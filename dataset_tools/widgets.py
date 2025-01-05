@@ -1,10 +1,22 @@
-import os
-from PyQt6.QtCore import QThread, pyqtSignal
-from dataset_tools import logger
+"""Widget contents"""
 
-class FileLoader(QThread):
-    finished = pyqtSignal(list, list, str)
-    progress = pyqtSignal(int)
+import os
+from pathlib import Path as p
+from PyQt6 import QtCore
+
+from dataset_tools import logger, EXC_INFO
+
+class Ext(list[str]):
+    """Valid file formats for metadata reading"""
+    PNG_ = [".png"]
+    JPEG = ['.jpg','.jpeg']
+    WEBP = ['.webp']
+    TEXT = ['.txt']
+
+class FileLoader(QtCore.QThread): # pylint: disable=c-extension-no-member
+    """Opens files in the UI"""
+    finished = QtCore.pyqtSignal(list, list, str) # pylint: disable=c-extension-no-member
+    progress = QtCore.pyqtSignal(int) # pylint: disable=c-extension-no-member
 
     def __init__(self, folder_path):
         super().__init__()
@@ -14,30 +26,48 @@ class FileLoader(QThread):
         self.text_files = []
 
     def run(self):
-        self.images, self.text_files = self._scan_directory(self.folder_path)
+        """Open selected folder"""
+        folder_contents              = self.scan_directory(self.folder_path)
+        self.images, self.text_files = self.populate_index_from_list(folder_contents)
         self.finished.emit(self.images, self.text_files, self.folder_path)
 
-    def _scan_directory(self, folder_path):
-      files = []
-      images = []
-      text_files = []
-      # Gather paths to all files in the selected folder
-      try:
-          all_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path)]
-      except FileNotFoundError:
-          return images, text_files
-      total_files = len(all_files)
-      progress = 0
-      for index, file_path in enumerate(all_files):
-        if os.path.isfile(file_path):
-          # Filter the file types as needed
-          if file_path.lower().endswith(('.png','.jpg','.jpeg','.webp')):
-             images.append(file_path)
-          if file_path.lower().endswith(('.txt')):
-            text_files.append(file_path)
-        progress = (index + 1)/total_files * 100
-        self.progress.emit(int(progress))
-      return images, text_files
-    
+    def scan_directory(self, folder_path:str ) -> list:
+        """
+        # Gather paths to all files in the selected folder\n
+        :param folder_path: `str` The directory to scan
+        :return: `list` The file contents of the directory
+        """
+
+        try:
+            folder_contents = [os.path.join(folder_path, f) for f in os.listdir(folder_path)]
+        except FileNotFoundError as error_log:
+            logger.info("Error loading folder %s",f"{folder_path} {error_log}", exc_info=EXC_INFO)
+        else:
+            return folder_contents
+
+    def populate_index_from_list(self,folder_contents: list)-> tuple[list]:
+        """
+        Create an index of relevant files from a list\n
+        :param :
+        :return: `tuple[list]` Images and text files that can be loaded by the system
+        """
+        image_files = []
+        text_files = []
+        file_count = len(folder_contents)
+        progress = 0
+        for index, file_path in enumerate(folder_contents):
+            if os.path.isfile(file_path):
+                logger.debug("%s",f"{file_path}")
+            # Filter the file types as needed
+                if p(file_path).suffix.lower() in Ext.PNG_ or Ext.JPEG or Ext.WEBP:
+                    image_files.append(file_path)
+                if p(file_path).suffix.lower() in Ext.TEXT:
+                    text_files.append(file_path)
+            logger.debug("%s",f"{image_files, text_files}")
+            progress = (index + 1)/file_count * 100
+            self.progress.emit(int(progress))
+        return image_files, text_files
+
     def clear_files(self):
-       self.files = []
+        """Empty file ilst"""
+        self.files = []

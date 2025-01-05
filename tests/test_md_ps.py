@@ -1,6 +1,6 @@
-
-import unittest
 import os
+import unittest
+
 from dataset_tools import logger
 from dataset_tools.metadata_parser import (
         format_chunk,
@@ -9,7 +9,6 @@ from dataset_tools.metadata_parser import (
         dehashed_metadata_str_to_dict,
         extract_enclosed_values
         )
-
 
 class TestParseMetadata(unittest.TestCase):
 
@@ -43,13 +42,14 @@ class TestParseMetadata(unittest.TestCase):
         _, structured_dict = extract_enclosed_values(self.cleaned_text)
         final_text = structured_metadata_list_to_dict(structured_dict)
         expected_output = self.structured_text
+        logger.debug("%s",f"{final_text}")
         assert final_text == expected_output
 
     def test_dehashed_metadata_str_to_dict(self):
         prompt_metadata, _ = extract_enclosed_values(self.cleaned_text)
         final_text = dehashed_metadata_str_to_dict(prompt_metadata)
         expected_output = self.dehashed_text
-        print(final_text)
+        logger.debug("%s",f"{final_text}")
         assert final_text == expected_output
 
 if __name__ == '__main__':
