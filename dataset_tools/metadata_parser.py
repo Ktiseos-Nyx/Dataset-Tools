@@ -75,6 +75,16 @@ def extract_enclosed_values(cleaned_text: str) -> tuple[str, list]:
     logger.debug("%s",f"{structured_dict}")
     return dehashed_text, structured_dict
 
+def clean_with_json(prestructured_data:dict, key_name: str) -> dict:
+    """
+    Use json loads to arrange half-formatted dictinto valid dict\n
+    :param prestructured_data: `dict` A dict with a single working key
+    :param key_name: `str` The single working key name
+    :return: `dict` A formatted dictionary object
+    """
+    cleaned_data = json.loads(prestructured_data[key_name])
+    return cleaned_data
+
 def structured_metadata_list_to_dict(prestructured_data: list) -> dict:
     """
     Convert delineated metadata into a dictionary\n
@@ -83,8 +93,9 @@ def structured_metadata_list_to_dict(prestructured_data: list) -> dict:
     """
     system_metadata = {}
     for key in prestructured_data:
+        logger.debug(key)
         if key == 'Hashes':
-            system_metadata[key] = json.loads(prestructured_data[key])
+            system_metadata[key] = clean_with_json(prestructured_data, key)
         elif ': "' in key and ':' in key:  # Handle TI hashes, split by colon and quote
             ti_hash_key = re.sub(r': .*$', '', key).strip()
             system_metadata[ti_hash_key] = prestructured_data[key]
@@ -120,12 +131,60 @@ def dehashed_metadata_str_to_dict(dehashed_text: str) -> dict:
     generation_metadata = dict((pair.split(': ', 1) for pair in dehashed_pairs))
     logger.debug(generation_metadata)
 
-    positive = next(iter(pos_key_val)) # Sample positive prompt
-    positive_prompt = pos_key_val[positive] # Separate prompts
+    positive = next(iter(pos_key_val), "") # Sample positive prompt
+    positive_prompt = pos_key_val.get(positive,None) # Separate prompts
 
     prompt_metadata = {"Positive prompt" : positive_prompt } | generation_metadata
     logger.debug("%s",f"{prompt_metadata}")
     return prompt_metadata, generation_metadata
+
+def arrange_webui_metadata(header_chunks:str) -> dict:
+    """
+    Using the header from a file, send to multiple formatting, cleaning, and parsing, processes \n
+    Return format : {"Prompts": , "Settings": , "System": } \n
+    :param header_chunks: `str` Header data from a file
+    :return: `dict` Metadata in a standardized format
+    """
+    cleaned_text = format_chunk(header_chunks)
+    dehashed_text, structured_dict = extract_enclosed_values(cleaned_text)
+    system_metadata = structured_metadata_list_to_dict(structured_dict)
+    prompt_metadata, generation_metadata = dehashed_metadata_str_to_dict(dehashed_text)
+    logger.debug("%s",f"{prompt_metadata, generation_metadata, system_metadata}")
+    logger.debug("%s",f"{type(prompt_metadata), type(generation_metadata), type(system_metadata)}")
+    return {"Prompts": prompt_metadata, "Settings": generation_metadata, "System": system_metadata}
+
+def arrange_nodeui_metadata(header_chunks:str) ->dict:
+    """
+    Using the header from a file, run formatting and parsing processes \n
+    Return format : {"Prompts": , "Settings": , "System": } \n
+    :param header_chunks: `str` Header data from a file
+    :return: `dict` Metadata in a standardized format
+    """
+    test_metadata = clean_with_json(header_chunks, 'prompt')
+    search_keys = ["text"]
+    prompt_data = {}
+    between_items= {}
+    misc_items = {}
+
+    logger.debug(test_metadata)
+ #or any(x in value.get('inputs') for x in search_keys):
+    for i, key in enumerate(test_metadata):
+        logger.debug(i)
+        value = test_metadata[key]
+        logger.debug(value)
+        key_name = value.get('class_type')
+        if "CLIPTextEncode" in key_name:
+            existing = prompt_data.get(key_name,{})
+            logger.debug(existing)
+            prompt_data.setdefault(key_name, existing | test_metadata[key].get('inputs'))
+        elif i <= 2:
+            between_items[key_name] = value['inputs']
+        else:
+            misc_items[key_name] = value['inputs']
+    prompt_items = {"Prompt": prompt_data }
+
+    return {'Prompts': prompt_items, 'Settings': between_items, "System": misc_items}
+
 
 def parse_metadata(file_path_named: str) -> dict:
     """
@@ -134,22 +193,14 @@ def parse_metadata(file_path_named: str) -> dict:
     :return: `dict` The metadata from the header of the file
     """
     header_chunks = open_png_header(file_path_named)
-
+    logger.debug("%s",f"{next(iter(header_chunks))}")
     metadata = None
 
     if next(iter(header_chunks)) == 'parameters': # A1111 format
-        logger.debug("%s",f"{next(iter(header_chunks))}")
-        cleaned_text = format_chunk(header_chunks)
-        dehashed_text, structured_dict = extract_enclosed_values(cleaned_text)
-        system_metadata = structured_metadata_list_to_dict(structured_dict)
-        prompt_metadata, generation_metadata = dehashed_metadata_str_to_dict(dehashed_text)
-        logger.debug("%s",f"{prompt_metadata, generation_metadata, system_metadata}")
-        logger.debug("%s",f"{type(prompt_metadata), type(generation_metadata), type(system_metadata)}")
+        metadata = arrange_webui_metadata(header_chunks)
+    elif next(iter(header_chunks)) == 'prompt': # ComfyUI format
+        metadata = arrange_nodeui_metadata(header_chunks)
 
-    elif next(iter(header_chunks)) == 'prompt':
-       # """Placeholder"""
-        pass
-    metadata = {"Prompts": prompt_metadata, "Settings": generation_metadata, "System": system_metadata}
     return metadata
 
     # hash_sample = re.search(r', cleaned_text)

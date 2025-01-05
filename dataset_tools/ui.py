@@ -203,6 +203,7 @@ class MainWindow(Qw.QMainWindow):
         :param :
         :return:
         """
+        metadata = None
         try:
             metadata = open_jpg_header(file_path) if (extension == Ext.JPEG or extension == Ext.WEBP) else parse_metadata(file_path)
         except IndexError as error_log:
@@ -211,8 +212,7 @@ class MainWindow(Qw.QMainWindow):
             logger.info("Variable not declared while extracting metadata from %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
         except ValueError as error_log:
             logger.info("Invalid dictionary formatting while extracting metadata from %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
-        else:
-            return metadata
+        return metadata
 
     def display_metadata(self, metadata, file_path):
         """direct collated data to fields and pretty print there"""
@@ -222,10 +222,8 @@ class MainWindow(Qw.QMainWindow):
             self.top_separator.setText('Prompt Data:')
             self.mid_separator.setText('Generation Data:')
             try:
-                prompt_data = metadata[next(iter(metadata))]
-                prompt_fields = f"{prompt_data.get('Positive prompt')}\n{prompt_data.get('Negative prompt')}"
-                logger.debug("%s",f"{prompt_data.get('Positive prompt')}")
-                self.upper_box.setText(prompt_fields)
+                prompt_data = metadata.get('Prompts')
+                self.upper_box.setText(''.join(f"{prompt_data.get(k)}\n" for k in prompt_keys if prompt_data.get(k)))
             except TypeError as error_log:
                 logger.info("Invalid data in prompt fields %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
             except KeyError as error_log:
