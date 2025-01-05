@@ -1,8 +1,8 @@
 from importlib import metadata
-from pprint import PrettyPrinter
 from xml.dom.minidom import parseString
-from dataset_tools.__init__ import logger
+from dataset_tools import logger
 import pprint
+import os
 
 from PyQt6.QtWidgets import (
     QMainWindow,
@@ -22,12 +22,13 @@ from PyQt6.QtGui import QFont, QPixmap
 from dataset_tools.widgets import FileLoader
 import imghdr
 from dataset_tools.metadata_parser import parse_metadata, open_jpg_header
+from dataset_tools import EXC_INFO
 import re
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
+        logger.info("Launching application...")
         # Set a default font for the app
         # app_font = QFont("Arial", 12)
         # self.setFont(app_font)
@@ -84,23 +85,31 @@ class MainWindow(QMainWindow):
         right_layout.addWidget(self.image_preview)
 
 
-        # Metadata Box
-        self.metadata_box = QTextEdit()
-        self.metadata_box.setReadOnly(True)
-        self.metadata_box.setMinimumWidth(400)
-        right_layout.addWidget(self.metadata_box)
-
-        # Prompt Text
-        self.prompt_text = QLabel()
-        self.prompt_text.setText("Prompt Info will show here")
-        self.prompt_text.setMinimumWidth(400)
-        right_layout.addWidget(self.prompt_text)
+        # Right top separator
+        self.top_separator = QLabel()
+        self.top_separator.setText("Prompt Info will show here")
+        self.top_separator.setMinimumWidth(400)
+        right_layout.addWidget(self.top_separator)
 
 
-        # Text File Content Area
-        self.text_content = QTextEdit()
-        self.text_content.setReadOnly(True)
-        right_layout.addWidget(self.text_content)
+        # Upper Right box
+        self.upper_box = QTextEdit()
+        self.upper_box.setReadOnly(True)
+        self.upper_box.setMinimumWidth(400)
+        right_layout.addWidget(self.upper_box)
+
+        # Right boxes separator
+        self.separator_text = QLabel()
+        self.separator_text.setText("Generation Info will show here")
+        self.separator_text.setMinimumWidth(400)
+        right_layout.addWidget(self.separator_text)
+
+
+        # Lower Right box
+        self.lower_box = QTextEdit()
+        self.lower_box.setMinimumWidth(400)
+        self.lower_box.setReadOnly(True)
+        right_layout.addWidget(self.lower_box)
 
 
         self.file_loader = None
@@ -124,9 +133,10 @@ class MainWindow(QMainWindow):
       self.text_files = []
       self.files_list.clear()
       self.image_preview.clear()
-      self.text_content.clear()
-      self.prompt_text.clear()
-      self.metadata_box.clear()
+      self.lower_box.clear()
+      self.separator_text.clear()
+      self.upper_box.clear()
+      self.top_separator.clear()
 
     def load_files(self, folder_path):
         # Start background loading of files using QThread
@@ -166,13 +176,14 @@ class MainWindow(QMainWindow):
 
     def on_file_selected(self, item):
         file_path = item.text()
-        self.message_label.setText(f"Selected {file_path}")
+        self.message_label.setText(f"Selected {os.path.normpath(os.path.basename(file_path))}")
 
         # Clear any previous selection
         self.image_preview.clear()
-        self.text_content.clear()
-        self.prompt_text.clear()
-        self.metadata_box.clear()
+        self.lower_box.clear()
+        self.separator_text.clear()
+        self.upper_box.clear()
+        self.top_separator.clear()
 
         if file_path.lower().endswith(('.png','.jpg','.jpeg','.webp')):
             # Load the image
@@ -194,47 +205,45 @@ class MainWindow(QMainWindow):
                 metadata = open_jpg_header(file_path)
 
         except IndexError as error_log:
-            logger.info(f"Unexpected list position, out of range error for metadata in {file_path} : {error_log}")
-            logger.debug(error_log)
-            metadata = None
+            logger.info(f"Unexpected list position, out of range error for metadata in {file_path}, {error_log}", exc_info=EXC_INFO)
             pass
         except UnboundLocalError as error_log:
-            logger.info(f"Variable not declared while extracting metadata from {file_path} : {error_log}")
-            logger.debug(error_log)
-            metadata = None
+            logger.info(f"Variable not declared while extracting metadata from {file_path}, {error_log}", exc_info=EXC_INFO)
             pass
         except ValueError as error_log:
-            logger.info(f"Invalid dictionary formatting while extracting metadata from{file_path} : {error_log}")
-            logger.debug(error_log)
-            metadata = None
+            logger.info(f"Invalid dictionary formatting while extracting metadata from {file_path}, {error_log}", exc_info=EXC_INFO)
             pass
 
         else:
             return metadata
-        return None
 
     def display_metadata(self, metadata, file_path):
         if metadata is not None:
-            prompt_keys = ['Positive prompt', 'Negative prompt']
+            prompt_keys = ['Positive prompt','Negative prompt', 'Prompt']
+            self.top_separator.setText('Prompt Data:')
+            self.separator_text.setText('Generation Data:')
             try:
-                generation_data = "\n".join(f"{k}: {v}" for k, v in metadata.items() if k not in prompt_keys)
-                self.metadata_box.setText(pprint.pformat(generation_data))
+                prompt_data = metadata['Prompts']
+                prompt_fields = f"{prompt_data.get('Positive prompt')}\n{prompt_data.get('Negative prompt')}"
+                logger.debug(prompt_data.get('Positive prompt'))
+                self.upper_box.setText(prompt_fields)
+            except TypeError as error_log:
+                logger.info(f"Invalid data in prompt fields {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
+                pass
 
             except AttributeError as error_log:
-                logger.info(f"'items' attribute cannot be applied to type {type(metadata)} from {file_path, metadata}  : {error_log}")
-                logger.debug(error_log)
+                logger.info(f"Attribute cannot be applied to type {type(metadata)} from  {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
                 pass
 
             try:
-                prompt_data = '\n'.join(f"{metadata.get(k)}" for k in metadata if k in prompt_keys)
-                self.text_content.setText(pprint.pformat(prompt_data))
-            except TypeError:
-                logger.info(f"Invalid data in prompt fields {type(metadata)} from {file_path, metadata}  : {error_log}")
+                not_prompt = {k: v for k, v in metadata.get('Prompts').items() if k not in prompt_keys and metadata.get('Prompts', None) is not None}
+                generation_data = not_prompt | metadata.get('Settings') | metadata.get('System')
+                self.lower_box.setText(pprint.pformat(generation_data))
 
             except AttributeError as error_log:
-                logger.info(f"attribute cannot be applied to type {type(metadata)} from {file_path, metadata}  : {error_log}")
-                logger.debug(error_log)
+                logger.info(f"'items' attribute cannot be applied to type {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
                 pass
+
 
     def load_image_preview(self, file_path):
         # load image file
@@ -243,9 +252,6 @@ class MainWindow(QMainWindow):
         self.image_preview.setPixmap(pixmap.scaled(self.image_preview.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
 
     def load_text_file(self, file_path):
-        try:
-            with open(file_path, 'r') as f:
-                content = f.read()
-                self.text_content.setText(content)
-        except Exception as e:
-             self.text_content.setText(f"Error loading text file: {e}")
+        with open(file_path, 'r') as f:
+            content = f.read()
+            self.lower_box.setText(content)

@@ -1,134 +1,127 @@
 
-from png import Reader as pngReader
-import zlib
 import re
 import json
-from dataset_tools import logger
 from collections import defaultdict
-import ast
+from dataset_tools import logger
+from PIL import Image
 
-def open_jpg_header(file_path_named: str):
+
+
+def open_jpg_header(file_path_named: str) -> dict:
     """
     Open jpg format files\n
     :param file_path_named: `str` The path and file name of the jpg file
     :return: `Generator[bytes]` Generator element containing header tags
     """
-    from PIL import Image, ExifTags
     from PIL.ExifTags import TAGS
-
     pil_img = Image.open(file_path_named)
     exif_info = pil_img._getexif()
     exif = {TAGS.get(k, k): v for k, v in exif_info.items()}
     return exif
 
-def open_png_header(file_path_named: str) -> bytes:
+
+def open_png_header(file_path_named: str) -> dict:
     """
     Open png format files\n
     :param file_path_named: `str` The path and file name of the png file
     :return: `Generator[bytes]` Generator element containing header bytes
     """
-    try:
-        with open(file_path_named, "rb") as f:
-            png_data = f.read()
-            reader = pngReader(bytes=png_data)
-            header_chunks = reader.chunks()
-    except Exception as error_log:
-        logger.info(f"Error reading png file: {file_path_named} {error_log}")
-        logger.debug(f"{file_path_named} {error_log}")
-    else:
-        return header_chunks
+    pil_img = Image.open(file_path_named)
+    if pil_img == None:
+        pil_img.load()
+    text_chunks = pil_img.info
+    logger.debug(text_chunks)
+    return text_chunks
 
 
-def extract_metadata_chunks(header_chunks: bytes,
-                            text_prefix: tuple = (b"tEXt", b"iTXt"),
-                            search_key: tuple = (b"parameters", b"prompt")
-                            ) -> bytes:
-    """
-    Scan metadata chunks, then extract relevant data\n
-    :param header_chunks: `Generator[bytes]` Data header from relevant file
-    :param text_prefix: `tuple` Values that precede text bytes
-    :param search_key: `tuple` Values that precede text we are looking for
-    :return: `bytes` Byte string from the header of relevant data
-    """
-    for chunk_name, chunk_data in header_chunks:
-        if chunk_name in text_prefix:
-            parts = chunk_data.split(b"\x00", 3)
-            key, *_, text_chunk = parts
-            if chunk_name == b"iTXt" and parts[1] == b'\x00':
-                try:
-                    text_chunk = zlib.decompress(text_chunk)
-                except Exception as error_log:
-                    logger.info(f"Error decompressing: ", error_log)
-                    logger.debug(f"",error_log, exc_info=True)
-                    continue
-
-            if key in search_key:
-                return text_chunk
-
-def clean_string_with_json(formatted_text:str) -> dict:
-    """"
-    Convert data into a clean dictionary\n
-    :param pre_cleaned_text: `str` Unstructured utf-8 formatted string
-    :return: `dict` Dictionary formatted data
-    """
-    if next(iter(formatted_text)) != "{":
-        formatted_text = restructure_metadata(formatted_text)
-        formatted_text = str(formatted_text).replace("\'","\"").replace('\n', '').strip()
-    try:
-        print(formatted_text)
-        json_structured_text = json.loads(formatted_text)
-    except Exception as e:
-        print("Error parsing json directly", e)
-    else:
-        return json_structured_text
-
-def format_chunk(text_chunk: bytes) -> dict:
+def format_chunk(text_chunks: dict) -> dict:
     """
     Turn raw bytes into utf8 formatted text\n
     :param text_chunk: `bytes` Data from a file header
     :return: `dict` text data in a dict structure
     """
-    try:
-        formatted_text = text_chunk.decode('utf-8', errors='ignore')
-    except Exception as error_log:
-        logger.info("Error decoding: ", error_log)
-        logger.debug(f"",error_log, exc_info=True)
-    else:
-        json_structured_text = clean_string_with_json(formatted_text)
-        logger.debug(f"Decoded Text: {json_structured_text}")
-        return json_structured_text
+    replace_strings = ['\xe2\x80\x8b','\x00', '\x00', '\u200b',]
+    dirty_string = text_chunks.get('parameters')
+    for buffer in replace_strings:
+        segmented_string = dirty_string.split(buffer)
+        clean_segments = [seg.replace(buffer, '') for seg in segmented_string]
+        cleaned_text = ' '.join(map(str,clean_segments)).replace('\n',',')
 
-def restructure_metadata(formatted_text: str) -> dict:
+    logger.debug(f"{cleaned_text}")
+    return cleaned_text
+
+
+def extract_enclosed_values(cleaned_text: str) -> tuple[str, list]:
     """
-    Reconstruct metadata header format into a dict\n
-    :param formatted_text: `str` Unstructured utf-8 formatted text
-    :return: `dict` The text formatted into a valid dictionary structure
+    Split string by pre-delineated tag information\n
+    :param cleaned_text: `str` Text without escape codes
+    :return: `tuple[str, list]` A freeform string and a partially-organized list of metadata
     """
-    pre_cleaned_text = defaultdict(dict)
+    pattern = r'(TI hashes:\s*"([^"]*)")|(Hardware Info:\s*"([^"]*)")|Hashes: (\{.*?\})'
+    prestructured_data = [x for x in re.findall(pattern, cleaned_text) if any(y for y in x)]
 
-    start_idx = formatted_text.find("POS\"") + 1
-    end_idx = formatted_text.find("\"", start_idx)
-    positive_string = formatted_text[start_idx:end_idx].strip()
+    structured_dict = {}
+    for item in prestructured_data:
+        # Only keep non-empty groups
+        if item[1]:   structured_dict[item[0]] = item[1]
+        elif item[3]: structured_dict[item[2]] = item[3]
+        else:         structured_dict['Hashes'] = item[4]
 
-    start_idx = formatted_text.find("Neg") + 1
-    end_idx = formatted_text.find("\"", start_idx)
-    negative_string = formatted_text[start_idx:end_idx].strip()
+    dehashed_text = re.sub(pattern, ',', cleaned_text).strip()
+    logger.debug(f"{dehashed_text}")
+    logger.debug(f"{structured_dict}")
+    return dehashed_text, structured_dict
 
-    start_idx = formatted_text.find("Hashes") + len("Hashes:")
-    end_idx = formatted_text.find("\"", start_idx)
-    hash_string = formatted_text[start_idx:end_idx].strip()
+def structured_metadata_list_to_dict(prestructured_data: list) -> dict:
+    """
+    Convert delineated metadata into a dictionary\n
+    :param prestructured_data: `list` Metadata tags pre-separated into an approximate list format
+    :return: `dict` A valid dictionary structure with identical information
+    """
+    system_metadata = {}
+    for key in prestructured_data:
+        if key == 'Hashes':
+            system_metadata[key] = json.loads(prestructured_data[key])
+        elif ': "' in key and ':' in key:  # Handle TI hashes, split by colon and quote
+            ti_hash_key = re.sub(r': .*$', '', key).strip()
+            system_metadata[ti_hash_key] = prestructured_data[key]
+        else: # Hardware Info, strip quotes"""
+            system_metadata[key.split(' ', 1)[0]] = prestructured_data[key].strip('"')
+    logger.debug(f"{system_metadata}")
+    return system_metadata
 
-    positive = positive_string.replace("\'","\"").replace('\n', '').strip()
-    negative = negative_string.replace("\'","\"").replace('\n', '').strip()
-    text_split = formatted_text.strip().split('\n')
 
-    for strip in text_split:
-        mapped_metadata = {}
-        for key, value in re.findall(r'(\w+):\s*(\d+(?:\.\d+)?)', strip):
-            mapped_metadata.setdefault(key.replace("\'","\"").replace('\n', '').strip(), value.replace("\'","\"").replace('\n', '').strip())
-        pre_cleaned_text = mapped_metadata | {"Hashes": hash_string, "Positive prompt": positive_string, "Negative prompt": negative_string }
-    return pre_cleaned_text
+def dehashed_metadata_str_to_dict(dehashed_text: str) -> dict:
+    """
+    Convert an unstructured metadata string into a dictionary\n
+    :param dehashed_data: `str` Metadata tags with quote and bracket delineated features removed
+    :return: `dict` A valid dictionary structure with identical information
+    """
 
+    #pairs = [pair.strip() for pair in dehashed_text.split(',')]
+    pos_match = re.match(r'(.*?POS \s*)', dehashed_text)
+    pos_key_val = {pos_match.group(1): dehashed_text[:dehashed_text.find(',Negative')].strip()} if pos_match else {}
+
+    # Rest of dehashed as a dict:
+    dehashed_pairs = [p for p in dehashed_text.split(',') if ': ' in p and p.strip()]
+    neg_side = dehashed_pairs[0].split('Steps:')
+    match = re.search(r'Negative prompt:\s*(.*?)Steps', dehashed_pairs[0])
+    negative = match.group(1) if match else None
+    logger.debug(negative)
+    logger.debug(neg_side)
+
+    logger.debug(negative)
+    logger.debug(f"{dehashed_pairs}")
+
+    generation_metadata = {k: v for k, v in (pair.split(': ', 1) for pair in dehashed_pairs)}
+    logger.debug(generation_metadata)
+
+    positive = next(iter(pos_key_val)) # Sample positive prompt
+    positive_prompt = pos_key_val[positive] # Separate prompts
+
+    prompt_metadata = {"Positive prompt" : positive_prompt } | generation_metadata
+    logger.debug(f"{prompt_metadata}")
+    return prompt_metadata, generation_metadata
 
 def parse_metadata(file_path_named: str) -> dict:
     """
@@ -137,7 +130,19 @@ def parse_metadata(file_path_named: str) -> dict:
     :return: `dict` The metadata from the header of the file
     """
     header_chunks = open_png_header(file_path_named)
-    if header_chunks is not None:
-        text_chunk = extract_metadata_chunks(header_chunks)
-        json_structured_text = format_chunk(text_chunk)
-        return json_structured_text
+    if next(iter(header_chunks)) == 'parameters':
+        logger.debug(next(iter(header_chunks)))
+        cleaned_text = format_chunk(header_chunks)
+        dehashed_text, structured_dict = extract_enclosed_values(cleaned_text)
+        system_metadata = structured_metadata_list_to_dict(structured_dict)
+        prompt_metadata, generation_metadata = dehashed_metadata_str_to_dict(dehashed_text)
+        logger.debug(f"{prompt_metadata | generation_metadata | system_metadata}")
+    elif next(iter(header_chunks)) == 'prompt':
+        """Placeholder"""
+    metadata = {"Prompts": prompt_metadata, "Settings": generation_metadata, "System": system_metadata}
+    return metadata
+
+
+    # hash_sample = re.search(r', cleaned_text)
+    # hash_sample_structure = eval(hash_sample.group(1)) # Return result 1 if found else 0
+    #dehashed_text = re.sub(r'Hashes: \{.*?\}', '', cleaned_text).strip()

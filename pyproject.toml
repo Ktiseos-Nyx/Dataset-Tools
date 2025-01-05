@@ -4,17 +4,15 @@ requires      = ["setuptools", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dataset-tools"
-description = "A script that in theory works to help you visualize your dataset, edit text"
-authors = [
-    { name = "The Duskfall Portal Crew", email = "Dataset-Tools@noreply.github.com" },
-]
-
+name            = "dataset-tools"
+description     = "A script that in theory works to help you visualize your dataset, edit text."
+authors         = [{ name = "Ktiseos Nyx", email = "Dataset-Tools@noreply.github.com" }]
 requires-python = ">= 3.10"
-license = { file = "LICENSE" }
-readme = "README.md"
-urls = { source = "https://github.com/duskfallcrew/Dataset-Tools" }
-dynamic = ["version"]
+license         = { file = "LICENSE" }
+readme          = "README.md"
+urls            = { source = "https://github.com/orgs/Ktiseos-Nyx/Dataset-Tools" }
+dynamic         = ["version"]
+
 keywords = [
     "training",
     "text",
@@ -26,7 +24,8 @@ keywords = [
     "generative",
     "art",
 ]
-dependencies = ["PyQt6", "pypng", "rich", "pillow"]
+
+dependencies = ["PyQt6", "rich", "pillow"]
 
 [project.optional-dependencies]
 dev = ["pytest"]
