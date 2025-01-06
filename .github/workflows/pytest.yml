@@ -1,0 +1,31 @@
+
+# Install Python dependencies, run tests
+
+name: PyTest
+
+on:
+  push:
+    branches: [ "x/dev", "main" ]
+  pull_request:
+    branches: [ "x/dev", "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.13
+      - name: Install dependencies and run Test
+        run: |
+          python -m pip install --upgrade pip
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install .[dev]
+          pytest -vv

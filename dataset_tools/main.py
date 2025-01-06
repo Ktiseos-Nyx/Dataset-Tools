@@ -1,21 +1,17 @@
+"""啟動程式，退出程式"""
+
 import sys
-import logging
+
+from PyQt6 import QtWidgets # ignore
+
 from dataset_tools import logger
 from dataset_tools.ui import MainWindow  # Import our main window class
-import argparse
 
 def main():
-    parser = argparse.ArgumentParser(description="Set the logging level via command line")
+    """Launch application"""
+    logger.info("%s","Launching application...")
 
-    parser.add_argument('--log', default='WARNING', help='Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)')
-
-    args = parser.parse_args()
-
-    log_level = getattr(logging, args.log.upper())
-    logger = logging.getLogger(__name__)
-
-    from PyQt6.QtWidgets import QApplication
-    app = QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv) # pylint: disable=c-extension-no-member
     window = MainWindow() # Initialize our main window.
     window.show()
     sys.exit(app.exec())
