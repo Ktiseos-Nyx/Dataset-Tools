@@ -1,10 +1,17 @@
+"""啟動程式，退出程式"""
 
 import sys
+
+from PyQt6 import QtWidgets # ignore
+
+from dataset_tools import logger
 from dataset_tools.ui import MainWindow  # Import our main window class
 
 def main():
-    from PyQt6.QtWidgets import QApplication
-    app = QApplication(sys.argv)
+    """Launch application"""
+    logger.info("%s","Launching application...")
+
+    app = QtWidgets.QApplication(sys.argv) # pylint: disable=c-extension-no-member
     window = MainWindow() # Initialize our main window.
     window.show()
     sys.exit(app.exec())
