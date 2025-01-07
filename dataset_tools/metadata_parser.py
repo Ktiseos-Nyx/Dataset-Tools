@@ -3,16 +3,17 @@
 
 import re
 import json
+from json import JSONDecodeError
 
 from PIL import Image
 from PIL.ExifTags import TAGS
-from dataset_tools import logger
+from dataset_tools import logger, EXC_INFO
 
 def open_jpg_header(file_path_named: str) -> dict:
     """
     Open jpg format files\n
-    :param file_path_named: `str` The path and file name of the jpg file
-    :return: `Generator[bytes]` Generator element containing header tags
+    :param file_path_named: The path and file name of the jpg file
+    :return: Generator element containing header tags
     """
     pil_image = Image.open(file_path_named)
     info  = pil_image.info
@@ -24,176 +25,170 @@ def open_jpg_header(file_path_named: str) -> dict:
 def open_png_header(file_path_named: str) -> dict:
     """
     Open png format files\n
-    :param file_path_named: `str` The path and file name of the png file
-    :return: `Generator[bytes]` Generator element containing header bytes
+    :param file_path_named: The path and file name of the png file
+    :return: Generator element containing header bytes
     """
     pil_img = Image.open(file_path_named)
     if pil_img is None: # We dont need to load completely unless totally necessary
         pil_img.load() # This is the case when we have no choice but to load (slower)
     text_chunks = pil_img.info
-    logger.debug("%s",f"{text_chunks}")
     return text_chunks
 
 
-def format_chunk(text_chunks: dict) -> dict:
+def format_chunk(text_chunks: str) -> list:
     """
-    Turn raw bytes into utf8 formatted text\n
-    :param text_chunk: `bytes` Data from a file header
-    :return: `dict` text data in a dict structure
+    Format text from header file by escape-code delineations\n
+    :param text_chunk: Data from a file header
+    :return: text data in a dict structure
     """
-    replace_strings = ['\xe2\x80\x8b','\x00', '\x00', '\u200b',]
+    replace_strings = ['\xe2\x80\x8b', '\x00', '\u200b','\n',"\'Negative Prompt\'"]
     dirty_string = text_chunks.get('parameters')
+    segments = [dirty_string]
+
     for buffer in replace_strings:
-        segmented_string = dirty_string.split(buffer)
-        clean_segments = [seg.replace(buffer, '') for seg in segmented_string]
-        cleaned_text = ' '.join(map(str,clean_segments)).replace('\n',',')
+        new_segments = []
+        for delination in segments: # Split segments and all sub-segments of this string
+            split_segs = delination.split(buffer)
+            new_segments.extend(s for s in split_segs if s)  # Skip empty strings
+        segments = new_segments
 
-    logger.debug("%s",f"{cleaned_text}")
-    return cleaned_text
+    clean_segments = segments
 
-def extract_enclosed_values(cleaned_text: str) -> tuple[str, list]:
+    logger.debug("%s",f"{clean_segments}")
+    return clean_segments
+
+def extract_prompts(clean_segments: list) -> tuple[dict, str]:
     """
     Split string by pre-delineated tag information\n
-    :param cleaned_text: `str` Text without escape codes
-    :return: `tuple[str, list]` A freeform string and a partially-organized list of metadata
+    :param cleaned_text: Text without escape codes
+    :return: A dictionary of prompts and a str of metadata
     """
-    pattern = r'(TI hashes:\s*"([^"]*)")|(Hardware Info:\s*"([^"]*)")|Hashes: (\{.*?\})'
-    prestructured_data = [x for x in re.findall(pattern, cleaned_text) if any(y for y in x)]
+    deprompted_segments = []
+    prompt_metadata = { 'Positive prompt':clean_segments[0], 'Negative prompt': clean_segments[1] }
+    for i in range(len(clean_segments)-2):
+        deprompted_segments.append(clean_segments[i+2])
+    deprompted_text = ''.join(deprompted_segments)
+    return prompt_metadata, deprompted_text
 
-    structured_dict = {}
-    for item in prestructured_data:
-        # Only keep non-empty groups
-        if item[1]:
-            structured_dict[item[0]] = item[1]
-        elif item[3]:
-            structured_dict[item[2]] = item[3]
-        else:
-            structured_dict['Hashes'] = item[4]
+def extract_partial_mappings(deprompted_text: str) -> tuple[str, list]:
+    """
+    Split string by pre-delineated tag information\n
+    :param cleaned_text: Text without escape codes
+    :return: A freeform string and a partially-organized list of metadata
+    """
+   # Regex for capturing dictionary or quoted strings
 
-    dehashed_text = re.sub(pattern, ',', cleaned_text).strip()
-    logger.debug("%s",f"{dehashed_text}")
-    logger.debug("%s",f"{structured_dict}")
-    return dehashed_text, structured_dict
+    pattern_types = [r' (\w*): ([{].*[}]),', r' (\w*\s*\w+): (["].*["]),']
+    valid_mapping = {}
+    remaining_text = deprompted_text
+    for pattern in pattern_types:
+        data = re.findall(pattern, deprompted_text)
+        logger.debug(data)
+        valid_mapping.setdefault(data[0][0], data[0][1])
+        remaining_text = re.sub(pattern, '', remaining_text).strip()
+    return valid_mapping, remaining_text
+
+    #subtract_pattern = r'(\w*\s*?:\s*?[{].*[}])|(,\s*?\w*\s*\w+:\s*?["].*["]),'
+
+def convert_str_to_dict(text_to_convert: str) -> tuple[dict]:
+    """
+    Convert an unstructured metadata string into a dictionary\n
+    :param dehashed_data: Metadata tags with quote and bracket delineated features removed
+    :return: A valid dictionary structure with identical information
+    """
+    segmented = text_to_convert.split(", ")
+    delineated = [item.split(": ") for item in segmented if isinstance(item, str)]
+    converted_text = {element[0]: element[1] for element in delineated}
+    return converted_text
 
 def clean_with_json(prestructured_data:dict, key_name: str) -> dict:
     """
-    Use json loads to arrange half-formatted dictinto valid dict\n
-    :param prestructured_data: `dict` A dict with a single working key
-    :param key_name: `str` The single working key name
-    :return: `dict` A formatted dictionary object
+    Use json loads to arrange half-formatted dict into valid dict\n
+    :param prestructured_data: A dict with a single working key
+    :param key_name: The single working key name
+    :return: A formatted dictionary object
     """
-    cleaned_data = json.loads(prestructured_data[key_name])
+    try:
+        cleaned_data = json.loads(prestructured_data[key_name])
+    except JSONDecodeError as error_log:
+        logger.info("Attempted to parse invalid formatting on %s", f"{prestructured_data} at {key_name}, {error_log}", exc_info=EXC_INFO)
     return cleaned_data
 
-def structured_metadata_list_to_dict(prestructured_data: list) -> dict:
+
+def dig_nested_values(initial_depth:dict, search_term:str, retrieval_keyword:str, key_labels: list,) ->dict:
     """
-    Convert delineated metadata into a dictionary\n
-    :param prestructured_data: `list` Metadata tags pre-separated into an approximate list format
-    :return: `dict` A valid dictionary structure with identical information
+    Trigger recursive dive into nested ditionary\n
+    :param initial_depth: Where to start in the nested dictionary
+    :param search_term: The value to search for
+    :param keyword: Key to retrieve the data beneath
+    :param key_labels: A list of labels to apply to the new dictionary
+    :return: The new dictionary and the original dictionary
     """
-    system_metadata = {}
-    for key in prestructured_data:
-        logger.debug(key)
-        if key == 'Hashes':
-            system_metadata[key] = clean_with_json(prestructured_data, key)
-        elif ': "' in key and ':' in key:  # Handle TI hashes, split by colon and quote
-            ti_hash_key = re.sub(r': .*$', '', key).strip()
-            system_metadata[ti_hash_key] = prestructured_data[key]
-        else: # Hardware Info, strip quotes"""
-            system_metadata[key.split(' ', 1)[0]] = prestructured_data[key].strip('"')
-    logger.debug("%s", f"{system_metadata}")
-    return system_metadata
+    nested_value = {}
+
+    def _check_depth_values(depth, k,v):
+        """Find matching key, fetch values and add them to a new dictionary"""
+        if isinstance(k, str) and isinstance(v, str) and (search_term in k or search_term in v):
+            key_name = next(iter(key_labels))
+            nested_value.setdefault(key_name,depth[retrieval_keyword].get(next(iter(depth[retrieval_keyword]))).strip('\n') )
+            logger.debug(depth)
+            if len(key_labels) > 1:
+                key_labels.pop(0)
+
+    def _cycle_depth(depth):
+        """Recurse through the dictionary completely"""
+        for k, v in depth.items():
+            _check_depth_values(depth,k,v)
+            if isinstance(v, dict):
+                _cycle_depth(v)
 
 
-def dehashed_metadata_str_to_dict(dehashed_text: str) -> dict:
-    """
-    Convert an unstructured metadata string into a dictionary\n
-    :param dehashed_data: `str` Metadata tags with quote and bracket delineated features removed
-    :return: `dict` A valid dictionary structure with identical information
-    """
-
-    #pairs = [pair.strip() for pair in dehashed_text.split(',')]
-    pos_match = re.match(r'(.*?POS \s*)', dehashed_text)
-    pos_key_val = {pos_match.group(1): dehashed_text[:dehashed_text.find(',Negative')].strip()} if pos_match else {}
-
-    # Rest of dehashed as a dict:
-    dehashed_pairs = [p for p in dehashed_text.split(',') if ': ' in p and p.strip()]
-
-    neg_side = dehashed_pairs[0].split('Steps:')
-    match = re.search(r'Negative prompt:\s*(.*?)Steps', dehashed_pairs[0])
-    negative = match.group(1) if match else None
-    logger.debug("%s",f"{negative}")
-    logger.debug("%s",f"{neg_side}")
-
-    logger.debug("%s",f"{negative}")
-    logger.debug("%s",f"{dehashed_pairs}")
-
-    generation_metadata = dict((pair.split(': ', 1) for pair in dehashed_pairs))
-    logger.debug(generation_metadata)
-
-    positive = next(iter(pos_key_val), "") # Sample positive prompt
-    positive_prompt = pos_key_val.get(positive,None) # Separate prompts
-
-    prompt_metadata = {"Positive prompt" : positive_prompt } | generation_metadata
-    logger.debug("%s",f"{prompt_metadata}")
-    return prompt_metadata, generation_metadata
-
-def arrange_webui_metadata(header_chunks:str) -> dict:
-    """
-    Using the header from a file, send to multiple formatting, cleaning, and parsing, processes \n
-    Return format : {"Prompts": , "Settings": , "System": } \n
-    :param header_chunks: `str` Header data from a file
-    :return: `dict` Metadata in a standardized format
-    """
-    cleaned_text = format_chunk(header_chunks)
-    dehashed_text, structured_dict = extract_enclosed_values(cleaned_text)
-    system_metadata = structured_metadata_list_to_dict(structured_dict)
-    prompt_metadata, generation_metadata = dehashed_metadata_str_to_dict(dehashed_text)
-    logger.debug("%s",f"{prompt_metadata, generation_metadata, system_metadata}")
-    logger.debug("%s",f"{type(prompt_metadata), type(generation_metadata), type(system_metadata)}")
-    return {"Prompts": prompt_metadata, "Settings": generation_metadata, "System": system_metadata}
+    _cycle_depth(initial_depth)
+    logger.debug(nested_value)
+    return nested_value, initial_depth # to do : make sure  initial depth doesnt store negative prompt
 
 def arrange_nodeui_metadata(header_chunks:str) ->dict:
     """
     Using the header from a file, run formatting and parsing processes \n
     Return format : {"Prompts": , "Settings": , "System": } \n
-    :param header_chunks: `str` Header data from a file
-    :return: `dict` Metadata in a standardized format
+    :param header_chunks: Header data from a file
+    :return: Metadata in a standardized format
     """
-    test_metadata = clean_with_json(header_chunks, 'prompt')
-    search_keys = ["text"]
-    prompt_data = {}
-    between_items= {}
-    misc_items = {}
+    clean_metadata = clean_with_json(header_chunks, 'prompt')
+    prompt_map, mixed_map = dig_nested_values(clean_metadata, 'CLIPTextEncode', 'inputs',["Positive prompt", "Negative prompt", "Prompt"])
+    logger.debug(mixed_map)
+    generation_map = {}
+    for node in mixed_map:
+        generation_map.update(mixed_map[node]["inputs"])
+    return {"Prompts": prompt_map, "Generation_Data": generation_map}
 
-    logger.debug(test_metadata)
- #or any(x in value.get('inputs') for x in search_keys):
-    for i, key in enumerate(test_metadata):
-        logger.debug(i)
-        value = test_metadata[key]
-        logger.debug(value)
-        key_name = value.get('class_type')
-        if "CLIPTextEncode" in key_name:
-            existing = prompt_data.get(key_name,{})
-            logger.debug(existing)
-            prompt_data.setdefault(key_name, existing | test_metadata[key].get('inputs'))
-        elif i <= 2:
-            between_items[key_name] = value['inputs']
-        else:
-            misc_items[key_name] = value['inputs']
-    prompt_items = {"Prompt": prompt_data }
 
-    return {'Prompts': prompt_items, 'Settings': between_items, "System": misc_items}
-
+def arrange_webui_metadata(header_chunks:str) -> dict:
+    """
+    Using the header from a file, send to multiple formatting, cleaning, and parsing, processes \n
+    Return format : {"Prompts": , "Settings": , "System": } \n
+    :param header_chunks: Header data from a file
+    :return: Metadata in a standardized format
+    """
+    cleaned_text = format_chunk(header_chunks)
+    logger.debug("%s",f"{type(cleaned_text)} : {cleaned_text} )")
+    prompt_map, deprompted_text = extract_prompts(cleaned_text)
+    logger.debug("%s",f"{type(prompt_map)} : {prompt_map}, {type(deprompted_text)} {deprompted_text} )")
+    system_map, generation_text = extract_partial_mappings(deprompted_text)
+    logger.debug("%s",f"{type(system_map)} : {system_map}, {type(generation_text)} {generation_text} )")
+    generation_map = convert_str_to_dict(generation_text)
+    logger.debug("%s",f"{type(generation_map)} : {generation_map} )")
+    return {"Prompts": prompt_map, "Generation_Data": generation_map, "System": system_map}
 
 def parse_metadata(file_path_named: str) -> dict:
     """
     Extract the metadata from the header of an image file\n
-    :param file_path_named: `str` The file to open
-    :return: `dict` The metadata from the header of the file
+    :param file_path_named: The file to open
+    :return: The metadata from the header of the file
     """
     header_chunks = open_png_header(file_path_named)
-    logger.debug("%s",f"{next(iter(header_chunks))}")
+    if header_chunks is not None and not isinstance(header_chunks, dict):
+        logger.debug("%s",f"{next(iter(header_chunks))}")
     metadata = None
 
     if next(iter(header_chunks)) == 'parameters': # A1111 format
@@ -202,7 +197,3 @@ def parse_metadata(file_path_named: str) -> dict:
         metadata = arrange_nodeui_metadata(header_chunks)
 
     return metadata
-
-    # hash_sample = re.search(r', cleaned_text)
-    # hash_sample_structure = eval(hash_sample.group(1)) # Return result 1 if found else 0
-    #dehashed_text = re.sub(r'Hashes: \{.*?\}', '', cleaned_text).strip()

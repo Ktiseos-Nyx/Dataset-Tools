@@ -4,7 +4,6 @@
 # pylint: disable=attribute-defined-outside-init
 
 from encodings import utf_8
-import pprint
 import os
 from pathlib import Path as p
 from PyQt6 import QtWidgets as Qw
@@ -110,8 +109,8 @@ class MainWindow(Qw.QMainWindow):
     def open_folder(self):
         """Open a dialog to select the folder"""
         folder_path = Qw.QFileDialog.getExistingDirectory(self, "Select a folder")
-        logger.debug("%s",f"Folder opened {folder_path}")
         if folder_path:
+            logger.debug("%s",f"Folder opened {folder_path}")
             # Call the file loading function
             self.load_files(folder_path)
 
@@ -206,10 +205,19 @@ class MainWindow(Qw.QMainWindow):
         metadata = None
         try:
             metadata = open_jpg_header(file_path) if (extension == Ext.JPEG or extension == Ext.WEBP) else parse_metadata(file_path)
-        except IndexError as error_log:
-            logger.info("Unexpected list position, out of range error for metadata in %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
+        except StopIteration as error_log:
+            logger.info("Overflow length on data operation for %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
+        except TypeError as error_log:
+            logger.info("Improper operation on variable while parsing %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
         except UnboundLocalError as error_log:
             logger.info("Variable not declared while extracting metadata from %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
+        except NameError as error_log:
+            logger.info("Attempted to access undeclared variable during parsing of %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
+        except AttributeError as error_log:
+            logger.info("Attempted invalid operation on %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
+        except IndexError as error_log:
+            logger.info("Unexpected list position, out of range error for metadata in %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
+
         except ValueError as error_log:
             logger.info("Invalid dictionary formatting while extracting metadata from %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
         return metadata
@@ -217,28 +225,35 @@ class MainWindow(Qw.QMainWindow):
     def display_metadata(self, metadata, file_path):
         """direct collated data to fields and pretty print there"""
         if metadata is not None:
-            logger.debug("%s",f"{metadata}")
-            prompt_keys = ['Positive prompt','Negative prompt', 'Prompt']
             self.top_separator.setText('Prompt Data:')
             self.mid_separator.setText('Generation Data:')
+            text_separator = "\n"
             try:
-                prompt_data = metadata.get('Prompts')
-                self.upper_box.setText(''.join(f"{prompt_data.get(k)}\n" for k in prompt_keys if prompt_data.get(k)))
+                positive_data = f"Positive prompt: {metadata['Prompts'].get('Positive prompt')}"
+                negative_data = f"Negative prompt: {metadata['Prompts'].get('Negative prompt')}"
             except TypeError as error_log:
                 logger.info("Invalid data in prompt fields %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
             except KeyError as error_log:
                 logger.info("Invalid key name for %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
             except AttributeError as error_log:
                 logger.info("Attribute cannot be applied to type %s", f" {type(metadata)} from  {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
+            else:
+                self.upper_box.setText(positive_data + text_separator*2 + negative_data)
 
             try:
-                not_prompt = {k: v for k, v in metadata.get('Prompts').items() if k not in prompt_keys and metadata.get('Prompts', None) is not None}
-                generation_data = not_prompt | metadata.get('Settings') | metadata.get('System')
-                self.lower_box.setText(pprint.pformat(generation_data))
-
+                sys_data_str = "\n"
+                gen_data_str = "\n"
+                if metadata.get('Generation_Data', None) is not None:
+                    gen_data_str = "\n".join(f"{k}: {v}" for k, v in metadata.get('Generation_Data', {}).items()) + "\n"
+                if metadata.get('System', None):
+                    sys_data_str = "\n".join(f"{k,v} \n" for k,v in metadata.get('System').items()) + "\n"
             except AttributeError as error_log:
                 logger.info("'items' attribute cannot be applied to type %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
-
+            except TypeError as error_log:
+                logger.info("Invalid data in generation fields  %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
+            else:
+                display = f"{gen_data_str}{text_separator*2}{sys_data_str}"
+                self.lower_box.setText(display)
 
     def load_image_preview(self, file_path):
         """Show preview of image file"""
