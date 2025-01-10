@@ -56,9 +56,9 @@ class FileLoader(QtCore.QThread): # pylint: disable=c-extension-no-member
         file_count = len(folder_contents)
         progress = 0
         for index, file_path in enumerate(folder_contents):
-            if os.path.isfile(file_path):
+            if os.path.isfile(file_path) and not file_path.endswith(".DS_Store"): #Filter out .DS_Store
             # Filter the file types as needed
-                if p(file_path).suffix.lower() in Ext.PNG_ or Ext.JPEG or Ext.WEBP:
+                if p(file_path).suffix.lower() in Ext.PNG_ or p(file_path).suffix.lower() in Ext.JPEG or p(file_path).suffix.lower() in Ext.WEBP:
                     image_files.append(file_path)
                 if p(file_path).suffix.lower() in Ext.TEXT:
                     text_files.append(file_path)
