@@ -1,6 +1,5 @@
-
 import re
-from typing import TypedDict
+from typing import TypedDict, Any
 from typing_extensions import Annotated
 from pydantic import TypeAdapter, BaseModel, Field, AfterValidator, field_serializer
 
@@ -24,7 +23,8 @@ def bracket_check(maybe_brackets:str | dict):
 
 class NodeDataMap(TypedDict):
     class_type: str
-    inputs: dict
+    inputs: dict[str,Any]
+    outputs: list[Any]
 
 class BracketedDict(BaseModel):
 
@@ -35,13 +35,10 @@ class BracketedDict(BaseModel):
     """
     brackets: Annotated[str, Field(init=False), AfterValidator(bracket_check)]
 
-class ValidityCheck:
+#class ValidityCheck: #TypeAdapter was removed
     """
     Confirm the data input of a ComfyUI dict\n
     :param node_data: The data to verify
     :type node_data: `str | dict`
     """
-    node_data = TypeAdapter(NodeDataMap)
-
-
-
+    #node_data = TypeAdapter(NodeDataMap) # TypeAdapter was removed
