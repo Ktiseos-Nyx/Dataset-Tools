@@ -7,11 +7,8 @@ from encodings import utf_8
 from dataset_tools import logger, EXC_INFO
 from dataset_tools.widgets import Ext
 
-from PIL import Image, UnidentifiedImageError
-from PIL.ExifTags import TAGS
+from PIL import Image, UnidentifiedImageError, ExifTags
 from pathlib import Path
-import piexif
-import piexif.helper
 
 
 class MetadataFileReader:
@@ -42,19 +39,13 @@ class MetadataFileReader:
         """
 
         img = Image.open(file_path_named)
-        exif = piexif.load(img.info.get("exif")) or {}
-        user_comment = exif.get("Exif", {}).get(piexif.ExifIFD.UserComment)
-        if user_comment:
-            logger.debug("exif data is byte string")
-            comment = piexif.helper.UserComment.load(user_comment)
-            logger.debug(f"Metadata from jpg: {file_path_named}: {comment}")
-            return {"parameters": comment}
-        else:
-            exif = {
-                TAGS.get(key, val): val for key, val in img.info.items() if key in TAGS
-            }
-            logger.debug(f"Metadata from jpg: {file_path_named}: {exif}")
-            return exif
+        exif = {
+            ExifTags.TAGS[label]: content
+            for label, content in img._getexif().items()
+            if label in ExifTags.TAGS
+        }
+        logger.debug("exif:: %s", f"{type(exif)} {exif}")
+        return exif
 
     def read_png_header(self, file_path_named):
         """

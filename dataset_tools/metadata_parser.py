@@ -313,14 +313,20 @@ def parse_metadata(file_path_named: str) -> dict:
     if header_data is not None:
         if isinstance(header_data, dict) and header_data.get("prompt"):
             metadata = arrange_nodeui_metadata(header_data)
-        elif isinstance(header_data, dict) or isinstance(header_data, str):
+        elif isinstance(header_data, dict) and (header_data.get("icc_profile") or header_data.get("'srgb'") or header_data.get("dpi")):
+            metadata = {
+                "Prompts": { "No": "Data" },
+                "Generation_Data": { 'EXIF':header_data} ,
+                "System": { "No": "Data" },
+            }
+        elif (isinstance(header_data, dict) and header_data.get("parameters")) or isinstance(header_data, str):
             metadata = arrange_webui_metadata(header_data)
 
         else:
             logger.error(f"Unexpected metadata type: {type(header_data)}")
             return {
-                "Prompts": "No Data",
-                "Generation_Data": "No Data",
-                "System": "No Data",
+                "Prompts": {"Positive prompt": { "No": "Data" }, "Negative prompt:": { "No": "Data" } },
+                "Generation_Data":  { "No": "Data" },
+                "System":  { "No": "Data" }
             }  # return placeholders
     return metadata
