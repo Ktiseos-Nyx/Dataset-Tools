@@ -25,7 +25,7 @@ keywords = [
     "art",
 ]
 
-dependencies = ["PyQt6", "rich", "pillow", "pydantic"]
+dependencies = ["PyQt6", "rich", "pillow", "pydantic", "piexif"]
 
 [project.optional-dependencies]
 dev = ["pytest"]
