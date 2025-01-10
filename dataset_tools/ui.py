@@ -1,22 +1,22 @@
 """App Ui"""
- # pylint: disable=line-too-long
- # pylint: disable=c-extension-no-member
+# pylint: disable=line-too-long
+# pylint: disable=c-extension-no-member
 # pylint: disable=attribute-defined-outside-init
 
-from encodings import utf_8
 import os
-from pathlib import Path as p
+
+from dataset_tools import logger
+from dataset_tools import EXC_INFO
+from dataset_tools.metadata_parser import parse_metadata
+from dataset_tools.widgets import FileLoader
+
 from PyQt6 import QtWidgets as Qw
 from PyQt6 import QtCore, QtGui
 
 
-from dataset_tools import logger
-from dataset_tools import EXC_INFO
-from dataset_tools.metadata_parser import parse_metadata, open_jpg_header
-from dataset_tools.widgets import FileLoader, Ext
-
 class MainWindow(Qw.QMainWindow):
-    """"Consolidated raw functions and behavior of window"""
+    """ "Consolidated raw functions and behavior of window"""
+
     def __init__(self):
         super().__init__()
         # Set a default font for the app
@@ -74,13 +74,11 @@ class MainWindow(Qw.QMainWindow):
         self.image_preview.setMinimumHeight(300)
         right_layout.addWidget(self.image_preview)
 
-
         # Right top separator
         self.top_separator = Qw.QLabel()
         self.top_separator.setText("Prompt Info will show here")
         self.top_separator.setMinimumWidth(400)
         right_layout.addWidget(self.top_separator)
-
 
         # Upper Right box
         self.upper_box = Qw.QTextEdit()
@@ -94,7 +92,6 @@ class MainWindow(Qw.QMainWindow):
         self.mid_separator.setMinimumWidth(400)
         right_layout.addWidget(self.mid_separator)
 
-
         # Lower Right box
         self.lower_box = Qw.QTextEdit()
         self.lower_box.setMinimumWidth(400)
@@ -104,13 +101,13 @@ class MainWindow(Qw.QMainWindow):
         self.file_loader = None
         self.current_folder = None
         self.clear_file_list()
-        logger.debug("%s","File List cleared")
+        logger.debug("%s", "File List cleared")
 
     def open_folder(self):
         """Open a dialog to select the folder"""
         folder_path = Qw.QFileDialog.getExistingDirectory(self, "Select a folder")
         if folder_path:
-            logger.debug("%s",f"Folder opened {folder_path}")
+            logger.debug("%s", f"Folder opened {folder_path}")
             # Call the file loading function
             self.load_files(folder_path)
 
@@ -120,14 +117,14 @@ class MainWindow(Qw.QMainWindow):
             self.file_loader.clear_files()
         self.files_list.clear()
         self.clear_file_list()
-        logger.debug("%s","File List cleared anew")
+        logger.debug("%s", "File List cleared anew")
         self.clear_selection()
-        logger.debug("%s","Selection cleared")
+        logger.debug("%s", "Selection cleared")
 
     def clear_file_list(self):
         """Initialize or re-initialize display of files"""
         self.file_list = []
-        logger.debug("%s",f"File List Initialized {self.file_list}")
+        logger.debug("%s", f"File List Initialized {self.file_list}")
         self.image_list = []
         self.text_files = []
 
@@ -152,7 +149,7 @@ class MainWindow(Qw.QMainWindow):
         self.file_loader.progress.connect(self.update_progress)
         self.file_loader.finished.connect(self.on_files_loaded)
         self.file_loader.start()
-        logger.debug("%s",f"Loading files from {folder_path}...")
+        logger.debug("%s", f"Loading files from {folder_path}...")
 
     def update_progress(self, progress):
         """Update progress bar"""
@@ -175,7 +172,6 @@ class MainWindow(Qw.QMainWindow):
         self.files_list.addItems(self.image_list)
         self.files_list.addItems(self.text_files)
 
-
     def on_file_selected(self, item):
         """Activate metadta on nab function"""
         file_path = item.text()
@@ -184,27 +180,20 @@ class MainWindow(Qw.QMainWindow):
         # Clear any previous selection
         self.clear_selection()
 
-        extension = p(file_path).suffix.lower()
         self.load_image_preview(file_path)
-        metadata = self.load_metadata(file_path, extension)
-
-        if extension in Ext.TEXT:
-            # Load the text file
-            self.load_text_file(file_path)
+        metadata = self.load_metadata(file_path)
 
         self.display_metadata(metadata, file_path)
 
-    def load_metadata(self, file_path: str, extension: str='.png') -> dict:
+    def load_metadata(self, file_path: str) -> dict:
         """
         Fetch metadata from file\n
         :param file_path: `str` The file to interpret
-        :param extension'':
-        :param :
-        :return:
+        :return: a dictionary of metadata
         """
         metadata = None
         try:
-            metadata = open_jpg_header(file_path) if (extension == Ext.JPEG or extension == Ext.WEBP) else parse_metadata(file_path)
+            metadata = parse_metadata(file_path)
         except StopIteration as error_log:
             logger.info("Overflow length on data operation for %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
         except TypeError as error_log:
@@ -225,8 +214,8 @@ class MainWindow(Qw.QMainWindow):
     def display_metadata(self, metadata, file_path):
         """direct collated data to fields and pretty print there"""
         if metadata is not None:
-            self.top_separator.setText('Prompt Data:')
-            self.mid_separator.setText('Generation Data:')
+            self.top_separator.setText("Prompt Data:")
+            self.mid_separator.setText("Generation Data:")
             text_separator = "\n"
             try:
                 positive_data = f"Positive prompt: {metadata['Prompts'].get('Positive prompt')}"
@@ -238,15 +227,15 @@ class MainWindow(Qw.QMainWindow):
             except AttributeError as error_log:
                 logger.info("Attribute cannot be applied to type %s", f" {type(metadata)} from  {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
             else:
-                self.upper_box.setText(positive_data + text_separator*2 + negative_data)
+                self.upper_box.setText(positive_data + text_separator * 2 + negative_data)
 
             try:
                 sys_data_str = "\n"
                 gen_data_str = "\n"
-                if metadata.get('Generation_Data', None) is not None:
-                    gen_data_str = "\n".join(f"{k}: {v}" for k, v in metadata.get('Generation_Data', {}).items()) + "\n"
-                if metadata.get('System', None):
-                    sys_data_str = "\n".join(f"{k,v} \n" for k,v in metadata.get('System').items()) + "\n"
+                if metadata.get("Generation_Data", None) is not None:
+                    gen_data_str = "\n".join(f"{k}: {v}" for k, v in metadata.get("Generation_Data", {}).items()) + "\n"
+                if metadata.get("System", None):
+                    sys_data_str = "\n".join(f"{k,v} \n" for k, v in metadata.get("System").items()) + "\n"
             except AttributeError as error_log:
                 logger.info("'items' attribute cannot be applied to type %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
             except TypeError as error_log:
@@ -260,9 +249,3 @@ class MainWindow(Qw.QMainWindow):
         pixmap = QtGui.QPixmap(file_path)
         # scale the image
         self.image_preview.setPixmap(pixmap.scaled(self.image_preview.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation))
-
-    def load_text_file(self, file_path):
-        """Read metadata inside a text file"""
-        with open(file_path, 'r', encoding=utf_8) as f:
-            content = f.read()
-            self.lower_box.setText(content)
