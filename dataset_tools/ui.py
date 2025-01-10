@@ -1,3 +1,11 @@
+#// SPDX-License-Identifier: CC0-1.0
+#// --<{ Ktiseos Nyx }>--
+"""App Ui"""
+
+# pylint: disable=line-too-long
+# pylint: disable=c-extension-no-member
+# pylint: disable=attribute-defined-outside-init
+
 import os
 import pprint  # Import the pprint module
 from dataset_tools import logger
@@ -188,7 +196,7 @@ class MainWindow(Qw.QMainWindow):
         except ValueError as error_log:
             logger.info("Invalid dictionary formatting while extracting metadata from %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
         return metadata
-    
+
     def on_file_selected(self, item):
         """Activate metadta on nab function"""
         file_path = item.text()

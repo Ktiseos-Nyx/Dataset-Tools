@@ -1,3 +1,5 @@
+#// SPDX-License-Identifier: CC0-1.0
+#// --<{ Ktiseos Nyx }>--
 """Widget contents"""
 
 import os

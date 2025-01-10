@@ -1,3 +1,6 @@
+#// SPDX-License-Identifier: CC0-1.0
+#// --<{ Ktiseos Nyx }>--
+
 """啟動程式，退出程式"""
 
 import sys

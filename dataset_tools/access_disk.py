@@ -1,4 +1,7 @@
-"""Encapsulate the file loader, to pass reader data to other functions"""
+#// SPDX-License-Identifier: CC0-1.0
+#// --<{ Ktiseos Nyx }>--
+
+"""Encapsulate the file loader to pass reader data to other functions"""
 
 from pathlib import Path as p
 from encodings import utf_8
