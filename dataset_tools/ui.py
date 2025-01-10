@@ -1,17 +1,20 @@
+#// SPDX-License-Identifier: CC0-1.0
+#// --<{ Ktiseos Nyx }>--
 """App Ui"""
+
 # pylint: disable=line-too-long
 # pylint: disable=c-extension-no-member
 # pylint: disable=attribute-defined-outside-init
 
 import os
-
+import pprint  # Import the pprint module
 from dataset_tools import logger
 from dataset_tools import EXC_INFO
 from dataset_tools.metadata_parser import parse_metadata
 from dataset_tools.widgets import FileLoader
-
 from PyQt6 import QtWidgets as Qw
 from PyQt6 import QtCore, QtGui
+from dataset_tools.widgets import Ext
 
 
 class MainWindow(Qw.QMainWindow):
@@ -55,7 +58,7 @@ class MainWindow(Qw.QMainWindow):
         # File list (replaced Qw.QLabel with Qw.QListWidget)
         self.files_list = Qw.QListWidget()
         self.files_list.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
-        self.files_list.itemClicked.connect(self.on_file_selected)
+        self.files_list.itemClicked.connect(self.on_file_selected)  # Corrected This
         left_layout.addWidget(self.files_list)
 
         # Add a progress bar for file loading
@@ -172,20 +175,7 @@ class MainWindow(Qw.QMainWindow):
         self.files_list.addItems(self.image_list)
         self.files_list.addItems(self.text_files)
 
-    def on_file_selected(self, item):
-        """Activate metadta on nab function"""
-        file_path = item.text()
-        self.message_label.setText(f"Selected {os.path.normpath(os.path.basename(file_path))}")
-
-        # Clear any previous selection
-        self.clear_selection()
-
-        self.load_image_preview(file_path)
-        metadata = self.load_metadata(file_path)
-
-        self.display_metadata(metadata, file_path)
-
-    def load_metadata(self, file_path: str) -> dict:
+    def load_metadata(self, file_path: str, extension: str = '.png') -> dict:
         """
         Fetch metadata from file\n
         :param file_path: `str` The file to interpret
@@ -194,15 +184,11 @@ class MainWindow(Qw.QMainWindow):
         metadata = None
         try:
             metadata = parse_metadata(file_path)
+        except IndexError as error_log:
+            logger.info("Unexpected list position, out of range error for metadata in %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
         except StopIteration as error_log:
             logger.info("Overflow length on data operation for %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
         except TypeError as error_log:
-            logger.info("Improper operation on variable while parsing %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
-        except UnboundLocalError as error_log:
-            logger.info("Variable not declared while extracting metadata from %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
-        except NameError as error_log:
-            logger.info("Attempted to access undeclared variable during parsing of %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
-        except AttributeError as error_log:
             logger.info("Attempted invalid operation on %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
         except IndexError as error_log:
             logger.info("Unexpected list position, out of range error for metadata in %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
@@ -211,13 +197,33 @@ class MainWindow(Qw.QMainWindow):
             logger.info("Invalid dictionary formatting while extracting metadata from %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
         return metadata
 
+    def on_file_selected(self, item):
+        """Activate metadta on nab function"""
+        file_path = item.text()
+        self.message_label.setText(f"Selected {os.path.normpath(os.path.basename(file_path))}")
+
+        # Clear any previous selection
+        self.clear_selection()
+
+        pixmap = QtGui.QPixmap(file_path)
+        # scale the image
+        self.image_preview.setPixmap(pixmap.scaled(self.image_preview.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation))
+
+        metadata = self.load_metadata(file_path)
+
+        self.display_metadata(metadata, file_path)
+
     def display_metadata(self, metadata, file_path):
         """direct collated data to fields and pretty print there"""
         if metadata is not None:
-            self.top_separator.setText("Prompt Data:")
-            self.mid_separator.setText("Generation Data:")
+            logger.debug("%s", f"{metadata}")
+            prompt_keys = ['Positive prompt', 'Negative prompt', 'Prompt']
+            self.top_separator.setText('Prompt Data:')
+            self.mid_separator.setText('Generation Data:')
             text_separator = "\n"
             try:
+                prompt_data = metadata.get('Prompts')
+                self.upper_box.setText(''.join(f"{prompt_data.get(k)}\n" for k in prompt_keys if prompt_data.get(k)))
                 positive_data = f"Positive prompt: {metadata['Prompts'].get('Positive prompt')}"
                 negative_data = f"Negative prompt: {metadata['Prompts'].get('Negative prompt')}"
             except TypeError as error_log:
@@ -230,22 +236,26 @@ class MainWindow(Qw.QMainWindow):
                 self.upper_box.setText(positive_data + text_separator * 2 + negative_data)
 
             try:
+                not_prompt = {k: v for k, v in metadata.get('Prompts', {}).items() if k not in prompt_keys}  # Default to {}
+                generation_data = (not_prompt or {}) | (metadata.get('Settings') or {}) | (metadata.get('System') or {})
+                self.lower_box.setText(pprint.pformat(generation_data))
                 sys_data_str = "\n"
                 gen_data_str = "\n"
-                if metadata.get("Generation_Data", None) is not None:
-                    gen_data_str = "\n".join(f"{k}: {v}" for k, v in metadata.get("Generation_Data", {}).items()) + "\n"
-                if metadata.get("System", None):
-                    sys_data_str = "\n".join(f"{k,v} \n" for k, v in metadata.get("System").items()) + "\n"
+                if metadata.get('Generation_Data', None) is not None:
+                    gen_data_str = "\n".join(f"{k}: {v}" for k, v in metadata.get('Generation_Data', {}).items()) + "\n"
+                if metadata.get('System', None):
+                    sys_data_str = "\n".join(f"{k,v} \n" for k, v in metadata.get('System').items()) + "\n"
             except AttributeError as error_log:
                 logger.info("'items' attribute cannot be applied to type %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
             except TypeError as error_log:
                 logger.info("Invalid data in generation fields  %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
             else:
-                display = f"{gen_data_str}{text_separator*2}{sys_data_str}"
+                display = f"{gen_data_str}{text_separator * 2}{sys_data_str}"
                 self.lower_box.setText(display)
 
-    def load_image_preview(self, file_path):
-        """Show preview of image file"""
-        pixmap = QtGui.QPixmap(file_path)
-        # scale the image
-        self.image_preview.setPixmap(pixmap.scaled(self.image_preview.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation))
+
+if __name__ == "__main__":
+    app = Qw.QApplication([])
+    window = MainWindow()
+    window.show()
+    app.exec()

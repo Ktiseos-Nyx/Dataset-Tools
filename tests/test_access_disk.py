@@ -1,12 +1,12 @@
 import unittest
 import os
 
-from dataset_tools.access_disk import FileReader
+from dataset_tools.access_disk import MetadataFileReader
+
 
 class TestDiskInterface(unittest.TestCase):
-
     def setUp(self):
-        self.reader = FileReader()
+        self.reader = MetadataFileReader()
         self.test_folder = os.path.dirname(os.path.abspath(__file__))
         self.real_file = os.path.join(self.test_folder, "test_img.png")
 
@@ -19,6 +19,7 @@ class TestDiskInterface(unittest.TestCase):
         chunks = self.reader.read_header(self.real_file)
         self.assertIsNotNone(chunks)
         self.assertTrue(list(chunks))  # Confirm it's not empty
+
 
 if __name__ == "__main__":
     unittest.main()
