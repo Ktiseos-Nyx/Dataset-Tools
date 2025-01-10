@@ -1,27 +1,74 @@
 # Dataset-Tools: A Simple Dataset Viewer for AI Art
 
+<div style="text-align: center">
+
+[__How to use Dataset-Tools__](#how-to-use-dataset-tools)<br>
+[__Launching the Application__](#launching-the-application)<br>
+[__User Interface Overview__](#user-interface-overview)<br>
+[__Improve the Project__](CONTRIBUTING.md)<br>
+[__Help the Creators__](#help-the-creators)<br>
+
+</div>
+
 Dataset-Tools is a desktop application designed to help users browse and manage their image and text datasets, particularly those used with AI art generation tools like Stable Diffusion. Developed using PyQt6, it provides a simple and intuitive graphical interface for browsing images, viewing metadata, and examining associated text prompts. This project is inspired by tools within the AI art community and aims to empower users in improving their dataset curation workflow.
 
 <img width="797" alt="Screenshot of the Application" src="https://github.com/user-attachments/assets/7e14c542-482d-42f4-a9ae-4305c9e2c383" />
 
+
+
+
+
 ## How to Use Dataset-Tools
+
+### Requirements
+
+To run the program, you will need the following software:
+
+#### Python:
+- [Python.org](https://www.python.org/downloads/) or [Try `uv`](https://github.com/astral-sh/uv?tab=readme-ov-file#installation)
+
+####  Git:
+- [Windows](https://gitforwindows.org/)
+- [MacOS step A](https://brew.sh/), [MacOS step B](https://git-scm.com/downloads/mac)
+- [Linux](https://git-scm.com/downloads/linux)
 
 ### Launching the Application
 
-1.  Ensure Python is installed on your system.
-2.  Clone or download the Dataset-Tools repository from GitHub.
-3.  In the Dataset-Tools folder, install the required dependencies:
+#### 1. Open your ``terminal`` shell console of choice.🐣  (ie:  ```powershell```,```cmd```,```zsh```,```bash```, etc.)
 
-    ```sh
-    pip install .
-    ```
-4.  Run the application using Python:
+#### 2. ``git clone`` or download the Dataset-Tools repository from GitHub.
 
-    ```sh
-    dataset-tools
-    ```
+```sh
+git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
+```
+
+#### 3. Move into Dataset-Tools folder and `pip install`the required dependencies:
+
+```sh
+cd Dataset-Tools
+pip install .
+```
+
+> [!NOTE]
+> `uv` users
+> ```sh
+> cd Dataset-Tools
+> uv pip install .
+> ```
+
+#### 4. Run the application with `dataset-tools` command:
+
+```sh
+dataset-tools
+```
+
+#### You're in!
+
+<br>
+<br>
 
 ### User Interface Overview
+<hr>
 
 The application window has the following main components:
 
@@ -57,45 +104,25 @@ The application window has the following main components:
 *   **Video Tutorials:** Create video tutorials to show users how to use the program.
 *   **Text Tutorials:** Create detailed tutorials in text and image to show the user how to use the program.
 
-## About the Creator
+## Help the Creators
 
-Dataset-Tools is developed by the Duskfall Portal Crew, a diverse system navigating life with DID, ADHD, Autism, and CPTSD. Our motivation stems from leveraging AI to promote inclusivity and mental health awareness. Join us in exploring identity and creative expression through technology.
+### --**__<{ Ktiseos Nyx }>__**--
 
-## Join Our Community
+ <!-- ![Static Badge](https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191)&link=https%3A%2F%2Fdiscord.gg%2F5t2kYxt7An)
+# https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191)&link=https%3A%2F%2Fdiscord.gg%2F5t2kYxt7An -->
 
-### Website:
-[End Media](https://www.end-media.org/)
 
-### Discord:
-[Join our Discord](https://discord.gg/5t2kYxt7An)
+is a creator collective consisting of Duskfall Portal Crew, EXDYSA, and more to come!
 
-### Backups:
-[Hugging Face](https://huggingface.co/EarthnDusk)
+<img alt="Static Badge" src="https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191)&link=https%3A%2F%2Fdiscord.gg%2F5t2kYxt7An">
 
-### Support Us:
-[Send a Pizza](https://www.end-media.org/)
+#### More about the Duskfall Portal crew [Link here]()
 
-### Subreddit:
-[Reddit](https://www.reddit.com/r/earthndusk/)
-
-Thank you for being part of our journey and supporting the Earth and Dusk community.
-
-## Credits
+The Duskfall Portal crew would like to thank -
 
 *   ChatGPT 3.5 & 4o: Powering innovative solutions and creative endeavors.
 *   Support of my peers, and the community at Large.
 *   [Canvas icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/canvas)
 *   Inspired by [receyuki/stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
 
-### Where we started from
-
-Here you can see some screenshots of previous versions of the application.
-
-<img width="459" alt="Screenshot 2024-06-14 at 22 00 40" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/9dc7f859-13d5-4e75-9f21-171648b3061e">
-<img width="464" alt="Screenshot 2024-06-14 at 22 09 01" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/dbfd0678-aff4-47f2-a23f-e7cfa14582ef">
-<img width="1202" alt="Screenshot 2024-06-15 at 00 03 47" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/a2e1b5bb-7ffc-43e9-8002-56aa977478f6">
-<img width="1198" alt="Screenshot 2024-06-15 at 00 03 55" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/8f948d75-96ae-4ae7-b87b-0ad8887e6745">
-<img width="1678" alt="Screenshot 2024-06-15 at 00 04 16" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/bba4d2a7-9aaa-42f3-82f8-b866db8f0084">
-<img width="1183" alt="Screenshot 2024-06-15 at 14 06 00" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/a513f6df-1fca-421b-ae8b-401abc7741cb">
-<img width="1190" alt="Screenshot 2024-06-15 at 15 01 45" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/10d386f8-ae21-4672-964c-5d4ebc889275">
-
+#### More about EXDYSA [Link here]()

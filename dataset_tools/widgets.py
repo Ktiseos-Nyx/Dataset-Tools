@@ -6,7 +6,7 @@ from PyQt6 import QtCore
 
 from dataset_tools import logger, EXC_INFO
 
-class Ext(list[str]):
+class Ext:
     """Valid file formats for metadata reading"""
     PNG_ = [".png"]
     JPEG = ['.jpg','.jpeg']
@@ -57,15 +57,14 @@ class FileLoader(QtCore.QThread): # pylint: disable=c-extension-no-member
         progress = 0
         for index, file_path in enumerate(folder_contents):
             if os.path.isfile(file_path):
-                logger.debug("%s",f"{file_path}")
             # Filter the file types as needed
                 if p(file_path).suffix.lower() in Ext.PNG_ or Ext.JPEG or Ext.WEBP:
                     image_files.append(file_path)
                 if p(file_path).suffix.lower() in Ext.TEXT:
                     text_files.append(file_path)
-            logger.debug("%s",f"{image_files, text_files}")
             progress = (index + 1)/file_count * 100
             self.progress.emit(int(progress))
+        logger.debug("%s",f"{image_files, text_files}")
         return image_files, text_files
 
     def clear_files(self):
