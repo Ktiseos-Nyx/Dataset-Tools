@@ -2,12 +2,27 @@
 #// --<{ Ktiseos Nyx }>--
 
 import re
-from typing import TypedDict, Annotated
+from typing import TypedDict, Annotated, Literal
 
 from dataset_tools import logger
 
 # from pydantic_core import ValidationError
 from pydantic import TypeAdapter, BaseModel, Field, AfterValidator, field_validator, ValidationError
+
+class UpField:
+    """Upper display area for ui\n"""
+    PROMPT: str = 'Prompt Data'
+    TAGS: str = 'Tags'
+    LABELS: list[str] = [PROMPT, TAGS]
+
+
+class DownField:
+    """Lower display area for ui\n"""
+    GENERATION_DATA: str = 'Generation Data'
+    SYSTEM:  str = 'System'
+    ICC:  str = 'ICC Profile'
+    EXIF:  str = 'EXIF'
+    LABELS: list[str] = [GENERATION_DATA, SYSTEM, ICC, EXIF]
 
 def bracket_check(maybe_brackets:str | dict):
     """

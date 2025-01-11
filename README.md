@@ -116,7 +116,7 @@ is a creator collective consisting of Duskfall Portal Crew, EXDYSA, and more to 
 
 <img alt="Static Badge" src="https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191)&link=https%3A%2F%2Fdiscord.gg%2F5t2kYxt7An">
 
-#### More about the Duskfall Portal crew [Link here]()
+#### More about the Duskfall Portal Crew [GitHub](https://github.com/duskfallcrew)
 
 The Duskfall Portal crew would like to thank -
 
@@ -125,4 +125,4 @@ The Duskfall Portal crew would like to thank -
 *   [Canvas icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/canvas)
 *   Inspired by [receyuki/stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
 
-#### More about EXDYSA [Link here]()
+#### More about EXDYSA [Feed me](https://ko-fi.com/exdysa)

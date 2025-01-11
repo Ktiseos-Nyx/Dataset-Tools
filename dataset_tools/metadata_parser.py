@@ -7,13 +7,14 @@
 import re
 import json
 from json import JSONDecodeError
-from typing import Tuple, List
+from typing import Tuple, List, Literal
 
 from dataset_tools import logger, EXC_INFO
 from dataset_tools.access_disk import MetadataFileReader
-from dataset_tools.correct_types import IsThisNode, BracketedDict, ListOfDelineatedStr
+from dataset_tools.correct_types import IsThisNode, BracketedDict, ListOfDelineatedStr, UpField, DownField
 
 from pydantic import ValidationError
+
 
 # /______________________________________________________________________________________________________________________ ComfyUI format
 
@@ -107,7 +108,7 @@ def arrange_nodeui_metadata(header_data: dict) -> dict:
                 )
                 prompt_map[keys] = renamed_metadata[keys]
                 generation_map.pop(keys)
-        return {"Prompts": prompt_map, "Generation_Data": generation_map}
+        return {UpField.PROMPT: prompt_map, DownField.GENERATION_DATA: generation_map}
 
 
 # /______________________________________________________________________________________________________________________ A4 format
@@ -121,20 +122,18 @@ def delineate_by_esc_codes(
     :param text_chunk: Data from a file header
     :return: text data in a dict structure
     """
+    segments = []
     replace_strings = ["\xe2\x80\x8b", "\x00", "\u200b", "\n", extra_delineation]
-    dirty_string = text_chunks.get("parameters")
-    if dirty_string is None:
-        dirty_string = text_chunks.get("exif")  # try to get exif if present
-    if dirty_string is None:
+    dirty_string = text_chunks.get("parameters", text_chunks.get("exif", False)) # Try parameters, then "exif"
+    logger.debug('dirty_string:: %s', f'{type(dirty_string)} {dirty_string}')
+    if not dirty_string:
         return []  # If still None, then just return an empty list
 
     if isinstance(dirty_string, bytes):  # Check if it is bytes
         try:
-            dirty_string = dirty_string.decode(
-                "utf-8"
-            )  # If it is, decode into utf-8 format
-        except UnicodeDecodeError:  # Catch exceptions if they fail to decode
-            logger.info("Could not decode string")  # Log it
+            dirty_string = dirty_string.decode("utf-8")  # If it is, decode into utf-8 format
+        except UnicodeDecodeError as error_log:  # Catch exceptions if they fail to decode
+            logger.info('Failed to decode %s', f'{dirty_string}, {error_log}', exc_info=EXC_INFO)
             return []  # Return nothing if decoding fails
 
     segments = [dirty_string]  # All string operations after this should be safe
@@ -160,11 +159,22 @@ def extract_prompts(clean_segments: list) -> Tuple[dict, str]:
     :type cleaned_text: list
     :return: A dictionary of prompts and a str of metadata
     """
-    prompt_metadata = {
-        "Positive prompt": clean_segments[0],
-        "Negative prompt": clean_segments[1].strip("Negative prompt: "),
-    }
-    deprompted_text = " ".join(clean_segments[2:])
+    logger.debug('clean_segments:: %s', f'{type(clean_segments)} {clean_segments}')
+
+    if len(clean_segments) <= 2:
+        prompt_metadata = {
+            "Positive prompt": clean_segments[0],
+            "Negative prompt": "",
+        }
+        deprompted_text = " ".join(clean_segments[1:])
+    elif 2 < len(clean_segments):
+        prompt_metadata = {
+            "Positive prompt": clean_segments[0],
+            "Negative prompt": clean_segments[1].strip("Negative prompt':"),
+        }
+        deprompted_text = " ".join(clean_segments[2:])
+    else:
+        return None
     return prompt_metadata, deprompted_text
 
 
@@ -292,9 +302,9 @@ def arrange_webui_metadata(header_data: str) -> dict:
     generation_map = make_paired_str_dict(generation_text)
     logger.debug("generation_map:: %s", f"{type(generation_map)} {generation_map}")
     return {
-        "Prompts": prompt_map,
-        "Generation_Data": generation_map,
-        "System": system_map,
+        UpField.PROMPT: prompt_map,
+        DownField.GENERATION_DATA: generation_map,
+        DownField.SYSTEM: system_map,
     }
 
 
@@ -313,20 +323,20 @@ def parse_metadata(file_path_named: str) -> dict:
     if header_data is not None:
         if isinstance(header_data, dict) and header_data.get("prompt"):
             metadata = arrange_nodeui_metadata(header_data)
-        elif isinstance(header_data, dict) and (header_data.get("icc_profile") or header_data.get("'srgb'") or header_data.get("dpi")):
-            metadata = {
-                "Prompts": { "No": "Data" },
-                "Generation_Data": { 'EXIF':header_data} ,
-                "System": { "No": "Data" },
-            }
         elif (isinstance(header_data, dict) and header_data.get("parameters")) or isinstance(header_data, str):
             metadata = arrange_webui_metadata(header_data)
+        elif isinstance(header_data, dict) and (header_data.get("icc_profile") or header_data.get("'exif'")):
+            metadata = {
+                UpField.TAGS: { 'EXIF': {k: v} for k,v in header_data.items() if k != 'icc_profile' or 'exif'} ,
+                DownField.ICC: { 'DATA': header_data.get('icc_profile') },
+                DownField.EXIF: {'DATA': header_data.get('exif') },
+            }
 
         else:
             logger.error(f"Unexpected metadata type: {type(header_data)}")
             return {
-                "Prompts": {"Positive prompt": { "No": "Data" }, "Negative prompt:": { "No": "Data" } },
-                "Generation_Data":  { "No": "Data" },
-                "System":  { "No": "Data" }
+                UpField.PROMPT: {"Positive prompt": { "No": "Data" }, "Negative prompt:": { "No": "Data" } },
+                DownField.GENERATION_DATA:  { "No": "Data" },
+                DownField.SYSTEM:  { "No": "Data" }
             }  # return placeholders
     return metadata

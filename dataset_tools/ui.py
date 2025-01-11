@@ -7,15 +7,14 @@
 # pylint: disable=attribute-defined-outside-init
 
 import os
-import pprint  # Import the pprint module
 from dataset_tools import logger
 from dataset_tools import EXC_INFO
 from dataset_tools.metadata_parser import parse_metadata
 from dataset_tools.widgets import FileLoader
+from dataset_tools.correct_types import UpField, DownField
+
 from PyQt6 import QtWidgets as Qw
 from PyQt6 import QtCore, QtGui
-from dataset_tools.widgets import Ext
-
 
 class MainWindow(Qw.QMainWindow):
     """ "Consolidated raw functions and behavior of window"""
@@ -106,6 +105,8 @@ class MainWindow(Qw.QMainWindow):
         self.clear_file_list()
         logger.debug("%s", "File List cleared")
 
+# /______________________________________________________________________________________________________________________ File Browser
+
     def open_folder(self):
         """Open a dialog to select the folder"""
         folder_path = Qw.QFileDialog.getExistingDirectory(self, "Select a folder")
@@ -175,6 +176,8 @@ class MainWindow(Qw.QMainWindow):
         self.files_list.addItems(self.image_list)
         self.files_list.addItems(self.text_files)
 
+# /______________________________________________________________________________________________________________________ Fetch Metadata
+
     def load_metadata(self, file_path: str, extension: str = '.png') -> dict:
         """
         Fetch metadata from file\n
@@ -213,46 +216,34 @@ class MainWindow(Qw.QMainWindow):
 
         self.display_metadata(metadata, file_path)
 
+# /______________________________________________________________________________________________________________________ Display Metadata
+
     def display_metadata(self, metadata, file_path):
         """direct collated data to fields and pretty print there"""
         if metadata is not None:
             logger.debug("%s", f"{metadata}")
-            prompt_keys = ['Positive prompt', 'Negative prompt', 'Prompt']
-            self.top_separator.setText('Prompt Data:')
-            self.mid_separator.setText('Generation Data:')
             text_separator = "\n"
+            upper_display_text = ""
+            lower_display_text = ""
             try:
-                prompt_data = metadata.get('Prompts')
-                self.upper_box.setText(''.join(f"{prompt_data.get(k)}\n" for k in prompt_keys if prompt_data.get(k)))
-                positive_data = f"Positive prompt: {metadata['Prompts'].get('Positive prompt')}"
-                negative_data = f"Negative prompt: {metadata['Prompts'].get('Negative prompt')}"
+                for tag in UpField.LABELS:
+                    logger.debug(tag)
+                    if metadata.get(tag, False):
+                        incoming_text = text_separator.join(f"{k}: {v} {text_separator}" for k, v in metadata.get(tag).items()) + text_separator
+                        upper_display_text += incoming_text + text_separator
+                for tag in DownField.LABELS:
+                    if metadata.get(tag, False):
+                        incoming_text = text_separator.join(f"{k}: {v}" for k, v in metadata.get(tag).items())
+                        lower_display_text += incoming_text + text_separator*2
             except TypeError as error_log:
                 logger.info("Invalid data in prompt fields %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
             except KeyError as error_log:
                 logger.info("Invalid key name for %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
             except AttributeError as error_log:
                 logger.info("Attribute cannot be applied to type %s", f" {type(metadata)} from  {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
-            else:
-                self.upper_box.setText(positive_data + text_separator * 2 + negative_data)
 
-            try:
-                not_prompt = {k: v for k, v in metadata.get('Prompts', {}).items() if k not in prompt_keys}  # Default to {}
-                generation_data = (not_prompt or {}) | (metadata.get('Settings') or {}) | (metadata.get('System') or {})
-                self.lower_box.setText(pprint.pformat(generation_data))
-                sys_data_str = "\n"
-                gen_data_str = "\n"
-                if metadata.get('Generation_Data', None) is not None:
-                    gen_data_str = "\n".join(f"{k}: {v}" for k, v in metadata.get('Generation_Data', {}).items()) + "\n"
-                if metadata.get('System', None):
-                    sys_data_str = "\n".join(f"{k,v} \n" for k, v in metadata.get('System').items()) + "\n"
-            except AttributeError as error_log:
-                logger.info("'items' attribute cannot be applied to type %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
-            except TypeError as error_log:
-                logger.info("Invalid data in generation fields  %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
-            else:
-                display = f"{gen_data_str}{text_separator * 2}{sys_data_str}"
-                self.lower_box.setText(display)
-
+            self.upper_box.setText(upper_display_text)
+            self.lower_box.setText(lower_display_text)
 
 if __name__ == "__main__":
     app = Qw.QApplication([])

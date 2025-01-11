@@ -21,6 +21,8 @@ if "pytest" not in sys.modules:
 
     group.add_argument("--log-level", default="i", type=str, choices=choices, help=f"Set the logging level ({choices})")
 
+    group.add_argument("--.", default=".", type=str, choices=choices, help=f"Open the current folder ({choices})")
+
     args = parser.parse_args()
 
     # Resolve log_level from args dynamically
