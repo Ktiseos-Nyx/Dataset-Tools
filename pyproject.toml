@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name            = "dataset-tools"
-description     = "A script that in theory works to help you visualize your dataset, edit text."
+description     = "An ultralight metadata viewer to help you visualize and edit dataset text."
 authors         = [{ name = "Ktiseos Nyx", email = "Dataset-Tools@noreply.github.com" }]
 requires-python = ">= 3.10"
 license         = { file = "LICENSE" }

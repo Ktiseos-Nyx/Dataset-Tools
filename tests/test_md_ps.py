@@ -5,6 +5,7 @@ from unittest.mock import Mock, patch
 
 from dataset_tools import logger
 from dataset_tools.access_disk import MetadataFileReader
+from dataset_tools.correct_types import UpField, DownField
 from dataset_tools.metadata_parser import (
     arrange_webui_metadata,
     delineate_by_esc_codes,
@@ -147,9 +148,9 @@ class TestParseMetadata(unittest.TestCase):
 
             assert mock_delineate_by_esc_codes.call_count == 1
             assert (
-                "Prompts" in result
-                and "Generation_Data" in result
-                and "System" in result
+                UpField.PROMPT in result
+                and DownField.GENERATION_DATA  in result
+                and DownField.SYSTEM in result
             )
 
     def test_rename_next_keys_of_not_prompt(self):

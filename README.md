@@ -12,10 +12,7 @@
 
 Dataset-Tools is a desktop application designed to help users browse and manage their image and text datasets, particularly those used with AI art generation tools like Stable Diffusion. Developed using PyQt6, it provides a simple and intuitive graphical interface for browsing images, viewing metadata, and examining associated text prompts. This project is inspired by tools within the AI art community and aims to empower users in improving their dataset curation workflow.
 
-<img width="797" alt="Screenshot of the Application" src="https://github.com/user-attachments/assets/7e14c542-482d-42f4-a9ae-4305c9e2c383" />
-
-
-
+https://github.com/user-attachments/assets/f8b4187b-2603-4bae-aa4a-dc3f621b5696
 
 
 ## How to Use Dataset-Tools
@@ -116,7 +113,7 @@ is a creator collective consisting of Duskfall Portal Crew, EXDYSA, and more to 
 
 <img alt="Static Badge" src="https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191)&link=https%3A%2F%2Fdiscord.gg%2F5t2kYxt7An">
 
-#### More about the Duskfall Portal crew [Link here]()
+#### More about the Duskfall Portal Crew [GitHub](https://github.com/duskfallcrew)
 
 The Duskfall Portal crew would like to thank -
 
@@ -125,4 +122,4 @@ The Duskfall Portal crew would like to thank -
 *   [Canvas icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/canvas)
 *   Inspired by [receyuki/stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
 
-#### More about EXDYSA [Link here]()
+#### More about EXDYSA [Feed me](https://ko-fi.com/exdysa)
