@@ -12,10 +12,7 @@
 
 Dataset-Tools is a desktop application designed to help users browse and manage their image and text datasets, particularly those used with AI art generation tools like Stable Diffusion. Developed using PyQt6, it provides a simple and intuitive graphical interface for browsing images, viewing metadata, and examining associated text prompts. This project is inspired by tools within the AI art community and aims to empower users in improving their dataset curation workflow.
 
-<img width="797" alt="Screenshot of the Application" src="https://github.com/user-attachments/assets/7e14c542-482d-42f4-a9ae-4305c9e2c383" />
-
-
-
+https://github.com/user-attachments/assets/f8b4187b-2603-4bae-aa4a-dc3f621b5696
 
 
 ## How to Use Dataset-Tools
