@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import Mock, patch
 
-from dataset_tools import logger
+from dataset_tools.logger import logger
 from dataset_tools.access_disk import MetadataFileReader
 from dataset_tools.correct_types import UpField, DownField
 from dataset_tools.metadata_parser import (
@@ -45,9 +45,7 @@ class TestParseMetadata(unittest.TestCase):
             "PonyXLV6_Scores GrungeOutfiPDXL_ GlamorShots_PDXL PDXL_FLWRBOY",
             'Steps: 30, Sampler: Euler a, Schedule type: Automatic, CFG scale:  7, Hires upscaler: 4x_foolhardy_Remacri, TI hashes: "PonyXLV6_Scores: 4b8555f2fb80, GrungeOutfiPDXL_: b6af61969ec4, GlamorShots_PDXL: 4b8ee3d1bd12, PDXL_FLWRBOY:  af38cbdc40f6", Version: v1.10.0',
         ]
-        self.actual_metadata_str = (
-            '{"PonyXLV6_Scores: 4b8555f2fb80, GrungeOutfiPDXL_: b6af61969ec4, GlamorShots_PDXL: 4b8ee3d1bd12, PDXL_FLWRBOY:  af38cbdc40f6}',
-        )
+        self.actual_metadata_str = ('{"PonyXLV6_Scores: 4b8555f2fb80, GrungeOutfiPDXL_: b6af61969ec4, GlamorShots_PDXL: 4b8ee3d1bd12, PDXL_FLWRBOY:  af38cbdc40f6}',)
         self.actual_metadata_sub_map = [
             "TI hashes",
             "PonyXLV6_Scores: 4b8555f2fb80, GrungeOutfiPDXL_: b6af61969ec4, GlamorShots_PDXL: 4b8ee3d1bd12, PDXL_FLWRBOY:  af38cbdc40f6, PonyXLV6_Scores: 4b8555f2fb80, GrungeOutfiPDXL_: b6af61969ec4, GlamorShots_PDXL: 4b8ee3d1bd12, PDXL_FLWRBOY:  af38cbdc40f6",
@@ -55,9 +53,7 @@ class TestParseMetadata(unittest.TestCase):
         self.valid_metadata_sub_map = "{PonyXLV6_Scores: 4b8555f2fb80, GrungeOutfiPDXL_: b6af61969ec4, GlamorShots_PDXL: 4b8ee3d1bd12, PDXL_FLWRBOY:  af38cbdc40f6, PonyXLV6_Scores: 4b8555f2fb80, GrungeOutfiPDXL_: b6af61969ec4, GlamorShots_PDXL: 4b8ee3d1bd12, PDXL_FLWRBOY:  af38cbdc40f6}"
 
     def test_delineate_by_esc_codes(self):
-        mock_header_data = {
-            "parameters": "1 2 3 4\u200b\u200b\u200b5\n6\n7\n8\xe2\x80\x8b\xe2\x80\x8b\xe2\x80\x8b9\n10\n11\n12\x00\x00\u200bbingpot\x00\n"
-        }
+        mock_header_data = {"parameters": "1 2 3 4\u200b\u200b\u200b5\n6\n7\n8\xe2\x80\x8b\xe2\x80\x8b\xe2\x80\x8b9\n10\n11\n12\x00\x00\u200bbingpot\x00\n"}
         formatted_chunk = delineate_by_esc_codes(mock_header_data)
         logger.debug("%s", f"{list(x for x in formatted_chunk)}")
         assert formatted_chunk == [
@@ -96,10 +92,7 @@ class TestParseMetadata(unittest.TestCase):
             "With": '{"Some": "useful", "although": "also"}',
             "Only": '{"The": "best", "Algorithm": "Will", "Successfully": "Match"}',
         }
-        assert (
-            dehashed_text
-            == "A: long, test: string, Some: useless, data: thrown, in: as, well: !!, All, Correctly! !"
-        )
+        assert dehashed_text == "A: long, test: string, Some: useless, data: thrown, in: as, well: !!, All, Correctly! !"
 
     def test_make_paired_str_dict(self):
         mock_string_data = "Who: the, Hell: makes, Production: code, Work: like, This: tho, i: say, as: i, make: the, same: mistakes"
@@ -120,21 +113,15 @@ class TestParseMetadata(unittest.TestCase):
     def test_arrange_webui_metadata(self):
         mock_delineate_by_esc_codes = Mock(return_value=["a", "b", "1", "2", "y", "z"])
         mock_extract_prompts = Mock(return_value={"Positive": "yay", "Negative": "boo"})
-        mock_extract_dict_by_delineation = Mock(
-            return_value=({"key": "value"}, "almost: right, but: not")
-        )
-        mock_make_paired_str_dict = Mock(
-            return_value=({"Okay": "Right"}, {"This": "Time"})
-        )
+        mock_extract_dict_by_delineation = Mock(return_value=({"key": "value"}, "almost: right, but: not"))
+        mock_make_paired_str_dict = Mock(return_value=({"Okay": "Right"}, {"This": "Time"}))
 
         with (
             patch(
                 "dataset_tools.metadata_parser.delineate_by_esc_codes",
                 mock_delineate_by_esc_codes,
             ),
-            patch(
-                "dataset_tools.metadata_parser.extract_prompts", mock_extract_prompts
-            ),
+            patch("dataset_tools.metadata_parser.extract_prompts", mock_extract_prompts),
             patch(
                 "dataset_tools.metadata_parser.extract_dict_by_delineation",
                 mock_extract_dict_by_delineation,
@@ -147,11 +134,7 @@ class TestParseMetadata(unittest.TestCase):
             result = arrange_webui_metadata("header header_data")
 
             assert mock_delineate_by_esc_codes.call_count == 1
-            assert (
-                UpField.PROMPT in result
-                and DownField.GENERATION_DATA  in result
-                and DownField.SYSTEM in result
-            )
+            assert UpField.PROMPT in result and DownField.GENERATION_DATA in result and DownField.SYSTEM in result
 
     def test_rename_next_keys_of_not_prompt(self):
         mock_dict = {

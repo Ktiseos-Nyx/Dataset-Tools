@@ -37,6 +37,8 @@ Development notes :
 
 Here you can see some screenshots of previous versions of the application.
 
+<img width="797" alt="Screenshot of the Application" src="https://github.com/user-attachments/assets/7e14c542-482d-42f4-a9ae-4305c9e2c383">
+
 <img width="459" alt="Screenshot 2024-06-14 at 22 00 40" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/9dc7f859-13d5-4e75-9f21-171648b3061e">
 <img width="464" alt="Screenshot 2024-06-14 at 22 09 01" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/dbfd0678-aff4-47f2-a23f-e7cfa14582ef">
 <img width="1202" alt="Screenshot 2024-06-15 at 00 03 47" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/a2e1b5bb-7ffc-43e9-8002-56aa977478f6">
