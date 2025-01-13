@@ -1,5 +1,5 @@
-#// SPDX-License-Identifier: CC0-1.0
-#// --<{ Ktiseos Nyx }>--
+# // SPDX-License-Identifier: CC0-1.0
+# // --<{ Ktiseos Nyx }>--
 """App Ui"""
 
 # pylint: disable=line-too-long
@@ -7,8 +7,10 @@
 # pylint: disable=attribute-defined-outside-init
 
 import os
-from dataset_tools import logger
-from dataset_tools import EXC_INFO
+from collections import defaultdict
+
+from dataset_tools.logger import debug_monitor  # , debug_monitor_solo
+from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.metadata_parser import parse_metadata
 from dataset_tools.widgets import FileLoader
 from dataset_tools.correct_types import UpField, DownField
@@ -16,9 +18,11 @@ from dataset_tools.correct_types import UpField, DownField
 from PyQt6 import QtWidgets as Qw
 from PyQt6 import QtCore, QtGui
 
+
 class MainWindow(Qw.QMainWindow):
     """ "Consolidated raw functions and behavior of window"""
 
+    # @debug_monitor_solo
     def __init__(self):
         super().__init__()
         # Set a default font for the app
@@ -58,6 +62,7 @@ class MainWindow(Qw.QMainWindow):
         self.files_list = Qw.QListWidget()
         self.files_list.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
         self.files_list.itemClicked.connect(self.on_file_selected)  # Corrected This
+
         left_layout.addWidget(self.files_list)
 
         # Add a progress bar for file loading
@@ -103,32 +108,30 @@ class MainWindow(Qw.QMainWindow):
         self.file_loader = None
         self.current_folder = None
         self.clear_file_list()
-        logger.debug("%s", "File List cleared")
 
-# /______________________________________________________________________________________________________________________ File Browser
+    # /______________________________________________________________________________________________________________________ File Browser
 
+    # @debug_monitor_solo
     def open_folder(self):
         """Open a dialog to select the folder"""
         folder_path = Qw.QFileDialog.getExistingDirectory(self, "Select a folder")
         if folder_path:
-            logger.debug("%s", f"Folder opened {folder_path}")
             # Call the file loading function
             self.load_files(folder_path)
 
+    # @debug_monitor_solo
     def clear_files(self):
         """Empty all field displays"""
         if self.file_loader:
             self.file_loader.clear_files()
         self.files_list.clear()
         self.clear_file_list()
-        logger.debug("%s", "File List cleared anew")
         self.clear_selection()
-        logger.debug("%s", "Selection cleared")
 
+    # @debug_monitor_solo
     def clear_file_list(self):
         """Initialize or re-initialize display of files"""
         self.file_list = []
-        logger.debug("%s", f"File List Initialized {self.file_list}")
         self.image_list = []
         self.text_files = []
 
@@ -140,6 +143,7 @@ class MainWindow(Qw.QMainWindow):
         self.upper_box.clear()
         self.top_separator.clear()
 
+    # @debug_monitor_solo
     def load_files(self, folder_path):
         """Start background loading of files using QThread"""
         self.current_folder = folder_path
@@ -153,7 +157,6 @@ class MainWindow(Qw.QMainWindow):
         self.file_loader.progress.connect(self.update_progress)
         self.file_loader.finished.connect(self.on_files_loaded)
         self.file_loader.start()
-        logger.debug("%s", f"Loading files from {folder_path}...")
 
     def update_progress(self, progress):
         """Update progress bar"""
@@ -176,9 +179,10 @@ class MainWindow(Qw.QMainWindow):
         self.files_list.addItems(self.image_list)
         self.files_list.addItems(self.text_files)
 
-# /______________________________________________________________________________________________________________________ Fetch Metadata
+    # /______________________________________________________________________________________________________________________ Fetch Metadata
 
-    def load_metadata(self, file_path: str, extension: str = '.png') -> dict:
+    @debug_monitor
+    def load_metadata(self, file_path: str, extension: str = ".png") -> dict:
         """
         Fetch metadata from file\n
         :param file_path: `str` The file to interpret
@@ -188,20 +192,18 @@ class MainWindow(Qw.QMainWindow):
         try:
             metadata = parse_metadata(file_path)
         except IndexError as error_log:
-            logger.info("Unexpected list position, out of range error for metadata in %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
+            nfo("Unexpected list position, out of range error for metadata in", file_path, ",", error_log)
         except StopIteration as error_log:
-            logger.info("Overflow length on data operation for %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
+            nfo("Overflow length on data operation for ", file_path, ",", error_log)
         except TypeError as error_log:
-            logger.info("Attempted invalid operation on %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
-        except IndexError as error_log:
-            logger.info("Unexpected list position, out of range error for metadata in %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
-
+            nfo("Attempted invalid operation on", file_path, ",", error_log)
         except ValueError as error_log:
-            logger.info("Invalid dictionary formatting while extracting metadata from %s", f"{file_path}, {error_log}", exc_info=EXC_INFO)
+            nfo("Invalid dictionary formatting while extracting metadata from", file_path, ",", error_log)
         return metadata
 
+    @debug_monitor
     def on_file_selected(self, item):
-        """Activate metadta on nab function"""
+        """Activate metadata on nab function"""
         file_path = item.text()
         self.message_label.setText(f"Selected {os.path.normpath(os.path.basename(file_path))}")
 
@@ -214,36 +216,63 @@ class MainWindow(Qw.QMainWindow):
 
         metadata = self.load_metadata(file_path)
 
-        self.display_metadata(metadata, file_path)
+        try:
+            self.display_text_of(metadata)
+        except TypeError as error_log:
+            nfo("Invalid data in prompt fields", type(metadata), "from", file_path, metadata, ":", error_log)
+        except KeyError as error_log:
+            nfo("Invalid key name for", type(metadata), "from", file_path, metadata, ":", error_log)
+        except AttributeError as error_log:
+            nfo("Attribute cannot be applied to type", type(metadata), "from", file_path, metadata, ":", error_log)
 
-# /______________________________________________________________________________________________________________________ Display Metadata
+    # /______________________________________________________________________________________________________________________ Display Metadata
 
-    def display_metadata(self, metadata, file_path):
-        """direct collated data to fields and pretty print there"""
+    def unpack_content_of(self, metadata: dict, labels: list, separators: list) -> dict:
+        """
+        Open and format dictionary content to feed to a display\n
+        :param metadata: A previously arranged dictionary
+        :type metadata: dict
+        :param labels: The names of keys within the existing dictionary
+        :type labels: list
+        :param separators: Padding for the text display
+        :type separators: list
+        :return: `dict` The arranged content
+        """
+        metadata_display = defaultdict(lambda: "")
+        for tag in labels:
+            if metadata.get(tag, False):
+                incoming_text = separators[0].join(f"{k}: {v} {separators[0]}" for k, v in metadata.get(tag).items()) + separators[1]
+                metadata_display["display"] += incoming_text + separators[2]
+                if metadata_display.get("title"):
+                    metadata_display["title"] += separators[3] + tag
+                else:
+                    metadata_display["title"] += tag
+        return metadata_display
+
+    @debug_monitor
+    def display_text_of(self, metadata: dict) -> None:  # fmt: skip
+        """
+        Use dictionary information to populate a QT text field\n
+        :param metadata: A previously arranged dictionary
+        :type metadata: dict
+        :return: None, information is sent to QT UI fields via calls
+        """
         if metadata is not None:
-            logger.debug("%s", f"{metadata}")
-            text_separator = "\n"
-            upper_display_text = ""
-            lower_display_text = ""
-            try:
-                for tag in UpField.LABELS:
-                    logger.debug(tag)
-                    if metadata.get(tag, False):
-                        incoming_text = text_separator.join(f"{k}: {v} {text_separator}" for k, v in metadata.get(tag).items()) + text_separator
-                        upper_display_text += incoming_text + text_separator
-                for tag in DownField.LABELS:
-                    if metadata.get(tag, False):
-                        incoming_text = text_separator.join(f"{k}: {v}" for k, v in metadata.get(tag).items())
-                        lower_display_text += incoming_text + text_separator*2
-            except TypeError as error_log:
-                logger.info("Invalid data in prompt fields %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
-            except KeyError as error_log:
-                logger.info("Invalid key name for %s", f" {type(metadata)} from {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
-            except AttributeError as error_log:
-                logger.info("Attribute cannot be applied to type %s", f" {type(metadata)} from  {file_path}, {metadata} : {error_log}", exc_info=EXC_INFO)
+            metadata_display = self.unpack_content_of(metadata, UpField.LABELS, ["\n", "\n", "\n", ", "])
 
-            self.upper_box.setText(upper_display_text)
-            self.lower_box.setText(lower_display_text)
+            self.top_separator.setText(metadata_display["title"])
+            self.upper_box.setText(metadata_display["display"])
+
+            metadata_display = self.unpack_content_of(metadata, DownField.LABELS, ["\n", " ", "", ", "])
+
+            self.mid_separator.setText(metadata_display["title"])
+            self.lower_box.setText(metadata_display["display"])
+        # else:
+        #     self.top_separator.setText("...")
+        #     self.mid_separator.setText("...")
+        #     self.upper_box.setText("No Data.")
+        #     self.lower_box.setText("No Data.")
+
 
 if __name__ == "__main__":
     app = Qw.QApplication([])

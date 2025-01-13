@@ -1,6 +1,6 @@
 # Dataset-Tools: A Simple Dataset Viewer for AI Art
 
-<div style="text-align: center">
+<span style="text-align: center">
 
 [__How to use Dataset-Tools__](#how-to-use-dataset-tools)<br>
 [__Launching the Application__](#launching-the-application)<br>
@@ -8,9 +8,11 @@
 [__Improve the Project__](CONTRIBUTING.md)<br>
 [__Help the Creators__](#help-the-creators)<br>
 
-</div>
+</span>
 
-Dataset-Tools is a desktop application designed to help users browse and manage their image and text datasets, particularly those used with AI art generation tools like Stable Diffusion. Developed using PyQt6, it provides a simple and intuitive graphical interface for browsing images, viewing metadata, and examining associated text prompts. This project is inspired by tools within the AI art community and aims to empower users in improving their dataset curation workflow.
+<hr>
+
+Dataset-Tools is a desktop application designed to help users browse and manage their image and text datasets, particularly those used with AI art generation tools like Stable Diffusion. Developed using PyQt6, it provides a simple and intuitive graphical interface for browsing images, viewing metadata, and examining associated text prompts. This project is inspired by tools within the AI art community (☮️[receyuki](https://github.com/receyuki/stable-diffusion-prompt-reader)🤍) and aims to empower users in improving their dataset curation workflow.
 
 https://github.com/user-attachments/assets/f8b4187b-2603-4bae-aa4a-dc3f621b5696
 
@@ -26,7 +28,7 @@ To run the program, you will need the following software:
 
 ####  Git:
 - [Windows](https://gitforwindows.org/)
-- [MacOS step A](https://brew.sh/), [MacOS step B](https://git-scm.com/downloads/mac)
+- [MacOS first option](https://git-scm.com/downloads/mac), [or second option](https://brew.sh/)
 - [Linux](https://git-scm.com/downloads/linux)
 
 ### Launching the Application
@@ -61,7 +63,6 @@ dataset-tools
 
 #### You're in!
 
-<br>
 <br>
 
 ### User Interface Overview
@@ -103,17 +104,21 @@ The application window has the following main components:
 
 ## Help the Creators
 
+<a href="https://discord.gg/5t2kYxt7An" target="_blank">
+
+![A flat logo for Discord](https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191))
+
+</a>
+
 ### --**__<{ Ktiseos Nyx }>__**--
 
- <!-- ![Static Badge](https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191)&link=https%3A%2F%2Fdiscord.gg%2F5t2kYxt7An)
-# https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191)&link=https%3A%2F%2Fdiscord.gg%2F5t2kYxt7An -->
+is a creator collective consisting of
 
 
-is a creator collective consisting of Duskfall Portal Crew, EXDYSA, and more to come!
 
-<img alt="Static Badge" src="https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191)&link=https%3A%2F%2Fdiscord.gg%2F5t2kYxt7An">
 
-#### More about the Duskfall Portal Crew [GitHub](https://github.com/duskfallcrew)
+
+#### [Duskfall Portal Crew on GitHub](https://github.com/duskfallcrew)
 
 The Duskfall Portal crew would like to thank -
 
@@ -122,4 +127,6 @@ The Duskfall Portal crew would like to thank -
 *   [Canvas icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/canvas)
 *   Inspired by [receyuki/stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
 
-#### More about EXDYSA [Feed me](https://ko-fi.com/exdysa)
+#### [EXDYSA on GitHub](https://github.com/exdysa)
+
+...and more to come!

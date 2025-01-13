@@ -28,7 +28,7 @@ keywords = [
 dependencies = ["PyQt6", "rich", "pillow", "pydantic"]
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "ruff"]
 
 [project.scripts]
 dataset-tools = "dataset_tools.main:main"
@@ -36,5 +36,21 @@ dataset-tools = "dataset_tools.main:main"
 [tool.setuptools_scm]
 write_to = "_version.py"
 
+# Personal preferences
 [tool.uv]
-dev-dependencies = ["pytest"]
+dev-dependencies = ["pytest", "ruff"]
+
+[tool.ruff]
+line-length    = 120
+extend-exclude = ["tests"]
+include        = ["*.py"]
+
+[tool.ruff.format]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length               = 120
+ignore-overlong-task-comments = true
+
+[tool.typos]
+
+files.extend-exclude = ["tests/*", "*test*"]
