@@ -30,9 +30,9 @@ dependencies = [
     "pydantic",
     "pillow",
     "PyQt6",
-    "typing-extensions; python < 3.11",
-    "pydantic-core; python < 3.11",
-    "toml; python < 3.11",
+    "typing-extensions; python < '3.11'",
+    "pydantic-core; python < '3.11'",
+    "toml; python < '3.11'",
 ]
 
 [project.optional-dependencies]

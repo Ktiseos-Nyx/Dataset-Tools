@@ -67,11 +67,14 @@ def debug_monitor(func):
     def wrapper(*args, **kwargs) -> None:
         return_data = func(*args, **kwargs)
         if not kwargs:
-            logger.debug("%s", f"Function {func.__name__} : {type(args)} : {args} : Returns: {return_data}")
+            logger.debug(
+                "%s",
+                f"Func {func.__name__} : {type(args)} : {args} : Return : {return_data}",
+            )
         else:
             logger.debug(
                 "%s",
-                f"Function {func.__name__} : {type(args)} {args} : {type(kwargs)} {kwargs} : Returns: {return_data}",
+                f"Func {func.__name__}{type(args)}:{args}:{type(kwargs)}:{kwargs}:R{return_data}",
             )
         return return_data
 

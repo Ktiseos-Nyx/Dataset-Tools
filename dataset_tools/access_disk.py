@@ -30,8 +30,8 @@ class MetadataFileReader:
         """
 
         img = Image.open(file_path_named)
-        exif = {ExifTags.TAGS[label]: content for label, content in img.getexif().items() if label in ExifTags.TAGS}
-        return exif
+        xf = {ExifTags.TAGS[key]: val for key, val in img.getexif().items() if key in ExifTags.TAGS}
+        return xf
 
     @debug_monitor
     def read_png_header(self, file_path_named):
