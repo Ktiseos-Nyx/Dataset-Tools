@@ -1,6 +1,7 @@
 # // SPDX-License-Identifier: CC0-1.0
 # // --<{ Ktiseos Nyx }>--
-"""Widget contents"""
+
+"""資料夾內容"""
 
 import os
 from pathlib import Path as p
@@ -33,7 +34,7 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
     @debug_monitor
     def scan_directory(self, folder_path: str) -> list:
         """
-        # Gather paths to all files in the selected folder\n
+        Gather paths to all files in the selected folder\n
         :param folder_path: `str` The directory to scan
         :return: `list` The file contents of the directory
         """
@@ -57,14 +58,19 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
         file_count = len(folder_contents)
         progress = 0
         for index, file_path in enumerate(folder_contents):
-            if os.path.isfile(file_path) and not file_path.endswith(".DS_Store"):  # Filter out .DS_Store
+            if os.path.isfile(file_path) and os.path.basename(file_path) not in Ext.IGNORE:  # Filter out .DS_Store
                 # Filter the file types as needed
                 if p(file_path).suffix.lower() in Ext.PNG_ or Ext.JPEG or Ext.WEBP:
                     image_files.append(file_path)
                 if p(file_path).suffix.lower() in Ext.TEXT or Ext.JSON:
                     text_files.append(file_path)
             progress = (index + 1) / file_count * 100
+
             self.progress.emit(int(progress))
+        if image_files:
+            image_files.sort()
+        if text_files:
+            text_files.sort()
         return image_files, text_files
 
     def clear_files(self):

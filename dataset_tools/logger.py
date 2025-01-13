@@ -1,67 +1,90 @@
-import logging
+# // SPDX-License-Identifier: CC0-1.0
+# // --<{ Ktiseos Nyx }>--
+
+"""建立控制檯日誌"""
+
 import sys
+import logging as pylog
+from logging import StreamHandler, Formatter
 from dataset_tools.correct_types import LOG_LEVEL, EXC_INFO
 
-from rich.logging import RichHandler
-from rich.console import Console
 from rich.theme import Theme
-from rich.default_styles import Style
+from rich.console import Console
+from rich.logging import RichHandler
+from rich.style import Style
+
 
 msg_init = None  # pylint: disable=invalid-name
 
-
 NOUVEAU = Theme(
     {
-        "logging.keyword": Style(bold=True, color="cyan", dim=True),
-        "logging.level.notset": Style(dim=True),
-        "logging.level.debug": Style(color="purple4"),
+        "logging.level.notset": Style(dim=True),  # level ids
+        "logging.level.debug": Style(color="magenta3"),
         "logging.level.info": Style(color="blue_violet"),
         "logging.level.warning": Style(color="gold3"),
         "logging.level.error": Style(color="dark_orange3", bold=True),
         "logging.level.critical": Style(color="deep_pink4", bold=True, reverse=True),
-        "repr.str": Style(color="cornflower_blue", dim=True),
-        "log.path": Style(dim=True, color="royal_blue1"),
-        "json.str": Style(color="deep_sky_blue4", italic=False, bold=False),
-        "log.message": Style(color="gray53"),
+        "logging.keyword": Style(bold=True, color="cyan", dim=True),
+        "log.path": Style(dim=True, color="royal_blue1"),  # line number
+        "repr.str": Style(color="sky_blue3", dim=True),
+        "json.str": Style(color="gray53", italic=False, bold=False),
+        "log.message": Style(color="steel_blue1"),  # variable name, normal strings
+        "repr.tag_start": Style(color="white"),  # class name tag
+        "repr.tag_end": Style(color="white"),  # class name tag
+        "repr.tag_contents": Style(color="deep_sky_blue4"),  # class readout
+        "repr.ellipsis": Style(color="purple4"),
+        "log.level": Style(color="gray37"),
     }
 )
 console = Console(stderr=True, theme=NOUVEAU)
 
 handler = RichHandler(console=console)
 
-
 if handler is None:
-    handler = logging.StreamHandler(sys.stdout)
+    handler = StreamHandler(sys.stderr)
     handler.propagate = False
 
-formatter = logging.Formatter(
+formatter = Formatter(
     fmt="%(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 handler.setFormatter(formatter)
-logging.root.setLevel(LOG_LEVEL)
-logging.root.addHandler(handler)
+pylog.root.setLevel(LOG_LEVEL)
+pylog.root.addHandler(handler)
 
 
 if msg_init is not None:
-    logger = logging.getLogger(__name__)
+    logger = pylog.getLogger(__name__)
     logger.info(msg_init)
 
-log_level = getattr(logging, LOG_LEVEL)
-logger = logging.getLogger(__name__)
+log_level = getattr(pylog, LOG_LEVEL)
+logger = pylog.getLogger(__name__)
 
 
 def debug_monitor(func):
+    """output debug"""
+
     def wrapper(*args, **kwargs) -> None:
         return_data = func(*args, **kwargs)
-        logger.debug("%s", f"Function {func.__name__} : {args} {kwargs} {return_data}", exc_info=True)
+        if not kwargs:
+            logger.debug("%s", f"Function {func.__name__} : {type(args)} : {args} : Returns: {return_data}")
+        else:
+            logger.debug(
+                "%s",
+                f"Function {func.__name__} : {type(args)} {args} : {type(kwargs)} {kwargs} : Returns: {return_data}",
+            )
         return return_data
 
     return wrapper
 
 
+def debug_message(message, *args):
+    """output debug"""
+    if args:
+        logger.debug("%s", f"{message} {args}", exc_info=EXC_INFO)
+
+
 def info_monitor(message, *args):
+    """output info"""
     if args:
         logger.info("%s", f"{message} {args}", exc_info=EXC_INFO)
-    else:
-        logger.info("%s", f"{message}", exc_info=EXC_INFO)

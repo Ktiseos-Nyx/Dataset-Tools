@@ -1,5 +1,6 @@
 # // SPDX-License-Identifier: CC0-1.0
 # // --<{ Ktiseos Nyx }>--
+
 """為使用者介面清理和安排元資料"""
 
 # pylint: disable=line-too-long
@@ -9,7 +10,7 @@ import json
 from json import JSONDecodeError
 from typing import Tuple, List
 
-from dataset_tools.logger import debug_monitor
+from dataset_tools.logger import debug_monitor, debug_message
 from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.access_disk import MetadataFileReader
 from dataset_tools.correct_types import (
@@ -59,17 +60,17 @@ def rename_next_keys_of(nested_map: dict, search_key: str, new_labels: list) -> 
         is_this_node = IsThisNode()
         next_layer = nested_map[key_name]
         is_this_node.data.validate_python(next_layer)  # be sure we have the right data
-        if not isinstance(new_labels, list):
-            raise ValidationError("Not list format in %s", new_labels)
-        else:
+        if isinstance(new_labels, list):
             class_type = next_layer.get("class_type", False)
             if search_key in class_type:
                 class_type = next(iter(x for x in new_labels if x not in extracted_data), "")
-                extracted_data[class_type] = next_layer["inputs"].get(next(iter(next_layer["inputs"]), "No Data"))
+                extracted_data[class_type] = next_layer["inputs"].get(next(iter(next_layer["inputs"]), UpField.PLACEHOLDER))
             else:
-                gen_data = "\n".join(f"{k}: {v}" for k, v in next_layer.get("inputs", {"": "No Data"}).items() if not isinstance(v, list) and v is not None)
+                gen_data = "\n".join(f"{k}: {v}" for k, v in next_layer.get("inputs", {"": UpField.PLACEHOLDER}).items() if not isinstance(v, list) and v is not None)
                 if gen_data:
                     extracted_data[class_type] = gen_data
+        else:
+            raise ValidationError(f"Not list format in {new_labels}")
 
     return extracted_data
 
@@ -97,11 +98,11 @@ def arrange_nodeui_metadata(header_data: dict) -> dict:
             if renamed_metadata.get(keys) is not None:
                 prompt_map[keys] = renamed_metadata[keys]
                 generation_map.pop(keys)
-        if prompt_map == {}:
-            prompt_map = {"": "No Data"}
+        if not prompt_map:
+            prompt_map = {"": UpField.PLACEHOLDER}
 
         return {UpField.PROMPT: prompt_map, DownField.GENERATION_DATA: generation_map}
-    return {"": "No Data"}
+    return {"": UpField.PLACEHOLDER}
 
 
 # /______________________________________________________________________________________________________________________ A4 format
@@ -155,7 +156,7 @@ def extract_prompts(clean_segments: list) -> Tuple[dict, str]:
             "Negative prompt": "",
         }
         deprompted_text = " ".join(clean_segments[1:])
-    elif 2 < len(clean_segments):
+    elif len(clean_segments) > 2:
         prompt_metadata = {
             "Positive prompt": clean_segments[0],
             "Negative prompt": clean_segments[1].strip("Negative prompt':"),
@@ -271,6 +272,7 @@ def arrange_webui_metadata(header_data: str) -> dict:
 # /______________________________________________________________________________________________________________________ Module Interface
 
 
+@debug_monitor
 def coordinate_metadata_ops(header_data: dict | str, metadata: dict = None) -> dict:
     """
     Process data based on identifying contents\n
@@ -282,18 +284,19 @@ def coordinate_metadata_ops(header_data: dict | str, metadata: dict = None) -> d
     """
     is_dict = isinstance(header_data, dict)
     has_prompt = is_dict and header_data.get("prompt")
-    has_params_or_str = (is_dict and header_data.get("parameters")) or isinstance(header_data, str)
+    has_params = is_dict and header_data.get("parameters")
     has_tags = is_dict and ("icc_profile" in header_data or "exif" in header_data)
+    is_str = isinstance(header_data, str)
 
     if has_prompt:
         metadata = arrange_nodeui_metadata(header_data)
-    elif has_params_or_str:
+    elif has_params:
         metadata = arrange_webui_metadata(header_data)
     elif has_tags:
         metadata = {
-            UpField.TAGS: {"EXIF": {key: value} for key, value in header_data.items() if key != "icc_profile" or "exif"},
-            DownField.ICC: {"DATA": header_data.get("icc_profile")},
-            DownField.EXIF: {"DATA": header_data.get("exif")},
+            UpField.TAGS: {UpField.EXIF: {key: value} for key, value in header_data.items() if (key != "icc_profile" or key != "exif")},
+            DownField.ICC: {DownField.DATA: header_data.get("icc_profile")},
+            DownField.EXIF: {DownField.DATA: header_data.get("exif")},
         }
     elif is_dict:
         try:
@@ -301,8 +304,10 @@ def coordinate_metadata_ops(header_data: dict | str, metadata: dict = None) -> d
         except JSONDecodeError as error_log:
             nfo("JSON Decode failed %s", error_log)
             metadata = {UpField.DATA: header_data}
+    elif is_str:
+        metadata = {UpField.DATA: header_data}
     else:
-        metadata = {UpField.PLACEHOLDER: {"": "No Data"}}
+        metadata = {UpField.PLACEHOLDER: {"": UpField.PLACEHOLDER}}
 
     return metadata
 
@@ -314,11 +319,13 @@ def parse_metadata(file_path_named: str) -> dict:
     :param file_path_named: The file to open
     :return: The metadata from the header of the file
     """
+
     reader = MetadataFileReader()
     metadata = None
     header_data = reader.read_header(file_path_named)
     if header_data is not None:
         metadata = coordinate_metadata_ops(header_data)
-        if metadata == UpField.PLACEHOLDER:
+        debug_message(metadata)
+        if metadata == {UpField.PLACEHOLDER: {"": UpField.PLACEHOLDER}} or not isinstance(metadata, dict):
             nfo("Unexpected format", file_path_named)
     return metadata

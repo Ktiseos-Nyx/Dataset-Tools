@@ -34,76 +34,77 @@ Coordinate with us by:
 ### Specifications :
 
 > #### Formatting/Linting Specification
-```
-editor       = Visual Studio Code
-formatting   = Ruff/Black/Better Align
-docstrings   = NumPY/Sphinx
-installation = setuptools
-testing      = pytest
-typing       = Pydantic
-ui           = QT
-```
+> ```
+> editor       = Visual Studio Code
+> formatting   = Ruff/Black/Better Align
+> docstrings   = NumPY/Sphinx
+> installation = setuptools
+> testing      = pytest
+> typing       = Pydantic
+> ui           = QT
+> ```
+
 > #### Variable dictionary
-```
-# Actions
-Delegate / Arrange / Direct / Traffic / Filter / Coordinate / Assign
-Fetch / Get / Extract / Pull / Send / Feed / Push
-Delineate / Format / Detail / Cat|Concat / Show / Join / Splice
-Diverge / Unite / Resolve / Generate / Activate
-Identify / Compare / Detect / Measure / Scan / Scrutinize
-Log / Cache / Read / Load / Capture / Populate / Save
-Test / Interpret / Poll / Interrogate / Flag / Mark / Mask / Trace
-Protect / Register / Ignore / Canonize
-Check / Validate / Normalize
-Advance / Skip / Exit / Leave / Cross / Structure / Fold
+> ```
+> # Actions
+> Delegate / Arrange / Direct / Traffic / Filter / Coordinate / Assign
+> Fetch / Get / Extract / Pull / Send / Feed / Push
+> Delineate / Format / Detail / Cat|Concat / Show / Join / Splice
+> Diverge / Unite / Resolve / Generate / Activate
+> Identify / Compare / Detect / Measure / Scan / Scrutinize
+> Log / Cache / Read / Load / Capture / Populate / Save
+> Test / Interpret / Poll / Interrogate / Flag / Mark / Mask / Trace
+> Protect / Register / Ignore / Canonize
+> Check / Validate / Normalize
+> Advance / Skip / Exit / Leave / Cross / Structure / Fold
 
-# Conditions
-Raw / Upstream / Downstream / Up / Down / Low / High
-Active / Passive / Inactive / Public / Private
-Extrinsic / Intrinsic / Static / Dynamic / Valid / Invalid
-Indirect / Direct / Pending / Next
-Maybe / Local / Remote / Persistent / Relevant
+> # Conditions
+> Raw / Upstream / Downstream / Up / Down / Low / High
+> Active / Passive / Inactive / Public / Private
+> Extrinsic / Intrinsic / Static / Dynamic / Valid / Invalid
+> Indirect / Direct / Pending / Next
+> Maybe / Local / Remote / Persistent / Relevant
 
-# Object
-File / Folder / Fragment / Component / Segment
-Header/ Content / Pattern / Target / Aspect
-State / Signal / Trigger / Level / Status / Attribute
-Location / Path / Parameter / Code / Mask
-Net / Disk
+> # Object
+> File / Folder / Fragment / Component / Segment
+> Header/ Content / Pattern / Target / Aspect
+> State / Signal / Trigger / Level / Status / Attribute
+> Location / Path / Parameter / Code / Mask
+> Net / Disk
 
-# Between bits
-Is / Has / Can
+> # Between bits
+> Is / Has / Can
 
-# File and Folder handling
+> # File and Folder handling
 
-file_contents   = data inside the file
-file_name       = exclusively
-file_path       = the path leading up to the file, with no file name
-file_path_named = relative or absolute path including name
+> file_contents   = data inside the file
+> file_name       = exclusively
+> file_path       = the path leading up to the file, with no file name
+> file_path_named = relative or absolute path including name
 
-empty_file_name          = a file to be created
-empty_file_name_and_path = relative or absolute path including name to be created
+> empty_file_name          = a file to be created
+> empty_file_name_and_path = relative or absolute path including name to be created
 
-folder_contents            = file names inside a folder
-folder_name                = the name of the folder
-folder_name_and_path       = relative or absolute path including name
-empty_folder_name          = a folder to be created
-empty_folder_name_and_path = relative or absolute path including name to be created
+> folder_contents            = file names inside a folder
+> folder_name                = the name of the folder
+> folder_name_and_path       = relative or absolute path including name
+> empty_folder_name          = a folder to be created
+> empty_folder_name_and_path = relative or absolute path including name to be created
 
-# Key and Value handling
-key_name
-key_name_and_path
-empty_key_name
-empty_key_name_and_path
+> # Key and Value handling
+> key_name
+> key_name_and_path
+> empty_key_name
+> empty_key_name_and_path
 
-value_name
-value_name_and_path
-empty_key_name
-empty_key_name_and_path
-new_key_name
-```
+> value_name
+> value_name_and_path
+> empty_key_name
+> empty_key_name_and_path
+> new_key_name
+> ```
 
-## Setting Up For Development:
+## Setting Up For Development
 
 These are the instructions to follow for people who want to build the app with us!
 

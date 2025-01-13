@@ -1,10 +1,12 @@
 # // SPDX-License-Identifier: CC0-1.0
 # // --<{ Ktiseos Nyx }>--
 
-"""Encapsulate the file loader to pass reader data to other functions"""
+"""Wrap I/O"""
 
 from pathlib import Path
+import os
 import json
+import toml
 
 from dataset_tools.logger import debug_monitor
 from dataset_tools.logger import info_monitor as nfo
@@ -28,14 +30,14 @@ class MetadataFileReader:
         """
 
         img = Image.open(file_path_named)
-        exif = {ExifTags.TAGS[label]: content for label, content in img._getexif().items() if label in ExifTags.TAGS}
+        exif = {ExifTags.TAGS[label]: content for label, content in img.getexif().items() if label in ExifTags.TAGS}
         return exif
 
     @debug_monitor
     def read_png_header(self, file_path_named):
         """
-        Open pnv format files\n
-        :param file_path_named: The path and file name of the jpg file
+        Open png format files\n
+        :param file_path_named: The path and file name of the png file
         :return: Generator element containing header tags
         """
         try:
@@ -48,24 +50,43 @@ class MetadataFileReader:
             return None
 
     def read_text_file_contents(self, file_path_named):
+        """
+        Open plaintext files\n
+        :param file_path_named: The path and file name of the text file
+        :return: Generator element containing content
+        """
         with open(file_path_named, "r", encoding="utf_8") as f:
-            return f.read()  # Reads text file into string
+            contents = f.read()
+            return {"Content": contents}  # Reads text file into string
 
-    def read_json_file(file_path: str, mode="r"):
-        with open(file_path, mode, encoding="UTF-8") as f:
-            return json.load(f)
+    def read_schema_file(self, file_path_named: str, mode="r"):
+        """
+        Open .json or toml files\n
+        :param file_path_named: The path and file name of the json file
+        :return: Generator element containing content
+        """
+        _, ext = os.path.splitext(file_path_named)
+        loader, mode = (toml.load, "rb") if ext == Ext.TOML else (json.load, "r")
+        with open(file_path_named, mode) as f:
+            try:
+                file_contents = loader(f)
+            except (toml.TomlDecodeError, json.decoder.JSONDecodeError) as errorlog:
+                raise SyntaxError(f"Couldn't read file {file_path_named}") from errorlog
+        return file_contents
 
     @debug_monitor
     def read_header(self, file_path_named: str) -> dict:
         """
-        Direct file read operations for various file formats \n
+        Direct file read operations for various file formats\n
         :param file_path_named: Location of file with file name and path
         :return: A mapping of information contained within it
         """
         ext = Path(file_path_named).suffix.lower()
         if ext in (Ext.EXIF):
             return self.read_jpg_header(file_path_named)
-        if ext in (Ext.PNG_):
+        elif ext in (Ext.PNG_):
             return self.read_png_header(file_path_named)
-        if ext in (Ext.PLAIN):
-            return {"Content": self.read_text_file_contents(file_path_named)}
+        elif ext in (Ext.PLAIN):
+            return self.read_text_file_contents(file_path_named)
+        elif ext in (Ext.SCHEMA):
+            return self.read_text_file_contents(file_path_named)

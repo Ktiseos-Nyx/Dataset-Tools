@@ -25,10 +25,19 @@ keywords = [
     "art",
 ]
 
-dependencies = ["PyQt6", "rich", "pillow", "pydantic"]
+dependencies = [
+    "rich",
+    "pydantic",
+    "pillow",
+    "PyQt6",
+    "typing-extensions; python < 3.11",
+    "pydantic-core; python < 3.11",
+    "toml; python < 3.11",
+]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff"]
+dev = ["pytest"]
+kn  = ["ruff", "pylint"]
 
 [project.scripts]
 dataset-tools = "dataset_tools.main:main"
@@ -38,12 +47,16 @@ write_to = "_version.py"
 
 # Personal preferences
 [tool.uv]
-dev-dependencies = ["pytest", "ruff"]
+dev-dependencies = ["pytest"]
 
 [tool.ruff]
 line-length    = 120
-extend-exclude = ["tests"]
 include        = ["*.py"]
+extend-exclude = ["^tests/.*$", "test.*$"]
+
+
+[tool.pylint]
+ignore-paths = ["^tests/.*$", "test_.*$"]
 
 [tool.ruff.format]
 
@@ -52,5 +65,4 @@ max-line-length               = 120
 ignore-overlong-task-comments = true
 
 [tool.typos]
-
-files.extend-exclude = ["tests/*", "*test*"]
+files.extend-exclude = ["^tests/.*$", "test.*$"]

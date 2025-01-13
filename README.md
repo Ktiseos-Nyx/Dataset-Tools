@@ -75,8 +75,6 @@ The application window has the following main components:
 *   **Image List:** Displays a list of images and text files found in the selected folder.
 *   **Image Preview:** An area to display a selected image.
 *   **Metadata Box:** A text area to display the extracted metadata from the selected image (including Stable Diffusion prompt, settings, etc.).
-*   **Prompt Text:** A text label to display the prompt from the selected image.
-*   **Text File Content Area:** A text area to display the content of any associated text files.
 
 ### Managing Images and Text
 
@@ -94,10 +92,9 @@ The application window has the following main components:
 
 ## Future Developments
 
-*   **Thumbnail Generation:** Implement thumbnails for faster browsing.
-*   **JPEG Metadata:** Add support for extracting metadata from JPEG files.
-*   **Themes:** Introduce customizable themes for appearance.
 *   **Filtering/Sorting:** Options to filter and sort files.
+*   **Thumbnail Generation:** Implement thumbnails for faster browsing.
+*   **Themes:** Introduce customizable themes for appearance.
 *   **Better User Experience:** Test on different operating systems and screen resolutions to optimize user experience.
 *   **Video Tutorials:** Create video tutorials to show users how to use the program.
 *   **Text Tutorials:** Create detailed tutorials in text and image to show the user how to use the program.
