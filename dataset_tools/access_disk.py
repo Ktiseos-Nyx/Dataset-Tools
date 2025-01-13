@@ -4,11 +4,11 @@
 """Encapsulate the file loader to pass reader data to other functions"""
 
 from pathlib import Path
-from encodings import utf_8
+import json
 
 from dataset_tools.logger import debug_monitor
-from dataset_tools.logger import info_monitor as loginfo
-from dataset_tools.correct_types import Ext
+from dataset_tools.logger import info_monitor as nfo
+from dataset_tools.correct_types import ExtensionType as Ext
 
 from PIL import Image, UnidentifiedImageError, ExifTags
 
@@ -29,7 +29,6 @@ class MetadataFileReader:
 
         img = Image.open(file_path_named)
         exif = {ExifTags.TAGS[label]: content for label, content in img._getexif().items() if label in ExifTags.TAGS}
-        # logger.debug("exif:: %s", f"{type(exif)} {exif}")
         return exif
 
     @debug_monitor
@@ -43,15 +42,18 @@ class MetadataFileReader:
             img = Image.open(file_path_named)
             if img is None:  # We dont need to load completely unless totally necessary
                 img.load()  # This is the case when we have no choice but to load (slower)
-            # logger.debug(f"Metadata from png: {file_path_named}: {img.info}")
             return img.info  # PNG info directly used here
         except UnidentifiedImageError as error_log:
-            loginfo("Failed to read image at:", file_path_named, error_log)
+            nfo("Failed to read image at:", file_path_named, error_log)
             return None
 
     def read_text_file_contents(self, file_path_named):
-        with open(file_path_named, "r", encoding=utf_8) as f:
+        with open(file_path_named, "r", encoding="utf_8") as f:
             return f.read()  # Reads text file into string
+
+    def read_json_file(file_path: str, mode="r"):
+        with open(file_path, mode, encoding="UTF-8") as f:
+            return json.load(f)
 
     @debug_monitor
     def read_header(self, file_path_named: str) -> dict:
@@ -61,9 +63,9 @@ class MetadataFileReader:
         :return: A mapping of information contained within it
         """
         ext = Path(file_path_named).suffix.lower()
-        if ext in (Ext.JPEG, Ext.WEBP):
+        if ext in (Ext.EXIF):
             return self.read_jpg_header(file_path_named)
         if ext in (Ext.PNG_):
             return self.read_png_header(file_path_named)
-        if ext in (Ext.TEXT):
+        if ext in (Ext.PLAIN):
             return {"Content": self.read_text_file_contents(file_path_named)}

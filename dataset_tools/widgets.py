@@ -6,9 +6,9 @@ import os
 from pathlib import Path as p
 from PyQt6 import QtCore
 
-from dataset_tools.correct_types import Ext
+from dataset_tools.correct_types import ExtensionType as Ext
 from dataset_tools.logger import debug_monitor
-from dataset_tools.logger import info_monitor as loginfo
+from dataset_tools.logger import info_monitor as nfo
 
 
 class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
@@ -41,7 +41,7 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
         try:
             folder_contents = [os.path.join(folder_path, f) for f in os.listdir(folder_path)]
         except FileNotFoundError as error_log:
-            loginfo("Error loading folder", folder_path, error_log)
+            nfo("Error loading folder", folder_path, error_log)
         else:
             return folder_contents
 
@@ -59,13 +59,12 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
         for index, file_path in enumerate(folder_contents):
             if os.path.isfile(file_path) and not file_path.endswith(".DS_Store"):  # Filter out .DS_Store
                 # Filter the file types as needed
-                if p(file_path).suffix.lower() in Ext.PNG_ or p(file_path).suffix.lower() in Ext.JPEG or p(file_path).suffix.lower() in Ext.WEBP:
+                if p(file_path).suffix.lower() in Ext.PNG_ or Ext.JPEG or Ext.WEBP:
                     image_files.append(file_path)
-                if p(file_path).suffix.lower() in Ext.TEXT:
+                if p(file_path).suffix.lower() in Ext.TEXT or Ext.JSON:
                     text_files.append(file_path)
             progress = (index + 1) / file_count * 100
             self.progress.emit(int(progress))
-        # logger.debug("%s",f"{image_files, text_files}")
         return image_files, text_files
 
     def clear_files(self):

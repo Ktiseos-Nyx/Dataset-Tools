@@ -1,11 +1,11 @@
 # // SPDX-License-Identifier: CC0-1.0
 # // --<{ Ktiseos Nyx }>--
 
+from ast import Constant
 from typing import TypedDict, Annotated
 
 from dataset_tools import LOG_LEVEL
 
-# from pydantic_core import ValidationError
 from pydantic import TypeAdapter, BaseModel, Field, AfterValidator, field_validator, ValidationError
 
 
@@ -14,7 +14,11 @@ class UpField:
 
     PROMPT: str = "Prompt Data"
     TAGS: str = "Tags"
-    LABELS: list[str] = [PROMPT, TAGS]
+    JSON_DATA: str = "JSON Data"
+    TEXT_DATA: str = "TEXT DATA"
+    DATA: str = "DATA"
+    PLACEHOLDER: str = "No Data"
+    LABELS: list[Constant] = [PROMPT, TAGS, TEXT_DATA, JSON_DATA, DATA, PLACEHOLDER]
 
 
 class DownField:
@@ -24,23 +28,46 @@ class DownField:
     SYSTEM: str = "System"
     ICC: str = "ICC Profile"
     EXIF: str = "EXIF"
-    LABELS: list[str] = [GENERATION_DATA, SYSTEM, ICC, EXIF]
+    RAW_DATA: str = "TEXT DATA"
+    PLACEHOLDER: str = "No Data"
+    LABELS: list[Constant] = [GENERATION_DATA, SYSTEM, ICC, EXIF, RAW_DATA, PLACEHOLDER]
 
 
-class Ext:
+class ExtensionType:
     """Valid file formats for metadata reading"""
 
-    PNG_ = [".png"]
-    JPEG = [".jpg", ".jpeg"]
-    WEBP = [".webp"]
-    TEXT = [".txt"]
+    PNG_: list[str] = [".png"]
+    JPEG: list[str] = [".jpg", ".jpeg"]
+    WEBP: list[str] = [".webp"]
+    TEXT: list[str] = [".txt"]
+    JSON: list[str] = [".json"]
+
+    IMAGE: list[Constant] = [JPEG, WEBP, PNG_]
+    EXIF: list[Constant] = [JPEG, WEBP]
+    PLAIN: list[Constant] = [TEXT, JSON]
 
 
 EXC_INFO: bool = LOG_LEVEL != "i"
 
 
 class NodeNames:
-    ENCODERS = ["CLIPTextEncodeFlux", "CLIPTextEncodeSD3", "CLIPTextEncodeSDXL", "CLIPTextEncodeHunyuanDiT", "WildcardEncode //Inspire", "CLIPTextEncode"]
+    ENCODERS = [
+        "CLIPTextEncodeFlux",
+        "CLIPTextEncodeSD3",
+        "CLIPTextEncodeSDXL",
+        "CLIPTextEncodeHunyuanDiT",
+        "WildcardEncode //Inspire",
+        "ImpactWildcardProcessor",
+        "CLIPTextEncode",
+    ]
+    IGNORE_KEYS = [
+        "type",
+        "link",
+        "shape",
+        "id",
+        "pos",
+        "size",
+    ]
 
 
 def bracket_check(maybe_brackets: str | dict):
@@ -48,7 +75,7 @@ def bracket_check(maybe_brackets: str | dict):
     Check and correct brackets in a kv pair format string\n
     :param maybe_brackets: The data that may or may not have brackets
     :type maybe_brackets: `str` | `dict`
-    :return: the corrrected string, or a dict
+    :return: the corrected string, or a dict
     """
     if isinstance(maybe_brackets, dict):
         pass
@@ -93,6 +120,5 @@ class ListOfDelineatedStr(BaseModel):
     @field_validator("convert")
     @classmethod
     def drop_tuple(cls, regex_match: list):
-        # logger.debug("regex_match: %s:: ", f"{type(regex_match)} {regex_match}")
         regex_match = list(next(iter(regex_match), None))
         return regex_match

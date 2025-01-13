@@ -11,7 +11,7 @@ if "pytest" not in sys.modules:
     group = parser.add_mutually_exclusive_group()
 
     levels = {"d": "DEBUG", "w": "WARNING", "e": "ERROR", "c": "CRITICAL", "i": "INFO"}
-    choices = list(levels.keys()) + list(levels.values()) + [v.upper() for v in levels.values()]
+    choices = list(levels.keys()) + list(levels.values()) + [value.upper() for value in levels.values()]
     for short, long in levels.items():
         group.add_argument(f"-{short}", f"--{long.lower()}", f"--{long}", action="store_true", help=f"Set logging level {long}")
 
@@ -28,5 +28,4 @@ else:
 try:
     __version__ = version("dataset-tools")
 except PackageNotFoundError as error_log:
-    error_log
-    print("dataset-tools package is not installed. Did you run `pip install .`?")
+    print(f"dataset-tools package is not installed. Did you run `pip install .`? {error_log}")

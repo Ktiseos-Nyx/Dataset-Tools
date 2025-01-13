@@ -104,15 +104,19 @@ The application window has the following main components:
 
 ## Help the Creators
 
-![A flat logo for Discord](https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191)&link=https%3A%2F%2Fdiscord.gg%2F5t2kYxt7An)
+<a href="https://discord.gg/5t2kYxt7An" target="_blank">
+
+![A flat logo for Discord](https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191))
+
+</a>
 
 ### --**__<{ Ktiseos Nyx }>__**--
 
 is a creator collective consisting of
 
-<a href="https://discord.gg/5t2kYxt7An" target="_blank">
 
-</a>
+
+
 
 #### [Duskfall Portal Crew on GitHub](https://github.com/duskfallcrew)
 

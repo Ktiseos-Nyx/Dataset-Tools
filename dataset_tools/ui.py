@@ -10,7 +10,7 @@ import os
 from collections import defaultdict
 
 from dataset_tools.logger import debug_monitor  # , debug_monitor_solo
-from dataset_tools.logger import info_monitor as loginfo
+from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.metadata_parser import parse_metadata
 from dataset_tools.widgets import FileLoader
 from dataset_tools.correct_types import UpField, DownField
@@ -108,7 +108,6 @@ class MainWindow(Qw.QMainWindow):
         self.file_loader = None
         self.current_folder = None
         self.clear_file_list()
-        # # logger.debug("%s", "File List cleared")
 
     # /______________________________________________________________________________________________________________________ File Browser
 
@@ -117,7 +116,6 @@ class MainWindow(Qw.QMainWindow):
         """Open a dialog to select the folder"""
         folder_path = Qw.QFileDialog.getExistingDirectory(self, "Select a folder")
         if folder_path:
-            # logger.debug("%s", f"Folder opened {folder_path}")
             # Call the file loading function
             self.load_files(folder_path)
 
@@ -128,15 +126,12 @@ class MainWindow(Qw.QMainWindow):
             self.file_loader.clear_files()
         self.files_list.clear()
         self.clear_file_list()
-        # logger.debug("%s", "File List cleared anew")
         self.clear_selection()
-        # logger.debug("%s", "Selection cleared")
 
     # @debug_monitor_solo
     def clear_file_list(self):
         """Initialize or re-initialize display of files"""
         self.file_list = []
-        # logger.debug("%s", f"File List Initialized {self.file_list}")
         self.image_list = []
         self.text_files = []
 
@@ -162,7 +157,6 @@ class MainWindow(Qw.QMainWindow):
         self.file_loader.progress.connect(self.update_progress)
         self.file_loader.finished.connect(self.on_files_loaded)
         self.file_loader.start()
-        # logger.debug("%s", f"Loading files from {folder_path}...")
 
     def update_progress(self, progress):
         """Update progress bar"""
@@ -198,18 +192,18 @@ class MainWindow(Qw.QMainWindow):
         try:
             metadata = parse_metadata(file_path)
         except IndexError as error_log:
-            loginfo("Unexpected list position, out of range error for metadata in", file_path, ",", error_log)
+            nfo("Unexpected list position, out of range error for metadata in", file_path, ",", error_log)
         except StopIteration as error_log:
-            loginfo("Overflow length on data operation for ", file_path, ",", error_log)
+            nfo("Overflow length on data operation for ", file_path, ",", error_log)
         except TypeError as error_log:
-            loginfo("Attempted invalid operation on", file_path, ",", error_log)
+            nfo("Attempted invalid operation on", file_path, ",", error_log)
         except ValueError as error_log:
-            loginfo("Invalid dictionary formatting while extracting metadata from", file_path, ",", error_log)
+            nfo("Invalid dictionary formatting while extracting metadata from", file_path, ",", error_log)
         return metadata
 
     @debug_monitor
     def on_file_selected(self, item):
-        """Activate metadta on nab function"""
+        """Activate metadata on nab function"""
         file_path = item.text()
         self.message_label.setText(f"Selected {os.path.normpath(os.path.basename(file_path))}")
 
@@ -225,11 +219,11 @@ class MainWindow(Qw.QMainWindow):
         try:
             self.display_text_of(metadata)
         except TypeError as error_log:
-            loginfo("Invalid data in prompt fields", type(metadata), "from", file_path, metadata, ":", error_log)
+            nfo("Invalid data in prompt fields", type(metadata), "from", file_path, metadata, ":", error_log)
         except KeyError as error_log:
-            loginfo("Invalid key name for", type(metadata), "from", file_path, metadata, ":", error_log)
+            nfo("Invalid key name for", type(metadata), "from", file_path, metadata, ":", error_log)
         except AttributeError as error_log:
-            loginfo("Attribute cannot be applied to type", type(metadata), "from", file_path, metadata, ":", error_log)
+            nfo("Attribute cannot be applied to type", type(metadata), "from", file_path, metadata, ":", error_log)
 
     # /______________________________________________________________________________________________________________________ Display Metadata
 
@@ -246,7 +240,6 @@ class MainWindow(Qw.QMainWindow):
         """
         metadata_display = defaultdict(lambda: "")
         for tag in labels:
-            # logger.debug(tag)
             if metadata.get(tag, False):
                 incoming_text = separators[0].join(f"{k}: {v} {separators[0]}" for k, v in metadata.get(tag).items()) + separators[1]
                 metadata_display["display"] += incoming_text + separators[2]
@@ -270,10 +263,15 @@ class MainWindow(Qw.QMainWindow):
             self.top_separator.setText(metadata_display["title"])
             self.upper_box.setText(metadata_display["display"])
 
-            metadata_display = self.unpack_content_of(metadata, DownField.LABELS, ["\n", " ", "\n\n", ", "])
+            metadata_display = self.unpack_content_of(metadata, DownField.LABELS, ["\n", " ", "", ", "])
 
             self.mid_separator.setText(metadata_display["title"])
             self.lower_box.setText(metadata_display["display"])
+        # else:
+        #     self.top_separator.setText("...")
+        #     self.mid_separator.setText("...")
+        #     self.upper_box.setText("No Data.")
+        #     self.lower_box.setText("No Data.")
 
 
 if __name__ == "__main__":
