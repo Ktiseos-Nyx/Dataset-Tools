@@ -10,15 +10,15 @@
 import os
 from collections import defaultdict
 
+import PyQt6
+from PyQt6 import QtWidgets as Qw
+from PyQt6 import QtCore, QtGui
+
 from dataset_tools.logger import debug_monitor  # , debug_monitor_solo
 from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.metadata_parser import parse_metadata
 from dataset_tools.widgets import FileLoader
 from dataset_tools.correct_types import UpField, DownField
-
-import PyQt6
-from PyQt6 import QtWidgets as Qw
-from PyQt6 import QtCore, QtGui
 
 
 class MainWindow(Qw.QMainWindow):
@@ -236,6 +236,7 @@ class MainWindow(Qw.QMainWindow):
 
     # /______________________________________________________________________________________________________________________ Display Metadata
 
+    @debug_monitor
     def unpack_content_of(self, metadata: dict, labels: list, separators: list) -> dict:
         """
         Open and format dictionary content to feed to a display\n

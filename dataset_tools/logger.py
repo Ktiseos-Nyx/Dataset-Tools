@@ -6,12 +6,13 @@
 import sys
 import logging as pylog
 from logging import StreamHandler, Formatter
-from dataset_tools.correct_types import LOG_LEVEL, EXC_INFO
 
 from rich.theme import Theme
 from rich.console import Console
 from rich.logging import RichHandler
 from rich.style import Style
+
+from dataset_tools.correct_types import LOG_LEVEL, EXC_INFO
 
 
 msg_init = None  # pylint: disable=invalid-name
@@ -82,12 +83,8 @@ def debug_monitor(func):
 
 
 def debug_message(message, *args):
-    """output debug"""
-    if args:
-        logger.debug("%s", f"{message} {args}", exc_info=EXC_INFO)
+    logger.debug("%s", f"{message} {args}")
 
 
 def info_monitor(message, *args):
-    """output info"""
-    if args:
-        logger.info("%s", f"{message} {args}", exc_info=EXC_INFO)
+    logger.info("%s", f"{message} {args}")

@@ -8,11 +8,11 @@ import os
 import json
 import toml
 
+from PIL import Image, UnidentifiedImageError, ExifTags
+
 from dataset_tools.logger import debug_monitor
 from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.correct_types import ExtensionType as Ext
-
-from PIL import Image, UnidentifiedImageError, ExifTags
 
 
 class MetadataFileReader:

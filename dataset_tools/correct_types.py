@@ -6,9 +6,9 @@
 from ast import Constant
 from typing_extensions import TypedDict, Annotated, List
 
-from dataset_tools import LOG_LEVEL
-
 from pydantic import TypeAdapter, BaseModel, Field, AfterValidator, field_validator, ValidationError
+
+from dataset_tools import LOG_LEVEL
 
 
 class UpField:
