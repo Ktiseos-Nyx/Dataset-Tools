@@ -1,3 +1,5 @@
+[![PyTest](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/pytest.yml/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/pytest.yml)
+
 # Dataset-Tools: A Simple Dataset Viewer for AI Art
 
 <span style="text-align: center">
