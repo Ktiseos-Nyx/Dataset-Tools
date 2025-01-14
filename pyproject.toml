@@ -24,11 +24,32 @@ keywords = [
     "generative",
     "art",
 ]
-
-dependencies = ["PyQt6", "rich", "pillow", "pydantic"]
-
+classifiers = [
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Multimedia :: Graphics :: Viewers",
+    "Topic :: Text Processing :: General",
+    "Topic :: Artistic Software",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Intended Audience :: Other Audience",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "Environment :: X11 Applications :: Qt",
+]
+dependencies = [
+    "rich",
+    "pydantic",
+    "pillow",
+    "PyQt6",
+    "typing-extensions",
+    "pydantic-core",
+    "toml",
+]
 [project.optional-dependencies]
-dev = ["pytest", "ruff"]
+dev = ["pytest"]
+kn  = ["ruff", "pylint"]
 
 [project.scripts]
 dataset-tools = "dataset_tools.main:main"
@@ -38,12 +59,16 @@ write_to = "_version.py"
 
 # Personal preferences
 [tool.uv]
-dev-dependencies = ["pytest", "ruff"]
+dev-dependencies = ["pytest"]
 
 [tool.ruff]
 line-length    = 120
-extend-exclude = ["tests"]
 include        = ["*.py"]
+extend-exclude = ["^tests/.*$", "test.*$"]
+
+
+[tool.pylint]
+ignore-paths = ["^tests/.*$", "test_.*$"]
 
 [tool.ruff.format]
 
@@ -52,5 +77,4 @@ max-line-length               = 120
 ignore-overlong-task-comments = true
 
 [tool.typos]
-
-files.extend-exclude = ["tests/*", "*test*"]
+files.extend-exclude = ["^tests/.*$", "test.*$"]

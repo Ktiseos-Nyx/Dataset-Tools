@@ -1,6 +1,7 @@
 # // SPDX-License-Identifier: CC0-1.0
 # // --<{ Ktiseos Nyx }>--
-"""App Ui"""
+
+"""App UI"""
 
 # pylint: disable=line-too-long
 # pylint: disable=c-extension-no-member
@@ -15,6 +16,7 @@ from dataset_tools.metadata_parser import parse_metadata
 from dataset_tools.widgets import FileLoader
 from dataset_tools.correct_types import UpField, DownField
 
+import PyQt6
 from PyQt6 import QtWidgets as Qw
 from PyQt6 import QtCore, QtGui
 
@@ -34,7 +36,7 @@ class MainWindow(Qw.QMainWindow):
         self.setMinimumSize(800, 600)  # set minimum size for standard window.
 
         # Central widget to hold our layout
-        central_widget = Qw.QWidget()
+        central_widget = PyQt6.QtWidgets.QWidget()
         self.setCentralWidget(central_widget)
 
         # Main layout
@@ -106,8 +108,9 @@ class MainWindow(Qw.QMainWindow):
         right_layout.addWidget(self.lower_box)
 
         self.file_loader = None
-        self.current_folder = None
+        self.current_folder = os.getcwd()
         self.clear_file_list()
+        self.load_files(os.getcwd())
 
     # /______________________________________________________________________________________________________________________ File Browser
 
@@ -182,7 +185,7 @@ class MainWindow(Qw.QMainWindow):
     # /______________________________________________________________________________________________________________________ Fetch Metadata
 
     @debug_monitor
-    def load_metadata(self, file_path: str, extension: str = ".png") -> dict:
+    def load_metadata(self, file_path: str) -> dict:
         """
         Fetch metadata from file\n
         :param file_path: `str` The file to interpret
@@ -212,7 +215,13 @@ class MainWindow(Qw.QMainWindow):
 
         pixmap = QtGui.QPixmap(file_path)
         # scale the image
-        self.image_preview.setPixmap(pixmap.scaled(self.image_preview.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation))
+        self.image_preview.setPixmap(
+            pixmap.scaled(
+                self.image_preview.size(),
+                QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                QtCore.Qt.TransformationMode.SmoothTransformation,
+            )
+        )
 
         metadata = self.load_metadata(file_path)
 
@@ -267,11 +276,11 @@ class MainWindow(Qw.QMainWindow):
 
             self.mid_separator.setText(metadata_display["title"])
             self.lower_box.setText(metadata_display["display"])
-        # else:
-        #     self.top_separator.setText("...")
-        #     self.mid_separator.setText("...")
-        #     self.upper_box.setText("No Data.")
-        #     self.lower_box.setText("No Data.")
+        else:
+            self.top_separator.setText(UpField.PLACEHOLDER)
+            self.mid_separator.setText(UpField.PLACEHOLDER)
+            self.upper_box.setText(UpField.PLACEHOLDER)
+            self.lower_box.setText(UpField.PLACEHOLDER)
 
 
 if __name__ == "__main__":

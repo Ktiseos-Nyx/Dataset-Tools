@@ -1,8 +1,10 @@
 # // SPDX-License-Identifier: CC0-1.0
 # // --<{ Ktiseos Nyx }>--
 
+"""確認 Data Type"""
+
 from ast import Constant
-from typing import TypedDict, Annotated
+from typing_extensions import TypedDict, Annotated, List
 
 from dataset_tools import LOG_LEVEL
 
@@ -15,10 +17,12 @@ class UpField:
     PROMPT: str = "Prompt Data"
     TAGS: str = "Tags"
     JSON_DATA: str = "JSON Data"
-    TEXT_DATA: str = "TEXT DATA"
+    TEXT_DATA: str = "TEXT Data"
+    TOML_DATA: str = "TOML Data"
+    EXIF: str = "EXIF"
     DATA: str = "DATA"
     PLACEHOLDER: str = "No Data"
-    LABELS: list[Constant] = [PROMPT, TAGS, TEXT_DATA, JSON_DATA, DATA, PLACEHOLDER]
+    LABELS: list[Constant] = [PROMPT, TAGS, TEXT_DATA, TOML_DATA, JSON_DATA, DATA, PLACEHOLDER]
 
 
 class DownField:
@@ -30,27 +34,38 @@ class DownField:
     EXIF: str = "EXIF"
     RAW_DATA: str = "TEXT DATA"
     PLACEHOLDER: str = "No Data"
+    DATA: str = "DATA"
     LABELS: list[Constant] = [GENERATION_DATA, SYSTEM, ICC, EXIF, RAW_DATA, PLACEHOLDER]
 
 
 class ExtensionType:
-    """Valid file formats for metadata reading"""
+    """Valid file formats for metadata reading\n"""
 
-    PNG_: list[str] = [".png"]
-    JPEG: list[str] = [".jpg", ".jpeg"]
-    WEBP: list[str] = [".webp"]
-    TEXT: list[str] = [".txt"]
-    JSON: list[str] = [".json"]
+    PNG_: List[str] = [".png"]
+    JPEG: List[str] = [".jpg", ".jpeg"]
+    WEBP: List[str] = [".webp"]
+    JSON: List[str] = [".json"]
+    TOML: List[str] = [".toml"]
+    TEXT: List[str] = [".txt", ".text"]
+    HTML: List[str] = [".html", ".htm"]
+    XML_: List[str] = [".xml", ".xml"]
 
-    IMAGE: list[Constant] = [JPEG, WEBP, PNG_]
-    EXIF: list[Constant] = [JPEG, WEBP]
-    PLAIN: list[Constant] = [TEXT, JSON]
+    IMAGE: List[Constant] = [JPEG, WEBP, PNG_]
+    EXIF: List[Constant] = [JPEG, WEBP]
+    SCHEMA: List[Constant] = [JSON, TOML]
+    PLAIN: List[Constant] = [TEXT, XML_, HTML]
 
-
-EXC_INFO: bool = LOG_LEVEL != "i"
+    IGNORE: List[Constant] = [
+        "Thumbs.db",
+        "desktop.ini",
+        ".fseventsd",
+        ".DS_Store",
+    ]
 
 
 class NodeNames:
+    """Node names that carry prompts inside"""
+
     ENCODERS = [
         "CLIPTextEncodeFlux",
         "CLIPTextEncodeSD3",
@@ -68,6 +83,9 @@ class NodeNames:
         "pos",
         "size",
     ]
+
+
+EXC_INFO: bool = LOG_LEVEL != "i"
 
 
 def bracket_check(maybe_brackets: str | dict):

@@ -1,3 +1,6 @@
+# // SPDX-License-Identifier: CC0-1.0
+# // --<{ Ktiseos Nyx }>--
+
 """初始化"""
 # pylint: disable=line-too-long
 
