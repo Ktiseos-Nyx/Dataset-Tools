@@ -72,7 +72,7 @@ def rename_next_keys_of(nested_map: dict, search_key: str, new_labels: list) -> 
 
             else:
                 node_inputs = next_layer.get("inputs", {"": UpField.PLACEHOLDER}).items()
-                gen_data = "\n".join(f"{k}: {v}" for k, v in node_inputs if v is not None)
+                gen_data = "\n".join(f"{k}: {v}" for k, v in node_inputs if not isinstance(v, list) and v is not None)
                 if gen_data:
                     extracted_data[class_type] = gen_data
 
