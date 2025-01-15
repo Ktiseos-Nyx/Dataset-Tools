@@ -10,6 +10,8 @@ import json
 from json import JSONDecodeError
 from typing import Tuple, List
 
+from pydantic import ValidationError
+
 from dataset_tools.logger import debug_monitor, debug_message
 from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.access_disk import MetadataFileReader
@@ -21,8 +23,6 @@ from dataset_tools.correct_types import (
     DownField,
     NodeNames,
 )
-
-from pydantic import ValidationError
 
 
 # /______________________________________________________________________________________________________________________ ComfyUI format
@@ -63,12 +63,19 @@ def rename_next_keys_of(nested_map: dict, search_key: str, new_labels: list) -> 
         if isinstance(new_labels, list):
             class_type = next_layer.get("class_type", False)
             if search_key in class_type:
-                class_type = next(iter(x for x in new_labels if x not in extracted_data), "")
-                extracted_data[class_type] = next_layer["inputs"].get(next(iter(next_layer["inputs"]), UpField.PLACEHOLDER))
+                class_type_field = next(iter(x for x in new_labels if x not in extracted_data), "")  # Name of prompt
+                inputs_field = next_layer.get("inputs", UpField.PLACEHOLDER).items()
+                prompt_data = next(iter(v for k, v in inputs_field if isinstance(v, str)))
+                if prompt_data:
+                    extracted_data[class_type_field] = prompt_data
+                    debug_message(prompt_data)
+
             else:
-                gen_data = "\n".join(f"{k}: {v}" for k, v in next_layer.get("inputs", {"": UpField.PLACEHOLDER}).items() if not isinstance(v, list) and v is not None)
+                node_inputs = next_layer.get("inputs", {"": UpField.PLACEHOLDER}).items()
+                gen_data = "\n".join(f"{k}: {v}" for k, v in node_inputs if not isinstance(v, list) and v is not None)
                 if gen_data:
                     extracted_data[class_type] = gen_data
+
         else:
             raise ValidationError(f"Not list format in {new_labels}")
 
