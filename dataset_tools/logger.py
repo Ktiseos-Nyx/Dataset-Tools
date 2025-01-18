@@ -12,7 +12,7 @@ from rich.console import Console
 from rich.logging import RichHandler
 from rich.style import Style
 
-from dataset_tools.correct_types import LOG_LEVEL, EXC_INFO
+from dataset_tools.correct_types import EXC_INFO, LOG_LEVEL
 
 
 msg_init = None  # pylint: disable=invalid-name
@@ -82,9 +82,9 @@ def debug_monitor(func):
     return wrapper
 
 
-def debug_message(message, *args):
-    logger.debug("%s", f"{message} {args}")
+def debug_message(*args):
+    logger.debug(args)
 
 
-def info_monitor(message, *args):
-    logger.info("%s", f"{message} {args}")
+def info_monitor(*args):
+    logger.info(args, exc_info=EXC_INFO)
