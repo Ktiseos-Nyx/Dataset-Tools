@@ -4,7 +4,13 @@
 """確認 Data Type"""
 
 from ast import Constant
-from typing_extensions import TypedDict, Annotated, List
+
+from platform import python_version_tuple
+
+if float(python_version_tuple()[0]) == 3.0 and float(python_version_tuple()[1]) <= 12.0:
+    from typing_extensions import TypedDict, Annotated, List, Union
+else:
+    from typing import TypedDict, Annotated, List, Union
 
 from pydantic import TypeAdapter, BaseModel, Field, AfterValidator, field_validator, ValidationError
 
@@ -71,10 +77,14 @@ class NodeNames:
         "CLIPTextEncodeSD3",
         "CLIPTextEncodeSDXL",
         "CLIPTextEncodeHunyuanDiT",
+        "CLIPTextEncodePixArtAlpha",
+        "CLIPTextEncodeSDXLRefiner",
         "WildcardEncode //Inspire",
         "ImpactWildcardProcessor",
-        "CLIPTextEncode",
+        "ImpactWildcardEncodeCLIPTextEncode",
     ]
+    PROMPT_LABELS = ["Positive prompt", "Negative prompt", "Prompt"]
+
     IGNORE_KEYS = [
         "type",
         "link",
@@ -83,6 +93,29 @@ class NodeNames:
         "pos",
         "size",
     ]
+
+    DATA_KEYS = {
+        "class_type": "inputs",
+        "nodes": "widget_values",
+    }
+    PROMPT_NODE_FIELDS = {
+        "text",
+        "t5xxl",
+        "clip-l",
+        "clip-g",
+        "mt5",
+        "mt5xl",
+        "bert",
+        "clip-h",
+        "wildcard",
+        "string",
+        "positive",
+        "negative",
+        "text_g",
+        "text_l",
+        "wildcard_text",
+        "populated_text",
+    }
 
 
 EXC_INFO: bool = LOG_LEVEL != "i"
@@ -109,7 +142,18 @@ def bracket_check(maybe_brackets: str | dict):
 
 class NodeDataMap(TypedDict):
     class_type: str
-    inputs: dict
+    inputs: Union[dict, float]
+
+
+class NodeWorkflow(TypedDict):
+    last_node_id: int
+    last_link_id: Union[int, dict]
+    nodes: list
+    links: list
+    groups: list
+    config: dict
+    extra: dict
+    version: float
 
 
 class BracketedDict(BaseModel):
@@ -130,6 +174,7 @@ class IsThisNode:
     """
 
     data = TypeAdapter(NodeDataMap)
+    workflow = TypeAdapter(NodeWorkflow)
 
 
 class ListOfDelineatedStr(BaseModel):
