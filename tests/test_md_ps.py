@@ -243,7 +243,7 @@ class TestParseMetadata(unittest.TestCase):
         mock_input = {"prompt": "prompt"}
         mock_redivide.return_value = "prompt", "gen"
         result = arrange_nodeui_metadata(mock_input)
-        mock_redivide.assert_called_with("prompt")
+        mock_redivide.assert_called_with(mock_input, "prompt")
         expected_result = {"Generation Data": "gen", "Prompt Data": "prompt"}
         assert result == expected_result
 
@@ -264,7 +264,7 @@ class TestParseMetadata(unittest.TestCase):
         full_metadata_key_test = {"prompt": "data", "workflow": "two"}
         mock_redivide.side_effect = [({}, {"data": "tokeep"}), ({"Positive": "three"}, {"gen_data": "one"})]
         result = arrange_nodeui_metadata(full_metadata_key_test)
-        mock_redivide.assert_has_calls([call("data"), call({"1": "two"})], any_order=False)
+        mock_redivide.assert_has_calls([call({"prompt": "data", "workflow": "two"}, "prompt"), call({"prompt": "data", "workflow": "two"}, "workflow")], any_order=False)
         # mock_redivide.assert_called_with({"1": "dict_data"}, self.new_prompt_dict_labels)
         assert result == {"Generation Data": {"data": "tokeep", "gen_data": "one"}, "Prompt Data": {"Positive": "three"}}
 
@@ -279,8 +279,9 @@ class TestParseMetadata(unittest.TestCase):
             "Negative prompt": {" "},
             "inputs": self.mock_bracket_dict_gen_data["inputs"],
         }
-        result = redivide_nodeui_data_in(f"{self.redivide_dict_test_data}")
-        mock_clean.assert_called_with(str(self.redivide_dict_test_data))
+        mock_data_with_prompt = {"prompt": f"{self.redivide_dict_test_data}"}
+        result = redivide_nodeui_data_in(mock_data_with_prompt, "prompt")
+        mock_clean.assert_called_with(mock_data_with_prompt, "prompt")
         expected_result = (
             self.mock_bracket_dict_next_keys,
             self.mock_bracket_dict_gen_data,
@@ -294,9 +295,9 @@ class TestParseMetadata(unittest.TestCase):
 
         mock_clean.return_value = self.mock_dict
         mock_rename.return_value = self.mock_dict
-        result = redivide_nodeui_data_in(f"{self.mock_dict}")
+        result = redivide_nodeui_data_in(f"{self.mock_dict}", "prompt")
         print(result)
-        mock_clean.assert_called_with(str(self.mock_dict))
+        mock_clean.assert_called_with(str(self.mock_dict), "prompt")
         expected_result = (
             {},
             self.mock_dict,
@@ -344,7 +345,7 @@ class TestParseMetadata(unittest.TestCase):
         mock_coord.return_value = {UpField.PLACEHOLDER: {"": UpField.PLACEHOLDER}}
         result = parse_metadata(fake_file)
         mock_read.assert_called_with(fake_file)
-        mock_coord.assert_called_with(data, NoneType)
+        mock_coord.assert_called_with(data)
         mock_nfo.assert_called_with("Unexpected format", fake_file)
         assert result == expected_return
 
