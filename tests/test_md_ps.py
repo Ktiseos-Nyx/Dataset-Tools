@@ -204,32 +204,39 @@ class TestParseMetadata(unittest.TestCase):
     def test_rename_prompt_keys_of_not_prompt(self):
         """test"""
         extracted = rename_prompt_keys_of(self.mock_dict)
-        assert extracted == {
-            "seed": 948476150837611,
-            "steps": 60,
-            "cfg": 12.0,
-            "sampler_name": "dpmpp_2m",
-            "scheduler": "karras",
-            "denoise": 1.0,
-        }
+        assert extracted == (
+            {},
+            {
+                "seed": 948476150837611,
+                "steps": 60,
+                "cfg": 12.0,
+                "sampler_name": "dpmpp_2m",
+                "scheduler": "karras",
+                "denoise": 1.0,
+            },
+        )
 
     def test_rename_prompt_keys_of_prompt(self):
         """test"""
         extracted = rename_prompt_keys_of(
             self.redivide_dict_test_data,
         )
-        expected_extracted = {
-            "clip_l": "Red gauze tape spun around an invisible hand",
-            "t5xxl": "Red gauze tape spun around an invisible hand",
-            "guidance": 1.0,
-        } | {
-            "seed": 1944739425534,
-            "steps": 4,
-            "cfg": 1.0,
-            "sampler_name": "euler",
-            "scheduler": "simple",
-            "denoise": 1.0,
-        }
+        expected_extracted = (
+            {
+                "clip_l": "Red gauze tape spun around an invisible hand",
+                "t5xxl": "Red gauze tape spun around an invisible hand",
+                "text": "",
+                "guidance": 1.0,
+            },
+            {
+                "seed": 1944739425534,
+                "steps": 4,
+                "cfg": 1.0,
+                "sampler_name": "euler",
+                "scheduler": "simple",
+                "denoise": 1.0,
+            },
+        )
         assert extracted == expected_extracted
 
     def test_validate_mapping_bracket_pair_structure_of(self):
@@ -244,7 +251,7 @@ class TestParseMetadata(unittest.TestCase):
         mock_redivide.return_value = "prompt", "gen"
         result = arrange_nodeui_metadata(mock_input)
         mock_redivide.assert_called_with(mock_input, "prompt")
-        expected_result = {"Generation Data": "gen", "Prompt Data": "prompt"}
+        expected_result = {"Prompt Data": "prompt", "Generation Data": "gen"}
         assert result == expected_result
 
     def test_validate_typical(self):
@@ -274,11 +281,12 @@ class TestParseMetadata(unittest.TestCase):
         """test"""
 
         mock_clean.return_value = self.redivide_dict_test_data
-        mock_rename.return_value = {
-            "Positive prompt": {"clip_l": "Red gauze tape spun around an invisible hand", "t5xxl": "Red gauze tape spun around an invisible hand"},
-            "Negative prompt": {" "},
-            "inputs": self.mock_bracket_dict_gen_data["inputs"],
-        }
+        mock_rename.return_value = (
+            {"Positive prompt": {"clip_l": "Red gauze tape spun around an invisible hand", "t5xxl": "Red gauze tape spun around an invisible hand"}, "Negative prompt": {" "}},
+            {
+                "inputs": self.mock_bracket_dict_gen_data["inputs"],
+            },
+        )
         mock_data_with_prompt = {"prompt": f"{self.redivide_dict_test_data}"}
         result = redivide_nodeui_data_in(mock_data_with_prompt, "prompt")
         mock_clean.assert_called_with(mock_data_with_prompt, "prompt")
@@ -294,15 +302,12 @@ class TestParseMetadata(unittest.TestCase):
         """test"""
 
         mock_clean.return_value = self.mock_dict
-        mock_rename.return_value = self.mock_dict
+        mock_rename.return_value = ({}, self.mock_dict)
         result = redivide_nodeui_data_in(f"{self.mock_dict}", "prompt")
-        print(result)
         mock_clean.assert_called_with(str(self.mock_dict), "prompt")
-        expected_result = (
-            {},
-            self.mock_dict,
-        )
-        self.assertEqual(result, expected_result)
+        expected_result = {}, self.mock_dict
+
+        self.assertEqual((result), expected_result)
 
     @patch("dataset_tools.metadata_parser.clean_with_json")
     def test_fail_dict(self, mock_clean):

@@ -9,10 +9,9 @@ import re
 import json
 from json import JSONDecodeError
 from typing import Tuple, List
-
 from pydantic import ValidationError
 
-from dataset_tools.logger import debug_monitor, debug_message
+from dataset_tools.logger import debug_monitor  # , debug_message
 from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.access_disk import MetadataFileReader
 from dataset_tools.correct_types import (
@@ -35,7 +34,7 @@ def clean_with_json(prestructured_data: dict, first_key: str) -> dict:
     Use json loads to arrange half-formatted dict into valid dict\n
     :param prestructured_data: A dict with a single working key
     :param key_name: The single working key name
-    :return: A formatted dictionary object
+    :return: The previous data newly formatted as a dictionary, but one key deeper
     """
     try:
         cleaned_data = json.loads(prestructured_data[first_key])
@@ -51,7 +50,7 @@ def validate_typical(nested_map: dict, key_name: str):
     Check metadata structure and ensure it meets expectations\n
     :param nested_map: metadata structure
     :type nested_map: dict
-    :return: The original node map if valid, or None
+    :return: The original node map one key lower, if valid, or None
     """
 
     is_this_node = IsThisNode()
@@ -74,35 +73,60 @@ def validate_typical(nested_map: dict, key_name: str):
     raise KeyError(f"Unknown format for dictionary {key_name} in {nested_map}")
 
 
-def search_for_prompt_in(this_layer, previously_extracted_data, node_id):
-    if node_id in this_layer and this_layer[node_id] in NodeNames.ENCODERS:
-        for field_name, contents in this_layer[NodeNames.DATA_KEYS[node_id]].items():
-            if isinstance(contents, str):
-                if field_name == "text":
-                    add_label = next((x for x in NodeNames.PROMPT_LABELS if x not in previously_extracted_data), "")
-                    prompt_data = {add_label: contents}
-                else:
-                    prompt_data = {field_name: contents}
-                return prompt_data
+@debug_monitor
+def search_for_prompt_in(this_node, extracted_prompt_data, name_column):
+    """Check for prompt data in"""
+    extracted_data = {}
+    data_column_title = NodeNames.DATA_KEYS[name_column]
+    prompt_column = this_node[data_column_title]
+    for node_field, node_input in prompt_column.items():
+        new_label = node_field
+        label_count = str(extracted_prompt_data.keys()).count(node_field)
+        if label_count > 0:
+            new_label = f"{node_field}_{label_count}"
 
-    elif "inputs" in this_layer:
-        return {k: v for k, v in this_layer["inputs"].items() if v and not isinstance(v, list)}
-    return {}
+        if not isinstance(node_input, list):
+            if isinstance(node_input, str):
+                node_input = node_input.strip()
+            extracted_data.setdefault(new_label, node_input)
+    return extracted_data
 
 
+@debug_monitor
+def search_for_gen_data_in(this_node, extracted_gen_data):
+    gen_data = {}
+    for node_field, node_input in this_node["inputs"].items():
+        new_label = node_field
+        label_count = str(extracted_gen_data.keys()).count(node_field)
+        if label_count > 0:
+            new_label = f"{node_field}_{label_count}"
+        if not isinstance(node_input, list):
+            if isinstance(node_input, str):
+                node_input = node_input.strip()
+            gen_data.setdefault(new_label, node_input)
+    return gen_data
+
+
+@debug_monitor
 def rename_prompt_keys_of(normalized_clean_data):
-    previously_extracted_data = {}
-    for layer in normalized_clean_data:
-        this_layer = validate_typical(normalized_clean_data, layer)
+    extracted_prompt_data = {}
+    extracted_gen_data = {}
+    for node_number in normalized_clean_data:
+        this_node = validate_typical(normalized_clean_data, node_number)  # Returns dictionary of node number
+        for name_column_title in NodeNames.DATA_KEYS:
+            if this_node and this_node.get(name_column_title, False):
+                name_column = name_column_title
+                break
+            raise KeyError("Metadata validated but expected keys were not found.")
+        node_name = this_node[name_column]
+        if node_name in NodeNames.ENCODERS:
+            extracted_prompt_data.update(search_for_prompt_in(this_node, extracted_prompt_data, name_column))
+        else:
+            extracted_gen_data.update(search_for_gen_data_in(this_node, extracted_gen_data))
+    return extracted_prompt_data, extracted_gen_data
 
-        if this_layer:
-            search_terms = ((n, nc) for n in NodeNames.DATA_KEYS for nc in NodeNames.ENCODERS)
-            for node_id, _ in search_terms:
-                previously_extracted_data.update(search_for_prompt_in(this_layer, previously_extracted_data, node_id))
 
-    return previously_extracted_data
-
-
+@debug_monitor
 def redivide_nodeui_data_in(header: str, first_key: str) -> Tuple[dict]:
     """
     Orchestrate tasks to recreate dictionary structure and extract relevant keys within\n
@@ -112,25 +136,21 @@ def redivide_nodeui_data_in(header: str, first_key: str) -> Tuple[dict]:
     :type variable: list
     :return: Metadata dict, or empty dicts if not found
     """
-
-    def pack_prompt(mixed_data: dict):
-        """Convert dictionary to expected formatting"""
-        packed_data_pass_1 = {k: mixed_data.get(k) for k in NodeNames.PROMPT_LABELS if k in mixed_data}
-        packed_data_pass_2 = {k: mixed_data.get(k) for k in NodeNames.PROMPT_NODE_FIELDS if k in mixed_data}
-        prompt_data = packed_data_pass_1 | packed_data_pass_2
-        return prompt_data
-
+    sorted_header_prompt = {}
+    sorted_header_data = {}
     try:
         jsonified_header = clean_with_json(header, first_key)
+    except KeyError as error_log:
+        nfo("%s", "No key found.", error_log)
+        return {"": UpField.PLACEHOLDER, " ": UpField.PLACEHOLDER}
+    else:
         if first_key == "workflow":
             normalized_clean_data = {"1": jsonified_header}  # To match normalized_prompt_structure format
         else:
             normalized_clean_data = jsonified_header
-        sorted_header_data = rename_prompt_keys_of(normalized_clean_data)
-    except KeyError as error_log:
-        nfo("%s", "No key found.", error_log)
-        return {"": UpField.PLACEHOLDER, " ": UpField.PLACEHOLDER}
-    return pack_prompt(sorted_header_data), {k: v for k, v in sorted_header_data.items() if k not in NodeNames.PROMPT_LABELS and k not in NodeNames.PROMPT_NODE_FIELDS}
+        sorted_header_prompt, sorted_header_data = rename_prompt_keys_of(normalized_clean_data)
+
+        return sorted_header_prompt, sorted_header_data
 
 
 def arrange_nodeui_metadata(header_data: dict) -> dict:

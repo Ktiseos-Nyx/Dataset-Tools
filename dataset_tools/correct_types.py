@@ -82,6 +82,7 @@ class NodeNames:
         "WildcardEncode //Inspire",
         "ImpactWildcardProcessor",
         "ImpactWildcardEncodeCLIPTextEncode",
+        "CLIPTextEncode",
     ]
     PROMPT_LABELS = ["Positive prompt", "Negative prompt", "Prompt"]
 
