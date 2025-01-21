@@ -6,7 +6,9 @@
 
 import sys
 import argparse
-from importlib.metadata import version, PackageNotFoundError
+
+from importlib import metadata
+
 # from re import I  # setuptools-scm versioning
 
 if "pytest" not in sys.modules:
@@ -29,6 +31,6 @@ else:
 
 
 try:
-    __version__ = version("dataset-tools")
-except PackageNotFoundError as error_log:
+    __version__ = metadata.version("dataset-tools")
+except metadata.PackageNotFoundError as error_log:
     print(f"dataset-tools package is not installed. Did you run `pip install .`? {error_log}")

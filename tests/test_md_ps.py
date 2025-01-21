@@ -14,7 +14,7 @@ from types import NoneType
 
 from dataset_tools.logger import logger
 from dataset_tools.access_disk import MetadataFileReader
-from dataset_tools.correct_types import IsThisNode, UpField, DownField, NodeNames
+from dataset_tools.correct_types import UpField, DownField, NodeNames
 from dataset_tools.metadata_parser import (
     arrange_webui_metadata,
     delineate_by_esc_codes,
@@ -24,7 +24,7 @@ from dataset_tools.metadata_parser import (
     coordinate_metadata_ops,
     arrange_nodeui_metadata,
     validate_mapping_bracket_pair_structure_of,
-    rename_prompt_keys_of,
+    filter_keys_of,
     parse_metadata,
     redivide_nodeui_data_in,
     validate_typical,
@@ -201,9 +201,9 @@ class TestParseMetadata(unittest.TestCase):
             assert mock_delineate_by_esc_codes.call_count == 1
             assert UpField.PROMPT in result and DownField.GENERATION_DATA in result and DownField.SYSTEM in result
 
-    def test_rename_prompt_keys_of_not_prompt(self):
+    def test_filter_keys_of_not_prompt(self):
         """test"""
-        extracted = rename_prompt_keys_of(self.mock_dict)
+        extracted = filter_keys_of(self.mock_dict)
         assert extracted == (
             {},
             {
@@ -216,16 +216,16 @@ class TestParseMetadata(unittest.TestCase):
             },
         )
 
-    def test_rename_prompt_keys_of_prompt(self):
+    def test_filter_keys_of_prompt(self):
         """test"""
-        extracted = rename_prompt_keys_of(
+        extracted = filter_keys_of(
             self.redivide_dict_test_data,
         )
         expected_extracted = (
             {
                 "clip_l": "Red gauze tape spun around an invisible hand",
                 "t5xxl": "Red gauze tape spun around an invisible hand",
-                "text": "",
+                # "text": "",
                 "guidance": 1.0,
             },
             {
@@ -276,12 +276,12 @@ class TestParseMetadata(unittest.TestCase):
         assert result == {"Generation Data": {"data": "tokeep", "gen_data": "one"}, "Prompt Data": {"Positive": "three"}}
 
     @patch("dataset_tools.metadata_parser.clean_with_json")
-    @patch("dataset_tools.metadata_parser.rename_prompt_keys_of")
-    def test_redivide_nodeui_data_in(self, mock_rename, mock_clean):
+    @patch("dataset_tools.metadata_parser.filter_keys_of")
+    def test_redivide_nodeui_data_in(self, mock_filter, mock_clean):
         """test"""
 
         mock_clean.return_value = self.redivide_dict_test_data
-        mock_rename.return_value = (
+        mock_filter.return_value = (
             {"Positive prompt": {"clip_l": "Red gauze tape spun around an invisible hand", "t5xxl": "Red gauze tape spun around an invisible hand"}, "Negative prompt": {" "}},
             {
                 "inputs": self.mock_bracket_dict_gen_data["inputs"],
@@ -297,12 +297,12 @@ class TestParseMetadata(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     @patch("dataset_tools.metadata_parser.clean_with_json")
-    @patch("dataset_tools.metadata_parser.rename_prompt_keys_of")
-    def test_redivide_nodeui_data_empty_prompt(self, mock_rename, mock_clean):
+    @patch("dataset_tools.metadata_parser.filter_keys_of")
+    def test_redivide_nodeui_data_empty_prompt(self, mock_filter, mock_clean):
         """test"""
 
         mock_clean.return_value = self.mock_dict
-        mock_rename.return_value = ({}, self.mock_dict)
+        mock_filter.return_value = ({}, self.mock_dict)
         result = redivide_nodeui_data_in(f"{self.mock_dict}", "prompt")
         mock_clean.assert_called_with(str(self.mock_dict), "prompt")
         expected_result = {}, self.mock_dict

@@ -45,12 +45,12 @@ def clean_with_json(prestructured_data: dict, first_key: str) -> dict:
 
 
 @debug_monitor
-def validate_typical(nested_map: dict, key_name: str):
+def validate_typical(nested_map: dict, key_name: str) -> dict | None:
     """
     Check metadata structure and ensure it meets expectations\n
     :param nested_map: metadata structure
     :type nested_map: dict
-    :return: The original node map one key lower, if valid, or None
+    :return: The original node map one key beneath initial entry point, if valid, or None
     """
 
     is_this_node = IsThisNode()
@@ -74,41 +74,57 @@ def validate_typical(nested_map: dict, key_name: str):
 
 
 @debug_monitor
-def search_for_prompt_in(this_node, extracted_prompt_data, name_column):
+def search_for_prompt_in(this_node, extracted_prompt_data, name_column) -> dict:
     """Check for prompt data in"""
     extracted_data = {}
     data_column_title = NodeNames.DATA_KEYS[name_column]
     prompt_column = this_node[data_column_title]
     for node_field, node_input in prompt_column.items():
-        new_label = node_field
-        label_count = str(extracted_prompt_data.keys()).count(node_field)
-        if label_count > 0:
-            new_label = f"{node_field}_{label_count}"
+        if node_field not in NodeNames.IGNORE_KEYS:
+            new_label = node_field
+            label_count = str(extracted_prompt_data.keys()).count(node_field)
+            if label_count > 0:
+                new_label = f"{node_field}_{label_count}"
 
-        if not isinstance(node_input, list):
-            if isinstance(node_input, str):
-                node_input = node_input.strip()
-            extracted_data.setdefault(new_label, node_input)
+            if not isinstance(node_input, list) and node_input:
+                if isinstance(node_input, str):
+                    node_input = node_input.strip()
+                extracted_data.setdefault(new_label, node_input)
     return extracted_data
 
 
 @debug_monitor
-def search_for_gen_data_in(this_node, extracted_gen_data):
+def search_for_gen_data_in(this_node: dict, extracted_gen_data: dict) -> dict:
+    """Check for generative data settings within in a dict structure\n
+    Filter based on dict value data type and reference names
+    :param this_node: The dict structure to scan
+    :param type: `dict`
+    :param extracted_gen_data: Collected data from previous scans
+    :param type: `dict`
+    return: A dict of collected values
+    """
     gen_data = {}
     for node_field, node_input in this_node["inputs"].items():
-        new_label = node_field
-        label_count = str(extracted_gen_data.keys()).count(node_field)
-        if label_count > 0:
-            new_label = f"{node_field}_{label_count}"
-        if not isinstance(node_input, list):
-            if isinstance(node_input, str):
-                node_input = node_input.strip()
-            gen_data.setdefault(new_label, node_input)
+        if node_field not in NodeNames.IGNORE_KEYS:
+            new_label = node_field
+            label_count = str(extracted_gen_data.keys()).count(node_field)
+            if label_count > 0:
+                new_label = f"{node_field}_{label_count}"
+            if not isinstance(node_input, list):
+                if isinstance(node_input, str):
+                    node_input = node_input.strip()
+                gen_data.setdefault(new_label, node_input)
     return gen_data
 
 
 @debug_monitor
-def rename_prompt_keys_of(normalized_clean_data):
+def filter_keys_of(normalized_clean_data: dict) -> Tuple[dict]:
+    """
+    Validate a dictionary structure then scan it based on info type\n
+    :param normalized_clean_data: Data prevalidated as correct json dict structure
+    :type dict: type
+    :return: A pair of data sets corresponding to prompt and generative settings
+    """
     extracted_prompt_data = {}
     extracted_gen_data = {}
     for node_number in normalized_clean_data:
@@ -148,7 +164,7 @@ def redivide_nodeui_data_in(header: str, first_key: str) -> Tuple[dict]:
             normalized_clean_data = {"1": jsonified_header}  # To match normalized_prompt_structure format
         else:
             normalized_clean_data = jsonified_header
-        sorted_header_prompt, sorted_header_data = rename_prompt_keys_of(normalized_clean_data)
+        sorted_header_prompt, sorted_header_data = filter_keys_of(normalized_clean_data)
 
         return sorted_header_prompt, sorted_header_data
 
@@ -267,7 +283,7 @@ def extract_dict_by_delineation(deprompted_text: str) -> Tuple[dict, list]:
         :param traces_of_kv_pairs: that has a string with dictionary delineations as its second value\n
         Examples - List[str]`['Key', '{Key, Value}'] , ['Key:', ' "Key": "Value" '] `\n
         NOT `"[Key, Key, Value]"` or other improper dicts\n
-        :type traces_of_kv_pairs: `list
+        :type traces_of_kv_pairs: `list`
         :return: A corrected dictionary structure from the kv pairs
         """
 
