@@ -3,18 +3,20 @@
 
 """確認 Data Type"""
 
-from ast import Constant
-
 from platform import python_version_tuple
 
-if float(python_version_tuple()[0]) == 3.0 and float(python_version_tuple()[1]) <= 12.0:
-    from typing_extensions import TypedDict, Annotated, List, Union
-else:
-    from typing import TypedDict, Annotated, List, Union
+from ast import Constant
 
-from pydantic import TypeAdapter, BaseModel, Field, AfterValidator, field_validator, ValidationError
+from pydantic import TypeAdapter, BaseModel, Field, AfterValidator, field_validator
+from pydantic_core import ValidationError
 
 from dataset_tools import LOG_LEVEL
+
+if float(python_version_tuple()[0]) == 3.0 and float(python_version_tuple()[1]) <= 12.0:
+    from typing_extensions import TypedDict, Annotated, List, Union, Set
+
+else:
+    from typing import TypedDict, Annotated, List, Union, Set
 
 
 class UpField:
@@ -41,25 +43,28 @@ class DownField:
     RAW_DATA: str = "TEXT DATA"
     PLACEHOLDER: str = "No Data"
     DATA: str = "DATA"
-    LABELS: list[Constant] = [GENERATION_DATA, SYSTEM, ICC, EXIF, RAW_DATA, PLACEHOLDER]
+    LABELS: List[Constant] = [GENERATION_DATA, SYSTEM, ICC, EXIF, RAW_DATA, PLACEHOLDER]
 
 
 class ExtensionType:
     """Valid file formats for metadata reading\n"""
 
-    PNG_: List[str] = [".png"]
-    JPEG: List[str] = [".jpg", ".jpeg"]
-    WEBP: List[str] = [".webp"]
-    JSON: List[str] = [".json"]
-    TOML: List[str] = [".toml"]
-    TEXT: List[str] = [".txt", ".text"]
-    HTML: List[str] = [".html", ".htm"]
-    XML_: List[str] = [".xml", ".xml"]
+    PNG_: Set[str] = {".png"}
+    JPEG: Set[str] = {".jpg", ".jpeg"}
+    WEBP: Set[str] = {".webp"}
+    JSON: Set[str] = {".json"}
+    TOML: Set[str] = {".toml"}
+    TEXT: Set[str] = {".txt", ".text"}
+    HTML: Set[str] = {".html", ".htm"}
+    XML_: Set[str] = {".xml"}
+    GGUF: Set[str] = {".gguf"}
+    SAFE: Set[str] = {".safetensors", ".sft"}
 
-    IMAGE: List[Constant] = [JPEG, WEBP, PNG_]
-    EXIF: List[Constant] = [JPEG, WEBP]
-    SCHEMA: List[Constant] = [JSON, TOML]
-    PLAIN: List[Constant] = [TEXT, XML_, HTML]
+    IMAGE: List[Set[str]] = [JPEG, WEBP, PNG_]
+    EXIF: List[Set[str]] = [JPEG, WEBP]
+    SCHEMA: List[Set[str]] = [JSON, TOML]
+    PLAIN: List[Set[str]] = [TEXT, XML_, HTML]
+    # MODEL: List[Set[str]] = [SAFE, GGUF]
 
     IGNORE: List[Constant] = [
         "Thumbs.db",
@@ -72,7 +77,7 @@ class ExtensionType:
 class NodeNames:
     """Node names that carry prompts inside"""
 
-    ENCODERS = [
+    ENCODERS = {
         "CLIPTextEncodeFlux",
         "CLIPTextEncodeSD3",
         "CLIPTextEncodeSDXL",
@@ -82,17 +87,11 @@ class NodeNames:
         "WildcardEncode //Inspire",
         "ImpactWildcardProcessor",
         "ImpactWildcardEncodeCLIPTextEncode",
-    ]
+        "CLIPTextEncode",
+    }
     PROMPT_LABELS = ["Positive prompt", "Negative prompt", "Prompt"]
 
-    IGNORE_KEYS = [
-        "type",
-        "link",
-        "shape",
-        "id",
-        "pos",
-        "size",
-    ]
+    IGNORE_KEYS = ["type", "link", "shape", "id", "pos", "size", "node_id"]
 
     DATA_KEYS = {
         "class_type": "inputs",
@@ -141,11 +140,15 @@ def bracket_check(maybe_brackets: str | dict):
 
 
 class NodeDataMap(TypedDict):
+    """Valid nodeui json prompt structure"""
+
     class_type: str
     inputs: Union[dict, float]
 
 
 class NodeWorkflow(TypedDict):
+    """Valid nodeui json workflow structure"""
+
     last_node_id: int
     last_link_id: Union[int, dict]
     nodes: list
@@ -178,10 +181,13 @@ class IsThisNode:
 
 
 class ListOfDelineatedStr(BaseModel):
+    """Ensure list conversion into delineated string\n"""
+
     convert: list
 
     @field_validator("convert")
     @classmethod
     def drop_tuple(cls, regex_match: list):
+        """Remove tuple elements from validation"""
         regex_match = list(next(iter(regex_match), None))
         return regex_match

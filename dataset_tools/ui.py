@@ -137,6 +137,7 @@ class MainWindow(Qw.QMainWindow):
         self.file_list = []
         self.image_list = []
         self.text_files = []
+        # self.model_files = []
 
     def clear_selection(self):
         """Empty file metadata display"""
@@ -165,7 +166,7 @@ class MainWindow(Qw.QMainWindow):
         """Update progress bar"""
         self.progress_bar.setValue(progress)
 
-    def on_files_loaded(self, image_list, text_files, loaded_folder):
+    def on_files_loaded(self, image_list, text_files, loaded_folder):  # model_files,
         """Callback for working folder contents"""
         if self.current_folder != loaded_folder:
             # We are loading files from a different folder
@@ -251,10 +252,10 @@ class MainWindow(Qw.QMainWindow):
         metadata_display = defaultdict(lambda: "")
         for tag in labels:
             if metadata.get(tag, False):
-                incoming_text = separators[0].join(f"{k}: {v} {separators[0]}" for k, v in metadata.get(tag).items()) + separators[1]
-                metadata_display["display"] += incoming_text + separators[2]
+                incoming_text = separators[0].join(f"{k}: {v} {separators[1]}" for k, v in metadata.get(tag).items()) + separators[2]
+                metadata_display["display"] += incoming_text + separators[3]
                 if metadata_display.get("title"):
-                    metadata_display["title"] += separators[3] + tag
+                    metadata_display["title"] += separators[4] + tag
                 else:
                     metadata_display["title"] += tag
         return metadata_display
@@ -268,12 +269,12 @@ class MainWindow(Qw.QMainWindow):
         :return: None, information is sent to QT UI fields via calls
         """
         if metadata is not None:
-            metadata_display = self.unpack_content_of(metadata, UpField.LABELS, ["\n", "\n", "\n", ", "])
+            metadata_display = self.unpack_content_of(metadata, UpField.LABELS, ["\n", "\n", "\n", "", ""])
 
             self.top_separator.setText(metadata_display["title"])
             self.upper_box.setText(metadata_display["display"])
 
-            metadata_display = self.unpack_content_of(metadata, DownField.LABELS, ["\n", " ", "", ", "])
+            metadata_display = self.unpack_content_of(metadata, DownField.LABELS, ["", "\n", "", "", ""])
 
             self.mid_separator.setText(metadata_display["title"])
             self.lower_box.setText(metadata_display["display"])

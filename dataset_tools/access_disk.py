@@ -30,8 +30,8 @@ class MetadataFileReader:
         """
 
         img = Image.open(file_path_named)
-        xf = {ExifTags.TAGS[key]: val for key, val in img.getexif().items() if key in ExifTags.TAGS}
-        return xf
+        exif_tags = {ExifTags.TAGS[key]: val for key, val in img.getexif().items() if key in ExifTags.TAGS}
+        return exif_tags
 
     @debug_monitor
     def read_png_header(self, file_path_named):
@@ -55,8 +55,8 @@ class MetadataFileReader:
         :param file_path_named: The path and file name of the text file
         :return: Generator element containing content
         """
-        with open(file_path_named, "r", encoding="utf_8") as f:
-            contents = f.read()
+        with open(file_path_named, "r", encoding="utf_8") as open_file:
+            contents = open_file.read()
             return {"Content": contents}  # Reads text file into string
 
     def read_schema_file(self, file_path_named: str, mode="r"):
@@ -67,9 +67,9 @@ class MetadataFileReader:
         """
         _, ext = os.path.splitext(file_path_named)
         loader, mode = (toml.load, "rb") if ext == Ext.TOML else (json.load, "r")
-        with open(file_path_named, mode) as f:
+        with open(file_path_named, mode) as open_file:
             try:
-                file_contents = loader(f)
+                file_contents = loader(open_file)
             except (toml.TomlDecodeError, json.decoder.JSONDecodeError) as errorlog:
                 raise SyntaxError(f"Couldn't read file {file_path_named}") from errorlog
         return file_contents
@@ -81,12 +81,15 @@ class MetadataFileReader:
         :param file_path_named: Location of file with file name and path
         :return: A mapping of information contained within it
         """
+        header = None
         ext = Path(file_path_named).suffix.lower()
-        if ext in (Ext.EXIF):
-            return self.read_jpg_header(file_path_named)
-        elif ext in (Ext.PNG_):
-            return self.read_png_header(file_path_named)
-        elif ext in (Ext.PLAIN):
-            return self.read_text_file_contents(file_path_named)
-        elif ext in (Ext.SCHEMA):
-            return self.read_text_file_contents(file_path_named)
+        if ext in Ext.EXIF:
+            header = self.read_jpg_header
+        elif ext in Ext.PNG_:
+            header = self.read_png_header
+        elif ext in Ext.PLAIN:
+            header = self.read_text_file_contents
+        elif ext in Ext.SCHEMA:
+            header = self.read_text_file_contents
+        if header:
+            return header(file_path_named)

@@ -41,11 +41,11 @@ classifiers = [
 dependencies = [
     "rich",
     "pydantic",
+    "pydantic-core",
     "pillow",
     "PyQt6",
-    "typing-extensions",
-    "pydantic-core",
     "toml",
+    "typing-extensions",
 ]
 [project.optional-dependencies]
 dev = ["pytest"]
@@ -65,7 +65,6 @@ dev-dependencies = ["pytest"]
 line-length    = 120
 include        = ["*.py"]
 extend-exclude = ["^tests/.*$", "test.*$"]
-
 
 [tool.pylint]
 ignore-paths = ["^tests/.*$", "test_.*$"]
