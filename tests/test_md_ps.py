@@ -10,11 +10,9 @@ from unittest.mock import Mock, patch, call
 
 from pydantic import ValidationError
 
-from types import NoneType
-
 from dataset_tools.logger import logger
 from dataset_tools.access_disk import MetadataFileReader
-from dataset_tools.correct_types import UpField, DownField, NodeNames
+from dataset_tools.correct_types import UpField, DownField, EmptyField
 from dataset_tools.metadata_parser import (
     arrange_webui_metadata,
     delineate_by_esc_codes,
@@ -254,17 +252,18 @@ class TestParseMetadata(unittest.TestCase):
         expected_result = {"Prompt Data": "prompt", "Generation Data": "gen"}
         assert result == expected_result
 
-    def test_validate_typical(self):
+    def test_validate_typical_success(self):
         result = validate_typical(self.redivide_dict_test_data, "2")
         expected_output = self.redivide_dict_test_data["2"]
         assert result == expected_output
 
-    def test_validate_typical_fail(self):
+    @patch("dataset_tools.metadata_parser.nfo")
+    def test_validate_typical_fail(self, mock_nfo):
         subdict = {"mock": "data"}
         mock_data = {"prompt": subdict}
-        with self.assertRaises(KeyError):
-            out = validate_typical(mock_data, "prompt")
-            assert out is None
+        out = validate_typical(mock_data, "prompt")
+        mock_nfo.assert_called()
+        assert out is None
 
     @patch("dataset_tools.metadata_parser.redivide_nodeui_data_in")
     def test_arrange_nodeui_metadata_workflow(self, mock_redivide):
@@ -345,9 +344,9 @@ class TestParseMetadata(unittest.TestCase):
         """test"""
         data = "No Data"
         fake_file = "fake.png"
-        expected_return = {UpField.PLACEHOLDER: {"": UpField.PLACEHOLDER}}
+        expected_return = {EmptyField.PLACEHOLDER: {"": EmptyField.PLACEHOLDER}}
         mock_read.return_value = data
-        mock_coord.return_value = {UpField.PLACEHOLDER: {"": UpField.PLACEHOLDER}}
+        mock_coord.return_value = {EmptyField.PLACEHOLDER: {"": EmptyField.PLACEHOLDER}}
         result = parse_metadata(fake_file)
         mock_read.assert_called_with(fake_file)
         mock_coord.assert_called_with(data)

@@ -46,6 +46,7 @@ dependencies = [
     "PyQt6",
     "toml",
     "typing-extensions",
+    "llama_cpp_python",
 ]
 [project.optional-dependencies]
 dev = ["pytest"]

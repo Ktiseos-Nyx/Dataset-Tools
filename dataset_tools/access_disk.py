@@ -13,6 +13,7 @@ from PIL import Image, UnidentifiedImageError, ExifTags
 from dataset_tools.logger import debug_monitor
 from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.correct_types import ExtensionType as Ext
+from dataset_tools.model_tool import ModelTool
 
 
 class MetadataFileReader:
@@ -49,7 +50,7 @@ class MetadataFileReader:
             nfo("Failed to read image at:", file_path_named, error_log)
             return None
 
-    def read_text_file_contents(self, file_path_named):
+    def read_txt_contents(self, file_path_named):
         """
         Open plaintext files\n
         :param file_path_named: The path and file name of the text file
@@ -81,15 +82,21 @@ class MetadataFileReader:
         :param file_path_named: Location of file with file name and path
         :return: A mapping of information contained within it
         """
-        header = None
         ext = Path(file_path_named).suffix.lower()
-        if ext in Ext.EXIF:
-            header = self.read_jpg_header
-        elif ext in Ext.PNG_:
-            header = self.read_png_header
-        elif ext in Ext.PLAIN:
-            header = self.read_text_file_contents
-        elif ext in Ext.SCHEMA:
-            header = self.read_text_file_contents
-        if header:
-            return header(file_path_named)
+        if ext in Ext.JPEG:
+            return self.read_jpg_header(file_path_named)
+        if ext in Ext.PNG_:
+            return self.read_png_header(file_path_named)
+        for file_types in Ext.PLAIN:
+            if ext in file_types:
+                return self.read_txt_contents(file_path_named)
+        for file_types in Ext.SCHEMA:
+            if ext in file_types:
+                return self.read_txt_contents(file_path_named)
+        for file_types in Ext.MODEL:
+            if ext in file_types:
+                model_tool = ModelTool()
+                return model_tool.read_metadata_from(file_path_named)
+
+        # if header:
+        #     return header(file_path_named)

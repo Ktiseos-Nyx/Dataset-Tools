@@ -15,6 +15,7 @@ from dataset_tools.logger import debug_monitor  # , debug_message
 from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.access_disk import MetadataFileReader
 from dataset_tools.correct_types import (
+    EmptyField,
     IsThisNode,
     NodeWorkflow,
     BracketedDict,
@@ -70,7 +71,8 @@ def validate_typical(nested_map: dict, key_name: str) -> dict | None:
             return nested_map[key_name]
 
     nfo("%s", f"Node workflow not found {key_name}")
-    raise KeyError(f"Unknown format for dictionary {key_name} in {nested_map}")
+    nfo(KeyError(f"Unknown format for dictionary {key_name} in {nested_map}"))
+    return None
 
 
 @debug_monitor
@@ -127,19 +129,20 @@ def filter_keys_of(normalized_clean_data: dict) -> Tuple[dict]:
     """
     extracted_prompt_data = {}
     extracted_gen_data = {}
-    for node_number in normalized_clean_data:
-        this_node = validate_typical(normalized_clean_data, node_number)  # Returns dictionary of node number
-        for name_column_title in NodeNames.DATA_KEYS:
-            if this_node and this_node.get(name_column_title, False):
-                name_column = name_column_title
-                break
-            raise KeyError("Metadata validated but expected keys were not found.")
-        node_name = this_node[name_column]
-        if node_name in NodeNames.ENCODERS:
-            extracted_prompt_data.update(search_for_prompt_in(this_node, extracted_prompt_data, name_column))
-        else:
-            extracted_gen_data.update(search_for_gen_data_in(this_node, extracted_gen_data))
-    return extracted_prompt_data, extracted_gen_data
+    if normalized_clean_data is not None:
+        for node_number in normalized_clean_data:
+            this_node = validate_typical(normalized_clean_data, node_number)  # Returns dictionary of node number
+            for name_column_title in NodeNames.DATA_KEYS:
+                if this_node and this_node.get(name_column_title, False):
+                    name_column = name_column_title
+                    break
+                raise KeyError("Metadata validated but expected keys were not found.")
+            node_name = this_node[name_column]
+            if node_name in NodeNames.ENCODERS:
+                extracted_prompt_data.update(search_for_prompt_in(this_node, extracted_prompt_data, name_column))
+            else:
+                extracted_gen_data.update(search_for_gen_data_in(this_node, extracted_gen_data))
+        return extracted_prompt_data, extracted_gen_data
 
 
 @debug_monitor
@@ -158,7 +161,7 @@ def redivide_nodeui_data_in(header: str, first_key: str) -> Tuple[dict]:
         jsonified_header = clean_with_json(header, first_key)
     except KeyError as error_log:
         nfo("%s", "No key found.", error_log)
-        return {"": UpField.PLACEHOLDER, " ": UpField.PLACEHOLDER}
+        return {"": EmptyField.PLACEHOLDER, " ": EmptyField.PLACEHOLDER}
     else:
         if first_key == "workflow":
             normalized_clean_data = {"1": jsonified_header}  # To match normalized_prompt_structure format
@@ -182,7 +185,13 @@ def arrange_nodeui_metadata(header_data: dict) -> dict:
         gen_pairs_copy = generation_data_pairs.copy()
         extracted_prompt_pairs, second_gen_map = redivide_nodeui_data_in(header_data, "workflow")
         generation_data_pairs = second_gen_map | gen_pairs_copy
-    return {UpField.PROMPT: extracted_prompt_pairs or {"": UpField.PLACEHOLDER}, DownField.GENERATION_DATA: generation_data_pairs}
+    return {
+        UpField.PROMPT: extracted_prompt_pairs or {EmptyField.PLACEHOLDER: EmptyField.EMPTY},
+        DownField.GENERATION_DATA: generation_data_pairs
+        or {
+            EmptyField.PLACEHOLDER: EmptyField.EMPTY,
+        },
+    }
 
 
 # /______________________________________________________________________________________________________________________ A4 format
@@ -360,9 +369,9 @@ def arrange_webui_metadata(header_data: str) -> dict:
 def arrange_exif_metadata(header_data: dict) -> dict:
     """Arrange EXIF data into correct format"""
     metadata = {
-        UpField.TAGS: {UpField.EXIF: {key: value} for key, value in header_data.items() if (key != "icc_profile" or key != "exif")},
-        DownField.ICC: {DownField.DATA: header_data.get("icc_profile")},
-        DownField.EXIF: {DownField.DATA: header_data.get("exif")},
+        UpField.TAGS: {DownField.EXIF: {key: value} for key, value in header_data.items() if (key != "icc_profile" or key != "exif")},
+        DownField.ICC: {UpField.DATA: header_data.get("icc_profile")},
+        DownField.EXIF: {UpField.DATA: header_data.get("exif")},
     }
     return metadata
 
@@ -386,7 +395,6 @@ def coordinate_metadata_ops(header_data: dict | str, metadata: dict = None) -> d
     has_prompt = isinstance(header_data, dict) and header_data.get("prompt")
     has_params = isinstance(header_data, dict) and header_data.get("parameters")
     has_tags = isinstance(header_data, dict) and ("icc_profile" in header_data or "exif" in header_data)
-
     if has_prompt:
         metadata = arrange_nodeui_metadata(header_data)
     elif has_params:
@@ -394,14 +402,27 @@ def coordinate_metadata_ops(header_data: dict | str, metadata: dict = None) -> d
     elif has_tags:
         metadata = arrange_exif_metadata(header_data)
     elif isinstance(header_data, dict):
+        if header_data.get(UpField.METADATA):
+            metadata = header_data
+        else:
+            nfo("Failed to load metadata : %s", header_data)
+    if not metadata and isinstance(header_data, str):
         try:
-            metadata = {UpField.JSON_DATA: json.loads(f"{header_data}")}
+            metadata = dict(header_data)
         except JSONDecodeError as error_log:
             nfo("JSON Decode failed %s", error_log)
-    if not metadata and isinstance(header_data, str):
-        metadata = {UpField.DATA: header_data}
+            metadata = {UpField.DATA: header_data, EmptyField.PLACEHOLDER: EmptyField.EMPTY}
+        except KeyError as error_log:
+            nfo("Could not load metadata as dict %s", error_log)
+            metadata = {UpField.DATA: header_data, EmptyField.PLACEHOLDER: EmptyField.EMPTY}
+        else:
+            up_data = {UpField.DATA: header_data}
+            down_data = {EmptyField.PLACEHOLDER: EmptyField.EMPTY}
+            metadata.setdefault(UpField.DATA, up_data)
+            metadata.setdefault(EmptyField.PLACEHOLDER, down_data)
+
     elif not metadata:
-        metadata = {UpField.PLACEHOLDER: {"": UpField.PLACEHOLDER}}
+        metadata = {EmptyField.PLACEHOLDER: {EmptyField.PLACEHOLDER: EmptyField.EMPTY}}
 
     return metadata
 
@@ -415,10 +436,10 @@ def parse_metadata(file_path_named: str) -> dict:
     """
 
     reader = MetadataFileReader()
-    metadata = None
+    metadata = {}
     header_data = reader.read_header(file_path_named)
     if header_data is not None:
         metadata = coordinate_metadata_ops(header_data)
-        if metadata == {UpField.PLACEHOLDER: {"": UpField.PLACEHOLDER}} or not isinstance(metadata, dict):
+        if metadata == {EmptyField.PLACEHOLDER: {"": EmptyField.PLACEHOLDER}} or not isinstance(metadata, dict):
             nfo("Unexpected format", file_path_named)
     return metadata

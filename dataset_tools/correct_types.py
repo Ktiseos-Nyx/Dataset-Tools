@@ -19,31 +19,57 @@ else:
     from typing import TypedDict, Annotated, List, Union, Set
 
 
-class UpField:
-    """Upper display area for ui\n"""
+class EmptyField:
+    "When no data is available"
 
+    PLACEHOLDER: str = "No Data"
+    EMPTY: str = "Empty"
+    LABELS: List[Constant] = [PLACEHOLDER, EMPTY]
+
+
+class UpField:
+    """Upper display area for ui\n
+    Tags in Up or Down arrange data layout for UI
+    Ensure ALL field tags are included in LABELS
+    """
+
+    METADATA: str = "Metadata"
     PROMPT: str = "Prompt Data"
     TAGS: str = "Tags"
-    JSON_DATA: str = "JSON Data"
     TEXT_DATA: str = "TEXT Data"
     TOML_DATA: str = "TOML Data"
-    EXIF: str = "EXIF"
     DATA: str = "DATA"
-    PLACEHOLDER: str = "No Data"
-    LABELS: list[Constant] = [PROMPT, TAGS, TEXT_DATA, TOML_DATA, JSON_DATA, DATA, PLACEHOLDER]
+    LABELS: List[Constant] = [
+        METADATA,
+        PROMPT,
+        TAGS,
+        TEXT_DATA,
+        TOML_DATA,
+        DATA,
+    ]
 
 
 class DownField:
-    """Lower display area for ui\n"""
+    """Lower display area for ui\n
+    Tags in Up or Down arrange data layout for UI
+    Ensure ALL field tags are included in LABELS
+
+    """
 
     GENERATION_DATA: str = "Generation Data"
     SYSTEM: str = "System"
     ICC: str = "ICC Profile"
     EXIF: str = "EXIF"
     RAW_DATA: str = "TEXT DATA"
-    PLACEHOLDER: str = "No Data"
-    DATA: str = "DATA"
-    LABELS: List[Constant] = [GENERATION_DATA, SYSTEM, ICC, EXIF, RAW_DATA, PLACEHOLDER]
+    JSON_DATA: str = "JSON Data"
+    LABELS: List[Constant] = [
+        GENERATION_DATA,
+        SYSTEM,
+        ICC,
+        EXIF,
+        RAW_DATA,
+        JSON_DATA,
+    ]
 
 
 class ExtensionType:
@@ -59,12 +85,13 @@ class ExtensionType:
     XML_: Set[str] = {".xml"}
     GGUF: Set[str] = {".gguf"}
     SAFE: Set[str] = {".safetensors", ".sft"}
+    PICK: Set[str] = {".pt", ".pth", ".ckpt", ".pickletensor"}
 
     IMAGE: List[Set[str]] = [JPEG, WEBP, PNG_]
     EXIF: List[Set[str]] = [JPEG, WEBP]
     SCHEMA: List[Set[str]] = [JSON, TOML]
     PLAIN: List[Set[str]] = [TEXT, XML_, HTML]
-    # MODEL: List[Set[str]] = [SAFE, GGUF]
+    MODEL: List[Set[str]] = [SAFE, GGUF, PICK]
 
     IGNORE: List[Constant] = [
         "Thumbs.db",
