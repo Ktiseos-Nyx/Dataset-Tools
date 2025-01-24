@@ -13,7 +13,7 @@ from PIL import Image, UnidentifiedImageError, ExifTags
 from dataset_tools.logger import debug_monitor
 from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.correct_types import ExtensionType as Ext
-from dataset_tools.model_tool import ModelTool
+# from dataset_tools.model_tool import ModelTool
 
 
 class MetadataFileReader:
@@ -93,10 +93,10 @@ class MetadataFileReader:
         for file_types in Ext.SCHEMA:
             if ext in file_types:
                 return self.read_txt_contents(file_path_named)
-        for file_types in Ext.MODEL:
-            if ext in file_types:
-                model_tool = ModelTool()
-                return model_tool.read_metadata_from(file_path_named)
+        # for file_types in Ext.MODEL:
+        #     if ext in file_types:
+        #         model_tool = ModelTool()
+        #         return model_tool.read_metadata_from(file_path_named)
 
         # if header:
         #     return header(file_path_named)
