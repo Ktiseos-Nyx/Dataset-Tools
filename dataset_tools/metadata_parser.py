@@ -135,9 +135,10 @@ def filter_keys_of(normalized_clean_data: dict) -> Tuple[dict]:
             for name_column_title in NodeNames.DATA_KEYS:
                 if this_node and this_node.get(name_column_title, False):
                     name_column = name_column_title
+                    node_name = this_node[name_column]
                     break
-                raise KeyError("Metadata validated but expected keys were not found.")
-            node_name = this_node[name_column]
+                node_name = this_node
+                # raise KeyError("Metadata validated but expected keys were not found.")
             if node_name in NodeNames.ENCODERS:
                 extracted_prompt_data.update(search_for_prompt_in(this_node, extracted_prompt_data, name_column))
             else:
