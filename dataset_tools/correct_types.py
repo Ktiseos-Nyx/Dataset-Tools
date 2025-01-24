@@ -111,11 +111,17 @@ class NodeNames:
         "CLIPTextEncodeHunyuanDiT",
         "CLIPTextEncodePixArtAlpha",
         "CLIPTextEncodeSDXLRefiner",
-        "WildcardEncode //Inspire",
-        "ImpactWildcardProcessor",
         "ImpactWildcardEncodeCLIPTextEncode",
-        "RecourseStrings",
-        "SelectString",
+        "BNK_CLIPTextEncodeAdvanced",
+        "BNK_CLIPTextEncodeSDXLAdvanced",
+        "WildcardEncode //Inspire",
+        # "RecourseStrings",  ACKTUALLY these aren't encoders *adjusts glasses*
+        # "StringSelector",
+        # "ImpactWildcardProcessor",
+        # "CText",
+        # "CTextML",
+        # "CListString",
+        # "CSwitchString",
         "CLIPTextEncode",
     }
     PROMPT_LABELS = ["Positive prompt", "Negative prompt", "Prompt"]
