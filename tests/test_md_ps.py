@@ -19,7 +19,7 @@ from dataset_tools.metadata_parser import (
     make_paired_str_dict,
     extract_dict_by_delineation,
     extract_prompts,
-    coordinate_metadata_ops,
+    coordinate_metadata_operations,
     arrange_nodeui_metadata,
     validate_mapping_bracket_pair_structure_of,
     filter_keys_of,
@@ -319,7 +319,7 @@ class TestParseMetadata(unittest.TestCase):
         """test"""
         data = {"parameters": {"random": "data"}}
         mock_webui.return_value = data
-        result = coordinate_metadata_ops(data, dict)
+        result = coordinate_metadata_operations(data, dict)
         mock_webui.assert_called_with(data)
         assert result == data
 
@@ -328,11 +328,11 @@ class TestParseMetadata(unittest.TestCase):
         """test"""
         data = {"prompt": {"random": "data"}}
         mock_node.return_value = data
-        result = coordinate_metadata_ops(data, dict)
+        result = coordinate_metadata_operations(data, dict)
         mock_node.assert_called_with(data)
         assert result == data
 
-    @patch("dataset_tools.metadata_parser.coordinate_metadata_ops")
+    @patch("dataset_tools.metadata_parser.coordinate_metadata_operations")
     @patch("dataset_tools.access_disk.MetadataFileReader.read_header")
     @patch("dataset_tools.metadata_parser.nfo")
     def test_parse_fail(
@@ -358,7 +358,7 @@ class TestParseMetadata(unittest.TestCase):
         """test"""
         mock_reader = MockReader.return_value
         mock_reader.read_header.return_value = "header"
-        with patch("dataset_tools.metadata_parser.coordinate_metadata_ops", return_value={"key": "value"}):
+        with patch("dataset_tools.metadata_parser.coordinate_metadata_operations", return_value={"key": "value"}):
             self.assertEqual(parse_metadata("path"), {"key": "value"})
 
 

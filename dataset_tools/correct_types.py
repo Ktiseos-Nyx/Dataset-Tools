@@ -37,14 +37,12 @@ class UpField:
     PROMPT: str = "Prompt Data"
     TAGS: str = "Tags"
     TEXT_DATA: str = "TEXT Data"
-    TOML_DATA: str = "TOML Data"
     DATA: str = "DATA"
     LABELS: List[Constant] = [
         METADATA,
         PROMPT,
         TAGS,
         TEXT_DATA,
-        TOML_DATA,
         DATA,
     ]
 
@@ -60,14 +58,18 @@ class DownField:
     SYSTEM: str = "System"
     ICC: str = "ICC Profile"
     EXIF: str = "EXIF"
-    RAW_DATA: str = "TEXT DATA"
+    RAW_DATA: str = "Text Data"
+    LAYER_DATA: str = "Layer Data"
     JSON_DATA: str = "JSON Data"
+    TOML_DATA: str = "TOML Data"
     LABELS: List[Constant] = [
         GENERATION_DATA,
         SYSTEM,
         ICC,
         EXIF,
         RAW_DATA,
+        LAYER_DATA,
+        TOML_DATA,
         JSON_DATA,
     ]
 
@@ -115,18 +117,29 @@ class NodeNames:
         "BNK_CLIPTextEncodeAdvanced",
         "BNK_CLIPTextEncodeSDXLAdvanced",
         "WildcardEncode //Inspire",
-        # "RecourseStrings",  ACKTUALLY these aren't encoders *adjusts glasses*
-        # "StringSelector",
-        # "ImpactWildcardProcessor",
-        # "CText",
-        # "CTextML",
-        # "CListString",
-        # "CSwitchString",
         "CLIPTextEncode",
+    }
+    STRING_INPUT = {
+        "RecourseStrings",
+        "StringSelector",
+        "ImpactWildcardProcessor",
+        "CText",
+        "CTextML",
+        "CListString",
+        "CSwitchString",
     }
     PROMPT_LABELS = ["Positive prompt", "Negative prompt", "Prompt"]
 
-    IGNORE_KEYS = ["type", "link", "shape", "id", "pos", "size", "node_id"]
+    IGNORE_KEYS = [
+        "type",
+        "link",
+        "shape",
+        "id",
+        "pos",
+        "size",
+        "node_id",
+        "empty_padding",
+    ]
 
     DATA_KEYS = {
         "class_type": "inputs",

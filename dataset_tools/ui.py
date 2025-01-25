@@ -225,15 +225,7 @@ class MainWindow(Qw.QMainWindow):
 
             for file_type in Ext.IMAGE:
                 if Path(file_path).suffix in file_type:
-                    pixmap = QtGui.QPixmap(file_path)
-                    # scale the image
-                    self.image_preview.setPixmap(
-                        pixmap.scaled(
-                            self.image_preview.size(),
-                            QtCore.Qt.AspectRatioMode.KeepAspectRatio,
-                            QtCore.Qt.TransformationMode.SmoothTransformation,
-                        )
-                    )
+                    self.display_image_of(file_path)
                     break
 
             metadata = self.load_metadata(file_path)
@@ -281,6 +273,26 @@ class MainWindow(Qw.QMainWindow):
         #     metadata_display["title"] += EmptyField.PLACEHOLDER
         #     metadata_display["display"] += metadata
         return metadata_display
+
+    @debug_monitor
+    def display_image_of(self, image_file: str) -> None:
+        """
+        Send an image to the previwer\n
+        :param image_file: Absolute path of the image to display
+        :type image_file: str
+        :return: None, sends an image to display
+        """
+
+        pixmap = QtGui.QPixmap(image_file)
+
+        # scale the image
+        self.image_preview.setPixmap(
+            pixmap.scaled(
+                self.image_preview.size(),
+                QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                QtCore.Qt.TransformationMode.SmoothTransformation,
+            )
+        )
 
     @debug_monitor
     def display_text_of(self, metadata: dict) -> None:  # fmt: skip

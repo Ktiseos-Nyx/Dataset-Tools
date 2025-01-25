@@ -106,16 +106,17 @@ def search_for_gen_data_in(this_node: dict, extracted_gen_data: dict) -> dict:
     return: A dict of collected values
     """
     gen_data = {}
-    for node_field, node_input in this_node["inputs"].items():
-        if node_field not in NodeNames.IGNORE_KEYS:
-            new_label = node_field
-            label_count = str(extracted_gen_data.keys()).count(node_field)
-            if label_count > 0:
-                new_label = f"{node_field}_{label_count}"
-            if not isinstance(node_input, list):
-                if isinstance(node_input, str):
-                    node_input = node_input.strip()
-                gen_data.setdefault(new_label, node_input)
+    if isinstance(this_node, dict):
+        for node_field, node_input in this_node["inputs"].items():
+            if node_field not in NodeNames.IGNORE_KEYS:
+                new_label = node_field
+                label_count = str(extracted_gen_data.keys()).count(node_field)
+                if label_count > 0:
+                    new_label = f"{node_field}_{label_count}"
+                if not isinstance(node_input, list):
+                    if isinstance(node_input, str):
+                        node_input = node_input.strip()
+                    gen_data.setdefault(new_label, node_input)
     return gen_data
 
 
@@ -139,7 +140,7 @@ def filter_keys_of(normalized_clean_data: dict) -> Tuple[dict]:
                     break
                 node_name = this_node
                 # raise KeyError("Metadata validated but expected keys were not found.")
-            if node_name in NodeNames.ENCODERS:
+            if node_name in NodeNames.ENCODERS or node_name in NodeNames.STRING_INPUT:
                 extracted_prompt_data.update(search_for_prompt_in(this_node, extracted_prompt_data, name_column))
             else:
                 extracted_gen_data.update(search_for_gen_data_in(this_node, extracted_gen_data))
@@ -188,10 +189,7 @@ def arrange_nodeui_metadata(header_data: dict) -> dict:
         generation_data_pairs = second_gen_map | gen_pairs_copy
     return {
         UpField.PROMPT: extracted_prompt_pairs or {EmptyField.PLACEHOLDER: EmptyField.EMPTY},
-        DownField.GENERATION_DATA: generation_data_pairs
-        or {
-            EmptyField.PLACEHOLDER: EmptyField.EMPTY,
-        },
+        DownField.GENERATION_DATA: generation_data_pairs or {EmptyField.PLACEHOLDER: EmptyField.EMPTY},
     }
 
 
@@ -381,7 +379,7 @@ def arrange_exif_metadata(header_data: dict) -> dict:
 
 
 @debug_monitor
-def coordinate_metadata_ops(header_data: dict | str, metadata: dict = None) -> dict:
+def coordinate_metadata_operations(header_data: dict | str, metadata: dict = None) -> dict:
     """
     Process data based on identifying contents\n
     :param header_data: Metadata extracted from file
@@ -392,38 +390,76 @@ def coordinate_metadata_ops(header_data: dict | str, metadata: dict = None) -> d
     :type metadata: dict
     :return: A dict of the metadata inside header data
     """
-
-    has_prompt = isinstance(header_data, dict) and header_data.get("prompt")
-    has_params = isinstance(header_data, dict) and header_data.get("parameters")
-    has_tags = isinstance(header_data, dict) and ("icc_profile" in header_data or "exif" in header_data)
-    if has_prompt:
-        metadata = arrange_nodeui_metadata(header_data)
-    elif has_params:
-        metadata = arrange_webui_metadata(header_data)
-    elif has_tags:
-        metadata = arrange_exif_metadata(header_data)
-    elif isinstance(header_data, dict):
-        if header_data.get(UpField.METADATA):
-            metadata = header_data
-        else:
-            nfo("Failed to load metadata : %s", header_data)
-    if not metadata and isinstance(header_data, str):
-        try:
-            metadata = dict(header_data)
-        except JSONDecodeError as error_log:
-            nfo("JSON Decode failed %s", error_log)
-            metadata = {UpField.DATA: header_data, EmptyField.PLACEHOLDER: EmptyField.EMPTY}
-        except KeyError as error_log:
-            nfo("Could not load metadata as dict %s", error_log)
-            metadata = {UpField.DATA: header_data, EmptyField.PLACEHOLDER: EmptyField.EMPTY}
-        else:
-            up_data = {UpField.DATA: header_data}
-            down_data = {EmptyField.PLACEHOLDER: EmptyField.EMPTY}
-            metadata.setdefault(UpField.DATA, up_data)
-            metadata.setdefault(EmptyField.PLACEHOLDER, down_data)
-
-    elif not metadata:
+    if isinstance(header_data, dict):
+        metadata = arrange_dict_metadata(header_data)
+    elif isinstance(header_data, str):
+        metadata = arrange_str_metadata(header_data)
+    if not metadata:
+        nfo("Failed to find/load metadata : %s", header_data)
         metadata = {EmptyField.PLACEHOLDER: {EmptyField.PLACEHOLDER: EmptyField.EMPTY}}
+
+    return metadata
+
+
+def arrange_dict_metadata(header_data: dict) -> dict:
+    """
+    Perform simple processing of a dictionary based on expectation of metadata\n
+    :param header_data: The data from the file
+    :type header_data: str
+    :return: A dictionary formatted for display
+    """
+    metadata = {}
+    condition_functions = {
+        lambda: header_data.get("prompt"): arrange_nodeui_metadata,
+        lambda: header_data.get("parameters"): arrange_webui_metadata,
+        lambda: "icc_profile" in header_data or "exif" in header_data: arrange_exif_metadata,
+    }
+    schema_functions = {
+        UpField.METADATA,
+        DownField.LAYER_DATA,
+        UpField.TEXT_DATA,
+        DownField.JSON_DATA,
+        DownField.TOML_DATA,
+    }
+
+    for condition, arranger in condition_functions.items():
+        if condition():
+            metadata.update(arranger(header_data))
+            break
+    for field_title in schema_functions:
+        field_data = header_data.get(field_title)
+        if field_data:
+            if field_title in metadata:
+                field_title_count = str(metadata.keys()).count(field_data)
+                field_title_name = f"{field_title}_{field_title_count}"
+                metadata.setdefault(field_title_name, field_data)
+            else:
+                metadata.setdefault(field_title, field_data)
+
+    return metadata
+
+
+def arrange_str_metadata(header_data: str) -> dict:
+    """
+    Perform simple processing of raw text strings inside of a file\n
+    :param header_data: The data from the file
+    :type header_data: str
+    :return: A dictionary formatted for display
+    """
+    metadata = {}
+    try:
+        metadata = dict(header_data)
+    except JSONDecodeError as error_log:
+        nfo("JSON Decode failed %s", error_log)
+        metadata = {UpField.DATA: header_data, EmptyField.PLACEHOLDER: EmptyField.EMPTY}
+    except KeyError as error_log:
+        nfo("Could not load metadata as dict %s", error_log)
+        metadata = {UpField.DATA: header_data, EmptyField.PLACEHOLDER: EmptyField.EMPTY}
+    else:
+        up_data = {UpField.DATA: header_data}
+        down_data = {EmptyField.PLACEHOLDER: EmptyField.EMPTY}
+        metadata.setdefault(UpField.DATA, up_data)
+        metadata.setdefault(EmptyField.PLACEHOLDER, down_data)
 
     return metadata
 
@@ -440,7 +476,7 @@ def parse_metadata(file_path_named: str) -> dict:
     metadata = {}
     header_data = reader.read_header(file_path_named)
     if header_data is not None:
-        metadata = coordinate_metadata_ops(header_data)
+        metadata = coordinate_metadata_operations(header_data)
         if metadata == {EmptyField.PLACEHOLDER: {"": EmptyField.PLACEHOLDER}} or not isinstance(metadata, dict):
             nfo("Unexpected format", file_path_named)
     return metadata
