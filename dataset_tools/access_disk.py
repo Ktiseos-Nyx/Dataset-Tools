@@ -16,6 +16,7 @@ from dataset_tools.correct_types import EmptyField, ExtensionType as Ext, DownFi
 from dataset_tools.model_tool import ModelTool
 
 
+
 class MetadataFileReader:
     """Interface for metadata and text read operations"""
 
@@ -113,6 +114,6 @@ class MetadataFileReader:
             if ext in file_types:
                 model_tool = ModelTool()
                 return model_tool.read_metadata_from(file_path_named)
-
+          
         # if header:
         #     return header(file_path_named)

@@ -18,6 +18,7 @@ from dataset_tools.correct_types import (
     EmptyField,
     IsThisNode,
     NodeWorkflow,
+    NodeWorkflowVariety2,
     BracketedDict,
     ListOfDelineatedStr,
     UpField,
@@ -62,6 +63,14 @@ def validate_typical(nested_map: dict, key_name: str) -> dict | None:
             nfo("%s", f"Node workflow not found, returning NoneType {key_name}", error_log)
         else:
             return nested_map[key_name]
+    elif next(iter(nested_map[key_name])) in NodeWorkflowVariety2.__annotations__.keys():
+        try:
+            is_this_node.workflow_v2.validate_python(nested_map)
+        except ValidationError as error_log:  #
+            nfo("%s", f"Node workflow not found, returning NoneType {key_name}", error_log)
+        else:
+            return nested_map[key_name]
+
     else:
         try:
             is_this_node.data.validate_python(nested_map[key_name])  # Be sure we have the right data
@@ -71,7 +80,7 @@ def validate_typical(nested_map: dict, key_name: str) -> dict | None:
             return nested_map[key_name]
 
     nfo("%s", f"Node workflow not found {key_name}")
-    nfo(KeyError(f"Unknown format for dictionary {key_name} in {nested_map}"))
+    nfo(f"Unknown format for dictionary {key_name} in {nested_map}")
     return None
 
 

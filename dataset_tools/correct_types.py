@@ -158,24 +158,24 @@ class NodeNames:
         "class_type": "inputs",
         "nodes": "widget_values",
     }
-    PROMPT_NODE_FIELDS = {
-        "text",
-        "t5xxl",
-        "clip-l",
-        "clip-g",
-        "mt5",
-        "mt5xl",
-        "bert",
-        "clip-h",
-        "wildcard",
-        "string",
-        "positive",
-        "negative",
-        "text_g",
-        "text_l",
-        "wildcard_text",
-        "populated_text",
-    }
+    # PROMPT_NODE_FIELDS = {
+    #     "text",
+    #     "t5xxl",
+    #     "clip-l",
+    #     "clip-g",
+    #     "mt5",
+    #     "mt5xl",
+    #     "bert",
+    #     "clip-h",
+    #     "wildcard",
+    #     "string",
+    #     "positive",
+    #     "negative",
+    #     "text_g",
+    #     "text_l",
+    #     "wildcard_text",
+    #     "populated_text",
+    # }
 
 
 EXC_INFO: bool = LOG_LEVEL != "i"
@@ -220,6 +220,18 @@ class NodeWorkflow(TypedDict):
     version: float
 
 
+class NodeWorkflowVariety2(TypedDict):
+    last_node_id: int
+    last_link_id: Union[int, dict]
+    nodes: list
+    links: list
+    groups: list
+    config: dict
+    extra: dict
+    version: float
+    widget_idx_map: dict
+
+
 class BracketedDict(BaseModel):
     """
     Ensure a string value is formatted correctly for a dictionary\n
@@ -239,6 +251,7 @@ class IsThisNode:
 
     data = TypeAdapter(NodeDataMap)
     workflow = TypeAdapter(NodeWorkflow)
+    workflow_v2 = TypeAdapter(NodeWorkflowVariety2)
 
 
 class ListOfDelineatedStr(BaseModel):

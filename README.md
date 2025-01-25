@@ -1,3 +1,4 @@
+
 # Dataset-Tools: A Simple Dataset Viewer for AI Art
 
 <span style="text-align: center">
@@ -9,6 +10,20 @@
 [__Help the Creators__](#help-the-creators)<br>
 
 </span>
+
+| Badge                                   | Description                               |
+| :-------------------------------------- | :---------------------------------------- |
+| [![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx) | Our Github |
+| ![Build Status](https://img.shields.io/badge/build-passing-brightgreen) | Indicates the build status of the project. |
+| [![PyTest](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/pytest.yml/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/pytest.yml)        | PyTest results. |
+| ![CC0 1.0 License](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg) | Creative Commons Zero v1.0 Universal (Public Domain Dedication) |
+| [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/5t2kYxt7An) | Discord Server |
+| [![Ko-Fi](https://img.shields.io/badge/Ko--fi-Support%20on%20Ko--fi-FF5E5B?logo=kofi&style=for-the-badge)](https://ko-fi.com/duskfallcrew) | Duskfallcrew Ko-FI | 
+| [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew) | Watch on Twitch | 
+
+
+
+
 
 <hr>
 

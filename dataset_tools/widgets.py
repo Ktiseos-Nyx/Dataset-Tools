@@ -70,7 +70,8 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
                         elif suffix in file_type and file_type in Ext.PLAIN or file_type in Ext.SCHEMA:
                             text_files.append(file_path)
                         elif suffix in file_type and file_type in Ext.MODEL:
-                            model_files.append(file_path)
+                            pass
+                            # model_files.append(file_path)
             progress = (index + 1) / file_count * 100
             self.progress.emit(int(progress))
 
