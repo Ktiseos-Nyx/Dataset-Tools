@@ -4,8 +4,9 @@
 # // --<{ Ktiseos Nyx }>--
 
 from pathlib import Path
-import mmap
-import pickle
+
+# import mmap
+# import pickle
 import struct
 import json
 from gguf import GGUFReader
@@ -32,32 +33,32 @@ class ModelTool:
         :return: `dict` a dictionary including the metadata header and external file attributes\n
         (model_header, disk_size, file_name, file_extension)
         """
+        metadata = None
         extension = Path(file_path_named).suffix
         import_map = {
             ".safetensors": self.metadata_from_safetensors,
             ".sft": self.metadata_from_safetensors,
             ".gguf": self.metadata_from_gguf,
-            ".pt": self.metadata_from_pickletensor,
-            ".pth": self.metadata_from_pickletensor,
-            ".ckpt": self.metadata_from_pickletensor,
+            # ".pt": self.metadata_from_pickletensor,
+            # ".pth": self.metadata_from_pickletensor,
+            # ".ckpt": self.metadata_from_pickletensor,
         }
         if extension in import_map:
             self.read_method = import_map.get(extension)
             metadata = self.read_method(file_path_named)
-            return metadata
         else:
             nfo(f"Unsupported file extension: {extension}")
-            return None
+        return metadata
 
-    def metadata_from_pickletensor(self, file_path_named: str) -> dict:
-        """
-        Collect metadata from a pickletensor file header\n
-        :param file_path: `str` the full path to the file being opened
-        :return: `dict` the key value pair structure found in the file
-        """
-        with open(file_path_named, "r+b") as file_contents_to:
-            mm = mmap.mmap(file_contents_to.fileno(), 0)
-            return pickle.loads(memoryview(mm))
+    # def metadata_from_pickletensor(self, file_path_named: str) -> dict:
+    #     """
+    #     Collect metadata from a pickletensor file header\n
+    #     :param file_path: `str` the full path to the file being opened
+    #     :return: `dict` the key value pair structure found in the file
+    #     """
+    #     with open(file_path_named, "r+b") as file_contents_to:
+    #         mem_map_data = mmap.mmap(file_contents_to.fileno(), 0)
+    #         return pickle.loads(memoryview(mem_map_data))
 
     GGUF_MAGIC_NUMBER = b"GGUF"
 
@@ -76,30 +77,45 @@ class ModelTool:
         else:
             if not magic_number and magic_number != self.GGUF_MAGIC_NUMBER:
                 nfo(f"Invalid GGUF magic number in '{file_path_named}'")
-                return False
+                result = False
             elif version < 2:
                 nfo(f"Unsupported GGUF version {version} in '{file_path_named}'")
-                return False
+                result = False
             elif magic_number == self.GGUF_MAGIC_NUMBER and version >= 2:
-                return True
+                result = True
             else:
-                return False
-        return None
+                result = False
+        return result
 
-    def create_gguf_reader(self, file_path_named: str):
+    def create_gguf_reader(self, file_path_named: str) -> dict:
+        """
+        Attempt to open gguf file with method from gguf library\n
+        :param file_path_named: Absolute path to the file being opened
+        :type file_path_named: `str`
+        :return: `dict` of relevant data from the file
+        """
+
         try:  # method using gguf library, better for LDM conversions
             reader = GGUFReader(file_path_named, "r")  # obsolete in numpy 2, also slower
         except ValueError as error_log:
             print(error_log)  # >:V
         else:
-            arch = reader.fields.get("general.architecture")  # model type category, prevents the need to block scan for id
-            reader_data = {"architecture_name": str(bytes(arch.parts[arch.data[0]]), encoding="utf-8")}
+            arch = reader.fields.get("general.architecture")  # model type
+            reader_data = {
+                "architecture_name": str(bytes(arch.parts[arch.data[0]]), encoding="utf-8"),
+            }
             general_name_raw = reader.fields.get("general.name")
             if general_name_raw:
                 try:
-                    general_name = (str(bytes(general_name_raw.parts[general_name_raw.data[0]]), encoding="utf-8"),)
+                    general_name_data = general_name_raw.parts[general_name_raw.data[0]]
+                    general_name = (str(bytes(general_name_data), encoding="utf-8"),)
                 except KeyError as error_log:
-                    nfo("Failed to get expected field within model metadata: %s", file_path_named, general_name_raw, error_log)
+                    nfo(
+                        "Failed to get expected field within model metadata: %s",
+                        file_path_named,
+                        general_name_raw,
+                        error_log,
+                    )
                 else:
                     reader_data.setdefault("general_name", general_name)
             # retrieve model name from the dict data
@@ -110,7 +126,7 @@ class ModelTool:
             # get dtype from metadata here
             for tensor in reader.tensors:
                 tensor_info = {"shape": str(tensor.shape), "dtype": str(tensor.tensor_type.name)}
-                tensor_data.setdefault(str(tensor.name), tensor_info)  # create dict similar to safetensors/pt results
+                tensor_data.setdefault(str(tensor.name), tensor_info)  # safetensors normalization
             file_metadata = {UpField.METADATA: reader_data, DownField.LAYER_DATA: tensor_data}
             return file_metadata
 
@@ -120,6 +136,7 @@ class ModelTool:
         :param file_path_named: `str` the full path to the file being opened
         :return: `dict` The entire header with Llama parser formatting
         """
+        file_metadata = {}
         parser = Llama(model_path=file_path_named, vocab_only=True, verbose=False)
         if parser:
             llama_data = {}
@@ -143,8 +160,7 @@ class ModelTool:
                 llama_data.setdefault("dtype", scores_dtype.name)  # e.g., 'float32'
             file_metadata = {UpField.METADATA: llama_data, DownField.LAYER_DATA: EmptyField.PLACEHOLDER}
 
-            return file_metadata
-        return None
+        return file_metadata
 
     def attempt_file_open(self, file_path_named: str) -> dict:
         """
@@ -156,16 +172,13 @@ class ModelTool:
         metadata = None
         metadata = self.create_gguf_reader(file_path_named)
         if metadata:
-            return metadata
+            pass
         else:
             try:
                 metadata = self.create_llama_parser(file_path_named)
             except ValueError as error_log:
                 nfo("Parsing .gguf file failed for %s", file_path_named, error_log)
-            else:
-                if metadata:
-                    return metadata
-        return None
+        return metadata
 
     def metadata_from_gguf(self, file_path_named: str) -> dict:
         """

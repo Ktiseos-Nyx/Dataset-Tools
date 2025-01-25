@@ -144,7 +144,7 @@ def filter_keys_of(normalized_clean_data: dict) -> Tuple[dict]:
                 extracted_prompt_data.update(search_for_prompt_in(this_node, extracted_prompt_data, name_column))
             else:
                 extracted_gen_data.update(search_for_gen_data_in(this_node, extracted_gen_data))
-        return extracted_prompt_data, extracted_gen_data
+    return extracted_prompt_data, extracted_gen_data
 
 
 @debug_monitor
