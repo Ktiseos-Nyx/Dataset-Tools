@@ -80,7 +80,7 @@ def validate_typical(nested_map: dict, key_name: str) -> dict | None:
             return nested_map[key_name]
 
     nfo("%s", f"Node workflow not found {key_name}")
-    nfo(KeyError(f"Unknown format for dictionary {key_name} in {nested_map}"))
+    nfo(f"Unknown format for dictionary {key_name} in {nested_map}")
     return None
 
 
