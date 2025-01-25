@@ -117,6 +117,15 @@ class NodeNames:
         "BNK_CLIPTextEncodeAdvanced",
         "BNK_CLIPTextEncodeSDXLAdvanced",
         "WildcardEncode //Inspire",
+        "TSC_EfficientLoader",
+        "TSC_EfficientLoaderSDXL",
+        "RgthreePowerPrompt",
+        "RgthreePowerPromptSimple",
+        "RgthreeSDXLPowerPromptPositive",
+        "RgthreeSDXLPowerPromptSimple",
+        "AdvancedCLIPTextEncode",
+        "AdvancedCLIPTextEncodeWithBreak",
+        "Text2Prompt",
         "CLIPTextEncode",
     }
     STRING_INPUT = {
@@ -127,6 +136,10 @@ class NodeNames:
         "CTextML",
         "CListString",
         "CSwitchString",
+        "CR_PromptText",
+        "StringLiteral",
+        "CR_CombinePromptSDParameterGenerator",
+        "WidgetToString",
     }
     PROMPT_LABELS = ["Positive prompt", "Negative prompt", "Prompt"]
 
