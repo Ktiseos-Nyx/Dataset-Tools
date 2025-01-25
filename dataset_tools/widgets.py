@@ -15,7 +15,7 @@ from dataset_tools.logger import info_monitor as nfo
 class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
     """Opens files in the UI"""
 
-    finished = QtCore.pyqtSignal(list, list, str)  # pylint: disable=c-extension-no-member
+    finished = QtCore.pyqtSignal(list, list, list, str)  # pylint: disable=c-extension-no-member
     progress = QtCore.pyqtSignal(int)  # pylint: disable=c-extension-no-member
 
     def __init__(self, folder_path):
@@ -24,13 +24,13 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
         self.files = []
         self.images = []
         self.text_files = []
-        # self.model_files = []
+        self.model_files = []
 
     def run(self):
         """Open selected folder"""
         folder_contents = self.scan_directory(self.folder_path)
-        self.images, self.text_files = self.populate_index_from_list(folder_contents)  # self.model_files
-        self.finished.emit(self.images, self.text_files, self.folder_path)  # self.model_files,
+        self.images, self.text_files, self.model_files = self.populate_index_from_list(folder_contents)
+        self.finished.emit(self.images, self.text_files, self.model_files, self.folder_path)
 
     @debug_monitor
     def scan_directory(self, folder_path: str) -> list:
@@ -56,7 +56,7 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
         """
         image_files = []
         text_files = []
-        # model_files = []
+        model_files = []
         file_count = len(folder_contents)
         progress = 0
         for index, file_path in enumerate(folder_contents):
@@ -69,8 +69,8 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
                             image_files.append(file_path)
                         elif suffix in file_type and file_type in Ext.PLAIN or file_type in Ext.SCHEMA:
                             text_files.append(file_path)
-                        # elif suffix in file_type and file_type in Ext.MODEL:
-                        #     model_files.append(file_path)
+                        elif suffix in file_type and file_type in Ext.MODEL:
+                            model_files.append(file_path)
             progress = (index + 1) / file_count * 100
             self.progress.emit(int(progress))
 
@@ -78,7 +78,9 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
             image_files.sort()
         if text_files:
             text_files.sort()
-        return image_files, text_files  # , model_files
+        if model_files:
+            model_files.sort()
+        return image_files, text_files, model_files
 
     def clear_files(self):
         """Empty file ilst"""

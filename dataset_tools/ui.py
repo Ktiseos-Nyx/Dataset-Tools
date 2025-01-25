@@ -8,6 +8,7 @@
 # pylint: disable=attribute-defined-outside-init
 
 import os
+from pathlib import Path
 from collections import defaultdict
 
 import PyQt6
@@ -18,7 +19,8 @@ from dataset_tools.logger import debug_monitor  # , debug_monitor_solo
 from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.metadata_parser import parse_metadata
 from dataset_tools.widgets import FileLoader
-from dataset_tools.correct_types import UpField, DownField
+from dataset_tools.correct_types import EmptyField, UpField, DownField
+from dataset_tools.correct_types import ExtensionType as Ext
 
 
 class MainWindow(Qw.QMainWindow):
@@ -62,8 +64,11 @@ class MainWindow(Qw.QMainWindow):
 
         # File list (replaced Qw.QLabel with Qw.QListWidget)
         self.files_list = Qw.QListWidget()
+        if not self.files_list.item:
+            self.files_list.item = self.currentItem()
         self.files_list.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
-        self.files_list.itemClicked.connect(self.on_file_selected)  # Corrected This
+        # self.files_list.itemClicked.connect(self.on_file_selected)  # Corrected This
+        self.files_list.currentItemChanged.connect(self.on_file_selected)
 
         left_layout.addWidget(self.files_list)
 
@@ -135,9 +140,9 @@ class MainWindow(Qw.QMainWindow):
     def clear_file_list(self):
         """Initialize or re-initialize display of files"""
         self.file_list = []
-        self.image_list = []
+        self.image_files = []
         self.text_files = []
-        # self.model_files = []
+        self.model_files = []
 
     def clear_selection(self):
         """Empty file metadata display"""
@@ -166,22 +171,25 @@ class MainWindow(Qw.QMainWindow):
         """Update progress bar"""
         self.progress_bar.setValue(progress)
 
-    def on_files_loaded(self, image_list, text_files, loaded_folder):  # model_files,
+    def on_files_loaded(self, image_list, text_files, model_files, loaded_folder):
         """Callback for working folder contents"""
         if self.current_folder != loaded_folder:
             # We are loading files from a different folder
             # than what's currently selected, so we need to ignore this.
             return
-        self.image_list = image_list
+        self.image_files = image_list
         self.text_files = text_files
+        self.model_files = model_files
         # update the message and hide the loading bar
-        self.message_label.setText(f"Loaded {len(self.image_list)} images and {len(self.text_files)} text files")
+
+        self.message_label.setText(f"Loaded {len(self.image_files)} image, {len(self.text_files)} text, and {len(self.model_files)} model files.")
         self.progress_bar.hide()
 
         # Clear and populate the Qw.QListWidget
         self.files_list.clear()
-        self.files_list.addItems(self.image_list)
+        self.files_list.addItems(self.image_files)
         self.files_list.addItems(self.text_files)
+        self.files_list.addItems(self.model_files)
 
     # /______________________________________________________________________________________________________________________ Fetch Metadata
 
@@ -206,34 +214,30 @@ class MainWindow(Qw.QMainWindow):
         return metadata
 
     @debug_monitor
-    def on_file_selected(self, item):
+    def on_file_selected(self, *args):  # I don't yet know whats getting passed as a third argument here...
         """Activate metadata on nab function"""
-        file_path = item.text()
-        self.message_label.setText(f"Selected {os.path.normpath(os.path.basename(file_path))}")
+        if args:
+            file_path = next(x.text() for x in args if hasattr(x, "text"))
+            self.message_label.setText(f"Selected {os.path.normpath(os.path.basename(file_path))}")
 
-        # Clear any previous selection
-        self.clear_selection()
+            # Clear any previous selection
+            self.clear_selection()
 
-        pixmap = QtGui.QPixmap(file_path)
-        # scale the image
-        self.image_preview.setPixmap(
-            pixmap.scaled(
-                self.image_preview.size(),
-                QtCore.Qt.AspectRatioMode.KeepAspectRatio,
-                QtCore.Qt.TransformationMode.SmoothTransformation,
-            )
-        )
+            for file_type in Ext.IMAGE:
+                if Path(file_path).suffix in file_type:
+                    self.display_image_of(file_path)
+                    break
 
-        metadata = self.load_metadata(file_path)
+            metadata = self.load_metadata(file_path)
 
-        try:
-            self.display_text_of(metadata)
-        except TypeError as error_log:
-            nfo("Invalid data in prompt fields", type(metadata), "from", file_path, metadata, ":", error_log)
-        except KeyError as error_log:
-            nfo("Invalid key name for", type(metadata), "from", file_path, metadata, ":", error_log)
-        except AttributeError as error_log:
-            nfo("Attribute cannot be applied to type", type(metadata), "from", file_path, metadata, ":", error_log)
+            try:
+                self.display_text_of(metadata)
+            except TypeError as error_log:
+                nfo("Invalid data in prompt fields", type(metadata), "from", file_path, metadata, ":", error_log)
+            except KeyError as error_log:
+                nfo("Invalid key name for", type(metadata), "from", file_path, metadata, ":", error_log)
+            except AttributeError as error_log:
+                nfo("Attribute cannot be applied to type", type(metadata), "from", file_path, metadata, ":", error_log)
 
     # /______________________________________________________________________________________________________________________ Display Metadata
 
@@ -251,14 +255,44 @@ class MainWindow(Qw.QMainWindow):
         """
         metadata_display = defaultdict(lambda: "")
         for tag in labels:
-            if metadata.get(tag, False):
+            if metadata.get(tag, False) and isinstance(metadata.get(tag, False), dict):
                 incoming_text = separators[0].join(f"{k}: {v} {separators[1]}" for k, v in metadata.get(tag).items()) + separators[2]
                 metadata_display["display"] += incoming_text + separators[3]
                 if metadata_display.get("title"):
                     metadata_display["title"] += separators[4] + tag
                 else:
                     metadata_display["title"] += tag
+            elif metadata.get(tag, False):
+                incoming_text = str(metadata.get(tag))
+                metadata_display["display"] += incoming_text + separators[3]
+                if metadata_display.get("title"):
+                    metadata_display["title"] += separators[4] + tag
+                else:
+                    metadata_display["title"] += tag
+        # else:
+        #     metadata_display["title"] += EmptyField.PLACEHOLDER
+        #     metadata_display["display"] += metadata
         return metadata_display
+
+    @debug_monitor
+    def display_image_of(self, image_file: str) -> None:
+        """
+        Send an image to the previwer\n
+        :param image_file: Absolute path of the image to display
+        :type image_file: str
+        :return: None, sends an image to display
+        """
+
+        pixmap = QtGui.QPixmap(image_file)
+
+        # scale the image
+        self.image_preview.setPixmap(
+            pixmap.scaled(
+                self.image_preview.size(),
+                QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                QtCore.Qt.TransformationMode.SmoothTransformation,
+            )
+        )
 
     @debug_monitor
     def display_text_of(self, metadata: dict) -> None:  # fmt: skip
@@ -268,7 +302,7 @@ class MainWindow(Qw.QMainWindow):
         :type metadata: dict
         :return: None, information is sent to QT UI fields via calls
         """
-        if metadata is not None:
+        if metadata:
             metadata_display = self.unpack_content_of(metadata, UpField.LABELS, ["\n", "\n", "\n", "", ""])
 
             self.top_separator.setText(metadata_display["title"])
@@ -279,10 +313,10 @@ class MainWindow(Qw.QMainWindow):
             self.mid_separator.setText(metadata_display["title"])
             self.lower_box.setText(metadata_display["display"])
         else:
-            self.top_separator.setText(UpField.PLACEHOLDER)
-            self.mid_separator.setText(UpField.PLACEHOLDER)
-            self.upper_box.setText(UpField.PLACEHOLDER)
-            self.lower_box.setText(UpField.PLACEHOLDER)
+            self.top_separator.setText(EmptyField.PLACEHOLDER)
+            self.mid_separator.setText(EmptyField.PLACEHOLDER)
+            self.upper_box.setText(EmptyField.PLACEHOLDER)
+            self.lower_box.setText(EmptyField.PLACEHOLDER)
 
 
 if __name__ == "__main__":

@@ -19,31 +19,59 @@ else:
     from typing import TypedDict, Annotated, List, Union, Set
 
 
-class UpField:
-    """Upper display area for ui\n"""
+class EmptyField:
+    "When no data is available"
 
+    PLACEHOLDER: str = "No Data"
+    EMPTY: str = "Empty"
+    LABELS: List[Constant] = [PLACEHOLDER, EMPTY]
+
+
+class UpField:
+    """Upper display area for ui\n
+    Tags in Up or Down arrange data layout for UI
+    Ensure ALL field tags are included in LABELS
+    """
+
+    METADATA: str = "Metadata"
     PROMPT: str = "Prompt Data"
     TAGS: str = "Tags"
-    JSON_DATA: str = "JSON Data"
     TEXT_DATA: str = "TEXT Data"
-    TOML_DATA: str = "TOML Data"
-    EXIF: str = "EXIF"
     DATA: str = "DATA"
-    PLACEHOLDER: str = "No Data"
-    LABELS: list[Constant] = [PROMPT, TAGS, TEXT_DATA, TOML_DATA, JSON_DATA, DATA, PLACEHOLDER]
+    LABELS: List[Constant] = [
+        METADATA,
+        PROMPT,
+        TAGS,
+        TEXT_DATA,
+        DATA,
+    ]
 
 
 class DownField:
-    """Lower display area for ui\n"""
+    """Lower display area for ui\n
+    Tags in Up or Down arrange data layout for UI
+    Ensure ALL field tags are included in LABELS
+
+    """
 
     GENERATION_DATA: str = "Generation Data"
     SYSTEM: str = "System"
     ICC: str = "ICC Profile"
     EXIF: str = "EXIF"
-    RAW_DATA: str = "TEXT DATA"
-    PLACEHOLDER: str = "No Data"
-    DATA: str = "DATA"
-    LABELS: List[Constant] = [GENERATION_DATA, SYSTEM, ICC, EXIF, RAW_DATA, PLACEHOLDER]
+    RAW_DATA: str = "Text Data"
+    LAYER_DATA: str = "Layer Data"
+    JSON_DATA: str = "JSON Data"
+    TOML_DATA: str = "TOML Data"
+    LABELS: List[Constant] = [
+        GENERATION_DATA,
+        SYSTEM,
+        ICC,
+        EXIF,
+        RAW_DATA,
+        LAYER_DATA,
+        TOML_DATA,
+        JSON_DATA,
+    ]
 
 
 class ExtensionType:
@@ -59,12 +87,13 @@ class ExtensionType:
     XML_: Set[str] = {".xml"}
     GGUF: Set[str] = {".gguf"}
     SAFE: Set[str] = {".safetensors", ".sft"}
+    PICK: Set[str] = {".pt", ".pth", ".ckpt", ".pickletensor"}
 
     IMAGE: List[Set[str]] = [JPEG, WEBP, PNG_]
     EXIF: List[Set[str]] = [JPEG, WEBP]
     SCHEMA: List[Set[str]] = [JSON, TOML]
     PLAIN: List[Set[str]] = [TEXT, XML_, HTML]
-    # MODEL: List[Set[str]] = [SAFE, GGUF]
+    MODEL: List[Set[str]] = [SAFE, GGUF, PICK]
 
     IGNORE: List[Constant] = [
         "Thumbs.db",
@@ -84,14 +113,46 @@ class NodeNames:
         "CLIPTextEncodeHunyuanDiT",
         "CLIPTextEncodePixArtAlpha",
         "CLIPTextEncodeSDXLRefiner",
-        "WildcardEncode //Inspire",
-        "ImpactWildcardProcessor",
         "ImpactWildcardEncodeCLIPTextEncode",
+        "BNK_CLIPTextEncodeAdvanced",
+        "BNK_CLIPTextEncodeSDXLAdvanced",
+        "WildcardEncode //Inspire",
+        "TSC_EfficientLoader",
+        "TSC_EfficientLoaderSDXL",
+        "RgthreePowerPrompt",
+        "RgthreePowerPromptSimple",
+        "RgthreeSDXLPowerPromptPositive",
+        "RgthreeSDXLPowerPromptSimple",
+        "AdvancedCLIPTextEncode",
+        "AdvancedCLIPTextEncodeWithBreak",
+        "Text2Prompt",
         "CLIPTextEncode",
+    }
+    STRING_INPUT = {
+        "RecourseStrings",
+        "StringSelector",
+        "ImpactWildcardProcessor",
+        "CText",
+        "CTextML",
+        "CListString",
+        "CSwitchString",
+        "CR_PromptText",
+        "StringLiteral",
+        "CR_CombinePromptSDParameterGenerator",
+        "WidgetToString",
     }
     PROMPT_LABELS = ["Positive prompt", "Negative prompt", "Prompt"]
 
-    IGNORE_KEYS = ["type", "link", "shape", "id", "pos", "size", "node_id"]
+    IGNORE_KEYS = [
+        "type",
+        "link",
+        "shape",
+        "id",
+        "pos",
+        "size",
+        "node_id",
+        "empty_padding",
+    ]
 
     DATA_KEYS = {
         "class_type": "inputs",
