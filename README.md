@@ -9,7 +9,7 @@
 <span style="text-align: center">
 
 ## Contents
-    
+   <hr> 
 [__How this Differs from Other Tools__](#how-this-differs-from-other-tools) <br>
   - [Intersectionality 💖✨🌈](#intersectionality-💖✨🌈) <br>
   
@@ -26,17 +26,17 @@
   -  [4. Run the application with dataset-tools command:](#4-run-the-application-with-dataset-tools-command) <br>
    
 [__User Interface Overview__](#user-interface-overview)<br>
-  - [__Managing Images and Text__](#managing-images-and-text)
-  - [__Key Features__](#key-features)<br>
-  - [__Future Developments__](#future-developments) <br>
+  - [Managing Images and Text](#managing-images-and-text)
+  - [Key Features](#key-features)<br>
+  - [Future Developments](#future-developments) <br>
   
 [__Fish Shell_Terminal_Extension__](#non-required-extensions---fish-shell)<br>
 
 [__Improve the Project__](CONTRIBUTING.md)<br>
 
 [__ABOUT US__](#about-us) <br>
-  - [__Help the Creators__](#help-the-creators) 
-  - [__Ktiseos Nyx would like to thank -__](#ktiseos-nyx-would-like-to-thank--)  <br>
+  - [Help the Creators](#help-the-creators) 
+  - [Ktiseos Nyx would like to thank -](#ktiseos-nyx-would-like-to-thank--)  <br>
 
 </span>
 
