@@ -10,3 +10,4 @@ dataset_tools/__pycache__/main.cpython-310.pyc
 dataset_tools/__pycache__/metadata_parser.cpython-310.pyc
 dataset_tools/__pycache__/ui.cpython-310.pyc
 dataset_tools/__pycache__/widgets.cpython-310.pyc
+dataset_tools/__pycache__/model_tool.cpython-310.pyc

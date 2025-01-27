@@ -11,7 +11,7 @@ from json import JSONDecodeError
 from typing import Tuple, List
 from pydantic import ValidationError
 
-from dataset_tools.logger import debug_monitor  # , debug_message
+from dataset_tools.logger import debug_monitor, debug_message
 from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.access_disk import MetadataFileReader
 from dataset_tools.correct_types import (
@@ -54,37 +54,37 @@ def validate_typical(nested_map: dict, key_name: str) -> dict | None:
     :return: The original node map one key beneath initial entry point, if valid, or None
     """
 
-    is_this_node = IsThisNode()
+    is_search_data = IsThisNode()
     if next(iter(nested_map[key_name])) in NodeWorkflow.__annotations__.keys():
         try:
-            is_this_node.workflow.validate_python(nested_map)
+            is_search_data.workflow.validate_python(nested_map)
         except ValidationError as error_log:  #
-            nfo("%s", f"Node workflow not found, returning NoneType {key_name}", error_log)
+            debug_message("%s", f"Node workflow not found, returning NoneType {key_name}", error_log)
         else:
             return nested_map[key_name]
     else:
         try:
-            is_this_node.data.validate_python(nested_map[key_name])  # Be sure we have the right data
+            is_search_data.data.validate_python(nested_map[key_name])  # Be sure we have the right data
         except ValidationError as error_log:
-            nfo("%s", "Node data not found", error_log)
+            debug_message("%s", "Node data not found", error_log)
         else:
             return nested_map[key_name]
 
-    nfo("%s", f"Node workflow not found {key_name}")
-    nfo(KeyError(f"Unknown format for dictionary {key_name} in {nested_map}"))
+    debug_message("%s", f"Node workflow not found {key_name}")
+    debug_message(KeyError(f"Unknown format for dictionary {key_name} in {nested_map}"))
     return None
 
 
 @debug_monitor
-def search_for_prompt_in(this_node, extracted_prompt_data, name_column) -> dict:
+def search_for_prompt_in(search_data, accumulated_prompt_data, name_column) -> dict:
     """Check for prompt data in"""
     extracted_data = {}
     data_column_title = NodeNames.DATA_KEYS[name_column]
-    prompt_column = this_node[data_column_title]
+    prompt_column = search_data[data_column_title]
     for node_field, node_input in prompt_column.items():
         if node_field not in NodeNames.IGNORE_KEYS:
             new_label = node_field
-            label_count = str(extracted_prompt_data.keys()).count(node_field)
+            label_count = str(accumulated_prompt_data.keys()).count(node_field)
             if label_count > 0:
                 new_label = f"{node_field}_{label_count}"
 
@@ -96,21 +96,21 @@ def search_for_prompt_in(this_node, extracted_prompt_data, name_column) -> dict:
 
 
 @debug_monitor
-def search_for_gen_data_in(this_node: dict, extracted_gen_data: dict) -> dict:
+def search_for_gen_data_in(search_data: dict, accumulated_data: dict) -> dict:
     """Check for generative data settings within in a dict structure\n
     Filter based on dict value data type and reference names
-    :param this_node: The dict structure to scan
+    :param search_data: The dict structure to scan
     :param type: `dict`
     :param extracted_gen_data: Collected data from previous scans
     :param type: `dict`
     return: A dict of collected values
     """
     gen_data = {}
-    if isinstance(this_node, dict):
-        for node_field, node_input in this_node["inputs"].items():
+    if isinstance(search_data, dict):
+        for node_field, node_input in search_data["inputs"].items():
             if node_field not in NodeNames.IGNORE_KEYS:
                 new_label = node_field
-                label_count = str(extracted_gen_data.keys()).count(node_field)
+                label_count = str(accumulated_data.keys()).count(node_field)
                 if label_count > 0:
                     new_label = f"{node_field}_{label_count}"
                 if not isinstance(node_input, list):
@@ -132,18 +132,18 @@ def filter_keys_of(normalized_clean_data: dict) -> Tuple[dict]:
     extracted_gen_data = {}
     if normalized_clean_data is not None:
         for node_number in normalized_clean_data:
-            this_node = validate_typical(normalized_clean_data, node_number)  # Returns dictionary of node number
+            search_data = validate_typical(normalized_clean_data, node_number)  # Returns dictionary of node number
             for name_column_title in NodeNames.DATA_KEYS:
-                if this_node and this_node.get(name_column_title, False):
+                if search_data and search_data.get(name_column_title, False):
                     name_column = name_column_title
-                    node_name = this_node[name_column]
+                    node_name = search_data[name_column]
                     break
-                node_name = this_node
+                node_name = search_data
                 # raise KeyError("Metadata validated but expected keys were not found.")
             if node_name in NodeNames.ENCODERS or node_name in NodeNames.STRING_INPUT:
-                extracted_prompt_data.update(search_for_prompt_in(this_node, extracted_prompt_data, name_column))
+                extracted_prompt_data.update(search_for_prompt_in(search_data, extracted_prompt_data, name_column))
             else:
-                extracted_gen_data.update(search_for_gen_data_in(this_node, extracted_gen_data))
+                extracted_gen_data.update(search_for_gen_data_in(search_data, extracted_gen_data))
     return extracted_prompt_data, extracted_gen_data
 
 
@@ -364,15 +364,86 @@ def arrange_webui_metadata(header_data: str) -> dict:
 # /______________________________________________________________________________________________________________________ EXIF Tags
 
 
+# @debug_monitor
+# def remove_esc_codes(header_data: dict) -> dict:
+#     """
+#     Format text from header file by removing escape codes\n
+#     :param text_chunk: Data from a file header
+#     :return: text data in a dict structure
+#     """
+#     clean_dictionary = {}
+#     for tag, dirty_string in header_data.items():
+#         if isinstance(dirty_string, bytes):  # Check if it is bytes
+#             decoded_string = dirty_string.decode("utf-16-be")  # If it is, decode into utf-16 format
+
+#             map_start = decoded_string.find("{")
+#             decoded_string = decoded_string.replace("'", '"')
+#             scrub_dictionary = {tag: decoded_string[map_start:]}
+#             new_data = clean_with_json(scrub_dictionary, tag)
+#             clean_dictionary.update(new_data)
+
+#     return clean_dictionary
+
+
+# def filter_exif_keys_in(metadata_tag: dict) -> dict:
+#     """
+#     Extract relevant EXIF values and arrange to display\n
+#     :param metadata_tag: A set of tags to evaluate
+#     :type variable: dict
+#     :return: A dict formatted for the UI
+#     """
+
+#     main_data = metadata_tag.get("extraMetadata")
+#     if main_data:
+#         metadata_tag.pop("extraMetadata")
+#     loads_main_data = json.loads(main_data.strip())
+#     generation_data = loads_main_data.get("prompt")
+#     sorted_header_prompt, sorted_header_data = filter_keys_of(metadata_tag)
+
+#     return {UpField.METADATA: sorted_header_prompt, DownField.GENERATION_DATA: sorted_header_data}
+
+
 @debug_monitor
 def arrange_exif_metadata(header_data: dict) -> dict:
     """Arrange EXIF data into correct format"""
-    metadata = {
-        UpField.TAGS: {DownField.EXIF: {key: value} for key, value in header_data.items() if (key != "icc_profile" or key != "exif")},
-        DownField.ICC: {UpField.DATA: header_data.get("icc_profile")},
-        DownField.EXIF: {UpField.DATA: header_data.get("exif")},
-    }
-    return metadata
+    # clean_dictionary = {}
+    for tag, dirty_string in header_data.items():
+        if isinstance(dirty_string, bytes):  # Check if it is bytes
+            decoded_data = dirty_string.decode("utf-16-be")  # If it is, decode into utf-16 format
+        else:
+            decoded_data = header_data[tag]
+        # print(decoded_data)
+        if isinstance(decoded_data, str):
+            map_start = decoded_data.find("{")
+            decoded_string = decoded_data.replace("'", '"')
+            scrub_dictionary = {tag: decoded_string[map_start:]}
+            sorted_header_prompt, sorted_header_data = redivide_nodeui_data_in(scrub_dictionary, tag)
+            if sorted_header_prompt and sorted_header_prompt != {}:
+                return {UpField.METADATA: sorted_header_prompt, DownField.GENERATION_DATA: sorted_header_data}
+            else:
+                return {
+                    UpField.TAGS: {DownField.EXIF: {key: value} for key, value in sorted_header_data.items() if (key != "icc_profile" or key != "exif")},
+                    DownField.ICC: {UpField.DATA: sorted_header_data.get("icc_profile")},
+                    DownField.EXIF: {
+                        UpField.DATA: sorted_header_data.get("exif"),
+                    },
+                }
+    # metadata_tag = remove_esc_codes(header_data)
+    # print("triggered")
+    # if metadata_tag:
+    #     metadata = filter_exif_keys_in(metadata_tag)
+    #     return metadata
+    # else:
+    # try:
+    #     metadata_tag = metadata_tag.get("UserComment")
+    # except KeyError:
+    # regex_dict = {}
+    # nfo("Expected exif key not found")
+
+    # decoded_tag = metadata_tag.decode("utf-16")
+    # test = json.loads(decoded_tag)
+    # delineated_tags = delineate_by_esc_codes(decoded_tag)
+    # structured_tags = dict(delineated_tags)
 
 
 # /______________________________________________________________________________________________________________________ Module Interface
@@ -409,11 +480,7 @@ def arrange_dict_metadata(header_data: dict) -> dict:
     :return: A dictionary formatted for display
     """
     metadata = {}
-    condition_functions = {
-        lambda: header_data.get("prompt"): arrange_nodeui_metadata,
-        lambda: header_data.get("parameters"): arrange_webui_metadata,
-        lambda: "icc_profile" in header_data or "exif" in header_data: arrange_exif_metadata,
-    }
+    condition_functions = {lambda: header_data.get("prompt"): arrange_nodeui_metadata, lambda: header_data.get("parameters"): arrange_webui_metadata, lambda: header_data.get("UserComment"): arrange_exif_metadata}
     schema_functions = {
         UpField.METADATA,
         DownField.LAYER_DATA,

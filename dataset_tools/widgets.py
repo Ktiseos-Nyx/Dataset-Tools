@@ -29,7 +29,7 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
     def run(self):
         """Open selected folder"""
         folder_contents = self.scan_directory(self.folder_path)
-        self.images, self.text_files, self.model_files = self.populate_index_from_list(folder_contents)
+        self.images, self.text_files, self.model_files = self.populate_index_from_list(folder_contents)  # pylint: disable=line-too-long
         self.finished.emit(self.images, self.text_files, self.model_files, self.folder_path)
 
     @debug_monitor
@@ -60,19 +60,20 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
         file_count = len(folder_contents)
         progress = 0
         for index, file_path in enumerate(folder_contents):
-            if os.path.isfile(file_path) and os.path.basename(file_path) not in Ext.IGNORE:  # Filter out .DS_Store
-                suffix = p(file_path).suffix.lower()
-                extension_types = [Ext.IMAGE, Ext.EXIF, Ext.SCHEMA, Ext.PLAIN]  # , Ext.MODEL]
-                for extension in extension_types:
-                    for file_type in extension:
-                        if suffix in file_type and file_type in Ext.IMAGE:
-                            image_files.append(file_path)
-                        elif suffix in file_type and file_type in Ext.PLAIN or file_type in Ext.SCHEMA:
-                            text_files.append(file_path)
-                        elif suffix in file_type and file_type in Ext.MODEL:
-                            model_files.append(file_path)
-            progress = (index + 1) / file_count * 100
-            self.progress.emit(int(progress))
+            if os.path.isfile(file_path):
+                if os.path.basename(file_path) not in Ext.IGNORE:  # Filter out .DS_Store
+                    suffix = p(file_path).suffix.lower()
+                    extension_types = [Ext.IMAGE, Ext.EXIF, Ext.SCHEMA, Ext.PLAIN]  # , Ext.MODEL]
+                    for extension in extension_types:
+                        for file_type in extension:
+                            if suffix in file_type and file_type in Ext.IMAGE:
+                                image_files.append(file_path)
+                            elif suffix in file_type and file_type in Ext.PLAIN or file_type in Ext.SCHEMA:
+                                text_files.append(file_path)
+                            elif suffix in file_type and file_type in Ext.MODEL:
+                                model_files.append(file_path)
+                progress = (index + 1) / file_count * 100
+                self.progress.emit(int(progress))
 
         if image_files:
             image_files.sort()
