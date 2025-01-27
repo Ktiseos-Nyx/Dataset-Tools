@@ -3,7 +3,8 @@
 # Dataset-Tools: A Simple Viewer for EXIF and AI Metadata
 
 <span style="text-align: center">
-[__How this Differs from Other Tools__](#how-this-differs-from-other-tools)
+    
+[__How this Differs from Other Tools__](#how-this-differs-from-other-tools)<br>
 [__How to use Dataset-Tools__](#how-to-use-dataset-tools)<br>
 - [Requirements](#requirements)<br>
 - [Git](#git) <br>
