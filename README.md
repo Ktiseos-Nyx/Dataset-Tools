@@ -1,5 +1,5 @@
 
-# Dataset-Tools: A Simple Dataset Viewer for AI Art
+# Dataset-Tools: A Simple Viewer for EXIF and AI Metadata
 
 <span style="text-align: center">
 
@@ -20,14 +20,14 @@
 | [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/5t2kYxt7An) | Discord Server |
 | [![Ko-Fi](https://img.shields.io/badge/Ko--fi-Support%20on%20Ko--fi-FF5E5B?logo=kofi&style=for-the-badge)](https://ko-fi.com/duskfallcrew) | Duskfallcrew Ko-FI | 
 | [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew) | Watch on Twitch | 
-
+| [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20on%20Ko--fi-FF5E5B?logo=kofi&style=for-the-badge)](https://ko-fi.com/exdysa) | Exdysa Ko-Fi | 
 
 
 
 
 <hr>
 
-Dataset-Tools is a desktop application designed to help users browse and manage their image and text datasets, particularly those used with AI art generation tools like Stable Diffusion. Developed using PyQt6, it provides a simple and intuitive graphical interface for browsing images, viewing metadata, and examining associated text prompts. This project is inspired by tools within the AI art community (☮️[receyuki](https://github.com/receyuki/stable-diffusion-prompt-reader)🤍) and aims to empower users in improving their dataset curation workflow.
+Dataset-Tools is a desktop application designed to help users browse and manage their image and text datasets, particularly those used with AI art generation tools like Stable Diffusion. Developed using PyQt6, it provides a simple and intuitive graphical interface for browsing images, viewing metadata, and examining associated text prompts. As of recently this has also extended it's use case to reading metadata from LoRa safetensor file formats, as well as reading metadata from sites such as [Civitai](https://civitai.com/). This project is inspired by tools within the AI art community (☮️[receyuki](https://github.com/receyuki/stable-diffusion-prompt-reader)🤍) and aims to empower users in improving their dataset curation workflow. If you're interested in getting involved, feel free to fork and contribute!
 
 https://github.com/user-attachments/assets/f8b4187b-2603-4bae-aa4a-dc3f621b5696
 
@@ -89,7 +89,7 @@ The application window has the following main components:
 *   **Open Folder:** A button to select a folder containing images and text files.
 *   **Image List:** Displays a list of images and text files found in the selected folder.
 *   **Image Preview:** An area to display a selected image.
-*   **Metadata Box:** A text area to display the extracted metadata from the selected image (including Stable Diffusion prompt, settings, etc.).
+*   **Metadata Box:** A text area to display the extracted metadata from the selected image or safetensors file (including Stable Diffusion prompt, settings, etc.).
 
 ### Managing Images and Text
 
@@ -97,11 +97,12 @@ The application window has the following main components:
 *   **Viewing Metadata:** Metadata associated with the selected image is displayed on the text area, such as steps, samplers, seeds, and more.
 *   **Viewing Text:** The content of any text file associated with the selected image is displayed on the text box.
 
+
 ## Key Features
 
 *   **Graphical User Interface (GUI):** Built with PyQt6 for a modern and cross-platform experience.
 *   **Image Previews:** Quickly view images in a dedicated preview area.
-*   **Metadata Extraction:** Extract and display relevant metadata from PNG image files, especially those generated from Stable Diffusion.
+*   **Metadata Extraction:** Extract and display relevant metadata from PNG image files, especially those generated from Stable Diffusion. Now including support for Safetensors files, please note this at the moment includes LoRA, and NOT Embeddings. This at the moment also includes for support beyond SDXL base models, as well as Flux, Aura, SD3 and more to come!
 *   **Text Viewing:** Display the content of text files.
 *   **Clear Layout:** A simple and intuitive layout, with list view on the left, and preview on the right.
 
@@ -132,13 +133,14 @@ is a creator collective consisting of
 
 #### [Duskfall Portal Crew on GitHub](https://github.com/duskfallcrew)
 
-The Duskfall Portal crew would like to thank -
+Ktiseos Nyx would like to thank -
 
-*   ChatGPT 3.5 & 4o: Powering innovative solutions and creative endeavors.
-*   Support of my peers, and the community at Large.
-*   [Canvas icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/canvas)
+*   The use of Gemini, ChatGPT, Claude/Anthropic as well as Llama and other tools that structured K/N's base of this tool.
+*   Support of our peers, and the community at Large.
 *   Inspired by [receyuki/stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
+*   The ever growing taunts & support by [Anzhc](https://github.com/anzhc)
 
 #### [EXDYSA on GitHub](https://github.com/exdysa)
+#### [Exdysa on Ko-Fi](https://ko-fi.com/exdysa)
 
 ...and more to come!
