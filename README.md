@@ -47,9 +47,11 @@ Unlike other metadata readers, this tool is designed to be fully up-to-date with
 
 *   🏳️‍🌈🏳️‍⚧️ The development of this app is driven by individuals who are either neurodivergent, or who actively support neurodiversity. We're also a team that identifies with, or actively supports the LGBTQIA2S+ community. Ktiseos Nyx is run by Earth & Dusk, which is a project run by a community of amazing and welcoming people.
 
-*   ✨🧠♾️ Neurodivergence encompasses so much more than just Autism & ADHD.  Whatever your specific form of neurodivergence may be, you are wholeheartedly welcome here.
+*   ✨🧠♾️ Neurodivergence encompasses so much more than just Autism & ADHD. Whatever your specific form of neurodivergence may be, you are wholeheartedly welcome here.
 
-*   🦄🚀💫  As the creator of this project (duskfallcrew), I personally navigate life with CPTSD, DID, Autism, & ADHD, and the buck doesn't stop there. While I've utilized LLMs at various stages of this project's development, this is not the end all be all, and whatever your insights, ideas, or contributions may be, you're welcome to be heard, and to contribute.
+*   🦄🚀💫 As the creator of this project (duskfallcrew), I personally navigate life with CPTSD, DID, Autism, & ADHD, and the buck doesn't stop there. While I've utilized LLMs at various stages of this project's development, this is not the end all be all, and whatever your insights, ideas, or contributions may be, you're welcome to be heard, and to contribute.
+
+<hr>
 
 ## How to Use Dataset-Tools
 
@@ -58,19 +60,26 @@ Unlike other metadata readers, this tool is designed to be fully up-to-date with
 To run the program, you will need the following software:
 
 #### Python:
-- [Python.org](https://www.python.org/downloads/) or [Try `uv`](https://github.com/astral-sh/uv?tab=readme-ov-file#installation)
 
-- Requires at least Python 3.10, older versions may not react well with the installation commands. 
-- You'll also note that certain Ubuntu systems may not install the required packages correctly, if you're having problems with this follow the guide below, or let us know in the issues section above!
-- UV Is available and useable on Linux, Windows and MacOS, it's extremely fast and written in rust! 
+*   [Python.org](https://www.python.org/downloads/) or  [Try `uv`](https://github.com/astral-sh/uv?tab=readme-ov-file#installation) (Optional)
 
-####  Git:
-- [Windows](https://gitforwindows.org/)
-- [MacOS first option](https://git-scm.com/downloads/mac), [or second option](https://brew.sh/)
-- [Linux](https://git-scm.com/downloads/linux)
+*   Requires at least Python 3.10; older versions may not react well with the installation commands.
 
+*  You'll also note that certain Ubuntu systems may not install the required packages correctly. If you're having problems with this, please follow the guide below, or let us know in the issues section above!
+
+*  `uv` is available and usable on Linux, Windows, and macOS. It's extremely fast and written in rust! It is also optional.
+
+#### Git:
+
+*   [Windows](https://gitforwindows.org/)
+*   [MacOS first option](https://git-scm.com/downloads/mac), [or second option](https://brew.sh/)
+*   [Linux](https://git-scm.com/downloads/linux)
+
+<hr>
 
 #### Installation on Linux (Ubuntu/Debian) Systems
+
+<hr>
 
 This section provides instructions on how to install the necessary tools for PyQt6 on Linux systems.
 
@@ -97,6 +106,7 @@ To install the necessary Qt6 development tools, use one of the following methods
     ```bash
     sudo apt update
     ```
+
 2.  **Install Qt6 development tools:**
 
     ```bash
@@ -110,6 +120,7 @@ To install the necessary Qt6 development tools, use one of the following methods
     ```bash
     sudo apt update
     ```
+
 2.  **Install the default Qt6 packages:**
 
     ```bash
@@ -123,14 +134,18 @@ After installing the Qt6 libraries, you need to check if the `qmake` or `qt6-qma
 1.  **Check for `qmake` or `qt6-qmake`:**
 
     Open your terminal and run the following commands one at a time:
+
     ```bash
     which qmake
     ```
     or
+
     ```bash
     which qt6-qmake
     ```
+
 2.  **If `qmake` or `qt6-qmake` is NOT found:** This means that you have not installed `qmake` yet and should run the `sudo apt install` commands above.
+
 3.  **If `qmake` or `qt6-qmake` is found:** This means that the tool is installed, but is not currently in your path. You can add it to your path by using the following command:
 
     ```bash
@@ -141,19 +156,20 @@ After installing the Qt6 libraries, you need to check if the `qmake` or `qt6-qma
 
 **Note**: Please copy and paste each command individually and execute them one by one.
 
- Then, you can install the package using pip within a virtual environment:
-    
-```
+Then, you can install the package using pip within a virtual environment:
+
+```bash
       python3 -m venv <env_name>
       source <env_name>/bin/activate
       pip install .
-
 ```
 ### Launching the Application
 
-#### 1. Open your ``terminal`` shell console of choice.🐣  (ie:  ```powershell```,```cmd```,```zsh```,```bash```, etc.)
+<hr>
 
-####$ VENV Instructions
+#### 1. Open your terminal shell console of choice.🐣 (ie: ``powershell``, ``cmd``, ``zsh``, ``bash``, etc.)
+
+####VENV Instructions
 
 It's customary for safety and sanity to use a Virtual environment! Trust me on this one, multiple python installations is always a mess and a half! 
 
@@ -170,7 +186,7 @@ pip install .
 Python 3.12 Example
 
 ```bash
-$ uv venv
+uv venv .venv
 Using Python 3.12.3
 Creating virtual environment at: .venv
 Activate with: source .venv/bin/activate
@@ -211,13 +227,16 @@ dataset-tools
 
 <br>
 
+<hr>
+
 ### User Interface Overview
+
 <hr>
 
 The application window has the following main components:
 
 *   **Current Folder:** Displays the path of the currently loaded folder.
-*   **Open Folder:** A button to select a folder containing images and text files.
+*   **Open Folder:** A button to select a folder containing images and text files, as well as if you have safetensors files.
 *   **Image List:** Displays a list of images and text files found in the selected folder.
 *   **Image Preview:** An area to display a selected image.
 *   **Metadata Box:** A text area to display the extracted metadata from the selected image or safetensors file (including Stable Diffusion prompt, settings, etc.).
@@ -250,9 +269,11 @@ The application window has the following main components:
 *   **Video Tutorials:** Create video tutorials to show users how to use the program.
 *   **Text Tutorials:** Create detailed tutorials in text and image to show the user how to use the program.
 
+<hr>
+
 ## Non-Required Extensions - Fish Shell
 
-This section describes how to install and configure Fish shell, a powerful terminal shell that offers enhanced quality of life features like syntax highlighting, autocompletion, and more. **This is not a required extension**, but it can significantly improve your terminal experience.
+This section describes how to install and configure Fish shell, a powerful terminal shell that offers enhanced quality-of-life features like syntax highlighting, autocompletion, and more. **This is not a required extension**, but it can significantly improve your terminal experience.
 
 **What is Fish Shell?**
 
@@ -291,13 +312,14 @@ Fish can be installed on macOS using several methods:
 
 Packages for Ubuntu are available from the [fish PPA](https://launchpad.net/~fish-shell/+archive/ubuntu/release-3), and can be installed using the following commands:
 
-    ```bash
+*   ```bash
     sudo apt-add-repository ppa:fish-shell/release-3
     sudo apt update
     sudo apt install fish
     ```
 #### Fedora/openSUSE/Red Hat/CentOS
 Packages for Debian, Fedora, openSUSE, and Red Hat Enterprise Linux/CentOS are available from the [openSUSE Build Service](https://software.opensuse.org/download.html?project=shells%3Afish&package=fish).
+
 #### Other Linux distributions
 Instructions for other distributions may be found at [fishshell.com](https://fishshell.com/).
 
@@ -311,6 +333,7 @@ On Windows 10/11, Fish can be installed:
 
 **Note:** Fish (4.0 and onwards) cannot be installed in Cygwin, due to a lack of Rust support.
 
+<hr>
 
 ### ABOUT US
 
@@ -334,7 +357,7 @@ is a creator collective consisting of
 
 ...and more to come!
 
-
+<hr>
 
 ## Help the Creators
 
@@ -343,6 +366,8 @@ is a creator collective consisting of
 ![A flat logo for Discord](https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191))
 
 </a>
+
+<hr>
 
 ### Sponsor us on Ko-Fi!
 #### [Duskfall on Ko-fi](https://ko-fi.com/duskfallcrew) 
