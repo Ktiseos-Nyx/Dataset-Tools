@@ -41,13 +41,127 @@ To run the program, you will need the following software:
 #### Python:
 - [Python.org](https://www.python.org/downloads/) or [Try `uv`](https://github.com/astral-sh/uv?tab=readme-ov-file#installation)
 
+UV Is available and useable on Linux, Windows and MacOS, it's extremely fast and written in rust! 
+
 #### Python Versions:
-- Requires at least Python 3.10, older versions may not react well with the installation commands. 
+- Requires at least Python 3.10, older versions may not react well with the installation commands.  You'll also note that certain Ubuntu systems may not install the required packages correctly, if you're having problems with this follow the guide below, or let us know in the issues section above!
 
 ####  Git:
 - [Windows](https://gitforwindows.org/)
 - [MacOS first option](https://git-scm.com/downloads/mac), [or second option](https://brew.sh/)
 - [Linux](https://git-scm.com/downloads/linux)
+
+##### Non Required Extensions - FISH SHELL
+
+This is a MAJOR quality of life tool to make it easier on your eyeballs! [Fish shell](https://github.com/fish-shell/fish-shell) gives you some extra security and quality of life with colors and extensions to your terminal!
+
+- macOS
+fish can be installed:
+
+using [Homebrew](http://brew.sh/): 
+```bash
+brew install fish
+```
+using [MacPorts](https://www.macports.org/): 
+```bash
+sudo port install fish
+```
+using [the installer from fishshell.com](https://fishshell.com/)
+as a [standalone app from fishshell.com](https://fishshell.com/)
+Note: The minimum supported macOS version is 10.10 "Yosemite".
+
+- Packages for Linux
+Packages for Debian, Fedora, openSUSE, and Red Hat Enterprise Linux/CentOS are available from the [openSUSE Build Service](https://software.opensuse.org/download.html?project=shells%3Afish&package=fish)
+Packages for Ubuntu are available from the [fish PPA](https://launchpad.net/~fish-shell/+archive/ubuntu/release-3), and can be installed using the following commands:
+
+```bash
+sudo apt-add-repository ppa:fish-shell/release-3
+sudo apt update
+sudo apt install fish
+```
+Instructions for other distributions may be found at [fishshell.com](https://fishshell.com/).
+
+- Windows
+
+On Windows 10/11, fish can be installed under the WSL Windows Subsystem for Linux with the instructions for the appropriate distribution listed above under “Packages for Linux”, or from source with the instructions below.
+
+fish (4.0 on and onwards) cannot be installed in Cygwin, due to a lack of Rust support.
+
+
+##### Installation on Linux (Ubuntu/Debian) Systems under 22.04
+
+Currently the PYQT6 environment tools are standard on these systems:
+
+* Ubuntu 20.04 LTS (Focal Fossa)
+
+* Ubuntu 22.04 LTS (Jammy Jellyfish)
+
+* Ubuntu 23.04 (Lunar Lobster) and other non-LTS releases
+
+If you are below that and you're receiving errors on installing PYQT6 please follow this guide which does seem difficult, but we'll work on figuring out how to make it work for you asap! 
+
+This package requires Qt6 development libraries to be installed. On Ubuntu/Debian systems, you can typically install them using one of the following methods:
+
+**Method 1 (Recommended):**
+
+   ```bash
+   sudo apt update
+   sudo apt install qt6-base-dev qt6-tools-dev
+```
+**Method 2 If method 1 fails:**
+
+```bash
+sudo apt update
+sudo apt install qt6-default
+```
+
+After installing the necessary packages, ensure that the path to either qmake or qt6-qmake is in your system's $PATH environment variable. You can use the commands 
+```bash
+which qmake
+```
+
+or 
+
+```bash
+which qt6-qmake 
+```
+
+to see if they are installed and find their locations. If neither exist you can install them using the commands above. If the tools exist but are not in your path you can add the path to your environment using a command such as
+
+```bash
+export PATH="/usr/lib/qt6/bin:$PATH" 
+```
+
+(replace /usr/lib/qt6/bin with the location returned by the which command used above).
+
+#### VENV Instructions
+
+It's customary for safety and sanity to use a Virtual environment! Trust me on this one, multiple python installations is always a mess and a half! 
+
+* If you're wanting to use a VENV via main python, you can set one up this way:
+
+```bash
+python3 -m venv <env_name>
+source <env_name>/bin/activate
+pip install .
+```
+
+* If you're wanting to use a VENV via main UV, you can set one up this way :
+
+Python 3.12 Example
+
+```bash
+$ uv venv
+Using Python 3.12.3
+Creating virtual environment at: .venv
+Activate with: source .venv/bin/activate
+```
+
+* If you're wanting to activate it and you have FISH?
+```bash
+source .venv/bin/activate.fish
+```
+
 
 ### Launching the Application
 
@@ -105,7 +219,7 @@ The application window has the following main components:
 
 *   **Graphical User Interface (GUI):** Built with PyQt6 for a modern and cross-platform experience.
 *   **Image Previews:** Quickly view images in a dedicated preview area.
-*   **Metadata Extraction:** Extract and display relevant metadata from PNG image files, especially those generated from Stable Diffusion. Now including support for Safetensors files, please note this at the moment includes LoRA, and NOT Embeddings. This at the moment also includes for support beyond SDXL base models, as well as Flux, Aura, SD3 and more to come!
+*   **Metadata Extraction:** Extract and display relevant metadata from PNG image files, especially those generated from Stable Diffusion. Now including support for Safetensors files, please note this at the moment includes LoRA, and NOT Embeddings. This at the moment also includes for support beyond SDXL base models, as well as Flux, Aura, SD3 and more to come! We've also recently added support for images from [Civitai](https://civitai.com/), supporting their EXIF formats! 
 *   **Text Viewing:** Display the content of text files.
 *   **Clear Layout:** A simple and intuitive layout, with list view on the left, and preview on the right.
 
@@ -142,6 +256,7 @@ Ktiseos Nyx would like to thank -
 *   Support of our peers, and the community at Large.
 *   Inspired by [receyuki/stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
 *   The ever growing taunts & support by [Anzhc](https://github.com/anzhc)
+*   [Civitai](https://civitai.com/) for giving us the space to learn and grow in the open source community!
 
 #### [EXDYSA on GitHub](https://github.com/exdysa)
 #### [Exdysa on Ko-Fi](https://ko-fi.com/exdysa)
