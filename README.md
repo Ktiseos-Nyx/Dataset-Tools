@@ -41,6 +41,9 @@ To run the program, you will need the following software:
 #### Python:
 - [Python.org](https://www.python.org/downloads/) or [Try `uv`](https://github.com/astral-sh/uv?tab=readme-ov-file#installation)
 
+#### Python Versions:
+- Requires at least Python 3.10, older versions may not react well with the installation commands. 
+
 ####  Git:
 - [Windows](https://gitforwindows.org/)
 - [MacOS first option](https://git-scm.com/downloads/mac), [or second option](https://brew.sh/)
