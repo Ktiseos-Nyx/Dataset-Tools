@@ -3,7 +3,7 @@
 # Dataset-Tools: A Simple Viewer for EXIF and AI Metadata
 
 <span style="text-align: center">
-
+[__How this Differs from Other Tools__](#how-this-differs-from-other-tools)
 [__How to use Dataset-Tools__](#how-to-use-dataset-tools)<br>
 - [Requirements](#requirements)<br>
 - [Git](#git) <br>
@@ -32,6 +32,12 @@
 Dataset-Tools is a desktop application designed to help users browse and manage their image and text datasets, particularly those used with AI art generation tools like Stable Diffusion. Developed using PyQt6, it provides a simple and intuitive graphical interface for browsing images, viewing metadata, and examining associated text prompts. As of recently this has also extended it's use case to reading metadata from LoRa safetensor file formats, as well as reading metadata from sites such as [Civitai](https://civitai.com/). This project is inspired by tools within the AI art community (☮️[receyuki](https://github.com/receyuki/stable-diffusion-prompt-reader)🤍) and aims to empower users in improving their dataset curation workflow. If you're interested in getting involved, feel free to fork and contribute!
 
 https://github.com/user-attachments/assets/f8b4187b-2603-4bae-aa4a-dc3f621b5696
+
+<hr>
+
+## How this Differs from Other Tools:
+
+Unlike other metadata readers, this tool is designed to be fully up-to-date with Python 3.12 and above, while maintaining compatibility with Python 3.10. It extends beyond basic image metadata, offering robust support for safetensors files commonly used in models and checkpoints across diverse AI platforms like Stable Diffusion, Aura, and Flux. Furthermore, it incorporates specific readers for ComfyUI and Automatic1111 EXIF data, as well as non-AI related metadata, and we are working to improve user customizability with more color themes. Our aim is to provide a simple, user-friendly tool that is easily verifiable for accuracy and ease of use.
 
 
 ## How to Use Dataset-Tools
