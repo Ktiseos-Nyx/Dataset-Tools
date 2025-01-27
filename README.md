@@ -107,6 +107,8 @@ The PyQt6 environment tools are typically included by default in these Ubuntu ve
 
 If you are using an older version of Ubuntu or Debian than those listed above, you might encounter errors when trying to install PyQt6. If you see errors related to PyQt6, please follow the steps below to install the required Qt6 development libraries.
 
+<hr>
+
 **Installation Steps**
 
 To install the necessary Qt6 development tools, use one of the following methods:
@@ -138,6 +140,8 @@ To install the necessary Qt6 development tools, use one of the following methods
     ```bash
     sudo apt install qt6-default
     ```
+    
+<hr>
 
 **Verify Installation**
 
@@ -175,13 +179,19 @@ Then, you can install the package using pip within a virtual environment:
       source <env_name>/bin/activate
       pip install .
 ```
+
 ### Launching the Application
 
 <hr>
 
 #### 1. Open your terminal shell console of choice.🐣 (ie: ``powershell``, ``cmd``, ``zsh``, ``bash``, etc.)
 
-####VENV Instructions
+    
+<hr>
+
+
+
+#### VENV Instructions
 
 It's customary for safety and sanity to use a Virtual environment! Trust me on this one, multiple python installations is always a mess and a half! 
 
@@ -209,11 +219,21 @@ Activate with: source .venv/bin/activate
 source .venv/bin/activate.fish
 ```
 
+    
+<hr>
+
+
+
 #### 2. ``git clone`` or download the Dataset-Tools repository from GitHub.
 
 ```sh
 git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
 ```
+
+    
+<hr>
+
+
 
 #### 3. Move into Dataset-Tools folder and `pip install`the required dependencies:
 
@@ -228,22 +248,30 @@ pip install .
 > cd Dataset-Tools
 > uv pip install .
 > ```
+    
+<hr>
+
 
 #### 4. Run the application with `dataset-tools` command:
 
 ```sh
 dataset-tools
 ```
+    
+<hr>
+
 
 #### You're in!
-
-<br>
-
+    
 <hr>
+
+
 
 ### User Interface Overview
 
 <hr>
+
+### Application Components
 
 The application window has the following main components:
 
@@ -253,11 +281,19 @@ The application window has the following main components:
 *   **Image Preview:** An area to display a selected image.
 *   **Metadata Box:** A text area to display the extracted metadata from the selected image or safetensors file (including Stable Diffusion prompt, settings, etc.).
 
+    
+<hr>
+
+
+
 ### Managing Images and Text
 
 *   **Selecting Images:** Click on an image or text file in the list to display its preview, metadata, and associated text content.
 *   **Viewing Metadata:** Metadata associated with the selected image is displayed on the text area, such as steps, samplers, seeds, and more.
 *   **Viewing Text:** The content of any text file associated with the selected image is displayed on the text box.
+    
+<hr>
+
 
 
 ## Key Features
@@ -271,6 +307,9 @@ The application window has the following main components:
     * We've also recently added support for images from [Civitai](https://civitai.com/), supporting their EXIF formats! 
 *   **Text Viewing:** Display the content of text files.
 *   **Clear Layout:** A simple and intuitive layout, with list view on the left, and preview on the right.
+    
+<hr>
+
 
 ## Future Developments
 
@@ -286,6 +325,9 @@ The application window has the following main components:
 ## Non-Required Extensions - Fish Shell
 
 This section describes how to install and configure Fish shell, a powerful terminal shell that offers enhanced quality-of-life features like syntax highlighting, autocompletion, and more. **This is not a required extension**, but it can significantly improve your terminal experience.
+    
+<hr>
+
 
 **What is Fish Shell?**
 
@@ -295,10 +337,16 @@ This section describes how to install and configure Fish shell, a powerful termi
 *   Smart autocompletion for faster typing
 *   Tab completion for directories and commands
 *   A more intuitive interface
+    
+<hr>
+
 
 **Installation**
 
 Here are the installation instructions for various operating systems:
+    
+<hr>
+
 
 ### macOS
 
@@ -317,8 +365,14 @@ Fish can be installed on macOS using several methods:
     *   [Download a standalone app from fishshell.com](https://fishshell.com/)
 
     **Note:** The minimum supported macOS version is 10.10 "Yosemite."
+    
+<hr>
+
 
 ### Linux
+    
+<hr>
+
 
 #### Debian/Ubuntu
 
@@ -329,13 +383,28 @@ Packages for Ubuntu are available from the [fish PPA](https://launchpad.net/~fis
     sudo apt update
     sudo apt install fish
     ```
+
+    
+<hr>
+
+
 #### Fedora/openSUSE/Red Hat/CentOS
 Packages for Debian, Fedora, openSUSE, and Red Hat Enterprise Linux/CentOS are available from the [openSUSE Build Service](https://software.opensuse.org/download.html?project=shells%3Afish&package=fish).
+    
+<hr>
+
 
 #### Other Linux distributions
 Instructions for other distributions may be found at [fishshell.com](https://fishshell.com/).
+    
+<hr>
+
 
 ### Windows
+    
+<hr>
+
+
 
 On Windows 10/11, Fish can be installed:
 
@@ -348,6 +417,9 @@ On Windows 10/11, Fish can be installed:
 <hr>
 
 ### ABOUT US
+    
+<hr>
+
 
 ### --**__<{ Ktiseos Nyx }>__**--
 
@@ -356,6 +428,9 @@ is a creator collective consisting of
 #### [EXDYSA on GitHub](https://github.com/exdysa)
 
 #### [Duskfall Portal Crew on GitHub](https://github.com/duskfallcrew)
+    
+<hr>
+
 
 ### Ktiseos Nyx would like to thank -
 
@@ -386,4 +461,7 @@ is a creator collective consisting of
 [![Ko-Fi](https://img.shields.io/badge/Ko--fi-Support%20on%20Ko--fi-FF5E5B?logo=kofi&style=for-the-badge)](https://ko-fi.com/duskfallcrew) 
 #### [Exdysa on Ko-Fi](https://ko-fi.com/exdysa) 
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20on%20Ko--fi-FF5E5B?logo=kofi&style=for-the-badge)](https://ko-fi.com/exdysa)
+    
+<hr>
+
 
