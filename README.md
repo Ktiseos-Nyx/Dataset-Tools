@@ -1,20 +1,23 @@
 [![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx) ![Build Status](https://img.shields.io/badge/build-passing-brightgreen) [![PyTest](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/pytest.yml/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/pytest.yml) ![CC0 1.0 License](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg) [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/5t2kYxt7An) [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew) 
+
 <hr>
+
 # Dataset-Tools: A Simple Viewer for EXIF and AI Metadata
 
 <span style="text-align: center">
     
 [__How this Differs from Other Tools__](#how-this-differs-from-other-tools)<br>
+- [Intersectionality 💖✨🌈](#intersectionality-💖✨🌈)
 [__How to use Dataset-Tools__](#how-to-use-dataset-tools)<br>
-- [Requirements](#requirements)<br>
-- [Git](#git) <br>
-- [Installation on Linux (Ubuntu/Debian) Systems under 22.04](#installation-on-linux-ubuntu-debian-systems)<br>
+- [Requirements](#requirements)
+- [Git](#git) 
+- [Installation on Linux (Ubuntu/Debian) Systems under 22.04](#installation-on-linux-ubuntu-debian-systems)
 [__Launching the Application__](#launching-the-application)<br>
--  [1. Open your terminal shell console of choice.🐣 (ie: powershell, cmd, zsh, bash, etc.)](#1-open-your-terminal-shell-console-of-choice-ie-powershell-cmd-zsh-bash-etc)<br>
--  [VENV Instructions](#venv-instructions)<br>
--  [2. git clone or download the Dataset-Tools repository from GitHub.](#2-git-clone-or-download-the-dataset-tools-repository-from-github)<br>
--  [3. Move into Dataset-Tools folder and pip installthe required dependencies:](#3-move-into-dataset-tools-folder-and-pip-installthe-required-dependencies)<br>
--  [4. Run the application with dataset-tools command:](#4-run-the-application-with-dataset-tools-command)<br>
+-  [1. Open your terminal shell console of choice.🐣 (ie: powershell, cmd, zsh, bash, etc.)](#1-open-your-terminal-shell-console-of-choice-ie-powershell-cmd-zsh-bash-etc)
+-  [VENV Instructions](#venv-instructions)
+-  [2. git clone or download the Dataset-Tools repository from GitHub.](#2-git-clone-or-download-the-dataset-tools-repository-from-github)
+-  [3. Move into Dataset-Tools folder and pip installthe required dependencies:](#3-move-into-dataset-tools-folder-and-pip-installthe-required-dependencies)
+-  [4. Run the application with dataset-tools command:](#4-run-the-application-with-dataset-tools-command)
 [__User Interface Overview__](#user-interface-overview)<br>
 [__Managing Images and Text__](#managing-images-and-text)<br>
 [__Key Features__](#key-features)<br>
@@ -23,7 +26,7 @@
 [__Improve the Project__](CONTRIBUTING.md)<br>
 [__ABOUT US__](#about-us)
 [__Help the Creators__](#help-the-creators)<br>
-[__Ktiseos Nyx would like to thank -__](#ktiseos-nyx-would-like-to-thank--)
+[__Ktiseos Nyx would like to thank -__](#ktiseos-nyx-would-like-to-thank--)<br>
 
 </span>
 
@@ -38,8 +41,15 @@ https://github.com/user-attachments/assets/f8b4187b-2603-4bae-aa4a-dc3f621b5696
 
 ## How this Differs from Other Tools:
 
-Unlike other metadata readers, this tool is designed to be fully up-to-date with Python 3.12 and above, while maintaining compatibility with Python 3.10. It extends beyond basic image metadata, offering robust support for safetensors files commonly used in models and checkpoints across diverse AI platforms like Stable Diffusion, Aura, and Flux. Furthermore, it incorporates specific readers for ComfyUI and Automatic1111 EXIF data, as well as non-AI related metadata, and we are working to improve user customizability with more color themes. Our aim is to provide a simple, user-friendly tool that is easily verifiable for accuracy and ease of use.
+Unlike other metadata readers, this tool is designed to be fully up-to-date with Python 3.12 and above, while maintaining compatibility with Python 3.10. It extends beyond basic image metadata, offering robust support for `safetensors` files commonly used in models and checkpoints across diverse AI platforms like Stable Diffusion, Aura, and Flux. Furthermore, it incorporates specific readers for ComfyUI and Automatic1111 EXIF data, as well as non-AI related metadata, and we are working to improve user customizability with more color themes. Our aim is to provide a simple, user-friendly tool that is easily verifiable for accuracy and ease of use.
 
+### Intersectionality 💖✨🌈
+
+*   🏳️‍🌈🏳️‍⚧️ The development of this app is driven by individuals who are either neurodivergent, or who actively support neurodiversity. We're also a team that identifies with, or actively supports the LGBTQIA2S+ community. Ktiseos Nyx is run by Earth & Dusk, which is a project run by a community of amazing and welcoming people.
+
+*   ✨🧠♾️ Neurodivergence encompasses so much more than just Autism & ADHD.  Whatever your specific form of neurodivergence may be, you are wholeheartedly welcome here.
+
+*   🦄🚀💫  As the creator of this project (duskfallcrew), I personally navigate life with CPTSD, DID, Autism, & ADHD, and the buck doesn't stop there. While I've utilized LLMs at various stages of this project's development, this is not the end all be all, and whatever your insights, ideas, or contributions may be, you're welcome to be heard, and to contribute.
 
 ## How to Use Dataset-Tools
 
