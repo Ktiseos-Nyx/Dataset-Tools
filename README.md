@@ -4,29 +4,33 @@
 
 # Dataset-Tools: A Simple Viewer for EXIF and AI Metadata
 
+<hr>
+
 <span style="text-align: center">
+
+## Contents
     
 [__How this Differs from Other Tools__](#how-this-differs-from-other-tools)<br>
-- [Intersectionality 💖✨🌈](#intersectionality-💖✨🌈)
+  - [Intersectionality 💖✨🌈](#intersectionality-💖✨🌈)
 [__How to use Dataset-Tools__](#how-to-use-dataset-tools)<br>
-- [Requirements](#requirements)
-- [Git](#git) 
-- [Installation on Linux (Ubuntu/Debian) Systems under 22.04](#installation-on-linux-ubuntu-debian-systems)
+  - [Requirements](#requirements)
+  - [Git](#git) 
+  - [Installation on Linux (Ubuntu/Debian) Systems under 22.04](#installation-on-linux-ubuntu-debian-systems)
 [__Launching the Application__](#launching-the-application)<br>
--  [1. Open your terminal shell console of choice.🐣 (ie: powershell, cmd, zsh, bash, etc.)](#1-open-your-terminal-shell-console-of-choice-ie-powershell-cmd-zsh-bash-etc)
--  [VENV Instructions](#venv-instructions)
--  [2. git clone or download the Dataset-Tools repository from GitHub.](#2-git-clone-or-download-the-dataset-tools-repository-from-github)
--  [3. Move into Dataset-Tools folder and pip installthe required dependencies:](#3-move-into-dataset-tools-folder-and-pip-installthe-required-dependencies)
--  [4. Run the application with dataset-tools command:](#4-run-the-application-with-dataset-tools-command)
+  -  [1. Open your terminal shell console of choice.🐣 (ie: powershell, cmd, zsh, bash, etc.)](#1-open-your-terminal-shell-console-of-choice-ie-powershell-cmd-zsh-bash-etc)
+  -  [VENV Instructions](#venv-instructions)
+  -  [2. git clone or download the Dataset-Tools repository from GitHub.](#2-git-clone-or-download-the-dataset-tools-repository-from-github)
+  -  [3. Move into Dataset-Tools folder and pip installthe required dependencies:](#3-move-into-dataset-tools-folder-and-pip-installthe-required-dependencies)
+  -  [4. Run the application with dataset-tools command:](#4-run-the-application-with-dataset-tools-command)
 [__User Interface Overview__](#user-interface-overview)<br>
-[__Managing Images and Text__](#managing-images-and-text)<br>
-[__Key Features__](#key-features)<br>
-[__Future Developments__](#future-developments)
+  - [__Managing Images and Text__](#managing-images-and-text)<br>
+  - [__Key Features__](#key-features)<br>
+  - [__Future Developments__](#future-developments)
 [__Fish Shell_Terminal_Extension__](#non-required-extensions---fish-shell)<br>
 [__Improve the Project__](CONTRIBUTING.md)<br>
 [__ABOUT US__](#about-us)
-[__Help the Creators__](#help-the-creators)<br>
-[__Ktiseos Nyx would like to thank -__](#ktiseos-nyx-would-like-to-thank--)<br>
+  - [__Help the Creators__](#help-the-creators) 
+  - [__Ktiseos Nyx would like to thank -__](#ktiseos-nyx-would-like-to-thank--) 
 
 </span>
 
