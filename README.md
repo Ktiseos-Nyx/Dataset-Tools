@@ -12,10 +12,12 @@
     
 [__How this Differs from Other Tools__](#how-this-differs-from-other-tools) <br>
   - [Intersectionality 💖✨🌈](#intersectionality-💖✨🌈) <br>
+  
 [__How to use Dataset-Tools__](#how-to-use-dataset-tools) <br>
   - [Requirements](#requirements)
   - [Git](#git) 
   - [Installation on Linux (Ubuntu/Debian) Systems under 22.04](#installation-on-linux-ubuntu-debian-systems) <br>
+  
 [__Launching the Application__](#launching-the-application)<br>
   -  [1. Open your terminal shell console of choice.🐣 (ie: powershell, cmd, zsh, bash, etc.)](#1-open-your-terminal-shell-console-of-choice-ie-powershell-cmd-zsh-bash-etc)
   -  [VENV Instructions](#venv-instructions)
@@ -27,8 +29,11 @@
   - [__Managing Images and Text__](#managing-images-and-text)
   - [__Key Features__](#key-features)<br>
   - [__Future Developments__](#future-developments) <br>
+  
 [__Fish Shell_Terminal_Extension__](#non-required-extensions---fish-shell)<br>
+
 [__Improve the Project__](CONTRIBUTING.md)<br>
+
 [__ABOUT US__](#about-us) <br>
   - [__Help the Creators__](#help-the-creators) 
   - [__Ktiseos Nyx would like to thank -__](#ktiseos-nyx-would-like-to-thank--)  <br>
