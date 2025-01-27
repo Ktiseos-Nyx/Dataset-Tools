@@ -4,13 +4,13 @@
 
 # Dataset-Tools: A Simple Viewer for EXIF and AI Metadata
 
-<hr>
+
 
 <span style="text-align: center">
 
 ## Contents
 
-   <hr> 
+
    
 [__How this Differs from Other Tools__](#how-this-differs-from-other-tools) <br>
   - [Intersectionality 💖✨🌈](#intersectionality-💖✨🌈) <br>
