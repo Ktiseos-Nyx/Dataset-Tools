@@ -257,12 +257,12 @@ class TestParseMetadata(unittest.TestCase):
         expected_output = self.redivide_dict_test_data["2"]
         assert result == expected_output
 
-    @patch("dataset_tools.metadata_parser.nfo")
-    def test_validate_typical_fail(self, mock_nfo):
+    @patch("dataset_tools.metadata_parser.debug_message")
+    def test_validate_typical_fail(self, mock_debug_msg):
         subdict = {"mock": "data"}
         mock_data = {"prompt": subdict}
         out = validate_typical(mock_data, "prompt")
-        mock_nfo.assert_called()
+        mock_debug_msg.assert_called()
         assert out is None
 
     @patch("dataset_tools.metadata_parser.redivide_nodeui_data_in")

@@ -176,7 +176,7 @@ class MainWindow(Qw.QMainWindow):
         if self.current_folder != loaded_folder:
             # We are loading files from a different folder
             # than what's currently selected, so we need to ignore this.
-            return
+            return  # x - ?????
         self.image_files = image_list
         self.text_files = text_files
         self.model_files = model_files
@@ -214,7 +214,7 @@ class MainWindow(Qw.QMainWindow):
         return metadata
 
     @debug_monitor
-    def on_file_selected(self, *args):  # I don't yet know whats getting passed as a third argument here...
+    def on_file_selected(self, *args):  # x - I don't yet know whats getting passed as a third argument here...
         """Activate metadata on nab function"""
         if args:
             file_path = next(x.text() for x in args if hasattr(x, "text"))

@@ -126,6 +126,7 @@ class NodeNames:
         "AdvancedCLIPTextEncode",
         "AdvancedCLIPTextEncodeWithBreak",
         "Text2Prompt",
+        "smZ CLIPTextEncode",
         "CLIPTextEncode",
     }
     STRING_INPUT = {

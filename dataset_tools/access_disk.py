@@ -10,7 +10,7 @@ import toml
 
 from PIL import Image, UnidentifiedImageError, ExifTags
 
-from dataset_tools.logger import debug_monitor
+from dataset_tools.logger import debug_message, debug_monitor
 from dataset_tools.logger import info_monitor as nfo
 from dataset_tools.correct_types import EmptyField, ExtensionType as Ext, DownField, UpField
 from dataset_tools.model_tool import ModelTool
@@ -31,7 +31,7 @@ class MetadataFileReader:
         """
 
         img = Image.open(file_path_named)
-        exif_tags = {ExifTags.TAGS[key]: val for key, val in img.getexif().items() if key in ExifTags.TAGS}
+        exif_tags = {ExifTags.TAGS[key]: val for key, val in img._getexif().items() if key in ExifTags.TAGS}  # pylint: disable=protected-access, line-too-long
         return exif_tags
 
     @debug_monitor
@@ -56,13 +56,28 @@ class MetadataFileReader:
         :param file_path_named: The path and file name of the text file
         :return: Generator element containing content
         """
-        with open(file_path_named, "r", encoding="utf_8") as open_file:
-            file_contents = open_file.read()
-            metadata = {
-                UpField.TEXT_DATA: file_contents,
-                EmptyField.EMPTY: {"": "EmptyField.PLACEHOLDER"},
-            }
-            return metadata  # Reads text file into string
+        try:
+            with open(file_path_named, "r", encoding="utf_8") as open_file:
+                file_contents = open_file.read()
+                metadata = {
+                    UpField.TEXT_DATA: file_contents,
+                    EmptyField.EMPTY: {"": "EmptyField.PLACEHOLDER"},
+                }
+                return metadata  # Reads text file into string
+        except UnicodeDecodeError as error_log:
+            nfo("File did not match expected unicode format %s", file_path_named)
+            debug_message(error_log)
+        try:
+            with open(file_path_named, "r", encoding="utf_16-be") as open_file:
+                file_contents = open_file.read()
+                metadata = {
+                    UpField.TEXT_DATA: file_contents,
+                    EmptyField.EMPTY: {"": "EmptyField.PLACEHOLDER"},
+                }
+                return metadata  # Reads text file into string
+        except UnicodeDecodeError as error_log:
+            nfo("File did not match expected unicode format %s", file_path_named)
+            debug_message(error_log)
 
     def read_schema_file(self, file_path_named: str, mode="r"):
         """
