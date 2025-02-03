@@ -4,7 +4,7 @@
 """資料夾內容"""
 
 import os
-from pathlib import Path as p
+from pathlib import Path
 from PyQt6 import QtCore
 
 from dataset_tools.correct_types import ExtensionType as Ext
@@ -54,34 +54,21 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
         :type folder_contents: `list`
         :return: `tuple[list]` Images and text files that can be loaded by the system
         """
-        image_files = []
-        text_files = []
-        model_files = []
-        file_count = len(folder_contents)
-        progress = 0
-        for index, file_path in enumerate(folder_contents):
-            if os.path.isfile(file_path):
-                if os.path.basename(file_path) not in Ext.IGNORE:  # Filter out .DS_Store
-                    suffix = p(file_path).suffix.lower()
-                    extension_types = [Ext.IMAGE, Ext.EXIF, Ext.SCHEMA, Ext.PLAIN]  # , Ext.MODEL]
-                    for extension in extension_types:
-                        for file_type in extension:
-                            if suffix in file_type and file_type in Ext.IMAGE:
-                                image_files.append(file_path)
-                            elif suffix in file_type and file_type in Ext.PLAIN or file_type in Ext.SCHEMA:
-                                text_files.append(file_path)
-                            elif suffix in file_type and file_type in Ext.MODEL:
-                                model_files.append(file_path)
-                progress = (index + 1) / file_count * 100
-                self.progress.emit(int(progress))
+        types = {"image": Ext.IMAGE, "plain": [Ext.PLAIN, Ext.SCHEMA], "model": Ext.MODEL}
+        categorized_files = {key: [] for key in types}
 
-        if image_files:
-            image_files.sort()
-        if text_files:
-            text_files.sort()
-        if model_files:
-            model_files.sort()
-        return image_files, text_files, model_files
+        for f_path in folder_contents:
+            path = Path(f_path)
+            if path.is_file() and path.name not in Ext.IGNORE:
+                suffix = path.suffix.lower()
+                for cat, exts in types.items():
+                    if any(suffix in ext for ext in exts):
+                        categorized_files[cat].append(str(path))
+
+        for files in categorized_files.values():
+            files.sort()
+
+        return (*categorized_files.values(),)
 
     def clear_files(self):
         """Empty file ilst"""
