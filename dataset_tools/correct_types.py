@@ -141,6 +141,7 @@ class NodeNames:
         "StringLiteral",
         "CR_CombinePromptSDParameterGenerator",
         "WidgetToString",
+        "Show Text 🐍",
     }
     PROMPT_LABELS = ["Positive prompt", "Negative prompt", "Prompt"]
 

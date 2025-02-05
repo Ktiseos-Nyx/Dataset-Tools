@@ -1,4 +1,8 @@
-[![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx) ![Build Status](https://img.shields.io/badge/build-passing-brightgreen) [![PyTest](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/pytest.yml/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/pytest.yml) ![CC0 1.0 License](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg) [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/5t2kYxt7An) [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew) 
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)  [![PyTest](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/pytest.yml/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/pytest.yml) ![CC0 1.0 License](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)
+
+[![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx) [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/5t2kYxt7An) [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew)
+
+
 
 <hr>
 
@@ -9,28 +13,6 @@
 <span style="text-align: center">
 
 ## Contents
-  
-[__How to use Dataset-Tools__](#how-to-use-dataset-tools) <br>
-  - [Requirements](#requirements)
-  - [Git](#git) 
-
-  
-[__Launching the Application__](#launching-the-application)<br>
-  -  [1. Open your terminal shell console of choice.🐣 (ie: powershell, cmd, zsh, bash, etc.)](#1-open-your-terminal-shell-console-of-choice-ie-powershell-cmd-zsh-bash-etc)
-  -  [2. git clone or download the Dataset-Tools repository from GitHub.](#2-git-clone-or-download-the-dataset-tools-repository-from-github)
-  -  [3. Move into Dataset-Tools folder and pip installthe required dependencies:](#3-move-into-dataset-tools-folder-and-pip-installthe-required-dependencies)
-  -  [4. Run the application with dataset-tools command:](#4-run-the-application-with-dataset-tools-command) <br>
-   
-[__User Interface Overview__](#user-interface-overview)<br>
-  - [Managing Images and Text](#managing-images-and-text)
-  - [Key Features](#key-features)<br>
-  - [Future Developments](#future-developments) <br>
-
-[__Improve the Project__](CONTRIBUTING.md)<br>
-
-[__ABOUT US__](#about-us) <br>
-  - [Help the Creators](#help-the-creators) 
-  - [Ktiseos Nyx would like to thank -](#ktiseos-nyx-would-like-to-thank--)  <br>
 
 </span>
 
@@ -75,7 +57,7 @@ To run the program, you will need the following software:
 
 #### 1. Open your terminal shell console of choice.🐣 (ie: ``powershell``, ``cmd``, ``zsh``, ``bash``, etc.)
 
-    
+
 <hr>
 
 
@@ -87,7 +69,7 @@ To run the program, you will need the following software:
 git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
 ```
 
-    
+
 <hr>
 
 
@@ -105,7 +87,7 @@ pip install .
 > cd Dataset-Tools
 > uv pip install .
 > ```
-    
+
 <hr>
 
 
@@ -114,12 +96,12 @@ pip install .
 ```sh
 dataset-tools
 ```
-    
+
 <hr>
 
 
 #### You're in!
-    
+
 <hr>
 
 
@@ -138,7 +120,7 @@ The application window has the following main components:
 *   **Image Preview:** An area to display a selected image.
 *   **Metadata Box:** A text area to display the extracted metadata from the selected image or safetensors file (including Stable Diffusion prompt, settings, etc.).
 
-    
+
 <hr>
 
 
@@ -148,7 +130,7 @@ The application window has the following main components:
 *   **Selecting Images:** Click on an image or text file in the list to display its preview, metadata, and associated text content.
 *   **Viewing Metadata:** Metadata associated with the selected image is displayed on the text area, such as steps, samplers, seeds, and more.
 *   **Viewing Text:** The content of any text file associated with the selected image is displayed on the text box.
-    
+
 <hr>
 
 
@@ -161,10 +143,10 @@ The application window has the following main components:
 *   **Metadata Extraction:** Extract and display relevant metadata from PNG image files, especially those generated from Stable Diffusion.
     * Now including support for Safetensors files, please note this at the moment includes LoRA, and NOT Embeddings.
     * This at the moment also includes for support beyond SDXL base models, as well as Flux, Aura, SD3 and more to come!
-    * We've also recently added support for images from [Civitai](https://civitai.com/), supporting their EXIF formats! 
+    * We've also recently added support for images from [Civitai](https://civitai.com/), supporting their EXIF formats!
 *   **Text Viewing:** Display the content of text files.
 *   **Clear Layout:** A simple and intuitive layout, with list view on the left, and preview on the right.
-    
+
 <hr>
 
 
@@ -184,7 +166,7 @@ The application window has the following main components:
 
 
 ### ABOUT US
-    
+
 <hr>
 
 
@@ -195,7 +177,7 @@ is a creator collective consisting of
 #### [EXDYSA on GitHub](https://github.com/exdysa)
 
 #### [Duskfall Portal Crew on GitHub](https://github.com/duskfallcrew)
-    
+
 <hr>
 
 
@@ -224,11 +206,11 @@ is a creator collective consisting of
 <hr>
 
 ### Sponsor us on Ko-Fi!
-#### [Duskfall on Ko-fi](https://ko-fi.com/duskfallcrew) 
-[![Ko-Fi](https://img.shields.io/badge/Ko--fi-Support%20on%20Ko--fi-FF5E5B?logo=kofi&style=for-the-badge)](https://ko-fi.com/duskfallcrew) 
-#### [Exdysa on Ko-Fi](https://ko-fi.com/exdysa) 
+#### [Duskfall on Ko-fi](https://ko-fi.com/duskfallcrew)
+[![Ko-Fi](https://img.shields.io/badge/Ko--fi-Support%20on%20Ko--fi-FF5E5B?logo=kofi&style=for-the-badge)](https://ko-fi.com/duskfallcrew)
+#### [Exdysa on Ko-Fi](https://ko-fi.com/exdysa)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20on%20Ko--fi-FF5E5B?logo=kofi&style=for-the-badge)](https://ko-fi.com/exdysa)
-    
+
 <hr>
 
 
