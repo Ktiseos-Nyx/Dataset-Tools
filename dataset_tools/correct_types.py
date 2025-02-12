@@ -1,7 +1,7 @@
-# // SPDX-License-Identifier: CC0-1.0
+# // SPDX-License-Identifier: MIT
 # // --<{ Ktiseos Nyx }>--
 
-"""確認 Data Type"""
+"""Confirm & Correct Data Type"""
 
 from platform import python_version_tuple
 
