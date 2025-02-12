@@ -1,5 +1,5 @@
-# // SPDX-License-Identifier: CC0-1.0
-# // --<{ Ktiseos Nyx }>--
+# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
+# SPDX-License-Identifier: MIT
 
 """Wrap I/O"""
 
