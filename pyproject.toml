@@ -46,6 +46,7 @@ dependencies = [
     "PyQt6",
     "toml",
     "typing-extensions",
+    "python-exiftool",
     # "gguf",  <-- Removed
     # "llama_cpp_python", <-- Removed
 ]
