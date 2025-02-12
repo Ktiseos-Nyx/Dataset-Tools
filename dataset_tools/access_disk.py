@@ -89,22 +89,22 @@ class MetadataFileReader:
             return None
 
     @debug_monitor
-    def read_png_header_pillow(self, file_path_named): # Pillow version for fallback
+    def read_jpg_header_pillow(self, file_path_named): # Pillow version
         """
-        Open png format files using Pillow for basic info (can switch to ExifTool if needed)\n
-        :param file_path_named: The path and file name of the png file
-        :return: Dictionary of header tags (from Pillow info for PNG), or None on error
+        Open jpg format files using Pillow for basic EXIF header extraction\n
+        :param file_path_named: The path and file name of the jpg file
+        :return: Dictionary of header tags from Pillow, or None if no EXIF
         """
         try:
             img = Image.open(file_path_named)
-            if img is None:
-                img.load()
-            return img.info  # Use Pillow for PNG info
-        except UnidentifiedImageError as error_log:
-            nfo("Failed to read PNG image at:", file_path_named, error_log)
-            return None
+            exif_data = img._getexif() # Get EXIF data
+            if exif_data: # <--- THIS IS THE LINE YOU NEED TO ADD (CHECK IF exif_data IS NOT None)
+                exif_tags = {EXIF_TAGS[key]: val for key, val in exif_data.items() if key in ExifTags.TAGS}
+                return exif_tags
+            else:
+                return None # Return None if no EXIF data found by Pillow
         except Exception as e:
-            print(f"Pillow error reading PNG header {file_path_named}: {e}")
+            print(f"Pillow error reading JPG header {file_path_named}: {e}")
             return None
 
 
