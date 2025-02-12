@@ -1,7 +1,7 @@
-# // SPDX-License-Identifier: CC0-1.0
-# // --<{ Ktiseos Nyx }>--
+# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
+# SPDX-License-Identifier: MIT
 
-"""為使用者介面清理和安排元資料"""
+"""Metadata Parser"""
 
 # pylint: disable=line-too-long
 
