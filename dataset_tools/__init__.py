@@ -1,15 +1,12 @@
-# // SPDX-License-Identifier: CC0-1.0
-# // --<{ Ktiseos Nyx }>--
+# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
+# SPDX-License-Identifier: MIT
 
-"""初始化"""
-# pylint: disable=line-too-long
+"""Initialize"""
 
 import sys
 import argparse
 
 from importlib import metadata
-
-# from re import I  # setuptools-scm versioning
 
 if "pytest" not in sys.modules:
     parser = argparse.ArgumentParser(description="Set logging level.")
@@ -25,7 +22,16 @@ if "pytest" not in sys.modules:
     args = parser.parse_args()
 
     # Resolve log_level from args dynamically
-    LOG_LEVEL = levels[next(iter([k for k, v in levels.items() if getattr(args, v.lower(), False)]), args.log_level)]
+    log_level_from_args = "INFO"  # Default value
+    for short, long in levels.items():
+        if getattr(args, long.lower(), False):
+            log_level_from_args = levels[short]
+            break  # Stop after finding the first match
+    else: # will only enter if for loop doesn't break
+        log_level_from_args = levels.get(args.log_level.lower(), "INFO") #.get incase there's a bad argument
+
+    LOG_LEVEL = log_level_from_args
+
 else:
     LOG_LEVEL = "DEBUG"
 
