@@ -173,6 +173,12 @@ Non-software assets within this repository (such as documentation and images in 
 
 If you have any questions about this license change, please feel free to open an issue.
 
+### For Former Contributors 
+
+If you have a local copy of the code you've worked on, your code should follow the lisc change for your safety. You do own your code, you don't own the final product.  This is pertaining to members that for various reasons have been removed from the repository...  Your contributions are valid, and you're welcome to create a new repository and refactor and go forth and create your version. We ask that you change the code in such a way that does not share the same official lineage as the tool that was originally designed.  You own your code, you're welcome to continue refactoring, rebasing and making a fresh new perspective.. We value all contributions..  
+
+The only concern on this was a security measure, and we are not trying to gaslight, nor cause issues with anyone that has previously worked on this.  We ourselves, will continue to refactor, redevelop and make shine what we hope for. We wish the same for you!
+
 
 ### ABOUT US
 
