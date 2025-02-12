@@ -1,7 +1,7 @@
-# // SPDX-License-Identifier: CC0-1.0
-# // --<{ Ktiseos Nyx }>--
+# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
+# SPDX-License-Identifier: MIT
 
-"""啟動程式，退出程式"""
+"""Launch and exit the application"""
 
 import sys
 from PyQt6 import QtWidgets
