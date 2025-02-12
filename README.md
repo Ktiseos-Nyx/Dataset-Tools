@@ -161,8 +161,17 @@ The application window has the following main components:
 
 <hr>
 
-## Non-Required Extensions - Fish Shell
+## License Change
 
+Previously, some parts of this repository were licensed under a Creative Commons license.  We have updated the license for all *software code* within this repository to the **MIT License**. This change was made to:
+
+*   Provide greater legal clarity for users and contributors of the software.
+*   Ensure compatibility with a wider range of other open-source projects.
+*   Use a license specifically designed for software, addressing issues like patents and warranties.
+
+Non-software assets within this repository (such as documentation and images in the `docs/` directory) remain under the [Creative Commons Attribution-ShareAlike 4.0 International License](link-to-cc-license).
+
+If you have any questions about this license change, please feel free to open an issue.
 
 
 ### ABOUT US
@@ -174,7 +183,7 @@ The application window has the following main components:
 
 is a creator collective consisting of
 
-#### [EXDYSA on GitHub](https://github.com/exdysa)
+
 
 #### [Duskfall Portal Crew on GitHub](https://github.com/duskfallcrew)
 
@@ -187,7 +196,7 @@ is a creator collective consisting of
 *   Support of our peers, and the community at Large.
 *   Inspired by [receyuki/stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
 *   The ever growing taunts & support by [Anzhc](https://github.com/anzhc)
-*   [Civitai](https://civitai.com/) for giving us the space to learn and grow in the open source community!
+
 
 
 
@@ -208,8 +217,7 @@ is a creator collective consisting of
 ### Sponsor us on Ko-Fi!
 #### [Duskfall on Ko-fi](https://ko-fi.com/duskfallcrew)
 [![Ko-Fi](https://img.shields.io/badge/Ko--fi-Support%20on%20Ko--fi-FF5E5B?logo=kofi&style=for-the-badge)](https://ko-fi.com/duskfallcrew)
-#### [Exdysa on Ko-Fi](https://ko-fi.com/exdysa)
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20on%20Ko--fi-FF5E5B?logo=kofi&style=for-the-badge)](https://ko-fi.com/exdysa)
+
 
 <hr>
 
