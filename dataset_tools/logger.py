@@ -1,7 +1,7 @@
-# // SPDX-License-Identifier: CC0-1.0
-# // --<{ Ktiseos Nyx }>--
+# Copyright (c) 2025 Ktiseos Nyx/ Dataset-Tools (*EARTH & DUSK MEDIA / 0FTH3N1GHT*)
+# SPDX-License-Identifier: MIT
 
-"""建立控制檯日誌"""
+"""Create console log"""
 
 import sys
 import logging as pylog

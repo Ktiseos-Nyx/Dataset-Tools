@@ -1,13 +1,27 @@
+# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
+# SPDX-License-Identifier: MIT
+
+# OS-specific files
 .DS_Store
+
+# Python bytecode and build artifacts
+__pycache__/            # Ignore all __pycache__ directories anywhere
+*.py[cod]               # Ignore .pyc, .pyo, .pyd files
 dataset_tools.egg-info
 dataset_tools.dataset_tools.egg-info
-build
-dataset_tools/__pycache__/__init__.cpython-310.pyc
-dataset_tools/__pycache__/access_disk.cpython-310.pyc
-dataset_tools/__pycache__/correct_types.cpython-310.pyc
-dataset_tools/__pycache__/logger.cpython-310.pyc
-dataset_tools/__pycache__/main.cpython-310.pyc
-dataset_tools/__pycache__/metadata_parser.cpython-310.pyc
-dataset_tools/__pycache__/ui.cpython-310.pyc
-dataset_tools/__pycache__/widgets.cpython-310.pyc
-dataset_tools/__pycache__/model_tool.cpython-310.pyc
+build/
+
+# Virtual environment (if using)
+.venv/
+venv/
+
+# Test coverage reports (if you generate them)
+.coverage
+coverage.xml
+htmlcov/
+
+# Editor/IDE specific files (optional - add if you want to ignore)
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
