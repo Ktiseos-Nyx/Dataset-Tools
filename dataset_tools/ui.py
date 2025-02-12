@@ -14,6 +14,7 @@ from collections import defaultdict
 import PyQt6
 from PyQt6 import QtWidgets as Qw
 from PyQt6 import QtCore, QtGui
+from PyQt6.QtCore import QSettings
 
 from dataset_tools.logger import debug_monitor  # , debug_monitor_solo
 from dataset_tools.logger import info_monitor as nfo
@@ -29,13 +30,58 @@ class MainWindow(Qw.QMainWindow):
     # @debug_monitor_solo
     def __init__(self):
         super().__init__()
-        # Set a default font for the app
-        # app_font = QtGui.QFont("Arial", 12)
-        # self.setFont(app_font)
 
         self.setWindowTitle("Dataset Viewer")
         self.setGeometry(100, 100, 800, 600)  # x, y, width, height
         self.setMinimumSize(800, 600)  # set minimum size for standard window.
+
+        settings = QSettings("YourOrganization", "DatasetViewer") # Same organization and app name as in apply_theme
+        saved_theme_name = settings.value("theme", "") # Try to load saved theme, default to empty string if not found
+
+        # --- Menu Bar ---
+        menu_bar = self.menuBar()
+
+        # File Menu
+        file_menu = menu_bar.addMenu("File")
+        change_folder_action = QtGui.QAction("Change Folder...", self)
+        change_folder_action.triggered.connect(self.open_folder)
+        file_menu.addAction(change_folder_action)
+        close_action = QtGui.QAction("Close", self)
+        close_action.triggered.connect(self.close)
+        file_menu.addAction(close_action)
+
+        # View Menu
+        view_menu = menu_bar.addMenu("View")
+        themes_menu = Qw.QMenu("Themes", self)
+        view_menu.addMenu(themes_menu)
+
+        # Dynamically create theme menu actions
+        from qt_material import list_themes
+        available_themes = list_themes()
+        self.theme_actions = {}
+        for theme_name in available_themes:
+            action = QtGui.QAction(theme_name.replace(".xml", "").replace("_", " ").title(), self)
+            action.setCheckable(True)
+            action.triggered.connect(lambda checked, theme=theme_name: self.apply_theme(theme))
+            themes_menu.addAction(action)
+            self.theme_actions[theme_name] = action
+
+        # About Menu
+        about_menu = menu_bar.addMenu("About")
+        about_action = QtGui.QAction("About...", self)
+        about_action.triggered.connect(self.show_about_dialog)
+        about_menu.addAction(about_action)
+
+
+        if saved_theme_name and saved_theme_name in self.theme_actions: # Check if saved theme is valid
+            self.theme_actions[saved_theme_name].setChecked(True) # Check the saved theme action in menu
+            self.apply_theme(saved_theme_name) # Apply the saved theme
+        else:
+            default_theme = "dark_teal.xml" # Default theme if no saved theme or saved theme is invalid
+            if default_theme in self.theme_actions:
+                self.theme_actions[default_theme].setChecked(True)
+                self.apply_theme(default_theme)
+
 
         # Central widget to hold our layout
         central_widget = PyQt6.QtWidgets.QWidget()
@@ -53,10 +99,21 @@ class MainWindow(Qw.QMainWindow):
         self.current_folder_label = Qw.QLabel("Current Folder: None")
         left_layout.addWidget(self.current_folder_label)
 
-        # Placeholder UI
+        # Open Folder Button
         self.open_folder_button = Qw.QPushButton("Open Folder")
         self.open_folder_button.clicked.connect(self.open_folder)
         left_layout.addWidget(self.open_folder_button)
+
+        # Sort Files Button
+        self.sort_button = Qw.QPushButton("Sort Files")
+        self.sort_button.clicked.connect(self.sort_files_list)
+        left_layout.addWidget(self.sort_button)
+
+        # Copy Metadata Button
+        self.copy_button = Qw.QPushButton("Copy Metadata")
+        self.copy_button.clicked.connect(self.copy_metadata_to_clipboard)
+        left_layout.addWidget(self.copy_button)
+
 
         # Placeholder label, you can remove this later
         self.message_label = Qw.QLabel("Select a folder!")
@@ -67,9 +124,7 @@ class MainWindow(Qw.QMainWindow):
         if not self.files_list.item:
             self.files_list.item = self.currentItem()
         self.files_list.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
-        # self.files_list.itemClicked.connect(self.on_file_selected)  # Corrected This
         self.files_list.currentItemChanged.connect(self.on_file_selected)
-
         left_layout.addWidget(self.files_list)
 
         # Add a progress bar for file loading
@@ -269,9 +324,6 @@ class MainWindow(Qw.QMainWindow):
                     metadata_display["title"] += separators[4] + tag
                 else:
                     metadata_display["title"] += tag
-        # else:
-        #     metadata_display["title"] += EmptyField.PLACEHOLDER
-        #     metadata_display["display"] += metadata
         return metadata_display
 
     @debug_monitor
@@ -317,6 +369,55 @@ class MainWindow(Qw.QMainWindow):
             self.mid_separator.setText(EmptyField.PLACEHOLDER)
             self.upper_box.setText(EmptyField.PLACEHOLDER)
             self.lower_box.setText(EmptyField.PLACEHOLDER)
+
+    def apply_theme(self, theme_name):
+        """Apply the selected qt-material theme and save to settings"""
+        from qt_material import apply_stylesheet
+        app = PyQt6.QtWidgets.QApplication.instance() # Get the QApplication instance
+
+        # Uncheck all other theme actions (radio-button behavior)
+        for action_theme_name, action in self.theme_actions.items():
+            if action_theme_name != theme_name:
+                action.setChecked(False)
+
+        apply_stylesheet(app, theme=theme_name) # Apply the selected theme
+        print(f"Theme applied and saved: {theme_name}") # Optional feedback to console
+
+        settings = QSettings("YourOrganization", "DatasetViewer") # Replace "YourOrganization" and "DatasetViewer"
+        settings.setValue("theme", theme_name) # Save theme name to settings
+
+
+    def show_about_dialog(self):
+        """Show the About dialog with application information and contributors"""
+        from PyQt6.QtWidgets import QMessageBox
+
+        version_text = "" # Default if version info not found
+        try:
+            from dataset_tools.version import __version__ # Try to import version
+            version_text = f"Version: {__version__}\n"
+        except ImportError:
+            pass # Handle case if version.py is not available
+
+        contributors_list = [ # Define your list of contributors here
+            "Your Name (Current Maintainer)",
+            "Previous Developer (Even if 'Asshole', credit is good practice)",
+            # Add other contributors here...
+        ]
+        contributors_text = "\nContributors:\n" + "\n".join(contributors_list)
+
+        license_text = "License: MIT License\n\n" # Update if you change license, link to full license in README/LICENSE file
+        license_link_text = "See LICENSE file for full license text.\n" # Add if you want to mention external license file
+
+        about_text = (
+            f"<b>Dataset Viewer</b>\n"
+            f"{version_text}"
+            f"An ultralight metadata viewer and dataset handler.\n\n"
+            f"{contributors_text}\n\n"
+            f"{license_text}"
+            f"{license_link_text}"
+        )
+
+        QMessageBox.about(self, "About Dataset Viewer", about_text) # Create and show about dialog
 
 
 if __name__ == "__main__":
