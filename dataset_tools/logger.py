@@ -1,7 +1,7 @@
 # // SPDX-License-Identifier: CC0-1.0
 # // --<{ Ktiseos Nyx }>--
 
-"""建立控制檯日誌"""
+"""Create console log"""
 
 import sys
 import logging as pylog
