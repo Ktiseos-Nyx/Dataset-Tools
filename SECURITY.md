@@ -1,6 +1,6 @@
 # Security Policy
 
-At Ktiseos Nyx, we take security seriously. While Dataset-Tools is currently under active development and not yet at a stable release (version 1.0), we are committed to addressing security vulnerabilities promptly and transparently.  We appreciate the community's help in identifying and reporting potential issues.
+At Ktiseos Nyx, we take security seriously. While Dataset-Tools is currently under active development and not yet at a stable release, we are committed to addressing security vulnerabilities promptly and transparently.  We appreciate the community's help in identifying and reporting potential issues.
 
 ## Supported Versions & Development Status
 
