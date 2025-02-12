@@ -1,7 +1,7 @@
-# // SPDX-License-Identifier: CC0-1.0
-# // --<{ Ktiseos Nyx }>--
+# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
+# SPDX-License-Identifier: MIT
 
-"""資料夾內容"""
+"""Widgets"""
 
 import os
 from pathlib import Path
@@ -12,11 +12,11 @@ from dataset_tools.logger import debug_monitor
 from dataset_tools.logger import info_monitor as nfo
 
 
-class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
+class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member - PyQt6 properties are dynamically added by C extensions, Pylint can't see them.
     """Opens files in the UI"""
 
-    finished = QtCore.pyqtSignal(list, list, list, str)  # pylint: disable=c-extension-no-member
-    progress = QtCore.pyqtSignal(int)  # pylint: disable=c-extension-no-member
+    finished = QtCore.pyqtSignal(list, list, list, str)  # pylint: disable=c-extension-no-member - PyQt6 properties are dynamically added by C extensions, Pylint can't see them.
+    progress = QtCore.pyqtSignal(int)  # pylint: disable=c-extension-no-member - PyQt6 properties are dynamically added by C extensions, Pylint can't see them.
 
     def __init__(self, folder_path):
         super().__init__()
@@ -32,6 +32,8 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
         self.images, self.text_files, self.model_files = self.populate_index_from_list(folder_contents)  # pylint: disable=line-too-long
         self.finished.emit(self.images, self.text_files, self.model_files, self.folder_path)
 
+    # In widgets.py, inside the FileLoader class
+
     @debug_monitor
     def scan_directory(self, folder_path: str) -> list:
         """
@@ -43,7 +45,13 @@ class FileLoader(QtCore.QThread):  # pylint: disable=c-extension-no-member
         try:
             folder_contents = [os.path.join(folder_path, f) for f in os.listdir(folder_path)]
         except FileNotFoundError as error_log:
-            nfo("Error loading folder", folder_path, error_log)
+            nfo(f"FileNotFoundError: Error loading folder '{folder_path}'. Folder not found.", error_log) # More specific message
+        except PermissionError as error_log: # Catch PermissionError specifically
+            nfo(f"PermissionError: Error loading folder '{folder_path}'. Insufficient permissions.", error_log) # More specific message
+        except OSError as error_log: # Catch other OS errors
+            nfo(f"OSError: General error loading folder '{folder_path}'. OS related issue.", error_log) # More general OS error
+        except Exception as error_log: # Catch any other unexpected errors
+            nfo(f"Unexpected error loading folder '{folder_path}'.", error_log) # Catch-all for other exceptions
         return folder_contents
 
     @debug_monitor
