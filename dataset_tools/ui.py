@@ -19,7 +19,7 @@ import PyQt6 # Or PySide6 if you switched for licensing
 from PyQt6 import QtWidgets as Qw # Or PySide6.QtWidgets
 from PyQt6 import QtCore, QtGui # Or PySide6.QtCore, PySide6.QtGui
 from PyQt6.QtCore import QSettings
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QDialogButtonBox, QLabel, QCheckBox
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QDialogButtonBox, QLabel, QCheckBox, QApplication 
 
 # Conditional import for qt_material for theme listing
 try:
