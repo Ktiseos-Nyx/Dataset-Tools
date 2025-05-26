@@ -1,5 +1,10 @@
 # dataset_tools/metadata_parser.py
 
+# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
+# SPDX-License-Identifier: GPL-3.0
+
+"""Parse metadata from various file types."""
+
 import re 
 import json 
 from pathlib import Path 
