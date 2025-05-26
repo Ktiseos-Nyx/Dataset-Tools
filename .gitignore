@@ -10,10 +10,17 @@ __pycache__/            # Ignore all __pycache__ directories anywhere
 dataset_tools.egg-info
 dataset_tools.dataset_tools.egg-info
 build/
+*.pyc
 
 # Virtual environment (if using)
+# Python virtual environments
 .venv/
 venv/
+.uufdadata/  # <--- ADD THIS LINE
+env/
+ENV/
+
+
 
 # Test coverage reports (if you generate them)
 .coverage
