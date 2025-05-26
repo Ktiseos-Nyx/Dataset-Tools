@@ -6,9 +6,9 @@
 
 # Dataset Tools: An AI Metadata Viewer
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/f8b4187b-2603-4bae-aa4a-dc3f621b5696" alt="Dataset Tools Screenshot" width="700">
-</p>
+<img width="1281" alt="Light Mode Theme - Wide View" src="https://github.com/user-attachments/assets/12fe1127-2a22-4668-8d60-160caf6e1a80" />
+
+<img width="796" alt="Dark Pink + Civitai Metadata" src="https://github.com/user-attachments/assets/d436f3ce-6760-4bca-ba2c-55c645d8bac0" />
 
 Dataset Tools is a desktop application designed to help users browse and manage their image datasets, particularly those used with AI art generation tools (like Stable Diffusion WebUI Forge, A1111, ComfyUI) and model files (like Safetensors). Developed using Python and PyQt6, it provides an intuitive graphical interface for browsing files, viewing embedded generation parameters, and examining associated metadata.
 
