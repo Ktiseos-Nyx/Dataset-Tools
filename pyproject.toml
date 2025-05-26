@@ -37,6 +37,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
     "Environment :: X11 Applications :: Qt",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
 ]
 dependencies = [
     "rich",
