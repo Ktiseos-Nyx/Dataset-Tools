@@ -1,25 +1,109 @@
+# dataset_tools/main.py
+
 # Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
 # SPDX-License-Identifier: MIT
 
 """Launch and exit the application"""
 
 import sys
+import argparse # Import argparse for command-line argument processing
 from PyQt6 import QtWidgets
 
-from dataset_tools.ui import MainWindow  # Import our main window class
-from dataset_tools.logger import info_monitor as loginfo
+# Import from your package's __init__.py
+from dataset_tools import set_package_log_level, __version__ # For version display
 
+# Import your UI and logger
+from dataset_tools.ui import MainWindow
+from dataset_tools import logger as app_logger # Import your logger module
 
-def main():
+def main(cli_args_list=None): # Added cli_args_list for testability
     """Launch application"""
-    loginfo("Launching application...")
 
-    app = QtWidgets.QApplication(sys.argv)  # pylint: disable=c-extension-no-member
+    # 1. Setup argparse for log level (and any other app-specific CLI args)
+    parser = argparse.ArgumentParser(
+        description=f"Dataset Tools v{__version__} - Metadata Viewer and Editor."
+    )
+    # Define how log levels are specified on the command line
+    # Using a single --log-level argument is often cleaner
+    levels_map_cli = {"d": "DEBUG", "i": "INFO", "w": "WARNING", "e": "ERROR", "c": "CRITICAL"}
+    valid_log_level_choices = list(levels_map_cli.keys()) + list(l.upper() for l in levels_map_cli.values()) + list(l.lower() for l in levels_map_cli.values())
+
+    parser.add_argument(
+        "--log-level",
+        default="INFO",  # Default log level if not specified by user
+        type=str,
+        choices=valid_log_level_choices,
+        help=(
+            "Set the logging level. "
+            f"Valid choices: {', '.join(levels_map_cli.values())} "
+            f"or their first letters: {', '.join(levels_map_cli.keys())}. "
+            "Case-insensitive."
+        ),
+        metavar="LEVEL"
+    )
+    # Add other command-line arguments for your application here if needed
+    # parser.add_argument("--some-option", action="store_true", help="An example option")
+
+    # Parse arguments
+    # If cli_args_list is None (normal execution), parse from sys.argv.
+    # Otherwise (e.g., for testing), parse from the provided list.
+    args = parser.parse_args(args=cli_args_list)
+
+
+    # 2. Determine the final log level string (e.g., "DEBUG", "INFO")
+    chosen_log_level_name = args.log_level.upper()
+    # If user gave a short form (e.g., "d"), convert to full name ("DEBUG")
+    if chosen_log_level_name.lower() in levels_map_cli:
+        chosen_log_level_name = levels_map_cli[chosen_log_level_name.lower()].upper()
+    # At this point, chosen_log_level_name should be one of "DEBUG", "INFO", etc.
+
+
+    # 3. Update the LOG_LEVEL variable in __init__.py
+    # This makes it available to any modules imported *after* this point,
+    # but modules already imported (like logger.py) won't see this change automatically.
+    set_package_log_level(chosen_log_level_name)
+
+
+    # 4. Reconfigure the actual logger instance(s)
+    # This is crucial because logger.py likely initialized its logger(s)
+    # with the default LOG_LEVEL from __init__.py when it was first imported.
+    if hasattr(app_logger, 'reconfigure_logger'):
+        app_logger.reconfigure_logger(chosen_log_level_name)
+    else:
+        # Fallback or warning if no reconfigure function is available
+        # This means logger.py needs to be adapted to have such a function.
+        print(
+            f"WARNING (main.py): Logger module does not have 'reconfigure_logger'. "
+            f"Log level '{chosen_log_level_name}' set via CLI may not be fully effective "
+            "for already initialized loggers."
+        )
+        # You might need to manually set the level on the root logger or your specific logger
+        # if no reconfigure function exists, e.g.:
+        # import logging as pylog
+        # pylog.getLogger("dataset_tools").setLevel(chosen_log_level_name) # If you use named loggers
+        # pylog.root.setLevel(chosen_log_level_name) # If you modify the root logger
+
+    # Now use your logger (it should reflect the new level if reconfigured)
+    app_logger.info_monitor(f"Dataset Tools v{__version__} launching...")
+    app_logger.info_monitor(f"Application log level set to: {chosen_log_level_name}")
+    app_logger.debug_message(f"Arguments parsed: {args}") # Example debug message
+
+
+    # 5. Initialize and run the PyQt application
+    # For QApplication, sys.argv is usually passed to allow Qt to process its own CLI args
+    # (like -style), but it's fine if your argparse has already consumed app-specific ones.
+    qt_app_args = sys.argv # Keep original sys.argv for Qt if needed
+    app = QtWidgets.QApplication(qt_app_args)
+    # pylint: disable=c-extension-no-member (if Pylint complains about QApplication)
+
     window = MainWindow()  # Initialize our main window.
+    # If MainWindow needs access to parsed args: window = MainWindow(args=args)
     window.show()
     sys.exit(app.exec())
 
 
 if __name__ == "__main__":
-    # begin routine
+    # This block is executed when you run `python dataset_tools/main.py`
+    # or `python -m dataset_tools.main`
+    # The `dataset-tools` script generated by pip also effectively calls this.
     main()
