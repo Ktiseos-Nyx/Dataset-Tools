@@ -48,10 +48,9 @@ dependencies = [
     "typing-extensions",
     "pyexiv2",
     "exif",
-   #"python-exiftool", <-- Removed
-    # "gguf",  <-- Removed
-    # "llama_cpp_python", <-- Removed
+    "sd-prompt-reader",  # <--- ADD THIS LINE
 ]
+
 [project.optional-dependencies]
 dev = ["pytest"]
 kn  = ["ruff", "pylint"]
