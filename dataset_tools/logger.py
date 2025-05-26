@@ -1,7 +1,7 @@
 # dataset_tools/logger.py
 
-# Copyright (c) 2025 Ktiseos Nyx/ Dataset-Tools (*EARTH & DUSK MEDIA / 0FTH3N1GHT*)
-# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
+# SPDX-License-Identifier: GPL-3.0
 
 """Create console log"""
 

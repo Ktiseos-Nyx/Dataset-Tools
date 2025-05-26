@@ -1,5 +1,8 @@
 # dataset_tools/access_disk.py
 
+# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
+# SPDX-License-Identifier: GPL-3.0
+
 from pathlib import Path
 import os
 import json
@@ -144,29 +147,62 @@ class MetadataFileReader:
     # However, if `metadata_parser.py` calls `std_reader.read_jpg_header_pyexiv2()` etc.,
     # then this particular `read_header` method here might become less used or just for .txt/.json etc.
 
+    # In access_disk.py
     @debug_monitor
-    def read_general_file_content(self, file_path_named: str) -> dict | None:
-        """
-        Reads content for non-image text-based or schema-based files.
-        For images, specific methods like read_jpg_header_pyexiv2 should be called by metadata_parser.
-        """
-        nfo(f"[MDFileReader] Reading general file: {file_path_named}")
-        ext = Path(file_path_named).suffix.lower()
+    def read_jpg_header_pyexiv2(self, file_path_named: str) -> dict | None:
+        nfo(f"[MDFileReader] Reading JPG with pyexiv2: {file_path_named}")
+        try:
+            img = pyexiv2.Image(file_path_named)
+            exif_tags = img.read_exif() # This returns a dict of decoded values
+            iptc_tags = img.read_iptc()
+            xmp_tags = img.read_xmp()
+            
+            metadata = {
+                "EXIF": exif_tags or {},
+                "IPTC": iptc_tags or {},
+                "XMP":  xmp_tags  or {}
+            }
 
-        if ext in Ext.JSON or ext in Ext.TOML:
-            return self.read_schema_file(file_path_named)
-        
-        # Broad check for text-like files (PLAIN includes .txt, .xml, .html)
-        for file_type_set in Ext.PLAIN:
-             if ext in file_type_set:
-                  return self.read_txt_contents(file_path_named)
+            # --- Attempt to get RAW UserComment bytes specifically ---
+            if exif_tags and 'Exif.Photo.UserComment' in exif_tags:
+                # pyexiv2.Image has a direct way to access tags if read_exif() doesn't give raw bytes
+                # This is a bit more involved if read_exif() already decodes.
+                # Let's check the type of what read_exif() returns for UserComment
+                uc_val_from_read_exif = exif_tags['Exif.Photo.UserComment']
+                print(f"DEBUG [read_jpg_header_pyexiv2] UserComment type from read_exif: {type(uc_val_from_read_exif)}")
+                if isinstance(uc_val_from_read_exif, str) and uc_val_from_read_exif.startswith("charset=Unicode"):
+                    print("DEBUG [read_jpg_header_pyexiv2] UserComment from read_exif is already a mangled string. Trying to get raw tag.")
+                    # Try to access the raw tag value if possible (API might vary)
+                    # This is speculative based on typical Exif library patterns
+                    try:
+                        # The pyexiv2.Image object 'img' might allow direct tag access
+                        # before read_exif() decodes everything.
+                        # This is difficult without knowing pyexiv2's detailed API for raw tag access
+                        # after read_exif() has been called.
+                        # If img. exif() is the primary way, we're stuck with its decoding.
+                        #
+                        # An alternative: if pyexiv2.ExifTag objects are accessible via img. exif() items
+                        # they might have a .raw_value or .Value property that returns bytes for Undefined type.
+                        # For now, we assume read_exif() is the main source.
+                        # The best might be if `img.get_tag_raw_values('Exif.Photo.UserComment')` existed.
+                        #
+                        # Given that `piexif` (used by sd-prompt-reader) CAN decode it properly,
+                        # the issue with `pyexiv2` might be its default string decoding for UserComment.
+                        #
+                        # For now, we pass what read_exif() gives. If it's a string, our
+                        # decode_exif_user_comment_to_json_string will get a string and fail to find JSON.
+                        # If it's bytes, decode_exif_user_comment_to_json_string will try to decode.
+                        pass # Keep existing metadata['EXIF']['Exif.Photo.UserComment']
+                    except Exception as e_raw:
+                        print(f"DEBUG [read_jpg_header_pyexiv2] Could not get raw UserComment bytes: {e_raw}")
 
-        if ext in Ext.MODEL: # Use set union for checking against Ext.MODEL
-            model_tool = ModelTool()
-            return model_tool.read_metadata_from(file_path_named)
-        
-        # If it's an image file but we got here, it means sd-prompt-reader didn't handle it
-        # and metadata_parser is asking us for standard EXIF via specific calls.
-        # This general read_header shouldn't try to re-read images if specific pyexiv2 methods exist.
-        nfo(f"[MDFileReader] No specific general handler for {file_path_named}")
-        return None
+
+            img.close()
+            if not metadata["EXIF"] and not metadata["IPTC"] and not metadata["XMP"]:
+                nfo(f"[MDFileReader] pyexiv2 found no EXIF/IPTC/XMP in JPG: {file_path_named}")
+                return None
+            return metadata
+        except Exception as e:
+            nfo(f"[MDFileReader] pyexiv2 error reading JPG {file_path_named}: {e}")
+            traceback.print_exc() # Print traceback for pyexiv2 errors
+            return None

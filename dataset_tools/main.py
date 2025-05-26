@@ -1,7 +1,7 @@
 # dataset_tools/main.py
 
 # Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-3.0
 
 """Launch and exit the application"""
 
