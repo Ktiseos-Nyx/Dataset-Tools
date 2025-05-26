@@ -1,5 +1,8 @@
 # dataset_tools/access_disk.py
 
+# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
+# SPDX-License-Identifier: GPL-3.0
+
 from pathlib import Path
 import os
 import json
