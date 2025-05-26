@@ -1,7 +1,7 @@
 # dataset_tools/ui.py
 
 # Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
-# SPDX-License-Identifier: MIT # Or GPL-3.0-or-later if you changed it
+# SPDX-License-Identifier: GPL-3.0
 
 """App UI"""
 
