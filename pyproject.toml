@@ -49,7 +49,8 @@ dependencies = [
     "typing-extensions",
     "pyexiv2",
     "exif",
-    "sd-prompt-reader",  # <--- ADD THIS LINE
+    "sd-prompt-reader",
+    "qt-material", # Fixed a borked import
 ]
 
 [project.optional-dependencies]
