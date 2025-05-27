@@ -46,7 +46,6 @@ def make_paired_str_dict(text_to_convert: str) -> dict:
     if not text_to_convert or not isinstance(text_to_convert, str):
         return {}
     
-    # print(f"DEBUG [make_paired_str_dict] INPUT (first 150): '{text_to_convert[:150]}'") # Optional
     converted_text = {}
     pattern = re.compile(r"""
         ([\w\s().\-/]+?)        # Key
@@ -88,7 +87,6 @@ def make_paired_str_dict(text_to_convert: str) -> dict:
              if ":" not in remaining_unparsed and "," not in remaining_unparsed and len(remaining_unparsed.split()) < 5:
                  if "Lora hashes" not in converted_text and "Version" not in converted_text : 
                     converted_text["Uncategorized Suffix"] = remaining_unparsed
-    # print(f"DEBUG [make_paired_str_dict] OUTPUT: {converted_text}") # Optional
     return converted_text
 
 def decode_exif_user_comment_to_json_string(uc_input: bytes | str) -> str | None:
@@ -213,45 +211,47 @@ def _populate_ui_dict_from_sdpr_parser(parser_instance, ui_dict_to_update: dict,
     Helper to translate sd-prompt-reader parser output into the final_ui_dict structure.
     Modifies ui_dict_to_update in place.
     """
-    # print(f"DEBUG [_populate_ui_dict_from_sdpr_parser] Populating from parser tool: {getattr(parser_instance, 'tool', 'Unknown')}, override: {tool_name_override}")
     temp_prompt_data = ui_dict_to_update.get(UpField.PROMPT, {})
-    if parser_instance.positive: temp_prompt_data["Positive"] = str(parser_instance.positive)
-    if parser_instance.negative: temp_prompt_data["Negative"] = str(parser_instance.negative)
-    if getattr(parser_instance, 'is_sdxl', False): # Check if is_sdxl attr exists
+    if getattr(parser_instance, 'positive', ""): temp_prompt_data["Positive"] = str(parser_instance.positive)
+    if getattr(parser_instance, 'negative', ""): temp_prompt_data["Negative"] = str(parser_instance.negative)
+    if getattr(parser_instance, 'is_sdxl', False): 
         if getattr(parser_instance, 'positive_sdxl', None): temp_prompt_data["Positive SDXL"] = parser_instance.positive_sdxl
         if getattr(parser_instance, 'negative_sdxl', None): temp_prompt_data["Negative SDXL"] = parser_instance.negative_sdxl
     if temp_prompt_data: ui_dict_to_update[UpField.PROMPT] = temp_prompt_data
 
     temp_gen_data = ui_dict_to_update.get(DownField.GENERATION_DATA, {})
-    if hasattr(parser_instance, 'parameter'): # Check if parameter attr exists
+    if hasattr(parser_instance, 'parameter'): 
         for key, value in parser_instance.parameter.items():
             if value and value != SDPR_PARAMETER_PLACEHOLDER:
                 display_key = key.replace("_", " ").capitalize()
                 temp_gen_data[display_key] = str(value)
     
-    if getattr(parser_instance, 'width', "0") and str(parser_instance.width) != "0": temp_gen_data["Width"] = str(parser_instance.width)
-    if getattr(parser_instance, 'height', "0") and str(parser_instance.height) != "0": temp_gen_data["Height"] = str(parser_instance.height)
+    parser_width = getattr(parser_instance, 'width', "0")
+    if parser_width and str(parser_width) != "0": temp_gen_data["Width"] = str(parser_width)
+    parser_height = getattr(parser_instance, 'height', "0")
+    if parser_height and str(parser_height) != "0": temp_gen_data["Height"] = str(parser_height)
 
-    if getattr(parser_instance, 'setting', ""):
+    parser_setting = getattr(parser_instance, 'setting', "")
+    if parser_setting:
         effective_tool = tool_name_override or (str(parser_instance.tool) if hasattr(parser_instance, 'tool') else None)
         if effective_tool and any(t in effective_tool for t in ["A1111", "Forge", "SD.Next", "Easy Diffusion"]):
-            additional_settings = make_paired_str_dict(str(parser_instance.setting))
+            additional_settings = make_paired_str_dict(str(parser_setting))
             for key_add, value_add in additional_settings.items():
                 display_key_add = key_add.replace("_", " ").capitalize()
                 if display_key_add not in temp_gen_data or \
                    temp_gen_data.get(display_key_add) in [None, "None", SDPR_PARAMETER_PLACEHOLDER, ""]:
                     temp_gen_data[display_key_add] = str(value_add)
         else: 
-            temp_gen_data["Tool Specific Settings"] = str(parser_instance.setting) # For ComfyUI, etc.
+            temp_gen_data["Tool Specific Settings"] = str(parser_setting) 
     if temp_gen_data: ui_dict_to_update[DownField.GENERATION_DATA] = temp_gen_data
     
-    if getattr(parser_instance, 'raw', ""): ui_dict_to_update[DownField.RAW_DATA] = str(parser_instance.raw)
+    parser_raw = getattr(parser_instance, 'raw', "")
+    if parser_raw: ui_dict_to_update[DownField.RAW_DATA] = str(parser_raw)
     
     detected_tool_str = tool_name_override or (str(parser_instance.tool) if hasattr(parser_instance, 'tool') else "Unknown")
     if detected_tool_str and detected_tool_str != "Unknown":
         if UpField.METADATA not in ui_dict_to_update: ui_dict_to_update[UpField.METADATA] = {}
         ui_dict_to_update[UpField.METADATA]["Detected Tool"] = detected_tool_str
-    # print(f"DEBUG [_populate_ui_dict_from_sdpr_parser] Resulting dict keys: {list(ui_dict_to_update.keys())}")
 
 
 def process_pyexiv2_data(pyexiv2_header_data: dict) -> dict:
@@ -266,7 +266,7 @@ def process_pyexiv2_data(pyexiv2_header_data: dict) -> dict:
         if 'Exif.Photo.FNumber' in exif_data: displayable_exif['F-Number'] = str(exif_data['Exif.Photo.FNumber'])
         if 'Exif.Photo.ExposureTime' in exif_data: displayable_exif['Exposure Time'] = str(exif_data['Exif.Photo.ExposureTime'])
         if 'Exif.Photo.ISOSpeedRatings' in exif_data: displayable_exif['ISO'] = str(exif_data['Exif.Photo.ISOSpeedRatings'])
-        if 'Exif.Photo.UserComment' in exif_data: # This is for displaying UserComment if it wasn't parsed as AI
+        if 'Exif.Photo.UserComment' in exif_data: 
             uc_val = exif_data['Exif.Photo.UserComment']
             uc_text_for_display = ""
             if isinstance(uc_val, bytes):
@@ -286,7 +286,7 @@ def process_pyexiv2_data(pyexiv2_header_data: dict) -> dict:
         if xmp_data.get('Xmp.dc.creator'):
             creator = xmp_data['Xmp.dc.creator']
             displayable_xmp['Artist'] = ", ".join(creator) if isinstance(creator, list) else str(creator)
-        if xmp_data.get('Xmp.dc.description'): # A1111 sometimes puts parameters here for JPEGs
+        if xmp_data.get('Xmp.dc.description'): 
             desc_val = xmp_data['Xmp.dc.description']
             desc_text = desc_val.get('x-default', str(desc_val)) if isinstance(desc_val, dict) else str(desc_val)
             displayable_xmp['Description'] = desc_text
@@ -346,7 +346,7 @@ def parse_metadata(file_path_named: str) -> dict:
                 if data_reader.status == BaseFormat.Status.READ_SUCCESS and data_reader.tool:
                     nfo(f"SDPR parsed successfully. Tool: {data_reader.tool}")
                     print(f"DEBUG: SDPR READ_SUCCESS. Tool: {data_reader.tool}")
-                    _populate_ui_dict_from_sdpr_parser(data_reader, final_ui_dict) # Pass final_ui_dict to be modified
+                    _populate_ui_dict_from_sdpr_parser(data_reader, final_ui_dict) 
                     potential_ai_parsed = True
         except FileNotFoundError:
             nfo(f"File not found by SDPR: {file_path_named}")
@@ -362,7 +362,7 @@ def parse_metadata(file_path_named: str) -> dict:
     if not potential_ai_parsed and not is_txt_file:
         status_name_from_sdpr = data_reader.status.name if data_reader and data_reader.status and hasattr(data_reader.status, 'name') else 'N/A'
         tool_name_from_sdpr = data_reader.tool if data_reader and data_reader.tool else 'N/A'
-        nfo(f"SDPR did not fully parse AI data (Tool: {tool_name_from_sdpr}, Status: {status_name_from_sdpr}). Trying pyexiv2 UserComment AI parse then standard EXIF/XMP.")
+        # nfo(f"SDPR did not fully parse AI data (Tool: {tool_name_from_sdpr}, Status: {status_name_from_sdpr}). Trying pyexiv2 UserComment AI parse then standard EXIF/XMP.")
         print(f"DEBUG: SDPR did not fully parse (Tool: {tool_name_from_sdpr}, Status: {status_name_from_sdpr}). Attempting pyexiv2 UserComment AI parse then standard fallback.")
         
         from .access_disk import MetadataFileReader 
@@ -374,12 +374,14 @@ def parse_metadata(file_path_named: str) -> dict:
             pyexiv2_raw_data = std_reader.read_png_header_pyexiv2(file_path_named)
 
         if pyexiv2_raw_data:
-            print(f"DEBUG: pyexiv2 fallback got data with keys: {list(pyexiv2_raw_data.keys())}")
+            # The read_jpg_header_pyexiv2 in access_disk.py already logs its keys.
+            # print(f"DEBUG: pyexiv2 fallback got data with keys: {list(pyexiv2_raw_data.keys())}")
             exif_part = pyexiv2_raw_data.get("EXIF", {}) 
             user_comment_value = exif_part.get("Exif.Photo.UserComment") if exif_part else None
 
             if user_comment_value:
-                print(f"DEBUG: Found UserComment from pyexiv2. Type: {type(user_comment_value)}. Value (first 50): {repr(user_comment_value[:50]) if isinstance(user_comment_value, (str,bytes)) else repr(user_comment_value)}")
+                # This log is already in access_disk.py's read_jpg_header_pyexiv2 if it's a string
+                # print(f"DEBUG: Found UserComment from pyexiv2. Type: {type(user_comment_value)}. Value (first 50): {repr(user_comment_value[:50]) if isinstance(user_comment_value, (str,bytes)) else repr(user_comment_value)}")
                 json_str_from_uc = decode_exif_user_comment_to_json_string(user_comment_value)
                 
                 if json_str_from_uc:
@@ -395,7 +397,6 @@ def parse_metadata(file_path_named: str) -> dict:
                                     extra_meta_dict = json.loads(extra_meta_str)
                                     print("DEBUG: Successfully parsed 'extraMetadata' string into dict.")
                                     
-                                    # OPTION 1: Direct extraction from extra_meta_dict for A1111-like params
                                     temp_prompt_data = final_ui_dict.get(UpField.PROMPT, {})
                                     if extra_meta_dict.get("prompt"): temp_prompt_data["Positive"] = extra_meta_dict["prompt"]
                                     if extra_meta_dict.get("negativePrompt"): temp_prompt_data["Negative"] = extra_meta_dict["negativePrompt"]
@@ -403,16 +404,20 @@ def parse_metadata(file_path_named: str) -> dict:
                                     
                                     temp_gen_data = final_ui_dict.get(DownField.GENERATION_DATA, {})
                                     if "steps" in extra_meta_dict: temp_gen_data["Steps"] = str(extra_meta_dict["steps"])
-                                    if "CFG scale" in extra_meta_dict: temp_gen_data["Cfg scale"] = str(extra_meta_dict["CFG scale"]) # Civitai uses "CFG scale"
-                                    elif "cfgScale" in extra_meta_dict: temp_gen_data["Cfg scale"] = str(extra_meta_dict["cfgScale"]) # Or this
-                                    if "sampler" in extra_meta_dict: temp_gen_data["Sampler"] = str(extra_meta_dict["sampler"])
+                                    # Civitai uses "CFG scale" (with space), A1111 uses "CFG scale" or "cfg_scale" in API, sd-prompt-reader might normalize to "Cfg scale"
+                                    if "CFG scale" in extra_meta_dict: temp_gen_data["Cfg scale"] = str(extra_meta_dict["CFG scale"]) 
+                                    elif "cfgScale" in extra_meta_dict: temp_gen_data["Cfg scale"] = str(extra_meta_dict["cfgScale"])
+                                    if "sampler" in extra_meta_dict: temp_gen_data["Sampler"] = str(extra_meta_dict["sampler"]) # Or "sampler_name"
+                                    elif "sampler_name" in extra_meta_dict: temp_gen_data["Sampler"] = str(extra_meta_dict["sampler_name"])
                                     if "seed" in extra_meta_dict: temp_gen_data["Seed"] = str(extra_meta_dict["seed"])
-                                    # Add other relevant A1111-like params from extra_meta_dict
+                                    if "width" in extra_meta_dict and "Width" not in temp_gen_data : temp_gen_data["Width"] = str(extra_meta_dict["width"])
+                                    if "height" in extra_meta_dict and "Height" not in temp_gen_data : temp_gen_data["Height"] = str(extra_meta_dict["height"])
+                                    # Add other relevant A1111-like params from extra_meta_dict as needed
                                     if temp_gen_data: final_ui_dict[DownField.GENERATION_DATA] = temp_gen_data
                                     
                                     if UpField.METADATA not in final_ui_dict: final_ui_dict[UpField.METADATA] = {}
                                     final_ui_dict[UpField.METADATA]["Detected Tool"] = "Civitai ComfyUI (via UserComment.extraMetadata)"
-                                    if DownField.RAW_DATA not in final_ui_dict: final_ui_dict[DownField.RAW_DATA] = json_str_from_uc # Store the whole workflow JSON
+                                    if DownField.RAW_DATA not in final_ui_dict: final_ui_dict[DownField.RAW_DATA] = json_str_from_uc 
                                     
                                     potential_ai_parsed = True
                                     print("DEBUG: Directly extracted A1111-style params from UserComment.extraMetadata JSON.")
@@ -421,13 +426,9 @@ def parse_metadata(file_path_named: str) -> dict:
                                     print(f"DEBUG: Failed to parse JSON from 'extraMetadata' string: {e_extra}")
                             
                             if not potential_ai_parsed and "nodes" in main_uc_json_obj:
-                                is_likely_comfy = False # Check for Comfy structure more reliably
                                 first_node_key = next(iter(main_uc_json_obj.get("nodes", {})), None)
                                 if first_node_key and isinstance(main_uc_json_obj["nodes"].get(first_node_key), dict) and \
                                    "class_type" in main_uc_json_obj["nodes"][first_node_key]:
-                                    is_likely_comfy = True
-                                
-                                if is_likely_comfy:
                                     print("DEBUG: UserComment JSON looks like ComfyUI graph. Trying SDPR_ComfyUIParser.")
                                     parser_comfy_uc = SDPR_ComfyUIParser(info=main_uc_json_obj)
                                     status = parser_comfy_uc.parse()
@@ -437,7 +438,7 @@ def parse_metadata(file_path_named: str) -> dict:
                                         potential_ai_parsed = True
                         except json.JSONDecodeError as e_json_load: print(f"DEBUG: UserComment (pyexiv2) decoded to string, but it's not valid JSON: {e_json_load}")
                         except Exception as e_uc_ai: print(f"DEBUG: Error parsing AI data from UserComment (pyexiv2 path with SDPR): {e_uc_ai}"); traceback.print_exc()
-                    else: # SDPR Not Available, but we have a JSON string
+                    else: 
                         print("DEBUG: SDPR not available. Decoded UserComment to JSON, storing raw and trying direct 'extraMetadata' parse.")
                         try:
                             main_uc_json_obj = json.loads(json_str_from_uc)
@@ -452,7 +453,10 @@ def parse_metadata(file_path_named: str) -> dict:
                                 if "CFG scale" in extra_meta_dict: temp_gen_data["Cfg scale"] = str(extra_meta_dict["CFG scale"])
                                 elif "cfgScale" in extra_meta_dict: temp_gen_data["Cfg scale"] = str(extra_meta_dict["cfgScale"])
                                 if "sampler" in extra_meta_dict: temp_gen_data["Sampler"] = str(extra_meta_dict["sampler"])
+                                elif "sampler_name" in extra_meta_dict: temp_gen_data["Sampler"] = str(extra_meta_dict["sampler_name"])
                                 if "seed" in extra_meta_dict: temp_gen_data["Seed"] = str(extra_meta_dict["seed"])
+                                if "width" in extra_meta_dict and "Width" not in temp_gen_data: temp_gen_data["Width"] = str(extra_meta_dict["width"]) 
+                                if "height" in extra_meta_dict and "Height" not in temp_gen_data: temp_gen_data["Height"] = str(extra_meta_dict["height"])
                                 if temp_gen_data: final_ui_dict[DownField.GENERATION_DATA] = temp_gen_data
                                 print("DEBUG: Directly extracted from extraMetadata (SDPR not available path).")
                         except Exception as e_direct_extract:
@@ -470,7 +474,7 @@ def parse_metadata(file_path_named: str) -> dict:
                 print("DEBUG: UserComment (pyexiv2) did not yield AI data. Processing pyexiv2_raw_data for standard EXIF/XMP.")
                 standard_photo_meta = process_pyexiv2_data(pyexiv2_raw_data)
                 if standard_photo_meta:
-                    final_ui_dict.update(standard_photo_meta) # Merge standard EXIF if AI not found
+                    final_ui_dict.update(standard_photo_meta) 
                     nfo("Displayed standard EXIF/XMP data.")
                     print("DEBUG: Populated final_ui_dict with standard EXIF/XMP.")
                 elif not final_ui_dict.get(EmptyField.PLACEHOLDER):
@@ -503,7 +507,7 @@ def parse_metadata(file_path_named: str) -> dict:
         elif pyexiv2_raw_data: loggable_header_info = str(list(pyexiv2_raw_data.keys()) if isinstance(pyexiv2_raw_data, dict) else pyexiv2_raw_data)[:200]
         
         nfo("Failed to find/load metadata for file. Last available data: %s", loggable_header_info)
-        if EmptyField.PLACEHOLDER not in final_ui_dict or list(final_ui_dict[EmptyField.PLACEHOLDER].keys()) == [EmptyField.PLACEHOLDER] : # Avoid overwriting specific errors
+        if EmptyField.PLACEHOLDER not in final_ui_dict or list(final_ui_dict[EmptyField.PLACEHOLDER].keys()) == [EmptyField.PLACEHOLDER] : 
             final_ui_dict[EmptyField.PLACEHOLDER] = {"Error": "No processable metadata found."}
         print("DEBUG: final_ui_dict is effectively empty after all checks.")
          
