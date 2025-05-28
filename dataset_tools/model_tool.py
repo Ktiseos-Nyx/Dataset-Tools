@@ -1,86 +1,69 @@
-# model-tool.py
-
-# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
-# SPDX-License-Identifier: GPL-3.0
-
-"""Load model metadata"""
+# Dataset-Tools/model_tool.py
+# Refactored to use specific parser classes
 
 from pathlib import Path
+from .logger import info_monitor as nfo
+from .correct_types import EmptyField # For default error return
 
-# import mmap
-# import pickle
-import struct
-import json
-
-from dataset_tools.logger import info_monitor as nfo
-from dataset_tools.correct_types import EmptyField, UpField, DownField
-
+# Import your new model parsers
+from .model_parsers import (
+    SafetensorsParser,
+    # PickletensorParser, # Add when implemented
+    # GgufParser,         # Add when implemented
+    ModelParserStatus
+)
 
 class ModelTool:
-    """Output state dict from a model file at [path] to the ui"""
-
     def __init__(self):
-        self.read_method = None
+        # Map extensions to parser classes
+        self.parser_map = {
+            ".safetensors": SafetensorsParser,
+            ".sft": SafetensorsParser,
+            # ".gguf": GgufParser,
+            # ".pt": PickletensorParser,
+            # ".pth": PickletensorParser,
+            # ".ckpt": PickletensorParser,
+        }
 
     def read_metadata_from(self, file_path_named: str) -> dict:
-        """
-        Detect file type and skim metadata from a model file using the appropriate tools\n
-        :param file_path_named: `str` The full path to the file being analyzed
-        :return: `dict` a dictionary including the metadata header and external file attributes\n
-        (model_header, disk_size, file_name, file_extension)
-        """
-        metadata = None
-        extension = Path(file_path_named).suffix
-        import_map = {
-            ".safetensors": self.metadata_from_safetensors,
-            ".sft": self.metadata_from_safetensors,
-            # ".gguf": self.metadata_from_gguf, # Removed GGUF
-            # ".pt": self.metadata_from_pickletensor,
-            # ".pth": self.metadata_from_pickletensor,
-            # ".ckpt": self.metadata_from_pickletensor,
+        nfo(f"[ModelTool] Attempting to read metadata from: {file_path_named}")
+        extension = Path(file_path_named).suffix.lower()
+      
+        ParserClass = self.parser_map.get(extension)
+
+        if ParserClass:
+            parser_instance = ParserClass(file_path_named)
+            status = parser_instance.parse()
+
+            if status == ModelParserStatus.SUCCESS:
+                return parser_instance.get_ui_data()
+            elif status == ModelParserStatus.FAILURE:
+                # Parser recognized the type but failed to parse
+                return {
+                    EmptyField.PLACEHOLDER.value: {
+                        "Error": f"{parser_instance.tool_name} parsing failed: {parser_instance._error_message or 'Unknown error'}",
+                        "File": file_path_named
+                    }
+                }
+            else: # NOT_APPLICABLE or UNATTEMPTED (shouldn't be UNATTEMPTED after parse call)
+                nfo(f"[ModelTool] Parser {ParserClass.__name__} not applicable for {file_path_named}")
+                # Fall through to unsupported extension
+        
+        nfo(f"[ModelTool] Unsupported file extension or no suitable parser found: {extension}")
+        return {
+            EmptyField.PLACEHOLDER.value: {
+                "Error": f"Unsupported model file extension: {extension}",
+                "File": file_path_named
+            }
         }
-        if extension in import_map:
-            self.read_method = import_map.get(extension)
-            metadata = self.read_method(file_path_named)
-        else:
-            nfo(f"Unsupported file extension: {extension}")
-        return metadata
 
-    # def metadata_from_pickletensor(self, file_path_named: str) -> dict:
-    #     """
-    #     Collect metadata from a pickletensor file header\n
-    #     :param file_path: `str` the full path to the file being opened
-    #     :return: `dict` the key value pair structure found in the file
-    #     """
-    #     with open(file_path_named, "r+b") as file_contents_to:
-    #         mem_map_data = mmap.mmap(file_contents_to.fileno(), 0)
-    #         return pickle.loads(memoryview(mem_map_data))
-
-    def metadata_from_safetensors(self, file_path_named: str) -> dict:
-        """
-        Collect metadata from a safetensors file header\n
-        :param file_path_named: `str` the full path to the file being opened
-        :return: `dict` the key value pair structure found in the file
-        """
-        assembled_data = {}
-        with open(file_path_named, "rb") as file_contents_to:
-            first_8_bytes = file_contents_to.read(8)
-            length_of_header = struct.unpack("<Q", first_8_bytes)[0]
-            header_data = file_contents_to.read(length_of_header)
-            header_data = header_data.decode("utf-8", errors="strict")
-            header_data = header_data.strip()
-            header_data = json.loads(f"{header_data}")
-            subtracted_data = header_data.copy()
-            if subtracted_data.get("__metadata__"):
-                try:
-                    subtracted_data.pop("__metadata__")
-                except KeyError as error_log:
-                    nfo("Couldnt remove '__metadata__' from header data. %s", header_data, error_log)
-            metadata_field = dict(header_data).get("__metadata__", False)
-            # metadata_field = json.loads(str(metadata_field).replace("'", '"'))
-            if metadata_field:
-                assembled_data.setdefault(UpField.METADATA, metadata_field)
-                assembled_data.setdefault(DownField.JSON_DATA, subtracted_data)
-            else:
-                assembled_data = {UpField.METADATA: EmptyField.EMPTY, DownField.JSON_DATA: subtracted_data}
-            return assembled_data
+# Example Usage (for testing, not part of the class)
+# if __name__ == '__main__':
+#     mt = ModelTool()
+#     test_file = "path/to/your/test.safetensors"
+#     if Path(test_file).exists():
+#         data = mt.read_metadata_from(test_file)
+#         import pprint
+#         pprint.pprint(data)
+#     else:
+#         print(f"Test file not found: {test_file}")
