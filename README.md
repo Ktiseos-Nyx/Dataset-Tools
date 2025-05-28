@@ -15,7 +15,6 @@ This project is inspired by tools within the AI art community, notably [stable-d
 | Screenshot 1: Light Green Theme | Screenshot 2: Options Display (Light Green) | Screenshot 3: Theme (Dark Teal) Choosing |
 | :-----------------------------: | :------------------------------: | :--------------------------: |
 | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.44.11.png" alt="Light Green Theme" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.39.png" alt="Options Display (Light Green)" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.31.png" alt="Theme (Dark Teal) Choosing" width="250"> |
-
 | Screenshot 4: Screen Sizes | Screenshot 5: Civitai Metadata |
 | :----------------------------: | :-------------------------: |
 | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.21.png" alt="Screen Sizes" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.10.png" alt="Civitai Metadata" width="250"> |
