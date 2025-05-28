@@ -67,13 +67,14 @@ def main(cli_args_list=None): # Added cli_args_list for testability
     # 4. Reconfigure the actual logger instance(s)
     # This is crucial because logger.py likely initialized its logger(s)
     # with the default LOG_LEVEL from __init__.py when it was first imported.
-    if hasattr(app_logger, 'reconfigure_logger'):
-        app_logger.reconfigure_logger(chosen_log_level_name)
+    # In main.py - CORRECTED
+    if hasattr(app_logger, 'reconfigure_all_loggers'): # Check for the correct function name
+        app_logger.reconfigure_all_loggers(chosen_log_level_name) # Call the correct function
     else:
-        # Fallback or warning if no reconfigure function is available
-        # This means logger.py needs to be adapted to have such a function.
+        # This else block might not even be strictly necessary if you know the function exists,
+        # but it's good for defensive programming if the logger module could change.
         print(
-            f"WARNING (main.py): Logger module does not have 'reconfigure_logger'. "
+            f"WARNING (main.py): Logger module does not have 'reconfigure_all_loggers'. "
             f"Log level '{chosen_log_level_name}' set via CLI may not be fully effective "
             "for already initialized loggers."
         )
