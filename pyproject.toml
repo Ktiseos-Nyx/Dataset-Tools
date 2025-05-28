@@ -51,7 +51,7 @@ dependencies = [
     "exif",
     "sd-prompt-reader",
     "qt-material", # Fixed a borked import
-    "pixexif", # Fixed another Borked import
+    "Piexif", # Fixed another Borked import
 ]
 
 [project.optional-dependencies]
