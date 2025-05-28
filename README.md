@@ -1,167 +1,206 @@
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen) 
+<div align="center">
+     <h1>Dataset Tools: An AI Metadata Viewer</h1>
+   ![Build Status](https://img.shields.io/badge/build-passing-brightgreen) 
 
-[![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx/Dataset-Tools) [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/5t2kYxt7An) [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew)
+[![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx/Dataset-Tools) [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/5t2kYxt7An) [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew) 
+
+[English Readme](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/README.md) [Wiki](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki) [Discussions](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions) [Notices](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/NOTICE.md) [License](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/LICENSE) 
 
 <hr>
-
-# Dataset Tools: An AI Metadata Viewer
-
-<img width="1281" alt="Light Mode Theme - Wide View" src="https://github.com/user-attachments/assets/12fe1127-2a22-4668-8d60-160caf6e1a80" />
-
-<img width="796" alt="Dark Pink + Civitai Metadata" src="https://github.com/user-attachments/assets/d436f3ce-6760-4bca-ba2c-55c645d8bac0" />
-
-Dataset Tools is a desktop application designed to help users browse and manage their image datasets, particularly those used with AI art generation tools (like Stable Diffusion WebUI Forge, A1111, ComfyUI) and model files (like Safetensors). Developed using Python and PyQt6, it provides an intuitive graphical interface for browsing files, viewing embedded generation parameters, and examining associated metadata.
+ Dataset Tools is a desktop application designed to help users browse and manage their image datasets, particularly those used with AI art generation tools (like Stable Diffusion WebUI Forge, A1111, ComfyUI) and model files (like Safetensors). Developed using Python and PyQt6, it provides an intuitive graphical interface for browsing files, viewing embedded generation parameters, and examining associated metadata.
 
 This project is inspired by tools within the AI art community, notably [stable-diffusion-prompt-reader by receyuki](https://github.com/receyuki/stable-diffusion-prompt-reader), and aims to empower users in improving their dataset curation workflow. We welcome contributions; feel free to fork the repository and submit pull requests!
 
 <hr>
+</div>
 
-## Contents
-
-*   [How to Use Dataset Tools](#how-to-use-dataset-tools)
-    *   [Requirements](#requirements)
-    *   [Installation & Launching](#installation--launching-the-application)
-*   [User Interface Overview](#user-interface-overview)
-*   [Key Features](#key-features)
-*   [Future Developments](#future-developments)
-*   [License](#license)
-*   [Acknowledgments](#acknowledgments)
-*   [Support Us](#support-us)
-
+<img src alt="Light Mode Theme - Wide View" src="https://github.com/user-attachments/assets/12fe1127-2a22-4668-8d60-160caf6e1a80" width="65%" />
 <hr>
+<img src alt="Dark Pink + Civitai Metadata" src="https://github.com/user-attachments/assets/d436f3ce-6760-4bca-ba2c-55c645d8bac0" width="75%"/>
 
-## How to Use Dataset Tools
 
-### Requirements
+---
 
-*   **Python:** Version 3.10 or newer. You can download it from [Python.org](https://www.python.org/downloads/).
-    *   (Optional) For faster environment and package management, consider [uv](https://github.com/astral-sh/uv).
-    *   *Note for Linux users:* Some system Pythons might require additional development headers (e.g., `python3-dev`, `python3-tk`) for all features or dependencies to build correctly.
-*   **Git:** Required for cloning the repository. Installation instructions: [Windows](https://gitforwindows.org/), [macOS](https://git-scm.com/downloads/mac) (or via [Homebrew](https://brew.sh/)), [Linux](https://git-scm.com/downloads/linux).
+**Navigation:**
+[Features](#features) •
+[Supported Formats](#supported-formats) •
+[Installation](#installation) •
+[Usage](#usage) •
+[Future Ideas (TODO)](#future-ideas-todo) •
+[Contributing](#contributing) •
+[License](#license) •
+[Acknowledgements](#acknowledgements)
 
-<hr>
+---
 
-### Installation & Launching the Application
+## Features
 
-1.  **Open your terminal** (e.g., PowerShell, Command Prompt, Terminal, Konsole).
+*   **Lightweight & Fast:** Designed for quick loading and efficient metadata display.
+*   **Cross-Platform:** Built with Python and PyQt6 (compatible with Windows, macOS, Linux).
+*   **Comprehensive Metadata Viewing:**
+    *   Clearly displays prompt information (positive, negative, SDXL-specific).
+    *   Shows detailed generation parameters from various AI tools.
+*   **Intuitive File Handling:**
+    *   **Drag and Drop:** Easily load single image files or entire folders. Dropped files are auto-selected.
+    *   Folder browsing and file list navigation.
+*   **Image Preview:** Clear, rescalable preview for selected images.
+*   **Copy Metadata:** One-click copy of parsed metadata to the clipboard.
+*   **Themeable UI:** Supports themes via `qt-material` (e.g., dark_pink, light_lightgreen_500).
+*   **Extensible Parser System:**
+    *   Utilizes a significantly adapted and enhanced version of `sd-prompt-reader` for robust parsing of many common AI image metadata formats.
+    *   **New Custom Parsers:** Includes dedicated parsers for:
+        *   `RuinedFooocus` (UserComment JSON).
+        *   `Civitai ComfyUI` (UserComment JSON with "extraMetadata").
+    *   **Model File Support:** Basic metadata viewing for `.safetensors` and `.gguf` model files.
+*   **Configurable Logging:** Control application log verbosity via command-line arguments for easier debugging.
 
-2.  **Clone the repository:**
-    ```sh
+## Supported Formats
+
+Dataset-Tools aims to read metadata from a wide array of sources. Current capabilities include:
+
+**AI Image Metadata:**
+*   **A1111 webUI / Forge:** PNG (parameters chunk), JPEG/WEBP (UserComment).
+*   **ComfyUI:**
+    *   Standard PNGs (embedded workflow JSON in "prompt" chunk).
+    *   Civitai-generated JPEGs/PNGs (UserComment JSON with "extraMetadata").
+*   **NovelAI:** PNG (Legacy "Software" tag & "Comment" JSON; Stealth LSB in alpha channel).
+*   **InvokeAI:** PNG (parsing "invokeai_metadata", "sd-metadata", or "Dream" chunks).
+*   **Easy Diffusion:** PNG, JPEG, WEBP (embedded JSON metadata).
+*   **Fooocus:** PNG ("Comment" chunk JSON), JPEG (JFIF comment JSON).
+*   **RuinedFooocus:** JPEG (UserComment JSON).
+*   **Draw Things:** PNG (XMP metadata containing JSON).
+*   **StableSwarmUI:** PNG, JPEG (EXIF or "sui_image_params" in PNG/UserComment).
+*   *(Support for other formats may be implicitly included via the adapted sd-prompt-reader core.)*
+
+**Model File Metadata (Header Information):**
+*   `.safetensors`
+*   `.gguf`
+
+**Other File Types:**
+*   `.txt`: Displays content.
+*   `.json`, `.toml`: Displays content (future: structured view).
+
+## Installation
+
+**Prerequisites:**
+*   Python 3.11 (as this was the version used during development and for dependency resolution). Other Python 3.9+ versions might work but are not extensively tested.
+*   `pip` (Python package installer).
+*   `git` (for cloning the repository).
+
+**Steps:**
+
+1.  **Clone the repository:**
+    ```bash
     git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
     cd Dataset-Tools
     ```
 
-3.  **Set up a Python virtual environment (Recommended):**
-    ```sh
-    python -m venv .venv 
-    # Activate it:
-    # Windows (cmd.exe): .venv\Scripts\activate.bat
-    # Windows (PowerShell): .venv\Scripts\Activate.ps1
+2.  **Create and activate a Python virtual environment (recommended):**
+    ```bash
+    python3.11 -m venv .venv 
+    # Or: python -m venv .venv
+
+    # Activate:
+    # Windows: .venv\Scripts\activate
     # macOS/Linux (bash/zsh): source .venv/bin/activate
-    # macOS/Linux (fish): source .venv/bin/activate.fish 
+    # macOS/Linux (fish): source .venv/bin/activate.fish
     ```
 
-4.  **Install the application and its dependencies:**
-    ```sh
-    # If using standard pip:
-    pip install . 
-    # For development (changes to code are reflected immediately):
-    # pip install -e .
+3.  **Install the package and its dependencies:**
+    The project uses `pyproject.toml` and can be installed using pip.
+    ```bash
+    # For users (standard install):
+    pip install .
+
+    # For developers (editable install, recommended for contributing):
+    pip install -e .
     ```
-    > **Note for `uv` users:**
-    > ```sh
-    > uv pip install .
-    > # Or for development:
-    > # uv pip install -e .
-    > ```
+    This command will read `pyproject.toml` and install `Dataset-Tools` along with all libraries listed as dependencies (e.g., `PyQt6`, `Pillow`, `qt-material`, `piexif`, `pyexiv2`, `toml`, `rich`, `pydantic`).
 
-5.  **Run the application:**
-    ```sh
-    dataset-tools
-    ```
-    (If the command isn't found, ensure your virtual environment's `bin` or `Scripts` directory is in your PATH, or run `python -m dataset_tools.main` from the project root.)
+## Usage
 
-<hr>
+### Launching the Application
 
-## User Interface Overview
+**After installation, run the application from your terminal:**
+  
+```bash
+    python -m dataset_tools.main [options]
+```
+####  Command-line Options:
 
-The application window is divided into a few main sections:
+> [!TIP]
+> 
+> ```bash
+>     --log-level LEVEL: Sets the logging verbosity.
+> ```
+> Choices: DEBUG, INFO (default), WARNING, ERROR, CRITICAL.
+> Short forms: d, i, w, e, c (case-insensitive).
+> ```bash
+>    Example: python -m dataset_tools.main --log-level DEBUG
+> ```
 
-*   **Left Panel:**
-    *   **Current Folder:** Displays the name of the currently loaded folder.
-    *   **Buttons:** "Open Folder", "Sort Files", "Copy Metadata".
-    *   **Status Message:** Shows loading progress or selected file info.
-    *   **File List:** Displays images, text files, model files, etc., found in the selected folder.
-*   **Right Panel:**
-    *   **Image Preview:** Displays a preview of the selected image.
-    *   **Prompt Info:** (e.g., Positive/Negative prompts from AI images)
-    *   **Generation Info:** (e.g., Steps, Sampler, Seed, CFG, Model from AI images or EXIF details)
-    *   **Raw Data:** Displays the full raw metadata string if available.
-*   **Bottom Bar:**
-    *   **Settings Button:** Opens a dialog for application settings (e.g., themes).
-    *   **Exit Button:** Closes the application.
-*   **Menu Bar:** Standard File, View, Help menus.
+#### GUI Interaction
 
-<hr>
+**Loading Files:**
 
-## Key Features
+1.  Click the "Open Folder" button or use the File > Change Folder... menu option.
+2.  Drag and Drop: Drag a single image/model file or an entire folder directly onto the application window.
+3.  If a single file is dropped, its parent folder will be loaded, and the file will be automatically selected in the list.
+4.  If a folder is dropped, that folder will be loaded.
 
-*   **Graphical User Interface (GUI):** Built with Python and PyQt6 for a modern, cross-platform experience.
-*   **Resizable Interface:** Main panels can be resized using a splitter.
-*   **AI Metadata Extraction:** Extracts and displays generation parameters from images created by popular AI tools (e.g., Stable Diffusion WebUI Forge/A1111, ComfyUI).
-*   **Safetensors Metadata:** Reads and displays metadata from `.safetensors` model files (LoRa, checkpoints, etc.).
-*   **Standard EXIF/XMP Display:** Shows standard photographic EXIF and XMP metadata for regular images.
-*   **Text/JSON/TOML Viewing:** Displays the content of associated text, JSON, or TOML files.
-*   **Image Previews:** Quickly view images.
-*   **Theming:** Supports themes via `qt-material` for a customizable look.
-*   **Settings Persistence:** Remembers last used folder, window geometry, and theme.
 
-<hr>
+**Navigation:**
+1. Select files from the list on the left panel to view their details.
+   *  Image Preview:
+         Selected images are displayed in the preview area on the right.
+         Non-image files or files that cannot be previewed will show a "No preview available" message.
+   *  Metadata Display:
+         Parsed prompts (Positive, Negative), generation parameters (Steps, Sampler, CFG, Seed, etc.), and other relevant metadata are shown in the text areas below/beside the image preview.
+         The Prompt Info and Generation Info section titles will update based on the content found.
+   *  Copy Metadata:
+         Use the "Copy Metadata" button to copy the currently displayed parsed metadata (from the text areas) to your system clipboard.
+   *  File List Actions:
+         Sort Files: Click the "Sort Files" button to sort the items in the file list alphabetically by type (images, then text, then models).
+   *  Settings & Themes:
+         Access application settings (e.g., display theme, window size preferences) via the "Settings..." button at the bottom or the View > Themes menu for quick theme changes.
 
-## Future Developments
+### Future Ideas (TODO)
 
-We're always looking to improve! Planned features include:
-*   Advanced filtering and sorting options for the file list.
-*   Thumbnail generation for faster browsing of large image sets.
-*   More comprehensive settings and customization options.
-*   Enhanced support for more AI tool metadata formats and model types.
-*   Video and text tutorials.
+- [ ] Enhanced metadata display and editing for model files (.safetensors, .gguf).
+- [ ] Full metadata editing and saving capabilities for images.
+- [ ] Batch operations: e.g., export all metadata from a folder, rename files based on metadata.
+- [ ] Advanced search and filtering capabilities within loaded datasets based on metadata content.
+- [ ] Support for more image, text, and model metadata formats.
+- [ ] A plugin architecture to allow for easier addition of custom parsers or functionalities.
+- [ ] Improved UI/UX for text/schema file viewing (e.g., syntax highlighting for JSON/TOML, better text wrapping).
+- [ ] Packaging for PyPI for easier pip install dataset-tools.
+- [ ] Creation of standalone executables for Windows, macOS, and Linux.
+- [ ] Comprehensive automated test suite to ensure stability and prevent regressions.
 
-<hr>
-
+## Contributing
+Your contributions are welcome! Whether it's bug reports, feature requests, documentation improvements, or code contributions, please feel free to get involved.
+   *  Issues: Please check the issues tab for existing bugs or ideas. If you don't see your issue, please open a new one with a clear description and steps to reproduce (for bugs).
+   *  Pull Requests:
+         Fork the repository.
+         Create a new branch for your feature or bugfix (git checkout -b feature/your-feature-name or bugfix/issue-number).
+         Make your changes and commit them with clear, descriptive messages.
+         Push your branch to your fork (git push origin feature/your-feature-name).
+         Submit a pull request to the main branch of the Ktiseos-Nyx/Dataset-Tools repository. Please provide a clear description of your changes in the PR.
 ## License
+This project is licensed under the terms of the <YOUR_NEW_LICENSE_NAME_HERE, e.g., Apache License 2.0 / MIT License / etc.>
+Please see the LICENSE file in the repository root for the full license text.
 
-This program is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.**
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
-
-The full license text is available in the `LICENSE` file in this repository.
-
-### Regarding Dependencies
-
-This project uses several third-party libraries, each with its own license:
-*   **PyQt6:** Licensed under GPLv3 (which is why this project is also GPLv3+) or a commercial license.
-*   **sd-prompt-reader (by receyuki):** MIT License.
-*   Other dependencies (Pillow, rich, pyexiv2, etc.) generally use permissive licenses like MIT, BSD, or similar.
-
-Please ensure compliance with all relevant licenses if you fork, modify, or distribute this software or its components.
-
-<hr>
-
-## Acknowledgments
-
-### Ktiseos Nyx would like to thank:
-
-*   Our peers and the wider AI and open-source communities for their continuous support and inspiration.
-*   **[receyuki](https://github.com/receyuki)** for the excellent [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader), which served as a key inspiration and whose library is now a core component for AI metadata parsing in this tool.
-*   **[Anzhc](https://github.com/anzhc)** for continued support and motivation.
-*   The developers of Python and the many open-source libraries that make this project possible.
-*   AI Language Models (like those from Google, OpenAI, Anthropic) for assistance with code generation, documentation, and problem-solving during development.
-
-...and many more!
-
+## Acknowledgements
+   *  Core Parsing Logic & Inspiration: This project incorporates and significantly adapts parsing functionalities from Stable Diffusion Prompt Reader by  **[receyuki](https://github.com/receyuki)** . Our sincere thanks for this foundational work.
+      Original Repository: [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
+      The original MIT license for this vendored code is included in the NOTICE.md file.
+   *  UI Theming: The beautiful PyQt themes are made possible by [qt-material](https://github.com/dunderlab/qt-material) by [DunderLab](https://github.com/dunderlab)
+   *  Essential Libraries: This project relies on great open-source Python libraries including [Pillow,](https://github.com/python-pillow/Pillow), [PyQt6](https://www.riverbankcomputing.com/software/pyqt/), [piexif](https://github.com/hMatoba/Piexif), [pyexiv2](https://github.com/LeoHsiao1/pyexiv2), [toml](https://github.com/uiri/toml), [Pydantic](https://docs.pydantic.dev/latest/), and [Rich](https://github.com/Textualize/rich). Their respective licenses apply.
+   *  **[Anzhc](https://github.com/anzhc)** for continued support and motivation.
+   *  Our peers and the wider AI and open-source communities for their continuous support and inspiration.
+   *  AI Language Models (like those from Google, OpenAI, Anthropic) for assistance with code generation, documentation, and problem-solving during development.
+   *  ...and many more!
 <hr>
 
 ## Support Us
