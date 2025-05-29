@@ -103,9 +103,7 @@ TOOLTIP = {
 }
 URL = {
     "release": "https://api.github.com/repos/receyuki/stable-diffusion-prompt-reader/releases/latest",
-    "format": (
-        "https://github.com/receyuki/stable-diffusion-prompt-reader#supported-formats"
-    ),
+    "format": ("https://github.com/receyuki/stable-diffusion-prompt-reader#supported-formats"),
     "comfyui": "https://github.com/receyuki/stable-diffusion-prompt-reader#comfyui",
 }
 DEFAULT_GRAY = "#8E8E93"

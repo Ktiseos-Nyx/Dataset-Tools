@@ -9,7 +9,8 @@ __email__ = "receyuki@gmail.com"
 import re
 
 from .base_format import BaseFormat
-from .utility import add_quotes, concat_strings # Ensure utility.py is in the same 'format' dir
+from .utility import add_quotes, concat_strings  # Ensure utility.py is in the same 'format' dir
+
 
 class A1111(BaseFormat):
     tool = "A1111 webUI"
@@ -33,7 +34,7 @@ class A1111(BaseFormat):
         if not current_raw_data and self._info and "parameters" in self._info:
             current_raw_data = str(self._info.get("parameters", ""))
             self._logger.debug(f"Using 'parameters' from info dict. Length: {len(current_raw_data)}")
-        
+
         if self._info and "postprocessing" in self._info:
             self._extra = str(self._info.get("postprocessing", ""))
             if self._extra:
@@ -42,7 +43,7 @@ class A1111(BaseFormat):
                     current_raw_data = concat_strings(current_raw_data, self._extra, "\n")
                 else:
                     current_raw_data = self._extra
-        
+
         self._raw = current_raw_data
 
         if not self._raw:
@@ -77,7 +78,9 @@ class A1111(BaseFormat):
             raw_prompt_block = self._raw[:steps_index].strip()
             self._setting = self._raw[steps_index:].strip()
         else:
-            self._logger.debug("A1111 _sd_format: '\\nSteps:' delineator not found. Assuming raw data is positive prompt or malformed.")
+            self._logger.debug(
+                "A1111 _sd_format: '\\nSteps:' delineator not found. Assuming raw data is positive prompt or malformed."
+            )
             raw_prompt_block = self._raw.strip()
             self._setting = ""
 
@@ -86,7 +89,7 @@ class A1111(BaseFormat):
 
         if negative_prompt_index != -1:
             self._positive = raw_prompt_block[:negative_prompt_index].strip()
-            self._negative = raw_prompt_block[negative_prompt_index + len(negative_prompt_marker):].strip()
+            self._negative = raw_prompt_block[negative_prompt_index + len(negative_prompt_marker) :].strip()
         else:
             self._positive = raw_prompt_block
             self._negative = ""
@@ -96,13 +99,13 @@ class A1111(BaseFormat):
             matches = re.findall(pattern, self._setting)
             setting_dict = {}
             # --- THIS IS THE CORRECTED LINE ---
-            for key, value in matches: 
-            # --- END CORRECTION ---
+            for key, value in matches:
+                # --- END CORRECTION ---
                 key = key.strip()
                 value = value.strip()
                 if key not in setting_dict:
                     setting_dict[key] = value
-            
+
             self._logger.debug(f"Parsed setting_dict from settings string: {setting_dict}")
 
             size_str = setting_dict.get("Size")
@@ -112,31 +115,36 @@ class A1111(BaseFormat):
                     self._width = str(int(w_str.strip()))
                     self._height = str(int(h_str.strip()))
                 except ValueError:
-                    self._logger.warn(f"Could not parse Size '{size_str}' into width/height. Keeping existing: {self._width}x{self._height}")
-            
+                    self._logger.warn(
+                        f"Could not parse Size '{size_str}' into width/height. Keeping existing: {self._width}x{self._height}"
+                    )
+
             for a1111_setting_key, (canonical_param_key, _) in self.PROMPT_MAPPING.items():
                 if a1111_setting_key in setting_dict:
                     if canonical_param_key in self._parameter:
                         self._parameter[canonical_param_key] = str(setting_dict[a1111_setting_key])
                     else:
-                        self._logger.warn(f"Canonical key '{canonical_param_key}' (for '{a1111_setting_key}') not in BaseFormat.PARAMETER_KEY.")
-            
+                        self._logger.warn(
+                            f"Canonical key '{canonical_param_key}' (for '{a1111_setting_key}') not in BaseFormat.PARAMETER_KEY."
+                        )
+
             direct_map_to_canonical = {
-                "Model": "model", "Model hash": "model_hash",
+                "Model": "model",
+                "Model hash": "model_hash",
             }
             for setting_key, canonical_key in direct_map_to_canonical.items():
                 if setting_key in setting_dict and canonical_key in self._parameter:
                     self._parameter[canonical_key] = str(setting_dict[setting_key])
-            
+
             if "size" in self._parameter and self._width != "0" and self._height != "0":
                 self._parameter["size"] = f"{self._width}x{self._height}"
         else:
             self._logger.debug("A1111 _sd_format: self._setting string is empty.")
 
     def prompt_to_line(self):
-        if not self._positive and not self._setting :
+        if not self._positive and not self._setting:
             return ""
-            
+
         line_parts = []
         if self._positive:
             line_parts.append(f"--prompt {add_quotes(self._positive).replace(chr(10), ' ')}")
@@ -148,7 +156,7 @@ class A1111(BaseFormat):
             line_parts.append(f"--height {self._height}")
 
         for a1111_key, (cli_arg_name, is_string) in self.PROMPT_MAPPING.items():
-            canonical_key = cli_arg_name 
+            canonical_key = cli_arg_name
             if canonical_key in self._parameter:
                 value = self._parameter[canonical_key]
                 if value and value != self.DEFAULT_PARAMETER_PLACEHOLDER:
@@ -156,5 +164,5 @@ class A1111(BaseFormat):
                         line_parts.append(f"--{cli_arg_name} {add_quotes(str(value))}")
                     else:
                         line_parts.append(f"--{cli_arg_name} {value}")
-        
+
         return " ".join(line_parts).strip()

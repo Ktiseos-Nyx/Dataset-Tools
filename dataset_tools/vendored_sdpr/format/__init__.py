@@ -13,10 +13,18 @@ from .fooocus import Fooocus
 
 # Your new parsers
 from .civitai import CivitaiComfyUIFormat
-from .ruinedfooocus import RuinedFooocusFormat # Add this line
+from .ruinedfooocus import RuinedFooocusFormat  # Add this line
 
 __all__ = [
-    "BaseFormat", "A1111", "EasyDiffusion", "InvokeAI", "NovelAI", 
-    "ComfyUI", "DrawThings", "SwarmUI", "Fooocus",
-    "CivitaiComfyUIFormat", "RuinedFooocusFormat", # Add to __all__
+    "BaseFormat",
+    "A1111",
+    "EasyDiffusion",
+    "InvokeAI",
+    "NovelAI",
+    "ComfyUI",
+    "DrawThings",
+    "SwarmUI",
+    "Fooocus",
+    "CivitaiComfyUIFormat",
+    "RuinedFooocusFormat",  # Add to __all__
 ]
