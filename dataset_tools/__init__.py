@@ -17,7 +17,7 @@ LOG_LEVEL = "INFO"  # Sensible default
 # This specific check for pytest can stay if you want this behavior.
 if "pytest" in sys.modules:
     LOG_LEVEL = "DEBUG"
-    print("DEBUG (__init__.py): Pytest detected, setting LOG_LEVEL to DEBUG.") # For clarity
+    print("DEBUG (__init__.py): Pytest detected, setting LOG_LEVEL to DEBUG.")  # For clarity
 
 # --- Version ---
 try:
@@ -36,12 +36,18 @@ except metadata.PackageNotFoundError:
 # then logger.py needs a reconfigure function.
 
 _log_level_map_internal = {
-    "d": "DEBUG", "debug": "DEBUG",
-    "i": "INFO", "info": "INFO",
-    "w": "WARNING", "warning": "WARNING",
-    "e": "ERROR", "error": "ERROR",
-    "c": "CRITICAL", "critical": "CRITICAL",
+    "d": "DEBUG",
+    "debug": "DEBUG",
+    "i": "INFO",
+    "info": "INFO",
+    "w": "WARNING",
+    "warning": "WARNING",
+    "e": "ERROR",
+    "error": "ERROR",
+    "c": "CRITICAL",
+    "critical": "CRITICAL",
 }
+
 
 def set_package_log_level(level_input: str):
     """
@@ -49,10 +55,10 @@ def set_package_log_level(level_input: str):
     Called by the main application entry point after parsing CLI args.
     The logger module should then re-read this or be explicitly reconfigured.
     """
-    global LOG_LEVEL # Declare that we are modifying the LOG_LEVEL in this module's scope
-    
+    global LOG_LEVEL  # Declare that we are modifying the LOG_LEVEL in this module's scope
+
     normalized_input = str(level_input).strip().lower()
-    
+
     # Check if the input is a direct key (e.g., 'd') or a value (e.g., 'debug')
     if normalized_input in _log_level_map_internal:
         LOG_LEVEL = _log_level_map_internal[normalized_input]
@@ -60,7 +66,7 @@ def set_package_log_level(level_input: str):
         # Fallback to INFO if an invalid level string is provided
         # print(f"Warning (__init__.py): Invalid log level '{level_input}' provided. Defaulting to INFO.")
         LOG_LEVEL = "INFO"
-    
+
     # This print is for debugging the mechanism itself. Your actual app logs will come from logger.py
     print(f"DEBUG (__init__.py): Package LOG_LEVEL variable updated to: {LOG_LEVEL}")
 

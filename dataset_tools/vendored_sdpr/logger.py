@@ -22,9 +22,7 @@ class Logger:
 
     @staticmethod
     def _configure_logger(logger):
-        formatter = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        )
+        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         # Create a stream handler for console output
         stream_handler = logging.StreamHandler()
         stream_handler.setFormatter(formatter)
@@ -47,9 +45,7 @@ class Logger:
 
     @classmethod
     def configure_global_logger(cls, level="INFO"):
-        formatter = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        )
+        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         level_value = cls.get_log_level(level)
 
         # Configure the root logger
