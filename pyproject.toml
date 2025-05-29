@@ -4,8 +4,8 @@ requires      = ["setuptools", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name            = "dataset-tools"
-description     = "An ultralight metadata viewer to help you visualize and edit dataset text."
+name            = "kn-dataset-tools"
+description     = "A Simple Viewer for EXIF and AI Metadata."
 authors         = [{ name = "Ktiseos Nyx", email = "Dataset-Tools@noreply.github.com" }]
 requires-python = ">= 3.10"
 license         = { file = "LICENSE" }
