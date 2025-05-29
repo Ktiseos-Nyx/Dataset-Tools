@@ -14,20 +14,13 @@ This project is inspired by tools within the AI art community, notably [stable-d
 
 <hr>
 
-Contact Us: 
+## Contact & Support Us: 
 
 <hr>
 
 [![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx/Dataset-Tools) [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/5t2kYxt7An) [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew) <a href="https://ko-fi.com/duskfallcrew" target="_blank"><img src="https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi" alt="Support us on Ko-fi"></a>
 
 </div>
-
-
-| Screenshot 1: Light Green Theme | Screenshot 2: Options Display (Light Green) | Screenshot 3: Theme (Dark Teal) Choosing |
-| :-----------------------------: | :------------------------------: | :--------------------------: |
-| <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.44.11.png" alt="Light Green Theme" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.39.png" alt="Options Display (Light Green)" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.31.png" alt="Theme (Dark Teal) Choosing" width="250"> |
-| Screenshot 4: Screen Sizes | Screenshot 5: Civitai Metadata | |
-| <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.21.png" alt="Screen Sizes" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.10.png" alt="Civitai Metadata" width="250"> |
 
 ---
 
@@ -36,10 +29,12 @@ Contact Us:
 [Supported Formats](#supported-formats) •
 [Installation](#installation) •
 [Usage](#usage) •
+[Example Images](#Example_Images)  •
 [Future Ideas (TODO)](#future-ideas-todo) •
 [Contributing](#contributing) •
 [License](#license) •
 [Acknowledgements](#acknowledgements)
+
 
 ---
 
@@ -173,6 +168,14 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
          Sort Files: Click the "Sort Files" button to sort the items in the file list alphabetically by type (images, then text, then models).
    *  Settings & Themes:
          Access application settings (e.g., display theme, window size preferences) via the "Settings..." button at the bottom or the View > Themes menu for quick theme changes.
+
+## Example Images
+
+| Screenshot 1: Light Green Theme | Screenshot 2: Options Display (Light Green) | Screenshot 3: Theme (Dark Teal) Choosing |
+| :-----------------------------: | :------------------------------: | :--------------------------: |
+| <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.44.11.png" alt="Light Green Theme" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.39.png" alt="Options Display (Light Green)" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.31.png" alt="Theme (Dark Teal) Choosing" width="250"> |
+| Screenshot 4: Screen Sizes | Screenshot 5: Civitai Metadata | |
+| <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.21.png" alt="Screen Sizes" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.10.png" alt="Civitai Metadata" width="250"> |
 
 ### Future Ideas (TODO)
 
