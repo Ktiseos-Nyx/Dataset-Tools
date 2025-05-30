@@ -1,6 +1,7 @@
 <div align="center">
      <h1>Dataset Tools: An AI Metadata Viewer</h1>
      
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/64cc620e197d474dab436852a1db4987)](https://app.codacy.com/gh/Ktiseos-Nyx/Dataset-Tools?utm_source=github.com&utm_medium=referral&utm_content=Ktiseos-Nyx/Dataset-Tools&utm_campaign=Badge_Grade)
 [![Dependency review](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/dependency-review.yml) [![CodeQL](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/github-code-scanning/codeql) ![Build Status](https://img.shields.io/badge/build-passing-brightgreen) 
 
 <hr>
