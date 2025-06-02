@@ -115,9 +115,9 @@ def reconfigure_all_loggers(new_log_level_name_str: str):
 
 # --- Helper Function to Configure an External Logger with Rich ---
 def setup_rich_handler_for_external_logger(
-    logger_to_configure: pylog.Logger,  # Pass the actual logger instance
-    rich_console_to_use: Console,  # Pass _dataset_tools_main_rich_console
-    log_level_to_set_str: str,  # Pass the desired log level string (e.g., "INFO", "DEBUG")
+        logger_to_configure: pylog.Logger,  # Pass the actual logger instance
+        rich_console_to_use: Console,  # Pass _dataset_tools_main_rich_console
+        log_level_to_set_str: str,  # Pass the desired log level string (e.g., "INFO", "DEBUG")
 ):
     """
     Configures the passed Python logger instance to use a RichHandler
