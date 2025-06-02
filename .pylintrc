@@ -4,7 +4,6 @@ disable=C0301,C0114,C0115,C0116,R0903,W0511
 # W0511: fixme
 
 [DESIGN]
-# max-complexity=18 # REMOVE THIS LINE
 # You can put other Pylint [DESIGN] options here, like:
 # max-args=7
 # max-locals=15
@@ -13,3 +12,6 @@ disable=C0301,C0114,C0115,C0116,R0903,W0511
 # max-parents=7
 # max-attributes=10 
 # min-public-methods=1 # (R0903 is disabled above, but this is where it would go)
+
+[MASTER]
+extension-pkg-allow-list=PyQt6,PyQt6.QtCore,PyQt6.QtGui,PyQt6.QtWidgets
