@@ -15,14 +15,16 @@ __email__ = "receyuki@gmail.com"
 def remove_quotes(string: str) -> str:
     """Removes single and double quotes from the beginning and end of a string."""
     s = str(string)  # Ensure input is a string
-    if (s.startswith('"') and s.endswith('"')) or (s.startswith("'") and s.endswith("'")):
+    if (s.startswith('"') and s.endswith('"')) or (
+        s.startswith("'") and s.endswith("'")
+    ):
         return s[1:-1]
     return s
 
 
 def add_quotes(string: str) -> str:
     """Adds double quotes around a string."""
-    return f'"{str(string)}"'  # Ensure input is string
+    return f'"{string!s}"'  # Ensure input is string
 
 
 def concat_strings(base: str, addition: str, separator: str = ", ") -> str:
@@ -47,8 +49,7 @@ def merge_str_to_tuple(item1, item2) -> tuple:
 
 
 def merge_dict(dict1: dict, dict2: dict) -> dict:
-    """
-    Merges dict2 into a copy of dict1.
+    """Merges dict2 into a copy of dict1.
     If a key exists in both dictionaries, their values are merged into a tuple
     using merge_str_to_tuple.
     """
@@ -62,9 +63,9 @@ def merge_dict(dict1: dict, dict2: dict) -> dict:
 
 
 __all__ = [
-    "remove_quotes",
     "add_quotes",
     "concat_strings",
-    "merge_str_to_tuple",
     "merge_dict",
+    "merge_str_to_tuple",
+    "remove_quotes",
 ]

@@ -1,21 +1,32 @@
 # dataset_tools/vendored_sdpr/format/ruinedfooocus.py
 import json
-import logging # For type hinting
-from typing import Dict, Any, Optional
+import logging  # For type hinting
+from typing import Any
 
+from ..logger import get_logger  # CORRECTED: Use get_logger
 from .base_format import BaseFormat
-from ..constants import PARAMETER_PLACEHOLDER # This import is fine
-from ..logger import get_logger # CORRECTED: Use get_logger
+
 
 class RuinedFooocusFormat(BaseFormat):
     tool = "RuinedFooocus"
 
-    def __init__(self, info: Optional[Dict[str, Any]] = None, raw: str = "", width: int = 0, height: int = 0):
-        super().__init__(info=info, raw=raw, width=width, height=height) # Pass all args to super
+    def __init__(
+        self,
+        info: dict[str, Any] | None = None,
+        raw: str = "",
+        width: int = 0,
+        height: int = 0,
+    ):
+        super().__init__(
+            info=info,
+            raw=raw,
+            width=width,
+            height=height,
+        )  # Pass all args to super
         self._logger: logging.Logger = get_logger(f"DSVendored_SDPR.Format.{self.tool}")
         # REMOVED: self.PARAMETER_PLACEHOLDER = PARAMETER_PLACEHOLDER
 
-    def parse(self) -> BaseFormat.Status: # Return type hint
+    def parse(self) -> BaseFormat.Status:  # Return type hint
         # pylint: disable=no-member # Add this at method level if many logger calls and Pylint still struggles
         # Or add to individual logger calls if preferred.
         # Assuming the get_logger fix in __init__ resolves most no-member issues for self._logger.
@@ -35,7 +46,9 @@ class RuinedFooocusFormat(BaseFormat):
             data = json.loads(self._raw)
 
             if not isinstance(data, dict) or data.get("software") != "RuinedFooocus":
-                self._logger.debug("JSON data is not in RuinedFooocus format (missing 'software' tag or not a dict).")
+                self._logger.debug(
+                    "JSON data is not in RuinedFooocus format (missing 'software' tag or not a dict).",
+                )
                 self._status = BaseFormat.Status.FORMAT_ERROR
                 self._error = "JSON is not RuinedFooocus format (software tag mismatch or not a dict)."
                 return self._status
@@ -46,7 +59,10 @@ class RuinedFooocusFormat(BaseFormat):
             # Populate parameters
             if "model" in self._parameter and data.get("base_model_name") is not None:
                 self._parameter["model"] = str(data.get("base_model_name"))
-            if "sampler_name" in self._parameter and data.get("sampler_name") is not None:
+            if (
+                "sampler_name" in self._parameter
+                and data.get("sampler_name") is not None
+            ):
                 self._parameter["sampler_name"] = str(data.get("sampler_name"))
             elif "sampler" in self._parameter and data.get("sampler_name") is not None:
                 self._parameter["sampler"] = str(data.get("sampler_name"))
@@ -71,12 +87,16 @@ class RuinedFooocusFormat(BaseFormat):
                 if "scheduler" in self._parameter:
                     self._parameter["scheduler"] = str(data.get("scheduler"))
                 else:
-                    custom_params_for_setting_string["Scheduler"] = str(data.get("scheduler"))
+                    custom_params_for_setting_string["Scheduler"] = str(
+                        data.get("scheduler"),
+                    )
             if data.get("base_model_hash") is not None:
                 if "model_hash" in self._parameter:
                     self._parameter["model_hash"] = str(data.get("base_model_hash"))
                 else:
-                    custom_params_for_setting_string["Model hash"] = str(data.get("base_model_hash"))
+                    custom_params_for_setting_string["Model hash"] = str(
+                        data.get("base_model_hash"),
+                    )
             if data.get("loras") is not None:
                 if "loras" in self._parameter:
                     self._parameter["loras"] = str(data.get("loras"))
@@ -85,7 +105,9 @@ class RuinedFooocusFormat(BaseFormat):
                 else:
                     custom_params_for_setting_string["Loras"] = str(data.get("loras"))
             if data.get("start_step") is not None:
-                custom_params_for_setting_string["Start step"] = str(data.get("start_step"))
+                custom_params_for_setting_string["Start step"] = str(
+                    data.get("start_step"),
+                )
             if data.get("denoise") is not None:
                 custom_params_for_setting_string["Denoise"] = str(data.get("denoise"))
 
@@ -104,15 +126,22 @@ class RuinedFooocusFormat(BaseFormat):
             self._status = BaseFormat.Status.READ_SUCCESS
 
         except json.JSONDecodeError as e:
-            self._logger.error(f"Invalid JSON encountered while parsing for {self.tool}: {e}")
+            self._logger.error(
+                f"Invalid JSON encountered while parsing for {self.tool}: {e}",
+            )
             self._status = BaseFormat.Status.FORMAT_ERROR
             self._error = f"Invalid JSON data: {e}"
-        except KeyError as e_key: # More specific exception
-            self._logger.error(f"Missing expected key in {self.tool} JSON data: {e_key}")
+        except KeyError as e_key:  # More specific exception
+            self._logger.error(
+                f"Missing expected key in {self.tool} JSON data: {e_key}",
+            )
             self._status = BaseFormat.Status.FORMAT_ERROR
             self._error = f"Missing data key: {e_key}"
         except Exception as e_parse:  # pylint: disable=broad-except
-            self._logger.error(f"Unexpected error during {self.tool} data parsing: {e_parse}", exc_info=True)
+            self._logger.error(
+                f"Unexpected error during {self.tool} data parsing: {e_parse}",
+                exc_info=True,
+            )
             self._status = BaseFormat.Status.FORMAT_ERROR
             self._error = f"General parsing error: {e_parse}"
 

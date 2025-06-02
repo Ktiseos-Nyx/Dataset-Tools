@@ -1,8 +1,9 @@
 # dataset_tools/model_parsers/base_model_parser.py
 from abc import ABC, abstractmethod
-from ..correct_types import UpField, DownField, EmptyField  # Your enums
-from ..logger import info_monitor as nfo
 from enum import Enum
+
+from ..correct_types import DownField, EmptyField, UpField  # Your enums
+from ..logger import info_monitor as nfo
 
 
 class ModelParserStatus(Enum):  # Or reuse DtParserStatus if applicable
@@ -28,7 +29,10 @@ class BaseModelParser(ABC):
         pass
 
     def parse(self) -> ModelParserStatus:
-        if self.status == ModelParserStatus.SUCCESS or self.status == ModelParserStatus.NOT_APPLICABLE:
+        if (
+            self.status == ModelParserStatus.SUCCESS
+            or self.status == ModelParserStatus.NOT_APPLICABLE
+        ):
             return self.status
         try:
             self._process()
@@ -44,13 +48,18 @@ class BaseModelParser(ABC):
 
     def get_ui_data(self) -> dict:
         if self.status != ModelParserStatus.SUCCESS:
-            return {EmptyField.PLACEHOLDER.value: {"Error": self._error_message or "Model parsing failed."}}
+            return {
+                EmptyField.PLACEHOLDER.value: {
+                    "Error": self._error_message or "Model parsing failed.",
+                },
+            }
 
         ui_data = {}
         if self.metadata_header:  # Often from __metadata__
             ui_data[UpField.METADATA.value] = self.metadata_header
         if self.main_header:  # The main tensor structure or other header info
-            ui_data[DownField.JSON_DATA.value] = self.main_header  # Or a more specific key like MODEL_STRUCTURE
+            # Or a more specific key like MODEL_STRUCTURE
+            ui_data[DownField.JSON_DATA.value] = self.main_header
 
         # Add tool name if not already in METADATA
         if UpField.METADATA.value not in ui_data:

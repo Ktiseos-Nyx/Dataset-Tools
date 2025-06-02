@@ -2,15 +2,16 @@
 # Refactored to use specific parser classes
 
 from pathlib import Path
-from .logger import info_monitor as nfo
+
 from .correct_types import EmptyField  # For default error return
+from .logger import info_monitor as nfo
 
 # Import your new model parsers
 from .model_parsers import (
-    SafetensorsParser,
     # PickletensorParser,  # Remains commented out as requested
     GGUFParser,  # Corrected Casing and Uncommented
     ModelParserStatus,
+    SafetensorsParser,
 )
 
 
@@ -33,43 +34,50 @@ class ModelTool:
         ParserClass = self.parser_map.get(extension)
 
         if ParserClass:
-            nfo(f"[ModelTool] Using parser: {ParserClass.__name__} for extension: {extension}")
+            nfo(
+                f"[ModelTool] Using parser: {ParserClass.__name__} for extension: {extension}",
+            )
             parser_instance = ParserClass(file_path_named)
             status = parser_instance.parse()  # This calls BaseModelParser.parse()
 
             if status == ModelParserStatus.SUCCESS:
-                nfo(f"[ModelTool] Successfully parsed with {parser_instance.tool_name}.")
+                nfo(
+                    f"[ModelTool] Successfully parsed with {parser_instance.tool_name}.",
+                )
                 return parser_instance.get_ui_data()
-            elif status == ModelParserStatus.FAILURE:
+            if status == ModelParserStatus.FAILURE:
                 error_msg = parser_instance._error_message or "Unknown parsing error"
-                nfo(f"[ModelTool] Parser {parser_instance.tool_name} failed: {error_msg}")
+                nfo(
+                    f"[ModelTool] Parser {parser_instance.tool_name} failed: {error_msg}",
+                )
                 return {
                     EmptyField.PLACEHOLDER.value: {
                         "Error": f"{parser_instance.tool_name} parsing failed: {error_msg}",
-                        "File": Path(file_path_named).name,  # Show only filename for brevity in UI
-                    }
+                        # Show only filename for brevity in UI
+                        "File": Path(file_path_named).name,
+                    },
                 }
-            elif status == ModelParserStatus.NOT_APPLICABLE:
+            if status == ModelParserStatus.NOT_APPLICABLE:
                 nfo(
-                    f"[ModelTool] Parser {ParserClass.__name__} found file not applicable: {Path(file_path_named).name}"
+                    f"[ModelTool] Parser {ParserClass.__name__} found file not applicable: {Path(file_path_named).name}",
                 )
                 # This case will fall through to the "Unsupported extension" if no other parser handles it.
                 # This is correct behavior.
             else:  # UNATTEMPTED or other unexpected status
                 nfo(
-                    f"[ModelTool] Parser {ParserClass.__name__} returned unexpected status '{status.name if hasattr(status, 'name') else status}' for {Path(file_path_named).name}"
+                    f"[ModelTool] Parser {ParserClass.__name__} returned unexpected status '{status.name if hasattr(status, 'name') else status}' for {Path(file_path_named).name}",
                 )
                 # Fall through to unsupported extension message
 
         # If no parser was found for the extension, or if the found parser returned NOT_APPLICABLE
         nfo(
-            f"[ModelTool] Unsupported model file extension '{extension}' or no suitable parser successfully processed the file: {Path(file_path_named).name}"
+            f"[ModelTool] Unsupported model file extension '{extension}' or no suitable parser successfully processed the file: {Path(file_path_named).name}",
         )
         return {
             EmptyField.PLACEHOLDER.value: {
                 "Error": f"Unsupported model file extension: {extension}",
                 "File": Path(file_path_named).name,
-            }
+            },
         }
 
 

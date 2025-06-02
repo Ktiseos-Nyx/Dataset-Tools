@@ -1,6 +1,7 @@
 # dataset_tools/model_parsers/safetensors_parser.py
-import struct
 import json
+import struct
+
 from .base_model_parser import BaseModelParser
 
 
@@ -24,7 +25,10 @@ class SafetensorsParser(BaseModelParser):
                 # if length_of_header > max_reasonable_header:
                 #     raise ValueError(f"Unusually large header size reported: {length_of_header} bytes")
 
-                header_json_str = f.read(length_of_header).decode("utf-8", errors="strict")
+                header_json_str = f.read(length_of_header).decode(
+                    "utf-8",
+                    errors="strict",
+                )
                 header_data = json.loads(header_json_str.strip())
 
             if "__metadata__" in header_data:
@@ -34,11 +38,16 @@ class SafetensorsParser(BaseModelParser):
             # self.processed_raw_data_display can be the full header_json_str or a summary
 
         except struct.error as e:
-            self._error_message = f"Safetensors struct error (likely not safetensors): {e}"
-            raise self.NotApplicableError(self._error_message)  # Or just raise ValueError
+            self._error_message = (
+                f"Safetensors struct error (likely not safetensors): {e}"
+            )
+            raise self.NotApplicableError(
+                self._error_message,
+            )  # Or just raise ValueError
         except json.JSONDecodeError as e:
             self._error_message = f"Safetensors JSON header decode error: {e}"
-            raise ValueError(self._error_message)  # This is a parsing failure for this type
+            # This is a parsing failure for this type
+            raise ValueError(self._error_message)
         except UnicodeDecodeError as e:
             self._error_message = f"Safetensors header UTF-8 decode error: {e}"
             raise ValueError(self._error_message)

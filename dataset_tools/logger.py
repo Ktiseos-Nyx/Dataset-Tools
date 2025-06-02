@@ -5,15 +5,16 @@
 
 """Create console log for Dataset-Tools and provide utilities for configuring other loggers."""
 
-import sys
 import logging as pylog  # Alias to distinguish from this module's 'logger' instance
-# Line that imported StreamHandler, Formatter can be removed
+import sys
 
-# Rich library components
-from rich.theme import Theme
 from rich.console import Console
 from rich.logging import RichHandler
 from rich.style import Style
+
+# Line that imported StreamHandler, Formatter can be removed
+# Rich library components
+from rich.theme import Theme
 
 # Import LOG_LEVEL from the package's __init__.py
 from dataset_tools import LOG_LEVEL as INITIAL_LOG_LEVEL_FROM_INIT
@@ -42,7 +43,7 @@ DATASET_TOOLS_RICH_THEME = Theme(
         "repr.tag_contents": Style(color="deep_sky_blue4"),
         "repr.ellipsis": Style(color="purple4"),
         "log.level": Style(color="gray37"),
-    }
+    },
 )
 
 # This is the main Rich Console instance for Dataset-Tools.
@@ -55,8 +56,13 @@ APP_LOGGER_NAME = "dataset_tools_app"  # Main logger name for your application
 logger = pylog.getLogger(APP_LOGGER_NAME)  # Get the instance
 
 # Set initial level based on what dataset_tools/__init__.py determined
-_current_log_level_str_for_dt = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper()  # Store current level string
-_initial_log_level_enum_for_dt = getattr(pylog, _current_log_level_str_for_dt, pylog.INFO)
+# Store current level string
+_current_log_level_str_for_dt = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper()
+_initial_log_level_enum_for_dt = getattr(
+    pylog,
+    _current_log_level_str_for_dt,
+    pylog.INFO,
+)
 logger.setLevel(_initial_log_level_enum_for_dt)
 
 # Add RichHandler to Dataset-Tools' own logger instance if it doesn't have handlers
@@ -74,8 +80,7 @@ if not logger.handlers:
 
 # --- Reconfiguration Function for Dataset-Tools Logger AND Vendored Loggers ---
 def reconfigure_all_loggers(new_log_level_name_str: str):
-    """
-    Updates the logging level of Dataset-Tools' main logger AND
+    """Updates the logging level of Dataset-Tools' main logger AND
     attempts to reconfigure known vendored/external loggers.
     """
     global logger, _current_log_level_str_for_dt  # Allow modification of global _current_log_level_str_for_dt
@@ -89,38 +94,49 @@ def reconfigure_all_loggers(new_log_level_name_str: str):
         for handler in logger.handlers:
             if isinstance(handler, RichHandler):  # Or other specific handlers you use
                 handler.setLevel(actual_level_enum)
-        logger.info(f"Dataset-Tools Logger level reconfigured to: {_current_log_level_str_for_dt}")
+        logger.info(
+            f"Dataset-Tools Logger level reconfigured to: {_current_log_level_str_for_dt}",
+        )
 
     # Reconfigure known vendored/external logger prefixes
     # These are the prefixes their Logger class might use when creating named loggers
     # (e.g., Logger("SD_Prompt_Reader.ImageDataReader"), Logger("SDPR.CivitaiComfyUIFormat"))
-    vendored_logger_prefixes_to_reconfigure = ["SD_Prompt_Reader", "SDPR", "DSVendored_SDPR"]
+    vendored_logger_prefixes_to_reconfigure = [
+        "SD_Prompt_Reader",
+        "SDPR",
+        "DSVendored_SDPR",
+    ]
 
     for prefix in vendored_logger_prefixes_to_reconfigure:
         external_parent_logger = pylog.getLogger(prefix)
         # Check if this logger was previously configured with our RichHandler
         was_configured_by_us = False
         for handler in external_parent_logger.handlers:
-            if isinstance(handler, RichHandler) and handler.console == _dataset_tools_main_rich_console:
+            if (
+                isinstance(handler, RichHandler)
+                and handler.console == _dataset_tools_main_rich_console
+            ):
                 was_configured_by_us = True
                 handler.setLevel(actual_level_enum)
                 break
 
         if was_configured_by_us:  # Only set level on logger if we added our handler
             external_parent_logger.setLevel(actual_level_enum)
-            logger.info(f"Reconfigured vendored logger tree '{prefix}' to level {_current_log_level_str_for_dt}")
+            logger.info(
+                f"Reconfigured vendored logger tree '{prefix}' to level {_current_log_level_str_for_dt}",
+            )
         # else:
         # logger.debug(f"Vendored logger prefix '{prefix}' not previously configured with DT RichHandler or no handlers found.")
 
 
 # --- Helper Function to Configure an External Logger with Rich ---
 def setup_rich_handler_for_external_logger(
-        logger_to_configure: pylog.Logger,  # Pass the actual logger instance
-        rich_console_to_use: Console,  # Pass _dataset_tools_main_rich_console
-        log_level_to_set_str: str,  # Pass the desired log level string (e.g., "INFO", "DEBUG")
+    logger_to_configure: pylog.Logger,  # Pass the actual logger instance
+    rich_console_to_use: Console,  # Pass _dataset_tools_main_rich_console
+    # Pass the desired log level string (e.g., "INFO", "DEBUG")
+    log_level_to_set_str: str,
 ):
-    """
-    Configures the passed Python logger instance to use a RichHandler
+    """Configures the passed Python logger instance to use a RichHandler
     with the provided Rich Console and log level.
     Removes existing handlers from it and sets propagation to False.
     """
@@ -140,14 +156,13 @@ def setup_rich_handler_for_external_logger(
         level=target_log_level_enum,  # Set the level on the handler
     )
     logger_to_configure.addHandler(new_rich_handler)
-    logger_to_configure.setLevel(target_log_level_enum)  # Set level on the logger itself
-    logger_to_configure.propagate = (
-        False  # Crucial: Prevents messages handled here from also going to Python's root logger
-    )
+    # Set level on the logger itself
+    logger_to_configure.setLevel(target_log_level_enum)
+    logger_to_configure.propagate = False  # Crucial: Prevents messages handled here from also going to Python's root logger
 
     # Use the main app logger to announce this configuration
     logger.info(
-        f"Configured external logger '{logger_to_configure.name}' with RichHandler at level {log_level_to_set_str.upper()}."
+        f"Configured external logger '{logger_to_configure.name}' with RichHandler at level {log_level_to_set_str.upper()}.",
     )
 
 
@@ -168,15 +183,24 @@ def debug_monitor(func):
         try:
             return_data = func(*args, **kwargs)
             # Truncate long return_data for cleaner logs
-            return_data_str = repr(return_data)  # Use repr for better type info
+            # Use repr for better type info
+            return_data_str = repr(return_data)
             if len(return_data_str) > 150:
                 return_data_str = return_data_str[:150] + "..."
             logger.debug(f"Return: {func.__name__} -> {return_data_str}")
             return return_data
         except Exception as e_dec:
             # Decide on exc_info based on the logger's own INITIAL_LOG_LEVEL_FROM_INIT
-            show_exc_info = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in ["DEBUG", "TRACE", "NOTSET", "ALL"]
-            logger.error(f"Exception in {func.__name__}: {e_dec}", exc_info=show_exc_info)
+            show_exc_info = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in [
+                "DEBUG",
+                "TRACE",
+                "NOTSET",
+                "ALL",
+            ]
+            logger.error(
+                f"Exception in {func.__name__}: {e_dec}",
+                exc_info=show_exc_info,
+            )
             raise
 
     return wrapper
@@ -192,7 +216,12 @@ def info_monitor(*args):
     """Logs an info message, joining all arguments into a single string."""
     message = " ".join(map(str, args))
     # Set exc_info based on whether an exception is being handled AND log level
-    should_show_exc_info_for_info = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in ["DEBUG", "TRACE", "NOTSET", "ALL"]
+    should_show_exc_info_for_info = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in [
+        "DEBUG",
+        "TRACE",
+        "NOTSET",
+        "ALL",
+    ]
     # Only show exc_info for info messages if an exception is active AND level is verbose
     exc_info_val = sys.exc_info()[0] is not None and should_show_exc_info_for_info
     logger.info(message, exc_info=exc_info_val)

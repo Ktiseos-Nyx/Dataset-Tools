@@ -17,7 +17,8 @@ LOG_LEVEL = "INFO"  # Sensible default
 # This specific check for pytest can stay if you want this behavior.
 if "pytest" in sys.modules:
     LOG_LEVEL = "DEBUG"
-    print("DEBUG (__init__.py): Pytest detected, setting LOG_LEVEL to DEBUG.")  # For clarity
+    # For clarity
+    print("DEBUG (__init__.py): Pytest detected, setting LOG_LEVEL to DEBUG.")
 
 # --- Version ---
 try:
@@ -50,8 +51,7 @@ _log_level_map_internal = {
 
 
 def set_package_log_level(level_input: str):
-    """
-    Sets the global LOG_LEVEL for the package based on a string argument.
+    """Sets the global LOG_LEVEL for the package based on a string argument.
     Called by the main application entry point after parsing CLI args.
     The logger module should then re-read this or be explicitly reconfigured.
     """
