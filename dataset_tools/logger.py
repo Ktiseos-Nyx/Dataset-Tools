@@ -158,7 +158,8 @@ def setup_rich_handler_for_external_logger(
     logger_to_configure.addHandler(new_rich_handler)
     # Set level on the logger itself
     logger_to_configure.setLevel(target_log_level_enum)
-    logger_to_configure.propagate = False  # Crucial: Prevents messages handled here from also going to Python's root logger
+    logger_to_configure.propagate = False  # Crucial: Prevents messages handled here from also going 
+    # to Python's root logger
 
     # Use the main app logger to announce this configuration
     logger.info(
