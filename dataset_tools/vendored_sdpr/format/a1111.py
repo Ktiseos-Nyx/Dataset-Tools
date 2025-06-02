@@ -162,8 +162,8 @@ class A1111(BaseFormat):
                 self._height = str(int(h_str.strip()))
             except ValueError:
                 self._logger.warn(  # pylint: disable=no-member
-                    f"Could not parse Size '{size_str}' into width/height. Keeping existing: {self._width}x{self._height}",
-                )
+                    f"Could not parse Size '{size_str}' into width/height. "
+                    f"Keeping existing: {self._width}x{self._height}",
 
         # Populate parameters based on PROMPT_MAPPING
         # Using a clear ASCII variable name like 'a1111_map_key'

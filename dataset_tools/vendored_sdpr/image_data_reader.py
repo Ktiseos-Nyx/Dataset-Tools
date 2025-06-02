@@ -145,7 +145,7 @@ class ImageDataReader:
             return False
 
     def _handle_text_file(self, file_obj: TextIO):
-        """Processes a text file object."""
+        """Process a text file object."""
         self._raw = file_obj.read()
         if self._try_parser(A1111, raw=self._raw):
             # Successfully parsed as A1111
@@ -267,7 +267,7 @@ class ImageDataReader:
             self._parse_novelai_lsb(image_obj)
 
     def _parse_drawthings_xmp(self, xmp_chunk: str):
-        """Helper to parse DrawThings XMP data."""
+        """Parse DrawThings XMP data."""
         if self._parser:
             return
         try:
@@ -329,7 +329,7 @@ class ImageDataReader:
             self._logger.warn(f"NovelAI LSB check error: {lsb_err}", exc_info=True)
 
     def _process_jpeg_webp_exif(self, image_obj: Image.Image):
-        """Processes EXIF data for JPEG/WEBP formats."""
+        """Process EXIF data for JPEG/WEBP formats."""
         if self._parser:
             return  # Already parsed
 
