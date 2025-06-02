@@ -145,7 +145,7 @@ class ImageDataReader:
             return False
 
     def _handle_text_file(self, file_obj: TextIO):
-        """Processes a text file object."""
+        """Process a text file object."""
         self._raw = file_obj.read()
         if self._try_parser(A1111, raw=self._raw):
             # Successfully parsed as A1111
