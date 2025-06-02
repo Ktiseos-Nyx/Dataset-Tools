@@ -1,4 +1,5 @@
-#
+# pyproject.toml
+
 [build-system]
 requires      = ["setuptools", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
@@ -10,19 +11,12 @@ authors         = [{ name = "Ktiseos Nyx", email = "Dataset-Tools@noreply.github
 requires-python = ">= 3.10"
 license         = { file = "LICENSE" }
 readme          = "README.md"
-urls            = { source = "https://github.com/orgs/Ktiseos-Nyx/Dataset-Tools" }
+urls            = { source = "https://github.com/Ktiseos-Nyx/Dataset-Tools" } # Corrected from your previous example to non-orgs
 dynamic         = ["version"]
 
 keywords = [
-    "training",
-    "text",
-    "images",
-    "AI",
-    "editing",
-    "dataset",
-    "metadata",
-    "generative",
-    "art",
+    "training", "text", "images", "AI", "editing", "dataset",
+    "metadata", "generative", "art",
 ]
 classifiers = [
     "Topic :: Multimedia :: Graphics",
@@ -35,8 +29,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Operating System :: OS Independent",
-    "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
-    "Environment :: X11 Applications :: Qt",
+    "Environment :: X11 Applications :: Qt", # This implies Linux focus for X11
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
 ]
 dependencies = [
@@ -44,20 +37,26 @@ dependencies = [
     "pydantic",
     "pydantic-core",
     "pillow",
-    "PyQt6",
+    "PyQt6", # Confirmed this is what you are using
     "toml",
-    "typing-extensions",
+    "typing-extensions", # Good for broader Python 3.x compatibility for newer typing features
     "pyexiv2",
-    "exif",
-    "sd-prompt-reader",
-    "qt-material", # Fixed a borked import
-    "piexif", # Fixed a borked import
+    # "exif", # Consider if this is still needed with piexif and pyexiv2
+    # "sd-prompt-reader", # REMOVE - You have vendored this.
+    "qt-material",
+    "piexif",
     "defusedxml",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest"]
-kn  = ["ruff", "pylint"]
+dev = [
+    "pytest", 
+    "mypy", 
+    "types-toml",       # Stubs for toml
+    "types-defusedxml", # Stubs for defusedxml
+    # PyQt6 aims to ship with its own stubs, so no separate types-PyQt6 or PyQt6-stubs from pip usually
+]
+kn  = ["ruff", "pylint"] # For your personal linting/tooling
 
 [project.scripts]
 dataset-tools = "dataset_tools.main:main"
@@ -69,19 +68,116 @@ write_to = "_version.py"
 [tool.uv]
 dev-dependencies = ["pytest"]
 
-[tool.ruff]
+# --- RUFF Configuration ---
+[tool.ruff] # General Ruff settings
 line-length    = 120
-include        = ["*.py"]
-extend-exclude = ["^tests/.*$", "test.*$"]
+include        = ["*.py", "*.pyi", "**/pyproject.toml"]
+extend-exclude = [
+    ".venv",
+    # "tests/", # I recommend REMOVING this line to lint/format your tests
+    # "test_*.py", # And this one too
+]
+# Move formatter settings into their own table
+# format.quote-style = "double" # Moved to [tool.ruff.format]
+# format.indent-style = "space"  # Moved to [tool.ruff.format]
+# format.skip-magic-trailing-comma = false # Moved to [tool.ruff.format]
+# format.line-ending = "lf" # Moved to [tool.ruff.format]
 
-[tool.pylint]
-ignore-paths = ["^tests/.*$", "test_.*$"]
+[tool.ruff.lint] # Lint-specific settings
+select = [
+    "E", "W", # pycodestyle errors and warnings
+    "F",      # Pyflakes
+    "I",      # isort (import sorting)
+    "C90",    # McCabe complexity
+    "N",      # pep8-naming
+    "D",      # pydocstyle (docstrings)
+    "UP",     # pyupgrade
+    "ANN",    # flake8-annotations (for type hint enforcement)
+    "S",      # flake8-bandit (security)
+    "BLE",    # flake8-blind-except
+    "B",      # flake8-bugbear
+    "A",      # flake8-builtins
+    "COM",    # flake8-commas (COM812 is the one to consider ignoring)
+    "ISC",    # flake8-implicit-str-concat
+    "T20",    # flake8-print
+    "PYI",    # flake8-pyi
+    "PT",     # flake8-pytest-style
+    "Q",      # flake8-quotes
+    "RSE",    # flake8-raise
+    "RET",    # flake8-return
+    "SLF",    # flake8-self
+    "SIM",    # flake8-simplify
+    "TID",    # flake8-tidy-imports
+    "ARG",    # flake8-unused-arguments
+    "PTH",    # flake8-use-pathlib
+    "PGH",    # pygrep-hooks
+    "PLC", "PLE", "PLR", "PLW", # Pylint equivalents
+    "RUF",    # Ruff-specific rules
+]
+ignore = [
+    "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107", # Ignore missing docstrings initially
+    # ANN101, ANN102 were removed by Ruff as deprecated/handled differently
+    "COM812", # Add this to ignore the formatter conflict with trailing commas
+]
+# fix = true # If you want `ruff check` to also attempt fixes without --fix flag
 
-[tool.ruff.format]
+[tool.ruff.format] # Formatter specific settings
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
 
 [tool.ruff.lint.pycodestyle]
 max-line-length               = 120
 ignore-overlong-task-comments = true
 
+[tool.ruff.lint.pylint]
+max-args = 7        # Default is 5
+max-branches = 18   # Default is 12, increased
+max-statements = 70 # Default is 50, increased
+max-locals = 20     # Default is 15, increased
+# Consider also:
+# allow-global-unused-variables = false (default)
+
+[tool.ruff.lint.flake8-annotations]
+allow-star-arg-any = true # Allows *args: Any and **kwargs: Any
+
 [tool.typos]
-files.extend-exclude = ["^tests/.*$", "test.*$"]
+files.extend-exclude = [
+    # "tests/",     # If you want to check typos in tests, remove this
+    # "test_*.py", # and this
+]
+
+# --- MYPY Configuration ---
+[tool.mypy]
+python_version = "3.10" # Match your requires-python lower bound
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+# For stricter checking later, uncomment these:
+# disallow_untyped_defs = true
+# disallow_incomplete_defs = true
+check_untyped_defs = true # Good to enable
+
+plugins = "pydantic.mypy"
+
+# Per-module settings for ignoring missing stubs or specific errors
+[[tool.mypy.overrides]]
+module = [
+    "piexif.*",
+    "pyexiv2.*",
+    "qt_material.*",
+    "defusedxml.*", # types-defusedxml should provide stubs
+    "dataset_tools.version", # Your _version.py
+    # "dataset_tools.vendored_sdpr.*", # Enable if vendored code is too noisy initially
+]
+ignore_missing_imports = true
+
+# PyQt6 should provide its own stubs. If MyPy still has issues with it
+# specifically for 'no attribute' errors that are false positives, 
+# you might need to add ignores for those specific attributes in code using `# type: ignore[attr-defined]`
+# Or, if there are many, consider:
+# [[tool.mypy.overrides]]
+# module = "PyQt6.*"
+# ignore_errors = true # Use this as a last resort for problematic C extensions

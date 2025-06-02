@@ -1,0 +1,19 @@
+# .prospector.yaml
+
+# Optional: Set a base strictness or profile
+# strictness: medium
+# inherits:
+#   - default
+
+# Configure McCabe tool
+mccabe:
+  options:
+    max-complexity: 18 # Set your desired complexity limit here
+
+# If you want to pass options to Pylint via Prospector (alternative to .pylintrc for some things)
+# pylint:
+#   options:
+#     extension-pkg-allow-list: PyQt6 # Example
+#   disable: # You can also list Pylint disables here
+#     - C0301 
+#     # ... other Pylint message codes ...

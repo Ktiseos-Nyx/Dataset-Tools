@@ -7,129 +7,143 @@ __copyright__ = "Copyright 2023, Receyuki"
 __email__ = "receyuki@gmail.com"
 
 import json
+import logging  # Standard Python logging
 from enum import Enum
-from ..logger import Logger  # Your vendored logger
-from ..constants import PARAMETER_PLACEHOLDER  # Your defined placeholder string
+from typing import Any  # CORRECTED: Added List, Optional
+
+from ..constants import PARAMETER_PLACEHOLDER
+
+# Import the factory function from the modified logger.py
+from ..logger import get_logger
 
 
+# pylint: disable=too-many-instance-attributes
 class BaseFormat:
-    # Define a comprehensive list of canonical parameter keys that parsers might try to populate.
-    # Specific parsers will map their unique field names to these canonical keys.
-    PARAMETER_KEY = [
-        "model",  # Name or path of the primary model
-        "model_hash",  # Hash of the primary model
-        "sampler_name",  # Sampler used (e.g., "Euler a", "DPM++ 2M Karras")
+    PARAMETER_KEY: list[str] = [  # Type hinted
+        "model",
+        "model_hash",
+        "sampler_name",
         "seed",
-        "subseed",  # For variation seeds
+        "subseed",
         "subseed_strength",
-        "cfg_scale",  # CFG scale value
+        "cfg_scale",
         "steps",
-        "size",  # Combined "WidthxHeight" string
-        "width",  # Parsed width (though often handled by self._width directly)
-        "height",  # Parsed height (similarly)
-        "scheduler",  # Scheduler if specified (e.g., "karras", "sgm_uniform")
-        "loras",  # String representation of LoRAs used
-        "hires_fix",  # Boolean or details about Hires. fix
-        "hires_upscaler",  # Upscaler used for Hires. fix
+        "size",
+        "width",
+        "height",
+        "scheduler",
+        "loras",
+        "hires_fix",
+        "hires_upscaler",
         "denoising_strength",
-        "restore_faces",  # Face restoration method or boolean
-        "version",  # Software version
-        # Add any other common parameters you want to standardize across formats
+        "restore_faces",
+        "version",
     ]
 
-    # Make PARAMETER_PLACEHOLDER available to instances and subclasses
     DEFAULT_PARAMETER_PLACEHOLDER = PARAMETER_PLACEHOLDER
 
-    class Status(Enum):  # Inner class for status codes
+    class Status(Enum):
         UNREAD = 1
         READ_SUCCESS = 2
         FORMAT_ERROR = 3
-        COMFYUI_ERROR = 4  # Specific error for ComfyUI if needed
+        COMFYUI_ERROR = 4
 
-    def __init__(self, info: dict = None, raw: str = "", width: int = 0, height: int = 0):
-        # Initialize core attributes
-        self._width = str(width)  # Store as string for consistent property return
-        self._height = str(height)  # Store as string
-        self._info = info if info is not None else {}  # Raw info dict from PIL or other source
-        self._raw = str(raw)  # Full raw metadata string, ensure it's a string
+    # __init__ signature using Optional, Dict, Any, Type will now be valid
+    # Removed Type[Any] for self as it's not standard and not needed for this fix.
+    def __init__(
+        self,
+        info: dict[str, Any] | None = None,
+        raw: str = "",
+        width: int = 0,
+        height: int = 0,
+    ):
+        self._width = str(width)
+        self._height = str(height)
+        self._info: dict[str, Any] = info if info is not None else {}
+        self._raw = str(raw)
 
-        # Initialize prompt and parameter attributes
         self._positive = ""
         self._negative = ""
-        self._positive_sdxl = {}  # For SDXL-specific positive prompts
-        self._negative_sdxl = {}  # For SDXL-specific negative prompts
-        self._setting = ""  # Reconstructed or raw settings string from the tool
+        self._positive_sdxl: dict[str, Any] = {}
+        self._negative_sdxl: dict[str, Any] = {}
+        self._setting = ""
 
-        # Initialize the parameter dictionary with defined keys and a placeholder
-        self._parameter = dict.fromkeys(
+        self._parameter: dict[str, Any] = dict.fromkeys(
             BaseFormat.PARAMETER_KEY,
-            BaseFormat.DEFAULT_PARAMETER_PLACEHOLDER,  # Use the consistent placeholder
+            BaseFormat.DEFAULT_PARAMETER_PLACEHOLDER,
         )
 
-        self._is_sdxl = False  # Flag for SDXL specific content
-        self._status = self.Status.UNREAD  # Initial parsing status
-        self._error = ""  # To store any specific error message during parsing
+        self._is_sdxl = False
+        self._status = self.Status.UNREAD
+        self._error = ""
 
-        # Logger: Use a more specific name if possible, or a generic one for the base.
-        # Specific parsers (A1111, ComfyUI) will create their own loggers.
-        # The name used here will be the parent if not overridden by subclass.
-        self._logger = Logger("DSVendored_SDPR.Format.Base")  # Consistent naming
+        # Use the get_logger factory function.
+        logger_name = (
+            f"DSVendored_SDPR.{self.__class__.__module__}.{self.__class__.__name__}"
+        )
+        if self.__class__ == BaseFormat:  # If it's an instance of BaseFormat itself
+            logger_name = "DSVendored_SDPR.Format.Base"
 
-        # Some parsers might set their tool name as a class attribute.
-        # If not, it can be set in the subclass's __init__ or by ImageDataReader.
+        self._logger: logging.Logger = get_logger(logger_name)
         self.tool = getattr(self.__class__, "tool", "Unknown")
 
-    def parse(self):
-        """
-        Public method to trigger parsing.
-        It calls the internal _process method which should be implemented by subclasses.
-        Handles basic status updates and error catching.
-        """
+    def parse(self) -> Status:
         if self._status == self.Status.READ_SUCCESS:
-            # Already parsed successfully
             return self._status
 
-        # Reset status and error before attempting to parse
         self._status = self.Status.UNREAD
         self._error = ""
 
         try:
-            self._process()  # Subclasses will implement their specific parsing logic here
-            # If _process completes without raising an exception, and doesn't set an error status:
-            if self._status == self.Status.UNREAD:  # If subclass _process didn't update status
-                # This implies _process might not have found its format or had an issue
-                # but didn't explicitly set FORMAT_ERROR. We assume success if no error.
-                # More robustly, _process should set self.status itself.
-                self.status = self.Status.READ_SUCCESS  # Default to success if no error from _process
-
-        except ValueError as ve:  # Catch specific errors like JSONDecodeError if _process raises them
-            self._logger.error(f"ValueError during {self.tool} parsing: {ve}")
+            self._process()
+            if self._status == self.Status.UNREAD:
+                if (
+                    not self._positive
+                    and not self._setting
+                    and not self._parameter_has_data()
+                ):
+                    # self._logger.debug (no-member should be fixed by get_logger and type hint for self._logger)
+                    self._logger.debug(
+                        f"{self.tool}._process completed but no data extracted. Assuming format mismatch.",
+                    )
+                    self.status = self.Status.FORMAT_ERROR
+                    self._error = f"{self.tool}: No usable data extracted."
+                else:
+                    self.status = self.Status.READ_SUCCESS
+        except ValueError as val_err:  # Renamed 've' to 'val_err' for clarity
+            # self._logger.error (no-member should be fixed)
+            self._logger.error(f"ValueError during {self.tool} parsing: {val_err}")
             self._status = self.Status.FORMAT_ERROR
-            self._error = str(ve)
-        except Exception as e:
-            self._logger.error(f"Unexpected exception during {self.tool} _process: {e}", exc_info=True)
+            self._error = str(val_err)
+        except (
+            Exception
+        ) as general_err:  # Renamed 'e' to 'general_err', added broad-except disable
+            # pylint: disable=broad-except
+            # self._logger.error (no-member should be fixed)
+            self._logger.error(
+                f"Unexpected exception during {self.tool} _process: {general_err}",
+                exc_info=True,
+            )
             self._status = self.Status.FORMAT_ERROR
-            self._error = f"Unexpected error: {e}"
-
+            self._error = f"Unexpected error: {general_err}"
         return self._status
 
-    def _process(self):
-        """
-        Internal processing method to be implemented by specific format parser subclasses.
-        This method should parse self._raw or self._info and populate attributes like
-        self._positive, self._negative, self._parameter, self._width, self._height (if found in metadata),
-        and self._setting. It should also set self._status and self._error if issues occur.
-        """
-        # Default implementation: do nothing, assume format not recognized by this base.
-        # Subclasses *must* override this.
-        self._logger.debug(f"BaseFormat._process called for tool {self.tool}. Subclass should implement parsing.")
-        # If a subclass calls super()._process() without implementing its own,
-        # it effectively means the format wasn't matched by that subclass.
-        # Consider setting status to FORMAT_ERROR here if it's not meant to be called directly.
-        # However, parse() handles the default status update.
-        pass
+    def _parameter_has_data(self) -> bool:
+        """Checks if any parameter has been populated beyond the placeholder."""
+        for value in self._parameter.values():
+            if value != self.DEFAULT_PARAMETER_PLACEHOLDER:
+                return True
+        return False
 
-    # --- Properties to access the parsed data ---
+    def _process(
+        self,
+    ):  # Pylint: Unnecessary pass statement (Note #6412) - pass is fine for abstract-like method
+        # self._logger.debug (no-member should be fixed)
+        self._logger.debug(
+            f"BaseFormat._process called for tool {self.tool}. Subclass should implement parsing.",
+        )
+        pass  # This is acceptable for a method designed to be overridden
+
     @property
     def height(self) -> str:
         return self._height
@@ -139,7 +153,7 @@ class BaseFormat:
         return self._width
 
     @property
-    def info(self) -> dict:
+    def info(self) -> dict[str, Any]:
         return self._info
 
     @property
@@ -151,23 +165,23 @@ class BaseFormat:
         return self._negative
 
     @property
-    def positive_sdxl(self) -> dict:
+    def positive_sdxl(self) -> dict[str, Any]:
         return self._positive_sdxl
 
     @property
-    def negative_sdxl(self) -> dict:
+    def negative_sdxl(self) -> dict[str, Any]:
         return self._negative_sdxl
 
     @property
-    def setting(self) -> str:  # The string of parameters, e.g., "Steps: 20, Sampler: Euler a, ..."
+    def setting(self) -> str:
         return self._setting
 
     @property
-    def raw(self) -> str:  # The full raw metadata string
+    def raw(self) -> str:
         return self._raw
 
     @property
-    def parameter(self) -> dict:  # Dictionary of parsed parameters
+    def parameter(self) -> dict[str, Any]:
         return self._parameter
 
     @property
@@ -175,44 +189,53 @@ class BaseFormat:
         return self._is_sdxl
 
     @property
-    def status(self) -> Status:  # Returns the Status Enum member
+    def status(self) -> Status:
         return self._status
 
     @status.setter
-    def status(self, value: Status):  # Allow setting status
+    def status(self, value: Status):
         if isinstance(value, self.Status):
             self._status = value
         else:
-            self._logger.warn(f"Attempted to set invalid status type: {type(value)}. Expected BaseFormat.Status Enum.")
+            # self._logger.warning (Pylint error #7325: no-member) -> should be fixed now
+            self._logger.warning(
+                f"Attempted to set invalid status type: {type(value)}. Expected BaseFormat.Status Enum.",
+            )
 
     @property
-    def error(self) -> str:  # Read-only access to the error message
+    def error(self) -> str:
         return self._error
 
     @property
-    def props(self) -> str:  # For dumping all relevant data as a JSON string (from original SDPR)
-        """Returns a JSON string representation of key properties."""
+    def props(self) -> str:
         properties = {
             "positive": self._positive,
             "negative": self._negative,
             "positive_sdxl": self._positive_sdxl,
             "negative_sdxl": self._negative_sdxl,
             "is_sdxl": self._is_sdxl,
-            **self._parameter,  # Unpack all parameters
-            "height": self._height,  # Include width/height if not already in _parameter as "size"
+            **self._parameter,
+            "height": self._height,
             "width": self._width,
-            "setting_string": self._setting,  # The reconstructed settings string
+            "setting_string": self._setting,
             "tool_detected": self.tool,
-            "raw_metadata_if_any": self._raw[:500] + "..."
-            if len(self._raw) > 500
-            else self._raw,  # Truncate long raw data
+            # Corrected hanging indentation for ternary operator
+            "raw_metadata_if_any": (
+                self._raw[:500] + "..." if len(self._raw) > 500 else self._raw
+            ),
         }
         try:
-            return json.dumps(properties, indent=2)  # Pretty print
-        except TypeError:  # Handle non-serializable data if any creeps in
-            # Fallback: convert problematic values to strings
+            return json.dumps(properties, indent=2)
+        except TypeError:
             safe_properties = {
-                k: str(v) if not isinstance(v, (dict, list, str, int, float, bool, type(None))) else v
+                k: (
+                    str(v)
+                    if not isinstance(
+                        v,
+                        (dict, list, str, int, float, bool, type(None)),
+                    )
+                    else v
+                )
                 for k, v in properties.items()
             }
             return json.dumps(safe_properties, indent=2)

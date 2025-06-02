@@ -1,4 +1,4 @@
-# dataset_tools/vendored_sdpr/format/a1111.py (Corrected Unpacking)
+# dataset_tools/vendored_sdpr/format/a1111.py
 
 __author__ = "receyuki"
 __filename__ = "a1111.py"
@@ -7,15 +7,16 @@ __copyright__ = "Copyright 2023, Receyuki"
 __email__ = "receyuki@gmail.com"
 
 import re
+from typing import Any
 
 from .base_format import BaseFormat
-from .utility import add_quotes, concat_strings  # Ensure utility.py is in the same 'format' dir
+from .utility import add_quotes, concat_strings
 
 
 class A1111(BaseFormat):
     tool = "A1111 webUI"
 
-    PROMPT_MAPPING = {
+    PROMPT_MAPPING: dict[str, tuple[str, bool]] = {
         "Seed": ("seed", False),
         "Variation seed strength": ("subseed_strength", False),
         "Sampler": ("sampler_name", True),
@@ -24,145 +25,227 @@ class A1111(BaseFormat):
         "Face restoration": ("restore_faces", False),
     }
 
-    def __init__(self, info: dict = None, raw: str = ""):
+    def __init__(
+        self,
+        info: dict[str, Any] | None = None,
+        raw: str = "",
+    ):  # Added Optional, Dict, Any for type hints
         super().__init__(info=info, raw=raw)
-        self._extra = ""
+        # self._logger is inherited from BaseFormat
+        self._extra: str = ""
+
+    def _extract_raw_data_from_info(self) -> str:
+        """Extracts raw parameter string from _info, prioritizing 'parameters' then 'postprocessing'."""
+        current_raw_data = ""
+        if self._info:
+            parameters_str = str(self._info.get("parameters", ""))
+            if parameters_str:
+                self._logger.debug(
+                    f"Using 'parameters' from info dict. Length: {len(parameters_str)}",
+                )  # pylint: disable=no-member
+                current_raw_data = parameters_str
+
+            postprocessing_str = str(self._info.get("postprocessing", ""))
+            if postprocessing_str:
+                self._logger.debug(
+                    f"Found 'postprocessing' data. Length: {len(postprocessing_str)}",
+                )  # pylint: disable=no-member
+                if current_raw_data:
+                    current_raw_data = concat_strings(
+                        current_raw_data,
+                        postprocessing_str,
+                        "\n",
+                    )
+                else:
+                    current_raw_data = postprocessing_str
+            self._extra = postprocessing_str
+        return current_raw_data
 
     def _process(self):
-        self._logger.debug(f"Attempting to parse using {self.tool} logic.")
-        current_raw_data = self._raw
-        if not current_raw_data and self._info and "parameters" in self._info:
-            current_raw_data = str(self._info.get("parameters", ""))
-            self._logger.debug(f"Using 'parameters' from info dict. Length: {len(current_raw_data)}")
+        self._logger.debug(
+            f"Attempting to parse using {self.tool} logic.",
+        )  # pylint: disable=no-member
 
-        if self._info and "postprocessing" in self._info:
-            self._extra = str(self._info.get("postprocessing", ""))
-            if self._extra:
-                self._logger.debug(f"Found 'postprocessing' data. Length: {len(self._extra)}")
-                if current_raw_data:
-                    current_raw_data = concat_strings(current_raw_data, self._extra, "\n")
-                else:
-                    current_raw_data = self._extra
+        raw_data_from_info = self._extract_raw_data_from_info()
 
-        self._raw = current_raw_data
+        if not self._raw and raw_data_from_info:
+            self._raw = raw_data_from_info
+        elif self._raw and raw_data_from_info and self._raw != raw_data_from_info:
+            if self._extra and self._extra not in self._raw:
+                self._raw = concat_strings(self._raw, self._extra, "\n")
 
         if not self._raw:
-            self._logger.warn(f"{self.tool}: No raw data, 'parameters', or 'postprocessing' in info dict to parse.")
+            self._logger.warn(
+                f"{self.tool}: No raw data, 'parameters', or 'postprocessing' in info dict to parse.",
+            )  # pylint: disable=no-member
             self.status = self.Status.FORMAT_ERROR
             self._error = "No A1111 parameter string found to parse."
             return
 
         self._sd_format()
 
-        if self._positive or self._setting:
-            self._logger.info(f"{self.tool}: Data parsed successfully.")
+        if self._positive or self._parameter_has_data():
+            self._logger.info(
+                f"{self.tool}: Data parsed successfully.",
+            )  # pylint: disable=no-member
             self.status = self.Status.READ_SUCCESS
         else:
-            self._logger.warn(f"{self.tool}: _sd_format completed but no positive prompt or settings were extracted.")
+            self._logger.warn(
+                f"{self.tool}: _sd_format completed but no positive prompt or settings were extracted.",
+            )  # pylint: disable=no-member
             self.status = self.Status.FORMAT_ERROR
-            self._error = f"{self.tool}: Failed to extract key fields from the parameter string."
+            self._error = (
+                f"{self.tool}: Failed to extract key fields from the parameter string."
+            )
 
-    def _sd_format(self):
-        if not self._raw:
-            self._logger.debug("A1111 _sd_format: self._raw is empty, cannot parse further.")
-            return
+    def _parse_prompt_blocks(self, raw_data: str) -> tuple[str, str, str]:
+        """Parses the raw data into positive, negative, and settings blocks."""
+        positive_prompt = ""
+        negative_prompt = ""
+        settings_block = ""
 
-        self._positive = ""
-        self._negative = ""
-        self._setting = ""
-
-        steps_index = self._raw.find("\nSteps:")
-        raw_prompt_block = self._raw
+        steps_index = raw_data.find("\nSteps:")
+        prompt_block_raw = raw_data
 
         if steps_index != -1:
-            raw_prompt_block = self._raw[:steps_index].strip()
-            self._setting = self._raw[steps_index:].strip()
+            prompt_block_raw = raw_data[:steps_index].strip()
+            settings_block = raw_data[steps_index:].strip()
         else:
-            self._logger.debug(
-                "A1111 _sd_format: '\\nSteps:' delineator not found. Assuming raw data is positive prompt or malformed."
+            self._logger.debug(  # pylint: disable=no-member
+                "A1111 _sd_format: '\\nSteps:' delineator not found. Assuming all raw data is positive prompt or malformed.",
             )
-            raw_prompt_block = self._raw.strip()
-            self._setting = ""
 
         negative_prompt_marker = "\nNegative prompt:"
-        negative_prompt_index = raw_prompt_block.find(negative_prompt_marker)
+        negative_prompt_index = prompt_block_raw.find(negative_prompt_marker)
 
         if negative_prompt_index != -1:
-            self._positive = raw_prompt_block[:negative_prompt_index].strip()
-            self._negative = raw_prompt_block[negative_prompt_index + len(negative_prompt_marker) :].strip()
+            positive_prompt = prompt_block_raw[:negative_prompt_index].strip()
+            negative_prompt = prompt_block_raw[
+                negative_prompt_index + len(negative_prompt_marker) :
+            ].strip()
         else:
-            self._positive = raw_prompt_block
-            self._negative = ""
+            positive_prompt = prompt_block_raw.strip()
 
-        if self._setting:
-            pattern = r"\s*([^:,]+):\s*([^,]+(?:\([^)]*\))?(?:\s+[^,]+)*)"
-            matches = re.findall(pattern, self._setting)
-            setting_dict = {}
-            # --- THIS IS THE CORRECTED LINE ---
-            for key, value in matches:
-                # --- END CORRECTION ---
-                key = key.strip()
-                value = value.strip()
-                if key not in setting_dict:
-                    setting_dict[key] = value
+        return positive_prompt, negative_prompt, settings_block
 
-            self._logger.debug(f"Parsed setting_dict from settings string: {setting_dict}")
+    def _parse_settings_string(self, settings_str: str) -> dict[str, str]:
+        """Parses the 'Steps: ...' block into a dictionary."""
+        if not settings_str:
+            return {}
 
-            size_str = setting_dict.get("Size")
-            if size_str:
-                try:
-                    w_str, h_str = size_str.split("x")
-                    self._width = str(int(w_str.strip()))
-                    self._height = str(int(h_str.strip()))
-                except ValueError:
-                    self._logger.warn(
-                        f"Could not parse Size '{size_str}' into width/height. Keeping existing: {self._width}x{self._height}"
+        pattern = r"([^:]+):\s*((?:[^,]|,(?=\s*\w+:\s*))+)"
+        # Alternative, potentially more robust for values with parentheses:
+        # pattern = r"\s*([^:,]+):\s*([^,]+(?:\([^)]*\))?(?:\s+[^,]+(?<!\sENSD:\s\d+))*)"
+
+        matches = re.findall(pattern, settings_str)
+        parsed_settings: dict[str, str] = {}
+        for key, value in matches:
+            key = key.strip()
+            value = value.strip()
+            if key not in parsed_settings:
+                parsed_settings[key] = value
+        self._logger.debug(
+            f"Parsed settings_dict from settings string: {parsed_settings}",
+        )  # pylint: disable=no-member
+        return parsed_settings
+
+    def _populate_parameters_from_settings(self, settings_dict: dict[str, str]):
+        """Populates self._width, self._height, and self._parameter from parsed settings."""
+        if not settings_dict:
+            return
+
+        size_str = settings_dict.get("Size")
+        if size_str:
+            try:
+                w_str, h_str = size_str.split("x")
+                self._width = str(int(w_str.strip()))
+                self._height = str(int(h_str.strip()))
+            except ValueError:
+                self._logger.warn(  # pylint: disable=no-member
+                    f"Could not parse Size '{size_str}' into width/height. Keeping existing: {self._width}x{self._height}",
+                )
+
+        # Populate parameters based on PROMPT_MAPPING
+        # Using a clear ASCII variable name like 'a1111_map_key'
+        for a1111_map_key, (canonical_param_key, _) in self.PROMPT_MAPPING.items():
+            if a1111_map_key in settings_dict:
+                # Use the same ASCII variable name
+                value = str(settings_dict[a1111_map_key])
+                if canonical_param_key in self._parameter:
+                    self._parameter[canonical_param_key] = value
+                else:
+                    self._logger.warn(  # pylint: disable=no-member
+                        f"Canonical key '{canonical_param_key}' (for A1111 key '{a1111_map_key}') not in BaseFormat.PARAMETER_KEY.",
                     )
 
-            for a1111_setting_key, (canonical_param_key, _) in self.PROMPT_MAPPING.items():
-                if a1111_setting_key in setting_dict:
-                    if canonical_param_key in self._parameter:
-                        self._parameter[canonical_param_key] = str(setting_dict[a1111_setting_key])
-                    else:
-                        self._logger.warn(
-                            f"Canonical key '{canonical_param_key}' (for '{a1111_setting_key}') not in BaseFormat.PARAMETER_KEY."
-                        )
+        direct_map_to_canonical = {
+            "Model": "model",
+            "Model hash": "model_hash",
+        }
+        for setting_key, canonical_key in direct_map_to_canonical.items():
+            if setting_key in settings_dict:
+                value = str(settings_dict[setting_key])
+                if canonical_key in self._parameter:
+                    self._parameter[canonical_key] = value
 
-            direct_map_to_canonical = {
-                "Model": "model",
-                "Model hash": "model_hash",
-            }
-            for setting_key, canonical_key in direct_map_to_canonical.items():
-                if setting_key in setting_dict and canonical_key in self._parameter:
-                    self._parameter[canonical_key] = str(setting_dict[setting_key])
+        if self._width != "0" and self._height != "0" and "size" in self._parameter:
+            self._parameter["size"] = f"{self._width}x{self._height}"
 
-            if "size" in self._parameter and self._width != "0" and self._height != "0":
-                self._parameter["size"] = f"{self._width}x{self._height}"
+    # pylint: disable=too-many-locals # This method might still be complex for pylint's default
+    def _sd_format(self):
+        """Main parsing function for A1111 format. Populates prompt and parameter attributes."""
+        if not self._raw:
+            self._logger.debug(
+                "A1111 _sd_format: self._raw is empty, cannot parse further.",
+            )  # pylint: disable=no-member
+            return
+
+        self._positive, self._negative, settings_str = self._parse_prompt_blocks(
+            self._raw,
+        )
+        self._setting = settings_str
+
+        if self._setting:
+            settings_dict = self._parse_settings_string(self._setting)
+            self._populate_parameters_from_settings(settings_dict)
         else:
-            self._logger.debug("A1111 _sd_format: self._setting string is empty.")
+            self._logger.debug(
+                "A1111 _sd_format: self._setting string is empty after parsing prompt blocks.",
+            )  # pylint: disable=no-member
 
-    def prompt_to_line(self):
-        if not self._positive and not self._setting:
+    def prompt_to_line(self) -> str:
+        """Converts parsed data back into a CLI-like string."""
+        # Use self.DEFAULT_PARAMETER_PLACEHOLDER inherited from BaseFormat
+        if (
+            not self._positive and not self._parameter_has_data()
+        ):  # _parameter_has_data is from BaseFormat
             return ""
 
         line_parts = []
         if self._positive:
-            line_parts.append(f"--prompt {add_quotes(self._positive).replace(chr(10), ' ')}")
+            line_parts.append(
+                f"--prompt {add_quotes(self._positive).replace(chr(10), ' ')}",
+            )
         if self._negative:
-            line_parts.append(f"--negative_prompt {add_quotes(self._negative).replace(chr(10), ' ')}")
+            line_parts.append(
+                f"--negative_prompt {add_quotes(self._negative).replace(chr(10), ' ')}",
+            )
 
         if self._width != "0" and self._height != "0":
             line_parts.append(f"--width {self._width}")
             line_parts.append(f"--height {self._height}")
 
-        for a1111_key, (cli_arg_name, is_string) in self.PROMPT_MAPPING.items():
-            canonical_key = cli_arg_name
-            if canonical_key in self._parameter:
-                value = self._parameter[canonical_key]
+        for _, (cli_arg_name, is_string) in self.PROMPT_MAPPING.items():
+            if cli_arg_name in self._parameter:
+                value = self._parameter[cli_arg_name]
                 if value and value != self.DEFAULT_PARAMETER_PLACEHOLDER:
                     if is_string:
                         line_parts.append(f"--{cli_arg_name} {add_quotes(str(value))}")
                     else:
                         line_parts.append(f"--{cli_arg_name} {value}")
+
+        model_val = self._parameter.get("model")  # Use .get for safety
+        if model_val and model_val != self.DEFAULT_PARAMETER_PLACEHOLDER:
+            line_parts.append(f"--model {add_quotes(str(model_val))}")
 
         return " ".join(line_parts).strip()

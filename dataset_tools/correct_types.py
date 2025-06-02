@@ -3,121 +3,133 @@
 # Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
 # SPDX-License-Identifier: GPL-3.0
 
-"""Confirm & Correct Data Type"""
+"""Confirm & Correct Data Type."""
 
+from enum import Enum
 from platform import python_version_tuple
-from enum import Enum  # Essential for defining Enums
+from typing import Any, ClassVar  # Standard types for Python 3.9+
 
-# from ast import Constant # This was not needed for the Enum structure
+from pydantic import BaseModel, TypeAdapter, field_validator
 
-from pydantic import TypeAdapter, BaseModel, field_validator
-
-# IMPORTANT: Import LOG_LEVEL directly into this module for EXC_INFO
 from dataset_tools import LOG_LEVEL
 
-# Typing imports conditional on Python version
-if float(python_version_tuple()[0]) == 3.0 and float(python_version_tuple()[1]) <= 12.0:
-    from typing_extensions import TypedDict, List, Union, Set  # Use List from typing_extensions
-else:
-    from typing import TypedDict, List, Union, Set  # Use List from typing
+# Conditional import for TypedDict specifically for Pydantic V2 compatibility
+# Pydantic V2 wants typing_extensions.TypedDict for Python < 3.12.
+# Your project requires Python >= 3.10.
+# So for 3.10 and 3.11, use typing_extensions.TypedDict.
+# For 3.12+, typing.TypedDict is fine with Pydantic V2.
+py_version_major_str, py_version_minor_str, _ = python_version_tuple()
+py_version_major = int(py_version_major_str)
+py_version_minor = int(py_version_minor_str)
+
+if py_version_major == 3 and py_version_minor < 12:
+    from typing_extensions import TypedDict
+else:  # Python 3.12+ (or other major versions, though unlikely for this project)
+    from typing import TypedDict
+
+
+# Define constants for magic numbers used in comparisons (for PLR2004)
+# Not strictly needed for python_version_tuple comparison as it's clear, but for consistency:
+# PYTHON_VERSION_TARGET_MAJOR = 3.0 # If you were comparing float(python_version_tuple()[0])
+# PYTHON_VERSION_TARGET_MINOR_MAX = 12.0 # If you were comparing float(python_version_tuple()[1])
+MAX_REMAINING_UNPARSED_SPLIT_LEN = 5
+MAX_RAW_METADATA_DISPLAY_LEN = 500
 
 
 class EmptyField(Enum):
-    """When no data is available. Used as keys in metadata dictionaries."""
+    """Represent placeholder or empty field states.
 
-    PLACEHOLDER = "_dt_internal_placeholder_"  # Key for placeholder messages
-    EMPTY = "_dt_internal_empty_value_"  # Key for an intentionally empty field state
-    # If you had specific placeholder messages for UI, they might be defined elsewhere or here:
-    # PLACEHOLDER_PROMPT_TEXT = "Prompt Information Area" # Example
-    # PLACEHOLDER_GEN_TEXT = "Generation Details Area"    # Example
-    # PLACEHOLDER_DETAILS_TEXT = "No specific details available." # Example
+    Used as keys in metadata dictionaries.
+    """
+
+    PLACEHOLDER = "_dt_internal_placeholder_"
+    EMPTY = "_dt_internal_empty_value_"
 
 
 class UpField(Enum):
-    """Defines sections for the upper display area in the UI.
+    """Define sections for the upper display area in the UI.
+
     The string values are used as keys in the metadata dictionary.
     """
 
     METADATA = "metadata_info_section"
     PROMPT = "prompt_data_section"
     TAGS = "tags_and_keywords_section"
-    TEXT_DATA = "text_file_content_section"  # For .txt file content
-    # DATA = "generic_data_block_section" # This was present, keep if used
+    TEXT_DATA = "text_file_content_section"
+    # DATA = "generic_data_block_section" # Keep if used
 
     @classmethod
-    def get_ordered_labels(cls) -> List["UpField"]:
-        """Returns a list of UpField members in their definition order for UI iteration."""
-        # Define the explicit order you want them to appear in the UI if it's specific
-        # If definition order is fine, list(cls) is okay.
-        # For example, if you want a specific order:
-        return [cls.PROMPT, cls.TAGS, cls.METADATA, cls.TEXT_DATA]  # Add DATA if used
-        # Or if definition order is fine:
-        # return list(cls)
+    def get_ordered_labels(cls) -> list["UpField"]:
+        """Return a list of UpField members for UI iteration."""
+        return [cls.PROMPT, cls.TAGS, cls.METADATA, cls.TEXT_DATA]
 
 
 class DownField(Enum):
-    """Defines sections for the lower display area in the UI.
+    """Define sections for the lower display area in the UI.
+
     The string values are used as keys in the metadata dictionary.
     """
 
     GENERATION_DATA = "generation_parameters_section"
-    RAW_DATA = "raw_tool_specific_data_section"  # Raw metadata string from AI tool
+    RAW_DATA = "raw_tool_specific_data_section"
     EXIF = "standard_exif_data_section"
+    JSON_DATA = "json_file_content_section"
+    TOML_DATA = "toml_file_content_section"
     # SYSTEM = "system_and_software_section" # Keep if used
     # ICC = "icc_profile_section" # Keep if used
     # LAYER_DATA = "image_layer_data_section" # Keep if used
-    JSON_DATA = "json_file_content_section"  # For .json file content
-    TOML_DATA = "toml_file_content_section"  # For .toml file content
 
     @classmethod
-    def get_ordered_labels(cls) -> List["DownField"]:
-        """Returns a list of DownField members in a specific order for UI iteration."""
-        # Define the explicit order
-        return [cls.GENERATION_DATA, cls.RAW_DATA, cls.EXIF, cls.JSON_DATA, cls.TOML_DATA]  # Add others if used
-        # Or if definition order is fine:
-        # return list(cls)
+    def get_ordered_labels(cls) -> list["DownField"]:
+        """Return a list of DownField members for UI iteration."""
+        return [
+            cls.GENERATION_DATA,
+            cls.RAW_DATA,
+            cls.EXIF,
+            cls.JSON_DATA,
+            cls.TOML_DATA,
+        ]
 
 
 class ExtensionType:
-    """Container for valid file extensions, categorized for processing."""
+    """Contain valid file extensions, categorized for processing."""
 
     # Individual file types
-    PNG_: Set[str] = {".png"}
-    JPEG: Set[str] = {".jpg", ".jpeg"}
-    WEBP: Set[str] = {".webp"}
-    JSON: Set[str] = {".json"}
-    TOML: Set[str] = {".toml"}
-    TEXT: Set[str] = {".txt", ".text"}
-    HTML: Set[str] = {".html", ".htm"}
-    XML_: Set[str] = {".xml"}
-    GGUF: Set[str] = {".gguf"}
-    SAFE: Set[str] = {".safetensors", ".sft"}
-    PICK: Set[str] = {".pt", ".pth", ".ckpt", ".pickletensor"}
+    PNG_: ClassVar[set[str]] = {".png"}
+    JPEG: ClassVar[set[str]] = {".jpg", ".jpeg"}
+    WEBP: ClassVar[set[str]] = {".webp"}
+    JSON: ClassVar[set[str]] = {".json"}
+    TOML: ClassVar[set[str]] = {".toml"}
+    TEXT: ClassVar[set[str]] = {".txt", ".text"}
+    HTML: ClassVar[set[str]] = {".html", ".htm"}
+    XML_: ClassVar[set[str]] = {".xml"}
+    GGUF: ClassVar[set[str]] = {".gguf"}
+    SAFE: ClassVar[set[str]] = {".safetensors", ".sft"}
+    PICK: ClassVar[set[str]] = {".pt", ".pth", ".ckpt", ".pickletensor"}
 
-    # Grouped categories - these are the attributes widgets.py will use
-    IMAGE: List[Set[str]] = [PNG_, JPEG, WEBP]
-    EXIF_CAPABLE: List[Set[str]] = [JPEG, WEBP]  # Files typically supporting rich EXIF
-    SCHEMA_FILES: List[Set[str]] = [JSON, TOML]  # Corrected attribute name for widgets.py
-    PLAIN_TEXT_LIKE: List[Set[str]] = [TEXT, XML_, HTML]  # Corrected attribute name
-    MODEL_FILES: List[Set[str]] = [SAFE, GGUF, PICK]  # Corrected attribute name
+    # Grouped categories
+    IMAGE: ClassVar[list[set[str]]] = [PNG_, JPEG, WEBP]
+    EXIF_CAPABLE: ClassVar[list[set[str]]] = [JPEG, WEBP]
+    SCHEMA_FILES: ClassVar[list[set[str]]] = [JSON, TOML]
+    PLAIN_TEXT_LIKE: ClassVar[list[set[str]]] = [TEXT, XML_, HTML]
+    MODEL_FILES: ClassVar[list[set[str]]] = [SAFE, GGUF, PICK]
 
-    # Filenames/patterns to ignore during directory scanning
-    IGNORE: List[str] = [
+    IGNORE: ClassVar[list[str]] = [
         "Thumbs.db",
         "desktop.ini",
         ".DS_Store",
         ".fseventsd",
         "._*",
-        "~$*",  # Common system/temp files
+        "~$*",
         "~$*.tmp",
-        "*.tmp",  # More temp files
+        "*.tmp",
     ]
 
 
 class NodeNames:
-    """Constants related to ComfyUI node names and data parsing."""
+    """Hold constants related to ComfyUI node names and data parsing."""
 
-    ENCODERS = {
+    ENCODERS: ClassVar[set[str]] = {
         "CLIPTextEncodeFlux",
         "CLIPTextEncodeSD3",
         "CLIPTextEncodeSDXL",
@@ -140,7 +152,7 @@ class NodeNames:
         "smZ CLIPTextEncode",
         "CLIPTextEncode",
     }
-    STRING_INPUT = {
+    STRING_INPUT: ClassVar[set[str]] = {
         "RecourseStrings",
         "StringSelector",
         "ImpactWildcardProcessor",
@@ -154,8 +166,12 @@ class NodeNames:
         "WidgetToString",
         "Show Text 🐍",
     }
-    PROMPT_LABELS = ["Positive prompt", "Negative prompt", "Prompt"]
-    IGNORE_KEYS = [
+    PROMPT_LABELS: ClassVar[list[str]] = [
+        "Positive prompt",
+        "Negative prompt",
+        "Prompt",
+    ]
+    IGNORE_KEYS: ClassVar[list[str]] = [
         "type",
         "link",
         "shape",
@@ -165,8 +181,11 @@ class NodeNames:
         "node_id",
         "empty_padding",
     ]
-    DATA_KEYS = {"class_type": "inputs", "nodes": "widget_values"}
-    PROMPT_NODE_FIELDS = {
+    DATA_KEYS: ClassVar[dict[str, str]] = {
+        "class_type": "inputs",
+        "nodes": "widget_values",
+    }
+    PROMPT_NODE_FIELDS: ClassVar[set[str]] = {
         "text",
         "t5xxl",
         "clip-l",
@@ -186,65 +205,66 @@ class NodeNames:
     }
 
 
-# Determine if extended exception info should be logged based on LOG_LEVEL from package __init__
 EXC_INFO: bool = LOG_LEVEL.strip().upper() in ["DEBUG", "TRACE", "NOTSET", "ALL"]
 
 
-def bracket_check(maybe_brackets: str | dict) -> str | dict:
-    """Ensures a string is bracket-enclosed if it's not a dict, for later parsing."""
+def bracket_check(maybe_brackets: str | dict[str, Any]) -> str | dict[str, Any]:
+    """Ensure a string is bracket-enclosed if not a dict, for later parsing."""
     if isinstance(maybe_brackets, dict):
         return maybe_brackets
-    elif isinstance(maybe_brackets, str):
+    if isinstance(maybe_brackets, str):
         corrected_str = maybe_brackets.strip()
         if not corrected_str.startswith("{"):
             corrected_str = "{" + corrected_str
         if not corrected_str.endswith("}"):
             corrected_str = corrected_str + "}"
         return corrected_str
-    else:
-        raise TypeError("Input for bracket_check must be a string or a dictionary.")
+    # Pylint no-else-return: No else needed here as prior conditions return
+    raise TypeError("Input for bracket_check must be a string or a dictionary.")
 
 
-# TypedDicts for ComfyUI workflow structures
 class NodeDataMap(TypedDict):
     class_type: str
-    inputs: Union[dict, float, str, list, None]  # Inputs can be varied
+    inputs: dict[str, Any] | float | str | list[Any] | None
 
 
 class NodeWorkflow(TypedDict):
     last_node_id: int
-    last_link_id: Union[int, dict, None]
-    nodes: List[NodeDataMap]  # Assuming nodes are lists of NodeDataMap-like structures
-    links: list
-    groups: list
-    config: dict
-    extra: dict
+    last_link_id: int | dict[str, Any] | None
+    nodes: list[NodeDataMap]
+    links: list[Any]
+    groups: list[Any]
+    config: dict[str, Any]
+    extra: dict[str, Any]
     version: float
 
 
-# Pydantic Models
-class BracketedDict(BaseModel):  # Currently unused, but kept for potential future use
+class BracketedDict(BaseModel):  # pylint: disable=unnecessary-pass
     """Placeholder for a Pydantic model that might use bracket_check."""
 
-    pass
+    pass  # Or use ... if it's truly empty and a placeholder
 
 
-class IsThisNode:  # Container for TypeAdapters
-    """TypeAdapters for validating parts of ComfyUI JSON data."""
+class IsThisNode:
+    """Hold TypeAdapters for validating parts of ComfyUI JSON data."""
 
-    data = TypeAdapter(NodeDataMap)
-    workflow = TypeAdapter(NodeWorkflow)
+    data: TypeAdapter[NodeDataMap] = TypeAdapter(NodeDataMap)
+    workflow: TypeAdapter[NodeWorkflow] = TypeAdapter(NodeWorkflow)
 
 
-class ListOfDelineatedStr(BaseModel):  # Specific Pydantic model
-    convert: list
+class ListOfDelineatedStr(BaseModel):
+    convert: list[Any]
 
     @field_validator("convert")
     @classmethod
-    def drop_tuple(cls, v: list) -> list:  # Changed 'regex_match' to 'v' for clarity
-        if v and isinstance(v, list) and v[0] and isinstance(v[0], tuple):
-            # This logic seems to want to take the first element of the first tuple in the list
-            # and make that the new list. This is very specific.
+    def drop_tuple(cls, v: list[Any]) -> list[Any]:
+        if v and isinstance(
+            v[0], tuple
+        ):  # Simplified from original, assuming v is non-empty list if v[0] is accessed
             first_tuple_first_element = next(iter(v[0]), None)
-            return [first_tuple_first_element] if first_tuple_first_element is not None else []
+            return (
+                [first_tuple_first_element]
+                if first_tuple_first_element is not None
+                else []
+            )
         return v
