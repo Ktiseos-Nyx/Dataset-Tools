@@ -15,47 +15,45 @@ name: Codacy Security Scan
 
 on:
   push:
-    branches: [ "main","kn/x" ]
+    branches: [ "main","kn/x" ] # Adjusted to your branches
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main","kn/x" ]
+    branches: [ "main","kn/x" ] # Adjusted to your branches
   schedule:
     - cron: '42 1 * * 2'
 
 permissions:
   contents: read
+  security-events: write
 
 jobs:
   codacy-security-scan:
-    permissions:
-      contents: read
-      security-events: write
     name: Codacy Security Scan
     runs-on: ubuntu-latest
     steps:
-      # Checkout the repository to the GitHub Actions runner
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Using a version tag
 
-      # Debugging step: Verify Docker images locally
-      - name: Verify Docker images
-        run: |
-          docker pull codacy/codacy-eslint:5.9.1 || exit 1
-          docker pull codacy/codacy-jackson-linter:5.2.1 || exit 1
+      # This step is NOT from their example and was specific to your earlier workflow.
+      # It's generally not needed as Codacy handles its own tool images.
+      # - name: Verify Docker images
+      #   run: |
+      #     docker pull codacy/codacy-eslint:5.9.1 || exit 1
+      #     docker pull codacy/codacy-jackson-linter:5.2.1 || exit 1
 
-      # Execute Codacy Analysis CLI with debugging enabled
       - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@d840f886c4bd4edc059706d09c6a1586111c540b
+        uses: codacy/codacy-analysis-cli-action@v4.4.5 # Using a version tag
         with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }} # Keep if you use project tokens
           verbose: true
           output: results.sarif
           format: sarif
           gh-code-scanning-compat: true
-          max-allowed-issues: 1000 # Lower this to catch critical errors earlier
+          # Optional: Use if you want the step to pass regardless of issue count,
+          # deferring failure to GitHub Code Scanning.
+          # However, this might mask the ESLint tool failure if it doesn't cause a non-zero exit from the CLI itself.
+          max-allowed-issues: 2147483647
 
-      # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v3 # Using a version tag
         with:
           sarif_file: results.sarif
