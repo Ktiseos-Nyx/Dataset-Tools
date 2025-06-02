@@ -267,7 +267,7 @@ class ImageDataReader:
             self._parse_novelai_lsb(image_obj)
 
     def _parse_drawthings_xmp(self, xmp_chunk: str):
-        """Helper to parse DrawThings XMP data."""
+        """Parse DrawThings XMP data."""
         if self._parser:
             return
         try:
