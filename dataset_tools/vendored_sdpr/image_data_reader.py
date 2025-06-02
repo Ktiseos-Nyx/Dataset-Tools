@@ -329,7 +329,7 @@ class ImageDataReader:
             self._logger.warn(f"NovelAI LSB check error: {lsb_err}", exc_info=True)
 
     def _process_jpeg_webp_exif(self, image_obj: Image.Image):
-        """Processes EXIF data for JPEG/WEBP formats."""
+        """Process EXIF data for JPEG/WEBP formats."""
         if self._parser:
             return  # Already parsed
 
