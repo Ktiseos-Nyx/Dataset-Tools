@@ -549,7 +549,7 @@ class ImageDataReader:
             )
 
     @staticmethod
-    def remove_data(image_file_path: str | Path) -> Image.Image | None:
+    def remove_data(image_file_path: Union[str, Path]) -> Optional[Image.Image]:
         try:
             with Image.open(image_file_path) as img_file:
                 image_data = list(img_file.getdata())
