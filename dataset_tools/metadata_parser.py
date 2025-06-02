@@ -2,37 +2,35 @@
 # Refactored to primarily use a vendored version of SDPR's ImageDataReader for AI parsing
 # and configures its logging to use Dataset-Tools' Rich console.
 
-# import json # F401: Removed as json is not directly used at this module's top level.
-# make_paired_str_dict uses re, _populate_ui... doesn't use json directly.
-# process_pyexiv2_data doesn't use json.
 from pathlib import Path
 import traceback
-import re  # For make_paired_str_dict
-import logging as pylog  # For getting logger instances by name
+import re
+import logging as pylog
 
+# First-party (absolute imports from your project)
+from dataset_tools import LOG_LEVEL as CURRENT_APP_LOG_LEVEL
+
+# First-party (relative imports for the current subpackage)
 from .correct_types import UpField, DownField, EmptyField
 from .logger import info_monitor as nfo
 from .logger import setup_rich_handler_for_external_logger
 from .logger import _dataset_tools_main_rich_console
-from dataset_tools import LOG_LEVEL as CURRENT_APP_LOG_LEVEL
 from .access_disk import MetadataFileReader
+
 
 # --- Import VENDORED sd-prompt-reader components ---
 VENDORED_SDPR_OK = False
-ImageDataReader = None
-BaseFormat = None
+ImageDataReader = None  # pylint: disable=invalid-name # Placeholder for class
+BaseFormat = None       # pylint: disable=invalid-name # Placeholder for class
 PARAMETER_PLACEHOLDER = "                    "  # Default from original constants
 
 try:
-    from .vendored_sdpr.image_data_reader import ImageDataReader
-    from .vendored_sdpr.format import BaseFormat
+    from .vendored_sdpr.image_data_reader import ImageDataReader # Actual class import
+    from .vendored_sdpr.format import BaseFormat # Actual class import
     from .vendored_sdpr.constants import PARAMETER_PLACEHOLDER as VENDORED_PARAMETER_PLACEHOLDER
 
-    # Use the vendored placeholder if available, otherwise keep the default
     PARAMETER_PLACEHOLDER = VENDORED_PARAMETER_PLACEHOLDER
-
     VENDORED_SDPR_OK = True
-    # F541 fix: Removed f-string prefix as there are no placeholders
     nfo("[DT.metadata_parser]: Successfully imported VENDORED SDPR components.")
 
     vendored_parent_logger_instance = pylog.getLogger("DSVendored_SDPR")
@@ -45,15 +43,16 @@ try:
         f"[DT.metadata_parser]: Configured Rich logging for 'DSVendored_SDPR' logger tree at level {CURRENT_APP_LOG_LEVEL}."
     )
 
-except ImportError as e_vendor:
+except ImportError as import_err_vendor: # Renamed e_vendor
     nfo(
-        f"CRITICAL WARNING [DT.metadata_parser]: Failed to import VENDORED SDPR components: {e_vendor}. AI Parsing will be severely limited."
+        f"CRITICAL WARNING [DT.metadata_parser]: Failed to import VENDORED SDPR components: {import_err_vendor}. AI Parsing will be severely limited."
     )
     traceback.print_exc()
     VENDORED_SDPR_OK = False
 
+    # pylint: disable=too-many-instance-attributes,unused-argument # For Dummy classes
     class DummyImageDataReader:
-        def __init__(self, f, is_txt=False):
+        def __init__(self, _file_obj, _is_txt=False): # Mark unused args
             self.status = None
             self.tool = None
             self.positive = ""
@@ -66,7 +65,7 @@ except ImportError as e_vendor:
             self.is_sdxl = False
             self.positive_sdxl = {}
             self.negative_sdxl = {}
-            self.format = ""  # Matches attribute in real ImageDataReader
+            self.format = ""
 
     class DummyBaseFormat:
         class Status:
@@ -75,11 +74,11 @@ except ImportError as e_vendor:
             FORMAT_ERROR = object()
             COMFYUI_ERROR = object()
 
-        PARAMETER_PLACEHOLDER = "                    "  # Ensure dummy has this
+        PARAMETER_PLACEHOLDER = "                    "
 
-    ImageDataReader = DummyImageDataReader
-    BaseFormat = DummyBaseFormat
-    PARAMETER_PLACEHOLDER = BaseFormat.PARAMETER_PLACEHOLDER
+    ImageDataReader = DummyImageDataReader # Assign dummy class
+    BaseFormat = DummyBaseFormat           # Assign dummy class
+    PARAMETER_PLACEHOLDER = DummyBaseFormat.PARAMETER_PLACEHOLDER
 
 
 print(
@@ -111,9 +110,9 @@ def make_paired_str_dict(text_to_convert: str) -> dict:
                 nfo(f"[DT.make_paired_str_dict] Unparsed gap: '{unparsed_gap[:50]}...'")
         key = match.group(1).strip()
         value_str = match.group(2).strip()
-        if (value_str.startswith('"') and value_str.endswith('"')) or (
-            value_str.startswith("'") and value_str.endswith("'")
-        ):
+        # Corrected hanging indent for the OR condition:
+        if ((value_str.startswith('"') and value_str.endswith('"')) or
+                (value_str.startswith("'") and value_str.endswith("'"))):
             value_str = value_str[1:-1]
         converted_text[key] = value_str
         last_end = match.end()
@@ -138,13 +137,14 @@ def _populate_ui_from_vendored_reader(reader_instance, ui_dict_to_update: dict):
         return
     expected_read_success_status = getattr(current_base_format_status_class, "READ_SUCCESS", object())
 
+    # Corrected hanging indent for the IF NOT condition:
     if not (
-        reader_instance
-        and hasattr(reader_instance, "status")
-        and reader_instance.status == expected_read_success_status
-        and hasattr(reader_instance, "tool")
-        and reader_instance.tool
-        and reader_instance.tool != "Unknown"  # Ensure tool is known
+        reader_instance and
+        hasattr(reader_instance, "status") and
+        reader_instance.status == expected_read_success_status and
+        hasattr(reader_instance, "tool") and
+        reader_instance.tool and
+        reader_instance.tool != "Unknown"
     ):
         status_val = getattr(reader_instance, "status", "N/A")
         tool_val = getattr(reader_instance, "tool", "N/A")
@@ -169,13 +169,12 @@ def _populate_ui_from_vendored_reader(reader_instance, ui_dict_to_update: dict):
         ui_dict_to_update[UpField.PROMPT.value] = temp_prompt_data
 
     temp_gen_data = ui_dict_to_update.get(DownField.GENERATION_DATA.value, {})
-    if hasattr(reader_instance, "parameter") and reader_instance.parameter:  # Check if parameter attribute exists
+    if hasattr(reader_instance, "parameter") and reader_instance.parameter:
         for key, value in reader_instance.parameter.items():
             if value and value != PARAMETER_PLACEHOLDER:
                 display_key = key.replace("_", " ").capitalize()
                 temp_gen_data[display_key] = str(value)
 
-    # Width and Height should come from reader instance properties, which might get them from parser or PIL
     if reader_instance.width and str(reader_instance.width) != "0":
         temp_gen_data["Width"] = str(reader_instance.width)
     if reader_instance.height and str(reader_instance.height) != "0":
@@ -184,19 +183,19 @@ def _populate_ui_from_vendored_reader(reader_instance, ui_dict_to_update: dict):
     setting_display_val = reader_instance.setting
     if setting_display_val:
         current_tool = reader_instance.tool
-        # Check for A1111-like tools that might have a settings string needing make_paired_str_dict
         if isinstance(current_tool, str) and any(t in current_tool for t in ["A1111", "Forge", "SD.Next"]):
             additional_settings = make_paired_str_dict(str(setting_display_val))
             for key_add, value_add in additional_settings.items():
                 display_key_add = key_add.replace("_", " ").capitalize()
+                # Corrected hanging indent for the list in the IN operator:
                 if display_key_add not in temp_gen_data or temp_gen_data.get(display_key_add) in [
                     None,
-                    "None",
+                    "None", # string "None"
                     PARAMETER_PLACEHOLDER,
                     "",
                 ]:
                     temp_gen_data[display_key_add] = str(value_add)
-        elif isinstance(current_tool, str) and current_tool != "Unknown":  # Don't add for Unknown tool
+        elif isinstance(current_tool, str) and current_tool != "Unknown":
             temp_gen_data["Tool Specific Data Block"] = str(setting_display_val)
 
     if temp_gen_data:
@@ -230,16 +229,20 @@ def process_pyexiv2_data(pyexiv2_header_data: dict, ai_tool_parsed: bool = False
             if isinstance(uc_val, bytes):
                 if uc_val.startswith(b"ASCII\x00\x00\x00"):
                     uc_text_for_display = uc_val[8:].decode("ascii", "replace")
-                elif uc_val.startswith(b"UNICODE\x00"):  # Also check for UTF-16 common prefix
+                elif uc_val.startswith(b"UNICODE\x00"):
                     uc_text_for_display = uc_val[8:].decode("utf-16", "replace")
                 else:
                     try:
                         uc_text_for_display = uc_val.decode("utf-8", "replace")
-                    except Exception:  # E722: Changed bare except to except Exception
-                        uc_text_for_display = f"<bytes len {len(uc_val)}>"
+                    except UnicodeDecodeError as unicode_err:
+                        nfo(f"Unicode decode error for UserComment: {unicode_err}")
+                        uc_text_for_display = f"<bytes len {len(uc_val)} unable to decode>"
+                    except Exception as general_decode_err: # pylint: disable=broad-except
+                        nfo(f"General error decoding UserComment: {general_decode_err}")
+                        uc_text_for_display = f"<bytes len {len(uc_val)} decode error>"
             elif isinstance(uc_val, str):
                 uc_text_for_display = uc_val
-            cleaned_uc_display = uc_text_for_display.strip("\x00 ").strip()  # Strip nulls and spaces
+            cleaned_uc_display = uc_text_for_display.strip("\x00 ").strip()
             if cleaned_uc_display:
                 displayable_exif["UserComment (Std.)"] = cleaned_uc_display
         if displayable_exif:
@@ -254,9 +257,9 @@ def process_pyexiv2_data(pyexiv2_header_data: dict, ai_tool_parsed: bool = False
         if xmp_data.get("Xmp.dc.description"):
             desc_val = xmp_data["Xmp.dc.description"]
             desc_text = desc_val.get("x-default", str(desc_val)) if isinstance(desc_val, dict) else str(desc_val)
-            if not ai_tool_parsed or len(desc_text) < 300:  # Show if not AI or short
+            if not ai_tool_parsed or len(desc_text) < 300:
                 displayable_xmp["Description"] = desc_text
-            elif ai_tool_parsed:  # If AI parsed and XMP desc is long, just note its existence
+            elif ai_tool_parsed:
                 displayable_xmp["Description (XMP)"] = f"Exists (length {len(desc_text)})"
         if xmp_data.get("Xmp.photoshop.DateCreated"):
             displayable_xmp["Date Created (XMP)"] = str(xmp_data["Xmp.photoshop.DateCreated"])
@@ -292,11 +295,11 @@ def parse_metadata(file_path_named: str) -> dict:
         placeholder_key_str = EmptyField.PLACEHOLDER.value
     except AttributeError:  # pragma: no cover
         nfo("CRITICAL [DT.metadata_parser]: EmptyField.PLACEHOLDER.value not accessible. Using fallback key.")
-        placeholder_key_str = "_dt_internal_placeholder_"  # Ensure this matches Enum value if it was intended
+        placeholder_key_str = "_dt_internal_placeholder_"
 
     nfo(f"[DT.metadata_parser]: >>> ENTERING parse_metadata for: {file_path_named}")
 
-    if VENDORED_SDPR_OK and ImageDataReader is not None and BaseFormat is not None:  # Ensure dummies are not None type
+    if VENDORED_SDPR_OK and ImageDataReader is not None and BaseFormat is not None:
         vendored_reader_instance = None
         try:
             nfo(f"[DT.metadata_parser]: Attempting to init VENDORED ImageDataReader (is_txt: {is_txt_file})")
@@ -304,23 +307,18 @@ def parse_metadata(file_path_named: str) -> dict:
                 with open(file_path_named, "r", encoding="utf-8", errors="replace") as f_obj:
                     vendored_reader_instance = ImageDataReader(f_obj, is_txt=True)
             else:
-                vendored_reader_instance = ImageDataReader(
-                    file_path_named
-                )  # This might raise PIL.UnidentifiedImageError
+                vendored_reader_instance = ImageDataReader(file_path_named)
 
             if vendored_reader_instance and hasattr(vendored_reader_instance, "status"):
-                status_obj = vendored_reader_instance.status  # Get status from reader
-
-                status_class_from_base = getattr(
-                    BaseFormat, "Status", None
-                )  # Get Status enum from BaseFormat (real or dummy)
-                vendored_success_status = object()  # Default non-matching object
+                status_obj = vendored_reader_instance.status
+                status_class_from_base = getattr(BaseFormat, "Status", None)
+                vendored_success_status = object()
 
                 if status_class_from_base:
                     vendored_success_status = getattr(status_class_from_base, "READ_SUCCESS", object())
-                    if vendored_success_status is object():  # F541 fix
+                    if vendored_success_status is object():
                         nfo("WARNING [DT.metadata_parser]: Real BaseFormat.Status does not have 'READ_SUCCESS'.")
-                else:  # F541 fix
+                else:
                     nfo(
                         "WARNING [DT.metadata_parser]: BaseFormat (real or dummy) from vendored_sdpr does not have a 'Status' attribute."
                     )
@@ -340,13 +338,13 @@ def parse_metadata(file_path_named: str) -> dict:
                     nfo(
                         f"Vendored SDPR ImageDataReader did not fully parse or identify AI tool. Final Status: {status_name}, Tool: {tool_name}. Error: {getattr(vendored_reader_instance, 'error', 'N/A')}"
                     )
-            else:  # pragma: no cover (should be caught by ImageDataReader init if PIL fails)
+            else:  # pragma: no cover
                 nfo("Vendored ImageDataReader instantiation failed or status attribute missing.")
-                # This implies ImageDataReader __init__ failed, e.g. Image.open error
+                # Corrected hanging indent for the IF condition:
                 if (
-                    vendored_reader_instance
-                    and hasattr(vendored_reader_instance, "error")
-                    and vendored_reader_instance.error
+                    vendored_reader_instance and
+                    hasattr(vendored_reader_instance, "error") and
+                    vendored_reader_instance.error
                 ):
                     final_ui_dict[placeholder_key_str] = {"Error": vendored_reader_instance.error}
 
@@ -354,10 +352,9 @@ def parse_metadata(file_path_named: str) -> dict:
             nfo(f"File not found by VENDORED ImageDataReader: {file_path_named}")
             if is_txt_file:
                 final_ui_dict[placeholder_key_str] = {"Error": "Text file not found."}
-            # For images, Image.open in ImageDataReader would raise this.
-        except Exception as e_vsdpr:  # Catch other errors from ImageDataReader
+        except Exception as e_vsdpr:  # pylint: disable=broad-except
             nfo(f"Error with VENDORED ImageDataReader or its parsers: {e_vsdpr}")
-            if not final_ui_dict.get(placeholder_key_str):  # Don't overwrite more specific error
+            if not final_ui_dict.get(placeholder_key_str):
                 final_ui_dict[placeholder_key_str] = {"Error": f"AI Parser Error: {e_vsdpr}"}
             traceback.print_exc()
     else:
@@ -381,7 +378,7 @@ def parse_metadata(file_path_named: str) -> dict:
                     if key_str not in final_ui_dict:
                         final_ui_dict[key_str] = value
                     elif isinstance(final_ui_dict.get(key_str), dict) and isinstance(value, dict):
-                        for sub_key, sub_value in value.items():  # pragma: no cover (deep merge, less common)
+                        for sub_key, sub_value in value.items():  # pragma: no cover
                             if sub_key not in final_ui_dict[key_str]:
                                 final_ui_dict[key_str][sub_key] = sub_value
                 if not potential_ai_parsed and DownField.EXIF.value in final_ui_dict:
