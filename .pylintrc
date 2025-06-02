@@ -4,3 +4,6 @@ disable=C0301,C0114,C0115,C0116,R0903,W0511
 # W0511: fixme
 [DESIGN]
 max-complexity=18 # Or whatever threshold you want
+
+indent-string='\t'
+indent-after-paren=1
