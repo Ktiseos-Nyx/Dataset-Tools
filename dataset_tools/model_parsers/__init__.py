@@ -64,9 +64,8 @@ if BaseModelParser and ModelParserStatus:  # Check if base classes are available
         traceback.print_exc()
         # SafetensorsParser remains None
 else:
-    print(
-        "DEBUG: model_parsers/__init__.py: Skipping SafetensorsParser import due to base class import failure or them being None.",
-    )
+        print("DEBUG: model_parsers/__init__.py: Skipping SafetensorsParser import due to base class import failure or "
+                  "them being None.")
     # SafetensorsParser remains None
 
 
