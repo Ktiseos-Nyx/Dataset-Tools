@@ -94,7 +94,6 @@ def main(cli_args_list=None):  # Added cli_args_list for testability
     # (like -style), but it's fine if your argparse has already consumed app-specific ones.
     qt_app_args = sys.argv  # Keep original sys.argv for Qt if needed
     app = QtWidgets.QApplication(qt_app_args)
-    # pylint: disable=c-extension-no-member (if Pylint complains about QApplication)
 
     window = MainWindow()  # Initialize our main window.
     # If MainWindow needs access to parsed args: window = MainWindow(args=args)
