@@ -36,7 +36,7 @@ except ImportError:
 
     nfo = nfo_fallback
 
-    def debug_monitor_fallback(func):
+    def debug_monitor_fallback(func: Callable) -> Callable:
         return func
 
     debug_monitor = debug_monitor_fallback
