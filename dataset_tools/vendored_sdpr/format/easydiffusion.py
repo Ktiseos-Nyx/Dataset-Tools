@@ -112,7 +112,7 @@ class EasyDiffusion(BaseFormat):
                 return PurePosixPath(value).name
         return str(value)
 
-    def _process(self) -> None:
+    self._parse_data(data_json)
         # self.status is managed by BaseFormat.parse()
         self._logger.debug("Attempting to parse using %s logic.", self.tool)
 
