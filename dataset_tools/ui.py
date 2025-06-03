@@ -900,7 +900,7 @@ class MainWindow(Qw.QMainWindow):
         try:
             return parse_metadata(full_file_path)
         except Exception as e_parse_meta:
-            nfo(
+            nfo("Error in parse_metadata for %s: %s", full_file_path, e_parse_meta)
                 "Error in parse_metadata for %s: %s",
                 full_file_path,
                 e_parse_meta,
