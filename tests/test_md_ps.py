@@ -138,9 +138,11 @@ class TestParseMetadataIntegration(unittest.TestCase):
             "size": "768x1024",  # From EmptyLatentImage
             "scheduler": "normal",
         }
-        mock_reader_instance.width = "768"  # From EmptyLatentImage via KSampler
-        mock_reader_instance.height = "1024"
-        mock_reader_instance.setting = "Steps: 25, Sampler: euler, CFG scale: 8.0, Seed: 987654321, Size: 768x1024, Model: comfy_sdxl_model.safetensors, Scheduler: normal, Denoise: 1.0"  # Example
+        mock_reader_instance.setting = (
+            "Steps: 25, Sampler: euler, CFG scale: 8.0, Seed: 987654321, "
+            "Size: 768x1024, Model: comfy_sdxl_model.safetensors, "
+            "Scheduler: normal, Denoise: 1.0"  # Example
+        )
         mock_reader_instance.raw = (
             self.comfy_example_prompt_str
         )  # ComfyUI parser stores prompt JSON as raw
