@@ -37,7 +37,7 @@ class DrawThings(BaseFormat):
     # The current BaseFormat logger name generation should be fine:
     # DSVendored_SDPR.format.drawthings.DrawThings
 
-    def _process(self) -> None:
+    def _process(self) -> None: self._validate_info()  # Extracted validation logic to a new method.
         # self.status is managed by BaseFormat.parse()
         self._logger.debug("Attempting to parse using %s logic.", self.tool)
 
