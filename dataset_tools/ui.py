@@ -13,8 +13,15 @@ from typing import Any
 
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
-from PyQt6.QtCore import QSettings
-from PyQt6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QLabel, QVBoxLayout
+from PyQt6.QtCore import QSettings  # QTimer, QDateTime, Qt also used from QtCore
+from PyQt6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QLabel,
+    QVBoxLayout,
+)
 
 # --- Logger Setup (Handles Fallback) ---
 try:
@@ -60,7 +67,85 @@ except ImportError:
 from .correct_types import DownField, EmptyField, UpField
 from .correct_types import ExtensionType as Ext
 from .metadata_parser import parse_metadata
-from .widgets import FileLoader, FileLoadResult  # Import FileLoadResult
+from .widgets import FileLoader, FileLoadResult
+
+
+# --- Custom Panel Widget for the Left Column ---
+class LeftPanelWidget(Qw.QWidget):
+    open_folder_requested = QtCore.pyqtSignal()
+    sort_files_requested = QtCore.pyqtSignal()
+    list_item_selected = QtCore.pyqtSignal(object, object)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._setup_panel_ui()
+
+    def _setup_panel_ui(self):
+        layout = Qw.QVBoxLayout(self)
+
+        self.current_folder_label = Qw.QLabel("Current Folder: None")
+        self.current_folder_label.setWordWrap(True)
+        layout.addWidget(self.current_folder_label)
+
+        button_layout_top = Qw.QHBoxLayout()
+        self.open_folder_button = Qw.QPushButton("Open Folder")
+        self.open_folder_button.clicked.connect(self.open_folder_requested.emit)
+        button_layout_top.addWidget(self.open_folder_button)
+
+        self.sort_button = Qw.QPushButton("Sort Files")
+        self.sort_button.clicked.connect(self.sort_files_requested.emit)
+        button_layout_top.addWidget(self.sort_button)
+        layout.addLayout(button_layout_top)
+
+        self.message_label = Qw.QLabel("Select a folder to view its contents.")
+        self.message_label.setWordWrap(True)
+        layout.addWidget(self.message_label)
+
+        self.files_list_widget = Qw.QListWidget()
+        self.files_list_widget.setSelectionMode(
+            Qw.QAbstractItemView.SelectionMode.SingleSelection
+        )
+        self.files_list_widget.currentItemChanged.connect(self.list_item_selected.emit)
+        self.files_list_widget.setSizePolicy(
+            Qw.QSizePolicy.Policy.Preferred, Qw.QSizePolicy.Policy.Expanding
+        )
+        layout.addWidget(self.files_list_widget, 1)
+
+    def set_current_folder_text(self, text: str):
+        self.current_folder_label.setText(text)
+
+    def set_message_text(self, text: str):
+        self.message_label.setText(text)
+
+    def clear_file_list_display(self):
+        self.files_list_widget.clear()
+
+    def add_items_to_file_list(self, items: list[str]):
+        self.files_list_widget.addItems(items)
+
+    def set_current_file_by_name(self, file_name: str) -> bool:
+        found_items = self.files_list_widget.findItems(
+            file_name, QtCore.Qt.MatchFlag.MatchExactly
+        )
+        if found_items:
+            self.files_list_widget.setCurrentItem(found_items[0])
+            return True
+        return False
+
+    def set_current_file_by_row(self, row: int):
+        if 0 <= row < self.files_list_widget.count():
+            self.files_list_widget.setCurrentRow(row)
+
+    def get_files_list_widget(self) -> Qw.QListWidget:
+        return self.files_list_widget
+
+    def set_buttons_enabled(self, enabled: bool):
+        self.open_folder_button.setEnabled(enabled)
+        self.sort_button.setEnabled(enabled)
+        self.files_list_widget.setEnabled(enabled)
+
+
+# --- End of LeftPanelWidget ---
 
 
 class ImageLabel(Qw.QLabel):
@@ -91,12 +176,10 @@ class ImageLabel(Qw.QLabel):
 
     def _update_scaled_pixmap(self):
         if self._pixmap.isNull() or self.width() <= 10 or self.height() <= 10:
-            if (
-                self._pixmap.isNull() and not self.text().strip()
-            ):  # Only set text if it's truly empty
+            if self._pixmap.isNull() and not self.text().strip():
                 super().setText("No preview available or image failed to load.")
             return
-        super().setText("")  # Clear text only if we are about to show a pixmap
+        super().setText("")
         scaled_pixmap = self._pixmap.scaled(
             self.size(),
             QtCore.Qt.AspectRatioMode.KeepAspectRatio,
@@ -243,10 +326,24 @@ class MainWindow(Qw.QMainWindow):
         self.settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
         self.setAcceptDrops(True)
         self.theme_actions: dict[str, QtGui.QAction] = {}
-
         self.file_loader: FileLoader | None = None
         self.current_files_in_list: list[str] = []
         self.current_folder: str = ""
+
+        # --- Status Bar Setup ---
+        self.main_status_bar = self.statusBar()  # Get/create the status bar
+        self.main_status_bar.showMessage("Ready", 3000)  # Initial message
+
+        self.datetime_label = Qw.QLabel()  # Create a label for date/time
+        self.main_status_bar.addPermanentWidget(
+            self.datetime_label
+        )  # Add to right side
+
+        self.status_timer = QtCore.QTimer(self)  # Timer to update date/time
+        self.status_timer.timeout.connect(self._update_datetime_status)
+        self.status_timer.start(1000)  # Update every second
+        self._update_datetime_status()  # Initial call to set date/time
+        # --- End Status Bar Setup ---
 
         saved_theme_name_xml = self.settings.value("theme", "dark_teal.xml")
         self._setup_menus()
@@ -266,7 +363,9 @@ class MainWindow(Qw.QMainWindow):
         if remember_geom and saved_geom:
             self.restoreGeometry(saved_geom)
         else:
-            default_size_presets = {"Default (1024x768)": (1024, 768)}
+            default_size_presets = {
+                "Default (1024x768)": (1024, 768)
+            }  # Simplified for direct use
             default_preset_name = self.settings.value(
                 "windowSizePreset", "Default (1024x768)"
             )
@@ -275,23 +374,31 @@ class MainWindow(Qw.QMainWindow):
             )
             self.resize_window(default_w, default_h)
 
-        self._setup_ui_layout()
+        self._setup_ui_layout()  # self.left_panel is created here
 
         initial_folder_path = self.settings.value("lastFolderPath", os.getcwd())
 
-        self.clear_file_list()
+        self.clear_file_list()  # This will interact with self.left_panel
         if initial_folder_path and Path(initial_folder_path).is_dir():
             self.load_files(initial_folder_path)
         else:
-            if hasattr(self, "current_folder_label"):
-                self.current_folder_label.setText(
+            if hasattr(self, "left_panel"):
+                self.left_panel.set_current_folder_text(
                     "Current Folder: None (Select a folder or drop files)"
                 )
-            if hasattr(self, "message_label"):
-                self.message_label.setText(
+                self.left_panel.set_message_text(
                     "Please select a folder to view its contents."
                 )
-            self.clear_selection()
+            self.clear_selection()  # Clears metadata and image preview
+
+    def _update_datetime_status(self):
+        """Updates the date and time in the status bar."""
+        current_dt = QtCore.QDateTime.currentDateTime()
+        # Example format: "Mon May 27 15:30:55 2024"
+        # Or use: current_dt.toString("yyyy-MM-dd hh:mm:ss")
+        self.datetime_label.setText(
+            current_dt.toString(QtCore.Qt.DateFormat.RFC2822Date)
+        )
 
     def resize_window(self, width: int, height: int):
         self.resize(width, height)
@@ -302,7 +409,9 @@ class MainWindow(Qw.QMainWindow):
         file_menu = menu_bar.addMenu("&File")
         change_folder_action = QtGui.QAction("Change &Folder...", self)
         change_folder_action.setShortcut(QtGui.QKeySequence.StandardKey.Open)
-        change_folder_action.triggered.connect(self.open_folder)
+        change_folder_action.triggered.connect(
+            self.open_folder
+        )  # MainWindow.open_folder handles dialog
         file_menu.addAction(change_folder_action)
         file_menu.addSeparator()
         close_action = QtGui.QAction("&Close Window", self)
@@ -329,10 +438,11 @@ class MainWindow(Qw.QMainWindow):
             no_themes.setEnabled(False)
             themes_menu.addAction(no_themes)
 
-        settings_action = QtGui.QAction("&Preferences...", self)
-        settings_action.setShortcut(QtGui.QKeySequence("Ctrl+,"))
-        settings_action.triggered.connect(self.open_settings_dialog)
-        view_menu.addAction(settings_action)
+        # Settings menu item can be removed if button on bottom bar is preferred
+        # settings_action = QtGui.QAction("&Preferences...", self)
+        # settings_action.setShortcut(QtGui.QKeySequence("Ctrl+,"))
+        # settings_action.triggered.connect(self.open_settings_dialog)
+        # view_menu.addAction(settings_action)
 
         help_menu = menu_bar.addMenu("&Help")
         about_action = QtGui.QAction("&About Dataset Viewer...", self)
@@ -361,35 +471,11 @@ class MainWindow(Qw.QMainWindow):
         self.main_splitter = Qw.QSplitter(QtCore.Qt.Orientation.Horizontal)
         overall_layout.addWidget(self.main_splitter, 1)
 
-        left_panel = Qw.QWidget()
-        left_layout = Qw.QVBoxLayout(left_panel)
-        self.current_folder_label = Qw.QLabel("Current Folder: None")
-        self.current_folder_label.setWordWrap(True)
-        left_layout.addWidget(self.current_folder_label)
-        button_layout_left = Qw.QHBoxLayout()
-        self.open_folder_button = Qw.QPushButton("Open Folder")
-        self.open_folder_button.clicked.connect(self.open_folder)
-        button_layout_left.addWidget(self.open_folder_button)
-        self.sort_button = Qw.QPushButton("Sort Files")
-        self.sort_button.clicked.connect(self.sort_files_list)
-        button_layout_left.addWidget(self.sort_button)
-        left_layout.addLayout(button_layout_left)
-        self.message_label = Qw.QLabel("Select a folder to view its contents.")
-        self.message_label.setWordWrap(True)
-        left_layout.addWidget(self.message_label)
-        self.files_list = Qw.QListWidget()
-        self.files_list.setSelectionMode(
-            Qw.QAbstractItemView.SelectionMode.SingleSelection
-        )
-        self.files_list.currentItemChanged.connect(self.on_file_selected)
-        self.files_list.setSizePolicy(
-            Qw.QSizePolicy.Policy.Preferred, Qw.QSizePolicy.Policy.Expanding
-        )
-        left_layout.addWidget(self.files_list, 1)
-        self.progress_bar = Qw.QProgressBar()
-        self.progress_bar.hide()
-        left_layout.addWidget(self.progress_bar)
-        self.main_splitter.addWidget(left_panel)
+        self.left_panel = LeftPanelWidget()  # Instantiate LeftPanelWidget
+        self.left_panel.open_folder_requested.connect(self.open_folder)
+        self.left_panel.sort_files_requested.connect(self.sort_files_list)
+        self.left_panel.list_item_selected.connect(self.on_file_selected)
+        self.main_splitter.addWidget(self.left_panel)
 
         middle_right_area_widget = Qw.QWidget()
         middle_right_layout = Qw.QHBoxLayout(middle_right_area_widget)
@@ -400,35 +486,38 @@ class MainWindow(Qw.QMainWindow):
 
         metadata_panel_widget = Qw.QWidget()
         metadata_layout = Qw.QVBoxLayout(metadata_panel_widget)
-        metadata_layout.setContentsMargins(0, 0, 0, 0)
-        metadata_layout.setSpacing(3)
+        metadata_layout.setContentsMargins(10, 20, 10, 20)
+        metadata_layout.setSpacing(15)
+        metadata_layout.addStretch(1)
+
         self.positive_prompt_label = Qw.QLabel("Positive Prompt")
-        self.positive_prompt_label.setWordWrap(True)
         metadata_layout.addWidget(self.positive_prompt_label)
         self.positive_prompt_box = Qw.QTextEdit()
         self.positive_prompt_box.setReadOnly(True)
         self.positive_prompt_box.setSizePolicy(
-            Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Expanding
+            Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred
         )
-        metadata_layout.addWidget(self.positive_prompt_box, 1)
+        metadata_layout.addWidget(self.positive_prompt_box)
+
         self.negative_prompt_label = Qw.QLabel("Negative Prompt")
-        self.negative_prompt_label.setWordWrap(True)
         metadata_layout.addWidget(self.negative_prompt_label)
         self.negative_prompt_box = Qw.QTextEdit()
         self.negative_prompt_box.setReadOnly(True)
         self.negative_prompt_box.setSizePolicy(
-            Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Expanding
+            Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred
         )
-        metadata_layout.addWidget(self.negative_prompt_box, 1)
+        metadata_layout.addWidget(self.negative_prompt_box)
+
         self.generation_data_label = Qw.QLabel("Generation Details & Metadata")
-        self.generation_data_label.setWordWrap(True)
         metadata_layout.addWidget(self.generation_data_label)
         self.generation_data_box = Qw.QTextEdit()
         self.generation_data_box.setReadOnly(True)
         self.generation_data_box.setSizePolicy(
-            Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Expanding
+            Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred
         )
-        metadata_layout.addWidget(self.generation_data_box, 2)
+        metadata_layout.addWidget(self.generation_data_box)
+
+        metadata_layout.addStretch(1)
         self.metadata_image_splitter.addWidget(metadata_panel_widget)
 
         self.image_preview = ImageLabel()
@@ -437,26 +526,34 @@ class MainWindow(Qw.QMainWindow):
 
         bottom_bar = Qw.QWidget()
         bottom_layout = Qw.QHBoxLayout(bottom_bar)
-        bottom_layout.setContentsMargins(0, 5, 0, 0)
+        bottom_layout.setContentsMargins(10, 5, 10, 5)
+        bottom_layout.addStretch(1)
+        action_buttons_layout = Qw.QHBoxLayout()
+        action_buttons_layout.setSpacing(10)
         self.copy_metadata_button = Qw.QPushButton("Copy All Metadata")
         self.copy_metadata_button.clicked.connect(self.copy_metadata_to_clipboard)
-        bottom_layout.addWidget(self.copy_metadata_button)
-        bottom_layout.addStretch(1)
+        action_buttons_layout.addWidget(self.copy_metadata_button)
+        self.settings_button = Qw.QPushButton("Settings")
+        self.settings_button.clicked.connect(self.open_settings_dialog)
+        action_buttons_layout.addWidget(self.settings_button)
         self.exit_button = Qw.QPushButton("Exit Application")
         self.exit_button.clicked.connect(self.close)
-        bottom_layout.addWidget(self.exit_button)
+        action_buttons_layout.addWidget(self.exit_button)
+        bottom_layout.addLayout(action_buttons_layout)
+        bottom_layout.addStretch(1)
         overall_layout.addWidget(bottom_bar, 0)
 
+        try:
+            win_width = self.width() if self.isVisible() else 1024
+        except RuntimeError:
+            win_width = 1024  # Fallback if called too early
         main_splitter_sizes = self.settings.value(
-            "mainSplitterSizes", [self.width() // 4, self.width() * 3 // 4], type=list
+            "mainSplitterSizes", [win_width // 4, win_width * 3 // 4], type=list
         )
         if hasattr(self, "main_splitter"):
             self.main_splitter.setSizes([int(s) for s in main_splitter_sizes])
-
         meta_img_splitter_sizes = self.settings.value(
-            "metaImageSplitterSizes",
-            [self.width() // 3, self.width() * 2 // 3],
-            type=list,
+            "metaImageSplitterSizes", [win_width // 3, win_width * 2 // 3], type=list
         )
         if hasattr(self, "metadata_image_splitter"):
             self.metadata_image_splitter.setSizes(
@@ -465,15 +562,13 @@ class MainWindow(Qw.QMainWindow):
 
     def clear_file_list(self):
         nfo("[UI] Clearing file list and selections.")
-        if hasattr(self, "files_list"):
-            self.files_list.clear()
+        if hasattr(self, "left_panel"):
+            self.left_panel.clear_file_list_display()
+            self.left_panel.set_message_text(
+                "Select a folder or drop files/folder here."
+            )
         self.current_files_in_list = []
         self.clear_selection()
-        if hasattr(self, "message_label"):
-            self.message_label.setText("Select a folder or drop files/folder here.")
-        if hasattr(self, "progress_bar"):
-            self.progress_bar.setValue(0)
-            self.progress_bar.hide()
 
     @debug_monitor
     def open_folder(self):
@@ -483,19 +578,19 @@ class MainWindow(Qw.QMainWindow):
             if self.current_folder and Path(self.current_folder).is_dir()
             else self.settings.value("lastFolderPath", os.path.expanduser("~"))
         )
-
         folder_path = Qw.QFileDialog.getExistingDirectory(
             self, "Select Folder to Load", start_dir
         )
-
         if folder_path:
             nfo("[UI] Folder selected via dialog: %s", folder_path)
             self.settings.setValue("lastFolderPath", folder_path)
             self.load_files(folder_path)
         else:
-            nfo("[UI] Folder selection cancelled.")
-            if hasattr(self, "message_label"):
-                self.message_label.setText("Folder selection cancelled.")
+            msg = "Folder selection cancelled."
+            nfo("[UI] %s", msg)
+            if hasattr(self, "left_panel"):
+                self.left_panel.set_message_text(msg)
+            self.main_status_bar.showMessage(msg, 3000)
 
     @debug_monitor
     def load_files(
@@ -503,35 +598,21 @@ class MainWindow(Qw.QMainWindow):
     ):
         nfo("[UI] Attempting to load files from: %s", folder_path)
         if self.file_loader and self.file_loader.isRunning():
-            nfo("[UI] File loading is already in progress. Please wait.")
-            if hasattr(self, "message_label"):
-                self.message_label.setText("Loading in progress... Please wait.")
+            nfo("[UI] File loading is already in progress.")
+            if hasattr(self, "left_panel"):
+                self.left_panel.set_message_text("Loading in progress... Please wait.")
             return
-
         self.current_folder = str(Path(folder_path).resolve())
-        if hasattr(self, "current_folder_label"):
-            self.current_folder_label.setText(f"Current Folder: {self.current_folder}")
-
-        self.clear_file_list()
-        if hasattr(self, "message_label"):
-            self.message_label.setText(
+        if hasattr(self, "left_panel"):
+            self.left_panel.set_current_folder_text(
+                f"Current Folder: {self.current_folder}"
+            )
+            self.left_panel.set_message_text(
                 f"Loading files from {Path(self.current_folder).name}..."
             )
-
-        if hasattr(self, "progress_bar"):
-            self.progress_bar.setValue(0)
-            self.progress_bar.show()
-
-        if hasattr(self, "open_folder_button"):
-            self.open_folder_button.setEnabled(False)
-        if hasattr(self, "files_list"):
-            self.files_list.setEnabled(False)
-        if hasattr(self, "sort_button"):
-            self.sort_button.setEnabled(False)
-
+            self.left_panel.set_buttons_enabled(False)
         self.file_loader = FileLoader(self.current_folder, file_to_select_after_load)
         self.file_loader.finished.connect(self.on_files_loaded)
-        self.file_loader.progress.connect(self.update_loading_progress)
         self.file_loader.start()
         nfo("[UI] FileLoader thread started for: %s", self.current_folder)
 
@@ -541,6 +622,9 @@ class MainWindow(Qw.QMainWindow):
             "[UI] FileLoader finished. Received result for folder: %s",
             result.folder_path,
         )
+        if not hasattr(self, "left_panel"):
+            nfo("[UI] Error: Left panel not available in on_files_loaded.")
+            return
 
         if result.folder_path != self.current_folder:
             nfo(
@@ -548,136 +632,92 @@ class MainWindow(Qw.QMainWindow):
                 result.folder_path,
                 self.current_folder,
             )
-            if hasattr(self, "open_folder_button"):
-                self.open_folder_button.setEnabled(True)
-            if hasattr(self, "files_list"):
-                self.files_list.setEnabled(True)
-            if hasattr(self, "sort_button"):
-                self.sort_button.setEnabled(True)
+            self.left_panel.set_buttons_enabled(
+                True
+            )  # Re-enable buttons on current panel
             return
-
-        if hasattr(self, "progress_bar"):
-            self.progress_bar.hide()
-            self.progress_bar.setValue(0)
-
-        if hasattr(self, "open_folder_button"):
-            self.open_folder_button.setEnabled(True)
-        if hasattr(self, "files_list"):
-            self.files_list.setEnabled(True)
-        if hasattr(self, "sort_button"):
-            self.sort_button.setEnabled(True)
+        self.left_panel.set_buttons_enabled(True)
 
         if not result or (not result.images and not result.texts and not result.models):
-            if hasattr(self, "message_label"):
-                self.message_label.setText(
-                    f"No compatible files found in {Path(result.folder_path).name}."
-                )
+            msg = f"No compatible files found in {Path(result.folder_path).name}."
+            self.left_panel.set_message_text(msg)
+            self.main_status_bar.showMessage(msg, 5000)
             nfo(
                 "[UI] No compatible files found or result was empty for %s.",
                 result.folder_path,
             )
             self.current_files_in_list = []
-            if hasattr(self, "files_list"):
-                self.files_list.clear()
+            self.left_panel.clear_file_list_display()
             return
-
         self.current_files_in_list = sorted(
             list(set(result.images + result.texts + result.models))
         )
-
-        if hasattr(self, "files_list"):
-            self.files_list.clear()
-            self.files_list.addItems(self.current_files_in_list)
-
-        count = len(self.current_files_in_list)
-        if hasattr(self, "message_label"):
-            self.message_label.setText(
-                f"Loaded {count} file(s) from {Path(result.folder_path).name}."
-            )
-        nfo(
-            "[UI] Populated file list with %d items from %s.", count, result.folder_path
+        self.left_panel.clear_file_list_display()
+        self.left_panel.add_items_to_file_list(self.current_files_in_list)
+        self.left_panel.set_message_text(
+            f"Loaded {len(self.current_files_in_list)} file(s) from {Path(result.folder_path).name}."
         )
 
-        selected_item = False
-        if result.file_to_select and hasattr(self, "files_list"):
-            items = self.files_list.findItems(
-                result.file_to_select, QtCore.Qt.MatchFlag.MatchExactly
-            )
-            if items:
-                self.files_list.setCurrentItem(items[0])
-                nfo("[UI] Auto-selected file: %s", result.file_to_select)
-                selected_item = True
+        selected_item_set = False
+        if result.file_to_select and self.left_panel.set_current_file_by_name(
+            result.file_to_select
+        ):
+            nfo("[UI] Auto-selected file: %s", result.file_to_select)
+            selected_item_set = True
 
         if (
-            not selected_item
-            and hasattr(self, "files_list")
-            and self.files_list.count() > 0
+            not selected_item_set
+            and self.left_panel.get_files_list_widget().count() > 0
         ):
-            self.files_list.setCurrentRow(0)
+            self.left_panel.set_current_file_by_row(0)
             nfo("[UI] Auto-selected first file in the list.")
-        elif (
-            not selected_item
-            and hasattr(self, "files_list")
-            and self.files_list.count() == 0
-        ):
-            self.clear_selection()
-
-    @debug_monitor
-    def update_loading_progress(self, value: int):
-        if hasattr(self, "progress_bar"):
-            self.progress_bar.setValue(value)
+        elif not selected_item_set:
+            self.clear_selection()  # Clear metadata/image if nothing could be auto-selected
 
     def sort_files_list(self):
-        nfo("[UI] 'Sort Files' button clicked.")
-        if hasattr(self, "files_list") and self.current_files_in_list:
-            current_selection_text = (
-                self.files_list.currentItem().text()
-                if self.files_list.currentItem()
-                else None
-            )
+        nfo("[UI] 'Sort Files' button clicked (from LeftPanelWidget).")
+        if not hasattr(self, "left_panel"):
+            return
+
+        if self.current_files_in_list:
+            list_widget = self.left_panel.get_files_list_widget()
+            current_qt_item = list_widget.currentItem()
+            current_selection_text = current_qt_item.text() if current_qt_item else None
 
             self.current_files_in_list.sort()
-            self.files_list.clear()
-            self.files_list.addItems(self.current_files_in_list)
+            self.left_panel.clear_file_list_display()
+            self.left_panel.add_items_to_file_list(self.current_files_in_list)
 
             if current_selection_text:
-                items = self.files_list.findItems(
-                    current_selection_text, QtCore.Qt.MatchFlag.MatchExactly
-                )
-                if items:
-                    self.files_list.setCurrentItem(items[0])
-            elif self.files_list.count() > 0:
-                self.files_list.setCurrentRow(0)
+                self.left_panel.set_current_file_by_name(current_selection_text)
+            elif list_widget.count() > 0:
+                self.left_panel.set_current_file_by_row(0)
 
-            if hasattr(self, "message_label"):
-                self.message_label.setText(
-                    f"Files sorted ({len(self.current_files_in_list)} items)."
-                )
+            msg = f"Files sorted ({len(self.current_files_in_list)} items)."
+            self.left_panel.set_message_text(msg)
+            self.main_status_bar.showMessage(msg, 3000)
             nfo("[UI] Files list re-sorted and repopulated.")
         else:
-            if hasattr(self, "message_label"):
-                self.message_label.setText("No files to sort.")
-            nfo("[UI] No files in list to sort.")
+            msg = "No files to sort."
+            self.left_panel.set_message_text(msg)
+            self.main_status_bar.showMessage(msg, 3000)
+            nfo("[UI] %s", msg)
 
     def clear_selection(self):
         self.image_preview.clear()
-
         ph_positive_txt = EmptyField.PLACEHOLDER_POSITIVE.value
         ph_negative_txt = EmptyField.PLACEHOLDER_NEGATIVE.value
         ph_details_txt = EmptyField.PLACEHOLDER_DETAILS.value
-
         if hasattr(self, "positive_prompt_label"):
             self.positive_prompt_label.setText("Positive Prompt")
         if hasattr(self, "positive_prompt_box"):
             self.positive_prompt_box.clear()
             self.positive_prompt_box.setPlaceholderText(ph_positive_txt)
-
         if hasattr(self, "negative_prompt_label"):
             self.negative_prompt_label.setText("Negative Prompt")
         if hasattr(self, "negative_prompt_box"):
             self.negative_prompt_box.clear()
             self.negative_prompt_box.setPlaceholderText(ph_negative_txt)
-
         if hasattr(self, "generation_data_label"):
             self.generation_data_label.setText("Generation Details & Metadata")
         if hasattr(self, "generation_data_box"):
@@ -688,7 +728,6 @@ class MainWindow(Qw.QMainWindow):
         ph_positive_txt = EmptyField.PLACEHOLDER_POSITIVE.value
         ph_negative_txt = EmptyField.PLACEHOLDER_NEGATIVE.value
         ph_details_txt = EmptyField.PLACEHOLDER_DETAILS.value
-
         if hasattr(self, "positive_prompt_box"):
             self.positive_prompt_box.clear()
             self.positive_prompt_box.setPlaceholderText(ph_positive_txt)
@@ -703,7 +742,6 @@ class MainWindow(Qw.QMainWindow):
         is_error_or_empty = metadata_dict is None or (
             len(metadata_dict) == 1 and placeholder_key in metadata_dict
         )
-
         if is_error_or_empty:
             error_msg = "N/A"
             if metadata_dict and placeholder_key in metadata_dict:
@@ -716,7 +754,6 @@ class MainWindow(Qw.QMainWindow):
             if hasattr(self, "generation_data_box"):
                 self.generation_data_box.setText(f"Info/Error:\n{error_msg}")
             return
-
         if metadata_dict is None:
             return
 
@@ -733,13 +770,13 @@ class MainWindow(Qw.QMainWindow):
         if hasattr(self, "negative_prompt_box"):
             self.negative_prompt_box.setText(negative_prompt_text)
 
-        details_parts: list[str] = []  # Ensure details_parts is typed
+        details_parts: list[str] = []
         separators = [": ", "\n", "\n\n---\n\n", "", " & "]
         section_separator = "\n\n" + "═" * 30 + "\n\n"
 
-        metadata_section = metadata_dict.get(UpField.METADATA.value)
-        if isinstance(metadata_section, dict) and "Detected Tool" in metadata_section:
-            details_parts.append(f"Detected Tool: {metadata_section['Detected Tool']}")
+        metadata_s = metadata_dict.get(UpField.METADATA.value)
+        if isinstance(metadata_s, dict) and "Detected Tool" in metadata_s:
+            details_parts.append(f"Detected Tool: {metadata_s['Detected Tool']}")
 
         gen_params_dict = metadata_dict.get(DownField.GENERATION_DATA.value, {})
         if isinstance(gen_params_dict, dict) and gen_params_dict:
@@ -766,7 +803,7 @@ class MainWindow(Qw.QMainWindow):
         append_unpacked_section("EXIF Details", DownField.EXIF)
         append_unpacked_section("Tags (XMP/IPTC)", UpField.TAGS)
 
-        model_header_content_parts: list[str] = []  # Ensure typed
+        model_header_content_parts: list[str] = []
         if (
             hasattr(DownField.JSON_DATA, "value")
             and DownField.JSON_DATA.value in metadata_dict
@@ -798,9 +835,8 @@ class MainWindow(Qw.QMainWindow):
         ):
             raw_content = str(metadata_dict[DownField.RAW_DATA.value])
             title = "Raw Data / Workflow"
-            if raw_content.strip().startswith("{") and raw_content.strip().endswith(
-                "}"
-            ):
+            raw_strip = raw_content.strip()
+            if raw_strip.startswith("{") and raw_strip.endswith("}"):
                 title += " (JSON)"
             details_parts.append(f"{title}:\n{raw_content}")
 
@@ -812,7 +848,6 @@ class MainWindow(Qw.QMainWindow):
     def copy_metadata_to_clipboard(self):
         nfo("Copy All Metadata button clicked.")
         text_parts = []
-
         if (
             hasattr(self, "positive_prompt_box")
             and self.positive_prompt_box.toPlainText().strip()
@@ -829,24 +864,26 @@ class MainWindow(Qw.QMainWindow):
             )
         if (
             hasattr(self, "generation_data_box")
-            and self.generation_data_box.toPlainText().strip()
+            and (gen_text := self.generation_data_box.toPlainText().strip())
+            and not gen_text.startswith("Info/Error:")
         ):
-            gen_text = self.generation_data_box.toPlainText().strip()
-            if not gen_text.startswith("Info/Error:"):
-                text_parts.append(f"{self.generation_data_label.text()}:\n{gen_text}")
+            text_parts.append(f"{self.generation_data_label.text()}:\n{gen_text}")
 
         final_text = ("\n\n" + "═" * 20 + "\n\n").join(filter(None, text_parts)).strip()
         if final_text:
             QtGui.QGuiApplication.clipboard().setText(final_text)
-            self.message_label.setText("Displayed metadata copied to clipboard!")
+            self.main_status_bar.showMessage(
+                "Displayed metadata copied to clipboard!", 3000
+            )
             nfo("Displayed metadata copied.")
         else:
-            self.message_label.setText("No actual metadata displayed to copy.")
+            self.main_status_bar.showMessage(
+                "No actual metadata displayed to copy.", 3000
+            )
             nfo("No metadata content in display boxes for copying.")
 
     @debug_monitor
     def load_metadata(self, file_name: str) -> dict[str, Any] | None:
-        # Ensure self.current_folder is not empty and file_name is not empty
         if not self.current_folder or not file_name:
             nfo(
                 "[UI] load_metadata: current_folder or file_name is empty. Current folder: '%s', File name: '%s'",
@@ -858,7 +895,6 @@ class MainWindow(Qw.QMainWindow):
                     "Error": "Cannot load metadata, folder or file name is missing."
                 }
             }
-
         full_file_path = os.path.join(self.current_folder, file_name)
         nfo("[UI] load_metadata: Attempting to parse metadata for: %s", full_file_path)
         try:
@@ -878,28 +914,36 @@ class MainWindow(Qw.QMainWindow):
         current_item: Qw.QListWidgetItem | None,
         _previous_item: Qw.QListWidgetItem | None = None,
     ):
-        if not current_item:
+        if not current_item:  # current_item can be None if selection cleared
             self.clear_selection()
-            if hasattr(self, "message_label"):
-                self.message_label.setText("No file selected.")
+            if hasattr(self, "left_panel"):
+                self.left_panel.set_message_text("No file selected.")
+            self.main_status_bar.showMessage("No file selected.", 3000)
             return
 
+        # If current_item is not None, it's a QListWidgetItem
         self.clear_selection()
-
         file_name = current_item.text()
-        if hasattr(self, "message_label"):
-            self.message_label.setText(f"Selected: {file_name}")
 
-        # --- DETAILED PATH LOGGING ---
+        if hasattr(self, "left_panel"):
+            # Update left panel message to show general folder status, not "Selected: ..."
+            count = len(self.current_files_in_list)
+            folder_name = (
+                Path(self.current_folder).name
+                if self.current_folder
+                else "Unknown Folder"
+            )
+            self.left_panel.set_message_text(f"{count} file(s) in {folder_name}")
+
+        self.main_status_bar.showMessage(
+            f"Selected: {file_name}", 4000
+        )  # Status bar for selection
+
         nfo("[UI] ON_FILE_SELECTED: current_item.text() (file_name) = '%s'", file_name)
         nfo("[UI] ON_FILE_SELECTED: self.current_folder = '%s'", self.current_folder)
 
-        if (
-            not self.current_folder or not file_name
-        ):  # Guard against empty path components
-            nfo(
-                "[UI] ON_FILE_SELECTED: current_folder or file_name is empty. Cannot construct path."
-            )
+        if not self.current_folder or not file_name:
+            nfo("[UI] ON_FILE_SELECTED: current_folder or file_name is empty.")
             self.display_text_of(
                 {
                     EmptyField.PLACEHOLDER.value: {
@@ -919,10 +963,8 @@ class MainWindow(Qw.QMainWindow):
             full_file_path,
             is_a_file,
         )
-        # --- END DETAILED PATH LOGGING ---
 
         file_suffix_lower = path_obj.suffix.lower()
-
         if not is_a_file:
             nfo(
                 "[UI] ON_FILE_SELECTED: Path check FAILED for '%s'. Not processing as image.",
@@ -949,7 +991,6 @@ class MainWindow(Qw.QMainWindow):
                         self.display_image_of(full_file_path)
                         is_image_displayed_this_time = True
                         break
-
             if not is_image_displayed_this_time:
                 nfo(
                     "[UI] ON_FILE_SELECTED: File '%s' (suffix '%s') did NOT match any image format set or Ext.IMAGE misconfigured.",
@@ -960,16 +1001,17 @@ class MainWindow(Qw.QMainWindow):
         metadata_dict = self.load_metadata(file_name)
         try:
             self.display_text_of(metadata_dict)
-            if metadata_dict:  # Check if metadata_dict is not None
-                placeholder_key_val = EmptyField.PLACEHOLDER.value
-                if len(metadata_dict) == 1 and placeholder_key_val in metadata_dict:
+            if metadata_dict:
+                if (
+                    len(metadata_dict) == 1
+                    and EmptyField.PLACEHOLDER.value in metadata_dict
+                ):
                     nfo("No meaningful metadata or error for %s", file_name)
-            else:  # metadata_dict is None
+            else:
                 nfo(
                     "No metadata returned for %s (load_metadata returned None)",
                     file_name,
                 )
-
         except Exception as e_display:
             nfo(
                 "Error displaying text metadata for %s: %s",
@@ -987,14 +1029,14 @@ class MainWindow(Qw.QMainWindow):
             for sub_key, sub_value in sorted(section_data_item.items()):
                 if sub_value is not None:
                     if isinstance(sub_value, dict):
-                        nested_str_parts = [
+                        nested_parts = [
                             f"  {nk}{key_value_sep}{nv}"
                             for nk, nv in sorted(sub_value.items())
                             if nv is not None
                         ]
-                        if nested_str_parts:
+                        if nested_parts:
                             parts.append(
-                                f"{sub_key}{key_value_sep.strip()}:\n{item_sep.join(nested_str_parts)}"
+                                f"{sub_key}{key_value_sep.strip()}:\n{item_sep.join(nested_parts)}"
                             )
                     else:
                         parts.append(f"{sub_key}{key_value_sep}{sub_value!s}")
@@ -1015,7 +1057,6 @@ class MainWindow(Qw.QMainWindow):
         display_output = defaultdict(lambda: "")
         title_parts: list[str] = []
         all_formatted_section_texts: list[str] = []
-
         for section_key_enum_member in labels_to_extract:
             if not hasattr(section_key_enum_member, "value"):
                 nfo(
@@ -1023,15 +1064,12 @@ class MainWindow(Qw.QMainWindow):
                     section_key_enum_member,
                 )
                 continue
-
             section_key_label_str = section_key_enum_member.value
             section_data = metadata_dict.get(section_key_label_str)
             if section_data is None:
                 continue
-
             title_name = getattr(section_key_enum_member, "name", section_key_label_str)
             title_parts.append(title_name.replace("_", " ").title())
-
             current_section_text_parts = self._format_single_section_data(
                 section_data, key_value_sep, item_sep
             )
@@ -1039,7 +1077,6 @@ class MainWindow(Qw.QMainWindow):
                 all_formatted_section_texts.append(
                     item_sep.join(current_section_text_parts)
                 )
-
         display_output["display"] = ("\n" + item_sep).join(all_formatted_section_texts)
         display_output["title"] = (
             title_joiner.join(title_parts) if title_parts else "Details"
@@ -1083,62 +1120,49 @@ class MainWindow(Qw.QMainWindow):
         app = QApplication.instance()
         if not app:
             return
-
         for theme_key, action in self.theme_actions.items():
             action.setChecked(theme_key == theme_name_xml)
-
         try:
             invert = theme_name_xml.startswith("dark_")
             apply_stylesheet(app, theme=theme_name_xml, invert_secondary=invert)
         except Exception as e_theme:
             nfo("Error applying theme %s: %s", theme_name_xml, e_theme, exc_info=True)
             return
-
         log_action = (
             "Initial theme loaded" if initial_load else "Theme applied and saved"
         )
-        nfo("%s: %s", log_action, theme_name_xml)  # Corrected lazy logging
+        nfo("%s: %s", log_action, theme_name_xml)
         if not initial_load:
             self.settings.setValue("theme", theme_name_xml)
 
     def show_about_dialog(self):
         from PyQt6.QtWidgets import QMessageBox
 
-        version_text = ""
-        try:
-            from dataset_tools.version import __version__ as fver
+        from dataset_tools import __version__ as p_version  # package_version
 
-            version_text = f"Version: {fver}\n"
-        except ImportError:
-            try:
-                from dataset_tools import __version__ as pver
-
-                if pver and pver != "0.0.0-dev":
-                    version_text = f"Version: {pver}\n"
-                else:
-                    nfo("Placeholder package version for About dialog.")
-            except ImportError:
-                nfo("Version info not found for About dialog.")
+        version_text = (
+            f"Version: {p_version}\n"
+            if p_version and p_version != "0.0.0-dev"
+            else "Version: N/A (dev)\n"
+        )
 
         contrib = ["KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA (Lead Developer)"]
         contrib_txt = "\nContributors:\n" + "\n".join(f"- {c}" for c in contrib)
         lic_name = "GPL-3.0-or-later"
-        lic_txt = f"License: {lic_name}\n(Refer to LICENSE file for full text)\n\n"
-
-        about_title = "<b>Dataset Viewer</b>"
-        about_desc = "An ultralight metadata viewer and dataset handler.\n"
-        about_dev = "Developed by KTISEOS NYX of EARTH & DUSK MEDIA."
-
-        full_about_text = f"{about_title}\n{version_text}{about_desc}\n{about_dev}{contrib_txt}\n\n{lic_txt}"
+        lic_txt = f"License: {lic_name}\n(Refer to LICENSE file)\n\n"
+        full_about_text = (
+            f"<b>Dataset Viewer</b>\n{version_text}An ultralight metadata viewer.\n"
+            f"Developed by KTISEOS NYX.{contrib_txt}\n\n{lic_txt}"
+        )
         QMessageBox.about(self, "About Dataset Viewer", full_about_text)
 
     def dragEnterEvent(self, event: QtGui.QDragEnterEvent):
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
-            nfo("[UI] Drag enter event accepted for URLs.")
+            nfo("[UI] Drag enter accepted.")
         else:
             event.ignore()
-            nfo("[UI] Drag enter event ignored (not URLs).")
+            nfo("[UI] Drag enter ignored (not URLs).")
 
     def dragMoveEvent(self, event: QtGui.QDragMoveEvent):
         if event.mimeData().hasUrls():
@@ -1165,7 +1189,6 @@ class MainWindow(Qw.QMainWindow):
                 elif path_obj.is_dir():
                     folder_to_load = str(path_obj)
                     nfo("[UI] Dropped folder. Loading folder: '%s'", folder_to_load)
-
                 if folder_to_load:
                     self.settings.setValue("lastFolderPath", folder_to_load)
                     self.load_files(
@@ -1178,56 +1201,41 @@ class MainWindow(Qw.QMainWindow):
 
     def closeEvent(self, event: QtGui.QCloseEvent):
         nfo("[UI] Close event triggered. Saving settings.")
+        app_settings = self.settings  # Cache settings object
         if hasattr(self, "main_splitter"):
-            self.settings.setValue("mainSplitterSizes", self.main_splitter.sizes())
+            app_settings.setValue("mainSplitterSizes", self.main_splitter.sizes())
         if hasattr(self, "metadata_image_splitter"):
-            self.settings.setValue(
+            app_settings.setValue(
                 "metaImageSplitterSizes", self.metadata_image_splitter.sizes()
             )
-
-        if self.settings.value("rememberGeometry", True, type=bool):
-            self.settings.setValue("geometry", self.saveGeometry())
+        if app_settings.value("rememberGeometry", True, type=bool):
+            app_settings.setValue("geometry", self.saveGeometry())
         else:
-            self.settings.remove("geometry")
-
+            app_settings.remove("geometry")
         super().closeEvent(event)
 
 
 if __name__ == "__main__":
-    main_app_logger = None
-    initial_log_lvl = "INFO"
-    pkg_ver = "N/A (direct run)"
-    if LOGGER_AVAILABLE:
-        try:
-            from dataset_tools import LOG_LEVEL as INITIAL_LOG_LEVEL_FROM_INIT_MAIN
-            from dataset_tools import __version__ as pkg_version_main
-            from dataset_tools.logger import logger as main_app_logger_main
+    # Fallback logger for direct run, actual app uses logger from main.py
+    def nfo_direct_run(*args):
+        print("NFO (direct_run ui.py):", *args)
 
-            main_app_logger = main_app_logger_main
-            initial_log_lvl = INITIAL_LOG_LEVEL_FROM_INIT_MAIN
-            pkg_ver = pkg_version_main
-        except ImportError as e:
-            print(f"Direct run: Import error for some components: {e}")
-
-    active_logger = main_app_logger
-    if active_logger:
-        active_logger.info("Dataset Tools UI (Direct Run) v%s launching...", pkg_ver)
-        active_logger.info("App log level (initial): %s", initial_log_lvl)
-    else:
-        nfo(
-            f"Dataset Tools UI (Direct Run) v{pkg_ver} launching...\nApp log level (initial): {initial_log_lvl}"
-        )
-
+    nfo_direct_run("Dataset Tools UI (Direct Run) launching...")
     app = Qw.QApplication(sys.argv if hasattr(sys, "argv") else [])
     if QT_MATERIAL_AVAILABLE:
         try:
             cfg = QSettings("EarthAndDuskMedia", "DatasetViewer")
-            theme = cfg.value("theme", "dark_teal.xml")
-            invert = theme.startswith("dark_")
-            apply_stylesheet(app, theme=theme, invert_secondary=invert)
-        except Exception as e:
-            nfo(f"Could not apply theme for direct test: {e}")
-
+            theme_to_load = cfg.value("theme", "dark_teal.xml")
+            apply_stylesheet(
+                app,
+                theme=theme_to_load,
+                invert_secondary=theme_to_load.startswith("dark_"),
+            )
+            nfo_direct_run(f"Applied theme: {theme_to_load}")
+        except Exception as e_theme_direct:
+            nfo_direct_run(f"Could not apply theme for direct test: {e_theme_direct}")
+    else:
+        nfo_direct_run("qt-material not found, using default Qt style.")
     window = MainWindow()
     window.show()
     sys.exit(app.exec())

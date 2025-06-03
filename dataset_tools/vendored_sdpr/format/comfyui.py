@@ -142,9 +142,10 @@ class ComfyUI(BaseFormat):
         candidates: dict[str, str] = {}
         for node_id, node_data in prompt_json_data.items():
             class_type = node_data.get("class_type")
-            if class_type in self.SAVE_IMAGE_TYPE or (class_type in self.KSAMPLER_TYPES and not any(
-                typ in self.SAVE_IMAGE_TYPE for typ in candidates.values()
-            )):
+            if class_type in self.SAVE_IMAGE_TYPE or (
+                class_type in self.KSAMPLER_TYPES
+                and not any(typ in self.SAVE_IMAGE_TYPE for typ in candidates.values())
+            ):
                 candidates[node_id] = class_type
         return candidates
 

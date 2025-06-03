@@ -14,7 +14,10 @@ from .access_disk import MetadataFileReader
 
 # First-party (relative imports for the current subpackage)
 from .correct_types import DownField, EmptyField, UpField
-from .logger import _dataset_tools_main_rich_console, setup_rich_handler_for_external_logger
+from .logger import (
+    _dataset_tools_main_rich_console,
+    setup_rich_handler_for_external_logger,
+)
 from .logger import info_monitor as nfo
 
 # --- Import VENDORED sd-prompt-reader components ---
@@ -24,7 +27,9 @@ BaseFormat = None  # pylint: disable=invalid-name # Placeholder for class
 PARAMETER_PLACEHOLDER = "                    "  # Default from original constants
 
 try:
-    from .vendored_sdpr.constants import PARAMETER_PLACEHOLDER as VENDORED_PARAMETER_PLACEHOLDER
+    from .vendored_sdpr.constants import (
+        PARAMETER_PLACEHOLDER as VENDORED_PARAMETER_PLACEHOLDER,
+    )
     from .vendored_sdpr.format import BaseFormat  # Actual class import
     from .vendored_sdpr.image_data_reader import ImageDataReader  # Actual class import
 

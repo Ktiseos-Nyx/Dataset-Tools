@@ -206,9 +206,7 @@ class GGUFParser(BaseModelParser):
                 f"Runtime error parsing GGUF file {self.file_path}: {e_runtime}"
             )
             raise ValueError(self._error_message) from e_runtime
-        except (
-            Exception
-        ) as e_general:  # Fallback for truly unexpected issues
+        except Exception as e_general:  # Fallback for truly unexpected issues
             self._error_message = (
                 f"Unexpected error parsing GGUF file {self.file_path}: {e_general}"
             )
