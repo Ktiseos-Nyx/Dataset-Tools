@@ -85,7 +85,7 @@ class SwarmUI(BaseFormat):
             return None
         return data_to_process
 
-    def _process(self) -> None:
+    def _process(self) -> None:  # Add a line break here
         # self.status is managed by BaseFormat.parse()
         self._logger.debug("Attempting to parse using %s logic.", self.tool)
 
