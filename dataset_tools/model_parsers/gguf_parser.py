@@ -147,7 +147,7 @@ class GGUFParser(BaseModelParser):
                     self.metadata_kv_count,
                 )
 
-                for i in range(int(self.metadata_kv_count)):  # Ensure count is int
+                for _ in range(int(self.metadata_kv_count)):  # Ensure count is int
                     key = self._read_string(f)
                     value_type_val = struct.unpack("<I", f.read(4))[
                         0
