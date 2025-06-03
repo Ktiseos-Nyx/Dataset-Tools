@@ -111,7 +111,7 @@ class LeftPanelWidget(Qw.QWidget):
         )
         layout.addWidget(self.files_list_widget, 1)
 
-    def set_current_folder_text(self, text: str):
+    def set_current_folder_text(self, text: str) -> None:
         self.current_folder_label.setText(text)
 
     def set_message_text(self, text: str):
