@@ -1021,7 +1021,7 @@ class MainWindow(Qw.QMainWindow):
             )
             self.display_text_of(None)
 
-    def _format_single_section_data(
+    nested_parts = self._format_nested_dict(sub_value, key_value_sep)
         self, section_data_item: Any, key_value_sep: str, item_sep: str
     ) -> list[str]:
         parts = []
