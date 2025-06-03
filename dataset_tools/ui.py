@@ -724,7 +724,7 @@ class MainWindow(Qw.QMainWindow):
             self.generation_data_box.clear()
             self.generation_data_box.setPlaceholderText(ph_details_txt)
 
-    def display_text_of(self, metadata_dict: dict[str, Any] | None) -> None:
+    def display_text_of(self, metadata_dict: Optional[dict[str, Any]] = None) -> None:
         ph_positive_txt = EmptyField.PLACEHOLDER_POSITIVE.value
         ph_negative_txt = EmptyField.PLACEHOLDER_NEGATIVE.value
         ph_details_txt = EmptyField.PLACEHOLDER_DETAILS.value
