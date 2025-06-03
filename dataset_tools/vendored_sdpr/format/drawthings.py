@@ -6,114 +6,153 @@ __filename__ = "drawthings.py"
 __copyright__ = "Copyright 2023, Receyuki"
 __email__ = "receyuki@gmail.com"
 
-import json  # Added, as it's used in _process if raw needs to be set
-import logging  # For type hinting
-from typing import Any  # For type hints
+# import logging # Not needed for type hinting if self._logger from BaseFormat
 
-# from ..logger import Logger  # OLD
-from ..logger import get_logger  # NEW
+# from ..logger import get_logger # Not needed if self._logger from BaseFormat
 from .base_format import BaseFormat
+
+# from .utility import remove_quotes # Handled by _build_settings_string
+
+# Parameter map from DrawThings keys to canonical keys
+DRAWTHINGS_PARAM_MAP: dict[str, str | list[str]] = {
+    "model": "model",
+    "sampler": "sampler_name",
+    "seed": "seed",
+    "scale": "cfg_scale",
+    "steps": "steps",
+    # "c" (positive prompt) and "uc" (negative prompt) are handled directly.
+    # "size" (dimensions) is handled specially.
+}
 
 
 class DrawThings(BaseFormat):
     tool = "Draw Things"
 
-    PARAMETER_MAP = {
-        "model": "model",
-        "sampler": "sampler_name",
-        "seed": "seed",
-        "scale": "cfg_scale",
-        "steps": "steps",
-    }
+    # PARAMETER_MAP is effectively replaced by DRAWTHINGS_PARAM_MAP
 
-    # Added Optional, Dict, Any
-    def __init__(self, info: dict[str, Any] | None = None, raw: str = ""):
-        super().__init__(info=info, raw=raw)
-        # self._logger = Logger(f"DSVendored_SDPR.Format.{self.tool.replace(' ', '_')}") # OLD
-        self._logger: logging.Logger = get_logger(
-            f"DSVendored_SDPR.Format.{self.tool.replace(' ', '_')}",
-        )  # NEW
-        # self.PARAMETER_PLACEHOLDER = PARAMETER_PLACEHOLDER # Inherited
+    # __init__ is inherited from BaseFormat.
+    # The logger is also inherited and named correctly by BaseFormat.
+    # If a specific logger name was crucial (e.g., with self.tool.replace(' ', '_')),
+    # __init__ would need to be overridden just for that.
+    # The current BaseFormat logger name generation should be fine:
+    # DSVendored_SDPR.format.drawthings.DrawThings
 
-    def _process(self):
-        # pylint: disable=no-member # Temporarily add if Pylint still complains
-        self._logger.debug(f"Attempting to parse using {self.tool} logic.")
+    def _process(self) -> None:
+        # self.status is managed by BaseFormat.parse()
+        self._logger.debug("Attempting to parse using %s logic.", self.tool)
 
         if not self._info or not isinstance(self._info, dict):
-            self._logger.warn(f"{self.tool}: Info data is empty or not a dictionary.")
+            self._logger.warning(
+                "%s: Info data is empty or not a dictionary.", self.tool
+            )
             self.status = self.Status.FORMAT_ERROR
             self._error = "Draw Things metadata (info dict) is missing or invalid."
             return
 
-        data_json = self._info
+        data_json = self._info.copy()  # Work on a copy if we're popping keys
 
         try:
+            # --- Positive and Negative Prompts ---
+            # .pop() is used here, so these keys are removed from data_json
             self._positive = str(data_json.pop("c", "")).strip()
             self._negative = str(data_json.pop("uc", "")).strip()
 
-            for dt_key, canonical_key in self.PARAMETER_MAP.items():
-                if dt_key in data_json and canonical_key in self._parameter:
-                    self._parameter[canonical_key] = str(
-                        data_json.get(dt_key, self.DEFAULT_PARAMETER_PLACEHOLDER),
+            handled_keys_for_settings = {"c", "uc"}  # Keys already processed
+
+            # --- Populate Standard Parameters ---
+            # We use _populate_parameters_from_map on the (modified) data_json
+            self._populate_parameters_from_map(
+                data_json,
+                DRAWTHINGS_PARAM_MAP,
+                handled_keys_for_settings,  # This will mark keys from DRAWTHINGS_PARAM_MAP as handled
+            )
+
+            # --- Handle Dimensions from "size" string ---
+            size_str = str(
+                data_json.get("size", "0x0")
+            )  # Use .get before marking as handled
+            if "size" in data_json:  # Mark "size" as handled if it existed
+                handled_keys_for_settings.add("size")
+
+            parsed_w, parsed_h = "0", "0"
+            if "x" in size_str:
+                try:
+                    w_str, h_str = size_str.split("x", 1)
+                    parsed_w = str(int(w_str.strip()))
+                    parsed_h = str(int(h_str.strip()))
+                except ValueError:
+                    self._logger.warning(
+                        "Could not parse DrawThings Size '%s'. Using defaults: %sx%s",
+                        size_str,
+                        self._width,
+                        self._height,  # Log current self._width/_height as defaults
+                        exc_info=True,  # Helpful for unexpected format
                     )
+                    # If parsing fails, self._width and self._height retain their initial values (often "0")
+                    # or values passed to __init__.
+                    # No explicit assignment to self._width/_height here if parsing fails.
 
-            size_str = data_json.get("size", "0x0")
-            try:
-                w_str, h_str = size_str.split("x")
-                self._width = str(int(w_str.strip()))
-                self._height = str(int(h_str.strip()))
-                if "size" in self._parameter:
-                    self._parameter["size"] = f"{self._width}x{self._height}"
-            except ValueError:
-                self._logger.warn(
-                    f"Could not parse DrawThings Size '{size_str}'. Using defaults: {self._width}x{self._height}",
+            # Update internal dimensions and parameters only if parsing was successful
+            if parsed_w != "0" or parsed_h != "0":  # Check if we got valid numbers
+                self._width = parsed_w
+                self._height = parsed_h
+
+            # Update parameters "width", "height", "size" using current self._width, self._height
+            # This ensures consistency even if parsing size_str failed and we use defaults.
+            if "width" in self._parameter and self._width != "0":
+                self._parameter["width"] = self._width
+            if "height" in self._parameter and self._height != "0":
+                self._parameter["height"] = self._height
+            if "size" in self._parameter and self._width != "0" and self._height != "0":
+                self._parameter["size"] = f"{self._width}x{self._height}"
+            elif (
+                "size" in self._parameter and size_str != "0x0"
+            ):  # If we couldn't parse but original size_str was non-default
+                self._parameter["size"] = (
+                    size_str  # Store original "size" string if it was valid-looking
                 )
-                if "size" in self._parameter:
-                    self._parameter["size"] = f"{self._width}x{self._height}"
 
-            setting_dict_for_display = {}
-            # Iterate over a copy of keys if popping from data_json inside loop
-            # or ensure all pops happen before this iteration.
-            # Here, pop("c") and pop("uc") happened before.
-            # Keys in PARAMETER_MAP were accessed by .get(), not popped.
-            # "size" was also .get().
-            for key, value in data_json.items():
-                # Check against original keys in data_json that are not part of specific handling.
-                if key not in ["c", "uc", "size"] + list(self.PARAMETER_MAP.keys()):
-                    setting_dict_for_display[key.capitalize()] = str(value)
-            self._setting = ", ".join(
-                [f"{k}: {v}" for k, v in sorted(setting_dict_for_display.items())],
+            # --- Build Settings String ---
+            # Original code added all *other* keys from data_json.
+            # data_json has had "c", "uc" popped, and keys from DRAWTHINGS_PARAM_MAP
+            # and "size" were added to handled_keys_for_settings.
+            self._setting = self._build_settings_string(
+                include_standard_params=False,  # Standard params are in self.parameter
+                custom_settings_dict=None,
+                remaining_data_dict=data_json,  # Use the modified data_json
+                remaining_handled_keys=handled_keys_for_settings,
+                # remaining_key_formatter=lambda k: k.capitalize(), # Original used .capitalize()
+                sort_parts=True,
             )
+            # Note: _build_settings_string uses self._format_key_for_display (snake_case to Title Case)
+            # The original `key.capitalize()` is slightly different. If exact match is needed,
+            # pass a custom formatter lambda k: k.capitalize(). For most keys, it's similar.
 
-            # If _raw was not set by ImageDataReader (e.g., if info was directly given from a PNG chunk)
-            if not self._raw and self._info:
-                # Store the original full JSON as raw
-                self._raw = json.dumps(self._info)
+            # --- Raw Data Population ---
+            self._set_raw_from_info_if_empty()  # If self._raw wasn't set, use original self._info
 
-            if (
-                self._positive
-                or self._parameter.get("seed", self.DEFAULT_PARAMETER_PLACEHOLDER)
-                != self.DEFAULT_PARAMETER_PLACEHOLDER
-            ):
-                self._logger.info(f"{self.tool}: Data parsed successfully.")
-                self.status = self.Status.READ_SUCCESS
+            # --- Final Status Check ---
+            if self._positive or self._parameter_has_data():
+                self._logger.info("%s: Data parsed successfully.", self.tool)
+                # self.status = self.Status.READ_SUCCESS # Let BaseFormat.parse() handle
             else:
-                self._logger.warn(
-                    f"{self.tool}: Parsing completed but no positive prompt or seed extracted.",
+                self._logger.warning(
+                    "%s: Parsing completed but no positive prompt or seed extracted.",
+                    self.tool,
                 )
-                self.status = self.Status.FORMAT_ERROR
-                self._error = f"{self.tool}: Key fields (prompt, seed) not found."
+                if self.status != self.Status.FORMAT_ERROR:
+                    self.status = self.Status.FORMAT_ERROR
+                    self._error = f"{self.tool}: Key fields (prompt, seed) not found."
 
-        except KeyError as key_err:  # Renamed 'ke'
+        except (
+            KeyError
+        ) as key_err:  # Should be less likely with .pop("key", default) and .get()
             self._logger.error(
-                f"{self.tool}: Missing essential key in JSON data: {key_err}",
-            )
-            self.status = self.Status.FORMAT_ERROR
-            self._error = f"Draw Things JSON missing key: {key_err}"
-        except Exception as general_err:  # Renamed 'e', pylint: disable=broad-except
-            self._logger.error(
-                f"{self.tool}: Unexpected error parsing Draw Things JSON: {general_err}",
+                "%s: Missing essential key in JSON data: %s",
+                self.tool,
+                key_err,
                 exc_info=True,
             )
             self.status = self.Status.FORMAT_ERROR
-            self._error = f"Unexpected error: {general_err}"
+            self._error = f"Draw Things JSON missing key: {key_err}"
+        # General exceptions are caught by BaseFormat.parse()

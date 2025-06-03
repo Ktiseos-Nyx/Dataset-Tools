@@ -39,11 +39,16 @@ MAX_RAW_METADATA_DISPLAY_LEN = 500
 class EmptyField(Enum):
     """Represent placeholder or empty field states.
 
-    Used as keys in metadata dictionaries.
+    Used as keys in metadata dictionaries or as UI placeholder text sources.
     """
 
     PLACEHOLDER = "_dt_internal_placeholder_"
     EMPTY = "_dt_internal_empty_value_"
+    # --- ADDED MEMBERS ---
+    PLACEHOLDER_POSITIVE = "Positive prompt will appear here."
+    PLACEHOLDER_NEGATIVE = "Negative prompt will appear here."
+    PLACEHOLDER_DETAILS = "Generation details and other metadata will appear here."
+    # --- END OF ADDED MEMBERS ---
 
 
 class UpField(Enum):

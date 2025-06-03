@@ -7,6 +7,7 @@
 
 import os
 from pathlib import Path
+from typing import NamedTuple
 
 from PyQt6 import QtCore
 
@@ -16,47 +17,64 @@ from dataset_tools.logger import debug_monitor
 from dataset_tools.logger import info_monitor as nfo
 
 
+# Define the data structure for FileLoader results
+class FileLoadResult(NamedTuple):
+    images: list[str]
+    texts: list[str]
+    models: list[str]
+    folder_path: str
+    file_to_select: str | None
+
+
 class FileLoader(QtCore.QThread):
     """Opens files in a separate thread to keep the UI responsive.
     Emits signals for progress and when finished.
     """
 
-    # Signal: finished(list_images, list_text_files, list_model_files, folder_path_str, file_to_select_str_or_None)
-    finished = QtCore.pyqtSignal(list, list, list, str, object)
+    # Signal now emits a single FileLoadResult object
+    finished = QtCore.pyqtSignal(FileLoadResult)
     progress = QtCore.pyqtSignal(int)  # For progress updates (0-100)
 
     def __init__(self, folder_path: str, file_to_select_on_finish: str | None = None):
         super().__init__()
         self.folder_path = folder_path
         self.file_to_select_on_finish = file_to_select_on_finish
-        # These lists will be populated by populate_index_from_list
-        self.images: list[str] = []
-        self.text_files: list[str] = []
-        self.model_files: list[str] = []
+        # Instance attributes for storing categorized files are no longer strictly needed here
+        # if run() directly constructs and emits the result based on populate_index_from_list return.
+        # However, keeping them can be useful if other methods in FileLoader might need them.
+        # For this refactor, populate_index_from_list will return them, and run() will use those.
 
     def run(self):
         """Scans the directory, categorizes files, and emits the results.
         This method is executed when the thread starts (self.start()).
         """
-        nfo(f"[FileLoader] Starting to scan directory: {self.folder_path}")
+        nfo("[FileLoader] Starting to scan directory: %s", self.folder_path)
         folder_contents_paths = self.scan_directory(self.folder_path)
 
-        # populate_index_from_list will categorize files and assign to instance attributes
-        # It now returns the lists, so we assign them here.
-        self.images, self.text_files, self.model_files = self.populate_index_from_list(
+        images_list, text_files_list, model_files_list = self.populate_index_from_list(
             folder_contents_paths,
         )
 
-        nfo(
-            f"[FileLoader] Scan finished. Emitting results for folder: {self.folder_path}. File to select: {self.file_to_select_on_finish}",
+        result = FileLoadResult(
+            images=images_list,
+            texts=text_files_list,
+            models=model_files_list,
+            folder_path=self.folder_path,
+            file_to_select=self.file_to_select_on_finish,
         )
-        self.finished.emit(
-            self.images,
-            self.text_files,
-            self.model_files,
-            self.folder_path,
-            self.file_to_select_on_finish,
+
+        nfo(  # Corrected for line length and using result attributes
+            (
+                "[FileLoader] Scan finished. Emitting result for folder: %s. "
+                "File to select: %s. Counts: Img=%s, Txt=%s, Mdl=%s"
+            ),
+            result.folder_path,
+            result.file_to_select,
+            len(result.images),
+            len(result.texts),
+            len(result.models),
         )
+        self.finished.emit(result)
 
     @debug_monitor
     def scan_directory(self, folder_path: str) -> list[str] | None:
@@ -65,29 +83,33 @@ class FileLoader(QtCore.QThread):
         :return: A list of full file paths, or None if an error occurs.
         """
         try:
-            # List items in directory
             items_in_folder = os.listdir(folder_path)
-            # Construct full paths for each item
             full_paths = [os.path.join(folder_path, item) for item in items_in_folder]
             nfo(
-                f"[FileLoader] Scanned {len(full_paths)} items (files/dirs) in directory: {folder_path}",
+                "[FileLoader] Scanned %s items (files/dirs) in directory: %s",
+                len(full_paths),
+                folder_path,
             )
             return full_paths
         except FileNotFoundError:
             nfo(
-                f"FileNotFoundError: Error loading folder '{folder_path}'. Folder not found.",
+                "FileNotFoundError: Error loading folder '%s'. Folder not found.",
+                folder_path,
             )
         except PermissionError:
             nfo(
-                f"PermissionError: Error loading folder '{folder_path}'. Insufficient permissions.",
+                "PermissionError: Error loading folder '%s'. Insufficient permissions.",
+                folder_path,
             )
         except OSError as e_os:
             nfo(
-                f"OSError: General error loading folder '{folder_path}'. OS related issue: {e_os}",
+                "OSError: General error loading folder '%s'. OS related issue: %s",
+                folder_path,
+                e_os,
             )
-        except Exception as e_gen:
-            nfo(f"Unexpected error loading folder '{folder_path}': {e_gen}")
-        return None  # Return None on any error during scanning
+        # Removed blind except Exception as specific errors are caught.
+        # If other OS-level errors are common, they could be added to the OSError catch.
+        return None
 
     @debug_monitor
     def populate_index_from_list(
@@ -100,7 +122,7 @@ class FileLoader(QtCore.QThread):
         """
         if folder_item_paths is None:
             nfo(
-                "[FileLoader] populate_index_from_list received None for folder_item_paths. Returning empty lists.",
+                "[FileLoader] populate_index_from_list received None. Returning empty lists."
             )
             return [], [], []
 
@@ -108,129 +130,112 @@ class FileLoader(QtCore.QThread):
         local_text_files: list[str] = []
         local_model_files: list[str] = []
 
-        # --- Debug prints for ExtensionType attributes ---
-        # These will help confirm that widgets.py is seeing the correct ExtensionType definition
-        print(
-            "--- DEBUG WIDGETS: Inspecting Ext (ExtensionType) from correct_types.py ---",
-        )
-        print(f"DEBUG WIDGETS: Type of Ext: {type(Ext)}")
-        # Print only a few
-        print(f"DEBUG WIDGETS: Attributes of Ext (first few): {dir(Ext)[:15]}...")
-
-        # Check for specific attributes by their correct names
-        expected_attrs = [
-            "IMAGE",
-            "SCHEMA_FILES",
-            "MODEL_FILES",
-            "PLAIN_TEXT_LIKE",
-            "IGNORE",
-        ]
-        for attr_name in expected_attrs:
-            has_attr = hasattr(Ext, attr_name)
-            print(f"DEBUG WIDGETS: Does Ext have '{attr_name}'? {has_attr}")
-            if has_attr:
-                attr_value = getattr(Ext, attr_name)
-                # Avoid printing huge lists if they are very long
-                print_val = str(attr_value)
-                if len(print_val) > 100:
-                    print_val = print_val[:100] + "..."
-                print(f"DEBUG WIDGETS: Value of Ext.{attr_name}: {print_val}")
-        print("--- END DEBUG WIDGETS ---")
-        # --- End Debug prints ---
+        # Debug prints for ExtensionType attributes (shortened to avoid line length issues)
+        # These are primarily for developer diagnosis, not regular operation.
+        if os.getenv("DEBUG_WIDGETS_EXT"):  # Optional debug via environment variable
+            print("--- DEBUG WIDGETS: Inspecting Ext (ExtensionType) ---")
+            print(f"DEBUG WIDGETS: Type of Ext: {type(Ext)}")
+            # Print only a few attributes, and shorten their value representation
+            expected_attrs = [
+                "IMAGE",
+                "SCHEMA_FILES",
+                "MODEL_FILES",
+                "PLAIN_TEXT_LIKE",
+                "IGNORE",
+            ]
+            for attr_name in expected_attrs:
+                has_attr = hasattr(Ext, attr_name)
+                val_str = str(getattr(Ext, attr_name, "N/A"))
+                val_display = val_str[:70] + "..." if len(val_str) > 70 else val_str
+                print(
+                    f"DEBUG WIDGETS: Ext.{attr_name}? {has_attr}. Value: {val_display}"
+                )
+            print("--- END DEBUG WIDGETS ---")
 
         # Flatten extension lists for easier checking.
-        # These rely on Ext having the correct attributes like IMAGE, SCHEMA_FILES, etc.
-        all_image_exts = {ext for ext_set in Ext.IMAGE for ext in ext_set}
+        all_image_exts = {
+            ext for ext_set in getattr(Ext, "IMAGE", []) for ext in ext_set
+        }
 
         all_plain_exts_final = set()
-        # Use hasattr to safely check for PLAIN_TEXT_LIKE before iterating
         if hasattr(Ext, "PLAIN_TEXT_LIKE"):
             for ext_set in Ext.PLAIN_TEXT_LIKE:
                 all_plain_exts_final.update(ext_set)
         else:
-            nfo(
-                "[FileLoader] WARNING: Ext.PLAIN_TEXT_LIKE attribute not found in ExtensionType.",
-            )
+            nfo("[FileLoader] WARNING: Ext.PLAIN_TEXT_LIKE attribute not found.")
 
         all_schema_exts = set()
         if hasattr(Ext, "SCHEMA_FILES"):
-            all_schema_exts = {
-                ext for ext_set in Ext.SCHEMA_FILES for ext in ext_set
-            }  # CORRECTED
+            all_schema_exts = {ext for ext_set in Ext.SCHEMA_FILES for ext in ext_set}
         else:
-            nfo(
-                "[FileLoader] WARNING: Ext.SCHEMA_FILES attribute not found in ExtensionType.",
-            )
+            nfo("[FileLoader] WARNING: Ext.SCHEMA_FILES attribute not found.")
 
         all_model_exts = set()
         if hasattr(Ext, "MODEL_FILES"):
-            all_model_exts = {
-                ext for ext_set in Ext.MODEL_FILES for ext in ext_set
-            }  # CORRECTED
+            all_model_exts = {ext for ext_set in Ext.MODEL_FILES for ext in ext_set}
         else:
-            nfo(
-                "[FileLoader] WARNING: Ext.MODEL_FILES attribute not found in ExtensionType.",
-            )
+            nfo("[FileLoader] WARNING: Ext.MODEL_FILES attribute not found.")
 
         all_text_like_exts = all_plain_exts_final.union(all_schema_exts)
-
-        # Ensure Ext.IGNORE exists and is a list/set of strings
-        ignore_list = []
-        if hasattr(Ext, "IGNORE") and isinstance(Ext.IGNORE, list):
-            ignore_list = Ext.IGNORE
-        else:
+        ignore_list = getattr(Ext, "IGNORE", [])
+        if not isinstance(ignore_list, list):
             nfo(
-                "[FileLoader] WARNING: Ext.IGNORE attribute not found or not a list in ExtensionType. Using empty ignore list.",
+                "[FileLoader] WARNING: Ext.IGNORE is not a list. Using empty ignore list."
             )
+            ignore_list = []
 
         total_items = len(folder_item_paths)
         processed_count = 0
-        current_progress_percent = 0  # To avoid emitting same progress repeatedly
+        current_progress_percent = 0
 
         for f_path_str in folder_item_paths:
             try:
-                path = Path(str(f_path_str))  # Ensure f_path_str is string
-                if (
-                    path.is_file() and path.name not in ignore_list
-                ):  # Use the verified ignore_list
+                path = Path(str(f_path_str))
+                if path.is_file() and path.name not in ignore_list:
                     suffix = path.suffix.lower()
-                    file_name_only = (
-                        path.name
-                    )  # We only need the name for the QListWidget
-
+                    file_name_only = path.name
                     if suffix in all_image_exts:
                         local_images.append(file_name_only)
                     elif suffix in all_text_like_exts:
                         local_text_files.append(file_name_only)
                     elif suffix in all_model_exts:
                         local_model_files.append(file_name_only)
-                # else:
-                # nfo(f"[FileLoader] Skipping non-file or ignored item: {path.name}") # Can be noisy
+            # Catch more specific errors for path operations
+            except (OSError, ValueError, TypeError, AttributeError) as e_path_specific:
+                nfo(
+                    "[FileLoader] Specific error processing path '%s': %s",
+                    f_path_str,
+                    e_path_specific,
+                )
             except (
                 Exception
-            ) as e_path:  # Catch errors related to Path object or os.path operations
-                nfo(f"[FileLoader] Error processing path '{f_path_str}': {e_path}")
+            ) as e_path_general:  # Fallback for truly unexpected path issues
+                nfo(
+                    "[FileLoader] General error processing path '%s': %s",
+                    f_path_str,
+                    e_path_general,
+                    exc_info=True,
+                )
 
             processed_count += 1
             if total_items > 0:
                 progress_percent = int((processed_count / total_items) * 100)
-                # Emit progress if it has changed significantly or for key milestones
                 if progress_percent > current_progress_percent and (
                     progress_percent % 5 == 0 or progress_percent == 100
                 ):
                     self.progress.emit(progress_percent)
                     current_progress_percent = progress_percent
 
-        # Emit final 100% progress if not already done
         if total_items > 0 and current_progress_percent < 100:
             self.progress.emit(100)
 
-        # Sort the lists of filenames
         local_images.sort()
         local_text_files.sort()
         local_model_files.sort()
-
         nfo(
-            f"[FileLoader] Categorized files: {len(local_images)} images, {len(local_text_files)} text/schema, {len(local_model_files)} models.",
+            "[FileLoader] Categorized files: %s images, %s text/schema, %s models.",
+            len(local_images),
+            len(local_text_files),
+            len(local_model_files),
         )
         return local_images, local_text_files, local_model_files

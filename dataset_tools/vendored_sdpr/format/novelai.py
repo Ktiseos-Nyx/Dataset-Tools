@@ -8,22 +8,31 @@ __email__ = "receyuki@gmail.com"
 
 import gzip
 import json
-import logging  # For type hinting
-from typing import Any  # For type hints
+from typing import Any
 
-from PIL import Image  # For type hint of LSBExtractor input
+from PIL import Image
 
-# from ..logger import Logger # OLD
-from ..logger import get_logger  # NEW
 from .base_format import BaseFormat
-from .utility import remove_quotes
+
+# from .utility import remove_quotes # _build_settings_string handles this
+
+NAI_PARAMETER_MAP: dict[str, str | list[str]] = {
+    # NAI key: canonical_param_key or list of keys
+    "sampler": "sampler_name",
+    "seed": "seed",
+    "strength": "denoising_strength",  # Assuming this is in BaseFormat.PARAMETER_KEY
+    "noise": "noise_offset",  # Custom, will go to settings string if not standard
+    "scale": "cfg_scale",
+    "steps": "steps",
+    # width & height are handled by _extract_and_set_dimensions
+}
 
 
 class NovelAI(BaseFormat):
     tool = "NovelAI"
 
     class LSBExtractor:
-        def __init__(self, img_pil_object: Image.Image):  # Type hint for img_pil_object
+        def __init__(self, img_pil_object: Image.Image):
             self.img_pil = img_pil_object
             self.data = list(img_pil_object.getdata())
             self.width, self.height = img_pil_object.size
@@ -31,9 +40,31 @@ class NovelAI(BaseFormat):
             self.lsb_bytes_list = bytearray()
             current_byte = 0
             bit_count = 0
-            if img_pil_object.mode == "RGBA":
+            # Ensure it's RGBA before trying to access alpha
+            if (
+                img_pil_object.mode == "RGBA"
+                and isinstance(self.data, list)
+                and self.data
+            ):
+                # Ensure data is not empty and pixels are tuples/lists with enough elements
+                if not isinstance(self.data[0], (tuple, list)) or len(self.data[0]) < 4:
+                    # Log this issue, LSB extraction won't work
+                    # (Need a logger here or raise an error)
+                    # For now, lsb_bytes_list will remain empty.
+                    return
+
                 for pixel_index in range(self.width * self.height):
-                    alpha_val = self.data[pixel_index][3]
+                    # Add safety check for pixel format if necessary, though getdata() usually standardizes
+                    try:
+                        alpha_val = self.data[pixel_index][3]
+                    except IndexError:
+                        # Pixel doesn't have an alpha channel, or data is malformed
+                        # (Log or handle this error)
+                        # For now, break or skip this pixel. For simplicity, we'll let it error
+                        # if data format is unexpected, or a more robust check would be needed.
+                        # This situation should ideally not occur if mode is 'RGBA'.
+                        continue  # Or raise error
+
                     lsb = alpha_val & 1
                     current_byte = (current_byte << 1) | lsb
                     bit_count += 1
@@ -41,8 +72,9 @@ class NovelAI(BaseFormat):
                         self.lsb_bytes_list.append(current_byte)
                         current_byte = 0
                         bit_count = 0
+            # else:
+            # Logger not available here, but ideally log if mode isn't RGBA or data is empty
 
-        # Renamed n to n_bytes, return Optional
         def get_next_n_bytes(self, n_bytes: int) -> bytes | None:
             if self.byte_cursor + n_bytes > len(self.lsb_bytes_list):
                 return None
@@ -52,7 +84,6 @@ class NovelAI(BaseFormat):
             self.byte_cursor += n_bytes
             return bytes(result_bytes)
 
-        # Return Optional
         def read_32bit_integer_big_endian(self) -> int | None:
             byte_chunk = self.get_next_n_bytes(4)
             if byte_chunk and len(byte_chunk) == 4:
@@ -61,181 +92,241 @@ class NovelAI(BaseFormat):
 
     def __init__(
         self,
-        info: dict[str, Any] | None = None,  # Added Optional, Dict, Any
+        info: dict[str, Any] | None = None,
         raw: str = "",
-        extractor: LSBExtractor | None = None,  # Type hint, Optional
+        extractor: LSBExtractor | None = None,
         width: int = 0,
         height: int = 0,
     ):
         super().__init__(info=info, raw=raw, width=width, height=height)
-        # self._logger = Logger(f"DSVendored_SDPR.Format.{self.tool}") # OLD
-        self._logger: logging.Logger = get_logger(
-            f"DSVendored_SDPR.Format.{self.tool}",
-        )  # NEW
-        # self.PARAMETER_PLACEHOLDER = PARAMETER_PLACEHOLDER # Inherited
+        # self._logger is inherited and initialized by BaseFormat
         self._extractor = extractor
 
-    def _process(self):
-        # pylint: disable=no-member # Temporarily add if Pylint still complains
-        self._logger.debug(f"Attempting to parse using {self.tool} logic.")
+    def _process(self) -> None:
+        # self.status is managed by BaseFormat.parse()
+        self._logger.debug("Attempting to parse using %s logic.", self.tool)
         parsed_successfully = False
+
         if self._info and self._info.get("Software") == "NovelAI":
             self._logger.debug(
-                "Found 'Software: NovelAI' tag, attempting legacy PNG parse.",
+                "Found 'Software: NovelAI' tag, attempting legacy PNG parse."
             )
             parsed_successfully = self._parse_nai_legacy_png()
         elif self._extractor:
             self._logger.debug("LSB Extractor provided, attempting stealth PNG parse.")
             parsed_successfully = self._parse_nai_stealth_png()
         else:
-            self._logger.warn(
-                f"{self.tool}: Neither legacy PNG info nor LSB extractor provided.",
+            self._logger.warning(
+                "%s: Neither legacy PNG info nor LSB extractor provided.", self.tool
             )
             self.status = self.Status.FORMAT_ERROR
             self._error = (
                 "No data source for NovelAI parser (legacy info or LSB extractor)."
             )
-            return
+            return  # Let BaseFormat.parse() handle the rest
 
         if parsed_successfully:
-            self.status = self.Status.READ_SUCCESS
-            self._logger.info(f"{self.tool}: Data parsed successfully.")
+            # self.status = self.Status.READ_SUCCESS # Let BaseFormat.parse() handle this
+            self._logger.info("%s: Data parsed successfully.", self.tool)
         else:
-            self.status = self.Status.FORMAT_ERROR
-            if not self._error:
+            # Ensure status is error if not already set by specific parsing methods
+            if self.status != self.Status.FORMAT_ERROR:
+                self.status = self.Status.FORMAT_ERROR
+            if not self._error:  # If sub-parser didn't set a specific error
                 self._error = f"{self.tool}: Failed to parse metadata."
 
+    def _parse_common_nai_json(
+        self, data_json: dict[str, Any], source_description: str
+    ) -> bool:
+        """Common logic to parse parameters from a NovelAI JSON structure."""
+        handled_keys_in_data_json = set()
+        custom_settings_for_display: dict[str, str] = {}
+
+        # Parameters from NAI_PARAMETER_MAP
+        self._populate_parameters_from_map(
+            data_json, NAI_PARAMETER_MAP, handled_keys_in_data_json
+        )
+
+        # Handle width/height specifically if present
+        self._extract_and_set_dimensions(
+            data_json, "width", "height", handled_keys_in_data_json
+        )
+
+        # Add remaining items from data_json to custom_settings_for_display
+        # These are keys not in NAI_PARAMETER_MAP and not "width"/"height"
+        # Also exclude "uc", "prompt", "Description", "Comment" as they are handled separately
+        # or are containers.
+        exclude_from_settings = {
+            "uc",
+            "prompt",
+            "Description",
+            "Comment",
+            "width",
+            "height",
+        }
+        exclude_from_settings.update(
+            NAI_PARAMETER_MAP.keys()
+        )  # Add keys already mapped
+
+        for k, v_val in data_json.items():
+            if k not in exclude_from_settings and k not in handled_keys_in_data_json:
+                # Format key for display and add to custom settings
+                # Keys like "sm", "sm_dyn" might appear here.
+                custom_settings_for_display[self._format_key_for_display(k)] = str(
+                    v_val
+                )
+                handled_keys_in_data_json.add(k)
+
+        self._setting = self._build_settings_string(
+            custom_settings_dict=custom_settings_for_display,
+            include_standard_params=True,
+            sort_parts=True,
+        )
+        return True
+
     def _parse_nai_legacy_png(self) -> bool:
-        # pylint: disable=no-member
+        if not self._info:  # Should be checked by caller (_process)
+            self._error = "Legacy PNG parsing called without _info."
+            return False
         try:
             self._positive = str(self._info.get("Description", "")).strip()
-            comment_str = self._info.get("Comment", "{}")
-            data_json = json.loads(comment_str)
-            if not isinstance(data_json, dict):
-                self._error = (
-                    "Legacy NovelAI 'Comment' field is not a valid JSON dictionary."
-                )
-                return False
-            self._negative = str(data_json.get("uc", "")).strip()
-            param_map = {
-                "sampler": "sampler_name",
-                "seed": "seed",
-                "strength": "denoising_strength",
-                "noise": "noise_offset",
-                "scale": "cfg_scale",
-                "steps": "steps",
-            }
-            for nai_key, canonical_key in param_map.items():
-                if nai_key in data_json and canonical_key in self._parameter:
-                    self._parameter[canonical_key] = str(data_json[nai_key])
-            if "size" in self._parameter and self._width != "0" and self._height != "0":
-                self._parameter["size"] = f"{self._width}x{self._height}"
-            setting_parts = []
-            for k, v_val in data_json.items():  # Renamed v to v_val
-                if k not in ["uc"] + list(param_map.keys()):
-                    setting_parts.append(
-                        f"{k.capitalize()}: {remove_quotes(str(v_val))}",
+            comment_str = self._info.get(
+                "Comment", "{}"
+            )  # Default to empty JSON string
+            data_json: dict[str, Any] = {}
+            try:
+                loaded_comment = json.loads(comment_str)
+                if isinstance(loaded_comment, dict):
+                    data_json = loaded_comment
+                else:
+                    self._logger.warning(
+                        "Legacy NovelAI 'Comment' field was not a JSON dictionary. Content: %s",
+                        comment_str[:200],  # Log snippet
                     )
-            self._setting = ", ".join(sorted(setting_parts))
-            self._raw = "\n".join(
-                filter(
-                    None,
-                    [self._positive, self._negative, f"Comment: {comment_str}"],
-                ),
-            ).strip()
+                    # Keep data_json empty, prompts/params won't be read from here
+            except json.JSONDecodeError:
+                self._logger.warning(
+                    "Invalid JSON in NovelAI legacy 'Comment': %s. Content: %s",
+                    comment_str[:200],  # Log snippet
+                    exc_info=True,  # Add exception info
+                )
+                # Keep data_json empty
+
+            # Negative prompt from "uc" key in the comment JSON
+            self._negative = str(data_json.get("uc", "")).strip()
+
+            # Use common parser for parameters from the comment JSON
+            self._parse_common_nai_json(data_json, "legacy comment JSON")
+
+            # Construct raw data representation for legacy format
+            raw_parts = [self._info.get("Description", "")]
+            if self._info.get("Source"):
+                raw_parts.append(f"Source: {self._info.get('Source')}")
+            raw_parts.append(
+                f"Comment: {comment_str}"
+            )  # Include original comment string
+            self._raw = "\n".join(filter(None, raw_parts)).strip()
+
             return True
-        except json.JSONDecodeError as json_decode_err:  # Renamed 'e'
-            self._error = f"Invalid JSON in NovelAI legacy 'Comment': {json_decode_err}"
-            return False
-        except Exception as general_err:  # Renamed 'e', pylint: disable=broad-except
+
+        except Exception as general_err:
             self._error = f"Error parsing NovelAI legacy PNG: {general_err}"
             self._logger.error(
-                f"NovelAI legacy parsing error: {general_err}",
-                exc_info=True,
+                "NovelAI legacy parsing error: %s", general_err, exc_info=True
             )
             return False
 
     def _parse_nai_stealth_png(self) -> bool:
-        # pylint: disable=no-member
-        if not self._extractor:  # Should not happen if _process logic is correct
+        if not self._extractor:
             self._error = "LSB extractor not available for stealth PNG."
             return False
         try:
-            data_length_bytes = self._extractor.read_32bit_integer_big_endian()
-            if data_length_bytes is None:
+            data_length = self._extractor.read_32bit_integer_big_endian()
+            if data_length is None:
                 self._error = "Could not read data length from LSB stream."
+                self._logger.warning(self._error)
                 return False
-            compressed_data = self._extractor.get_next_n_bytes(data_length_bytes)
-            if compressed_data is None or len(compressed_data) != data_length_bytes:
-                self._error = f"Could not read {data_length_bytes} bytes of compressed data from LSB stream."
+            if (
+                data_length <= 0 or data_length > 10 * 1024 * 1024
+            ):  # Sanity check length
+                self._error = f"Invalid data length from LSB stream: {data_length}"
+                self._logger.warning(self._error)
+                return False
+
+            compressed_data = self._extractor.get_next_n_bytes(data_length)
+            if compressed_data is None or len(compressed_data) != data_length:
+                self._error = f"Could not read {data_length} bytes of compressed data from LSB stream."
+                self._logger.warning(self._error)
                 return False
 
             json_string = gzip.decompress(compressed_data).decode("utf-8")
-            data_json = json.loads(json_string)
-            if not isinstance(data_json, dict):
+            self._raw = json_string  # Store the full decompressed JSON as raw
+            main_json_data = json.loads(json_string)
+
+            if not isinstance(main_json_data, dict):
                 self._error = "Decompressed LSB data is not a valid JSON dictionary."
+                self._logger.warning(self._error)
                 return False
-            self._raw = json_string
-            data_for_params = data_json  # Default
 
-            if "Comment" in data_json:
-                comment_json_str = data_json.pop("Comment", "{}")
+            data_to_use_for_prompts_params = main_json_data  # Default
+
+            # NovelAI stealth PNGs can have metadata in a nested "Comment" JSON string
+            # or directly in the main JSON ("Description" for positive prompt).
+            if "Comment" in main_json_data:
+                comment_json_str = str(main_json_data.get("Comment", "{}"))
                 try:
-                    comment_data = json.loads(comment_json_str)
-                    if isinstance(comment_data, dict):
-                        self._positive = str(comment_data.get("prompt", "")).strip()
-                        self._negative = str(comment_data.get("uc", "")).strip()
-                        data_for_params = comment_data
+                    comment_data_dict = json.loads(comment_json_str)
+                    if isinstance(comment_data_dict, dict):
+                        self._logger.debug(
+                            "Using nested 'Comment' JSON for prompts and parameters."
+                        )
+                        self._positive = str(
+                            comment_data_dict.get("prompt", "")
+                        ).strip()
+                        self._negative = str(comment_data_dict.get("uc", "")).strip()
+                        data_to_use_for_prompts_params = (
+                            comment_data_dict  # Use this for params
+                        )
+                    else:
+                        self._logger.warning(
+                            "NovelAI stealth 'Comment' field was not a JSON dictionary. Using main JSON. Content: %s",
+                            comment_json_str[:200],
+                        )
+                        self._positive = str(
+                            main_json_data.get("Description", "")
+                        ).strip()
+                        # Negative might not be available if only Description is present
                 except json.JSONDecodeError:
-                    self._logger.warn(
-                        "NovelAI stealth 'Comment' field was not valid JSON. Using main JSON for prompt/params.",
+                    self._logger.warning(
+                        "NovelAI stealth 'Comment' field was not valid JSON. Using main JSON. Content: %s",
+                        comment_json_str[:200],
+                        exc_info=True,
                     )
-                    # Fallback to Description
-                    self._positive = str(data_json.get("Description", "")).strip()
+                    self._positive = str(main_json_data.get("Description", "")).strip()
             else:
-                self._positive = str(data_json.get("Description", "")).strip()
+                self._logger.debug(
+                    "No 'Comment' field in stealth PNG, using 'Description' for positive prompt."
+                )
+                self._positive = str(main_json_data.get("Description", "")).strip()
+                # Negative prompt might be absent or in the main_json_data directly if structure varies
+                self._negative = str(main_json_data.get("uc", "")).strip()
 
-            param_map = {
-                "sampler": "sampler_name",
-                "seed": "seed",
-                "strength": "denoising_strength",
-                "noise": "noise_offset",
-                "scale": "cfg_scale",
-                "steps": "steps",
-                "width": "width",
-                "height": "height",
-            }
-            for nai_key, canonical_key in param_map.items():
-                if nai_key in data_for_params and canonical_key in self._parameter:
-                    self._parameter[canonical_key] = str(data_for_params.get(nai_key))
+            # Use common parser for parameters
+            return self._parse_common_nai_json(
+                data_to_use_for_prompts_params, "stealth PNG JSON"
+            )
 
-            if data_for_params.get("width") is not None:
-                self._width = str(data_for_params.get("width"))
-            if data_for_params.get("height") is not None:
-                self._height = str(data_for_params.get("height"))
-            if "size" in self._parameter and self._width != "0" and self._height != "0":
-                self._parameter["size"] = f"{self._width}x{self._height}"
-
-            setting_parts = []
-            for k, v_val in data_for_params.items():  # Renamed v to v_val
-                if k not in ["prompt", "uc", "Description", "Comment"] + list(
-                    param_map.keys(),
-                ):
-                    setting_parts.append(
-                        f"{k.capitalize()}: {remove_quotes(str(v_val))}",
-                    )
-            self._setting = ", ".join(sorted(setting_parts))
-            return True
         except gzip.BadGzipFile as e_gzip:
             self._error = f"Invalid GZip data in NovelAI stealth PNG: {e_gzip}"
+            self._logger.warning("%s: %s", self.tool, self._error, exc_info=True)
             return False
         except json.JSONDecodeError as e_json:
             self._error = f"Invalid JSON in NovelAI stealth PNG: {e_json}"
+            self._logger.warning("%s: %s", self.tool, self._error, exc_info=True)
             return False
-        except Exception as general_err:  # Renamed 'e', pylint: disable=broad-except
+        except Exception as general_err:
             self._error = f"Error parsing NovelAI stealth PNG: {general_err}"
             self._logger.error(
-                f"NovelAI stealth parsing error: {general_err}",
-                exc_info=True,
+                "NovelAI stealth parsing error: %s", general_err, exc_info=True
             )
             return False
