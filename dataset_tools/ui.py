@@ -311,7 +311,7 @@ class SettingsDialog(QDialog):
             if (
                 self.theme_combo.currentData() != self.current_theme_on_open
                 and self.current_theme_on_open
-            ):
+            if QT_MATERIAL_AVAILABLE and self.parent_window and hasattr(self.parent_window, "apply_theme") and self.theme_combo.currentData() != self.current_theme_on_open and self.current_theme_on_open:
                 self.parent_window.apply_theme(
                     self.current_theme_on_open, initial_load=False
                 )
