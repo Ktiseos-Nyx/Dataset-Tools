@@ -121,6 +121,73 @@ ignore = [
 ]
 # fix = true # If you want `ruff check` to also attempt fixes without --fix flag
 
+# ADD/MODIFY THIS SECTION:
+# For your vendored code, be more lenient, especially with complexity, length, args, statements,
+# and potentially some annotation/docstring rules if they are too noisy for code you didn't write.
+[tool.ruff.lint.per-file-ignores]
+"dataset_tools/vendored_sdpr/format/*.py" = [
+    "C901", "PLR0912", "PLR0913", "PLR0915", "PLW0603", # Example: PLW0603 is global statement
+    "D100", "D101", "D102", "D103", "D104", "D105", "D107",
+    "ANN001", "ANN002", "ANN003", "ANN201", "ANN202", "ANN204", "ANN205", "ANN401",
+    "BLE001", # Allow blind excepts if they are guarded by logging exc_info
+    "SIM102", # If you don't like its nested if simplification everywhere
+    "B007",   # Unused loop variable (if it's being picky about your error handlers)
+    # Add any other Pylint (PLx), Bugbear (B), Simplify (SIM) rules that are SUPER noisy here
+]
+"dataset_tools/vendored_sdpr/image_data_reader.py" = [
+    "C901", "PLR0912", "PLR0913", "PLR0915", "PLW0603",
+    "D100", "D101", "D102", "D103", "D107",
+    "ANN001", "ANN002", "ANN003", "ANN201", "ANN202", "ANN204", "ANN205", "ANN401",
+    "BLE001",
+    "SIM102",
+]
+"dataset_tools/vendored_sdpr/logger.py" = ["D103", "D203", "D213", "D214", "D215", "PT009", "T201", "PLR2004", "S101", "ANN001", "ANN201", "ANN401", "ARG002", "N803", "PTH118"]
+"dataset_tools/widgets.py" = [
+    "PTH118", # BECAUSE WHY NOT
+    "PLR2004", # ugh
+    "C901", # mega ugh 
+    "PLR0912", "PLR0913", "PLR0915", "PLW0603", "PTH208", 
+    "ANN201", "ANN202", "ANN204", "ANN205", "ANN401",
+    "B007",   # Unused loop variable (if it's being picky about your error handlers)
+    "D203", # Missing docstring in public function
+    "D213", # Missing docstring in public class
+    "D214", # Missing docstring in public module
+    "D215", # Missing docstring in public package
+    "PT009", # Allow missing docstrings in public function
+    "T201",      # Allow print statements
+    "PLR2004",   # Allow magic value comparisons
+    "S101",      # Allow `assert`
+    "ANN001",    # Missing type hint for function argument (e.g. for self, mock objects)
+    "ANN201",    # Missing return type hint for public function (test methods)
+    "ANN401",    # if you use `Any` a lot in tests for mocks
+    "ARG002", # Allow unused arguments
+    "N803", # Allow case mismatches because i'm a dumbass
+    "PTH118", # Allow errors with pathlib because i'm a dumbass dum!
+    "BLE001", # blegh 
+    "SIM102", # If you don't like its nested if simplification everywhere
+    "D415", # because emet selch said so
+    "D205", # because i have a shark! 
+    ]
+# For your tests, you might want to ignore missing docstrings for test methods,
+# print statements, and magic value comparisons.
+"tests/*" = [
+    "D100", "D101", "D102", "D103", "D104", "D400", "D415", # Missing docstrings
+    "D203", # Missing docstring in public function
+    "D213", # Missing docstring in public class
+    "D214", # Missing docstring in public module
+    "D215", # Missing docstring in public package
+    "PT009", # Allow missing docstrings in public function
+    "T201",      # Allow print statements
+    "PLR2004",   # Allow magic value comparisons
+    "S101",      # Allow `assert`
+    "ANN001",    # Missing type hint for function argument (e.g. for self, mock objects)
+    "ANN201",    # Missing return type hint for public function (test methods)
+    "ANN401",    # if you use `Any` a lot in tests for mocks
+    "ARG002", # Allow unused arguments
+    "N803", # Allow case mismatches because i'm a dumbass
+    "PTH118", # Allow errors with pathlib because i'm a dumbass dum!
+]
+
 [tool.ruff.format] # Formatter specific settings
 quote-style = "double"
 indent-style = "space"
@@ -132,12 +199,10 @@ max-line-length               = 120
 ignore-overlong-task-comments = true
 
 [tool.ruff.lint.pylint]
-max-args = 7        # Default is 5
-max-branches = 18   # Default is 12, increased
-max-statements = 70 # Default is 50, increased
-max-locals = 20     # Default is 15, increased
-# Consider also:
-# allow-global-unused-variables = false (default)
+max-args = 8        # Increased from 7
+max-branches = 18
+max-statements = 70
+max-locals = 20
 
 [tool.ruff.lint.flake8-annotations]
 allow-star-arg-any = true # Allows *args: Any and **kwargs: Any
@@ -170,7 +235,8 @@ module = [
     "qt_material.*",
     "defusedxml.*", # types-defusedxml should provide stubs
     "dataset_tools.version", # Your _version.py
-    # "dataset_tools.vendored_sdpr.*", # Enable if vendored code is too noisy initially
+    "PyQt6.*",
+    "dataset_tools.vendored_sdpr.*", # Enable if vendored code is too noisy initially
 ]
 ignore_missing_imports = true
 

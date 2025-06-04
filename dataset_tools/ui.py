@@ -9,7 +9,7 @@ import os
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Any  # Import List for type hinting
+from typing import Any  # Using list directly instead of TypingList
 
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
@@ -23,6 +23,26 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
 )
 
+# --- Logger Setup (Handles Fallback) ---
+try:
+    from .logger import debug_monitor
+    from .logger import info_monitor as nfo
+
+    LOGGER_AVAILABLE = True
+except ImportError:
+
+    def nfo_fallback(*args):
+        print("NFO (fallback):", *args)
+
+    nfo = nfo_fallback
+
+    def debug_monitor_fallback(func):
+        return func
+
+    debug_monitor = debug_monitor_fallback
+    LOGGER_AVAILABLE = False
+    print("WARNING: Main logger (nfo, debug_monitor) not available. Using fallback print/dummy decorator.")
+
 try:
     from qt_material import apply_stylesheet, list_themes
 
@@ -30,32 +50,91 @@ try:
 except ImportError:
     QT_MATERIAL_AVAILABLE = False
 
-    def list_themes():
+    def list_themes_fallback():
         return ["default_light.xml", "default_dark.xml"]
 
-    def apply_stylesheet(app, theme, invert_secondary=False):
+    list_themes = list_themes_fallback
+
+    def apply_stylesheet_fallback(app, theme, invert_secondary=False):
         pass
 
-    print(
-        "WARNING: qt-material library not found. Theme functionality will be limited.",
-    )
+    apply_stylesheet = apply_stylesheet_fallback
+    nfo("WARNING: qt-material library not found. Theme functionality will be limited.")
 
 
-from .correct_types import DownField, EmptyField, UpField  # Import your Enums
-
-# If Ext is used, ensure it's defined
+from .correct_types import DownField, EmptyField, UpField
 from .correct_types import ExtensionType as Ext
-from .logger import (
-    debug_monitor,
-)  # Assuming logger.py is in the same package or sys.path
-from .logger import (
-    info_monitor as nfo,
-)
-from .metadata_parser import parse_metadata  # Your main parsing function
-from .widgets import FileLoader  # Assuming FileLoader is in widgets.py
+from .metadata_parser import parse_metadata
+from .widgets import FileLoader, FileLoadResult
 
 
-# --- Custom ImageLabel for better rescaling ---
+# --- Custom Panel Widget for the Left Column ---
+class LeftPanelWidget(Qw.QWidget):
+    open_folder_requested = QtCore.pyqtSignal()
+    sort_files_requested = QtCore.pyqtSignal()
+    list_item_selected = QtCore.pyqtSignal(object, object)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._setup_panel_ui()
+
+    def _setup_panel_ui(self):
+        layout = Qw.QVBoxLayout(self)
+        self.current_folder_label = Qw.QLabel("Current Folder: None")
+        self.current_folder_label.setWordWrap(True)
+        layout.addWidget(self.current_folder_label)
+        button_layout_top = Qw.QHBoxLayout()
+        self.open_folder_button = Qw.QPushButton("Open Folder")
+        self.open_folder_button.clicked.connect(self.open_folder_requested.emit)
+        button_layout_top.addWidget(self.open_folder_button)
+        self.sort_button = Qw.QPushButton("Sort Files")
+        self.sort_button.clicked.connect(self.sort_files_requested.emit)
+        button_layout_top.addWidget(self.sort_button)
+        layout.addLayout(button_layout_top)
+        self.message_label = Qw.QLabel("Select a folder to view its contents.")
+        self.message_label.setWordWrap(True)
+        layout.addWidget(self.message_label)
+        self.files_list_widget = Qw.QListWidget()
+        self.files_list_widget.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
+        self.files_list_widget.currentItemChanged.connect(self.list_item_selected.emit)
+        self.files_list_widget.setSizePolicy(Qw.QSizePolicy.Policy.Preferred, Qw.QSizePolicy.Policy.Expanding)
+        layout.addWidget(self.files_list_widget, 1)
+
+    def set_current_folder_text(self, text: str):
+        self.current_folder_label.setText(text)
+
+    def set_message_text(self, text: str):
+        self.message_label.setText(text)
+
+    def clear_file_list_display(self):
+        self.files_list_widget.clear()
+
+    def add_items_to_file_list(self, items: list[str]):
+        self.files_list_widget.addItems(items)
+
+    def set_current_file_by_name(self, file_name: str) -> bool:
+        found_items = self.files_list_widget.findItems(file_name, QtCore.Qt.MatchFlag.MatchExactly)
+        if found_items:
+            self.files_list_widget.setCurrentItem(found_items[0])
+            return True
+        return False
+
+    def set_current_file_by_row(self, row: int):
+        if 0 <= row < self.files_list_widget.count():
+            self.files_list_widget.setCurrentRow(row)
+
+    def get_files_list_widget(self) -> Qw.QListWidget:
+        return self.files_list_widget
+
+    def set_buttons_enabled(self, enabled: bool):
+        self.open_folder_button.setEnabled(enabled)
+        self.sort_button.setEnabled(enabled)
+        self.files_list_widget.setEnabled(enabled)
+
+
+# --- End of LeftPanelWidget ---
+
+
 class ImageLabel(Qw.QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -67,7 +146,7 @@ class ImageLabel(Qw.QLabel):
         self.setFrameShape(Qw.QFrame.Shape.StyledPanel)
         self.setText("Image Preview Area\n\n(Drag & Drop Image Here)")
 
-    def setPixmap(self, pixmap: QtGui.QPixmap | None):
+    def setPixmap(self, pixmap: QtGui.QPixmap | None):  # Use Optional
         if pixmap is None or pixmap.isNull():
             self._pixmap = QtGui.QPixmap()
             super().clear()
@@ -84,7 +163,7 @@ class ImageLabel(Qw.QLabel):
 
     def _update_scaled_pixmap(self):
         if self._pixmap.isNull() or self.width() <= 10 or self.height() <= 10:
-            if self._pixmap.isNull() and (not self.text() or self.text() == ""):
+            if self._pixmap.isNull() and not self.text().strip():
                 super().setText("No preview available or image failed to load.")
             return
         super().setText("")
@@ -100,15 +179,15 @@ class ImageLabel(Qw.QLabel):
         super().resizeEvent(event)
 
 
-# --- SettingsDialog Class (No changes needed here based on Enum fix) ---
 class SettingsDialog(QDialog):
-    def __init__(self, parent=None, current_theme_xml=""):
+    def __init__(self, parent: Qw.QWidget | None = None, current_theme_xml: str = ""):  # Use Optional
         super().__init__(parent)
         self.setWindowTitle("Application Settings")
         self.setMinimumWidth(400)
-        self.parent_window = parent
+        self.parent_window = parent  # parent is QWidget, but MainWindow specifically
         self.current_theme_on_open = current_theme_xml
         self.settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
+
         layout = QVBoxLayout(self)
         theme_label = QLabel("<b>Display Theme:</b>")
         layout.addWidget(theme_label)
@@ -116,19 +195,26 @@ class SettingsDialog(QDialog):
         if QT_MATERIAL_AVAILABLE:
             self.available_themes_xml = list_themes()
             for theme_xml_name in self.available_themes_xml:
-                display_name = (
-                    theme_xml_name.replace(".xml", "").replace("_", " ").title()
-                )
+                # Line was too long, break it
+                display_name_part1 = theme_xml_name.replace(".xml", "")
+                display_name = display_name_part1.replace("_", " ").title()
                 self.theme_combo.addItem(display_name, theme_xml_name)
-            if current_theme_xml in self.available_themes_xml:
-                index = self.theme_combo.findData(current_theme_xml)
-                if index >= 0:
-                    self.theme_combo.setCurrentIndex(index)
+
+            # Line was too long, break it (Codacy issue L220)
+            current_theme_display_name_part1 = current_theme_xml.replace(".xml", "")
+            current_theme_display_name = current_theme_display_name_part1.replace("_", " ").title()
+            index = self.theme_combo.findText(current_theme_display_name)
+
+            if index >= 0:
+                self.theme_combo.setCurrentIndex(index)
+            elif self.available_themes_xml:  # Check if list is not empty
+                self.theme_combo.setCurrentIndex(0)
         else:
             self.theme_combo.addItem("Default (qt-material not found)")
             self.theme_combo.setEnabled(False)
         layout.addWidget(self.theme_combo)
         layout.addSpacing(15)
+
         size_label = QLabel("<b>Window Size:</b>")
         layout.addWidget(size_label)
         self.size_combo = QComboBox()
@@ -139,44 +225,36 @@ class SettingsDialog(QDialog):
             "Medium (1280x900)": (1280, 900),
             "Large (1600x900)": (1600, 900),
         }
-        for display_name in self.size_presets.keys():
+        for display_name in self.size_presets:
             self.size_combo.addItem(display_name)
+
         remember_geom = self.settings.value("rememberGeometry", True, type=bool)
         if remember_geom:
             self.size_combo.setCurrentText("Remember Last Size")
         else:
-            saved_preset_name = self.settings.value(
-                "windowSizePreset",
-                "Default (1024x768)",
-            )
-            index = self.size_combo.findText(saved_preset_name)
-            if index >= 0:
-                self.size_combo.setCurrentIndex(index)
+            saved_preset_name = self.settings.value("windowSizePreset", "Default (1024x768)")
+            if self.size_combo.findText(saved_preset_name) != -1:
+                self.size_combo.setCurrentText(saved_preset_name)
             else:
                 self.size_combo.setCurrentText("Default (1024x768)")
         layout.addWidget(self.size_combo)
         layout.addStretch(1)
+
         button_box = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok
             | QDialogButtonBox.StandardButton.Cancel
-            | QDialogButtonBox.StandardButton.Apply,
+            | QDialogButtonBox.StandardButton.Apply
         )
         button_box.accepted.connect(self.accept_settings)
         button_box.rejected.connect(self.reject_settings)
-        button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(
-            self.apply_all_settings,
-        )
+        button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.apply_all_settings)
         layout.addWidget(button_box)
 
     def apply_theme_settings(self):
         if not QT_MATERIAL_AVAILABLE:
             return
         selected_theme_xml = self.theme_combo.currentData()
-        if (
-            selected_theme_xml
-            and self.parent_window
-            and hasattr(self.parent_window, "apply_theme")
-        ):
+        if selected_theme_xml and self.parent_window and hasattr(self.parent_window, "apply_theme"):
             self.parent_window.apply_theme(selected_theme_xml, initial_load=False)
 
     def apply_window_settings(self):
@@ -184,18 +262,9 @@ class SettingsDialog(QDialog):
         size_tuple = self.size_presets.get(selected_size_text)
         if selected_size_text == "Remember Last Size":
             self.settings.setValue("rememberGeometry", True)
-            last_geom = self.settings.value("geometry")
-            if (
-                last_geom
-                and self.parent_window
-                and hasattr(self.parent_window, "restoreGeometry")
-            ):
-                self.parent_window.restoreGeometry(last_geom)
-        elif (
-            size_tuple
-            and self.parent_window
-            and hasattr(self.parent_window, "resize_window")
-        ):
+            if self.parent_window and hasattr(self.parent_window, "saveGeometry"):
+                self.settings.setValue("geometry", self.parent_window.saveGeometry())
+        elif size_tuple and self.parent_window and hasattr(self.parent_window, "resize_window"):
             self.settings.setValue("rememberGeometry", False)
             self.settings.setValue("windowSizePreset", selected_size_text)
             self.parent_window.resize_window(size_tuple[0], size_tuple[1])
@@ -210,492 +279,572 @@ class SettingsDialog(QDialog):
         self.current_theme_on_open = self.theme_combo.currentData()
         self.accept()
 
-    def reject_settings(self):
-        if (
-            QT_MATERIAL_AVAILABLE
-            and self.parent_window
-            and hasattr(self.parent_window, "apply_theme")
-        ):
-            if self.theme_combo.currentData() != self.current_theme_on_open:
-                self.parent_window.apply_theme(
-                    self.current_theme_on_open,
-                    initial_load=False,
-                )
+    def reject_settings(
+        self,
+    ):  # MODIFIED for line length (Codacy issue L273) and clarity
+        can_apply_theme = QT_MATERIAL_AVAILABLE and self.parent_window and hasattr(self.parent_window, "apply_theme")
+
+        # Check if current_theme_on_open is a non-empty string before comparing
+        valid_revert_theme_exists = bool(self.current_theme_on_open)
+
+        theme_has_changed = self.theme_combo.currentData() != self.current_theme_on_open
+
+        if can_apply_theme and theme_has_changed and valid_revert_theme_exists:
+            self.parent_window.apply_theme(self.current_theme_on_open, initial_load=False)
         self.reject()
 
 
 class MainWindow(Qw.QMainWindow):
-    """Consolidated raw functions and behavior of window"""
-
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Dataset Viewer")
+        self.setWindowTitle("Dataset Viewer")  # Line 314 (Codacy "Syntax Error") - this line is fine.
         self.setMinimumSize(800, 600)
         self.settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
         self.setAcceptDrops(True)
+        self.theme_actions: dict[str, QtGui.QAction] = {}
+        self.file_loader: FileLoader | None = None  # Use Optional from typing
+        self.current_files_in_list: list[str] = []
+        self.current_folder: str = ""
+
+        self.main_status_bar = self.statusBar()
+        self.main_status_bar.showMessage("Ready", 3000)
+        self.datetime_label = Qw.QLabel()
+        self.main_status_bar.addPermanentWidget(self.datetime_label)
+        self.status_timer = QtCore.QTimer(self)
+        self.status_timer.timeout.connect(self._update_datetime_status)
+        self.status_timer.start(1000)
+        self._update_datetime_status()
 
         saved_theme_name_xml = self.settings.value("theme", "dark_teal.xml")
         self._setup_menus()
         if QT_MATERIAL_AVAILABLE:
             if saved_theme_name_xml and saved_theme_name_xml in self.theme_actions:
-                self.apply_theme(saved_theme_name_xml, initial_load=True)
+                self.apply_theme(saved_theme_name_xml, True)
             elif "dark_teal.xml" in self.theme_actions:
-                self.apply_theme("dark_teal.xml", initial_load=True)
+                self.apply_theme("dark_teal.xml", True)
             elif self.theme_actions:
-                self.apply_theme(
-                    next(iter(self.theme_actions.keys())),
-                    initial_load=True,
-                )
+                (ft := next(iter(self.theme_actions.keys()), None)) and self.apply_theme(ft, True)
 
         remember_geom = self.settings.value("rememberGeometry", True, type=bool)
         saved_geom = self.settings.value("geometry")
         if remember_geom and saved_geom:
             self.restoreGeometry(saved_geom)
         else:
-            default_preset_name = self.settings.value(
-                "windowSizePreset",
-                "Default (1024x768)",
-            )
-            size_presets_local = {
-                "Default (1024x768)": (1024, 768),
-                "Small (800x600)": (800, 600),
-            }  # Example
-            default_w, default_h = size_presets_local.get(
-                default_preset_name,
-                (1024, 768),
-            )
-            self.resize_window(default_w, default_h)
-
+            dsp = {"Default (1024x768)": (1024, 768)}
+            dpn = self.settings.value("windowSizePreset", "Default (1024x768)")
+            dw, dh = dsp.get(dpn, (1024, 768))
+            self.resize_window(dw, dh)
         self._setup_ui_layout()
-        self.file_loader = None
-        self.current_folder = self.settings.value("lastFolderPath", os.getcwd())
+        initial_folder_path = self.settings.value("lastFolderPath", os.getcwd())
         self.clear_file_list()
-        self.load_files(self.current_folder)
+        if initial_folder_path and Path(initial_folder_path).is_dir():
+            self.load_files(initial_folder_path)
+        else:
+            if hasattr(self, "left_panel"):
+                self.left_panel.set_current_folder_text("Current Folder: None")
+                self.left_panel.set_message_text("Please select folder.")
+            self.clear_selection()
 
-    def _setup_menus(self):
+    def _update_datetime_status(self):
+        self.datetime_label.setText(QtCore.QDateTime.currentDateTime().toString(QtCore.Qt.DateFormat.RFC2822Date))
+
+    def resize_window(self, width: int, height: int):
+        self.resize(width, height)
+        nfo(f"[UI] Window resized: {width}x{height}")
+
+    def _setup_menus(self):  # Restored to readable version
         menu_bar = self.menuBar()
         file_menu = menu_bar.addMenu("&File")
         change_folder_action = QtGui.QAction("Change &Folder...", self)
+        change_folder_action.setShortcut(QtGui.QKeySequence.StandardKey.Open)
         change_folder_action.triggered.connect(self.open_folder)
         file_menu.addAction(change_folder_action)
         file_menu.addSeparator()
         close_action = QtGui.QAction("&Close Window", self)
+        close_action.setShortcut(QtGui.QKeySequence.StandardKey.Close)
         close_action.triggered.connect(self.close)
         file_menu.addAction(close_action)
         view_menu = menu_bar.addMenu("&View")
         themes_menu = Qw.QMenu("&Themes", self)
         view_menu.addMenu(themes_menu)
-        self.theme_actions = {}
         if QT_MATERIAL_AVAILABLE:
-            theme_action_group = QtGui.QActionGroup(self)
-            theme_action_group.setExclusive(True)
-            available_themes_xml = list_themes()
-            for theme_xml in available_themes_xml:
-                display_name = theme_xml.replace(".xml", "").replace("_", " ").title()
-                action = QtGui.QAction(display_name, self, checkable=True)
+            group = QtGui.QActionGroup(self)
+            group.setExclusive(True)
+            for theme_xml in list_themes():
+                name = theme_xml.replace(".xml", "").replace("_", " ").title()
+                action = QtGui.QAction(name, self, checkable=True)
                 action.setData(theme_xml)
                 action.triggered.connect(self.on_theme_action_triggered)
                 themes_menu.addAction(action)
-                theme_action_group.addAction(action)
+                group.addAction(action)
                 self.theme_actions[theme_xml] = action
         else:
-            no_themes_action = QtGui.QAction("qt-material not found", self)
-            no_themes_action.setEnabled(False)
-            themes_menu.addAction(no_themes_action)
-        about_menu = menu_bar.addMenu("&Help")
+            no_themes = QtGui.QAction("qt-material not found", self)
+            no_themes.setEnabled(False)
+            themes_menu.addAction(no_themes)
+        help_menu = menu_bar.addMenu("&Help")
         about_action = QtGui.QAction("&About Dataset Viewer...", self)
         about_action.triggered.connect(self.show_about_dialog)
-        about_menu.addAction(about_action)
+        help_menu.addAction(about_action)
 
-    def _setup_ui_layout(self):
-        main_content_area_widget = Qw.QWidget()
-        self.setCentralWidget(main_content_area_widget)
-        overall_layout = Qw.QVBoxLayout(main_content_area_widget)
+    def on_theme_action_triggered(self):
+        action = self.sender()
+        action and isinstance(action, QtGui.QAction) and (
+            theme_xml := action.data()
+        ) and theme_xml and self.apply_theme(theme_xml)
+
+    def open_settings_dialog(self):
+        current_theme_xml = self.settings.value("theme", "dark_teal.xml")
+        SettingsDialog(self, current_theme_xml=current_theme_xml).exec()
+
+    def _setup_ui_layout(self):  # Restored to readable version
+        main_widget = Qw.QWidget()
+        self.setCentralWidget(main_widget)
+        overall_layout = Qw.QVBoxLayout(main_widget)
         overall_layout.setContentsMargins(5, 5, 5, 5)
         overall_layout.setSpacing(5)
         self.main_splitter = Qw.QSplitter(QtCore.Qt.Orientation.Horizontal)
         overall_layout.addWidget(self.main_splitter, 1)
-        left_panel_widget = Qw.QWidget()
-        left_layout = Qw.QVBoxLayout(left_panel_widget)
-        self.current_folder_label = Qw.QLabel("Current Folder: None")
-        self.current_folder_label.setWordWrap(True)
-        left_layout.addWidget(self.current_folder_label)
-        button_layout = Qw.QHBoxLayout()
-        self.open_folder_button = Qw.QPushButton("Open Folder")
-        self.open_folder_button.clicked.connect(self.open_folder)
-        button_layout.addWidget(self.open_folder_button)
-        self.sort_button = Qw.QPushButton("Sort Files")
-        self.sort_button.clicked.connect(self.sort_files_list)
-        button_layout.addWidget(self.sort_button)
-        self.copy_button = Qw.QPushButton("Copy Metadata")
-        self.copy_button.clicked.connect(self.copy_metadata_to_clipboard)
-        button_layout.addWidget(self.copy_button)
-        left_layout.addLayout(button_layout)
-        self.message_label = Qw.QLabel("Select a folder to view its contents.")
-        self.message_label.setWordWrap(True)
-        left_layout.addWidget(self.message_label)
-        self.files_list = Qw.QListWidget()
-        self.files_list.setSelectionMode(
-            Qw.QAbstractItemView.SelectionMode.SingleSelection,
-        )
-        self.files_list.currentItemChanged.connect(self.on_file_selected)
-        self.files_list.setSizePolicy(
-            Qw.QSizePolicy.Policy.Preferred,
-            Qw.QSizePolicy.Policy.Expanding,
-        )
-        left_layout.addWidget(self.files_list, 1)
-        self.progress_bar = Qw.QProgressBar()
-        self.progress_bar.hide()
-        left_layout.addWidget(self.progress_bar)
-        self.main_splitter.addWidget(left_panel_widget)
-        right_panel_widget = Qw.QWidget()
-        right_layout = Qw.QVBoxLayout(right_panel_widget)
+        self.left_panel = LeftPanelWidget()
+        self.left_panel.open_folder_requested.connect(self.open_folder)
+        self.left_panel.sort_files_requested.connect(self.sort_files_list)
+        self.left_panel.list_item_selected.connect(self.on_file_selected)
+        self.main_splitter.addWidget(self.left_panel)
+        middle_right_area_widget = Qw.QWidget()
+        middle_right_layout = Qw.QHBoxLayout(middle_right_area_widget)
+        middle_right_layout.setContentsMargins(0, 0, 0, 0)
+        middle_right_layout.setSpacing(5)
+        self.metadata_image_splitter = Qw.QSplitter(QtCore.Qt.Orientation.Horizontal)
+        middle_right_layout.addWidget(self.metadata_image_splitter)
+        metadata_panel_widget = Qw.QWidget()
+        metadata_layout = Qw.QVBoxLayout(metadata_panel_widget)
+        metadata_layout.setContentsMargins(10, 20, 10, 20)
+        metadata_layout.setSpacing(15)
+        metadata_layout.addStretch(1)
+        self.positive_prompt_label = Qw.QLabel("Positive Prompt")
+        metadata_layout.addWidget(self.positive_prompt_label)
+        self.positive_prompt_box = Qw.QTextEdit()
+        self.positive_prompt_box.setReadOnly(True)
+        self.positive_prompt_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
+        metadata_layout.addWidget(self.positive_prompt_box)
+        self.negative_prompt_label = Qw.QLabel("Negative Prompt")
+        metadata_layout.addWidget(self.negative_prompt_label)
+        self.negative_prompt_box = Qw.QTextEdit()
+        self.negative_prompt_box.setReadOnly(True)
+        self.negative_prompt_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
+        metadata_layout.addWidget(self.negative_prompt_box)
+        self.generation_data_label = Qw.QLabel("Generation Details & Metadata")
+        metadata_layout.addWidget(self.generation_data_label)
+        self.generation_data_box = Qw.QTextEdit()
+        self.generation_data_box.setReadOnly(True)
+        self.generation_data_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
+        metadata_layout.addWidget(self.generation_data_box)
+        metadata_layout.addStretch(1)
+        self.metadata_image_splitter.addWidget(metadata_panel_widget)
         self.image_preview = ImageLabel()
-        right_layout.addWidget(self.image_preview, stretch=3)
-        self.top_separator = Qw.QLabel("Prompt Info")
-        self.top_separator.setWordWrap(True)
-        right_layout.addWidget(self.top_separator, stretch=0)
-        self.upper_box = Qw.QTextEdit()
-        self.upper_box.setReadOnly(True)
-        self.upper_box.setSizePolicy(
-            Qw.QSizePolicy.Policy.Expanding,
-            Qw.QSizePolicy.Policy.Expanding,
-        )
-        right_layout.addWidget(self.upper_box, stretch=2)
-        self.mid_separator = Qw.QLabel("Generation Info")
-        self.mid_separator.setWordWrap(True)
-        right_layout.addWidget(self.mid_separator, stretch=0)
-        self.lower_box = Qw.QTextEdit()
-        self.lower_box.setReadOnly(True)
-        self.lower_box.setSizePolicy(
-            Qw.QSizePolicy.Policy.Expanding,
-            Qw.QSizePolicy.Policy.Expanding,
-        )
-        right_layout.addWidget(self.lower_box, stretch=2)
-        self.main_splitter.addWidget(right_panel_widget)
-        bottom_button_bar_widget = Qw.QWidget()
-        bottom_button_layout = Qw.QHBoxLayout(bottom_button_bar_widget)
-        bottom_button_layout.setContentsMargins(0, 0, 0, 0)
-        bottom_button_layout.addStretch(1)
-        self.settings_button = Qw.QPushButton("Settings...")
+        self.metadata_image_splitter.addWidget(self.image_preview)
+        self.main_splitter.addWidget(middle_right_area_widget)
+        bottom_bar = Qw.QWidget()
+        bottom_layout = Qw.QHBoxLayout(bottom_bar)
+        bottom_layout.setContentsMargins(10, 5, 10, 5)
+        bottom_layout.addStretch(1)
+        action_buttons_layout = Qw.QHBoxLayout()
+        action_buttons_layout.setSpacing(10)
+        self.copy_metadata_button = Qw.QPushButton("Copy All Metadata")
+        self.copy_metadata_button.clicked.connect(self.copy_metadata_to_clipboard)
+        action_buttons_layout.addWidget(self.copy_metadata_button)
+        self.settings_button = Qw.QPushButton("Settings")
         self.settings_button.clicked.connect(self.open_settings_dialog)
-        bottom_button_layout.addWidget(self.settings_button)
+        action_buttons_layout.addWidget(self.settings_button)
         self.exit_button = Qw.QPushButton("Exit Application")
         self.exit_button.clicked.connect(self.close)
-        bottom_button_layout.addWidget(self.exit_button)
-        overall_layout.addWidget(bottom_button_bar_widget, 0)
-        splitter_state = self.settings.value("splitterSizes")
-        if hasattr(self, "main_splitter") and splitter_state:
-            self.main_splitter.restoreState(splitter_state)
-        elif hasattr(self, "main_splitter"):
-            self.main_splitter.setSizes([self.width() // 3, self.width() * 2 // 3])
-
-    def on_theme_action_triggered(self):
-        action = self.sender()
-        if action and isinstance(action, QtGui.QAction) and action.isChecked():
-            theme_xml_from_action = action.data()
-            if theme_xml_from_action:
-                self.apply_theme(theme_xml_from_action, initial_load=False)
-
-    def open_settings_dialog(self):
-        current_theme_xml = ""
-        if QT_MATERIAL_AVAILABLE:
-            for theme_name, action in self.theme_actions.items():
-                if action.isChecked():
-                    current_theme_xml = theme_name
-                    break
-            if not current_theme_xml and self.theme_actions:
-                current_theme_xml = next(iter(self.theme_actions.keys()))
-        dialog = SettingsDialog(self, current_theme_xml=current_theme_xml)
-        dialog.exec()
-
-    def resize_window(self, width, height):
-        min_w, min_h = self.minimumSize().width(), self.minimumSize().height()
-        new_width = max(width, min_w)
-        new_height = max(height, min_h)
-        if QApplication.instance():
-            screen_geometry = QApplication.primaryScreen().availableGeometry()
-            new_width = min(new_width, screen_geometry.width() - 20)
-            new_height = min(new_height, screen_geometry.height() - 50)
-        self.resize(new_width, new_height)
-
-    def closeEvent(self, event: QtGui.QCloseEvent):
-        nfo("Saving application settings on close...")
-        if self.settings.value("rememberGeometry", True, type=bool):
-            self.settings.setValue("geometry", self.saveGeometry())
-        else:
-            self.settings.remove("geometry")
-        if hasattr(self, "main_splitter"):
-            self.settings.setValue("splitterSizes", self.main_splitter.saveState())
-        self.settings.setValue("lastFolderPath", self.current_folder)
-        nfo("Settings saved.")
-        super().closeEvent(event)
-
-    def open_folder(self):
-        last_folder = self.settings.value("lastFolderPath", os.getcwd())
-        folder_path = Qw.QFileDialog.getExistingDirectory(
-            self,
-            "Select a folder",
-            last_folder,
+        action_buttons_layout.addWidget(self.exit_button)
+        bottom_layout.addLayout(action_buttons_layout)
+        bottom_layout.addStretch(1)
+        overall_layout.addWidget(bottom_bar, 0)
+        try:
+            win_width = self.width() if self.isVisible() else 1024
+        except RuntimeError:
+            win_width = 1024
+        main_splitter_sizes = self.settings.value("mainSplitterSizes", [win_width // 4, win_width * 3 // 4], type=list)
+        hasattr(self, "main_splitter") and self.main_splitter.setSizes([int(s) for s in main_splitter_sizes])
+        meta_img_splitter_sizes = self.settings.value(
+            "metaImageSplitterSizes", [win_width // 3, win_width * 2 // 3], type=list
         )
-        if folder_path:
-            self.settings.setValue("lastFolderPath", folder_path)
-            self.load_files(folder_path)
+        hasattr(self, "metadata_image_splitter") and self.metadata_image_splitter.setSizes(
+            [int(s) for s in meta_img_splitter_sizes]
+        )
 
     def clear_file_list(self):
-        self.image_files = []
-        self.text_files = []
-        self.model_files = []
+        nfo("[UI] Clearing file list and selections.")
+        if hasattr(self, "left_panel"):
+            self.left_panel.clear_file_list_display()
+            self.left_panel.set_message_text("Select a folder or drop files/folder here.")
+        self.current_files_in_list = []
+        self.clear_selection()
+
+    @debug_monitor
+    def open_folder(self):
+        nfo("[UI] 'Open Folder' action triggered.")
+        start_dir = (
+            self.current_folder
+            if self.current_folder and Path(self.current_folder).is_dir()
+            else self.settings.value("lastFolderPath", os.path.expanduser("~"))
+        )
+        folder_path = Qw.QFileDialog.getExistingDirectory(self, "Select Folder to Load", start_dir)
+        if folder_path:
+            nfo("[UI] Folder selected via dialog: %s", folder_path)
+            self.settings.setValue("lastFolderPath", folder_path)
+            self.load_files(folder_path)
+        else:
+            msg = "Folder selection cancelled."
+            nfo("[UI] %s", msg)
+            hasattr(self, "left_panel") and self.left_panel.set_message_text(msg)
+            self.main_status_bar.showMessage(msg, 3000)
+
+    @debug_monitor
+    def load_files(self, folder_path: str, file_to_select_after_load: str | None = None):
+        nfo("[UI] Attempting to load files from: %s", folder_path)
+        if self.file_loader and self.file_loader.isRunning():
+            nfo("[UI] File loading is already in progress.")
+            hasattr(self, "left_panel") and self.left_panel.set_message_text("Loading in progress... Please wait.")
+            return
+        self.current_folder = str(Path(folder_path).resolve())
+        if hasattr(self, "left_panel"):
+            self.left_panel.set_current_folder_text(f"Current Folder: {self.current_folder}")
+            self.left_panel.set_message_text(f"Loading files from {Path(self.current_folder).name}...")
+            self.left_panel.set_buttons_enabled(False)
+        self.file_loader = FileLoader(self.current_folder, file_to_select_after_load)
+        self.file_loader.finished.connect(self.on_files_loaded)
+        self.file_loader.start()
+        nfo("[UI] FileLoader thread started for: %s", self.current_folder)
+
+    @debug_monitor
+    def on_files_loaded(self, result: FileLoadResult):
+        nfo(
+            "[UI] FileLoader finished. Received result for folder: %s",
+            result.folder_path,
+        )
+        if not hasattr(self, "left_panel"):
+            nfo("[UI] Error: Left panel not available in on_files_loaded.")
+            return
+        if result.folder_path != self.current_folder:
+            nfo(
+                "[UI] Discarding stale FileLoader result for: %s (current is %s)",
+                result.folder_path,
+                self.current_folder,
+            )
+            self.left_panel.set_buttons_enabled(True)
+            return
+        self.left_panel.set_buttons_enabled(True)
+        if not result or (not result.images and not result.texts and not result.models):
+            msg = f"No compatible files found in {Path(result.folder_path).name}."
+            self.left_panel.set_message_text(msg)
+            self.main_status_bar.showMessage(msg, 5000)
+            nfo(
+                "[UI] No compatible files found or result was empty for %s.",
+                result.folder_path,
+            )
+            self.current_files_in_list = []
+            self.left_panel.clear_file_list_display()
+            return
+        self.current_files_in_list = sorted(list(set(result.images + result.texts + result.models)))
+        self.left_panel.clear_file_list_display()
+        self.left_panel.add_items_to_file_list(self.current_files_in_list)
+        self.left_panel.set_message_text(
+            f"Loaded {len(self.current_files_in_list)} file(s) from {Path(result.folder_path).name}."
+        )
+        selected_item_set = False
+        if result.file_to_select and self.left_panel.set_current_file_by_name(result.file_to_select):
+            nfo("[UI] Auto-selected file: %s", result.file_to_select)
+            selected_item_set = True
+        if not selected_item_set and self.left_panel.get_files_list_widget().count() > 0:
+            self.left_panel.set_current_file_by_row(0)
+            nfo("[UI] Auto-selected first file in the list.")
+        elif not selected_item_set:
+            self.clear_selection()
+
+    def sort_files_list(self):
+        nfo("[UI] 'Sort Files' button clicked (from LeftPanelWidget).")
+        if not hasattr(self, "left_panel"):
+            return
+        if self.current_files_in_list:
+            list_widget = self.left_panel.get_files_list_widget()
+            current_qt_item = list_widget.currentItem()
+            current_selection_text = current_qt_item.text() if current_qt_item else None
+            self.current_files_in_list.sort()
+            self.left_panel.clear_file_list_display()
+            self.left_panel.add_items_to_file_list(self.current_files_in_list)
+            if current_selection_text:
+                self.left_panel.set_current_file_by_name(current_selection_text)
+            elif list_widget.count() > 0:
+                self.left_panel.set_current_file_by_row(0)
+            msg = f"Files sorted ({len(self.current_files_in_list)} items)."
+            self.left_panel.set_message_text(msg)
+            self.main_status_bar.showMessage(msg, 3000)
+            nfo("[UI] Files list re-sorted and repopulated.")
+        else:
+            msg = "No files to sort."
+            self.left_panel.set_message_text(msg)
+            self.main_status_bar.showMessage(msg, 3000)
+            nfo("[UI] %s", msg)
 
     def clear_selection(self):
         self.image_preview.clear()
-        # Use getattr for placeholders in case EmptyField definition changes or attribute is missing
-        # Also ensure EmptyField.PLACEHOLDER_GEN.value is used if they are enums
-        ph_gen_val = EmptyField.PLACEHOLDER.value  # Default if specific not found
-        if hasattr(EmptyField, "PLACEHOLDER_GEN") and hasattr(
-            EmptyField.PLACEHOLDER_GEN,
-            "value",
-        ):
-            ph_gen_val = EmptyField.PLACEHOLDER_GEN.value
-        elif hasattr(
-            EmptyField,
-            "PLACEHOLDER_GEN",
-        ):  # If it's a direct string attribute
-            ph_gen_val = EmptyField.PLACEHOLDER_GEN
-        self.lower_box.clear()
-        self.mid_separator.setText(
-            getattr(EmptyField, "_fallback_gen_placeholder_text", ph_gen_val),
-        )
+        ph_positive_txt = EmptyField.PLACEHOLDER_POSITIVE.value
+        ph_negative_txt = EmptyField.PLACEHOLDER_NEGATIVE.value
+        ph_details_txt = EmptyField.PLACEHOLDER_DETAILS.value
+        if hasattr(self, "positive_prompt_label"):
+            self.positive_prompt_label.setText("Positive Prompt")
+        if hasattr(self, "positive_prompt_box"):
+            self.positive_prompt_box.clear()
+            self.positive_prompt_box.setPlaceholderText(ph_positive_txt)
+        if hasattr(self, "negative_prompt_label"):
+            self.negative_prompt_label.setText("Negative Prompt")
+        if hasattr(self, "negative_prompt_box"):
+            self.negative_prompt_box.clear()
+            self.negative_prompt_box.setPlaceholderText(ph_negative_txt)
+        if hasattr(self, "generation_data_label"):
+            self.generation_data_label.setText("Generation Details & Metadata")
+        if hasattr(self, "generation_data_box"):
+            self.generation_data_box.clear()
+            self.generation_data_box.setPlaceholderText(ph_details_txt)
 
-        ph_prompt_val = EmptyField.PLACEHOLDER.value  # Default
-        if hasattr(EmptyField, "PLACEHOLDER_PROMPT") and hasattr(
-            EmptyField.PLACEHOLDER_PROMPT,
-            "value",
-        ):
-            ph_prompt_val = EmptyField.PLACEHOLDER_PROMPT.value
-        elif hasattr(EmptyField, "PLACEHOLDER_PROMPT"):
-            ph_prompt_val = EmptyField.PLACEHOLDER_PROMPT
-
-        self.upper_box.clear()
-        self.top_separator.setText(
-            getattr(EmptyField, "_fallback_prompt_placeholder_text", ph_prompt_val),
-        )
-
-    def load_files(
-        self,
-        folder_path: str,
-        file_to_select_after_load: str | None = None,
-    ):
-        self.current_folder = folder_path
-        self.current_folder_label.setText(f"Current Folder: {Path(folder_path).name}")
-        self.message_label.setText("Loading files...")
-        self.progress_bar.setValue(0)
-        self.progress_bar.show()
-        if self.file_loader and self.file_loader.isRunning():
-            try:
-                self.file_loader.progress.disconnect(self.update_progress)
-                self.file_loader.finished.disconnect(self.on_files_loaded)
-            except TypeError:
-                pass
-        self.file_loader = FileLoader(folder_path, file_to_select_after_load)
-        self.file_loader.progress.connect(self.update_progress)
-        self.file_loader.finished.connect(self.on_files_loaded)
-        self.file_loader.start()
-
-    def update_progress(self, progress: int):
-        self.progress_bar.setValue(progress)
-
-    def on_files_loaded(
-        self,
-        image_list: list,
-        text_files: list,
-        model_files: list,
-        loaded_folder: str,
-        file_to_select: str | None = None,
-    ):
-        if self.current_folder != loaded_folder:
-            nfo(
-                f"Ignoring loaded files from '{loaded_folder}' as current folder changed to '{self.current_folder}'",
-            )
+    def display_text_of(self, metadata_dict: dict[str, Any] | None) -> None:  # Use Optional
+        ph_positive_txt = EmptyField.PLACEHOLDER_POSITIVE.value
+        ph_negative_txt = EmptyField.PLACEHOLDER_NEGATIVE.value
+        ph_details_txt = EmptyField.PLACEHOLDER_DETAILS.value
+        if hasattr(self, "positive_prompt_box"):
+            self.positive_prompt_box.clear()
+            self.positive_prompt_box.setPlaceholderText(ph_positive_txt)
+        if hasattr(self, "negative_prompt_box"):
+            self.negative_prompt_box.clear()
+            self.negative_prompt_box.setPlaceholderText(ph_negative_txt)
+        if hasattr(self, "generation_data_box"):
+            self.generation_data_box.clear()
+            self.generation_data_box.setPlaceholderText(ph_details_txt)
+        placeholder_key = EmptyField.PLACEHOLDER.value
+        is_error_or_empty = metadata_dict is None or (len(metadata_dict) == 1 and placeholder_key in metadata_dict)
+        if is_error_or_empty:
+            error_msg = "N/A"
+            if metadata_dict and placeholder_key in metadata_dict:
+                content = metadata_dict[placeholder_key]
+                error_msg = (
+                    content.get("Error", content.get("Info", "N/A")) if isinstance(content, dict) else str(content)
+                )
+            if hasattr(self, "generation_data_box"):
+                self.generation_data_box.setText(f"Info/Error:\n{error_msg}")
             return
-        self.image_files = sorted(image_list)
-        self.text_files = sorted(text_files)
-        self.model_files = sorted(model_files)
-        self.message_label.setText(
-            f"Loaded {len(self.image_files)} images, {len(self.text_files)} text, {len(self.model_files)} model files.",
-        )
-        self.progress_bar.hide()
-        self.files_list.clear()
-        self.files_list.addItems(self.image_files)
-        self.files_list.addItems(self.text_files)
-        self.files_list.addItems(self.model_files)
+        # metadata_dict is guaranteed not None here by earlier check or previous return
+        positive_prompt_text = ""
+        prompt_section = metadata_dict.get(UpField.PROMPT.value, {})
+        isinstance(prompt_section, dict) and (positive_prompt_text := str(prompt_section.get("Positive", "")).strip())
+        hasattr(self, "positive_prompt_box") and self.positive_prompt_box.setText(positive_prompt_text)
+        negative_prompt_text = ""
+        isinstance(prompt_section, dict) and (negative_prompt_text := str(prompt_section.get("Negative", "")).strip())
+        hasattr(self, "negative_prompt_box") and self.negative_prompt_box.setText(negative_prompt_text)
+        details_parts: list[str] = []
+        separators = [": ", "\n", "\n\n---\n\n", "", " & "]
+        section_separator = "\n\n" + "═" * 30 + "\n\n"
+        metadata_s = metadata_dict.get(UpField.METADATA.value)
+        if isinstance(metadata_s, dict) and "Detected Tool" in metadata_s:
+            details_parts.append(f"Detected Tool: {metadata_s['Detected Tool']}")
+        gen_params_dict = metadata_dict.get(DownField.GENERATION_DATA.value, {})
+        if isinstance(gen_params_dict, dict) and gen_params_dict:
+            # Line was too long (Codacy issue L736)
+            param_strings = [f"{k}{separators[0]}{v}" for k, v in sorted(gen_params_dict.items())]
+            param_display_list = param_strings  # Assign to avoid undefined var if list comp is empty
+            if param_display_list:
+                details_parts.append(f"Generation Parameters:\n{separators[1].join(param_display_list)}")
 
-        if file_to_select:
-            items = self.files_list.findItems(
-                file_to_select,
-                QtCore.Qt.MatchFlag.MatchExactly,
+        def append_unpacked_section(title: str, field_enum_member: Any):
+            if hasattr(field_enum_member, "value") and field_enum_member.value in metadata_dict:
+                unpacked = self.unpack_content_of(metadata_dict, [field_enum_member], separators)
+                display_text = unpacked.get("display", "").strip()
+                if display_text:
+                    details_parts.append(f"{title}:\n{display_text}")
+
+        append_unpacked_section("EXIF Details", DownField.EXIF)
+        append_unpacked_section("Tags (XMP/IPTC)", UpField.TAGS)
+        model_header_content_parts: list[str] = []
+        if hasattr(DownField.JSON_DATA, "value") and DownField.JSON_DATA.value in metadata_dict:
+            unpacked = self.unpack_content_of(metadata_dict, [DownField.JSON_DATA], separators)
+            unpacked.get("display") and model_header_content_parts.append(
+                f"Model Header (JSON):\n{unpacked['display']}"
             )
-            if items:
-                self.files_list.setCurrentItem(items[0])
-                nfo(f"[UI] Auto-selected dropped/specified file: {file_to_select}")
-            elif self.files_list.count() > 0:
-                self.files_list.setCurrentRow(0)
-        elif self.files_list.count() > 0:
-            self.files_list.setCurrentRow(0)
-
-    def sort_files_list(self):
-        nfo("Sort Files button clicked. Sorting file list.")
-        if self.files_list.count() == 0:
-            nfo("File list is empty, nothing to sort.")
-            self.message_label.setText("Nothing to sort.")
-            return
-        self.image_files.sort()
-        self.text_files.sort()
-        self.model_files.sort()
-        self.files_list.clear()
-        self.files_list.addItems(self.image_files)
-        self.files_list.addItems(self.text_files)
-        self.files_list.addItems(self.model_files)
-        if self.files_list.count() > 0:
-            self.files_list.setCurrentRow(0)
-        self.message_label.setText(f"Sorted {self.files_list.count()} items.")
-        nfo(f"Sorted {self.files_list.count()} items in the file list.")
-
-    def copy_metadata_to_clipboard(self):
-        nfo("Copy Metadata button clicked.")
-        current_selection = self.files_list.currentItem()
-        if not current_selection:
-            self.message_label.setText("No file selected to copy metadata from.")
-            nfo("No file selected.")
-            return
-        prompt_info_title = self.top_separator.text()
-        prompt_info_content = self.upper_box.toPlainText().strip()
-        generation_info_title = self.mid_separator.text()
-        generation_info_content = self.lower_box.toPlainText().strip()
-
-        # Assuming EmptyField.PLACEHOLDER.value, etc. will be the actual string values
-        # Default to a generic string if specific placeholders aren't defined or .value fails
-        ph_prompt_default = "Prompt Info"
-        ph_gen_default = "Generation Info"
-        ph_details_default = "N/A"
-
-        try:
-            ph_prompt = (
-                EmptyField.PLACEHOLDER_PROMPT.value
-                if hasattr(EmptyField, "PLACEHOLDER_PROMPT")
-                else ph_prompt_default
+        if hasattr(DownField.TOML_DATA, "value") and DownField.TOML_DATA.value in metadata_dict:
+            unpacked = self.unpack_content_of(metadata_dict, [DownField.TOML_DATA], separators)
+            unpacked.get("display") and model_header_content_parts.append(
+                f"Model Header (TOML):\n{unpacked['display']}"
             )
-        except AttributeError:
-            ph_prompt = getattr(EmptyField, "PLACEHOLDER_PROMPT", ph_prompt_default)
+        model_header_content_parts and details_parts.append(separators[1].join(model_header_content_parts))
+        if hasattr(DownField.RAW_DATA, "value") and DownField.RAW_DATA.value in metadata_dict:
+            raw_content = str(metadata_dict[DownField.RAW_DATA.value])
+            title = "Raw Data / Workflow"
+            raw_strip = raw_content.strip()
+            if raw_strip.startswith("{") and raw_strip.endswith("}"):
+                title += " (JSON)"
+            details_parts.append(f"{title}:\n{raw_content}")
+        if hasattr(self, "generation_data_box"):
+            self.generation_data_box.setText(section_separator.join(filter(None, details_parts)))
 
-        try:
-            ph_gen = (
-                EmptyField.PLACEHOLDER_GEN.value
-                if hasattr(EmptyField, "PLACEHOLDER_GEN")
-                else ph_gen_default
-            )
-        except AttributeError:
-            ph_gen = getattr(EmptyField, "PLACEHOLDER_GEN", ph_gen_default)
-
-        try:
-            ph_details = (
-                EmptyField.PLACEHOLDER_DETAILS.value
-                if hasattr(EmptyField, "PLACEHOLDER_DETAILS")
-                else ph_details_default
-            )
-        except AttributeError:
-            ph_details = getattr(EmptyField, "PLACEHOLDER_DETAILS", ph_details_default)
-
-        is_prompt_empty = (
-            not prompt_info_content
-            or prompt_info_content == ph_details
-            or prompt_info_title == ph_prompt
-        )
-        is_gen_empty = (
-            not generation_info_content
-            or generation_info_content == ph_details
-            or generation_info_title == ph_gen
-        )
-        if is_prompt_empty and is_gen_empty:
-            self.message_label.setText("No metadata displayed to copy.")
-            nfo("No metadata content in text boxes.")
-            return
-        clipboard_text = []
-        if not is_prompt_empty:
-            clipboard_text.append(f"{prompt_info_title}:\n{prompt_info_content}")
-        if not is_gen_empty:
-            clipboard_text.append(
-                f"{generation_info_title}:\n{generation_info_content}",
-            )
-        final_clipboard_text = "\n\n".join(clipboard_text)
-        if final_clipboard_text:
-            QtGui.QGuiApplication.clipboard().setText(final_clipboard_text)
-            self.message_label.setText("Metadata copied to clipboard!")
-            nfo("Metadata copied to clipboard.")
+    def _get_text_from_box(self, box_attr_name: str, label_attr_name: str) -> str | None:
+        """Helper to get formatted text from a label and text box if they exist and box has content."""
+        if hasattr(self, box_attr_name) and hasattr(self, label_attr_name):
+            box_widget = getattr(self, box_attr_name)
+            label_widget = getattr(self, label_attr_name)
+            if not isinstance(box_widget, Qw.QTextEdit) or not isinstance(label_widget, Qw.QLabel):
+                nfo(f"Widget type mismatch for {box_attr_name} or {label_attr_name}")
+                return None
+            content = box_widget.toPlainText().strip()
+            if content:
+                if box_attr_name == "generation_data_box" and content.startswith("Info/Error:"):
+                    return None
+                return f"{label_widget.text()}:\n{content}"
         else:
-            self.message_label.setText("No actual metadata to copy.")
-            nfo("No metadata found to copy after formatting.")
+            nfo(f"Missing attribute for {box_attr_name} or {label_attr_name}")
+        return None
+
+    def copy_metadata_to_clipboard(self):  # Addressed complexity (Codacy L874)
+        nfo("Copy All Metadata button clicked.")
+        text_parts: list[str] = []
+        part = self._get_text_from_box("positive_prompt_box", "positive_prompt_label")
+        if part:
+            text_parts.append(part)
+        part = self._get_text_from_box("negative_prompt_box", "negative_prompt_label")
+        if part:
+            text_parts.append(part)
+        part = self._get_text_from_box("generation_data_box", "generation_data_label")
+        if part:
+            text_parts.append(part)
+        final_text = ("\n\n" + "═" * 20 + "\n\n").join(text_parts).strip()
+        if final_text:
+            QtGui.QGuiApplication.clipboard().setText(final_text)
+            self.main_status_bar.showMessage("Displayed metadata copied to clipboard!", 3000)
+            nfo("Displayed metadata copied.")
+        else:
+            self.main_status_bar.showMessage("No actual metadata displayed to copy.", 3000)
+            nfo("No metadata content in display boxes for copying.")
 
     @debug_monitor
-    def load_metadata(self, file_name: str) -> dict[str, Any] | None:
-        metadata: dict[str, Any] | None = None
+    def load_metadata(self, file_name: str) -> dict[str, Any] | None:  # Use Optional
+        if not self.current_folder or not file_name:
+            nfo(
+                "[UI] load_metadata: folder/file empty. Current: '%s', File: '%s'",
+                self.current_folder,
+                file_name,
+            )
+            return {EmptyField.PLACEHOLDER.value: {"Error": "Cannot load metadata, folder/file name missing."}}
         full_file_path = os.path.join(self.current_folder, file_name)
+        nfo("[UI] load_metadata: Parsing: %s", full_file_path)
         try:
-            metadata = parse_metadata(full_file_path)
-        except Exception as error_log:
-            # Log full error
-            nfo(f"Error in parse_metadata for {full_file_path}: {error_log}")
-        return metadata
+            return parse_metadata(full_file_path)
+        except Exception as e:
+            nfo("Error in parse_metadata for %s: %s", full_file_path, e, exc_info=True)
+            return None
 
     @debug_monitor
     def on_file_selected(
         self,
         current_item: Qw.QListWidgetItem | None,
-        previous_item: Qw.QListWidgetItem | None,
+        _previous_item: Qw.QListWidgetItem | None = None,
     ):
         if not current_item:
             self.clear_selection()
-            self.message_label.setText("No file selected.")
+            if hasattr(self, "left_panel"):
+                self.left_panel.set_message_text("No file selected.")
+            self.main_status_bar.showMessage("No file selected.", 3000)
             return
-        file_name = current_item.text()
-        self.message_label.setText(f"Selected: {file_name}")
         self.clear_selection()
+        file_name = current_item.text()
+        if hasattr(self, "left_panel"):
+            count = len(self.current_files_in_list)
+            folder_name = Path(self.current_folder).name if self.current_folder else "Unknown Folder"
+            self.left_panel.set_message_text(f"{count} file(s) in {folder_name}")
+        self.main_status_bar.showMessage(f"Selected: {file_name}", 4000)
+        nfo("[UI] ON_FILE_SELECTED: file_name = '%s'", file_name)
+        nfo("[UI] ON_FILE_SELECTED: self.current_folder = '%s'", self.current_folder)
+        if not self.current_folder or not file_name:
+            nfo("[UI] ON_FILE_SELECTED: folder/file empty.")
+            self.display_text_of({EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}})
+            return
         full_file_path = os.path.join(self.current_folder, file_name)
-        is_image = False
-        file_suffix_lower = Path(full_file_path).suffix.lower()
-
-        # Check if Ext.IMAGE is a list of sets
-        if hasattr(Ext, "IMAGE") and isinstance(Ext.IMAGE, list):
-            for image_format_set in Ext.IMAGE:
-                if (
-                    isinstance(image_format_set, set)
-                    and file_suffix_lower in image_format_set
-                ):
-                    self.display_image_of(full_file_path)
-                    is_image = True
-                    break
-        if not is_image:
-            self.image_preview.setPixmap(None)
-            self.image_preview.setText(
-                "No preview for this file type or image is invalid.",
+        nfo("[UI] ON_FILE_SELECTED: full_path = '%s'", full_file_path)
+        path_obj = Path(full_file_path)
+        is_a_file = path_obj.is_file()
+        nfo(
+            "[UI] ON_FILE_SELECTED: Path('%s').is_file() result = %s",
+            full_file_path,
+            is_a_file,
+        )
+        file_suffix_lower = path_obj.suffix.lower()
+        if not is_a_file:
+            nfo(
+                "[UI] ON_FILE_SELECTED: Path check FAILED for '%s'. Not image.",
+                full_file_path,
             )
-
-        metadata_dict: dict[str, Any] | None = self.load_metadata(file_name)
+        else:
+            nfo(
+                "[UI] ON_FILE_SELECTED: Path PASSED for '%s'. Suffix: '%s'. Processing for image.",
+                full_file_path,
+                file_suffix_lower,
+            )
+            is_image_displayed_this_time = False
+            if hasattr(Ext, "IMAGE") and isinstance(Ext.IMAGE, list):
+                for image_format_set in Ext.IMAGE:
+                    if isinstance(image_format_set, set) and file_suffix_lower in image_format_set:
+                        # Line was too long (Codacy issue L987) - break format string
+                        nfo(
+                            "[UI] ON_FILE_SELECTED: File '%s' suffix '%s' MATCHES image format set."
+                            " Calling display_image_of.",
+                            file_name,
+                            file_suffix_lower,
+                        )
+                        self.display_image_of(full_file_path)
+                        is_image_displayed_this_time = True
+                        break
+            if not is_image_displayed_this_time:
+                # Line was too long (Codacy issue L996) - break format string
+                nfo(
+                    "[UI] ON_FILE_SELECTED: File '%s' (suffix '%s') did NOT match any"
+                    " image format set or Ext.IMAGE misconfigured.",
+                    file_name,
+                    file_suffix_lower,
+                )
+        metadata_dict = self.load_metadata(file_name)
         try:
             self.display_text_of(metadata_dict)
-            # --- MODIFIED: Use .value for EmptyField.PLACEHOLDER if it's an Enum ---
-            placeholder_key = (
-                EmptyField.PLACEHOLDER.value
-                if hasattr(EmptyField.PLACEHOLDER, "value")
-                else EmptyField.PLACEHOLDER
-            )
-            if not metadata_dict or (
-                len(metadata_dict) == 1 and placeholder_key in metadata_dict
-            ):
-                nfo(f"No meaningful metadata or error for {file_name}")
-        except Exception as e:
-            nfo(f"Error displaying text metadata for {file_name}: {e}")
-            self.display_text_of(None)  # Pass None to display_text_of
+            if metadata_dict:
+                if len(metadata_dict) == 1 and EmptyField.PLACEHOLDER.value in metadata_dict:
+                    nfo("No meaningful metadata for %s", file_name)
+            else:
+                nfo("No metadata for %s (load_metadata returned None)", file_name)
+        except Exception as e_display:
+            nfo("Error display_text for %s: %s", file_name, e_display, exc_info=True)
+            self.display_text_of(None)
+
+    def _format_nested_dict_for_display(
+        self, nested_dict: dict, key_value_sep: str, item_sep: str
+    ) -> str:  # Addressed complexity (Codacy L1049)
+        nested_str_parts = [f"  {nk}{key_value_sep}{nv}" for nk, nv in sorted(nested_dict.items()) if nv is not None]
+        return item_sep.join(nested_str_parts)
+
+    def _format_single_section_data(self, section_data_item: Any, key_value_sep: str, item_sep: str) -> list[str]:
+        parts: list[str] = []
+        if isinstance(section_data_item, dict):
+            for sub_key, sub_value in sorted(section_data_item.items()):
+                if sub_value is not None:
+                    if isinstance(sub_value, dict):
+                        formatted_nested = self._format_nested_dict_for_display(sub_value, key_value_sep, item_sep)
+                        if formatted_nested:
+                            parts.append(f"{sub_key}{key_value_sep.strip()}:\n{formatted_nested}")
+                    else:
+                        parts.append(f"{sub_key}{key_value_sep}{sub_value!s}")
+        elif isinstance(section_data_item, list):
+            parts.extend(str(item) for item in section_data_item)
+        elif section_data_item is not None:
+            parts.append(str(section_data_item))
+        return parts
 
     @debug_monitor
     def unpack_content_of(
@@ -704,159 +853,53 @@ class MainWindow(Qw.QMainWindow):
         labels_to_extract: list[Any],
         separators: list[str],
     ) -> defaultdict[str, str]:
-        # labels_to_extract should be a list of Enum members (e.g., from UpField.get_ordered_labels())
-        key_value_sep, item_sep, block_sep, _, title_joiner = separators
+        key_value_sep, item_sep, _, _, title_joiner = separators
         display_output = defaultdict(lambda: "")
         title_parts: list[str] = []
-        all_section_texts = []
-
-        for (
-            section_key_enum_member
-        ) in labels_to_extract:  # labels_to_extract is now a list of Enum members
+        all_formatted_section_texts: list[str] = []
+        for section_key_enum_member in labels_to_extract:
             if not hasattr(section_key_enum_member, "value"):
                 nfo(
-                    f"Warning: Item '{section_key_enum_member}' in labels_to_extract is not a valid Enum member with a .value attribute. Skipping.",
+                    "Warning: Item '%s' not valid Enum. Skipping.",
+                    section_key_enum_member,
                 )
                 continue
-            # Use .value for the string key
             section_key_label_str = section_key_enum_member.value
             section_data = metadata_dict.get(section_key_label_str)
-
-            if section_data is not None:
-                # Use Enum member's name for title parts for better readability, or value if preferred
-                title_parts.append(
-                    section_key_enum_member.name.replace("_", " ").title(),
-                )
-                current_section_text_parts = []
-                if isinstance(section_data, dict):
-                    for sub_key, sub_value in section_data.items():
-                        if sub_value is not None:
-                            if isinstance(sub_value, dict):
-                                nested_parts = [
-                                    f"  {nk}{key_value_sep}{nv}"
-                                    for nk, nv in sub_value.items()
-                                    if nv is not None
-                                ]
-                                if nested_parts:
-                                    current_section_text_parts.append(
-                                        f"{sub_key}{key_value_sep.strip()}:\n"
-                                        + item_sep.join(nested_parts),
-                                    )
-                            else:
-                                current_section_text_parts.append(
-                                    f"{sub_key}{key_value_sep}{sub_value!s}",
-                                )
-                elif isinstance(section_data, list):
-                    current_section_text_parts.extend(
-                        str(item) for item in section_data
-                    )
-                else:
-                    current_section_text_parts.append(str(section_data))
-                if current_section_text_parts:
-                    all_section_texts.append(item_sep.join(current_section_text_parts))
-
-        display_output["display"] = block_sep.join(all_section_texts)
-        if title_parts:
-            display_output["title"] = title_joiner.join(title_parts)
-        else:
-            display_output["title"] = "Info"  # Default title
+            if section_data is None:
+                continue
+            title_name = getattr(section_key_enum_member, "name", section_key_label_str)
+            title_parts.append(title_name.replace("_", " ").title())
+            current_section_text_parts = self._format_single_section_data(section_data, key_value_sep, item_sep)
+            if current_section_text_parts:
+                all_formatted_section_texts.append(item_sep.join(current_section_text_parts))
+        display_output["display"] = ("\n" + item_sep).join(all_formatted_section_texts)
+        display_output["title"] = title_joiner.join(title_parts) if title_parts else "Details"
         return display_output
 
     def display_image_of(self, image_file_path: str) -> None:
+        nfo("[UI] display_image_of: Loading pixmap for: '%s'", image_file_path)
         try:
             pixmap = QtGui.QPixmap(image_file_path)
-            self.image_preview.setPixmap(pixmap)
+            if pixmap.isNull():
+                nfo("[UI] display_image_of: QPixmap NULL for '%s'.", image_file_path)
+                self.image_preview.setPixmap(None)
+            else:
+                nfo(
+                    "[UI] display_image_of: QPixmap OK for '%s'. Size: %dx%d",
+                    image_file_path,
+                    pixmap.width(),
+                    pixmap.height(),
+                )
+                self.image_preview.setPixmap(pixmap)
         except Exception as e:
-            nfo(f"Error creating QPixmap for {image_file_path}: {e}")
+            nfo(
+                "[UI] display_image_of: Exception for '%s': %s",
+                image_file_path,
+                e,
+                exc_info=True,
+            )
             self.image_preview.setPixmap(None)
-
-    def display_text_of(self, metadata_dict: dict[str, Any] | None) -> None:
-        # Get placeholder strings, using .value if Enums, with fallbacks
-        ph_prompt_default = "Prompt Info"
-        ph_gen_default = "Generation Info"
-        ph_details_default = "N/A"
-        try:
-            ph_prompt = (
-                EmptyField.PLACEHOLDER_PROMPT.value
-                if hasattr(EmptyField, "PLACEHOLDER_PROMPT")
-                else ph_prompt_default
-            )
-        except AttributeError:
-            ph_prompt = getattr(EmptyField, "PLACEHOLDER_PROMPT", ph_prompt_default)
-        try:
-            ph_gen = (
-                EmptyField.PLACEHOLDER_GEN.value
-                if hasattr(EmptyField, "PLACEHOLDER_GEN")
-                else ph_gen_default
-            )
-        except AttributeError:
-            ph_gen = getattr(EmptyField, "PLACEHOLDER_GEN", ph_gen_default)
-        try:
-            ph_details = (
-                EmptyField.PLACEHOLDER_DETAILS.value
-                if hasattr(EmptyField, "PLACEHOLDER_DETAILS")
-                else ph_details_default
-            )
-        except AttributeError:
-            ph_details = getattr(EmptyField, "PLACEHOLDER_DETAILS", ph_details_default)
-
-        # Determine the key for placeholder data in metadata_dict
-        placeholder_key = (
-            EmptyField.PLACEHOLDER.value
-            if hasattr(EmptyField.PLACEHOLDER, "value")
-            else EmptyField.PLACEHOLDER
-        )
-
-        is_error_or_empty = False
-        if metadata_dict is None or (
-            placeholder_key in metadata_dict and len(metadata_dict) == 1
-        ):
-            is_error_or_empty = True
-
-        if not is_error_or_empty:
-            separators = [": ", "\n", "\n\n", "", " & "]
-            # --- MODIFIED: Use .get_ordered_labels() if UpField/DownField are Enums with this method ---
-            metadata_display_upper = self.unpack_content_of(
-                metadata_dict,
-                UpField.get_ordered_labels(),
-                separators,
-            )
-            self.top_separator.setText(
-                metadata_display_upper.get("title", ph_prompt).strip(" & "),
-            )
-            self.upper_box.setText(metadata_display_upper.get("display", "").strip())
-
-            metadata_display_lower = self.unpack_content_of(
-                metadata_dict,
-                DownField.get_ordered_labels(),
-                separators,
-            )
-            self.mid_separator.setText(
-                metadata_display_lower.get("title", ph_gen).strip(" & "),
-            )
-            self.lower_box.setText(metadata_display_lower.get("display", "").strip())
-        else:
-            self.top_separator.setText(ph_prompt)
-            self.mid_separator.setText(ph_gen)
-            error_msg_to_display = ph_details
-            if metadata_dict and placeholder_key in metadata_dict:  # Check .value
-                placeholder_content = metadata_dict[placeholder_key]
-                if (
-                    isinstance(placeholder_content, dict)
-                    and "Error" in placeholder_content
-                ):
-                    error_msg_to_display = (
-                        f"Error loading metadata:\n{placeholder_content['Error']}"
-                    )
-                elif (
-                    isinstance(placeholder_content, dict)
-                    and "Info" in placeholder_content
-                ):
-                    error_msg_to_display = placeholder_content["Info"]
-                elif isinstance(placeholder_content, str):
-                    error_msg_to_display = placeholder_content
-            self.upper_box.setText(error_msg_to_display)
-            self.lower_box.setText("")
 
     def apply_theme(self, theme_name_xml: str, initial_load=False):
         if not QT_MATERIAL_AVAILABLE:
@@ -868,59 +911,36 @@ class MainWindow(Qw.QMainWindow):
         for theme_key, action in self.theme_actions.items():
             action.setChecked(theme_key == theme_name_xml)
         try:
-            invert = theme_name_xml in ("dark_teal.xml", "dark_blue.xml")
+            invert = theme_name_xml.startswith("dark_")
             apply_stylesheet(app, theme=theme_name_xml, invert_secondary=invert)
         except Exception as e:
-            nfo(f"Error applying theme {theme_name_xml}: {e}")
+            nfo("Error applying theme %s: %s", theme_name_xml, e, exc_info=True)
             return
+        log_action = "Initial theme loaded" if initial_load else "Theme applied and saved"
+        nfo("%s: %s", log_action, theme_name_xml)
         if not initial_load:
-            nfo(f"Theme applied and saved: {theme_name_xml}")
             self.settings.setValue("theme", theme_name_xml)
-        else:
-            nfo(f"Initial theme loaded: {theme_name_xml}")
 
     def show_about_dialog(self):
         from PyQt6.QtWidgets import QMessageBox
 
-        version_text = ""
-        try:
-            from dataset_tools.version import __version__ as file_version
+        from dataset_tools import __version__ as p_version
 
-            version_text = f"Version: {file_version}\n"
-        except ImportError:
-            try:
-                from dataset_tools import __version__ as pkg_version
-
-                if pkg_version and pkg_version != "0.0.0-dev":
-                    version_text = f"Version: {pkg_version}\n"
-                else:
-                    nfo("Placeholder package version found ('0.0.0-dev').")
-            except ImportError:
-                nfo("Version information not found.")
-                pass
-        contributors_list = [
-            "KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA (Lead Developer)",
-        ]
-        contributors_text = "\nContributors:\n" + "\n".join(
-            f"- {c}" for c in contributors_list
-        )
-        license_name = "GPL-3.0-or-later"
-        license_text = (
-            f"License: {license_name}\n(Refer to LICENSE file for full text)\n\n"
-        )
-        about_text = (
-            f"<b>Dataset Viewer</b>\n{version_text}An ultralight metadata viewer and dataset handler.\n\n"
-            f"Developed by KTISEOS NYX of EARTH & DUSK MEDIA.\n{contributors_text}\n\n{license_text}"
-        )
-        QMessageBox.about(self, "About Dataset Viewer", about_text)
+        version_text = f"Version: {p_version}\n" if p_version and p_version != "0.0.0-dev" else "Version: N/A (dev)\n"
+        contrib = ["KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA (Lead Developer)"]
+        contrib_txt = "\nContributors:\n" + "\n".join(f"- {c}" for c in contrib)
+        lic_name = "GPL-3.0-or-later"
+        lic_txt = f"License: {lic_name}\n(Refer to LICENSE file)\n\n"
+        full_about_text = f"<b>Dataset Viewer</b>\n{version_text}An ultralight metadata viewer.\nDeveloped by KTISEOS NYX.{contrib_txt}\n\n{lic_txt}"
+        QMessageBox.about(self, "About Dataset Viewer", full_about_text)
 
     def dragEnterEvent(self, event: QtGui.QDragEnterEvent):
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
-            nfo("[UI] Drag enter event accepted for URLs.")
+            nfo("[UI] Drag enter accepted.")
         else:
             event.ignore()
-            nfo("[UI] Drag enter event ignored (not URLs).")
+            nfo("[UI] Drag enter ignored (not URLs).")
 
     def dragMoveEvent(self, event: QtGui.QDragMoveEvent):
         if event.mimeData().hasUrls():
@@ -930,79 +950,66 @@ class MainWindow(Qw.QMainWindow):
 
     def dropEvent(self, event: QtGui.QDropEvent):
         mime_data = event.mimeData()
-        if mime_data.hasUrls():
-            urls = mime_data.urls()
-            if urls:
-                dropped_file_path_qurl = urls[0]
-                if dropped_file_path_qurl.isLocalFile():
-                    dropped_path_str = dropped_file_path_qurl.toLocalFile()
-                    nfo(f"[UI] Item dropped: {dropped_path_str}")
-                    path_obj = Path(dropped_path_str)
-                    folder_to_load = ""
-                    file_to_select_name = None
-                    if path_obj.is_file():
-                        folder_to_load = str(path_obj.parent)
-                        file_to_select_name = path_obj.name
-                        nfo(
-                            f"[UI] Dropped file. Loading folder: {folder_to_load}. Will select: {file_to_select_name}",
-                        )
-                    elif path_obj.is_dir():
-                        folder_to_load = str(path_obj)
-                        nfo(f"[UI] Dropped folder. Loading folder: {folder_to_load}")
-                    if folder_to_load:
-                        self.settings.setValue("lastFolderPath", folder_to_load)
-                        self.load_files(
-                            folder_to_load,
-                            file_to_select_after_load=file_to_select_name,
-                        )
-                        event.acceptProposedAction()
-                        return
+        if mime_data.hasUrls() and (urls := mime_data.urls()):
+            dropped_path_qurl = urls[0]
+            if dropped_path_qurl.isLocalFile():
+                dropped_path_str = dropped_path_qurl.toLocalFile()
+                nfo("[UI] Item dropped: %s", dropped_path_str)
+                path_obj = Path(dropped_path_str)
+                folder_to_load, file_to_select = "", None
+                if path_obj.is_file():
+                    folder_to_load, file_to_select = str(path_obj.parent), path_obj.name
+                    nfo(
+                        ("[UI] Dropped file. Loading folder: '%s'. Will select: '%s'"),
+                        folder_to_load,
+                        file_to_select,
+                    )
+                elif path_obj.is_dir():
+                    folder_to_load = str(path_obj)
+                    nfo("[UI] Dropped folder. Loading folder: '%s'", folder_to_load)
+                if folder_to_load:
+                    self.settings.setValue("lastFolderPath", folder_to_load)
+                    self.load_files(folder_to_load, file_to_select_after_load=file_to_select)
+                    event.acceptProposedAction()
+                    return
         event.ignore()
         nfo("[UI] Drop event ignored (no local valid file/folder URL).")
 
+    def closeEvent(self, event: QtGui.QCloseEvent):
+        nfo("[UI] Close event triggered. Saving settings.")
+        app_settings = self.settings
+        if hasattr(self, "main_splitter"):
+            app_settings.setValue("mainSplitterSizes", self.main_splitter.sizes())
+        if hasattr(self, "metadata_image_splitter"):
+            app_settings.setValue("metaImageSplitterSizes", self.metadata_image_splitter.sizes())
+        if app_settings.value("rememberGeometry", True, type=bool):
+            app_settings.setValue("geometry", self.saveGeometry())
+        else:
+            app_settings.remove("geometry")
+        super().closeEvent(event)
 
-# --- Main execution guard for direct script run (testing) ---
+
 if __name__ == "__main__":
-    # This requires correct_types.py to be fixed with Enums first.
-    # And also assumes dataset_tools package structure is accessible.
-    try:
-        from dataset_tools import (
-            LOG_LEVEL as INITIAL_LOG_LEVEL_FROM_INIT_MAIN,
-        )
-        from dataset_tools import (
-            __version__ as pkg_version_main,
-        )
-        from dataset_tools.logger import logger as main_app_logger_main
 
-        main_app_logger_main.info(
-            f"Dataset Tools UI (Direct Run) v{pkg_version_main} launching...",
-        )
-        main_app_logger_main.info(
-            f"Application log level (initial from __init__): {INITIAL_LOG_LEVEL_FROM_INIT_MAIN}",
-        )
-    except ImportError as e_main_import:
-        print(
-            f"Direct run: Could not import package components for logging: {e_main_import}",
-        )
+    def nfo_direct_run(*args):
+        print("NFO (direct_run ui.py):", *args)
 
-        # Fallback simple print if logger isn't available
-        def nfo(*args):
-            print("NFO:", *args)
-
+    nfo_direct_run("Dataset Tools UI (Direct Run) launching...")
     app = Qw.QApplication(sys.argv if hasattr(sys, "argv") else [])
     if QT_MATERIAL_AVAILABLE:
         try:
-            temp_settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
-            theme_to_load = temp_settings.value("theme", "dark_teal.xml")
-            invert = theme_to_load in ("dark_teal.xml", "dark_blue.xml")
-            apply_stylesheet(app, theme=theme_to_load, invert_secondary=invert)
-        except Exception as e_theme_main:
-            print(f"Could not apply theme for direct ui.py test: {e_theme_main}")
-
+            cfg = QSettings("EarthAndDuskMedia", "DatasetViewer")
+            theme_to_load = cfg.value("theme", "dark_teal.xml")
+            apply_stylesheet(
+                app,
+                theme=theme_to_load,
+                invert_secondary=theme_to_load.startswith("dark_"),
+            )
+            nfo_direct_run(f"Applied theme: {theme_to_load}")
+        except Exception as e_theme_direct:
+            nfo_direct_run(f"Could not apply theme for direct test: {e_theme_direct}")
+    else:
+        nfo_direct_run("qt-material not found, using default Qt style.")
     window = MainWindow()
     window.show()
-
-    if hasattr(app, "exec"):
-        sys.exit(app.exec())
-    elif hasattr(app, "exec_"):
-        sys.exit(app.exec_())
+    sys.exit(app.exec())
