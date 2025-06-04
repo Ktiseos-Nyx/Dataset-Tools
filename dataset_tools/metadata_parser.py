@@ -14,9 +14,8 @@ from .access_disk import MetadataFileReader
 
 # First-party (relative imports for the current subpackage)
 from .correct_types import DownField, EmptyField, UpField
-from .logger import _dataset_tools_main_rich_console
+from .logger import _dataset_tools_main_rich_console, setup_rich_handler_for_external_logger
 from .logger import info_monitor as nfo
-from .logger import setup_rich_handler_for_external_logger
 
 # --- Import VENDORED sd-prompt-reader components ---
 VENDORED_SDPR_OK = False

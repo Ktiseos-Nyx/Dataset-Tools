@@ -8,13 +8,13 @@ __email__ = "receyuki@gmail.com; your_email@example.com"  # Add your email if de
 
 import json
 import logging  # For type hinting
-from typing import Any, Dict  # Use Dict
+from typing import Any  # Use Dict
 
 from .base_format import BaseFormat  # Assuming BaseFormat is in the same package level
 from .utility import merge_dict  # Assuming utility.py is in the same package level
 
 # Mapping of common keys found in ComfyUI KSampler nodes to standard parameter names
-COMFY_FLOW_TO_PARAM_MAP: Dict[str, str | list[str]] = {
+COMFY_FLOW_TO_PARAM_MAP: dict[str, str | list[str]] = {
     "ckpt_name": "model",  # From CheckpointLoader nodes
     "sampler_name": "sampler_name",  # From KSampler nodes
     "seed": ["seed", "noise_seed"],  # KSampler "seed", KSamplerAdvanced "noise_seed"
@@ -70,7 +70,7 @@ class ComfyUI(BaseFormat):
 
     def __init__(
         self,
-        info: Dict[str, Any] | None = None,  # Use Dict
+        info: dict[str, Any] | None = None,  # Use Dict
         raw: str = "",
         width: Any = 0,  # Use Any for flexibility from ImageDataReader
         height: Any = 0,  # Use Any for flexibility
@@ -86,8 +86,8 @@ class ComfyUI(BaseFormat):
             logger_obj=logger_obj,
             **kwargs,  # Pass remaining kwargs
         )
-        self._prompt_json: Dict[str, Any] = {}  # Parsed "prompt" chunk (workflow)
-        self._workflow_json: Dict[str, Any] | None = None  # Parsed "workflow" chunk (API format)
+        self._prompt_json: dict[str, Any] = {}  # Parsed "prompt" chunk (workflow)
+        self._workflow_json: dict[str, Any] | None = None  # Parsed "workflow" chunk (API format)
 
     def _process(self) -> None:
         self._logger.debug("Attempting to parse using %s logic.", self.tool)
@@ -180,8 +180,8 @@ class ComfyUI(BaseFormat):
                 if not self._error:  # Only set if a more specific error isn't already there
                     self._error = f"{self.tool}: Failed to extract meaningful data from workflow graph."
 
-    def _find_end_node_candidates(self, workflow_json_data: Dict[str, Any]) -> Dict[str, str]:
-        candidates: Dict[str, str] = {}
+    def _find_end_node_candidates(self, workflow_json_data: dict[str, Any]) -> dict[str, str]:
+        candidates: dict[str, str] = {}
         # Check if any SaveImage type nodes are present first
         is_save_image_present = any(
             isinstance(node_data, dict) and node_data.get("class_type") in self.SAVE_IMAGE_TYPE
@@ -214,7 +214,7 @@ class ComfyUI(BaseFormat):
 
         return candidates
 
-    def _count_meaningful_params(self, flow_details: Dict[str, Any]) -> int:
+    def _count_meaningful_params(self, flow_details: dict[str, Any]) -> int:
         count = 0
         # Check prompts
         if flow_details.get("positive_prompt") or (
@@ -255,10 +255,10 @@ class ComfyUI(BaseFormat):
         return count
 
     def _get_best_flow_data(
-        self, workflow_json_data: Dict[str, Any], end_node_candidates: Dict[str, str]
-    ) -> Dict[str, Any]:
+        self, workflow_json_data: dict[str, Any], end_node_candidates: dict[str, str]
+    ) -> dict[str, Any]:
         # ... (implementation as before, ensure it uses Dict) ...
-        best_flow_data: Dict[str, Any] = {}
+        best_flow_data: dict[str, Any] = {}
         max_extracted_params = -1
         self._logger.debug("Candidate end nodes for traversal: %s", end_node_candidates)
 
@@ -295,7 +295,7 @@ class ComfyUI(BaseFormat):
         # If no end_node_candidates, status/error already set.
         return best_flow_data
 
-    def _apply_flow_data_to_self(self, flow_data: Dict[str, Any]) -> None:
+    def _apply_flow_data_to_self(self, flow_data: dict[str, Any]) -> None:
         # ... (implementation as before, ensure types and defaults are robust) ...
         self._positive = str(flow_data.get("positive_prompt", "")).strip()
         self._negative = str(flow_data.get("negative_prompt", "")).strip()
@@ -392,7 +392,7 @@ class ComfyUI(BaseFormat):
                     self._raw = str(workflow_to_traverse)
 
     @staticmethod
-    def merge_clip(data: Dict[str, Any]) -> str:  # Use Dict
+    def merge_clip(data: dict[str, Any]) -> str:  # Use Dict
         # ... (implementation as before) ...
         clip_g = str(data.get("Clip G", "")).strip(" ,")
         clip_l = str(data.get("Clip L", "")).strip(" ,")
@@ -407,8 +407,8 @@ class ComfyUI(BaseFormat):
         return f"Clip G: {clip_g}, Clip L: {clip_l}"
 
     def _run_traversal_for_node(
-        self, workflow_json_data: Dict[str, Any], start_node_id: str
-    ) -> Dict[str, Any]:  # Use Dict
+        self, workflow_json_data: dict[str, Any], start_node_id: str
+    ) -> dict[str, Any]:  # Use Dict
         # ... (implementation as before, ensure all dicts are Dict and use BaseFormat.PARAMETER_KEY) ...
         # Reset temporary state for this traversal path
         original_positive, self._positive = self._positive, ""
@@ -419,7 +419,7 @@ class ComfyUI(BaseFormat):
 
         raw_flow_values, _ = self._original_comfy_traverse_logic(workflow_json_data, start_node_id)
 
-        current_path_data: Dict[str, Any] = {
+        current_path_data: dict[str, Any] = {
             "positive_prompt": self._positive,
             "negative_prompt": self._negative,
             "positive_sdxl_prompts": self._positive_sdxl.copy(),
@@ -485,10 +485,10 @@ class ComfyUI(BaseFormat):
 
     def _original_comfy_traverse_logic(
         self,
-        prompt_data: Dict[str, Any],  # Full workflow/prompt JSON
+        prompt_data: dict[str, Any],  # Full workflow/prompt JSON
         node_id: str,  # Current node ID to process
-    ) -> tuple[Dict[str, Any], list[str]]:  # Returns (extracted_flow_data, node_path_list)
-        flow: Dict[str, Any] = {}
+    ) -> tuple[dict[str, Any], list[str]]:  # Returns (extracted_flow_data, node_path_list)
+        flow: dict[str, Any] = {}
         node_path_history: list[str] = [node_id]  # Track nodes visited in this path
 
         current_node_details = prompt_data.get(node_id)
@@ -555,11 +555,10 @@ class ComfyUI(BaseFormat):
                         flow["k_width"] = w_val
                     if (h_val := lat_inputs.get("height")) is not None:
                         flow["k_height"] = h_val
-                else:  # Latent might come from VAEEncode or other source, traverse it
-                    if prev_latent_node_id in prompt_data:
-                        sub_flow, sub_nodes = self._original_comfy_traverse_logic(prompt_data, prev_latent_node_id)
-                        flow = merge_dict(flow, sub_flow)
-                        node_path_history.extend(sub_nodes)
+                elif prev_latent_node_id in prompt_data:
+                    sub_flow, sub_nodes = self._original_comfy_traverse_logic(prompt_data, prev_latent_node_id)
+                    flow = merge_dict(flow, sub_flow)
+                    node_path_history.extend(sub_nodes)
 
             # Traverse model, positive, negative inputs
             for input_name in ["model", "positive", "negative"]:
@@ -607,7 +606,7 @@ class ComfyUI(BaseFormat):
 
             if class_type == "CLIPTextEncodeSDXL":
                 self._is_sdxl = True
-                sdxl_prompts: Dict[str, str] = {}
+                sdxl_prompts: dict[str, str] = {}
                 for clip_suffix, input_key in [("G", "text_g"), ("L", "text_l")]:
                     text_val_sdxl = current_node_inputs.get(input_key)
                     resolved_text_sdxl = ""
@@ -627,7 +626,7 @@ class ComfyUI(BaseFormat):
 
             if class_type == "CLIPTextEncodeSDXLRefiner":
                 self._is_sdxl = True
-                refiner_prompt: Dict[str, str] = {}
+                refiner_prompt: dict[str, str] = {}
                 # actual_text_str for refiner is resolved from "text" input above
                 refiner_prompt["Refiner"] = actual_text_str.strip()
                 return refiner_prompt, []
@@ -683,7 +682,7 @@ class ComfyUI(BaseFormat):
             if isinstance(node_widgets, list) and node_widgets:
                 # Assuming the first widget value is the primitive's output if it's a simple type
                 return {"text_output": str(node_widgets[0])}, []
-            elif "value" in current_node_inputs:  # Fallback if linked
+            if "value" in current_node_inputs:  # Fallback if linked
                 return {"text_output": str(current_node_inputs["value"])}, []
 
         # 9. Specific Custom Nodes (Example: SDXLPromptStyler)

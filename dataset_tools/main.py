@@ -11,8 +11,10 @@ import sys
 from PyQt6 import QtWidgets
 
 # Import from your package's __init__.py
-from dataset_tools import __version__  # For version display
-from dataset_tools import set_package_log_level  # For version display
+from dataset_tools import (
+    __version__,  # For version display
+    set_package_log_level,  # For version display
+)
 from dataset_tools import logger as app_logger  # Import your logger module
 
 # Import your UI and logger

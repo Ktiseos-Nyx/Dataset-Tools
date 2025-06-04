@@ -18,20 +18,19 @@ from defusedxml import minidom
 from PIL import Image, UnidentifiedImageError
 
 from .constants import PARAMETER_PLACEHOLDER
-from .format import MochiDiffusionFormat  # Now expects IPTC data
 from .format import (
     A1111,
     BaseFormat,
-    CivitaiFormat,
+    CivitaiFormat,  # YodayoFormat,
     ComfyUI,
     DrawThings,
     EasyDiffusion,
     Fooocus,
     InvokeAI,
+    MochiDiffusionFormat,  # Now expects IPTC data
     NovelAI,
     RuinedFooocusFormat,
     SwarmUI,
-    YodayoFormat,
 )
 from .logger import get_logger
 
@@ -54,7 +53,7 @@ class ImageDataReader:
     PARSER_CLASSES_PNG = [
         ComfyUI,
         CivitaiFormat,
-        YodayoFormat,
+        # YodayoFormat,
         A1111,
         EasyDiffusion,
         InvokeAI,
@@ -68,7 +67,7 @@ class ImageDataReader:
         MochiDiffusionFormat,  # <<< MOCHI FIRST FOR JPEG/WEBP due to specific IPTC usage
         CivitaiFormat,
         EasyDiffusion,
-        YodayoFormat,
+        # YodayoFormat,
         A1111,
         SwarmUI,
     ]

@@ -24,7 +24,8 @@ from .mochi_diffusion import MochiDiffusionFormat  # <<< ADDED
 from .novelai import NovelAI
 from .ruinedfooocus import RuinedFooocusFormat
 from .swarmui import SwarmUI
-from .yodayo import YodayoFormat  # <<< ADDED
+
+# from .yodayo import YodayoFormat  # <<< ADDED
 
 # List all exported names for `from .format import *` if ever used,
 # and for clarity of what this package provides, making them available for
@@ -34,7 +35,7 @@ __all__ = [
     "A1111",
     "ComfyUI",
     "CivitaiFormat",  # <<< CORRECTED
-    "YodayoFormat",  # <<< ADDED
+    # "YodayoFormat",  # <<< ADDED
     "MochiDiffusionFormat",  # <<< ADDED
     "DrawThings",
     "EasyDiffusion",

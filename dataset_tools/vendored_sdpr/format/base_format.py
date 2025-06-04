@@ -13,7 +13,6 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import (  # Changed from typing.Any to typing.Dict for explicit Dict type hint
     Any,
-    Dict,
 )
 
 from ..constants import PARAMETER_PLACEHOLDER
@@ -24,7 +23,7 @@ from ..logger import get_logger
 class RemainingDataConfig:
     """Configuration for processing remaining data in _build_settings_string."""
 
-    data_dict: Dict[str, Any] | None = None  # Use Dict
+    data_dict: dict[str, Any] | None = None  # Use Dict
     handled_keys: set[str] | None = None
     key_formatter: Callable[[str], str] | None = None
     value_processor: Callable[[Any], str] | None = None
@@ -93,7 +92,7 @@ class BaseFormat:
 
     def __init__(
         self,
-        info: Dict[str, Any] | None = None,
+        info: dict[str, Any] | None = None,
         raw: str = "",
         width: Any = 0,
         height: Any = 0,
@@ -101,7 +100,7 @@ class BaseFormat:
         **kwargs: Any,
     ):
         # Initialize core attributes
-        self._info: Dict[str, Any] = info.copy() if info is not None else {}
+        self._info: dict[str, Any] = info.copy() if info is not None else {}
         self._raw: str = str(raw)
 
         try:  # Robust width/height conversion
@@ -135,13 +134,13 @@ class BaseFormat:
         self._negative: str = ""
         self._setting: str = ""
         self._is_sdxl: bool = False
-        self._positive_sdxl: Dict[str, Any] = {}
-        self._negative_sdxl: Dict[str, Any] = {}
+        self._positive_sdxl: dict[str, Any] = {}
+        self._negative_sdxl: dict[str, Any] = {}
 
         # Initialize _parameter dictionary using PARAMETER_KEY
         # Access PARAMETER_KEY via self.__class__ to get it from the actual subclass
         param_keys_to_init = getattr(self.__class__, "PARAMETER_KEY", [])
-        self._parameter: Dict[str, Any] = {key: self.DEFAULT_PARAMETER_PLACEHOLDER for key in param_keys_to_init}
+        self._parameter: dict[str, Any] = {key: self.DEFAULT_PARAMETER_PLACEHOLDER for key in param_keys_to_init}
 
         # Populate width, height, size in parameters if they are defined keys
         if "width" in self._parameter:
@@ -275,8 +274,8 @@ class BaseFormat:
 
     def _populate_parameters_from_map(
         self,
-        data_dict: Dict[str, Any],
-        parameter_map: Dict[str, str | list[str]],
+        data_dict: dict[str, Any],
+        parameter_map: dict[str, str | list[str]],
         handled_keys_set: set[str] | None = None,
         value_processor: Callable[[Any], Any] | None = None,
     ):
@@ -292,7 +291,7 @@ class BaseFormat:
 
     def _extract_and_set_dimensions(
         self,
-        data_dict: Dict[str, Any],
+        data_dict: dict[str, Any],
         width_source_key: str,
         height_source_key: str,
         handled_keys_set: set[str] | None = None,
@@ -327,7 +326,7 @@ class BaseFormat:
         self,
         size_str: str,
         source_key_for_debug: str,
-        data_dict_for_handled_keys: (Dict[str, Any] | None) = None,  # Unused here, but for consistency
+        data_dict_for_handled_keys: (dict[str, Any] | None) = None,  # Unused here, but for consistency
         handled_keys_set: set[str] | None = None,
     ):
         if handled_keys_set is None:
@@ -373,10 +372,10 @@ class BaseFormat:
 
     def _build_settings_string(
         self,
-        custom_settings_dict: Dict[str, str] | None = None,
+        custom_settings_dict: dict[str, str] | None = None,
         remaining_config_obj: RemainingDataConfig | None = None,
         # Deprecated individual remaining_data args, use remaining_config_obj instead
-        remaining_data_dict: Dict[str, Any] | None = None,
+        remaining_data_dict: dict[str, Any] | None = None,
         remaining_handled_keys: set[str] | None = None,
         remaining_key_formatter: Callable[[str], str] | None = None,
         remaining_value_processor: Callable[[Any], str] | None = None,
@@ -481,7 +480,7 @@ class BaseFormat:
         return self._width if self._width != "0" else self.DEFAULT_PARAMETER_PLACEHOLDER
 
     @property
-    def info(self) -> Dict[str, Any]:
+    def info(self) -> dict[str, Any]:
         return self._info.copy()
 
     @property
@@ -493,11 +492,11 @@ class BaseFormat:
         return self._negative
 
     @property
-    def positive_sdxl(self) -> Dict[str, Any]:
+    def positive_sdxl(self) -> dict[str, Any]:
         return self._positive_sdxl.copy()  # Return copy
 
     @property
-    def negative_sdxl(self) -> Dict[str, Any]:
+    def negative_sdxl(self) -> dict[str, Any]:
         return self._negative_sdxl.copy()  # Return copy
 
     @property
@@ -509,7 +508,7 @@ class BaseFormat:
         return self._raw
 
     @property
-    def parameter(self) -> Dict[str, Any]:
+    def parameter(self) -> dict[str, Any]:
         return self._parameter.copy()  # Return copy
 
     @property
@@ -533,7 +532,7 @@ class BaseFormat:
 
     @property
     def props(self) -> str:
-        properties: Dict[str, Any] = {
+        properties: dict[str, Any] = {
             "positive": self.positive,
             "negative": self.negative,
             "positive_sdxl": self.positive_sdxl,

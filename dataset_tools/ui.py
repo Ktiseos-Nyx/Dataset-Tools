@@ -62,9 +62,8 @@ except ImportError:
     nfo("WARNING: qt-material library not found. Theme functionality will be limited.")
 
 
-from .correct_types import DownField, EmptyField
+from .correct_types import DownField, EmptyField, UpField
 from .correct_types import ExtensionType as Ext
-from .correct_types import UpField
 from .metadata_parser import parse_metadata
 from .widgets import FileLoader, FileLoadResult
 
