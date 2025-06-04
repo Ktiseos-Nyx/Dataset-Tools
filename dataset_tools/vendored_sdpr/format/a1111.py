@@ -27,8 +27,9 @@ class A1111(BaseFormat):
         "Model hash": "model_hash",
     }
 
-    def __init__(self, info: dict[str, Any] | None = None, raw: str = ""):
-        super().__init__(info=info, raw=raw)
+    # MODIFICATION: Added **kwargs to __init__ signature and super().__init__ call
+    def __init__(self, info: dict[str, Any] | None = None, raw: str = "", **kwargs):
+        super().__init__(info=info, raw=raw, **kwargs)
         self._extra: str = ""  # Stores postprocessing string if separate
 
     def _extract_raw_data_from_info(self) -> str:
