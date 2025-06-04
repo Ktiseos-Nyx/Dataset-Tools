@@ -96,16 +96,8 @@ class MetadataFileReader:
         path_obj = Path(file_path_named)
         ext = path_obj.suffix.lower()
 
-        is_toml = (
-            any(ext in ext_set for ext_set in Ext.TOML)
-            if isinstance(Ext.TOML, list)
-            else ext in Ext.TOML
-        )
-        is_json = (
-            any(ext in ext_set for ext_set in Ext.JSON)
-            if isinstance(Ext.JSON, list)
-            else ext in Ext.JSON
-        )
+        is_toml = any(ext in ext_set for ext_set in Ext.TOML) if isinstance(Ext.TOML, list) else ext in Ext.TOML
+        is_json = any(ext in ext_set for ext_set in Ext.JSON) if isinstance(Ext.JSON, list) else ext in Ext.JSON
 
         if is_toml:
             loader = toml.load
@@ -225,14 +217,10 @@ class MetadataFileReader:
             else ext_lower in Ext.SCHEMA_FILES
         )
         is_jpg = (
-            any(ext_lower in ext_set for ext_set in Ext.JPEG)
-            if isinstance(Ext.JPEG, list)
-            else ext_lower in Ext.JPEG
+            any(ext_lower in ext_set for ext_set in Ext.JPEG) if isinstance(Ext.JPEG, list) else ext_lower in Ext.JPEG
         )
         is_png = (
-            any(ext_lower in ext_set for ext_set in Ext.PNG_)
-            if isinstance(Ext.PNG_, list)
-            else ext_lower in Ext.PNG_
+            any(ext_lower in ext_set for ext_set in Ext.PNG_) if isinstance(Ext.PNG_, list) else ext_lower in Ext.PNG_
         )
         is_model_file = (
             any(ext_lower in ext_set for ext_set in Ext.MODEL_FILES)
@@ -264,9 +252,7 @@ class MetadataFileReader:
                         "Info": f"Model file ({ext_lower}) - ModelTool parser not available.",
                     },
                 }
-            except (
-                Exception
-            ) as e_model:  # pylint: disable=broad-except # pragma: no cover
+            except Exception as e_model:  # pylint: disable=broad-except # pragma: no cover
                 nfo(
                     f"[MDFileReader] Error using ModelTool for {path_obj.name}: {e_model}",
                 )

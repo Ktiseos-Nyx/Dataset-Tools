@@ -17,9 +17,7 @@ class ModelTool:
         }
 
     def read_metadata_from(self, file_path_named: str) -> dict:
-        nfo(
-            "[ModelTool] Attempting to read metadata from: %s", file_path_named
-        )  # % logging
+        nfo("[ModelTool] Attempting to read metadata from: %s", file_path_named)  # % logging
         file_path_obj = Path(file_path_named)  # Create Path object once
         extension = file_path_obj.suffix.lower()
         file_name_for_log = file_path_obj.name  # Use for logging messages
@@ -64,9 +62,7 @@ class ModelTool:
                 )
                 # Fall through: handled by the final "Unsupported" block
             else:  # UNATTEMPTED or other unexpected status
-                status_display_name = (
-                    status.name if hasattr(status, "name") else str(status)
-                )
+                status_display_name = status.name if hasattr(status, "name") else str(status)
                 # Corrected E501 on original line 62 and using % logging:
                 nfo(
                     ("[ModelTool] Parser %s returned unexpected status '%s' for %s"),

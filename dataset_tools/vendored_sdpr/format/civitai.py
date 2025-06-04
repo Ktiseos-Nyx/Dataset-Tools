@@ -38,14 +38,10 @@ class CivitaiComfyUIFormat(BaseFormat):
         super().__init__(info=info, raw=raw, width=width, height=height)
         # self._logger is inherited. If a specific logger name format was used:
         # self._logger = get_logger(f"DSVendored_SDPR.Format.{self.tool.replace(' ', '_')}")
-        self.workflow_data: dict[str, Any] | None = (
-            None  # To store the outer workflow JSON
-        )
+        self.workflow_data: dict[str, Any] | None = None  # To store the outer workflow JSON
 
     def _decode_user_comment_for_civitai(self, uc_string: str) -> str | None:
-        self._logger.debug(
-            "Attempting to decode UserComment (first 70): '%s'", uc_string[:70]
-        )
+        self._logger.debug("Attempting to decode UserComment (first 70): '%s'", uc_string[:70])
         if not uc_string or not isinstance(uc_string, str):
             self._logger.warning("UserComment string is empty or not a string.")
             return None
@@ -60,23 +56,15 @@ class CivitaiComfyUIFormat(BaseFormat):
                 data_to_process[:50],
             )
 
-        if (
-            "笀" in data_to_process
-            or "∀" in data_to_process
-            or "izarea" in data_to_process
-        ) and not (data_to_process.startswith("{") and data_to_process.endswith("}")):
-            self._logger.debug(
-                "Mojibake characters detected. Attempting latin-1 -> utf-16le decode."
-            )
+        if ("笀" in data_to_process or "∀" in data_to_process or "izarea" in data_to_process) and not (
+            data_to_process.startswith("{") and data_to_process.endswith("}")
+        ):
+            self._logger.debug("Mojibake characters detected. Attempting latin-1 -> utf-16le decode.")
             try:
-                json_string = data_to_process.encode("latin-1", "replace").decode(
-                    "utf-16le", "replace"
-                )
+                json_string = data_to_process.encode("latin-1", "replace").decode("utf-16le", "replace")
                 json_string = json_string.strip("\x00")
                 json.loads(json_string)
-                self._logger.debug(
-                    "Mojibake reversal/decode (latin-1 -> utf-16le) successful."
-                )
+                self._logger.debug("Mojibake reversal/decode (latin-1 -> utf-16le) successful.")
                 return json_string
             except Exception as e_moji:  # pylint: disable=broad-except
                 self._logger.warning(
@@ -86,23 +74,17 @@ class CivitaiComfyUIFormat(BaseFormat):
                 )
 
         if data_to_process.startswith("{") and data_to_process.endswith("}"):
-            self._logger.debug(
-                "Data (post-prefix/post-mojibake-attempt) looks like plain JSON. Validating."
-            )
+            self._logger.debug("Data (post-prefix/post-mojibake-attempt) looks like plain JSON. Validating.")
             try:
                 data_to_process = data_to_process.strip("\x00")
                 json.loads(data_to_process)
                 self._logger.debug("Plain JSON validation successful.")
                 return data_to_process
             except json.JSONDecodeError as json_decode_err:
-                self._logger.warning(
-                    "Plain JSON validation failed: %s", json_decode_err, exc_info=True
-                )
+                self._logger.warning("Plain JSON validation failed: %s", json_decode_err, exc_info=True)
                 return None
 
-        self._logger.debug(
-            "UserComment string not recognized as Civitai JSON after processing."
-        )
+        self._logger.debug("UserComment string not recognized as Civitai JSON after processing.")
         return None
 
     def _process(self) -> None:  # Changed from parse() to _process()
@@ -118,9 +100,7 @@ class CivitaiComfyUIFormat(BaseFormat):
         cleaned_workflow_json_str = self._decode_user_comment_for_civitai(self._raw)
 
         if not cleaned_workflow_json_str:
-            self._logger.warning(
-                "Failed to decode UserComment or not Civitai JSON for %s.", self.tool
-            )
+            self._logger.warning("Failed to decode UserComment or not Civitai JSON for %s.", self.tool)
             self.status = self.Status.FORMAT_ERROR
             if not self._error:  # _decode_user_comment_for_civitai might set it
                 self._error = "UserComment decode/validation failed."
@@ -129,9 +109,7 @@ class CivitaiComfyUIFormat(BaseFormat):
         try:
             parsed_workflow_data = json.loads(cleaned_workflow_json_str)
             if not isinstance(parsed_workflow_data, dict):
-                self._logger.error(
-                    "Parsed UserComment workflow is not a dictionary for %s.", self.tool
-                )
+                self._logger.error("Parsed UserComment workflow is not a dictionary for %s.", self.tool)
                 self.status = self.Status.FORMAT_ERROR
                 self._error = "Workflow data from UserComment is not a dict."
                 return
@@ -165,9 +143,7 @@ class CivitaiComfyUIFormat(BaseFormat):
         try:
             extra_meta_dict = json.loads(extra_metadata_str)
             if not isinstance(extra_meta_dict, dict):
-                self._logger.error(
-                    "'extraMetadata' content is not a dictionary for %s.", self.tool
-                )
+                self._logger.error("'extraMetadata' content is not a dictionary for %s.", self.tool)
                 self.status = self.Status.FORMAT_ERROR
                 self._error = "'extraMetadata' content is not a dict."
                 return
@@ -194,12 +170,8 @@ class CivitaiComfyUIFormat(BaseFormat):
                 handled_keys_in_extra_meta.add("cfgScale")
 
             # Sampler
-            sampler_val = extra_meta_dict.get(
-                "sampler", extra_meta_dict.get("sampler_name")
-            )
-            if self._populate_parameter(
-                "sampler_name", sampler_val, "sampler/sampler_name"
-            ):
+            sampler_val = extra_meta_dict.get("sampler", extra_meta_dict.get("sampler_name"))
+            if self._populate_parameter("sampler_name", sampler_val, "sampler/sampler_name"):
                 handled_keys_in_extra_meta.add("sampler")
                 handled_keys_in_extra_meta.add("sampler_name")
 
@@ -208,9 +180,7 @@ class CivitaiComfyUIFormat(BaseFormat):
                 handled_keys_in_extra_meta.add("seed")
 
             # --- Handle Dimensions ---
-            self._extract_and_set_dimensions(
-                extra_meta_dict, "width", "height", handled_keys_in_extra_meta
-            )
+            self._extract_and_set_dimensions(extra_meta_dict, "width", "height", handled_keys_in_extra_meta)
 
             # --- Build Settings String ---
             # Original code included all *other* keys from extra_meta_dict.

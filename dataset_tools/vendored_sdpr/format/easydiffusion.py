@@ -49,9 +49,7 @@ class EasyDiffusion(BaseFormat):
         if not json_source_material and self._info:
             if isinstance(self._info, dict):
                 # If _info is already a dict, it's likely pre-parsed JSON
-                self._logger.debug(
-                    "Using pre-parsed dictionary from self._info for %s.", self.tool
-                )
+                self._logger.debug("Using pre-parsed dictionary from self._info for %s.", self.tool)
                 return self._info  # Use it directly
             if isinstance(self._info, str):
                 json_source_material = self._info
@@ -67,16 +65,12 @@ class EasyDiffusion(BaseFormat):
                 return None
 
         if not json_source_material:
-            self._logger.warning(
-                "%s: Raw data (or info) is empty. Cannot parse.", self.tool
-            )
+            self._logger.warning("%s: Raw data (or info) is empty. Cannot parse.", self.tool)
             self.status = self.Status.FORMAT_ERROR
             self._error = "Easy Diffusion metadata string is empty."
             return None
 
-        self._logger.debug(
-            "Attempting to parse JSON from %s for %s.", source_description, self.tool
-        )
+        self._logger.debug("Attempting to parse JSON from %s for %s.", source_description, self.tool)
         try:
             data_json = json.loads(json_source_material)
             if not isinstance(data_json, dict):
@@ -112,7 +106,7 @@ class EasyDiffusion(BaseFormat):
                 return PurePosixPath(value).name
         return str(value)
 
-    self._parse_data(data_json)
+    def _process(self) -> None:
         # self.status is managed by BaseFormat.parse()
         self._logger.debug("Attempting to parse using %s logic.", self.tool)
 
@@ -123,13 +117,9 @@ class EasyDiffusion(BaseFormat):
 
         # --- Positive and Negative Prompts ---
         # Easy Diffusion uses "prompt" or "Prompt"
-        self._positive = str(
-            data_json.get("prompt", data_json.get("Prompt", ""))
-        ).strip()
+        self._positive = str(data_json.get("prompt", data_json.get("Prompt", ""))).strip()
         # And "negative_prompt" or "Negative Prompt"
-        self._negative = str(
-            data_json.get("negative_prompt", data_json.get("Negative Prompt", ""))
-        ).strip()
+        self._negative = str(data_json.get("negative_prompt", data_json.get("Negative Prompt", ""))).strip()
 
         handled_keys_for_settings = {
             "prompt",
@@ -150,9 +140,7 @@ class EasyDiffusion(BaseFormat):
 
         for ed_key, canonical_key_target in ED_PARAM_MAP.items():
             if ed_key in data_json:
-                value_processor = value_processors_map.get(
-                    canonical_key_target
-                )  # Check if target needs processor
+                value_processor = value_processors_map.get(canonical_key_target)  # Check if target needs processor
                 if not value_processor and isinstance(
                     canonical_key_target, list
                 ):  # Check if any in list need processor
@@ -163,20 +151,14 @@ class EasyDiffusion(BaseFormat):
 
                 self._populate_parameter(
                     canonical_key_target,
-                    (
-                        value_processor(data_json[ed_key])
-                        if value_processor
-                        else data_json[ed_key]
-                    ),
+                    (value_processor(data_json[ed_key]) if value_processor else data_json[ed_key]),
                     source_key_for_debug=ed_key,
                 )
                 handled_keys_for_settings.add(ed_key)
 
         # --- Handle Dimensions ---
         # Easy Diffusion uses "width" and "height" directly.
-        self._extract_and_set_dimensions(
-            data_json, "width", "height", handled_keys_for_settings
-        )
+        self._extract_and_set_dimensions(data_json, "width", "height", handled_keys_for_settings)
 
         # --- Build Settings String ---
         # The original code included all *other* keys from data_json in the settings string.

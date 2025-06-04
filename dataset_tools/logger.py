@@ -42,9 +42,7 @@ APP_LOGGER_NAME = "dataset_tools_app"
 logger = pylog.getLogger(APP_LOGGER_NAME)
 
 _current_log_level_str_for_dt = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper()
-_initial_log_level_enum_for_dt = getattr(
-    pylog, _current_log_level_str_for_dt, pylog.INFO
-)
+_initial_log_level_enum_for_dt = getattr(pylog, _current_log_level_str_for_dt, pylog.INFO)
 logger.setLevel(_initial_log_level_enum_for_dt)
 
 if not logger.handlers:
@@ -60,7 +58,7 @@ if not logger.handlers:
 
 
 def reconfigure_all_loggers(new_log_level_name_str: str):
-    global _current_log_level_str_for_dt  # No logger variable modification needed here
+    global _current_log_level_str_for_dt
 
     _current_log_level_str_for_dt = new_log_level_name_str.strip().upper()
     actual_level_enum = getattr(pylog, _current_log_level_str_for_dt, pylog.INFO)
@@ -70,10 +68,12 @@ def reconfigure_all_loggers(new_log_level_name_str: str):
         for handler in logger.handlers:
             if isinstance(handler, RichHandler):
                 handler.setLevel(actual_level_enum)
-        logger.info(
+        # Use the logger's own method for consistency after reconfiguration
+        debug_message("Dataset-Tools Logger internal level object set to: %s", actual_level_enum)
+        info_monitor(  # Use info_monitor which is now fixed
             "Dataset-Tools Logger level reconfigured to: %s",
             _current_log_level_str_for_dt,
-        )  # % logging
+        )
 
     vendored_logger_prefixes_to_reconfigure = [
         "SD_Prompt_Reader",
@@ -84,20 +84,17 @@ def reconfigure_all_loggers(new_log_level_name_str: str):
         external_parent_logger = pylog.getLogger(prefix)
         was_configured_by_us = False
         for handler in external_parent_logger.handlers:
-            if (
-                isinstance(handler, RichHandler)
-                and handler.console == _dataset_tools_main_rich_console
-            ):
+            if isinstance(handler, RichHandler) and handler.console == _dataset_tools_main_rich_console:
                 was_configured_by_us = True
                 handler.setLevel(actual_level_enum)
                 break
         if was_configured_by_us:
             external_parent_logger.setLevel(actual_level_enum)
-            logger.info(
+            info_monitor(  # Use info_monitor
                 "Reconfigured vendored logger tree '%s' to level %s",
                 prefix,
                 _current_log_level_str_for_dt,
-            )  # % logging
+            )
 
 
 def setup_rich_handler_for_external_logger(
@@ -106,6 +103,7 @@ def setup_rich_handler_for_external_logger(
     log_level_to_set_str: str,
 ):
     target_log_level_enum = getattr(pylog, log_level_to_set_str.upper(), pylog.INFO)
+    # Remove existing handlers to avoid duplication if called multiple times
     for handler in logger_to_configure.handlers[:]:
         logger_to_configure.removeHandler(handler)
 
@@ -119,7 +117,8 @@ def setup_rich_handler_for_external_logger(
     logger_to_configure.addHandler(new_rich_handler)
     logger_to_configure.setLevel(target_log_level_enum)
     logger_to_configure.propagate = False
-    logger.info(  # Using app's logger to announce
+    # Use info_monitor (app's logger) to announce this configuration
+    info_monitor(
         "Configured external logger '%s' with RichHandler at level %s.",
         logger_to_configure.name,
         log_level_to_set_str.upper(),
@@ -127,69 +126,92 @@ def setup_rich_handler_for_external_logger(
 
 
 def debug_monitor(func):
+    """Decorator to log function calls and their returns/exceptions at DEBUG level."""
+
+    # Uses f-strings for its own message construction, but calls logger.debug/logger.error
     def wrapper(*args, **kwargs):
+        # Construct argument string representation
         arg_str_list = [repr(a) for a in args]
         kwarg_str_list = [f"{k}={v!r}" for k, v in kwargs.items()]
         all_args_str = ", ".join(arg_str_list + kwarg_str_list)
 
-        # Split log message if all_args_str is very long
         log_msg_part1 = f"Call: {func.__name__}("
         log_msg_part2 = ")"
-        max_arg_len = 150 - len(log_msg_part1) - len(log_msg_part2) - 3  # -3 for "..."
+        # Max length for the arguments part of the log message
+        max_arg_len_for_display = 200 - len(log_msg_part1) - len(log_msg_part2) - 3  # 3 for "..."
 
-        if len(all_args_str) > max_arg_len:
-            all_args_str_display = all_args_str[:max_arg_len] + "..."
+        if len(all_args_str) > max_arg_len_for_display:
+            all_args_str_display = all_args_str[:max_arg_len_for_display] + "..."
         else:
             all_args_str_display = all_args_str
-        # This still uses f-string for constructing the message string, then logs it.
-        # For pure %-style, it'd be: logger.debug("Call: %s(%s)", func.__name__, all_args_str_display)
-        # Let's keep it as is for now, as the main cost is all_args_str construction.
+
+        # Log the call using f-string for this specific decorator message
         logger.debug(f"{log_msg_part1}{all_args_str_display}{log_msg_part2}")
 
         try:
             return_data = func(*args, **kwargs)
             return_data_str = repr(return_data)
-            # Similar truncation for return data
+
             log_ret_msg_part1 = f"Return: {func.__name__} -> "
-            max_ret_len = 150 - len(log_ret_msg_part1) - 3
-            if len(return_data_str) > max_ret_len:
-                return_data_str_display = return_data_str[:max_ret_len] + "..."
+            # Max length for the return value part of the log message
+            max_ret_len_for_display = 200 - len(log_ret_msg_part1) - 3  # 3 for "..."
+
+            if len(return_data_str) > max_ret_len_for_display:
+                return_data_str_display = return_data_str[:max_ret_len_for_display] + "..."
             else:
                 return_data_str_display = return_data_str
+
             logger.debug(f"{log_ret_msg_part1}{return_data_str_display}")
             return return_data
         except Exception as e_dec:
+            # Determine if full traceback should be shown based on initial log level
             show_exc_info = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in [
                 "DEBUG",
                 "TRACE",
                 "NOTSET",
                 "ALL",
             ]
-            # Using % formatting for the error log
-            logger.error(
-                "Exception in %s: %s", func.__name__, e_dec, exc_info=show_exc_info
-            )
-            raise
+            # Use %-formatting for the error log as it's a direct call to logger.error
+            logger.error("Exception in %s: %s", func.__name__, e_dec, exc_info=show_exc_info)
+            raise  # Re-raise the exception
 
     return wrapper
 
 
-def debug_message(*args):
-    # Construct message then log; %-style would be logger.debug("%s", message_content)
-    message = " ".join(map(str, args))
-    logger.debug(message)
+# --- CORRECTED WRAPPER FUNCTIONS ---
+def debug_message(msg: str, *args, **kwargs):
+    """Logs a message with DEBUG level using the main app logger.
+    'msg' is the primary message string, potentially with format specifiers.
+    '*args' are the arguments for the format specifiers in 'msg'.
+    '**kwargs' can include 'exc_info', 'stack_info', etc., for the underlying logger.
+    """
+    logger.debug(msg, *args, **kwargs)
 
 
-def info_monitor(*args):
-    message = " ".join(map(str, args))
-    should_show_exc_info_for_info = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in [
-        "DEBUG",
-        "TRACE",
-        "NOTSET",
-        "ALL",
-    ]
-    exc_info_val = sys.exc_info()[0] is not None and should_show_exc_info_for_info
-    logger.info(
-        message, exc_info=exc_info_val
-    )  # Already good if message is just the string
-    # If message were a format string, it would need args
+def info_monitor(msg: str, *args, **kwargs):  # Renamed from nfo for clarity
+    """Logs a message with INFO level using the main app logger.
+    'msg' is the primary message string, potentially with format specifiers.
+    '*args' are the arguments for the format specifiers in 'msg'.
+    '**kwargs' can include 'exc_info', 'stack_info', etc.
+
+    If 'exc_info' is not explicitly passed in kwargs, it will be automatically
+    set to True if an exception is active AND the initial log level was DEBUG/TRACE.
+    """
+    # Check if exc_info is explicitly passed by the caller
+    if "exc_info" not in kwargs:
+        # Default exc_info behavior: add it if an exception is active and log level is permissive
+        should_add_exc_info_automatically = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in [
+            "DEBUG",
+            "TRACE",
+            "NOTSET",  # Usually means log everything
+            "ALL",  # Custom "ALL" level if you define it
+        ]
+        # Check if there's an active exception
+        current_exception = sys.exc_info()[0]
+        if should_add_exc_info_automatically and current_exception is not None:
+            kwargs["exc_info"] = True
+
+    logger.info(msg, *args, **kwargs)
+
+
+# --- END OF CORRECTED WRAPPER FUNCTIONS ---

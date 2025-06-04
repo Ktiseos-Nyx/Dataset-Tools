@@ -36,16 +36,12 @@ class A1111(BaseFormat):
         if self._info:
             parameters_str = str(self._info.get("parameters", ""))
             if parameters_str:
-                self._logger.debug(
-                    "Using 'parameters' from info dict. Length: %s", len(parameters_str)
-                )
+                self._logger.debug("Using 'parameters' from info dict. Length: %s", len(parameters_str))
                 current_raw_data = parameters_str
 
             self._extra = str(self._info.get("postprocessing", ""))
             if self._extra:
-                self._logger.debug(
-                    "Found 'postprocessing' data. Length: %s", len(self._extra)
-                )
+                self._logger.debug("Found 'postprocessing' data. Length: %s", len(self._extra))
                 if not current_raw_data:  # Only use if 'parameters' wasn't found
                     current_raw_data = self._extra
         return current_raw_data
@@ -61,9 +57,7 @@ class A1111(BaseFormat):
             # and _extra (from _info['postprocessing']) exists and isn't already in _raw, append it.
             # This prioritizes _raw if both exist but allows supplementing with _extra.
             if self._extra and self._extra not in self._raw:
-                self._logger.debug(
-                    "Appending _extra (postprocessing from _info) to existing _raw for A1111."
-                )
+                self._logger.debug("Appending _extra (postprocessing from _info) to existing _raw for A1111.")
                 self._raw = concat_strings(self._raw, self._extra, "\n")
         elif not self._raw and not raw_data_from_info:
             self._logger.warn(
@@ -75,9 +69,7 @@ class A1111(BaseFormat):
             return
 
         if not self._raw:  # Final check
-            self._logger.warn(
-                "%s: Effective raw data is empty after processing _info.", self.tool
-            )
+            self._logger.warn("%s: Effective raw data is empty after processing _info.", self.tool)
             self.status = self.Status.FORMAT_ERROR
             self._error = "A1111 parameter string is empty after consolidation."
             return
@@ -85,12 +77,7 @@ class A1111(BaseFormat):
         self._parse_a1111_format()
 
         if self.status != self.Status.FORMAT_ERROR:
-            if (
-                self._positive
-                or self._parameter_has_data()
-                or self._width != "0"
-                or self._setting
-            ):
+            if self._positive or self._parameter_has_data() or self._width != "0" or self._setting:
                 self._logger.info("%s: Data parsed successfully.", self.tool)
             else:
                 self._logger.warning(
@@ -125,9 +112,7 @@ class A1111(BaseFormat):
             settings_match = re.search(settings_marker_pattern, after_negative_marker)
             if settings_match:
                 positive_prompt = positive_candidate
-                negative_prompt = after_negative_marker[
-                    : settings_match.start()
-                ].strip()
+                negative_prompt = after_negative_marker[: settings_match.start()].strip()
                 settings_block = after_negative_marker[settings_match.start() :].strip()
             else:  # No settings block after negative prompt
                 positive_prompt = positive_candidate
@@ -163,29 +148,19 @@ class A1111(BaseFormat):
         for key, value in matches:
             key = key.strip()
             value = value.strip(" ,")  # Strip trailing comma/space from value
-            if (
-                key and key not in parsed_settings
-            ):  # Ensure key is not empty and first one wins
+            if key and key not in parsed_settings:  # Ensure key is not empty and first one wins
                 parsed_settings[key] = value
 
-        self._logger.debug(
-            "Parsed settings_dict from settings string: %s", parsed_settings
-        )
+        self._logger.debug("Parsed settings_dict from settings string: %s", parsed_settings)
         return parsed_settings
 
     def _parse_a1111_format(self):
         if not self._raw:
-            self._logger.debug(
-                "%s _parse_a1111_format: self._raw is empty, cannot parse.", self.tool
-            )
+            self._logger.debug("%s _parse_a1111_format: self._raw is empty, cannot parse.", self.tool)
             return
 
-        self._positive, self._negative, settings_block_str = self._parse_prompt_blocks(
-            self._raw
-        )
-        self._setting = (
-            settings_block_str  # Store the raw settings block as self._setting
-        )
+        self._positive, self._negative, settings_block_str = self._parse_prompt_blocks(self._raw)
+        self._setting = settings_block_str  # Store the raw settings block as self._setting
 
         handled_keys_from_settings_dict = set()  # Keys handled from the settings_dict
 

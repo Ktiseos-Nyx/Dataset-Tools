@@ -27,29 +27,21 @@ class SafetensorsParser(BaseModelParser):
                         f"Reported safetensors header size is excessively large: {length_of_header} bytes."
                     )
 
-                header_json_str = f.read(length_of_header).decode(
-                    "utf-8", errors="strict"
-                )
+                header_json_str = f.read(length_of_header).decode("utf-8", errors="strict")
                 header_data = json.loads(header_json_str.strip())
 
             if "__metadata__" in header_data:
                 self.metadata_header = header_data.pop("__metadata__")
             self.main_header = header_data
 
-        except (
-            FileNotFoundError
-        ):  # Let BaseModelParser handle this for consistent status
+        except FileNotFoundError:  # Let BaseModelParser handle this for consistent status
             raise
         except struct.error as e_struct:
             self._error_message = f"Safetensors struct error (likely not safetensors or corrupted): {e_struct}"
             raise self.NotApplicableError(self._error_message) from e_struct
         except (json.JSONDecodeError, UnicodeDecodeError) as e_decode:
-            self._error_message = (
-                f"Safetensors header decode error (JSON or UTF-8): {e_decode}"
-            )
-            raise ValueError(
-                self._error_message
-            ) from e_decode  # Indicates parsing failure for this type
+            self._error_message = f"Safetensors header decode error (JSON or UTF-8): {e_decode}"
+            raise ValueError(self._error_message) from e_decode  # Indicates parsing failure for this type
         except ValueError as e_val:  # Catches our "file too small" or "large header"
             self._error_message = f"Safetensors format validation error: {e_val}"
             # Could be NotApplicableError if "file too small" means it's not this type.
