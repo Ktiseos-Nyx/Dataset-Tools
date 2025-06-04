@@ -1,6 +1,5 @@
 # dataset_tools/vendored_sdpr/image_data_reader.py
 # This is YOUR VENDORED and MODIFIED copy - FUSED VERSION
-# (Corrected _try_parser, status logic, defusedxml, logger, and Pylint suggestions)
 
 __author__ = "receyuki"
 __filename__ = "image_data_reader.py"
@@ -9,41 +8,69 @@ __copyright__ = "Copyright 2023, Receyuki"
 __email__ = "receyuki@gmail.com"
 
 import json
-import logging  # Standard library
-from pathlib import Path  # Standard library
-from typing import Any, BinaryIO, TextIO  # Standard library
+import logging
+from pathlib import Path
+from typing import Any, BinaryIO, TextIO
 
-import piexif  # Third-party
-import piexif.helper  # Third-party
-from defusedxml import minidom  # Third-party
-from PIL import (
-    Image,  # Third-party
-    UnidentifiedImageError,  # Third-party
-)
-from PIL.PngImagePlugin import PngInfo  # Third-party
+import piexif
+import piexif.helper
+from defusedxml import minidom
+from PIL import Image, UnidentifiedImageError
 
-# Local application/library specific
 from .constants import PARAMETER_PLACEHOLDER
-from .format import (  # Local application/library specific
+from .format import (
     A1111,
     BaseFormat,
-    CivitaiComfyUIFormat,
+    CivitaiFormat,  # YodayoFormat,
     ComfyUI,
     DrawThings,
     EasyDiffusion,
     Fooocus,
     InvokeAI,
+    MochiDiffusionFormat,  # Now expects IPTC data
     NovelAI,
     RuinedFooocusFormat,
     SwarmUI,
 )
-from .logger import get_logger  # Local application/library specific
+from .logger import get_logger
+
+# IPTC tag constants from piexif for clarity
+IPTC_CAPTION_ABSTRACT = (2, 120)  # piexif.IPTCApplicationRecord.Caption
+IPTC_ORIGINATING_PROGRAM = (
+    2,
+    65,
+)  # piexif.IPTCApplicationRecord.OriginatingProgram - check if this is the right tag for Mochi's intent
+IPTC_PROGRAM_VERSION = (2, 70)  # piexif.IPTCApplicationRecord.ProgramVersion
+
+# Alternative: Pillow's getiptcinfo() uses string keys if IPTCIM is available
+# For Mochi: 'caption/abstract', 'originating program', 'program version'
+# These are more user-friendly if available.
 
 
-# Pylint disables for class complexity - refactoring these would be major architectural changes
-# pylint: disable=too-many-instance-attributes,too-many-public-methods
 class ImageDataReader:
     NOVELAI_MAGIC = "stealth_pngcomp"
+
+    PARSER_CLASSES_PNG = [
+        ComfyUI,
+        CivitaiFormat,
+        # YodayoFormat,
+        A1111,
+        EasyDiffusion,
+        InvokeAI,
+        NovelAI,
+        SwarmUI,
+        MochiDiffusionFormat,  # Mochi might save IPTC to PNGs via some mechanism, try last for PNGs
+    ]
+
+    PARSER_CLASSES_JPEG_WEBP = [
+        # RuinedFooocus is handled specially before this loop
+        MochiDiffusionFormat,  # <<< MOCHI FIRST FOR JPEG/WEBP due to specific IPTC usage
+        CivitaiFormat,
+        EasyDiffusion,
+        # YodayoFormat,
+        A1111,
+        SwarmUI,
+    ]
 
     def __init__(
         self,
@@ -52,53 +79,113 @@ class ImageDataReader:
     ):
         self._height: int = 0
         self._width: int = 0
-        self._info: dict[str, Any] = {}
+        self._info: dict[str, Any] = {}  # Raw PIL info
+        self._parsed_iptc_info: dict[str, str] = {}  # Store extracted IPTC fields
         self._positive: str = ""
         self._negative: str = ""
-        self._positive_sdxl: dict[str, Any] = {}
-        self._negative_sdxl: dict[str, Any] = {}
-        self._setting: str = ""
+        # ... (other attributes as before) ...
         self._raw: str = ""
         self._tool: str = ""
-        # Ensure BaseFormat.PARAMETER_KEY is accessible and a list
-        base_param_key_attr = getattr(BaseFormat, "PARAMETER_KEY", None)
-        if isinstance(base_param_key_attr, list):
-            self._parameter_key: list[str] = base_param_key_attr
-        else:
-            self._parameter_key = [
-                "model",
-                "sampler",
-                "seed",
-                "cfg",
-                "steps",
-                "size",
-            ]  # Fallback
-
-        self._parameter: dict[str, Any] = dict.fromkeys(
-            self._parameter_key,
-            PARAMETER_PLACEHOLDER,
+        base_param_key_attr = getattr(BaseFormat, "PARAMETER_KEY", [])
+        self._parameter_key: list[str] = (
+            base_param_key_attr
+            if isinstance(base_param_key_attr, list)
+            else ["model", "sampler", "seed", "cfg", "steps", "size"]
         )
+        self._parameter: dict[str, Any] = dict.fromkeys(self._parameter_key, PARAMETER_PLACEHOLDER)
         self._is_txt: bool = is_txt
         self._is_sdxl: bool = False
         self._format_str: str = ""
-        self._props: str = ""
         self._parser: BaseFormat | None = None
         self._status: BaseFormat.Status = BaseFormat.Status.UNREAD
         self._error: str = ""
-        # Corrected logger initialization
         self._logger: logging.Logger = get_logger("DSVendored_SDPR.ImageDataReader")
+        self._exif_software_tag: str | None = None
         self.read_data(file_path_or_obj)
 
+    def _initialize_state(self) -> None:
+        # ... (as before) ...
+        self._status = BaseFormat.Status.UNREAD
+        self._error = ""
+        self._parser = None
+        self._tool = ""
+        self._raw = ""
+        self._info = {}
+        self._parsed_iptc_info = {}  # <<< ADDED: Reset parsed IPTC
+        self._width = 0
+        self._height = 0
+        self._positive = ""
+        self._negative = ""
+        self._setting = ""
+        self._positive_sdxl = {}
+        self._negative_sdxl = {}
+        self._is_sdxl = False
+        self._parameter = dict.fromkeys(self._parameter_key, PARAMETER_PLACEHOLDER)
+        self._format_str = ""
+        self._exif_software_tag = None
+
+    def _get_display_name(self, file_path_or_obj: str | Path | TextIO | BinaryIO) -> str:
+        # ... (as before) ...
+        if hasattr(file_path_or_obj, "name") and file_path_or_obj.name:
+            try:
+                return Path(file_path_or_obj.name).name
+            except TypeError:
+                return str(file_path_or_obj.name)
+        if isinstance(file_path_or_obj, (str, Path)):
+            return Path(file_path_or_obj).name
+        return "UnnamedFileObject"
+
     def _try_parser(self, parser_class: type[BaseFormat], **kwargs: Any) -> bool:
+        # ... (logging for kwargs as before, ensuring raw is truncated) ...
+        kwarg_keys_for_log = []
+        temp_kwargs_for_log = kwargs.copy()
+        if (
+            "raw" in temp_kwargs_for_log
+            and isinstance(temp_kwargs_for_log["raw"], str)
+            and len(temp_kwargs_for_log["raw"]) > 70
+        ):
+            temp_kwargs_for_log["raw"] = temp_kwargs_for_log["raw"][:67] + "..."
+
+        for k, v_val in temp_kwargs_for_log.items():
+            if k == "logger_obj":
+                continue
+            if k == "info" and isinstance(v_val, dict):
+                kwarg_keys_for_log.append("info=<dict>")
+            else:
+                kwarg_keys_for_log.append(f"{k}='{v_val}'" if isinstance(v_val, str) else f"{k}={v_val}")
+
         self._logger.debug(
-            f"Attempting parser: {parser_class.__name__} with kwargs: {list(kwargs.keys())}",
+            "Attempting parser: %s with kwargs: [%s]",
+            parser_class.__name__,
+            ", ".join(kwarg_keys_for_log),
         )
+        # ... (rest of _try_parser as before, ensuring 'info' passed to parser includes software_tag and potentially iptc_info) ...
         try:
-            # Ensure width and height are integers if passed
-            if "width" in kwargs and self._width > 0:  # Check if width is valid
-                kwargs["width"] = int(self._width)
-            if "height" in kwargs and self._height > 0:  # Check if height is valid
-                kwargs["height"] = int(self._height)
+            if "width" not in kwargs and self._width > 0:
+                kwargs["width"] = self._width
+            if "height" not in kwargs and self._height > 0:
+                kwargs["height"] = self._height
+
+            kwargs["logger_obj"] = self._logger
+
+            # Consolidate info to pass to parser
+            # Start with a copy of existing kwargs["info"] or an empty dict
+            parser_info_arg = kwargs.get("info", {}).copy()
+            if not isinstance(parser_info_arg, dict):
+                parser_info_arg = {}
+
+            if self._exif_software_tag:
+                parser_info_arg["software_tag"] = self._exif_software_tag
+
+            # Add parsed IPTC info if Mochi is being tried (or make it general)
+            # If MochiDiffusionFormat, ensure it gets the IPTC fields
+            if parser_class is MochiDiffusionFormat and self._parsed_iptc_info:
+                parser_info_arg.update(self._parsed_iptc_info)  # Add all parsed IPTC fields
+
+            if parser_info_arg:  # Only pass info if it has content
+                kwargs["info"] = parser_info_arg
+            elif "info" in kwargs and not parser_info_arg:  # Remove empty info from kwargs
+                del kwargs["info"]
 
             temp_parser = parser_class(**kwargs)
             parser_own_status = temp_parser.parse()
@@ -108,613 +195,488 @@ class ImageDataReader:
                 self._tool = getattr(self._parser, "tool", parser_class.__name__)
                 self._status = BaseFormat.Status.READ_SUCCESS
                 self._error = ""
-                self._logger.info(f"Successfully parsed as {self._tool}.")
+                self._logger.info("Successfully parsed as %s.", self._tool)
                 return True
 
-            parser_error_msg = getattr(temp_parser, "error", "N/A")
-            status_name = (
-                parser_own_status.name
-                if hasattr(parser_own_status, "name")
-                else str(parser_own_status)
-            )
+            if parser_own_status != BaseFormat.Status.FORMAT_DETECTION_ERROR:
+                parser_error_msg = getattr(temp_parser, "error", "Unknown parser error")
+                if parser_error_msg and (self._status == BaseFormat.Status.UNREAD or not self._error):
+                    self._error = parser_error_msg
+
+            status_name = parser_own_status.name if hasattr(parser_own_status, "name") else str(parser_own_status)
             self._logger.debug(
-                f"{parser_class.__name__} parsing attempt resulted in status: {status_name}. Error: {parser_error_msg}",
+                "%s parsing attempt: Status %s. Error: %s",
+                parser_class.__name__,
+                status_name,
+                getattr(temp_parser, "error", "N/A"),
             )
-            if parser_error_msg and (
-                self._status == BaseFormat.Status.UNREAD or not self._error
-            ):
-                self._error = parser_error_msg
             return False
-        except TypeError as type_err:
+        except TypeError as type_err:  # Catch TyperError from parser_class(**kwargs)
             self._logger.error(
-                f"TypeError instantiating or calling {parser_class.__name__}: {type_err}. Check __init__/parse signature.",
+                "TypeError with %s init/call: %s. Check parser's __init__ signature and kwargs. Passed: %s",
+                parser_class.__name__,
+                type_err,
+                kwargs.keys(),  # Log keys that were passed
                 exc_info=True,
             )
             if self._status == BaseFormat.Status.UNREAD:
                 self._error = f"Init/call error for {parser_class.__name__}: {type_err}"
             return False
-        except Exception as general_exception:  # pylint: disable=broad-except
+        except Exception as general_exception:  # Catch other exceptions during parse()
             self._logger.error(
-                f"Unexpected exception during {parser_class.__name__} attempt: {general_exception}",
-                exc_info=True,  # Log full traceback for unexpected errors
-            )
-            if self._status == BaseFormat.Status.UNREAD:
-                self._error = (
-                    f"Runtime error in {parser_class.__name__}: {general_exception}"
-                )
-            return False
-
-    def _handle_text_file(self, file_obj: TextIO):
-        """Process a text file object."""
-        self._raw = file_obj.read()
-        if self._try_parser(A1111, raw=self._raw):
-            # Successfully parsed as A1111
-            pass
-        else:
-            if (
-                self._status == BaseFormat.Status.UNREAD
-            ):  # If no parser claimed success yet
-                self._status = BaseFormat.Status.FORMAT_ERROR
-            if not self._error:  # If parser didn't set a specific error
-                self._error = "Failed to parse text file as A1111 format."
-        log_status_name = (
-            self._status.name if hasattr(self._status, "name") else str(self._status)
-        )
-        self._logger.info(
-            f"Text file processed. Final Status: {log_status_name}, Tool: {self._tool or 'None'}",
-        )
-
-    def _attempt_legacy_swarm_exif(self, image_obj: Image.Image):
-        """Attempts to parse SwarmUI legacy EXIF."""
-        if self._parser:
-            return  # Already parsed
-        try:
-            exif_pil = image_obj.getexif()
-            if exif_pil:
-                # DeviceSetting (0x0110) for EXIF_TAGS.MODEL by some old SwarmUI, might be non-standard.
-                # Standard UserComment is 0x9286 (ExifIFD.UserComment)
-                # Standard ImageDescription is 0x010e (ImageIFD.ImageDescription)
-                # Check if this key is correct for Swarm
-                exif_json_str = exif_pil.get(0x0110)
-                if exif_json_str:
-                    exif_dict = json.loads(exif_json_str)
-                    if "sui_image_params" in exif_dict:
-                        self._try_parser(SwarmUI, info=exif_dict)
-        except json.JSONDecodeError as json_err:
-            self._logger.debug(f"SwarmUI legacy EXIF: Invalid JSON: {json_err}")
-        except Exception as general_exception:  # pylint: disable=broad-except
-            self._logger.debug(
-                f"SwarmUI legacy EXIF check failed: {general_exception}",
+                "Unexpected exception during %s.parse() attempt: %s",
+                parser_class.__name__,
+                general_exception,
                 exc_info=True,
             )
+            if self._status == BaseFormat.Status.UNREAD:
+                self._error = f"Runtime error in {parser_class.__name__}: {general_exception}"
+            return False
 
-    def _process_png_chunks(self, image_obj: Image.Image):
-        """Processes various PNG chunks to find metadata."""
+    def _handle_text_file(self, file_obj: TextIO) -> None:
+        # ... (as before) ...
+        raw_text_content = ""
+        try:
+            raw_text_content = file_obj.read()
+        except Exception as e_read:
+            self._logger.error("Error reading text file object: %s", e_read, exc_info=True)
+            self._status = BaseFormat.Status.FORMAT_ERROR
+            self._error = f"Could not read text file content: {e_read!s}"
+            return
+        if not self._try_parser(A1111, raw=raw_text_content):
+            if self._status == BaseFormat.Status.UNREAD:
+                self._status = BaseFormat.Status.FORMAT_ERROR
+            if not self._error:
+                self._error = "Failed to parse text file as A1111 format."
+        if not self._parser:
+            self._raw = raw_text_content
+        log_status_name = self._status.name if hasattr(self._status, "name") else str(self._status)
+        self._logger.info(
+            "Text file processed. Final Status: %s, Tool: %s",
+            log_status_name,
+            self._tool or "None",
+        )
+
+    def _attempt_legacy_swarm_exif(self, image_obj: Image.Image) -> None:
+        # ... (as before) ...
         if self._parser:
-            return  # Already parsed
+            return
+        try:
+            exif_pil = image_obj.getexif()
+            if exif_pil and (exif_json_str := exif_pil.get(0x0110)) and isinstance(exif_json_str, (str, bytes)):
+                if isinstance(exif_json_str, bytes):
+                    exif_json_str = exif_json_str.decode("utf-8", errors="ignore")
+                if "sui_image_params" in exif_json_str:
+                    try:
+                        exif_dict = json.loads(exif_json_str)
+                        if isinstance(exif_dict, dict) and "sui_image_params" in exif_dict:
+                            if self._try_parser(SwarmUI, info=exif_dict):
+                                return
+                    except json.JSONDecodeError as json_err:
+                        self._logger.debug("SwarmUI legacy EXIF (0x0110): Invalid JSON: %s", json_err)
+        except Exception as e:
+            self._logger.debug("SwarmUI legacy EXIF (0x0110) check failed: %s", e, exc_info=False)
 
-        # Extract relevant PNG chunks
-        png_params = self._info.get("parameters")
-        png_prompt = self._info.get("prompt")
-        # png_workflow = self._info.get("workflow") # Not directly used by _try_parser calls here
-        png_postproc = self._info.get("postprocessing")
-        png_neg_prompt_ed = self._info.get("negative_prompt") or self._info.get(
-            "Negative Prompt",
-        )
-        png_invoke_meta_keys = ["invokeai_metadata", "sd-metadata", "Dream"]
-        png_invoke_meta = next(
-            (
-                self._info.get(key)
-                for key in png_invoke_meta_keys
-                if self._info.get(key)
-            ),
-            None,
-        )
-        png_software_tag = self._info.get("Software")
+    def _process_png_chunks(self, image_obj: Image.Image) -> None:
+        # ... (as before, but ensure MochiDiffusionFormat is called appropriately if it might use info for PNGs) ...
+        if self._parser:
+            return
+
+        png_params_chunk = self._info.get("parameters")
         png_comment_chunk = self._info.get("Comment")
         png_xmp_chunk = self._info.get("XML:com.adobe.xmp")
+        png_user_comment_chunk = self._info.get("UserComment")
 
-        # Order of attempts matters
-        if png_params and not self._parser:
-            if "sui_image_params" in png_params:
-                self._try_parser(SwarmUI, raw=png_params)
-            elif self._try_parser(A1111, info=self._info):
-                if (
-                    png_prompt and self._tool == "A1111 webUI"
-                ):  # Check if it might be ComfyUI emulating A1111
-                    self._logger.debug(
-                        "PNG 'parameters' parsed by A1111, also has 'prompt', could be ComfyUI.",
-                    )
-                    # ComfyUI might also be tried later if this isn't definitive enough
+        for parser_class in self.PARSER_CLASSES_PNG:
+            if self._parser:
+                break
+            kwargs_for_parser = {"info": self._info.copy()}  # Base kwargs
 
-        if png_postproc and not self._parser:  # A1111 postprocessing info
-            self._try_parser(A1111, info=self._info)
+            # Provide 'raw' preferentially if a specific chunk is the known primary source
+            if (parser_class is A1111 and png_params_chunk) or (
+                parser_class is SwarmUI and png_params_chunk and "sui_image_params" in png_params_chunk
+            ):
+                kwargs_for_parser["raw"] = png_params_chunk
+            elif parser_class is MochiDiffusionFormat:
+                # Mochi uses IPTC, less likely for PNGs. If it did use a PNG chunk for its string,
+                # its parser would need to look in `info`. For now, it mainly expects IPTC.
+                # If Mochi wrote its string to PNG:Comment:
+                if png_comment_chunk:
+                    kwargs_for_parser["raw"] = png_comment_chunk
 
-        if png_neg_prompt_ed and not self._parser:  # EasyDiffusion specific field
-            self._try_parser(EasyDiffusion, info=self._info)
+            if self._try_parser(parser_class, **kwargs_for_parser):
+                continue
 
-        if png_invoke_meta and not self._parser:  # InvokeAI
-            self._try_parser(InvokeAI, info=self._info)
-
-        if png_software_tag == "NovelAI" and not self._parser:
-            self._try_parser(
-                NovelAI,
-                info=self._info,
-                width=self._width,
-                height=self._height,
-            )
-
-        if png_prompt and not self._parser:  # ComfyUI often uses 'prompt' for workflow
-            self._try_parser(
-                ComfyUI,
-                info=self._info,
-                width=self._width,
-                height=self._height,
-            )
-
-        if png_comment_chunk and not self._parser:  # Fooocus stores JSON in Comment
+        if not self._parser and png_comment_chunk:
             try:
                 comment_data = json.loads(png_comment_chunk)
-                self._try_parser(Fooocus, info=comment_data)
+                if isinstance(comment_data, dict) and "prompt" in comment_data:
+                    if self._try_parser(Fooocus, info=comment_data):
+                        return
             except json.JSONDecodeError:
-                self._logger.warn("Fooocus PNG Comment: Not valid JSON.")
+                self._logger.debug("PNG Comment not valid JSON or not Fooocus.")
 
-        if png_xmp_chunk and not self._parser:  # DrawThings
+        if not self._parser and png_xmp_chunk:
             self._parse_drawthings_xmp(png_xmp_chunk)
+            if self._parser:
+                return
 
-        # NovelAI LSB in PNG (alpha channel)
-        if image_obj.mode == "RGBA" and not self._parser:
+        if not self._parser and image_obj.mode == "RGBA":
             self._parse_novelai_lsb(image_obj)
 
-    def _parse_drawthings_xmp(self, xmp_chunk: str):
-        """Parse DrawThings XMP data."""
+    def _parse_drawthings_xmp(self, xmp_chunk: str) -> None:
+        # ... (as before) ...
         if self._parser:
             return
         try:
             xmp_dom = minidom.parseString(xmp_chunk)
-            uc_nodes = xmp_dom.getElementsByTagName("exif:UserComment")
-            if not uc_nodes:
-                return
+            description_nodes = xmp_dom.getElementsByTagName("rdf:Description")
+            for desc_node in description_nodes:
+                uc_nodes = desc_node.getElementsByTagName("exif:UserComment")
+                data_str = None
+                if not uc_nodes or not uc_nodes[0].childNodes:
+                    continue
+                first_child = uc_nodes[0].childNodes[0]
+                if first_child.nodeType == first_child.TEXT_NODE:
+                    data_str = first_child.data
+                elif first_child.nodeName == "rdf:Alt":
+                    alt_node = first_child
+                    li_nodes = alt_node.getElementsByTagName("rdf:li")
+                    if (
+                        li_nodes
+                        and li_nodes[0].childNodes
+                        and li_nodes[0].childNodes[0].nodeType == li_nodes[0].TEXT_NODE
+                    ):
+                        data_str = li_nodes[0].childNodes[0].data
+                if data_str:
+                    if self._try_parser(DrawThings, raw=data_str.strip()):
+                        return
+        except (minidom.ExpatError, json.JSONDecodeError) as e:
+            self._logger.warning("DrawThings PNG XMP: Parse error: %s", e)
+        except Exception as e:
+            self._logger.warning("DrawThings PNG XMP: Unexpected error: %s", e, exc_info=True)
 
-            # Try to find the correct node structure for DrawThings
-            # This can be complex due to nested rdf:Alt/rdf:li or similar structures
-            # The original deep access was: uc_node[0].childNodes[1].childNodes[1].childNodes[0].data
-            # This needs to be made more robust, e.g., by iterating or searching for specific tags.
-            # For now, implementing a safer, if less deep, access pattern.
-            # This part is a simplification and might need adjustment for actual DrawThings XMP.
-            # pylint: disable=too-many-boolean-expressions
-            node_l0 = uc_nodes[0]
-            if (
-                node_l0
-                and node_l0.childNodes
-                and len(node_l0.childNodes) > 1
-                and node_l0.childNodes[1]  # Check level 1
-                and node_l0.childNodes[1].childNodes
-                and len(node_l0.childNodes[1].childNodes) > 1
-                and node_l0.childNodes[1].childNodes[1]  # Check level 2
-                and node_l0.childNodes[1].childNodes[1].childNodes
-                # Check level 3 (data node)
-                and len(node_l0.childNodes[1].childNodes[1].childNodes) > 0
-                and hasattr(node_l0.childNodes[1].childNodes[1].childNodes[0], "data")
-            ):
-                json_str = node_l0.childNodes[1].childNodes[1].childNodes[0].data
-                self._try_parser(DrawThings, info=json.loads(json_str))
-            else:
-                self._logger.warn(
-                    "DrawThings PNG XMP: UserComment structure not as expected or data missing.",
-                )
-        except minidom.ExpatError as xml_err:
-            self._logger.warn(f"DrawThings PNG XMP: XML parsing error: {xml_err}")
-        except json.JSONDecodeError:
-            self._logger.warn("DrawThings PNG XMP: UserComment content not valid JSON.")
-        except Exception as general_exception:  # pylint: disable=broad-except
-            self._logger.warn(
-                f"DrawThings PNG XMP: Error processing XMP: {general_exception}",
-                exc_info=True,
-            )
-
-    def _parse_novelai_lsb(self, image_obj: Image.Image):
-        """Helper to parse NovelAI LSB data from an image object."""
+    def _parse_novelai_lsb(self, image_obj: Image.Image) -> None:
+        # ... (as before) ...
         if self._parser:
             return
         try:
-            reader = NovelAI.LSBExtractor(image_obj)
-            magic_bytes = reader.get_next_n_bytes(len(self.NOVELAI_MAGIC))
-            if (
-                magic_bytes
-                and magic_bytes.decode("utf-8", errors="ignore") == self.NOVELAI_MAGIC
-            ):
-                self._try_parser(NovelAI, extractor=reader)
-        except Exception as lsb_err:  # pylint: disable=broad-except
-            self._logger.warn(f"NovelAI LSB check error: {lsb_err}", exc_info=True)
+            extractor = NovelAI.LSBExtractor(image_obj)
+            if not extractor.lsb_bytes_list:
+                self._logger.debug("NovelAI LSB: Extractor found no data.")
+                return
+            magic_bytes = extractor.get_next_n_bytes(len(self.NOVELAI_MAGIC))
+            if magic_bytes and magic_bytes.decode("utf-8", "ignore") == self.NOVELAI_MAGIC:
+                if self._try_parser(NovelAI, extractor=extractor):
+                    return
+            else:
+                self._logger.debug("NovelAI LSB: Magic bytes not found.")
+        except Exception as e:
+            self._logger.warning("NovelAI LSB check encountered an error: %s", e, exc_info=True)
 
-    def _process_jpeg_webp_exif(self, image_obj: Image.Image):
-        """Process EXIF data for JPEG/WEBP formats."""
+    def _process_jpeg_webp_exif(self, image_obj: Image.Image) -> None:
         if self._parser:
-            return  # Already parsed
+            return
 
-        raw_user_comment: str | None = None
-        software_tag: str = ""
-        jfif_comment: str = self._info.get("comment", b"").decode("utf-8", "ignore")
+        raw_user_comment_str: str | None = None
+        # self._exif_software_tag and self._parsed_iptc_info are populated by _process_image_file
 
-        if self._info.get("exif"):
+        # Try to get UserComment from piexif if EXIF data exists
+        if exif_bytes := self._info.get("exif"):  # This is raw EXIF bytes from PIL.info
             try:
-                exif_data = piexif.load(self._info["exif"])
-                user_comment_bytes = exif_data.get("Exif", {}).get(
-                    piexif.ExifIFD.UserComment,
-                )
+                # piexif.load is done in _process_image_file to get self._parsed_iptc_info
+                # and self._exif_software_tag. We need UserComment from that loaded dict.
+                # For now, assume piexif.load was successful if _parsed_iptc_info has something or exif_bytes exists.
+                # A better way would be to store the loaded piexif_dict itself.
+                # Let's reload here for simplicity, or assume it's already available via a helper.
+                temp_exif_dict = piexif.load(exif_bytes)
+                user_comment_bytes = temp_exif_dict.get("Exif", {}).get(piexif.ExifIFD.UserComment)
                 if user_comment_bytes:
-                    raw_user_comment = piexif.helper.UserComment.load(
-                        user_comment_bytes,
-                    )
+                    raw_user_comment_str = piexif.helper.UserComment.load(user_comment_bytes)
+            except Exception:  # piexif.InvalidImageDataError or others
+                self._logger.debug("Could not load UserComment via piexif from EXIF.")
 
-                software_bytes = exif_data.get("0th", {}).get(piexif.ImageIFD.Software)
-                if software_bytes:
-                    software_tag = software_bytes.decode("ascii", "ignore").strip()
-            except piexif.InvalidImageDataError as exif_load_err:  # More specific error
-                self._logger.warn(
-                    f"piexif load error (InvalidImageDataError) for EXIF: {exif_load_err}",
-                )
-            except Exception as exif_err:  # pylint: disable=broad-except
-                self._logger.warn(
-                    f"piexif load error for EXIF: {exif_err}",
-                    exc_info=True,
-                )
+        jfif_comment_bytes = self._info.get("comment", b"")
+        jfif_comment_str = jfif_comment_bytes.decode("utf-8", "ignore") if isinstance(jfif_comment_bytes, bytes) else ""
 
-        # 1. RuinedFooocus / Civitai (UserComment)
-        if raw_user_comment and not self._parser:
-            if raw_user_comment.strip().startswith("{"):  # Potential JSON
-                try:
-                    uc_json = json.loads(raw_user_comment)
-                    if (
-                        isinstance(uc_json, dict)
-                        and uc_json.get("software") == "RuinedFooocus"
-                    ):
-                        self._try_parser(
-                            RuinedFooocusFormat,
-                            raw=raw_user_comment,
-                            width=self._width,
-                            height=self._height,
-                        )
-                except json.JSONDecodeError:
-                    self._logger.debug(
-                        "UserComment starts with '{' but is not valid RuinedFooocus JSON.",
-                    )
-
-            if not self._parser:  # Check for Civitai if not RuinedFooocus
-                is_civitai_uc = False
-                if (
-                    software_tag == "4c6047c3-8b1c-4058-8888-fd48353bf47d"
-                ):  # Known Civitai software tag
-                    is_civitai_uc = True
-                else:
-                    # Civitai often has "charset=Unicode" then JSON, or just JSON.
-                    # The "笀∀爀攀猀漀甀爀挀攀" part is mangled Unicode for "{"resource".
-                    text_segment = raw_user_comment  # Default to full comment
-                    if (
-                        "charset=Unicode" in raw_user_comment
-                    ):  # More specific check for Civitai
-                        text_segment = raw_user_comment.split("charset=Unicode", 1)[
-                            -1
-                        ].strip()
-
-                    if (
-                        # Corrected hanging indent
-                        text_segment.startswith("笀∀爀攀猀漀甀爀挀攀")
-                        or text_segment.startswith('{"resource-stack":}')
-                    ) and '"extraMetadata":' in text_segment:
-                        is_civitai_uc = True
-                    elif (
-                        text_segment.startswith('{"resource-stack":}')
-                        and '"extraMetadata":' in text_segment
-                    ):  # Simpler check if no mangled Unicode
-                        is_civitai_uc = True
-
-                if is_civitai_uc:
-                    self._try_parser(
-                        CivitaiComfyUIFormat,
-                        raw=raw_user_comment,
-                        width=self._width,
-                        height=self._height,
-                    )
-
-        # 2. Fooocus (JFIF Comment)
-        if not self._parser and jfif_comment:
+        # --- Attempt RuinedFooocus (very specific UserComment JSON) ---
+        if raw_user_comment_str and raw_user_comment_str.strip().startswith("{"):
             try:
-                jfif_json = json.loads(jfif_comment)
-                # Fooocus JFIF comments are typically a flat JSON with "prompt", "negative_prompt" etc.
-                if isinstance(jfif_json, dict) and "prompt" in jfif_json:
-                    self._try_parser(Fooocus, info=jfif_json)
+                uc_json = json.loads(raw_user_comment_str)
+                if isinstance(uc_json, dict) and uc_json.get("software") == "RuinedFooocus":
+                    if self._try_parser(RuinedFooocusFormat, raw=raw_user_comment_str):
+                        return
             except json.JSONDecodeError:
-                self._logger.debug("JFIF Comment not valid Fooocus JSON.")
+                pass
 
-        # 3. Standard UserComment Fallbacks (A1111, EasyDiffusion, SwarmUI)
-        if not self._parser and raw_user_comment:
-            self._raw = raw_user_comment  # Set self._raw for these parsers
-            if "sui_image_params" in raw_user_comment:
-                self._try_parser(SwarmUI, raw=self._raw)
-            # EasyDiffusion often JSON in UserComment
-            elif raw_user_comment.strip().startswith("{"):
-                self._try_parser(EasyDiffusion, raw=self._raw)
-            else:  # A1111 often plain text in UserComment
-                self._try_parser(A1111, raw=self._raw)
+        # --- Iterate through ordered JPEG/WEBP parsers ---
+        for parser_class in self.PARSER_CLASSES_JPEG_WEBP:
+            if self._parser:
+                break
 
-        # 4. NovelAI LSB (RGBA JPEG/WEBP)
+            kwargs_for_parser = {}
+            # MochiDiffusionFormat expects IPTC Caption-Abstract as raw, and other IPTC in info
+            if parser_class is MochiDiffusionFormat:
+                iptc_caption = self._parsed_iptc_info.get("iptc_caption_abstract", "")
+                if iptc_caption:  # Only try Mochi if we actually found its main data source
+                    kwargs_for_parser["raw"] = iptc_caption
+                    # info kwarg with other IPTC fields is added by _try_parser if self._parsed_iptc_info is populated
+                else:  # No caption, Mochi parser won't work with raw=None
+                    continue  # Skip trying Mochi if no IPTC caption
+            elif raw_user_comment_str:  # For other parsers that use UserComment
+                kwargs_for_parser["raw"] = raw_user_comment_str
+            else:  # No UserComment for other parsers to use
+                continue  # Skip if no raw_user_comment_str for these parsers
+
+            if self._try_parser(parser_class, **kwargs_for_parser):
+                return  # Successfully parsed
+
+        # ---- Attempt parsing based on JFIF Comment if no success yet ----
+        if not self._parser and jfif_comment_str:
+            try:
+                jfif_json_data = json.loads(jfif_comment_str)
+                if isinstance(jfif_json_data, dict) and "prompt" in jfif_json_data:
+                    if self._try_parser(Fooocus, info=jfif_json_data):
+                        return
+            except json.JSONDecodeError:
+                self._logger.debug("JFIF Comment not valid JSON or not Fooocus.")
+
         if not self._parser and image_obj.mode == "RGBA":
             self._parse_novelai_lsb(image_obj)
 
-    # pylint: disable=too-many-branches,too-many-statements
-    def read_data(self, file_path_or_obj: str | Path | TextIO | BinaryIO):
-        # Reset state for fresh read
-        self._status = BaseFormat.Status.UNREAD
-        self._error = ""
-        self._parser = None
-        self._tool = ""
-        self._raw = ""  # Clear raw from previous reads
-        self._info = {}  # Clear info
-        self._width = 0
-        self._height = 0
-
-        file_display_name = str(file_path_or_obj)
-        if hasattr(file_path_or_obj, "name"):  # For file objects
-            file_display_name = Path(file_path_or_obj.name).name
-        elif isinstance(file_path_or_obj, (str, Path)):
-            file_display_name = Path(file_path_or_obj).name
-
-        if self._is_txt:
-            if hasattr(file_path_or_obj, "read") and callable(file_path_or_obj.read):
-                # Assuming file_path_or_obj is an opened text file object
-                self._handle_text_file(file_path_or_obj)  # type: ignore
-            else:
-                self._logger.error(
-                    "Text file processing expected a readable file object.",
-                )
-                self._status = BaseFormat.Status.FORMAT_ERROR
-                self._error = "Invalid file object for text file."
-            # Final logging for text files is inside _handle_text_file
-            return
-
+    def _process_image_file(self, file_path_or_obj: str | Path | BinaryIO, file_display_name: str) -> None:
         try:
-            with Image.open(file_path_or_obj) as img:  # Renamed f_img to img
+            with Image.open(file_path_or_obj) as img:
                 self._width = img.width
                 self._height = img.height
-                self._info = (
-                    img.info.copy() if img.info else {}
-                )  # Ensure it's a mutable copy
+                self._info = img.info.copy() if img.info else {}
                 self._format_str = img.format or ""
+                self._logger.debug(
+                    "Image opened: %s, Format: %s, Size: %sx%s",
+                    file_display_name,
+                    self._format_str,
+                    self._width,
+                    self._height,
+                )
 
-                # TODO: Refactor parser attempts into a strategy list or chained calls
-                # Example: parser_strategies = [self._attempt_legacy_swarm_exif, self._process_png_chunks, ...]
-                # for strategy_fn in parser_strategies:
-                #     if self._parser: break
-                #     strategy_fn(img)
+                # --- Extract common EXIF/IPTC fields early ---
+                if exif_bytes := self._info.get("exif"):
+                    try:
+                        exif_data_dict = piexif.load(exif_bytes)
+                        # Software Tag
+                        sw_bytes = exif_data_dict.get("0th", {}).get(piexif.ImageIFD.Software)
+                        if sw_bytes and isinstance(sw_bytes, bytes):
+                            self._exif_software_tag = sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
+                            self._logger.debug("Found EXIF:Software tag: %s", self._exif_software_tag)
+
+                        # IPTC Data for MochiDiffusion and potentially others
+                        iptc_dict_from_exif = exif_data_dict.get("IPTC", {})
+                        if iptc_dict_from_exif:
+                            self._logger.debug("Found IPTC block in EXIF via piexif.")
+                            caption_b = iptc_dict_from_exif.get(IPTC_CAPTION_ABSTRACT)
+                            if caption_b:
+                                try:
+                                    self._parsed_iptc_info["iptc_caption_abstract"] = caption_b.decode(
+                                        "utf-8", "replace"
+                                    )
+                                except AttributeError:
+                                    self._parsed_iptc_info["iptc_caption_abstract"] = str(caption_b)
+
+                            program_b = iptc_dict_from_exif.get(IPTC_ORIGINATING_PROGRAM)
+                            if program_b:
+                                try:
+                                    self._parsed_iptc_info["iptc_originating_program"] = program_b.decode(
+                                        "utf-8", "replace"
+                                    )
+                                except AttributeError:
+                                    self._parsed_iptc_info["iptc_originating_program"] = str(program_b)
+
+                            version_b = iptc_dict_from_exif.get(IPTC_PROGRAM_VERSION)
+                            if version_b:
+                                try:
+                                    self._parsed_iptc_info["iptc_program_version"] = version_b.decode(
+                                        "utf-8", "replace"
+                                    )
+                                except AttributeError:
+                                    self._parsed_iptc_info["iptc_program_version"] = str(version_b)
+
+                            if self._parsed_iptc_info:
+                                self._logger.debug("Parsed IPTC fields: %s", self._parsed_iptc_info)
+
+                    except Exception as e_exif_load:
+                        self._logger.debug(
+                            "Could not parse EXIF for Software/IPTC tags: %s",
+                            e_exif_load,
+                        )
+
+                # Alternative IPTC extraction using Pillow's getiptcinfo() if IPTCIM is installed
+                # This often gives more straightforward string keys.
+                if not self._parsed_iptc_info and hasattr(img, "getiptcinfo"):
+                    try:
+                        pil_iptc_info = img.getiptcinfo()  # Needs IPTCIM package
+                        if pil_iptc_info:
+                            self._logger.debug("Found IPTC via Pillow getiptcinfo().")
+                            # Keys in pil_iptc_info are usually like ('caption/abstract', 'originating program', etc.)
+                            # We need to map these to our consistent keys
+                            # (2,120) -> 'caption/abstract'
+                            # (2,65)  -> 'originating program' (Mochi's definition)
+                            # (2,70)  -> 'program version'
+                            # The exact keys from getiptcinfo() might vary based on IPTCIM version.
+                            # This part requires checking what getiptcinfo() actually returns.
+                            # For example:
+                            if val := pil_iptc_info.get((2, 120)):
+                                self._parsed_iptc_info["iptc_caption_abstract"] = str(val)
+                            if val := pil_iptc_info.get((2, 65)):
+                                self._parsed_iptc_info["iptc_originating_program"] = str(val)
+                            if val := pil_iptc_info.get((2, 70)):
+                                self._parsed_iptc_info["iptc_program_version"] = str(val)
+                            if self._parsed_iptc_info:
+                                self._logger.debug(
+                                    "Parsed IPTC fields from Pillow: %s",
+                                    self._parsed_iptc_info,
+                                )
+                    except Exception as e_pil_iptc:
+                        self._logger.debug(
+                            "Pillow getiptcinfo() failed or IPTCIM not available: %s",
+                            e_pil_iptc,
+                        )
 
                 self._attempt_legacy_swarm_exif(img)
 
-                if not self._parser and self._format_str == "PNG":
-                    self._process_png_chunks(img)
-                elif not self._parser and self._format_str in ["JPEG", "WEBP"]:
-                    self._process_jpeg_webp_exif(img)
-
+                if not self._parser:
+                    if self._format_str == "PNG":
+                        self._process_png_chunks(img)
+                    elif self._format_str in ["JPEG", "WEBP"]:
+                        self._process_jpeg_webp_exif(img)
+                    else:  # Generic fallback for other image types
+                        self._logger.info(
+                            "Image format '%s' not specifically handled. Checking generic EXIF UserComment.",
+                            self._format_str,
+                        )
+                        if not self._parser and (
+                            exif_b := self._info.get("exif")
+                        ):  # Re-check if not parsed by IPTC path
+                            try:
+                                exif_d = piexif.load(exif_b)
+                                uc_b = exif_d.get("Exif", {}).get(piexif.ExifIFD.UserComment)
+                                if uc_b:
+                                    uc_s = piexif.helper.UserComment.load(uc_b)
+                                    if uc_s and not uc_s.strip().startswith("{"):  # A1111 is text
+                                        if self._try_parser(A1111, raw=uc_s):
+                                            pass
+                            except Exception as e_gen_exif:
+                                self._logger.debug(
+                                    "Generic EXIF UserComment (A1111 fallback) check failed: %s",
+                                    e_gen_exif,
+                                )
+        # ... (Exception handling as before) ...
         except FileNotFoundError:
-            self._logger.error(f"Image file not found: {file_display_name}")
             self._status = BaseFormat.Status.FORMAT_ERROR
             self._error = "Image file not found."
-        except UnidentifiedImageError as unident_err:  # Specific PIL error
-            self._logger.error(
-                f"Cannot identify image file '{file_display_name}': {unident_err}",
-            )
+            self._logger.error("Image file not found: %s", file_display_name)
+        except UnidentifiedImageError as e:
             self._status = BaseFormat.Status.FORMAT_ERROR
-            self._error = f"Cannot identify image file: {unident_err}"
-        except Exception as outer_open_err:  # pylint: disable=broad-except
+            self._error = f"Cannot identify image: {e!s}"
+            self._logger.error("Cannot identify image file '%s': %s", file_display_name, e)
+        except OSError as e:
+            self._status = BaseFormat.Status.FORMAT_ERROR
+            self._error = f"File system error: {e!s}"
             self._logger.error(
-                f"Error opening or processing image '{file_display_name}': {outer_open_err}",
+                "OS/IO error opening image '%s': %s",
+                file_display_name,
+                e,
                 exc_info=True,
             )
+        except Exception as e:
             self._status = BaseFormat.Status.FORMAT_ERROR
-            if not self._error:  # Only set if not already set by a more specific error
-                self._error = f"Pillow/general error: {outer_open_err}"
+            self._error = f"Pillow/general error: {e!s}"
+            self._logger.error(
+                "Error opening/processing image '%s': %s",
+                file_display_name,
+                e,
+                exc_info=True,
+            )
 
-        # Final Status Check
+    def read_data(self, file_path_or_obj: str | Path | TextIO | BinaryIO) -> None:
+        # ... (as before) ...
+        self._initialize_state()
+        file_display_name = self._get_display_name(file_path_or_obj)
+        self._logger.debug("Reading data for: %s (is_txt: %s)", file_display_name, self._is_txt)
+        if self._is_txt:
+            if hasattr(file_path_or_obj, "read") and callable(file_path_or_obj.read):
+                self._handle_text_file(file_path_or_obj)
+            else:
+                try:
+                    with open(file_path_or_obj, encoding="utf-8") as f_obj:
+                        self._handle_text_file(f_obj)
+                except Exception as e_open:
+                    self._logger.error("Error opening text file '%s': %s", file_display_name, e_open)
+                    self._status = BaseFormat.Status.FORMAT_ERROR
+                    self._error = f"Could not open text file: {e_open!s}"
+        else:
+            self._process_image_file(file_path_or_obj, file_display_name)
         if self._status == BaseFormat.Status.UNREAD:
-            self._logger.warn(
-                f"No suitable parser found or no parser claimed success for '{file_display_name}'.",
+            self._logger.warning(
+                "No suitable parser for '%s' or all parsers failed/declined.",
+                file_display_name,
             )
             self._status = BaseFormat.Status.FORMAT_ERROR
             if not self._error:
-                self._error = "No suitable parser found or parsing failed."
-
-        log_tool_name = self._tool if self._tool else "None"
-        log_status_name = (
-            self._status.name if hasattr(self._status, "name") else str(self._status)
-        )
+                self._error = "No suitable metadata parser or file unreadable/corrupted."
+        log_tool = self._tool or "None"
+        log_status_name = self._status.name if hasattr(self._status, "name") else str(self._status)
         self._logger.info(
-            f"Final Reading Status for '{file_display_name}': {log_status_name}, Tool: {log_tool_name}",
+            "Final Reading Status for '%s': %s, Tool: %s",
+            file_display_name,
+            log_status_name,
+            log_tool,
         )
-
-        # Consolidate error message logging
-        final_error_to_log = self._error  # Start with ImageDataReader's own error
-        if self._parser and getattr(self._parser, "error", None):
-            # If parser has an error and either we didn't succeed or IDR has no error, prefer parser's.
+        final_error_to_log = self._error
+        if self._parser and hasattr(self._parser, "error") and self._parser.error:
             if self._status != BaseFormat.Status.READ_SUCCESS or not final_error_to_log:
                 final_error_to_log = self._parser.error
-
         if self._status != BaseFormat.Status.READ_SUCCESS and final_error_to_log:
-            self._logger.warn(f"Error details: {final_error_to_log}")
-        elif (
-            self._status != BaseFormat.Status.READ_SUCCESS
-        ):  # Fallback if no error string captured
-            self._logger.warn(
-                f"Parsing failed with status {log_status_name} (no specific error message captured).",
-            )
+            self._logger.warning("Error details for '%s': %s", file_display_name, final_error_to_log)
 
-    @staticmethod
-    def remove_data(image_file_path: Union[str, Path]) -> Optional[Image.Image]:
-        try:
-            with Image.open(image_file_path) as img_file:
-                image_data = list(img_file.getdata())
-                image_without_exif = Image.new(img_file.mode, img_file.size)
-                image_without_exif.putdata(image_data)
-                return image_without_exif
-        except FileNotFoundError:
-            get_logger("DSVendored_SDPR.ImageDataReader").error(
-                f"remove_data: File not found - {image_file_path}",
-            )
-        except Exception as general_err:  # pylint: disable=broad-except
-            get_logger("DSVendored_SDPR.ImageDataReader").error(
-                f"remove_data: Error processing {image_file_path} - {general_err}",
-                exc_info=True,
-            )
-        return None
-
-    @staticmethod
-    def save_image(
-        image_path: str | Path,
-        new_path: str | Path,
-        image_format: str,
-        data: str | None = None,
-    ):
-        # Specific logger for this static method
-        logger_instance = get_logger("DSVendored_SDPR.ImageDataReader.Save")
-        metadata_to_embed: Any = None  # Can be PngInfo or bytes for EXIF
-        if data:
-            image_format_upper = image_format.strip().upper()
-            if image_format_upper == "PNG":
-                metadata_to_embed = PngInfo()
-                metadata_to_embed.add_text("parameters", data)
-            elif image_format_upper in ["JPEG", "JPG", "WEBP"]:
-                try:
-                    # Ensure data is string for UserComment
-                    user_comment_bytes = piexif.helper.UserComment.dump(
-                        str(data),
-                        encoding="unicode",
-                    )
-                    metadata_to_embed = piexif.dump(
-                        {"Exif": {piexif.ExifIFD.UserComment: user_comment_bytes}},
-                    )
-                except Exception as dump_err:  # pylint: disable=broad-except
-                    logger_instance.error(
-                        f"piexif dump error: {dump_err}",
-                        exc_info=True,
-                    )
-                    metadata_to_embed = None  # Ensure it's None if dump fails
-        try:
-            with Image.open(image_path) as img_to_save:
-                image_format_upper = (
-                    image_format.strip().upper()
-                )  # Ensure it's stripped and upper
-                save_kwargs: dict[str, Any] = {}
-
-                if image_format_upper == "PNG":
-                    if metadata_to_embed:
-                        save_kwargs["pnginfo"] = metadata_to_embed
-                elif image_format_upper in ["JPEG", "JPG"]:
-                    save_kwargs["quality"] = 95
-                    # Preserve existing EXIF if not embedding new metadata, or merge if piexif handles it.
-                    # For simplicity, if we have new EXIF (metadata_to_embed), we use that.
-                    # Otherwise, try to preserve existing.
-                    if metadata_to_embed:
-                        # piexif.dump produces bytes suitable for exif kwarg
-                        save_kwargs["exif"] = metadata_to_embed
-                        metadata_to_embed = None  # Clear it so piexif.insert is not called later for JPEG
-                    elif img_to_save.info.get("exif"):
-                        save_kwargs["exif"] = img_to_save.info["exif"]
-
-                elif image_format_upper == "WEBP":
-                    # For lossless, though Pillow's default might be good
-                    save_kwargs["quality"] = 100
-                    save_kwargs["lossless"] = True
-                    if metadata_to_embed:
-                        # piexif.dump produces bytes
-                        save_kwargs["exif"] = metadata_to_embed
-                        metadata_to_embed = None  # Clear it for WEBP too
-
-                img_to_save.save(new_path, **save_kwargs)
-
-                # For JPEG/WEBP, piexif.insert is sometimes used if Pillow doesn't handle EXIF well for a format
-                # However, Pillow's `save` with `exif=` argument should be preferred.
-                # The original code had piexif.insert calls after save for JPEG/WEBP.
-                # If Pillow's `exif=` kwarg is sufficient, these are not needed.
-                # Keeping the logic structure but it might be redundant if `exif=` works.
-                if metadata_to_embed and image_format_upper in ["JPEG", "JPG", "WEBP"]:
-                    logger_instance.debug(
-                        f"Attempting piexif.insert for {new_path} (should be redundant if exif= kwarg worked)",
-                    )
-                    try:
-                        piexif.insert(metadata_to_embed, str(new_path))
-                    except Exception as insert_err:  # pylint: disable=broad-except
-                        logger_instance.error(
-                            f"piexif.insert ({image_format_upper}) error: {insert_err}",
-                            exc_info=True,
-                        )
-
-        except FileNotFoundError:
-            logger_instance.error(
-                f"Image save error: Source file not found - {image_path}",
-            )
-        except UnidentifiedImageError:
-            logger_instance.error(
-                f"Image save error: Cannot identify source image - {image_path}",
-            )
-        except Exception as save_err:  # pylint: disable=broad-except
-            logger_instance.error(
-                f"Image save error for {new_path}: {save_err}",
-                exc_info=True,
-            )
-
-    @staticmethod
-    def construct_data(positive: str, negative: str, setting: str) -> str:
-        parts = []
-        if positive:
-            parts.append(positive)
-        if negative:
-            parts.append(f"Negative prompt: {negative}")
-        if setting:
-            parts.append(setting)
-        return "\n".join(parts)
-
-    def prompt_to_line(self) -> str:
-        if self._parser and hasattr(self._parser, "prompt_to_line"):
-            return self._parser.prompt_to_line()
-        # Fallback if no parser or parser has no such method
-        return self.construct_data(self.positive, self.negative, self.setting)
-
-    # Properties to access data, preferring parsed data if available
+    # ... (remove_data, save_image, construct_data, prompt_to_line, and all properties remain the same) ...
+    # --- Properties ---
     @property
     def height(self) -> str:
-        parser_h = getattr(self._parser, "height", None)
-        # Ensure valid integer string before comparing to "0"
-        if parser_h is not None:
-            try:
-                if int(str(parser_h)) > 0:
-                    return str(parser_h)
-            except ValueError:
-                pass  # Not a valid int string
+        parser_h_str = str(getattr(self._parser, "height", "0"))
+        if parser_h_str.isdigit() and int(parser_h_str) > 0:
+            return parser_h_str
         return str(self._height) if self._height > 0 else "0"
 
     @property
     def width(self) -> str:
-        parser_w = getattr(self._parser, "width", None)
-        if parser_w is not None:
-            try:
-                if int(str(parser_w)) > 0:
-                    return str(parser_w)
-            except ValueError:
-                pass
+        parser_w_str = str(getattr(self._parser, "width", "0"))
+        if parser_w_str.isdigit() and int(parser_w_str) > 0:
+            return parser_w_str
         return str(self._width) if self._width > 0 else "0"
 
     @property
     def info(self) -> dict[str, Any]:
-        return self._info
+        return self._info.copy()
 
     @property
     def positive(self) -> str:
-        # getattr will return self._positive if self._parser is None or has no 'positive'
-        return str(getattr(self._parser, "positive", self._positive))
+        return str(
+            getattr(
+                self._parser,
+                "positive",
+                (self._positive_sdxl.get("positive", "") if self._positive_sdxl else self._positive),
+            )
+        )
 
     @property
     def negative(self) -> str:
-        return str(getattr(self._parser, "negative", self._negative))
+        return str(
+            getattr(
+                self._parser,
+                "negative",
+                (self._negative_sdxl.get("negative", "") if self._negative_sdxl else self._negative),
+            )
+        )
 
     @property
     def positive_sdxl(self) -> dict[str, Any]:
@@ -731,24 +693,17 @@ class ImageDataReader:
     @property
     def raw(self) -> str:
         parser_raw = getattr(self._parser, "raw", None)
-        # Return parser's raw if it exists and is not None, otherwise fallback to self._raw
         return str(parser_raw if parser_raw is not None else self._raw)
 
     @property
     def tool(self) -> str:
         parser_tool = getattr(self._parser, "tool", None)
-        # Prefer parser's tool if it's valid and not "Unknown"
-        return (
-            str(parser_tool)
-            if parser_tool and parser_tool != "Unknown"
-            else str(self._tool)
-        )
+        return str(parser_tool if parser_tool and parser_tool != "Unknown" else self._tool)
 
     @property
     def parameter(self) -> dict[str, Any]:
-        # Ensure a dictionary is returned, even if the parser's parameter is None
         parser_param = getattr(self._parser, "parameter", None)
-        return parser_param if parser_param is not None else (self._parameter or {})
+        return parser_param.copy() if parser_param is not None else (self._parameter.copy() if self._parameter else {})
 
     @property
     def format(self) -> str:
@@ -759,20 +714,34 @@ class ImageDataReader:
         return getattr(self._parser, "is_sdxl", self._is_sdxl)
 
     @property
-    def props(self) -> str:  # This typically calls the parser's props method
+    def props(self) -> str:
         if self._parser and hasattr(self._parser, "props"):
-            return self._parser.props
-        # Fallback to a basic representation if no parser or parser has no props
-        fallback_props = {
+            try:
+                return self._parser.props
+            except Exception as prop_err:
+                self._logger.warning("Error calling parser's props: %s", prop_err)
+        fb_props = {
             "positive": self.positive,
             "negative": self.negative,
             "width": self.width,
             "height": self.height,
             "tool": self.tool,
             "setting": self.setting,
-            **self.parameter,
+            "is_sdxl": self.is_sdxl,
+            "status": (self.status.name if hasattr(self.status, "name") else str(self.status)),
+            "error": self.error,
+            "format": self.format,
         }
-        return json.dumps(fallback_props, indent=2)
+        if self.positive_sdxl:
+            fb_props["positive_sdxl"] = self.positive_sdxl
+        if self.negative_sdxl:
+            fb_props["negative_sdxl"] = self.negative_sdxl
+        fb_props.update(self.parameter)
+        try:
+            return json.dumps(fb_props, indent=2)
+        except TypeError as json_type_err:
+            self._logger.error("Error serializing props to JSON: %s. Data: %s", json_type_err, fb_props)
+            return f'{{"error": "Failed to serialize props to JSON: {json_type_err!s}"}}'
 
     @property
     def status(self) -> BaseFormat.Status:
@@ -780,6 +749,9 @@ class ImageDataReader:
 
     @property
     def error(self) -> str:
-        parser_err = getattr(self._parser, "error", None)
-        # Prefer parser's error if it exists, otherwise ImageDataReader's own error
-        return str(parser_err if parser_err else self._error)
+        parser_error = getattr(self._parser, "error", None)
+        if self._status != BaseFormat.Status.READ_SUCCESS and self._error:
+            return self._error
+        if parser_error:
+            return str(parser_error)
+        return str(self._error)

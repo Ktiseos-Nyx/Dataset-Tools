@@ -14,10 +14,7 @@ from .access_disk import MetadataFileReader
 
 # First-party (relative imports for the current subpackage)
 from .correct_types import DownField, EmptyField, UpField
-from .logger import (
-    _dataset_tools_main_rich_console,
-    setup_rich_handler_for_external_logger,
-)
+from .logger import _dataset_tools_main_rich_console, setup_rich_handler_for_external_logger
 from .logger import info_monitor as nfo
 
 # --- Import VENDORED sd-prompt-reader components ---
@@ -162,14 +159,9 @@ def make_paired_str_dict(text_to_convert: str) -> dict:
             nfo(
                 f"[DT.make_paired_str_dict] Final unparsed: '{remaining_unparsed[:100]}...'",
             )
-            if (
-                ":" not in remaining_unparsed
-                and "," not in remaining_unparsed
-                and len(remaining_unparsed.split()) < 5
-            ):
+            if ":" not in remaining_unparsed and "," not in remaining_unparsed and len(remaining_unparsed.split()) < 5:
                 if (
-                    "Lora hashes" not in converted_text
-                    and "Version" not in converted_text
+                    "Lora hashes" not in converted_text and "Version" not in converted_text
                 ):  # Check against already parsed keys
                     converted_text["Uncategorized Suffix"] = remaining_unparsed
     return converted_text
@@ -234,9 +226,7 @@ def _populate_ui_from_vendored_reader(reader_instance, ui_dict_to_update: dict):
     setting_display_val = reader_instance.setting
     if setting_display_val:
         current_tool = reader_instance.tool
-        if isinstance(current_tool, str) and any(
-            t in current_tool for t in ["A1111", "Forge", "SD.Next"]
-        ):
+        if isinstance(current_tool, str) and any(t in current_tool for t in ["A1111", "Forge", "SD.Next"]):
             additional_settings = make_paired_str_dict(str(setting_display_val))
             for key_add, value_add in additional_settings.items():
                 display_key_add = key_add.replace("_", " ").capitalize()
@@ -262,9 +252,7 @@ def _populate_ui_from_vendored_reader(reader_instance, ui_dict_to_update: dict):
     if reader_instance.tool and reader_instance.tool != "Unknown":
         if UpField.METADATA.value not in ui_dict_to_update:
             ui_dict_to_update[UpField.METADATA.value] = {}
-        ui_dict_to_update[UpField.METADATA.value][
-            "Detected Tool"
-        ] = reader_instance.tool
+        ui_dict_to_update[UpField.METADATA.value]["Detected Tool"] = reader_instance.tool
 
 
 def process_pyexiv2_data(
@@ -298,12 +286,8 @@ def process_pyexiv2_data(
                         uc_text_for_display = uc_val.decode("utf-8", "replace")
                     except UnicodeDecodeError as unicode_err:
                         nfo(f"Unicode decode error for UserComment: {unicode_err}")
-                        uc_text_for_display = (
-                            f"<bytes len {len(uc_val)} unable to decode>"
-                        )
-                    except (
-                        Exception
-                    ) as general_decode_err:  # pylint: disable=broad-except
+                        uc_text_for_display = f"<bytes len {len(uc_val)} unable to decode>"
+                    except Exception as general_decode_err:  # pylint: disable=broad-except
                         nfo(f"General error decoding UserComment: {general_decode_err}")
                         uc_text_for_display = f"<bytes len {len(uc_val)} decode error>"
             elif isinstance(uc_val, str):
@@ -319,22 +303,14 @@ def process_pyexiv2_data(
         displayable_xmp = {}
         if xmp_data.get("Xmp.dc.creator"):
             creator = xmp_data["Xmp.dc.creator"]
-            displayable_xmp["Artist"] = (
-                ", ".join(creator) if isinstance(creator, list) else str(creator)
-            )
+            displayable_xmp["Artist"] = ", ".join(creator) if isinstance(creator, list) else str(creator)
         if xmp_data.get("Xmp.dc.description"):
             desc_val = xmp_data["Xmp.dc.description"]
-            desc_text = (
-                desc_val.get("x-default", str(desc_val))
-                if isinstance(desc_val, dict)
-                else str(desc_val)
-            )
+            desc_text = desc_val.get("x-default", str(desc_val)) if isinstance(desc_val, dict) else str(desc_val)
             if not ai_tool_parsed or len(desc_text) < 300:
                 displayable_xmp["Description"] = desc_text
             elif ai_tool_parsed:
-                displayable_xmp["Description (XMP)"] = (
-                    f"Exists (length {len(desc_text)})"
-                )
+                displayable_xmp["Description (XMP)"] = f"Exists (length {len(desc_text)})"
         if xmp_data.get("Xmp.photoshop.DateCreated"):
             displayable_xmp["Date Created (XMP)"] = str(
                 xmp_data["Xmp.photoshop.DateCreated"],
@@ -349,9 +325,7 @@ def process_pyexiv2_data(
         displayable_iptc = {}
         if iptc_data.get("Iptc.Application2.Keywords"):
             keywords = iptc_data["Iptc.Application2.Keywords"]
-            displayable_iptc["Keywords (IPTC)"] = (
-                ", ".join(keywords) if isinstance(keywords, list) else str(keywords)
-            )
+            displayable_iptc["Keywords (IPTC)"] = ", ".join(keywords) if isinstance(keywords, list) else str(keywords)
         if iptc_data.get("Iptc.Application2.Caption"):
             displayable_iptc["Caption (IPTC)"] = str(
                 iptc_data["Iptc.Application2.Caption"],
@@ -417,22 +391,14 @@ def parse_metadata(file_path_named: str) -> dict:
                         "WARNING [DT.metadata_parser]: BaseFormat (real or dummy) from vendored_sdpr does not have a 'Status' attribute.",
                     )
 
-                status_name = (
-                    status_obj.name
-                    if status_obj and hasattr(status_obj, "name")
-                    else str(status_obj)
-                )
+                status_name = status_obj.name if status_obj and hasattr(status_obj, "name") else str(status_obj)
                 tool_name = getattr(vendored_reader_instance, "tool", "N/A")
 
                 nfo(
                     f"[DT.metadata_parser]: VENDORED ImageDataReader instance created. Status: {status_name}, Tool: {tool_name}",
                 )
 
-                if (
-                    status_obj == vendored_success_status
-                    and tool_name
-                    and tool_name != "Unknown"
-                ):
+                if status_obj == vendored_success_status and tool_name and tool_name != "Unknown":
                     nfo(
                         f"VENDORED SDPR components parsed successfully. Tool: {tool_name}",
                     )
@@ -502,10 +468,7 @@ def parse_metadata(file_path_named: str) -> dict:
                                 final_ui_dict[key_str][sub_key] = sub_value
                 if not potential_ai_parsed and DownField.EXIF.value in final_ui_dict:
                     nfo("Displayed standard EXIF/XMP data (via pyexiv2).")
-                elif (
-                    DownField.EXIF.value in final_ui_dict
-                    or UpField.TAGS.value in final_ui_dict
-                ):
+                elif DownField.EXIF.value in final_ui_dict or UpField.TAGS.value in final_ui_dict:
                     nfo("Added standard EXIF/XMP data alongside AI data (if any).")
             elif not potential_ai_parsed and not final_ui_dict.get(placeholder_key_str):
                 final_ui_dict[placeholder_key_str] = {
@@ -517,10 +480,7 @@ def parse_metadata(file_path_named: str) -> dict:
             }
 
     if not final_ui_dict:
-        if not (
-            placeholder_key_str in final_ui_dict
-            and "Error" in final_ui_dict.get(placeholder_key_str, {})
-        ):
+        if not (placeholder_key_str in final_ui_dict and "Error" in final_ui_dict.get(placeholder_key_str, {})):
             final_ui_dict[placeholder_key_str] = {
                 "Error": "No processable metadata found after all attempts.",
             }
