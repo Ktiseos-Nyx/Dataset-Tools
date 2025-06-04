@@ -63,7 +63,12 @@ dataset-tools = "dataset_tools.main:main"
 
 [tool.setuptools_scm]
 write_to = "_version.py"
-
+# For releases, you want the version to be exactly the tag if you're on a tag.
+# If you're not on an exact tag, it will still try to guess and add a dev marker,
+# but the local_scheme = "no-local-version" will prevent the +localpart.
+version_scheme = "guess-next-dev" # This is often a good default for general use
+local_scheme = "no-local-version"   # <<< THIS IS THE KEY FOR PYPI RELEASES
+                                    # It prevents the +g<hash>.d<date> part.
 # Personal preferences
 [tool.uv]
 dev-dependencies = ["pytest"]
