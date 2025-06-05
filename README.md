@@ -122,16 +122,31 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
     ```
     This command will read `pyproject.toml` and install `Dataset-Tools` along with all libraries listed as dependencies (e.g., `PyQt6`, `Pillow`, `qt-material`, `piexif`, `pyexiv2`, `toml`, `rich`, `pydantic`).
 
+4. **Optional Installation**
+  You're now able to use PYPI packages to install Dataset Tools.
+   ```bash
+     pip install kn-dataset-tools
+   ```
+
 ## Usage
 
 ### Launching the Application
 
 **After installation, run the application from your terminal:**
+
+*  Option One
+
+  ```bash
+   python -m dataset_tools.main [options]
+  ```
+
+* Option Two
+
+  ```bash
+    dataset-tools
+  ```
   
-```bash
-    python -m dataset_tools.main [options]
-```
-####  Command-line Options:
+####  Advanced Command-line Options:
 
 > [!TIP]
 > 
