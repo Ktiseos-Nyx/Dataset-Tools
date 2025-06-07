@@ -74,8 +74,8 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 *   **Fooocus:** PNG ("Comment" chunk JSON), JPEG (JFIF comment JSON).
 *   **RuinedFooocus:** JPEG (UserComment JSON).
 *   **Draw Things:** PNG (XMP metadata containing JSON).
-*   **StableSwarmUI:** PNG, JPEG (EXIF or "sui_image_params" in PNG/UserComment).
-*   *(Support for other formats may be implicitly included via the adapted sd-prompt-reader core.)*
+*   **SwarmUI:** PNG, JPEG (EXIF or "sui_image_params" in PNG/UserComment).
+*   *(Support for other formats may be on the way, please see issues and/or discussions for details)*
 
 **Model File Metadata (Header Information):**
 *   `.safetensors`
