@@ -1,0 +1,2 @@
+[console_scripts]
+dataset-tools = dataset_tools.main:main

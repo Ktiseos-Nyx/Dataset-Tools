@@ -1,0 +1,2 @@
+[pyinstaller40]
+hook-dirs = qt_material:get_hook_dirs

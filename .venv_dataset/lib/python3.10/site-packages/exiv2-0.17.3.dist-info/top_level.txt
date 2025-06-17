@@ -1,0 +1,16 @@
+_basicio
+_datasets
+_easyaccess
+_error
+_exif
+_image
+_iptc
+_metadatum
+_preview
+_properties
+_tags
+_types
+_value
+_version
+_xmp
+exiv2
