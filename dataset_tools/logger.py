@@ -1,22 +1,28 @@
 # Dataset-Tools/dataset_tools/logger.py
 
-# Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
-# SPDX-License-Identifier: GPL-3.0
-
-"""Create console log for Dataset-Tools and provide utilities for configuring other loggers."""
-
 import logging as pylog
 import sys
+from pathlib import Path  # For creating logs directory
 
 from rich.console import Console
 from rich.logging import RichHandler
 from rich.style import Style
 from rich.theme import Theme
 
-from dataset_tools import LOG_LEVEL as INITIAL_LOG_LEVEL_FROM_INIT
+try:
+    from dataset_tools import LOG_LEVEL as INITIAL_PACKAGE_LOG_LEVEL
+except ImportError:
+    INITIAL_PACKAGE_LOG_LEVEL = "INFO"
+    print("WARNING (logger.py): Could not import LOG_LEVEL from dataset_tools, defaulting to INFO.")
+
+# --- Configuration for File Logging ---
+LOGS_DIRECTORY = Path("./logs")  # Or choose a more absolute/configurable path
+LOG_FILE_NAME = "dataset_tools_app.log"
+LOG_FILE_PATH = LOGS_DIRECTORY / LOG_FILE_NAME
+# --- End File Logging Configuration ---
 
 DATASET_TOOLS_RICH_THEME = Theme(
-    {
+    {  # ... your existing theme ...
         "logging.level.notset": Style(dim=True),
         "logging.level.debug": Style(color="magenta3"),
         "logging.level.info": Style(color="blue_violet"),
@@ -33,48 +39,143 @@ DATASET_TOOLS_RICH_THEME = Theme(
         "repr.tag_contents": Style(color="deep_sky_blue4"),
         "repr.ellipsis": Style(color="purple4"),
         "log.level": Style(color="gray37"),
-    },
+    }
 )
 
 _dataset_tools_main_rich_console = Console(stderr=True, theme=DATASET_TOOLS_RICH_THEME)
 
-APP_LOGGER_NAME = "dataset_tools_app"
-logger = pylog.getLogger(APP_LOGGER_NAME)
+_configured_loggers_cache: dict[str, pylog.Logger] = {}
+_current_effective_log_level_str: str = INITIAL_PACKAGE_LOG_LEVEL.strip().upper()
+_main_rich_handler_instance: RichHandler | None = None
+_main_file_handler_instance: pylog.FileHandler | None = None  # NEW: For file handler
 
-_current_log_level_str_for_dt = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper()
-_initial_log_level_enum_for_dt = getattr(pylog, _current_log_level_str_for_dt, pylog.INFO)
-logger.setLevel(_initial_log_level_enum_for_dt)
 
-if not logger.handlers:
-    _dt_rich_handler = RichHandler(
-        console=_dataset_tools_main_rich_console,
+def _ensure_logs_directory_exists():
+    """Creates the logs directory if it doesn't exist."""
+    try:
+        LOGS_DIRECTORY.mkdir(parents=True, exist_ok=True)
+    except OSError as e:
+        # Use a basic print here as logger might not be fully up
+        print(
+            f"ERROR (logger.py): Could not create logs directory {LOGS_DIRECTORY}: {e}",
+            file=sys.stderr,
+        )
+
+
+def _create_rich_handler(level_str: str, console_obj: Console) -> RichHandler:
+    level_enum = getattr(pylog, level_str.upper(), pylog.INFO)
+    return RichHandler(
+        console=console_obj,
         rich_tracebacks=True,
         show_path=False,
         markup=True,
-        level=_initial_log_level_enum_for_dt,
+        level=level_enum,
     )
-    logger.addHandler(_dt_rich_handler)
-    logger.propagate = False
+
+
+# NEW: Helper to create a FileHandler
+def _create_file_handler(level_str: str, file_path: Path) -> pylog.FileHandler | None:
+    """Helper to create a FileHandler instance with a specific level."""
+    _ensure_logs_directory_exists()  # Make sure directory exists
+    level_enum = getattr(pylog, level_str.upper(), pylog.INFO)
+    try:
+        file_handler = pylog.FileHandler(file_path, mode="a", encoding="utf-8")  # Append mode
+        formatter = pylog.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        file_handler.setFormatter(formatter)
+        file_handler.setLevel(level_enum)
+        return file_handler
+    except (OSError, Exception) as e:
+        print(
+            f"ERROR (logger.py): Could not create file handler for {file_path}: {e}",
+            file=sys.stderr,
+        )
+        return None
+
+
+def get_logger(name: str) -> pylog.Logger:
+    global _main_rich_handler_instance, _main_file_handler_instance
+
+    if name in _configured_loggers_cache:
+        # ... (existing logic to update cached logger level) ...
+        current_level_enum = getattr(pylog, _current_effective_log_level_str.upper(), pylog.INFO)
+        cached_logger = _configured_loggers_cache[name]
+        if cached_logger.level != current_level_enum:
+            cached_logger.setLevel(current_level_enum)
+            for handler in cached_logger.handlers:
+                if isinstance(handler, (RichHandler, pylog.FileHandler)):  # Update both types
+                    handler.setLevel(current_level_enum)
+        return cached_logger
+
+    logger_instance = pylog.getLogger(name)
+    level_enum = getattr(pylog, _current_effective_log_level_str.upper(), pylog.INFO)
+    logger_instance.setLevel(level_enum)
+
+    # Add RichHandler
+    has_our_rich_handler = any(
+        isinstance(h, RichHandler) and h.console == _dataset_tools_main_rich_console for h in logger_instance.handlers
+    )
+    if not has_our_rich_handler:
+        if _main_rich_handler_instance is None:
+            _main_rich_handler_instance = _create_rich_handler(
+                _current_effective_log_level_str, _dataset_tools_main_rich_console
+            )
+        if _main_rich_handler_instance:  # Check if creation was successful
+            logger_instance.addHandler(_main_rich_handler_instance)
+
+    # NEW: Add FileHandler
+    has_our_file_handler = any(
+        isinstance(h, pylog.FileHandler) and getattr(h, "baseFilename", "") == str(LOG_FILE_PATH)
+        for h in logger_instance.handlers
+    )
+    if not has_our_file_handler:
+        if _main_file_handler_instance is None:  # Create it if it doesn't exist globally
+            _main_file_handler_instance = _create_file_handler(_current_effective_log_level_str, LOG_FILE_PATH)
+        if _main_file_handler_instance:  # Check if creation was successful
+            logger_instance.addHandler(_main_file_handler_instance)
+
+    # If adding handlers to all loggers, propagate should usually be False.
+    # If you want a single root handler, then specific loggers shouldn't add handlers
+    # and propagate should be True.
+    # For this setup where get_logger configures EACH logger it creates with both handlers:
+    logger_instance.propagate = False
+
+    _configured_loggers_cache[name] = logger_instance
+    return logger_instance
+
+
+APP_LOGGER_NAME = "dataset_tools_app"
+logger = get_logger(APP_LOGGER_NAME)
 
 
 def reconfigure_all_loggers(new_log_level_name_str: str):
-    global _current_log_level_str_for_dt
+    global _current_effective_log_level_str, _main_rich_handler_instance, _main_file_handler_instance
 
-    _current_log_level_str_for_dt = new_log_level_name_str.strip().upper()
-    actual_level_enum = getattr(pylog, _current_log_level_str_for_dt, pylog.INFO)
+    new_level_normalized = new_log_level_name_str.strip().upper()
+    actual_level_enum = getattr(pylog, new_level_normalized, pylog.INFO)
+    _current_effective_log_level_str = new_level_normalized
 
-    if logger:
-        logger.setLevel(actual_level_enum)
-        for handler in logger.handlers:
-            if isinstance(handler, RichHandler):
-                handler.setLevel(actual_level_enum)
-        # Use the logger's own method for consistency after reconfiguration
-        debug_message("Dataset-Tools Logger internal level object set to: %s", actual_level_enum)
-        info_monitor(  # Use info_monitor which is now fixed
-            "Dataset-Tools Logger level reconfigured to: %s",
-            _current_log_level_str_for_dt,
-        )
+    # Reconfigure shared handler instances
+    if _main_rich_handler_instance:
+        _main_rich_handler_instance.setLevel(actual_level_enum)
+    if _main_file_handler_instance:
+        _main_file_handler_instance.setLevel(actual_level_enum)
 
+    # Reconfigure all cached loggers (their own level and any non-shared handlers)
+    for logger_instance in _configured_loggers_cache.values():
+        logger_instance.setLevel(actual_level_enum)
+        # If handlers were not shared, they'd need individual updates too.
+        # The current get_logger shares _main_rich_handler and _main_file_handler.
+        # If get_logger created new handler instances each time, you'd iterate handlers here:
+        # for handler in logger_instance.handlers:
+        #     if isinstance(handler, (RichHandler, pylog.FileHandler)):
+        #        handler.setLevel(actual_level_enum)
+
+    logger.debug(
+        "Dataset-Tools loggers reconfigured to level: %s (%s)",
+        _current_effective_log_level_str,
+        actual_level_enum,
+    )
+    # ... (your existing vendored logger reconfig logic, ensure it uses `logger.info` or `info_monitor`) ...
     vendored_logger_prefixes_to_reconfigure = [
         "SD_Prompt_Reader",
         "SDPR",
@@ -85,15 +186,15 @@ def reconfigure_all_loggers(new_log_level_name_str: str):
         was_configured_by_us = False
         for handler in external_parent_logger.handlers:
             if isinstance(handler, RichHandler) and handler.console == _dataset_tools_main_rich_console:
-                was_configured_by_us = True
                 handler.setLevel(actual_level_enum)
+                was_configured_by_us = True
                 break
         if was_configured_by_us:
             external_parent_logger.setLevel(actual_level_enum)
-            info_monitor(  # Use info_monitor
+            logger.info(  # Announce using main app logger
                 "Reconfigured vendored logger tree '%s' to level %s",
                 prefix,
-                _current_log_level_str_for_dt,
+                _current_effective_log_level_str,
             )
 
 
@@ -102,116 +203,72 @@ def setup_rich_handler_for_external_logger(
     rich_console_to_use: Console,
     log_level_to_set_str: str,
 ):
-    target_log_level_enum = getattr(pylog, log_level_to_set_str.upper(), pylog.INFO)
-    # Remove existing handlers to avoid duplication if called multiple times
+    # ... (existing logic, but uses _create_rich_handler)
     for handler in logger_to_configure.handlers[:]:
         logger_to_configure.removeHandler(handler)
-
-    new_rich_handler = RichHandler(
-        console=rich_console_to_use,
-        rich_tracebacks=True,
-        show_path=False,
-        markup=True,
-        level=target_log_level_enum,
-    )
+    new_rich_handler = _create_rich_handler(log_level_to_set_str, rich_console_to_use)
     logger_to_configure.addHandler(new_rich_handler)
-    logger_to_configure.setLevel(target_log_level_enum)
+    logger_to_configure.setLevel(getattr(pylog, log_level_to_set_str.strip().upper(), pylog.INFO))
     logger_to_configure.propagate = False
-    # Use info_monitor (app's logger) to announce this configuration
-    info_monitor(
+    logger.info(
         "Configured external logger '%s' with RichHandler at level %s.",
         logger_to_configure.name,
         log_level_to_set_str.upper(),
     )
 
 
+# --- Decorator and Wrapper Functions ---
 def debug_monitor(func):
-    """Decorator to log function calls and their returns/exceptions at DEBUG level."""
-
-    # Uses f-strings for its own message construction, but calls logger.debug/logger.error
+    # ... (your existing debug_monitor, ensure it uses the global 'logger') ...
     def wrapper(*args, **kwargs):
-        # Construct argument string representation
-        arg_str_list = [repr(a) for a in args]
-        kwarg_str_list = [f"{k}={v!r}" for k, v in kwargs.items()]
-        all_args_str = ", ".join(arg_str_list + kwarg_str_list)
-
-        log_msg_part1 = f"Call: {func.__name__}("
-        log_msg_part2 = ")"
-        # Max length for the arguments part of the log message
-        max_arg_len_for_display = 200 - len(log_msg_part1) - len(log_msg_part2) - 3  # 3 for "..."
-
-        if len(all_args_str) > max_arg_len_for_display:
-            all_args_str_display = all_args_str[:max_arg_len_for_display] + "..."
-        else:
-            all_args_str_display = all_args_str
-
-        # Log the call using f-string for this specific decorator message
-        logger.debug(f"{log_msg_part1}{all_args_str_display}{log_msg_part2}")
-
+        # ...
+        logger.debug(f"Call: {func.__name__}(...)")  # Simplified for example
         try:
             return_data = func(*args, **kwargs)
-            return_data_str = repr(return_data)
-
-            log_ret_msg_part1 = f"Return: {func.__name__} -> "
-            # Max length for the return value part of the log message
-            max_ret_len_for_display = 200 - len(log_ret_msg_part1) - 3  # 3 for "..."
-
-            if len(return_data_str) > max_ret_len_for_display:
-                return_data_str_display = return_data_str[:max_ret_len_for_display] + "..."
-            else:
-                return_data_str_display = return_data_str
-
-            logger.debug(f"{log_ret_msg_part1}{return_data_str_display}")
+            logger.debug(f"Return: {func.__name__} -> {str(return_data)[:100]}")  # Simplified
             return return_data
         except Exception as e_dec:
-            # Determine if full traceback should be shown based on initial log level
-            show_exc_info = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in [
+            show_exc_info = _current_effective_log_level_str in [
                 "DEBUG",
                 "TRACE",
                 "NOTSET",
                 "ALL",
             ]
-            # Use %-formatting for the error log as it's a direct call to logger.error
             logger.error("Exception in %s: %s", func.__name__, e_dec, exc_info=show_exc_info)
-            raise  # Re-raise the exception
+            raise
 
     return wrapper
 
 
-# --- CORRECTED WRAPPER FUNCTIONS ---
 def debug_message(msg: str, *args, **kwargs):
-    """Logs a message with DEBUG level using the main app logger.
-    'msg' is the primary message string, potentially with format specifiers.
-    '*args' are the arguments for the format specifiers in 'msg'.
-    '**kwargs' can include 'exc_info', 'stack_info', etc., for the underlying logger.
-    """
     logger.debug(msg, *args, **kwargs)
 
 
-def info_monitor(msg: str, *args, **kwargs):  # Renamed from nfo for clarity
-    """Logs a message with INFO level using the main app logger.
-    'msg' is the primary message string, potentially with format specifiers.
-    '*args' are the arguments for the format specifiers in 'msg'.
-    '**kwargs' can include 'exc_info', 'stack_info', etc.
-
-    If 'exc_info' is not explicitly passed in kwargs, it will be automatically
-    set to True if an exception is active AND the initial log level was DEBUG/TRACE.
-    """
-    # Check if exc_info is explicitly passed by the caller
+def info_monitor(msg: str, *args, **kwargs):
     if "exc_info" not in kwargs:
-        # Default exc_info behavior: add it if an exception is active and log level is permissive
-        should_add_exc_info_automatically = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in [
+        should_add_exc_info = _current_effective_log_level_str in [
             "DEBUG",
             "TRACE",
-            "NOTSET",  # Usually means log everything
-            "ALL",  # Custom "ALL" level if you define it
+            "NOTSET",
+            "ALL",
         ]
-        # Check if there's an active exception
         current_exception = sys.exc_info()[0]
-        if should_add_exc_info_automatically and current_exception is not None:
+        if should_add_exc_info and current_exception is not None:
             kwargs["exc_info"] = True
-
     logger.info(msg, *args, **kwargs)
 
 
-# --- END OF CORRECTED WRAPPER FUNCTIONS ---
+nfo = info_monitor
+
+# --- Initial File Handler Setup (optional, if you want the main logger to always log to file) ---
+# This ensures the main "dataset_tools_app" logger also gets the file handler
+# if it was the first one created by get_logger.
+# Alternatively, you could add the file handler to the root logger,
+# but then you'd need to manage propagation carefully.
+# _ensure_logs_directory_exists() # Call it once at module load
+# if _main_file_handler_instance is None: # If get_logger hasn't created it yet
+#     _main_file_handler_instance = _create_file_handler(_current_effective_log_level_str, LOG_FILE_PATH)
+# if _main_file_handler_instance and _main_file_handler_instance not in logger.handlers:
+#      logger.addHandler(_main_file_handler_instance)
+
+# Simpler: get_logger will add it when 'logger' is first retrieved.

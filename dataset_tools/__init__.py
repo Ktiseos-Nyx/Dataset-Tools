@@ -3,10 +3,21 @@
 # Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
 # SPDX-License-Identifier: MIT
 
-"""Initialize dataset_tools package"""
+"""Initialize dataset_tools package."""
 
 import sys
 from importlib import metadata
+from pathlib import Path  # <<< ADD THIS IMPORT
+
+# --- Define Project-Level Paths Here ---
+# This will be the absolute path to the 'dataset_tools' directory
+PACKAGE_ROOT = Path(__file__).resolve().parent
+
+# The project root is one level up from the package directory
+PROJECT_ROOT = PACKAGE_ROOT.parent
+
+# Define the path to the config directory
+CONFIG_PATH = PROJECT_ROOT / "config"
 
 # --- Default Log Level ---
 # This will be used if the application isn't run via main.py's argument parsing,
@@ -18,7 +29,7 @@ LOG_LEVEL = "INFO"  # Sensible default
 if "pytest" in sys.modules:
     LOG_LEVEL = "DEBUG"
     # For clarity
-    print("DEBUG (__init__.py): Pytest detected, setting LOG_LEVEL to DEBUG.")
+    print("DEBUG (__init__.py): Pytest detected, setting LOG_LEVEL to DEBUG.")  # noqa: T201
 
 # --- Version ---
 try:
@@ -50,17 +61,17 @@ _log_level_map_internal = {
 }
 
 
-def set_package_log_level(level_input: str):
+def set_package_log_level(level_input: str) -> None:
     """Sets the global LOG_LEVEL for the package based on a string argument.
     Called by the main application entry point after parsing CLI args.
     The logger module should then re-read this or be explicitly reconfigured.
-    """
-    global LOG_LEVEL  # Declare that we are modifying the LOG_LEVEL in this module's scope
+    """  # noqa: D205, D401
+    global LOG_LEVEL  # Declare that we are modifying the LOG_LEVEL in this module's scope  # noqa: PLW0603
 
     normalized_input = str(level_input).strip().lower()
 
     # Check if the input is a direct key (e.g., 'd') or a value (e.g., 'debug')
-    if normalized_input in _log_level_map_internal:
+    if normalized_input in _log_level_map_internal:  # noqa: SIM108, SIM401
         LOG_LEVEL = _log_level_map_internal[normalized_input]
     else:
         # Fallback to INFO if an invalid level string is provided
@@ -68,7 +79,7 @@ def set_package_log_level(level_input: str):
         LOG_LEVEL = "INFO"
 
     # This print is for debugging the mechanism itself. Your actual app logs will come from logger.py
-    print(f"DEBUG (__init__.py): Package LOG_LEVEL variable updated to: {LOG_LEVEL}")
+    print(f"DEBUG (__init__.py): Package LOG_LEVEL variable updated to: {LOG_LEVEL}")  # noqa: T201
 
     # IMPORTANT: This only sets the LOG_LEVEL *variable* in this __init__.py.
     # Your logger.py (which imports LOG_LEVEL from here) will use this value when it's

@@ -3,7 +3,7 @@
 # Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
 # SPDX-License-Identifier: GPL-3.0
 
-"""App UI for Dataset-Tools"""
+"""App UI for Dataset-Tools."""
 
 import os
 import sys
@@ -14,14 +14,7 @@ from typing import Any  # Using list directly instead of TypingList
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
 from PyQt6.QtCore import QSettings
-from PyQt6.QtWidgets import (
-    QApplication,
-    QComboBox,
-    QDialog,
-    QDialogButtonBox,
-    QLabel,
-    QVBoxLayout,
-)
+from PyQt6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QLabel, QVBoxLayout
 
 # --- Logger Setup (Handles Fallback) ---
 try:
@@ -62,8 +55,9 @@ except ImportError:
     nfo("WARNING: qt-material library not found. Theme functionality will be limited.")
 
 
-from .correct_types import DownField, EmptyField, UpField
+from .correct_types import DownField, EmptyField
 from .correct_types import ExtensionType as Ext
+from .correct_types import UpField
 from .metadata_parser import parse_metadata
 from .widgets import FileLoader, FileLoadResult
 
@@ -174,13 +168,13 @@ class ImageLabel(Qw.QLabel):
         )
         super().setPixmap(scaled_pixmap)
 
-    def resizeEvent(self, event: QtGui.QResizeEvent):
+    def resizeEvent(self, event: QtGui.QResizeEvent) -> None:
         self._update_scaled_pixmap()
         super().resizeEvent(event)
 
 
 class SettingsDialog(QDialog):
-    def __init__(self, parent: Qw.QWidget | None = None, current_theme_xml: str = ""):  # Use Optional
+    def __init__(self, parent: Qw.QWidget | None = None, current_theme_xml: str = "") -> None:  # Use Optional
         super().__init__(parent)
         self.setWindowTitle("Application Settings")
         self.setMinimumWidth(400)
@@ -250,7 +244,7 @@ class SettingsDialog(QDialog):
         button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.apply_all_settings)
         layout.addWidget(button_box)
 
-    def apply_theme_settings(self):
+    def apply_theme_settings(self) -> None:
         if not QT_MATERIAL_AVAILABLE:
             return
         selected_theme_xml = self.theme_combo.currentData()
@@ -345,14 +339,14 @@ class MainWindow(Qw.QMainWindow):
                 self.left_panel.set_message_text("Please select folder.")
             self.clear_selection()
 
-    def _update_datetime_status(self):
+    def _update_datetime_status(self) -> None:
         self.datetime_label.setText(QtCore.QDateTime.currentDateTime().toString(QtCore.Qt.DateFormat.RFC2822Date))
 
-    def resize_window(self, width: int, height: int):
+    def resize_window(self, width: int, height: int) -> None:
         self.resize(width, height)
         nfo(f"[UI] Window resized: {width}x{height}")
 
-    def _setup_menus(self):  # Restored to readable version
+    def _setup_menus(self) -> None:  # Restored to readable version
         menu_bar = self.menuBar()
         file_menu = menu_bar.addMenu("&File")
         change_folder_action = QtGui.QAction("Change &Folder...", self)
@@ -387,17 +381,17 @@ class MainWindow(Qw.QMainWindow):
         about_action.triggered.connect(self.show_about_dialog)
         help_menu.addAction(about_action)
 
-    def on_theme_action_triggered(self):
+    def on_theme_action_triggered(self) -> None:
         action = self.sender()
         action and isinstance(action, QtGui.QAction) and (
             theme_xml := action.data()
         ) and theme_xml and self.apply_theme(theme_xml)
 
-    def open_settings_dialog(self):
+    def open_settings_dialog(self) -> None:
         current_theme_xml = self.settings.value("theme", "dark_teal.xml")
         SettingsDialog(self, current_theme_xml=current_theme_xml).exec()
 
-    def _setup_ui_layout(self):  # Restored to readable version
+    def _setup_ui_layout(self) -> None:  # Restored to readable version
         main_widget = Qw.QWidget()
         self.setCentralWidget(main_widget)
         overall_layout = Qw.QVBoxLayout(main_widget)
@@ -475,7 +469,7 @@ class MainWindow(Qw.QMainWindow):
             [int(s) for s in meta_img_splitter_sizes]
         )
 
-    def clear_file_list(self):
+    def clear_file_list(self) -> None:
         nfo("[UI] Clearing file list and selections.")
         if hasattr(self, "left_panel"):
             self.left_panel.clear_file_list_display()
@@ -484,7 +478,7 @@ class MainWindow(Qw.QMainWindow):
         self.clear_selection()
 
     @debug_monitor
-    def open_folder(self):
+    def open_folder(self) -> None:
         nfo("[UI] 'Open Folder' action triggered.")
         start_dir = (
             self.current_folder
@@ -503,7 +497,7 @@ class MainWindow(Qw.QMainWindow):
             self.main_status_bar.showMessage(msg, 3000)
 
     @debug_monitor
-    def load_files(self, folder_path: str, file_to_select_after_load: str | None = None):
+    def load_files(self, folder_path: str, file_to_select_after_load: str | None = None) -> None:
         nfo("[UI] Attempting to load files from: %s", folder_path)
         if self.file_loader and self.file_loader.isRunning():
             nfo("[UI] File loading is already in progress.")

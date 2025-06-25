@@ -5,14 +5,25 @@
 
 import json
 import logging as pylog
-import traceback
-from pathlib import Path
+# import traceback # Keep commented out if not explicitly needed and causing F401
+from pathlib import Path # Ensure Path is imported here
 
-import pyexiv2  # Assuming pyexiv2 is a required dependency
+import pyexiv2
 import toml
 
-from .correct_types import DownField, EmptyField, UpField
+# --- Pillow Import for Fallback ---
+try:
+    from PIL import Image
+    from PIL.ExifTags import TAGS
+    PILLOW_AVAILABLE = True
+except ImportError:
+    PILLOW_AVAILABLE = False
+# -----------------------------------
+
+
+from .correct_types import DownField, EmptyField
 from .correct_types import ExtensionType as Ext
+from .correct_types import UpField
 from .logger import debug_monitor
 from .logger import info_monitor as nfo
 
@@ -42,105 +53,40 @@ class MetadataFileReader:
                 nfo(
                     f"[MDFileReader] pyexiv2 found no standard EXIF/IPTC/XMP in PNG: {file_path_named}",
                 )
+                # --- FALLBACK LOGIC FOR NO METADATA ---
+                if PILLOW_AVAILABLE:
+                    nfo(f"[MDFileReader] Attempting fallback with Pillow for EXIF data...")
+                    # Corrected: Pass file_path_named to the fallback method
+                    pillow_exif = self._read_exif_with_pillow(file_path_named)
+                    if pillow_exif:
+                        nfo(f"[MDFileReader] Successfully read EXIF data with Pillow.")
+                        metadata["PILLOW_EXIF"] = pillow_exif
+                        return metadata
+                    else:
+                        nfo(f"[MDFileReader] Pillow also found no EXIF data for {file_path_named}.")
+                # --- END FALLBACK LOGIC ---
                 return None
             return metadata
-        except pyexiv2.Exiv2Error as exiv_err:
+        # --- MODIFIED EXCEPTION HANDLING ---
+        except Exception as ex:  # Catch any exception during pyexiv2 operations
             nfo(
-                f"[MDFileReader] pyexiv2 Exiv2Error reading PNG standard metadata {file_path_named}: {exiv_err}",
+                f"[MDFileReader] An error occurred with pyexiv2 for PNG {file_path_named}: {ex}",
             )
+            self._logger.debug("Traceback for pyexiv2 PNG error:", exc_info=True)
+            # --- FALLBACK LOGIC FOR pyexiv2 ERRORS ---
+            if PILLOW_AVAILABLE:
+                nfo(f"[MDFileReader] Attempting fallback with Pillow due to pyexiv2 error...")
+                # Corrected: Pass file_path_named to the fallback method
+                pillow_exif = self._read_exif_with_pillow(file_path_named)
+                if pillow_exif:
+                    nfo(f"[MDFileReader] Successfully read EXIF data with Pillow after pyexiv2 error.")
+                    return {"PILLOW_EXIF": pillow_exif}
+                else:
+                    nfo(f"[MDFileReader] Pillow also found no EXIF data for {file_path_named} after pyexiv2 error.")
+            # --- END FALLBACK LOGIC ---
             return None
-        except OSError as io_err:
-            nfo(
-                f"[MDFileReader] pyexiv2 IOError reading PNG standard metadata {file_path_named}: {io_err}",
-            )
-            return None
-        except Exception as e:  # pylint: disable=broad-except
-            nfo(
-                f"[MDFileReader] pyexiv2 general error reading PNG standard metadata {file_path_named}: {e}",
-            )
-            # self._logger.error("pyexiv2 PNG error for %s", file_path_named, exc_info=True) # Example of lazy logging for error
-            return None
+        # --- END MODIFIED EXCEPTION HANDLING ---
 
-    @debug_monitor
-    def read_txt_contents(self, file_path_named: str) -> dict | None:
-        nfo(f"[MDFileReader] Reading TXT: {file_path_named}")
-        encodings_to_try = ["utf-8", "utf-16", "latin-1"]
-        for enc in encodings_to_try:
-            try:
-                with open(file_path_named, encoding=enc) as open_file:
-                    file_contents = open_file.read()
-                    return {UpField.TEXT_DATA.value: file_contents}
-            except UnicodeDecodeError:
-                continue
-            except OSError as file_err:
-                nfo(
-                    f"[MDFileReader] File Error reading TXT {file_path_named} with encoding {enc}: {file_err}",
-                )
-                return None  # Or perhaps `break` to stop trying other encodings if it's a file system error
-            except Exception as e:  # pylint: disable=broad-except
-                nfo(
-                    f"[MDFileReader] General Error reading TXT {file_path_named} with encoding {enc}: {e}",
-                )
-                return None
-        nfo(
-            f"[MDFileReader] Failed to decode TXT {file_path_named} with common encodings.",
-        )
-        return None
-
-    @debug_monitor
-    def read_schema_file(self, file_path_named: str) -> dict | None:
-        nfo(f"[MDFileReader] Reading schema file: {file_path_named}")
-        header_field_enum = DownField.JSON_DATA
-        loader = None
-        mode = "r"
-        path_obj = Path(file_path_named)
-        ext = path_obj.suffix.lower()
-
-        is_toml = any(ext in ext_set for ext_set in Ext.TOML) if isinstance(Ext.TOML, list) else ext in Ext.TOML
-        is_json = any(ext in ext_set for ext_set in Ext.JSON) if isinstance(Ext.JSON, list) else ext in Ext.JSON
-
-        if is_toml:
-            loader = toml.load
-            mode = "rb"  # toml usually prefers binary mode for load(file_obj)
-            header_field_enum = DownField.TOML_DATA
-        elif is_json:
-            loader = json.load
-            mode = "r"
-            header_field_enum = DownField.JSON_DATA
-        else:
-            nfo(
-                f"[MDFileReader] Unknown schema file type for {file_path_named} (ext: {ext})",
-            )
-            return None
-        try:
-            # For toml in 'rb' mode, no encoding kwarg. For json in 'r', utf-8 is good default.
-            open_kwargs = {"encoding": "utf-8"} if mode == "r" and is_json else {}
-            # type: ignore # open_kwargs might make mode check complex for mypy
-            with open(file_path_named, mode, **open_kwargs) as open_file:
-                file_contents = loader(open_file)
-                return {header_field_enum.value: file_contents}
-        except (
-            toml.TomlDecodeError,
-            json.JSONDecodeError,
-        ) as decode_err:  # Renamed error_log
-            nfo(
-                f"[MDFileReader] Schema decode error for {file_path_named}: {decode_err}",
-            )
-            return {
-                EmptyField.PLACEHOLDER.value: {
-                    "Error": f"Invalid {ext.upper()[1:]} format.",
-                },
-            }
-        except OSError as file_err:
-            nfo(
-                f"[MDFileReader] File Error reading schema file {file_path_named}: {file_err}",
-            )
-            return None
-        except Exception as e:  # pylint: disable=broad-except
-            nfo(
-                f"[MDFileReader] General Error reading schema file {file_path_named}: {e}",
-            )
-            return None
 
     @debug_monitor
     def read_jpg_header_pyexiv2(self, file_path_named: str) -> dict | None:
@@ -159,51 +105,184 @@ class MetadataFileReader:
 
             if exif_tags and "Exif.Photo.UserComment" in exif_tags:
                 uc_val_from_read_exif = exif_tags["Exif.Photo.UserComment"]
-                # Corrected lazy logging:
                 self._logger.debug(
                     "[MDFileReader] UserComment type from read_exif for %s: %s",
-                    Path(file_path_named).name,
+                    Path(file_path_named).name, # Path is available here
                     type(uc_val_from_read_exif),
                 )
                 if isinstance(
                     uc_val_from_read_exif,
                     str,
                 ) and uc_val_from_read_exif.startswith("charset="):
-                    # Corrected lazy logging:
                     self._logger.debug(
                         "[MDFileReader] UserComment from read_exif appears to be an already decoded string with charset prefix for %s.",
-                        Path(file_path_named).name,
+                        Path(file_path_named).name, # Path is available here
                     )
             img.close()
             if not metadata["EXIF"] and not metadata["IPTC"] and not metadata["XMP"]:
                 nfo(
                     f"[MDFileReader] pyexiv2 found no EXIF/IPTC/XMP in JPG: {file_path_named}",
                 )
+                # --- FALLBACK LOGIC FOR NO METADATA ---
+                if PILLOW_AVAILABLE:
+                    nfo(f"[MDFileReader] Attempting fallback with Pillow for EXIF data...")
+                    pillow_exif = self._read_exif_with_pillow(file_path_named)
+                    if pillow_exif:
+                        nfo(f"[MDFileReader] Successfully read EXIF data with Pillow.")
+                        metadata["PILLOW_EXIF"] = pillow_exif
+                        return metadata
+                    else:
+                        nfo(f"[MDFileReader] Pillow also found no EXIF data for {file_path_named}.")
+                # --- END FALLBACK LOGIC ---
                 return None
             return metadata
-        except pyexiv2.Exiv2Error as exiv_err:
+        # --- MODIFIED EXCEPTION HANDLING ---
+        except Exception as ex:  # Catch any exception during pyexiv2 operations
             nfo(
-                f"[MDFileReader] pyexiv2 Exiv2Error reading JPG {file_path_named}: {exiv_err}",
+                f"[MDFileReader] An error occurred with pyexiv2 for JPG {file_path_named}: {ex}",
             )
-            traceback.print_exc()
+            self._logger.debug("Traceback for pyexiv2 JPG error:", exc_info=True)
+            # --- FALLBACK LOGIC FOR pyexiv2 ERRORS ---
+            if PILLOW_AVAILABLE:
+                nfo(f"[MDFileReader] Attempting fallback with Pillow due to pyexiv2 error...")
+                pillow_exif = self._read_exif_with_pillow(file_path_named)
+                if pillow_exif:
+                    nfo(f"[MDFileReader] Successfully read EXIF data with Pillow after pyexiv2 error.")
+                    return {"PILLOW_EXIF": pillow_exif}
+                else:
+                    nfo(f"[MDFileReader] Pillow also found no EXIF data for {file_path_named} after pyexiv2 error.")
+            # --- END FALLBACK LOGIC ---
             return None
-        except OSError as io_err:
-            nfo(
-                f"[MDFileReader] pyexiv2 IOError reading JPG {file_path_named}: {io_err}",
-            )
-            traceback.print_exc()
+        # --- END MODIFIED EXCEPTION HANDLING ---
+
+
+    @debug_monitor
+    # pylint: disable=no-member
+    def _read_exif_with_pillow(self, file_path: str) -> dict | None:
+        """
+        Reads EXIF data from an image using Pillow as a fallback.
+        Returns a dictionary of EXIF tags, or None if an error occurs or no EXIF is found.
+        """
+        if not PILLOW_AVAILABLE:
+            self._logger.warning("Pillow is not installed. Cannot perform fallback EXIF read.")
             return None
-        except Exception as e:  # pylint: disable=broad-except
+
+        exif_data = {}
+        try:
+            with Image.open(file_path) as img:
+                exif_info = img.getexif()
+                if exif_info:
+                    for tag_id, value in exif_info.items():
+                        tag = TAGS.get(tag_id, tag_id)
+                        if isinstance(value, bytes):
+                            try:
+                                value = value.decode('utf-8', errors='replace')
+                            except UnicodeDecodeError:
+                                value = str(value)
+                        exif_data[tag] = value
+                    # FIX: Ensure Path is available here by using the imported Path
+                    nfo(f"[MDFileReader] Pillow successfully extracted EXIF data from {Path(file_path).name}")
+                    return exif_data
+                else:
+                    nfo(f"[MDFileReader] Pillow found no EXIF data in {Path(file_path).name}") # Path is available here
+                    return None
+        except FileNotFoundError:
+            self._logger.error(f"Pillow fallback: File not found at {file_path}")
+            return None
+        except OSError as e:
+            self._logger.error(f"Pillow fallback: OS error reading {file_path}: {e}")
+            return None
+        except Exception as e:
+            self._logger.error(f"Pillow fallback: Unexpected error reading {file_path}: {e}", exc_info=True)
+            return None
+    # --- END NEW FALLBACK EXIF READING FUNCTION ---
+
+
+    @debug_monitor
+    # pylint: disable=no-member
+    def read_txt_contents(self, file_path_named: str) -> dict | None:
+        nfo(f"[MDFileReader] Reading TXT: {file_path_named}")
+        encodings_to_try = ["utf-8", "utf-16", "latin-1"]
+        for enc in encodings_to_try:
+            try:
+                with open(file_path_named, encoding=enc) as open_file:
+                    file_contents = open_file.read()
+                    return {UpField.TEXT_DATA.value: file_contents}
+            except UnicodeDecodeError:
+                continue
+            except OSError as file_err:
+                nfo(
+                    f"[MDFileReader] File Error reading TXT {file_path_named} with encoding {enc}: {file_err}",
+                )
+                return None
+            except Exception as e:
+                nfo(
+                    f"[MDFileReader] General Error reading TXT {file_path_named} with encoding {enc}: {e}",
+                )
+                return None
+        nfo(
+            f"[MDFileReader] Failed to decode TXT {file_path_named} with common encodings.",
+        )
+        return None
+
+    @debug_monitor
+    # pylint: disable=no-member
+    def read_schema_file(self, file_path_named: str) -> dict | None:
+        nfo(f"[MDFileReader] Reading schema file: {file_path_named}")
+        header_field_enum = DownField.JSON_DATA
+        loader = None
+        mode = "r"
+        path_obj = Path(file_path_named) # Path is available here
+        ext = path_obj.suffix.lower()
+
+        is_toml = any(ext in ext_set for ext_set in Ext.TOML) if isinstance(Ext.TOML, list) else ext in Ext.TOML
+        is_json = any(ext in ext_set for ext_set in Ext.JSON) if isinstance(Ext.JSON, list) else ext in Ext.JSON
+
+        if is_toml:
+            loader = toml.load
+            mode = "rb"
+            header_field_enum = DownField.TOML_DATA
+        elif is_json:
+            loader = json.load
+            mode = "r"
+            header_field_enum = DownField.JSON_DATA
+        else:
             nfo(
-                f"[MDFileReader] pyexiv2 general error reading JPG {file_path_named}: {e}",
+                f"[MDFileReader] Unknown schema file type for {file_path_named} (ext: {ext})",
             )
-            traceback.print_exc()
+            return None
+        try:
+            open_kwargs = {"encoding": "utf-8"} if mode == "r" and is_json else {}
+            with open(file_path_named, mode, **open_kwargs) as open_file:
+                file_contents = loader(open_file)
+                return {header_field_enum.value: file_contents}
+        except (
+            toml.TomlDecodeError,
+            json.JSONDecodeError,
+        ) as decode_err:
+            nfo(
+                f"[MDFileReader] Schema decode error for {file_path_named}: {decode_err}",
+            )
+            return {
+                EmptyField.PLACEHOLDER.value: {
+                    "Error": f"Invalid {ext.upper()[1:]} format.",
+                },
+            }
+        except OSError as file_err:
+            nfo(
+                f"[MDFileReader] File Error reading schema file {file_path_named}: {file_err}",
+            )
+            return None
+        except Exception as e:
+            nfo(
+                f"[MDFileReader] General Error reading schema file {file_path_named}: {e}",
+            )
             return None
 
     @debug_monitor
     def read_file_data_by_type(self, file_path_named: str) -> dict | None:
         nfo(f"[MDFileReader] Dispatching read for: {file_path_named}")
-        path_obj = Path(file_path_named)
+        path_obj = Path(file_path_named) # Path is available here
         ext_lower = path_obj.suffix.lower()
 
         is_text_plain = (
@@ -230,7 +309,6 @@ class MetadataFileReader:
 
         if is_text_plain:
             return self.read_txt_contents(file_path_named)
-        # Changed to if, not elif, to allow a file to be both (though unlikely to be handled this way)
         if is_schema:
             return self.read_schema_file(file_path_named)
         if is_jpg:
@@ -239,11 +317,11 @@ class MetadataFileReader:
             return self.read_png_header_pyexiv2(file_path_named)
         if is_model_file:
             try:
-                from .model_tool import ModelTool  # Local import
+                from .model_tool import ModelTool
 
                 tool = ModelTool()
                 return tool.read_metadata_from(file_path_named)
-            except ImportError:  # pragma: no cover
+            except ImportError:
                 nfo(
                     f"[MDFileReader] ModelTool not available for import. Cannot process model file: {path_obj.name}",
                 )
@@ -252,7 +330,7 @@ class MetadataFileReader:
                         "Info": f"Model file ({ext_lower}) - ModelTool parser not available.",
                     },
                 }
-            except Exception as e_model:  # pylint: disable=broad-except # pragma: no cover
+            except Exception as e_model:
                 nfo(
                     f"[MDFileReader] Error using ModelTool for {path_obj.name}: {e_model}",
                 )
@@ -261,7 +339,6 @@ class MetadataFileReader:
                         "Error": f"Could not parse model file: {e_model}",
                     },
                 }
-        # Fallthrough if none of the above
         nfo(
             f"[MDFileReader] File type {ext_lower} for {path_obj.name} is not handled by this dispatcher.",
         )
