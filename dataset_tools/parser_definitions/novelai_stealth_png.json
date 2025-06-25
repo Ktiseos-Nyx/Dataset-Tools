@@ -1,0 +1,33 @@
+{
+  "parser_name": "NovelAI (Stealth LSB PNG)",
+  "priority": 129,
+  "target_file_types": [
+    "PNG"
+  ],
+  "base_format_class": "NovelAI",
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be PNG and RGBA for LSB to be possible.",
+      "source_type": "file_format",
+      "operator": "equals",
+      "value": "PNG"
+    },
+    {
+      "comment": "Rule 2: Image mode must be RGBA (checked by Python class, but can be a hint here).",
+      "source_type": "pil_info_pil_mode",
+      "operator": "equals",
+      "value": "RGBA",
+      "optional": true
+    },
+    {
+      "comment": "Rule 3: LSB magic bytes 'stealth_pngcomp' must be detectable.",
+      "source_type": "context_lsb_magic_bytes_check",
+      "expected_magic_bytes": "stealth_pngcomp",
+      "operator": "equals"
+    }
+  ],
+  "primary_data_source_for_raw": {
+    "comment": "The Python class will use its LSB extractor. No single 'raw' string is passed from here in the same way. The 'info' (context_data) and a constructed LSBExtractor instance are key.",
+    "source_type": "custom_python_class_handling"
+  }
+}

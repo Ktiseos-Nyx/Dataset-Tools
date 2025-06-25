@@ -2,6 +2,11 @@
 
 print("DEBUG: model_parsers/__init__.py: TOP OF FILE")
 
+# --- ADD THIS LINE ---
+from ..parser_registry import register_parser_class
+# --------------------
+
+
 # Initialize names to None so they exist in the module's scope,
 # preventing NameError if an import fails but a later import depends on the name existing.
 BaseModelParser = None
@@ -95,6 +100,16 @@ else:
             "or them being None."
         ),  # Corrected line length
     )
+
+# --- ADD THESE LINES ---
+# Register the parsers we successfully loaded
+if SafetensorsParser is not None:
+    # We need a name for the parser definition JSON to use. Let's make one up.
+    register_parser_class("Python.Safetensors", SafetensorsParser)
+
+if GGUFParser is not None:
+    register_parser_class("Python.GGUF", GGUFParser)
+# --
 
 _exportable_names = []
 if BaseModelParser is not None:

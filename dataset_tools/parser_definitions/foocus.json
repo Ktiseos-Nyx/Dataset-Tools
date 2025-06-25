@@ -1,0 +1,216 @@
+{
+  "parser_name": "Fooocus",
+  "priority": 100,
+  "target_file_types": [
+    "PNG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have a 'Comment' or 'parameters' PNG chunk that is valid JSON.",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "png_chunk",
+          "source_key": "Comment",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "parameters",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: The parsed JSON from that chunk must contain core Fooocus keys.",
+      "source_type": "json_from_png_chunk_options",
+      "chunk_source_key_options": [
+        "Comment",
+        "parameters"
+      ],
+      "operator": "json_contains_all_keys",
+      "expected_keys": [
+        "prompt",
+        "seed",
+        "sampler_name",
+        "steps",
+        "guidance_scale",
+        "width",
+        "height",
+        "base_model_name"
+      ]
+    },
+    {
+      "comment": "Rule 3: Ensure it's NOT RuinedFooocus (which has a higher priority parser).",
+      "source_type": "json_from_png_chunk_options",
+      "chunk_source_key_options": [
+        "Comment",
+        "parameters"
+      ],
+      "json_path": "software",
+      "operator": "not_equals_case_insensitive",
+      "value": "RuinedFooocus",
+      "optional": true
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "comment": "Engine gets the JSON string from the 'Comment' or 'parameters' PNG chunk and parses it.",
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "Comment"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "parameters"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself",
+          "comment": "Parse the found chunk string into a JSON object."
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "direct_json_path",
+        "json_path": "prompt",
+        "value_type": "string"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "direct_json_path",
+        "json_path": "negative_prompt",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "direct_json_path",
+        "json_path": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "direct_json_path",
+        "json_path": "guidance_scale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "direct_json_path",
+        "json_path": "width",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "direct_json_path",
+        "json_path": "height",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "direct_json_path",
+        "json_path": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "direct_json_path",
+        "json_path": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "direct_json_path",
+        "json_path": "scheduler",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "direct_json_path",
+        "json_path": "base_model_name",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.model_hash",
+        "method": "direct_json_path",
+        "json_path": "base_model_hash",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.loras_string",
+        "method": "direct_json_path",
+        "json_path": "loras",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.loras",
+        "method": "parse_a1111_lora_string_to_array",
+        "source_variable_key": "parameters.tool_specific.loras_string_VAR_",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.performance_selection",
+        "method": "direct_json_path",
+        "json_path": "performance_selection",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.aspect_ratios_selection",
+        "method": "direct_json_path",
+        "json_path": "aspect_ratios_selection",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.image_number",
+        "method": "direct_json_path",
+        "json_path": "image_number",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.negative_prompt_weights",
+        "method": "direct_json_path",
+        "json_path": "negative_prompt_weights",
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "Fooocus",
+      "tool": "Fooocus",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height",
+        "model": "$parameters.model",
+        "model_hash": "$parameters.model_hash",
+        "loras": "$parameters.loras",
+        "tool_specific": {
+          "fooocus_performance_selection": "$parameters.tool_specific.performance_selection",
+          "fooocus_aspect_ratios_selection": "$parameters.tool_specific.aspect_ratios_selection",
+          "fooocus_image_number": "$parameters.tool_specific.image_number",
+          "fooocus_negative_prompt_weights": "$parameters.tool_specific.negative_prompt_weights",
+          "fooocus_loras_raw_string": "$parameters.tool_specific.loras_string"
+        }
+      },
+      "workflow": "$INPUT_JSON_OBJECT_AS_STRING"
+    }
+  }
+}

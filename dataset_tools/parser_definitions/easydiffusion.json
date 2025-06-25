@@ -1,0 +1,203 @@
+{
+  "parser_name": "Easy Diffusion",
+  "priority": 70,
+  "target_file_types": [
+    "PNG",
+    "JPEG",
+    "WEBP"
+  ],
+  "detection_rules": [
+    {
+      "comment": "RULE A: The primary data source must exist and its content must be valid JSON.",
+      "condition": "OR",
+      "rules": [
+        {
+          "comment": "Sub-rule A1: Check EXIF UserComment.",
+          "source_type": "exif_user_comment",
+          "operator": "is_valid_json"
+        },
+        {
+          "comment": "Sub-rule A2: Check PNG chunk 'parameters'.",
+          "source_type": "png_chunk",
+          "source_key": "parameters",
+          "operator": "is_valid_json"
+        },
+        {
+          "comment": "Sub-rule A3: Check PNG chunk 'Comment'.",
+          "source_type": "png_chunk",
+          "source_key": "Comment",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "RULE B: The JSON data (identified by RULE A) must contain characteristic Easy Diffusion keys.",
+      "source_type": "json_from_usercomment_or_png_chunk",
+      "chunk_source_key_options_for_png": [
+        "parameters",
+        "Comment"
+      ],
+      "operator": "json_contains_any_key",
+      "expected_keys": [
+        "prompt",
+        "Prompt",
+        "seed",
+        "sampler_name",
+        "num_inference_steps"
+      ]
+    },
+    {
+      "comment": "RULE C (Optional): Stronger signal for Easy Diffusion if present.",
+      "source_type": "json_from_usercomment_or_png_chunk",
+      "chunk_source_key_options_for_png": [
+        "parameters",
+        "Comment"
+      ],
+      "operator": "json_path_exists",
+      "json_path": "use_stable_diffusion_model",
+      "optional": true
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "comment": "Engine gets the JSON string from EXIF UserComment or a relevant PNG chunk.",
+      "source_options": [
+        {
+          "source_type": "exif_user_comment"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "parameters"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "Comment"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself",
+          "comment": "Parse the found string (from UserComment or chunk) into a JSON object."
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "direct_json_path_coalesce",
+        "json_paths": [
+          "prompt",
+          "Prompt"
+        ],
+        "value_type": "string"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "direct_json_path_coalesce",
+        "json_paths": [
+          "negative_prompt",
+          "Negative Prompt"
+        ],
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "direct_json_path",
+        "json_path": "seed",
+        "value_type": "integer_or_string"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "direct_json_path_transform",
+        "json_path": "use_stable_diffusion_model",
+        "transform_type": "extract_filename",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.clip_skip",
+        "method": "direct_json_path",
+        "json_path": "clip_skip",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.vae_model",
+        "method": "direct_json_path_transform",
+        "json_path": "use_vae_model",
+        "transform_type": "extract_filename",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "direct_json_path",
+        "json_path": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "direct_json_path",
+        "json_path": "num_inference_steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "direct_json_path",
+        "json_path": "guidance_scale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "direct_json_path",
+        "json_path": "width",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "direct_json_path",
+        "json_path": "height",
+        "value_type": "integer",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "Easy Diffusion",
+      "tool": "Easy Diffusion",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "model": "$parameters.model",
+        "clip_skip": "$parameters.clip_skip",
+        "vae_model": "$parameters.vae_model",
+        "sampler_name": "$parameters.sampler_name",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height"
+      },
+      "tool_specific_parameters_json": {
+        "method": "collect_remaining_json_fields",
+        "exclude_paths": [
+          "prompt",
+          "Prompt",
+          "negative_prompt",
+          "Negative Prompt",
+          "seed",
+          "use_stable_diffusion_model",
+          "clip_skip",
+          "use_vae_model",
+          "sampler_name",
+          "num_inference_steps",
+          "guidance_scale",
+          "width",
+          "height"
+        ]
+      },
+      "workflow": "$INPUT_JSON_OBJECT_AS_STRING"
+    }
+  }
+}

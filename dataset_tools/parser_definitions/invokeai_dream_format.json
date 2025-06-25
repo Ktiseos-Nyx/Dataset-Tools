@@ -1,0 +1,103 @@
+{
+  "parser_name": "InvokeAI (Dream format string)",
+  "priority": 116,
+  "target_file_types": [
+    "PNG"
+  ],
+  "detection_rules": [
+    {
+      "source_type": "png_chunk",
+      "source_key": "Dream",
+      "operator": "exists"
+    },
+    {
+      "comment": "Dream string usually starts with a quoted prompt and has -s, -S, -C, -A options",
+      "source_type": "png_chunk",
+      "source_key": "Dream",
+      "operator": "regex_match_all",
+      "regex_patterns": [
+        "^\\s*\\\".*?\\\"",
+        "-\\w\\s+[^\\s]+"
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_type": "pil_info_key",
+      "source_key": "Dream"
+    },
+    "fields": [
+      {
+        "target_key": "_internal.full_prompt_str_dream",
+        "method": "regex_extract_group_from_string_source",
+        "regex_pattern": "^\\s*\\\"(.*?)\\\"",
+        "group_index": 1,
+        "value_type": "string"
+      },
+      {
+        "target_key": "prompt",
+        "method": "invokeai_split_prompt_positive",
+        "source_variable_key": "_internal.full_prompt_str_dream_VAR_"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "invokeai_split_prompt_negative",
+        "source_variable_key": "_internal.full_prompt_str_dream_VAR_"
+      },
+      {
+        "target_key": "_internal.options_str_dream",
+        "method": "regex_extract_group_from_string_source",
+        "regex_pattern": "^\\s*\\\".*?\\\"\\s*(-\\S.*)?$",
+        "group_index": 1,
+        "value_type": "string",
+        "optional": true,
+        "default_value": ""
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "regex_extract_from_variable_kv_style",
+        "source_variable_key": "_internal.options_str_dream_VAR_",
+        "key_regex": "-s\\s+([\\d.]+)",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "regex_extract_from_variable_kv_style",
+        "source_variable_key": "_internal.options_str_dream_VAR_",
+        "key_regex": "-S\\s+([\\d.]+)",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "regex_extract_from_variable_kv_style",
+        "source_variable_key": "_internal.options_str_dream_VAR_",
+        "key_regex": "-C\\s+([\\d.]+)",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "regex_extract_from_variable_kv_style",
+        "source_variable_key": "_internal.options_str_dream_VAR_",
+        "key_regex": "-A\\s+([^\\s]+)",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "regex_extract_from_variable_kv_style",
+        "source_variable_key": "_internal.options_str_dream_VAR_",
+        "key_regex": "-W\\s+([\\d]+)",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "regex_extract_from_variable_kv_style",
+        "source_variable_key": "_internal.options_str_dream_VAR_",
+        "key_regex": "-H\\s+([\\d]+)",
+        "value_type": "integer",
+        "optional": true
+      }
+    ],
+    "output_template": {}
+  }
+}

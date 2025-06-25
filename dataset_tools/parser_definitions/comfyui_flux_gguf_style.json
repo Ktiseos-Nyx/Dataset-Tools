@@ -1,0 +1,136 @@
+{
+  "parser_name": "ComfyUI (Flux/GGUF Style)",
+  "priority": 142,
+  "target_file_types": [
+    "PNG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rules to detect workflow chunk, presence of KSampler/SamplerCustomAdvanced AND specific nodes like UnetLoaderGGUF, DualCLIPLoaderGGUF with type: 'flux'",
+      "json_query_type": "has_node_with_class_and_input_value",
+      "class_type": "DualCLIPLoaderGGUF",
+      "input_key": "type",
+      "expected_input_value": "flux"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {},
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_sampler_input"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "RandomNoise"
+          }
+        ],
+        "input_key": "noise_seed"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "BasicScheduler"
+          }
+        ],
+        "input_key": "steps"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "FluxGuidance"
+          }
+        ],
+        "input_key": "guidance"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "KSamplerSelect"
+          }
+        ],
+        "input_key": "sampler_name"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "BasicScheduler"
+          }
+        ],
+        "input_key": "scheduler"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "UnetLoaderGGUF"
+          }
+        ],
+        "input_key": "unet_name"
+      },
+      {
+        "target_key": "parameters.tool_specific.clip_g_or_1",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "DualCLIPLoaderGGUF"
+          }
+        ],
+        "input_key": "clip_name1"
+      },
+      {
+        "target_key": "parameters.tool_specific.clip_l_or_2",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "DualCLIPLoaderGGUF"
+          }
+        ],
+        "input_key": "clip_name2"
+      },
+      {
+        "target_key": "parameters.vae_model",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "VAELoader"
+          }
+        ],
+        "input_key": "vae_name"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "EmptyLatentImage"
+          }
+        ],
+        "input_key": "width"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "EmptyLatentImage"
+          }
+        ],
+        "input_key": "height"
+      }
+    ],
+    "output_template": {}
+  }
+}

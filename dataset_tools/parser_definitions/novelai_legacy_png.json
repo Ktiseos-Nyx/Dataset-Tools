@@ -1,0 +1,148 @@
+{
+  "parser_name": "NovelAI (Legacy PNG Chunks)",
+  "priority": 128,
+  "target_file_types": [
+    "PNG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Software tag in EXIF (if present via PIL info) or PNG chunk must be NovelAI.",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "exif_software_tag",
+          "operator": "equals",
+          "value": "NovelAI"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "Software",
+          "operator": "equals",
+          "value": "NovelAI"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must have a 'Description' chunk (for positive prompt).",
+      "source_type": "png_chunk",
+      "source_key": "Description",
+      "operator": "exists"
+    },
+    {
+      "comment": "Rule 3: Must have a 'Comment' chunk which should contain JSON.",
+      "source_type": "png_chunk",
+      "source_key": "Comment",
+      "operator": "is_valid_json"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "comment": "Primary input data will be the JSON object parsed from the 'Comment' chunk.",
+      "source_type": "pil_info_key",
+      "source_key": "Comment",
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "direct_context_value",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Description"
+        },
+        "value_type": "string"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "direct_json_path",
+        "json_path": "uc",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "direct_json_path",
+        "json_path": "sampler",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "direct_json_path",
+        "json_path": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.denoising_strength",
+        "method": "direct_json_path",
+        "json_path": "strength",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.noise_offset",
+        "method": "direct_json_path",
+        "json_path": "noise",
+        "value_type": "float_or_integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "direct_json_path",
+        "json_path": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "direct_json_path",
+        "json_path": "width",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "direct_json_path",
+        "json_path": "height",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.source_chunk_value",
+        "method": "direct_context_value",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Source"
+        },
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "NovelAI (Legacy PNG Chunks)",
+      "tool": "NovelAI",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "sampler_name": "$parameters.sampler_name",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height",
+        "denoising_strength": "$parameters.denoising_strength",
+        "tool_specific": {
+          "noise_offset": "$parameters.tool_specific.noise_offset",
+          "source_chunk": "$parameters.tool_specific.source_chunk_value"
+        }
+      },
+      "workflow": {
+        "Description": "$CONTEXT.png_chunks.Description",
+        "Comment_JSON_as_Input": "$INPUT_JSON_OBJECT_AS_STRING"
+      }
+    }
+  }
+}

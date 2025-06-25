@@ -1,0 +1,262 @@
+{
+  "parser_name": "Midjourney (PNG Chunks & XMP)",
+  "priority": 130,
+  "target_file_types": [
+    "PNG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have a 'Description' PNG chunk.",
+      "source_type": "png_chunk",
+      "source_key": "Description",
+      "operator": "exists"
+    },
+    {
+      "comment": "Rule 2: The 'Description' chunk must contain '--ar' or '--v' or '--niji' or 'Job ID:'.",
+      "source_type": "png_chunk",
+      "source_key": "Description",
+      "operator": "regex_match_any",
+      "regex_patterns": [
+        "--ar\\s+",
+        "--v\\s+",
+        "--niji\\s+",
+        "Job ID:",
+        "--chaos\\s+",
+        "--stylize\\s+",
+        "--weird\\s+"
+      ]
+    },
+    {
+      "comment": "Rule 3: Often has an 'Author' chunk (strong indicator but optional for matching).",
+      "source_type": "png_chunk",
+      "source_key": "Author",
+      "operator": "exists",
+      "optional": true
+    },
+    {
+      "comment": "Rule 4: XMP string often contains DigImageGUID (strong indicator but optional).",
+      "source_type": "xmp_string_content",
+      "operator": "regex_match",
+      "regex_pattern": "iptcExt:DigImageGUID",
+      "optional": true
+    },
+    {
+      "comment": "Rule 5: To differentiate from Fooocus that might also use 'Description' for a simple prompt, ensure it's NOT Fooocus-style JSON in 'parameters' or 'Comment' if those chunks exist.",
+      "condition": "AND",
+      "rules": [
+        {
+          "source_type": "png_chunk",
+          "source_key": "parameters",
+          "operator": "not_strictly_fooocus_json_structure",
+          "optional": true
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "Comment",
+          "operator": "not_strictly_fooocus_json_structure",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "regex_capture_before_first_kv_match",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Description"
+        },
+        "kv_block_delimiter_pattern": "\\s--[a-zA-Z]|Job ID:",
+        "fallback_full_string": true
+      },
+      {
+        "target_key": "parameters.tool_specific.aspect_ratio_str",
+        "method": "regex_extract_group_from_string_source",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Description"
+        },
+        "regex_pattern": "--ar\\s+([^\\s]+)",
+        "group_index": 1,
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.version_str",
+        "method": "regex_extract_group_from_string_source",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Description"
+        },
+        "regex_pattern": "--v\\s+([^\\s]+)",
+        "group_index": 1,
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.niji_version_str",
+        "method": "regex_extract_group_from_string_source",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Description"
+        },
+        "regex_pattern": "--niji\\s+([^\\s]+)",
+        "group_index": 1,
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.stylize",
+        "method": "regex_extract_group_from_string_source",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Description"
+        },
+        "regex_pattern": "--stylize\\s+(\\d+)",
+        "group_index": 1,
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.chaos",
+        "method": "regex_extract_group_from_string_source",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Description"
+        },
+        "regex_pattern": "--chaos\\s+(\\d+)",
+        "group_index": 1,
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.weird",
+        "method": "regex_extract_group_from_string_source",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Description"
+        },
+        "regex_pattern": "--weird\\s+(\\d+)",
+        "group_index": 1,
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.profile_str",
+        "method": "regex_extract_group_from_string_source",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Description"
+        },
+        "regex_pattern": "--profile\\s+([^\\s]+)",
+        "group_index": 1,
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.job_id_from_desc",
+        "method": "regex_extract_group_from_string_source",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Description"
+        },
+        "regex_pattern": "Job ID:\\s*([\\w-]+)",
+        "group_index": 1,
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.author",
+        "method": "direct_context_value",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Author"
+        },
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.creation_time",
+        "method": "direct_context_value",
+        "source_data_from_context": {
+          "type": "png_chunk",
+          "key": "Creation Time"
+        },
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.xmp_digImageGUID",
+        "method": "regex_extract_group_from_string_source",
+        "source_data_from_context": {
+          "type": "xmp_string"
+        },
+        "regex_pattern": "iptcExt:DigImageGUID=\\\"([\\w-]+)\\\"",
+        "group_index": 1,
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.xmp_digitalSourceType",
+        "method": "regex_extract_group_from_string_source",
+        "source_data_from_context": {
+          "type": "xmp_string"
+        },
+        "regex_pattern": "iptcExt:DigitalSourceType=\\\"([^\\\"]+)\\\"",
+        "group_index": 1,
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "Midjourney (PNG Chunks & XMP)",
+      "tool": "Midjourney",
+      "prompt": "$prompt",
+      "negative_prompt": "",
+      "parameters": {
+        "steps": null,
+        "sampler_name": null,
+        "cfg_scale": null,
+        "seed": null,
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height",
+        "model": {
+          "method": "conditional_value_map",
+          "source_variable_key": "parameters.tool_specific.version_str_VAR_",
+          "value_map": {
+            "5": "Midjourney v5.0",
+            "7": "Midjourney v7",
+            "6.1": "Midjourney v6.1",
+            "6.0": "Midjourney v6.0",
+            "5.2": "Midjourney v5.2",
+            "5.1": "Midjourney v5.1"
+          },
+          "default_value_from_variable_if_no_map": "$parameters.tool_specific.version_str_VAR_",
+          "optional": true
+        },
+        "tool_specific": {
+          "author": "$parameters.tool_specific.author",
+          "creation_time": "$parameters.tool_specific.creation_time",
+          "aspect_ratio_string": "$parameters.tool_specific.aspect_ratio_str",
+          "version_string": "$parameters.tool_specific.version_str",
+          "niji_version_string": "$parameters.tool_specific.niji_version_str",
+          "stylize": "$parameters.tool_specific.stylize",
+          "chaos": "$parameters.tool_specific.chaos",
+          "weird": "$parameters.tool_specific.weird",
+          "profile": "$parameters.tool_specific.profile_str",
+          "job_id": "$parameters.tool_specific.job_id_from_desc",
+          "xmp_guid": "$parameters.tool_specific.xmp_digImageGUID",
+          "xmp_source_type": "$parameters.tool_specific.xmp_digitalSourceType"
+        }
+      },
+      "workflow": {
+        "Description_Chunk": "$CONTEXT.png_chunks.Description",
+        "Author_Chunk": "$CONTEXT.png_chunks.Author",
+        "CreationTime_Chunk": "$CONTEXT.png_chunks.Creation Time",
+        "XMP_String": "$CONTEXT.xmp_string"
+      }
+    }
+  }
+}

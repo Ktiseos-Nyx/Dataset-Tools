@@ -1,0 +1,127 @@
+{
+  "parser_name": "Flux (Black Forest Labs EXIF)",
+  "priority": 120,
+  "target_file_types": [
+    "JPEG",
+    "TIFF",
+    "PNG"
+  ],
+  "detection_rules": [
+    {
+      "source_type": "software_tag",
+      "operator": "contains_case_insensitive",
+      "value": ";flux"
+    },
+    {
+      "source_type": "exif_tag_general_string_value",
+      "exif_ifd": "0th",
+      "exif_tag_name": "Make",
+      "operator": "contains_case_insensitive",
+      "value": "black forest labs"
+    },
+    {
+      "source_type": "exif_tag_general_string_value",
+      "exif_ifd": "0th",
+      "exif_tag_name": "ImageDescription",
+      "operator": "exists"
+    }
+  ],
+  "parsing_instructions": {
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "direct_context_value",
+        "source_data_from_context": {
+          "type": "exif_tag_general_string_value",
+          "exif_ifd": "0th",
+          "exif_tag_name": "ImageDescription"
+        },
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "direct_context_value",
+        "source_data_from_context": {
+          "type": "exif_tag_general_string_value",
+          "exif_ifd": "0th",
+          "exif_tag_name": "Model"
+        },
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "static_value",
+        "value": null
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "static_value",
+        "value": null
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "static_value",
+        "value": null
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "static_value",
+        "value": null
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "static_value",
+        "value": null
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "static_value",
+        "value": null
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "Flux (Black Forest Labs EXIF)",
+      "tool_base": "Flux (Black Forest Labs)",
+      "flux_model_variant_from_parser": "$parameters.model",
+      "tool": {
+        "method": "string_concatenate_conditional",
+        "parts": [
+          {
+            "value_from_key": "tool_base"
+          },
+          {
+            "value_from_key": "flux_model_variant_from_parser",
+            "prefix": " (",
+            "suffix": ")",
+            "condition_key_exists": "flux_model_variant_from_parser"
+          }
+        ]
+      },
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height"
+      },
+      "tool_specific_parameters_json": {
+        "SoftwareTag": "$CONTEXT.software_tag",
+        "MakeTag": {
+          "method": "direct_context_value",
+          "source_data_from_context": {
+            "type": "exif_tag_general_string_value",
+            "exif_ifd": "0th",
+            "exif_tag_name": "Make"
+          }
+        },
+        "ModelTag": "$parameters.model"
+      }
+    }
+  }
+}

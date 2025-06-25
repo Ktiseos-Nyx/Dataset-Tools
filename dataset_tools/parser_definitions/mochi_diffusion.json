@@ -1,0 +1,217 @@
+{
+  "parser_name": "Mochi Diffusion (IPTC)",
+  "priority": 98,
+  "target_file_types": [
+    "JPEG",
+    "TIFF",
+    "PNG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: IPTC OriginatingProgram must contain 'Mochi Diffusion' OR CaptionAbstract must contain 'Generator: Mochi Diffusion'.",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "context_iptc_field_value",
+          "iptc_field_name": "OriginatingProgram",
+          "operator": "contains_case_insensitive",
+          "value": "Mochi Diffusion"
+        },
+        {
+          "source_type": "context_iptc_field_value",
+          "iptc_field_name": "CaptionAbstract",
+          "operator": "contains",
+          "value": "Generator: Mochi Diffusion"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: IPTC CaptionAbstract (the parameter string) must exist.",
+      "source_type": "context_iptc_field_value",
+      "iptc_field_name": "CaptionAbstract",
+      "operator": "exists"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "comment": "The string content of IPTC:Caption-Abstract.",
+      "source_type": "context_iptc_field_value_string",
+      "iptc_field_name": "CaptionAbstract"
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "key_value_extract_from_string",
+        "key_name": "Include in Image",
+        "value_type": "string",
+        "kv_separator": ":",
+        "pair_separator": ";"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "key_value_extract_from_string",
+        "key_name": "Exclude from Image",
+        "value_type": "string",
+        "kv_separator": ":",
+        "pair_separator": ";",
+        "optional": true
+      },
+      {
+        "target_key": "_internal.generator_str",
+        "method": "key_value_extract_from_string",
+        "key_name": "Generator",
+        "value_type": "string",
+        "kv_separator": ":",
+        "pair_separator": ";",
+        "optional": true
+      },
+      {
+        "target_key": "_internal.originating_program_str",
+        "method": "direct_context_value",
+        "source_data_from_context": {
+          "type": "context_iptc_field_value",
+          "iptc_field_name": "OriginatingProgram"
+        },
+        "optional": true
+      },
+      {
+        "target_key": "parsed_tool_name",
+        "method": "coalesce_variables",
+        "variable_keys_in_order": [
+          "_internal.generator_str_VAR_",
+          "_internal.originating_program_str_VAR_"
+        ],
+        "default_value": "Mochi Diffusion"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "key_value_extract_from_string",
+        "key_name": "Guidance Scale",
+        "value_type": "float_or_integer",
+        "kv_separator": ":",
+        "pair_separator": ";"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "key_value_extract_from_string",
+        "key_name": "Steps",
+        "value_type": "integer",
+        "kv_separator": ":",
+        "pair_separator": ";"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "key_value_extract_from_string",
+        "key_name": "Model",
+        "value_type": "string",
+        "kv_separator": ":",
+        "pair_separator": ";",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "key_value_extract_from_string",
+        "key_name": "Seed",
+        "value_type": "integer_or_string",
+        "kv_separator": ":",
+        "pair_separator": ";"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "key_value_extract_from_string",
+        "key_name": "Scheduler",
+        "value_type": "string",
+        "kv_separator": ":",
+        "pair_separator": ";"
+      },
+      {
+        "target_key": "parameters.upscaler",
+        "method": "key_value_extract_from_string",
+        "key_name": "Upscaler",
+        "value_type": "string",
+        "kv_separator": ":",
+        "pair_separator": ";",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.date",
+        "method": "key_value_extract_from_string",
+        "key_name": "Date",
+        "value_type": "string",
+        "kv_separator": ":",
+        "pair_separator": ";",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.mochi_ml_compute_unit",
+        "method": "key_value_extract_from_string",
+        "key_name": "ML Compute Unit",
+        "value_type": "string",
+        "kv_separator": ":",
+        "pair_separator": ";",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_version_detail",
+        "method": "key_value_extract_from_string",
+        "key_name": "Generator",
+        "value_type": "string",
+        "kv_separator": ":",
+        "pair_separator": ";",
+        "optional": true
+      },
+      {
+        "target_key": "_internal.size_str",
+        "method": "key_value_extract_from_string",
+        "key_name": "Size",
+        "value_type": "string",
+        "kv_separator": ":",
+        "pair_separator": ";",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "regex_transform_from_variable",
+        "source_variable_key": "_internal.size_str_VAR_",
+        "transform_regex": "^(\\d+)x\\d+$",
+        "transform_group": 1,
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "regex_transform_from_variable",
+        "source_variable_key": "_internal.size_str_VAR_",
+        "transform_regex": "^\\d+x(\\d+)$",
+        "transform_group": 1,
+        "value_type": "integer",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "Mochi Diffusion (IPTC)",
+      "tool": "$parsed_tool_name",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "cfg_scale": "$parameters.cfg_scale",
+        "steps": "$parameters.steps",
+        "model": "$parameters.model",
+        "seed": "$parameters.seed",
+        "sampler_name": "$parameters.sampler_name",
+        "upscaler": "$parameters.upscaler",
+        "date": "$parameters.date",
+        "version": "$parameters.tool_version_detail",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height",
+        "tool_specific": {
+          "mochi_ml_compute_unit": "$parameters.tool_specific.mochi_ml_compute_unit"
+        }
+      },
+      "workflow": {
+        "IPTC_CaptionAbstract": "$INPUT_STRING",
+        "IPTC_OriginatingProgram": "$_internal.originating_program_str_VAR_"
+      }
+    }
+  }
+}
