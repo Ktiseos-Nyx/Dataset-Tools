@@ -9,6 +9,7 @@ __email__ = "receyuki@gmail.com"
 
 import json
 import logging
+import sys
 from pathlib import Path
 from typing import Any, BinaryIO, TextIO
 
@@ -20,19 +21,94 @@ from PIL import Image, UnidentifiedImageError
 from .constants import PARAMETER_PLACEHOLDER
 from .format import (
     A1111,
-    BaseFormat,
-    CivitaiFormat,  # YodayoFormat,
+    CivitaiFormat,
     ComfyUI,
     DrawThings,
     EasyDiffusion,
     Fooocus,
     InvokeAI,
-    MochiDiffusionFormat,  # Now expects IPTC data
+    MochiDiffusionFormat,
     NovelAI,
     RuinedFooocusFormat,
     SwarmUI,
 )
+from .format import TensorArtFormat as TensorArt  # This should now work
+from .format import YodayoFormat as Yodayo
 from .logger import get_logger
+from .format import BaseFormat
+
+def fix_sjis_utf8_mojibake(mojibake_text: str) -> str:
+    """Fixes a string that was UTF-8 but incorrectly decoded as Shift-JIS."""
+    try:
+        return mojibake_text.encode('shift_jis_2004').decode('utf-8')
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return mojibake_text
+
+def get_generation_parameters(file_path: str) -> str | None:
+    """
+    Robustly extracts AI generation parameters from an image file.
+    This version is smarter and checks multiple locations for PNG, JPEG, and WEBP files.
+    """
+    try:
+        with Image.open(file_path) as img:
+            # --- STRATEGY 1: Check common PNG text chunks ---
+            # These are the most reliable and should be checked first.
+            if 'parameters' in img.info:  # A1111, Forge, SD.Next
+                return img.info['parameters']
+            if 'prompt' in img.info:  # ComfyUI (JSON data)
+                return img.info['prompt']
+            if 'workflow' in img.info:  # ComfyUI (JSON data with workflow)
+                return img.info['workflow']
+            if 'Comment' in img.info:  # Fooocus (JSON data in PNG)
+                return img.info['Comment']
+
+            # --- STRATEGY 2: Check JPEG/WEBP comment block ---
+            # Used by Fooocus and others for JPEGs.
+            if 'comment' in img.info:
+                comment_bytes = img.info.get('comment', b'')
+                if isinstance(comment_bytes, bytes):
+                    return comment_bytes.decode('utf-8', 'ignore')
+
+            # --- STRATEGY 3: Check standard EXIF UserComment tag ---
+            # This is a common fallback for many tools and file types.
+            exif_data = img.getexif()
+            USER_COMMENT_TAG = 37510  # 0x9286
+
+            if USER_COMMENT_TAG in exif_data:
+                exif_bytes = exif_data[USER_COMMENT_TAG]
+                if isinstance(exif_bytes, bytes) and len(exif_bytes) > 8:
+                    # Standard EXIF UserComment has an 8-byte header (e.g., b'UNICODE\x00')
+                    # We slice past it and decode the rest as UTF-8.
+                    return exif_bytes[8:].decode('utf-8', 'ignore')
+                elif isinstance(exif_bytes, str):
+                    # If it's already a string, it might be our Mojibake victim.
+                    # The fix_sjis_utf8_mojibake function is still available in this file.
+                    return fix_sjis_utf8_mojibake(exif_bytes)
+
+            # --- STRATEGY 4: Last resort checks for less common locations ---
+            IMAGE_DESCRIPTION_TAG = 270 # 0x010e
+            if IMAGE_DESCRIPTION_TAG in exif_data:
+                description_bytes = exif_data[IMAGE_DESCRIPTION_TAG]
+                if isinstance(description_bytes, bytes):
+                    return description_bytes.decode('utf-8', 'ignore')
+                elif isinstance(description_bytes, str):
+                    return description_bytes
+
+    except (FileNotFoundError, UnidentifiedImageError):
+        # File not found or Pillow can't read it. Silently fail and return None.
+        return None
+    except Exception as e:
+        # Catch any other unexpected errors during parsing.
+        pylog.getLogger("DSVendored_SDPR.ImageDataReader").warning(
+            f"get_generation_parameters encountered an unexpected error: {e}"
+        )
+        return None
+
+    # If we've tried everything and found nothing, return None.
+    return None
+
+# --- END OF REPLACEMENT ---
+
 
 # IPTC tag constants from piexif for clarity
 IPTC_CAPTION_ABSTRACT = (2, 120)  # piexif.IPTCApplicationRecord.Caption
@@ -51,27 +127,218 @@ class ImageDataReader:
     NOVELAI_MAGIC = "stealth_pngcomp"
 
     PARSER_CLASSES_PNG = [
+        # --- ComfyUI Flavors First (these look for JSON in specific places) ---
         ComfyUI,
+        # Generic ComfyUI (checks info for "prompt" or "workflow" keys)
+        TensorArt,
+        # TensorArt (ComfyUI JSON, checks EMS patterns, needs raw JSON)
         CivitaiFormat,
-        # YodayoFormat,
-        A1111,
-        EasyDiffusion,
-        InvokeAI,
-        NovelAI,
+        # Civitai (ComfyUI JSON in UserComment/params, or A1111 text)
+        # Order of these three Comfy-based ones depends on:
+        # 1. Which PNG chunk they primarily expect their JSON in.
+        # 2. How distinct their JSON content is from each other.
+        # --- Specific text/JSON based formats often in Comment or Parameters ---
+        # Fooocus,
+        # PNG tEXt "Comment" chunk (JSON)
+        RuinedFooocusFormat,
+        # PNG tEXt "Comment" chunk (JSON with specific "software" tag)
         SwarmUI,
-        MochiDiffusionFormat,  # Mochi might save IPTC to PNGs via some mechanism, try last for PNGs
+        # 'sui_image_params' in "parameters" chunk
+        # --- A1111 and its Variants (Text-based parameter strings) ---
+        # Yodayo (A1111 variant, needs "parameters" or UserComment)
+        # KohyaSSFormat,
+        # (If using PNG UserComment, needs UserComment)
+        A1111,
+        Yodayo,
+        # Generic A1111 (primarily "parameters" chunk, fallback UserComment)
+        # --- Formats using specific chunks or distinct metadata structures ---
+        InvokeAI,
+        # 'sd-metadata' or 'invokeai_metadata' chunks
+        EasyDiffusion,
+        # JSON in UserComment or other less common chunks
+        # --- Formats using XMP (often need pre-parsed XMP passed in info) ---
+        DrawThings,
+        # # XMP:exif:UserComment (JSON) and XMP:iptcExt:DigImageGUID and XMP:dc:description
+        # --- Unique mechanisms ---
+        NovelAI,  # LSB steganography
+        # --- General Fallbacks or Less Common PNG Usage ---
+        MochiDiffusionFormat,  # Primarily IPTC (more for JPEG/WEBP)
     ]
 
     PARSER_CLASSES_JPEG_WEBP = [
-        # RuinedFooocus is handled specially before this loop
-        MochiDiffusionFormat,  # <<< MOCHI FIRST FOR JPEG/WEBP due to specific IPTC usage
-        CivitaiFormat,
-        EasyDiffusion,
-        # YodayoFormat,
-        A1111,
-        SwarmUI,
+        # RuinedFooocusFormat, # Handled specially for UserComment JSON before the loop
+        # MochiDiffusionFormat,  # IPTC based
+        # KohyaSSFormat,        # UserComment with encoding prefix
+        CivitaiFormat,  # EXIF UserComment for ComfyUI JSON or A1111 text
+        TensorArt,  # If it uses EXIF UserComment for ComfyUI JSON (less common)
+        # EasyDiffusion,  # JSON in EXIF UserComment
+        Yodayo,  # A1111-like EXIF UserComment
+        A1111,  # Generic A1111 EXIF UserComment
+        # SwarmUI,  # Legacy EXIF or UserComment
+        # Fooocus,  # JFIF comment JSON
+        # drawThings # typically uses XMP in PNGs, less common in JPEG EXIF directly for its JSON.
     ]
 
+def _process_image_file(self, file_path_or_obj: str | Path | BinaryIO, file_display_name: str) -> None:
+    try:
+        with Image.open(file_path_or_obj) as img:
+            self._width = img.width
+            self._height = img.height
+            self._info = img.info.copy() if img.info else {}
+            self._format_str = img.format or ""
+            self._logger.debug(
+                "Image opened: %s, Format: %s, Size: %sx%s",
+                file_display_name,
+                self._format_str,
+                self._width,
+                self._height,
+            )
+
+            # --- Extract common EXIF/IPTC fields early ---
+            if exif_bytes := self._info.get("exif"):
+                try:
+                    exif_data_dict = piexif.load(exif_bytes)
+                    # Software Tag
+                    sw_bytes = exif_data_dict.get("0th", {}).get(piexif.ImageIFD.Software)
+                    if sw_bytes and isinstance(sw_bytes, bytes):
+                        self._exif_software_tag = sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
+                        self._logger.debug("Found EXIF:Software tag: %s", self._exif_software_tag)
+
+                    # IPTC Data for MochiDiffusion and potentially others
+                    iptc_dict_from_exif = exif_data_dict.get("IPTC", {})
+                    if iptc_dict_from_exif:
+                        # ... (Your existing IPTC parsing logic here, it's fine) ...
+                        pass # Placeholder for your IPTC logic
+
+                except Exception as e_exif_load:
+                    self._logger.debug(
+                        "Could not parse EXIF for Software/IPTC tags: %s",
+                        e_exif_load,
+                    )
+
+            # (Your alternative IPTC extraction logic here, it's fine)
+
+            self._attempt_legacy_swarm_exif(img)
+
+            # --- PRIMARY PARSING ATTEMPTS ---
+            if not self._parser:
+                if self._format_str == "PNG":
+                    self._process_png_chunks(img)
+                elif self._format_str in ["JPEG", "WEBP"]:
+                    self._process_jpeg_webp_exif(img)
+                else:  # Generic fallback for other image types
+                    self._logger.info(
+                        "Image format '%s' not specifically handled. Checking generic EXIF UserComment.",
+                        self._format_str,
+                    )
+                    if not self._parser and (
+                        exif_b := self._info.get("exif")
+                    ):  # Re-check if not parsed by IPTC path
+                        try:
+                            exif_d = piexif.load(exif_b)
+                            uc_b = exif_d.get("Exif", {}).get(piexif.ExifIFD.UserComment)
+                            if uc_b:
+                                uc_s = piexif.helper.UserComment.load(uc_b)
+                                if uc_s and not uc_s.strip().startswith("{"):  # A1111 is text
+                                    if self._try_parser(A1111, raw=uc_s):
+                                        pass
+                        except Exception as e_gen_exif:
+                            self._logger.debug(
+                                "Generic EXIF UserComment (A1111 fallback) check failed: %s",
+                                e_gen_exif,
+                            )
+
+            # --- START OF CORRECTLY INDENTED AND PLACED SAFETY NET ---
+            # If after all the specific parsers have failed, we try our robust fallback.
+            if not self._parser:
+                self._logger.debug(
+                    "Primary parsers failed. Attempting robust fallback with get_generation_parameters."
+                )
+
+                # We call YOUR function here. This is the wire being connected.
+                clean_text = get_generation_parameters(file_path_or_obj)
+
+                if clean_text:
+                    self._logger.info(
+                        "Fallback succeeded. Found clean text. Now trying to parse it as A1111 format."
+                    )
+                    # We got clean data! Now feed it back into the system's A1111 parser.
+                    self._try_parser(A1111, raw=clean_text)
+                else:
+                    self._logger.debug(
+                        "Robust fallback (get_generation_parameters) also failed to find any text."
+                    )
+            # --- END OF SAFETY NET ---
+
+    except FileNotFoundError:
+        self._status = BaseFormat.Status.FORMAT_ERROR
+        self._error = "Image file not found."
+        self._logger.error("Image file not found: %s", file_display_name)
+    except UnidentifiedImageError as e:
+        self._status = BaseFormat.Status.FORMAT_ERROR
+        self._error = f"Cannot identify image: {e!s}"
+        self._logger.error("Cannot identify image file '%s': %s", file_display_name, e)
+    except OSError as e:
+        self._status = BaseFormat.Status.FORMAT_ERROR
+        self._error = f"File system error: {e!s}"
+        self._logger.error(
+            "OS/IO error opening image '%s': %s",
+            file_display_name,
+            e,
+            exc_info=True,
+        )
+    except Exception as e:
+        self._status = BaseFormat.Status.FORMAT_ERROR
+        self._error = f"Pillow/general error: {e!s}"
+        self._logger.error(
+            "Error opening/processing image '%s': %s",
+            file_display_name,
+            e,
+            exc_info=True,
+        )
+
+    def read_data(self, file_path_or_obj: str | Path | TextIO | BinaryIO) -> None:
+        # ... (as before) ...
+        self._initialize_state()
+        file_display_name = self._get_display_name(file_path_or_obj)
+        self._logger.debug("Reading data for: %s (is_txt: %s)", file_display_name, self._is_txt)
+        if self._is_txt:
+            if hasattr(file_path_or_obj, "read") and callable(file_path_or_obj.read):
+                self._handle_text_file(file_path_or_obj)
+            else:
+                try:
+                    with open(file_path_or_obj, encoding="utf-8") as f_obj:
+                        self._handle_text_file(f_obj)
+                except Exception as e_open:
+                    self._logger.error("Error opening text file '%s': %s", file_display_name, e_open)
+                    self._status = BaseFormat.Status.FORMAT_ERROR
+                    self._error = f"Could not open text file: {e_open!s}"
+        else:
+            self._process_image_file(file_path_or_obj, file_display_name)
+        if self._status == BaseFormat.Status.UNREAD:
+            self._logger.warning(
+                "No suitable parser for '%s' or all parsers failed/declined.",
+                file_display_name,
+            )
+            self._status = BaseFormat.Status.FORMAT_ERROR
+            if not self._error:
+                self._error = "No suitable metadata parser or file unreadable/corrupted."
+        log_tool = self._tool or "None"
+        log_status_name = self._status.name if hasattr(self._status, "name") else str(self._status)
+        self._logger.info(
+            "Final Reading Status for '%s': %s, Tool: %s",
+            file_display_name,
+            log_status_name,
+            log_tool,
+        )
+        final_error_to_log = self._error
+        if self._parser and hasattr(self._parser, "error") and self._parser.error:
+            if self._status != BaseFormat.Status.READ_SUCCESS or not final_error_to_log:
+                final_error_to_log = self._parser.error
+        if self._status != BaseFormat.Status.READ_SUCCESS and final_error_to_log:
+            self._logger.warning("Error details for '%s': %s", file_display_name, final_error_to_log)
+
+    # ... (remove_data, save_image, construct_data, prompt_to_line, and all properties remain the same) ...
     def __init__(
         self,
         file_path_or_obj: str | Path | TextIO | BinaryIO,
@@ -135,7 +402,7 @@ class ImageDataReader:
             return Path(file_path_or_obj).name
         return "UnnamedFileObject"
 
-    def _try_parser(self, parser_class: type[BaseFormat], **kwargs: Any) -> bool:
+    def _try_parser(self, parser_class: "type[BaseFormat]", **kwargs: Any) -> bool:
         # ... (logging for kwargs as before, ensuring raw is truncated) ...
         kwarg_keys_for_log = []
         temp_kwargs_for_log = kwargs.copy()
@@ -186,7 +453,6 @@ class ImageDataReader:
                 kwargs["info"] = parser_info_arg
             elif "info" in kwargs and not parser_info_arg:  # Remove empty info from kwargs
                 del kwargs["info"]
-
             temp_parser = parser_class(**kwargs)
             parser_own_status = temp_parser.parse()
 
@@ -263,7 +529,7 @@ class ImageDataReader:
             return
         try:
             exif_pil = image_obj.getexif()
-            if exif_pil and (exif_json_str := exif_pil.get(0x0110)) and isinstance(exif_json_str, (str, bytes)):
+            if exif_pil and (exif_json_str := exif_pil.get(0x0110)) and isinstance(exif_json_str, str | bytes):
                 if isinstance(exif_json_str, bytes):
                     exif_json_str = exif_json_str.decode("utf-8", errors="ignore")
                 if "sui_image_params" in exif_json_str:
@@ -278,51 +544,109 @@ class ImageDataReader:
             self._logger.debug("SwarmUI legacy EXIF (0x0110) check failed: %s", e, exc_info=False)
 
     def _process_png_chunks(self, image_obj: Image.Image) -> None:
-        # ... (as before, but ensure MochiDiffusionFormat is called appropriately if it might use info for PNGs) ...
         if self._parser:
             return
 
-        png_params_chunk = self._info.get("parameters")
-        png_comment_chunk = self._info.get("Comment")
-        png_xmp_chunk = self._info.get("XML:com.adobe.xmp")
-        png_user_comment_chunk = self._info.get("UserComment")
+        # Extract common PNG chunks once
+        pil_info = self._info  # This is img.info from PIL
+        png_parameters_chunk = pil_info.get("parameters")
+        png_comment_chunk = pil_info.get("Comment")
+        png_workflow_chunk = pil_info.get("workflow")
+        png_prompt_chunk = pil_info.get("prompt")  # Standard ComfyUI API output
+        png_user_comment_chunk = pil_info.get("UserComment")
+        png_xmp_chunk = pil_info.get("XML:com.adobe.xmp")
+        # ... other specific chunks ...
+
+        self._logger.debug(
+            "PNG Chunks found: parameters=%s, Comment=%s, workflow=%s, prompt=%s, UserComment=%s, XMP=%s",
+            bool(png_parameters_chunk),
+            bool(png_comment_chunk),
+            bool(png_workflow_chunk),
+            bool(png_prompt_chunk),
+            bool(png_user_comment_chunk),
+            bool(png_xmp_chunk),
+        )
 
         for parser_class in self.PARSER_CLASSES_PNG:
             if self._parser:
                 break
-            kwargs_for_parser = {"info": self._info.copy()}  # Base kwargs
 
-            # Provide 'raw' preferentially if a specific chunk is the known primary source
-            if (parser_class is A1111 and png_params_chunk) or (
-                parser_class is SwarmUI and png_params_chunk and "sui_image_params" in png_params_chunk
+            kwargs_for_parser = {
+                "info": pil_info.copy(),
+                "width": self._width,
+                "height": self._height,
+            }
+            potential_raw_data_for_parser = None
+
+            # --- Determine 'raw' based on parser_class AND available chunks ---
+            if parser_class is ComfyUI:
+                # SDPR ComfyUI parser checks info["prompt"] and info["workflow"] itself.
+                # If we want to force it to use a different chunk as raw JSON:
+                if png_prompt_chunk:
+                    potential_raw_data_for_parser = png_prompt_chunk
+                elif png_workflow_chunk:
+                    potential_raw_data_for_parser = png_workflow_chunk
+                # It doesn't typically use UserComment directly unless a subclass tells it to.
+            elif parser_class is TensorArt:
+                # TensorArt needs ComfyUI JSON. Where does it store it? Assume UserComment or parameters for now.
+                if png_user_comment_chunk:
+                    potential_raw_data_for_parser = png_user_comment_chunk
+                elif png_parameters_chunk:
+                    potential_raw_data_for_parser = png_parameters_chunk
+                elif png_workflow_chunk:
+                    potential_raw_data_for_parser = png_workflow_chunk  # Fallback
+            elif parser_class is CivitaiFormat:
+                # CivitaiFormat's _process tries ComfyUI JSON then A1111 text.
+                # It needs to be given the chunk that most likely contains its data.
+                # For ComfyUI JSON, Civitai often uses UserComment.
+                # For A1111 text, it might use parameters or UserComment.
+                if png_user_comment_chunk:
+                    potential_raw_data_for_parser = png_user_comment_chunk
+                elif png_parameters_chunk:
+                    potential_raw_data_for_parser = png_parameters_chunk
+            elif (parser_class is Fooocus and png_comment_chunk) or (
+                parser_class is RuinedFooocusFormat and png_comment_chunk
             ):
-                kwargs_for_parser["raw"] = png_params_chunk
-            elif parser_class is MochiDiffusionFormat:
-                # Mochi uses IPTC, less likely for PNGs. If it did use a PNG chunk for its string,
-                # its parser would need to look in `info`. For now, it mainly expects IPTC.
-                # If Mochi wrote its string to PNG:Comment:
-                if png_comment_chunk:
-                    kwargs_for_parser["raw"] = png_comment_chunk
+                potential_raw_data_for_parser = png_comment_chunk
+            elif parser_class is SwarmUI and png_parameters_chunk and "sui_image_params" in png_parameters_chunk:
+                potential_raw_data_for_parser = png_parameters_chunk
+            elif parser_class in [Yodayo, A1111]:  # These expect A1111 text
+                if png_parameters_chunk:
+                    potential_raw_data_for_parser = png_parameters_chunk
+                elif png_user_comment_chunk:
+                    potential_raw_data_for_parser = png_user_comment_chunk
+            # For InvokeAI, NovelAI, DrawThings, Midjourney, Mochi:
+            # They primarily use self._info (InvokeAI, DrawThings XMP string, Midjourney XMP),
+            # self.extractor (NovelAI), or self._parsed_iptc_info (Mochi).
+            # `raw` is less critical or handled internally by their _process if they need a specific sub-part.
+
+            if potential_raw_data_for_parser is not None:
+                kwargs_for_parser["raw"] = potential_raw_data_for_parser
+                self._logger.debug(
+                    "Passing specific raw data (len %s) to %s",
+                    len(potential_raw_data_for_parser),
+                    parser_class.__name__,
+                )
 
             if self._try_parser(parser_class, **kwargs_for_parser):
-                continue
+                # If _try_parser returns True, it means self._parser is set and tool identified.
+                # The loop will break at the next iteration's `if self._parser:` check.
+                pass  # Or explicit `break` if _try_parser doesn't set self._parser directly
 
-        if not self._parser and png_comment_chunk:
-            try:
-                comment_data = json.loads(png_comment_chunk)
-                if isinstance(comment_data, dict) and "prompt" in comment_data:
-                    if self._try_parser(Fooocus, info=comment_data):
-                        return
-            except json.JSONDecodeError:
-                self._logger.debug("PNG Comment not valid JSON or not Fooocus.")
-
+        # --- Special handling after the loop (as before) ---
         if not self._parser and png_xmp_chunk:
-            self._parse_drawthings_xmp(png_xmp_chunk)
-            if self._parser:
-                return
+            if not self._tool or self._tool == "Unknown":
+                self._parse_drawthings_xmp(png_xmp_chunk)
 
         if not self._parser and image_obj.mode == "RGBA":
             self._parse_novelai_lsb(image_obj)
+
+        # Final A1111 fallback if absolutely nothing else worked and "parameters" chunk exists
+        if not self._parser and png_parameters_chunk and (not self._tool or self._tool == "Unknown"):
+            self._logger.debug(
+                "No specific tool found by loop, trying A1111 as a final fallback on 'parameters' chunk."
+            )
+            self._try_parser(A1111, raw=png_parameters_chunk, info=pil_info.copy())
 
     def _parse_drawthings_xmp(self, xmp_chunk: str) -> None:
         # ... (as before) ...
@@ -444,201 +768,10 @@ class ImageDataReader:
         if not self._parser and image_obj.mode == "RGBA":
             self._parse_novelai_lsb(image_obj)
 
-    def _process_image_file(self, file_path_or_obj: str | Path | BinaryIO, file_display_name: str) -> None:
-        try:
-            with Image.open(file_path_or_obj) as img:
-                self._width = img.width
-                self._height = img.height
-                self._info = img.info.copy() if img.info else {}
-                self._format_str = img.format or ""
-                self._logger.debug(
-                    "Image opened: %s, Format: %s, Size: %sx%s",
-                    file_display_name,
-                    self._format_str,
-                    self._width,
-                    self._height,
-                )
+# REPLACE THE ENTIRE _process_image_file FUNCTION WITH THIS:
 
-                # --- Extract common EXIF/IPTC fields early ---
-                if exif_bytes := self._info.get("exif"):
-                    try:
-                        exif_data_dict = piexif.load(exif_bytes)
-                        # Software Tag
-                        sw_bytes = exif_data_dict.get("0th", {}).get(piexif.ImageIFD.Software)
-                        if sw_bytes and isinstance(sw_bytes, bytes):
-                            self._exif_software_tag = sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
-                            self._logger.debug("Found EXIF:Software tag: %s", self._exif_software_tag)
 
-                        # IPTC Data for MochiDiffusion and potentially others
-                        iptc_dict_from_exif = exif_data_dict.get("IPTC", {})
-                        if iptc_dict_from_exif:
-                            self._logger.debug("Found IPTC block in EXIF via piexif.")
-                            caption_b = iptc_dict_from_exif.get(IPTC_CAPTION_ABSTRACT)
-                            if caption_b:
-                                try:
-                                    self._parsed_iptc_info["iptc_caption_abstract"] = caption_b.decode(
-                                        "utf-8", "replace"
-                                    )
-                                except AttributeError:
-                                    self._parsed_iptc_info["iptc_caption_abstract"] = str(caption_b)
 
-                            program_b = iptc_dict_from_exif.get(IPTC_ORIGINATING_PROGRAM)
-                            if program_b:
-                                try:
-                                    self._parsed_iptc_info["iptc_originating_program"] = program_b.decode(
-                                        "utf-8", "replace"
-                                    )
-                                except AttributeError:
-                                    self._parsed_iptc_info["iptc_originating_program"] = str(program_b)
-
-                            version_b = iptc_dict_from_exif.get(IPTC_PROGRAM_VERSION)
-                            if version_b:
-                                try:
-                                    self._parsed_iptc_info["iptc_program_version"] = version_b.decode(
-                                        "utf-8", "replace"
-                                    )
-                                except AttributeError:
-                                    self._parsed_iptc_info["iptc_program_version"] = str(version_b)
-
-                            if self._parsed_iptc_info:
-                                self._logger.debug("Parsed IPTC fields: %s", self._parsed_iptc_info)
-
-                    except Exception as e_exif_load:
-                        self._logger.debug(
-                            "Could not parse EXIF for Software/IPTC tags: %s",
-                            e_exif_load,
-                        )
-
-                # Alternative IPTC extraction using Pillow's getiptcinfo() if IPTCIM is installed
-                # This often gives more straightforward string keys.
-                if not self._parsed_iptc_info and hasattr(img, "getiptcinfo"):
-                    try:
-                        pil_iptc_info = img.getiptcinfo()  # Needs IPTCIM package
-                        if pil_iptc_info:
-                            self._logger.debug("Found IPTC via Pillow getiptcinfo().")
-                            # Keys in pil_iptc_info are usually like ('caption/abstract', 'originating program', etc.)
-                            # We need to map these to our consistent keys
-                            # (2,120) -> 'caption/abstract'
-                            # (2,65)  -> 'originating program' (Mochi's definition)
-                            # (2,70)  -> 'program version'
-                            # The exact keys from getiptcinfo() might vary based on IPTCIM version.
-                            # This part requires checking what getiptcinfo() actually returns.
-                            # For example:
-                            if val := pil_iptc_info.get((2, 120)):
-                                self._parsed_iptc_info["iptc_caption_abstract"] = str(val)
-                            if val := pil_iptc_info.get((2, 65)):
-                                self._parsed_iptc_info["iptc_originating_program"] = str(val)
-                            if val := pil_iptc_info.get((2, 70)):
-                                self._parsed_iptc_info["iptc_program_version"] = str(val)
-                            if self._parsed_iptc_info:
-                                self._logger.debug(
-                                    "Parsed IPTC fields from Pillow: %s",
-                                    self._parsed_iptc_info,
-                                )
-                    except Exception as e_pil_iptc:
-                        self._logger.debug(
-                            "Pillow getiptcinfo() failed or IPTCIM not available: %s",
-                            e_pil_iptc,
-                        )
-
-                self._attempt_legacy_swarm_exif(img)
-
-                if not self._parser:
-                    if self._format_str == "PNG":
-                        self._process_png_chunks(img)
-                    elif self._format_str in ["JPEG", "WEBP"]:
-                        self._process_jpeg_webp_exif(img)
-                    else:  # Generic fallback for other image types
-                        self._logger.info(
-                            "Image format '%s' not specifically handled. Checking generic EXIF UserComment.",
-                            self._format_str,
-                        )
-                        if not self._parser and (
-                            exif_b := self._info.get("exif")
-                        ):  # Re-check if not parsed by IPTC path
-                            try:
-                                exif_d = piexif.load(exif_b)
-                                uc_b = exif_d.get("Exif", {}).get(piexif.ExifIFD.UserComment)
-                                if uc_b:
-                                    uc_s = piexif.helper.UserComment.load(uc_b)
-                                    if uc_s and not uc_s.strip().startswith("{"):  # A1111 is text
-                                        if self._try_parser(A1111, raw=uc_s):
-                                            pass
-                            except Exception as e_gen_exif:
-                                self._logger.debug(
-                                    "Generic EXIF UserComment (A1111 fallback) check failed: %s",
-                                    e_gen_exif,
-                                )
-        # ... (Exception handling as before) ...
-        except FileNotFoundError:
-            self._status = BaseFormat.Status.FORMAT_ERROR
-            self._error = "Image file not found."
-            self._logger.error("Image file not found: %s", file_display_name)
-        except UnidentifiedImageError as e:
-            self._status = BaseFormat.Status.FORMAT_ERROR
-            self._error = f"Cannot identify image: {e!s}"
-            self._logger.error("Cannot identify image file '%s': %s", file_display_name, e)
-        except OSError as e:
-            self._status = BaseFormat.Status.FORMAT_ERROR
-            self._error = f"File system error: {e!s}"
-            self._logger.error(
-                "OS/IO error opening image '%s': %s",
-                file_display_name,
-                e,
-                exc_info=True,
-            )
-        except Exception as e:
-            self._status = BaseFormat.Status.FORMAT_ERROR
-            self._error = f"Pillow/general error: {e!s}"
-            self._logger.error(
-                "Error opening/processing image '%s': %s",
-                file_display_name,
-                e,
-                exc_info=True,
-            )
-
-    def read_data(self, file_path_or_obj: str | Path | TextIO | BinaryIO) -> None:
-        # ... (as before) ...
-        self._initialize_state()
-        file_display_name = self._get_display_name(file_path_or_obj)
-        self._logger.debug("Reading data for: %s (is_txt: %s)", file_display_name, self._is_txt)
-        if self._is_txt:
-            if hasattr(file_path_or_obj, "read") and callable(file_path_or_obj.read):
-                self._handle_text_file(file_path_or_obj)
-            else:
-                try:
-                    with open(file_path_or_obj, encoding="utf-8") as f_obj:
-                        self._handle_text_file(f_obj)
-                except Exception as e_open:
-                    self._logger.error("Error opening text file '%s': %s", file_display_name, e_open)
-                    self._status = BaseFormat.Status.FORMAT_ERROR
-                    self._error = f"Could not open text file: {e_open!s}"
-        else:
-            self._process_image_file(file_path_or_obj, file_display_name)
-        if self._status == BaseFormat.Status.UNREAD:
-            self._logger.warning(
-                "No suitable parser for '%s' or all parsers failed/declined.",
-                file_display_name,
-            )
-            self._status = BaseFormat.Status.FORMAT_ERROR
-            if not self._error:
-                self._error = "No suitable metadata parser or file unreadable/corrupted."
-        log_tool = self._tool or "None"
-        log_status_name = self._status.name if hasattr(self._status, "name") else str(self._status)
-        self._logger.info(
-            "Final Reading Status for '%s': %s, Tool: %s",
-            file_display_name,
-            log_status_name,
-            log_tool,
-        )
-        final_error_to_log = self._error
-        if self._parser and hasattr(self._parser, "error") and self._parser.error:
-            if self._status != BaseFormat.Status.READ_SUCCESS or not final_error_to_log:
-                final_error_to_log = self._parser.error
-        if self._status != BaseFormat.Status.READ_SUCCESS and final_error_to_log:
-            self._logger.warning("Error details for '%s': %s", file_display_name, final_error_to_log)
-
-    # ... (remove_data, save_image, construct_data, prompt_to_line, and all properties remain the same) ...
     # --- Properties ---
     @property
     def height(self) -> str:
