@@ -26,7 +26,7 @@ SWARM_PARAM_MAP: dict[str, str | list[str]] = {
 class SwarmUI(BaseFormat):
     tool = "StableSwarmUI"
 
-    def __init__(self, info: dict[str, Any] | None = None, raw: str = ""):
+    def __init__(self, info: dict | None = None, raw: str = "", **kwargs):  # noqa: ARG002
         # BaseFormat __init__ handles width, height, logger, etc.
         # We call super().__init__ first, then potentially modify self._info based on self._raw
         # The 'raw' passed to super might be the original raw, or if _info is None, this raw.

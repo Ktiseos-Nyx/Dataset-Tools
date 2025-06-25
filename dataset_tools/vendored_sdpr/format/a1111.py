@@ -327,9 +327,7 @@ class A1111(BaseFormat):
         if size_val_from_dict:
             # _extract_and_set_dimensions_from_string will update self._width, self._height,
             # and self._parameter["width"], self._parameter["height"], self._parameter["size"]
-            self._extract_and_set_dimensions_from_string(
-                size_val_from_dict, "Size", settings_dict, handled_keys_for_params
-            )
+            self._extract_and_set_dimensions_from_string(size_val_from_dict, "Size", handled_keys_for_params)
             # handled_keys_for_params.add("Size") is done by the method above if successful
 
         # Ensure self._width, self._height (from BaseFormat init or Size parsing)

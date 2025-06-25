@@ -6,6 +6,8 @@ from typing import Any  # Use Dict from typing
 
 from .a1111 import A1111
 
+# from ...metadata_engine import register_parser_class
+
 
 class YodayoFormat(A1111):
     # Class variable for the tool name this parser identifies.
@@ -14,7 +16,6 @@ class YodayoFormat(A1111):
     tool = "Yodayo/Moescape"
 
     YODAYO_PARAM_MAP = {
-        "Version": "tool_version",  # Yodayo often has a "Version" key in its settings
         "NGMS": "yodayo_ngms",  # "NGMS" seems specific to Yodayo examples
         # "Model" is handled by A1111; its format (UUID vs filename) is a hint in _is_yodayo_candidate.
         # "Lora hashes" (the specific key name) is a positive Yodayo indicator.
@@ -30,9 +31,6 @@ class YodayoFormat(A1111):
         **kwargs: Any,
     ):
         # Call A1111's __init__ which will call BaseFormat's __init__
-        # All these named args (info, raw, width, height, logger_obj) and **kwargs
-        # will be correctly passed to BaseFormat.__init__ if A1111.__init__
-        # also passes them correctly (i.e., A1111.__init__ must accept them or **kwargs).
         super().__init__(
             info=info,
             raw=raw,
@@ -46,12 +44,11 @@ class YodayoFormat(A1111):
     def _is_yodayo_candidate(self, settings_dict: dict[str, str]) -> bool:
         """Checks for Yodayo/Moescape specific markers in the parsed A1111 settings_dict.
         Called after the parent A1111 class has successfully parsed the text.
+        Relies more on NGMS, specific "Lora hashes" key, and EXIF software tag.
         """
-        # Use the tool name this class *intends* to identify for logging.
-        # self.tool might currently be "A1111 webUI" from the parent A1111._process().
         intended_parser_tool_name = self.__class__.tool
 
-        # Priority 1: EXIF:Software tag (most reliable if present)
+        # Priority 1: EXIF:Software tag (most reliable if present and specific)
         if self._info and "software_tag" in self._info:
             software = str(self._info["software_tag"]).lower()
             if "yodayo" in software or "moescape" in software:
@@ -61,7 +58,6 @@ class YodayoFormat(A1111):
                     self._info["software_tag"],
                 )
                 return True
-            # If software tag explicitly indicates A1111/Forge, it's NOT Yodayo
             if "automatic1111" in software or "forge" in software or "sd.next" in software:
                 self._logger.debug(
                     "[%s] EXIF:Software indicates A1111/Forge/SD.Next ('%s'). Not Yodayo/Moescape.",
@@ -70,65 +66,105 @@ class YodayoFormat(A1111):
                 )
                 return False
 
-        # Priority 2: Yodayo-specific parameter keys from settings_dict
+        # --- Strong Positive Yodayo Markers in settings_dict ---
         has_ngms = "NGMS" in settings_dict
-        has_yodayo_specific_lora_hashes_key = "Lora hashes" in settings_dict
-        # Note: A1111 often uses "Hashes: {..." (plural "Hashes", value is a dict string)
-        # Yodayo example showed "Lora hashes: id:hash,id:hash" (plural "hashes", value is comma-separated string)
+        has_yodayo_lora_hashes_key_format = "Lora hashes" in settings_dict
 
+        model_is_uuid_in_settings = False
+        if model_value := settings_dict.get("Model"):
+            if re.fullmatch(r"[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}", model_value, re.IGNORECASE):
+                model_is_uuid_in_settings = True
+
+        # --- Decision based on positive Yodayo markers ---
+        # Condition 1: NGMS is present. This is a very strong Yodayo signal.
         if has_ngms:
             self._logger.debug(
                 "[%s] Identified by presence of 'NGMS' parameter.",
                 intended_parser_tool_name,
             )
+            if model_is_uuid_in_settings:
+                self._logger.debug(
+                    "[%s] 'NGMS' present AND 'Model' is UUID. High confidence Yodayo.",
+                    intended_parser_tool_name,
+                )
             return True
 
-        if has_yodayo_specific_lora_hashes_key:
-            model_value = settings_dict.get("Model")  # Yodayo might use UUID for model name here
-            if model_value and re.fullmatch(r"[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}", model_value, re.IGNORECASE):
-                self._logger.debug(
-                    "[%s] Identified by 'Lora hashes' key AND UUID-like Model value.",
-                    intended_parser_tool_name,
-                )
-            else:
-                self._logger.debug(
-                    "[%s] Identified by 'Lora hashes' key (Model name is '%s', not UUID). This is a strong Yodayo signal.",
-                    intended_parser_tool_name,
-                    model_value,
-                )
-            return True  # The key "Lora hashes" itself is quite specific.
+        # Condition 2: Specific "Lora hashes" key is present AND Model is UUID.
+        if has_yodayo_lora_hashes_key_format and model_is_uuid_in_settings:
+            self._logger.debug(
+                "[%s] Identified by 'Lora hashes' key AND 'Model' is UUID.",
+                intended_parser_tool_name,
+            )
+            return True
 
-        # Priority 3: Negative indicators - presence of strong A1111/Forge markers
-        # These suggest it's more likely advanced A1111/Forge than Yodayo's typical output.
+        # Condition 3: Specific "Lora hashes" key is present (Model not UUID, NGMS not present).
+        # Check if Version string contradicts this by being clearly A1111/Forge.
+        if has_yodayo_lora_hashes_key_format:  # And previous conditions (NGMS, Model UUID) were false
+            version_str_from_settings = settings_dict.get("Version", "")
+            is_a1111_webui_version_pattern = r"v\d+\.\d+\.\d+"
+            is_likely_forge_version_pattern = (
+                r"forge" in version_str_from_settings.lower()
+                or re.match(r"v\d+\.\d+\.\d+.*-v\d+\.\d+\.\d+", version_str_from_settings)
+                or re.match(r"f\d+\.\d+\.\d+v\d+\.\d+\.\d+", version_str_from_settings)
+            )
+            if re.match(is_a1111_webui_version_pattern, version_str_from_settings) or is_likely_forge_version_pattern:
+                self._logger.debug(
+                    "[%s] Has 'Lora hashes' key, but 'Version' ('%s') looks like A1111/Forge. Declining.",
+                    intended_parser_tool_name,
+                    version_str_from_settings,
+                )
+                return False
+            self._logger.debug(
+                "[%s] Identified by 'Lora hashes' key. Version ('%s') not clearly A1111/Forge.",
+                intended_parser_tool_name,
+                version_str_from_settings,
+            )
+            return True
+
+        # --- If no strong positive Yodayo markers, check for strong A1111/Forge/SD.Next negative markers ---
+        version_str_from_settings = settings_dict.get("Version", "")
+        is_a1111_webui_version_pattern = r"v\d+\.\d+\.\d+"
+        is_likely_forge_version_pattern = (
+            r"forge" in version_str_from_settings.lower()
+            or re.match(r"v\d+\.\d+\.\d+.*-v\d+\.\d+\.\d+", version_str_from_settings)
+            or re.match(r"f\d+\.\d+\.\d+v\d+\.\d+\.\d+", version_str_from_settings)
+        )
+
+        if re.match(is_a1111_webui_version_pattern, version_str_from_settings) or is_likely_forge_version_pattern:
+            self._logger.debug(
+                "[%s] 'Version' string ('%s') matches A1111 WebUI or Forge pattern. Not Yodayo.",
+                intended_parser_tool_name,
+                version_str_from_settings,
+            )
+            return False
+
         has_a1111_forge_hires_params = (
             "Hires upscale" in settings_dict and "Hires upscaler" in settings_dict and "Hires steps" in settings_dict
         )
         has_ultimate_sd_upscale_params = any(k.startswith("Ultimate SD upscale") for k in settings_dict)
         has_adetailer_params = any(k.startswith("ADetailer") for k in settings_dict)
-
-        version_str = settings_dict.get("Version", "")
-        # Matches common Forge version strings like "v1.7.0- GIBBERISH-v1.8.0- GIBBERISH" or "f0.0.1v1.8.0..."
-        is_likely_forge_version = (
-            "forge" in version_str.lower()
-            or re.match(r"v\d+\.\d+\.\d+.*-v\d+\.\d+\.\d+", version_str)
-            or re.match(r"f\d+\.\d+\.\d+v\d+\.\d+\.\d+", version_str)
-        )
+        has_controlnet_params = any(k.startswith("ControlNet ") for k in settings_dict)
 
         if (
             has_a1111_forge_hires_params
             or has_ultimate_sd_upscale_params
-            or is_likely_forge_version
             or has_adetailer_params
+            or has_controlnet_params
         ):
             self._logger.debug(
-                "[%s] Found strong A1111/Forge specific markers (Hires, Ultimate Upscale, ADetailer, or Forge Version string). Not Yodayo/Moescape.",
+                "[%s] Found strong A1111/Forge/SD.Next specific parameter markers. Not Yodayo/Moescape. "
+                "(Hires: %s, UltimateUS: %s, ADetailer: %s, ControlNet: %s)",
                 intended_parser_tool_name,
+                has_a1111_forge_hires_params,
+                has_ultimate_sd_upscale_params,
+                has_adetailer_params,
+                has_controlnet_params,
             )
             return False
 
         self._logger.debug(
-            "[%s] No definitive Yodayo/Moescape positive markers (EXIF Software, NGMS, 'Lora hashes' key) found, "
-            "and no strong A1111/Forge negative markers found to explicitly exclude. Declining to ensure no misidentification of plain A1111.",
+            "[%s] No definitive Yodayo/Moescape positive markers (EXIF Software, NGMS, 'Lora hashes'+Model UUID) found, "
+            "and no strong A1111/Forge/SD.Next negative markers. Declining.",
             intended_parser_tool_name,
         )
         return False
@@ -138,7 +174,7 @@ class YodayoFormat(A1111):
             return []
         loras: list[dict[str, str]] = []
         parts = lora_hashes_str.split(",")
-        for part_str in parts:  # Renamed part to part_str to avoid conflict with re.match var
+        for part_str in parts:
             part_str = part_str.strip()
             if not part_str:
                 continue
@@ -153,7 +189,7 @@ class YodayoFormat(A1111):
             else:
                 self._logger.warning(
                     "[%s] Could not parse Lora hash part: '%s' from string '%s'",
-                    self.tool,
+                    self.tool,  # Use self.tool for runtime tool name
                     part_str,
                     lora_hashes_str,
                 )
@@ -174,7 +210,7 @@ class YodayoFormat(A1111):
             loras.append(lora_info)
             self._logger.debug(
                 "[%s] Extracted LoRA from prompt: %s, weight: %s",
-                self.tool,
+                self.tool,  # Use self.tool for runtime tool name
                 name_or_id,
                 weight,
             )
@@ -185,28 +221,20 @@ class YodayoFormat(A1111):
 
     def _process(self) -> None:
         # Call A1111's _process() to parse the A1111-style text first.
-        # This will set self.status, self._positive, self._negative, self._setting,
-        # self._parameter (with A1111 common keys), and self.tool (likely to "A1111 webUI").
         super()._process()
 
         if self.status != self.Status.READ_SUCCESS:
-            # If the parent A1111 parser failed, then this Yodayo parser also fails.
-            # The status and error message are already set by the parent.
             self._logger.debug(
                 "[%s] Parent A1111 _process did not result in READ_SUCCESS (status: %s). Yodayo parsing cannot proceed further.",
-                self.__class__.tool,
-                self.status.name,  # Use class tool name for logging context
+                self.__class__.tool,  # Use class tool for context before self.tool is potentially changed
+                self.status.name if hasattr(self.status, "name") else str(self.status),
             )
             return
 
-        # A1111 text was successfully parsed. Now, determine if it's *specifically* Yodayo.
         a1111_settings_dict: dict[str, str] = {}
-        if self._setting:  # self._setting was populated by A1111._process()
-            # Use the _parse_settings_string_to_dict method inherited from A1111
+        if self._setting:
             a1111_settings_dict = self._parse_settings_string_to_dict(self._setting)
 
-        # If no settings block was found by A1111, it's hard to check for Yodayo specifics from parameters.
-        # Rely on software tag if available, otherwise, it's not Yodayo.
         is_yodayo_sw_tag = (
             self._info
             and "software_tag" in self._info
@@ -216,6 +244,8 @@ class YodayoFormat(A1111):
             )
         )
 
+        # If A1111 parsing found no settings block, we can only rely on the software tag.
+        # If software tag also isn't Yodayo, then it's not Yodayo.
         if not a1111_settings_dict and not is_yodayo_sw_tag:
             self._logger.debug(
                 "[%s] A1111 parsing yielded no settings dictionary, and no Yodayo software tag. Declining.",
@@ -226,18 +256,13 @@ class YodayoFormat(A1111):
             return
 
         if not self._is_yodayo_candidate(a1111_settings_dict):
-            # It parsed as A1111, but doesn't meet specific Yodayo criteria.
-            # Set status to FORMAT_DETECTION_ERROR to signal ImageDataReader.
             self.status = self.Status.FORMAT_DETECTION_ERROR
             self._error = "A1111-like text parsed, but not identified as Yodayo/Moescape by specific markers."
-            # Log message is already handled within _is_yodayo_candidate
             return
 
-        # --- If we reach here, it's confirmed as Yodayo/Moescape ---
+        # --- Confirmed as Yodayo/Moescape ---
         self.tool = self.__class__.tool  # Set self.tool to "Yodayo/Moescape"
 
-        # Populate Yodayo-specific parameters into self._parameter.
-        # self._parameter already contains common A1111 params from parent call.
         handled_yodayo_keys_in_settings_dict = set()
         self._populate_parameters_from_map(
             a1111_settings_dict,
@@ -252,7 +277,6 @@ class YodayoFormat(A1111):
                 self._parameter["lora_hashes_data"] = self.parsed_loras_from_hashes
             handled_yodayo_keys_in_settings_dict.add("Lora hashes")
 
-        # Extract <lora:...> from prompts if parent A1111 didn't (it usually doesn't)
         if self._positive:
             cleaned_positive, extracted_loras_pos = self._extract_loras_from_prompt_text(self._positive)
             if extracted_loras_pos:
@@ -265,18 +289,9 @@ class YodayoFormat(A1111):
                 self._negative = cleaned_negative
                 self._parameter["loras_from_prompt_negative"] = extracted_loras_neg
 
-        # Rebuild self._setting to only include Yodayo-specific unhandled items,
-        # or items not part of A1111's standard SETTINGS_TO_PARAM_MAP or YODAYO_PARAM_MAP.
-        # For now, self._setting still holds the original A1111 settings block, which is usually acceptable.
-        # If a cleaner Yodayo-only settings string is desired:
-        # all_handled_keys = handled_yodayo_keys_in_settings_dict.copy()
-        # all_handled_keys.update(A1111.SETTINGS_TO_PARAM_MAP.keys()) # Keys handled by parent A1111
-        # self._setting = self._build_settings_string(
-        #     remaining_data_dict=a1111_settings_dict,
-        #     remaining_handled_keys=all_handled_keys,
-        #     include_standard_params=False # Already in self._parameter
-        # )
+        # self._setting currently holds the A1111 settings string.
+        # If needed, it could be rebuilt to only contain Yodayo-specific unhandled items,
+        # but for now, retaining the A1111 block is often fine as "Tool Specific Data Block".
 
         self._logger.info("[%s] Successfully processed and identified as Yodayo/Moescape.", self.tool)
-        # self.status is already READ_SUCCESS (from A1111 parent's successful parse).
-        # We have now refined self.tool and potentially self._parameter and prompts.
+        # self.status is already READ_SUCCESS from A1111 parent's successful parse.

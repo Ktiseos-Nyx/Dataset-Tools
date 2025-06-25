@@ -11,12 +11,10 @@ import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
-from typing import (  # Changed from typing.Any to typing.Dict for explicit Dict type hint
-    Any,
-)
+from typing import Any  # Changed from typing.Any to typing.Dict for explicit Dict type hint
 
-from ..constants import PARAMETER_PLACEHOLDER
-from ..logger import get_logger
+from ..constants import PARAMETER_PLACEHOLDER  # noqa: TID252
+from ..logger import get_logger  # noqa: TID252
 
 
 @dataclass
@@ -33,7 +31,7 @@ class RemainingDataConfig:
 class BaseFormat:
     # Define common parameter keys that parsers might try to populate.
     # Subclasses can override or extend this if they have a very different core set.
-    PARAMETER_KEY: list[str] = [
+    PARAMETER_KEY: list[str] = [  # noqa: RUF012
         "model",
         "model_hash",
         "sampler_name",
@@ -88,7 +86,7 @@ class BaseFormat:
         COMFYUI_ERROR = 4  # Specific errors from ComfyUI parsing
         MISSING_INFO = 5  # Required info/raw data not provided to parser
         FORMAT_DETECTION_ERROR = 6  # Parser determined the data is not for it
-        # PARTIAL_SUCCESS = 7   # Optional: if partial data extraction is considered a state
+        PARTIAL_SUCCESS = 7   # Optional: if partial data extraction is considered a state
 
     def __init__(
         self,
@@ -166,7 +164,7 @@ class BaseFormat:
             return self._status  # Already successfully parsed
 
         # Reset status for a fresh parse attempt (if re-parsing is allowed/intended)
-        # self.status = self.Status.UNREAD # Or handle this in ImageDataReader
+        self.status = self.Status.UNREAD # Or handle this in ImageDataReader
         self._error = ""  # Clear previous error
 
         try:
@@ -233,10 +231,7 @@ class BaseFormat:
     def _parameter_has_data(self) -> bool:
         if not self._parameter:
             return False
-        for value in self._parameter.values():
-            if value != self.DEFAULT_PARAMETER_PLACEHOLDER:
-                return True
-        return False
+        return any(value != self.DEFAULT_PARAMETER_PLACEHOLDER for value in self._parameter.values())
 
     def _populate_parameter(
         self,
@@ -263,7 +258,7 @@ class BaseFormat:
                     self._height = value_str
                 populated_any = True
             else:
-                self._logger.debug(
+                self._logger.debug(  # noqa: PLE1205
                     "Target key '%s' for source '%s' not in self.PARAMETER_KEY. Value '%s' not assigned.",
                     target_key,
                     source_key_for_debug,
@@ -326,12 +321,12 @@ class BaseFormat:
         self,
         size_str: str,
         source_key_for_debug: str,
-        data_dict_for_handled_keys: (dict[str, Any] | None) = None,  # Unused here, but for consistency
+        # data_dict_for_handled_keys: (dict[str, Any] | None) = None,
+        # Unused here, but for consistency with other methods
         handled_keys_set: set[str] | None = None,
     ):
         if handled_keys_set is None:
             handled_keys_set = set()
-
         size_str = str(size_str).strip()
         if not size_str:
             return
@@ -357,13 +352,13 @@ class BaseFormat:
         )
 
     @staticmethod
-    def _format_key_for_display(key: str) -> str:
+    def _format_key_for_display(self, key: str):
         return key.replace("_", " ").capitalize()
 
     @staticmethod
     def _remove_quotes_from_string(text: Any) -> str:
         text_str = str(text).strip()
-        if len(text_str) >= 2:
+        if len(text_str) >= 2:  # noqa: PLR2004
             if (text_str.startswith('"') and text_str.endswith('"')) or (
                 text_str.startswith("'") and text_str.endswith("'")
             ):
@@ -446,7 +441,7 @@ class BaseFormat:
         return pair_separator.join(final_parts)
 
     def _set_raw_from_info_if_empty(self):
-        """Sets self._raw from self._info (as JSON or str) if self._raw is currently empty."""
+        """Set self._raw from self._info (as JSON or str) if self._raw is currently empty."""
         if not self._raw and self._info:
             try:
                 self._raw = json.dumps(self._info)  # Attempt to serialize info as JSON
@@ -468,14 +463,14 @@ class BaseFormat:
     def height(self) -> str:
         # Prioritize self._parameter["height"] if set and valid, then self._height
         param_h = self._parameter.get("height", self.DEFAULT_PARAMETER_PLACEHOLDER)
-        if param_h != self.DEFAULT_PARAMETER_PLACEHOLDER and param_h != "0":
+        if param_h not in (self.DEFAULT_PARAMETER_PLACEHOLDER, "0"):
             return param_h
         return self._height if self._height != "0" else self.DEFAULT_PARAMETER_PLACEHOLDER
 
     @property
     def width(self) -> str:
         param_w = self._parameter.get("width", self.DEFAULT_PARAMETER_PLACEHOLDER)
-        if param_w != self.DEFAULT_PARAMETER_PLACEHOLDER and param_w != "0":
+        if param_w not in (self.DEFAULT_PARAMETER_PLACEHOLDER, "0"):
             return param_w
         return self._width if self._width != "0" else self.DEFAULT_PARAMETER_PLACEHOLDER
 
@@ -540,14 +535,14 @@ class BaseFormat:
             "is_sdxl": self.is_sdxl,
             "setting_string": self.setting,
             "tool_detected": self.tool,
-            "raw_metadata_preview": (self.raw[:500] + "..." if len(self.raw) > 500 else self.raw),
+            "raw_metadata_preview": (self.raw[:500] + "..." if len(self.raw) > 500 else self.raw),  # noqa: PLR2004
             "status": (self.status.name if hasattr(self.status, "name") else str(self.status)),
             "error_message": self.error,
         }
         # Add parameters, excluding placeholders AND empty dicts/lists
         for key, value in self.parameter.items():
             if value != self.DEFAULT_PARAMETER_PLACEHOLDER:
-                if isinstance(value, (dict, list)) and not value:
+                if isinstance(value, dict | list) and not value:
                     continue  # Skip empty dict/list
                 properties[key] = value
 
@@ -576,7 +571,7 @@ class BaseFormat:
         final_props_to_serialize = {
             k: v
             for k, v in properties.items()
-            if v != self.DEFAULT_PARAMETER_PLACEHOLDER and not (isinstance(v, (dict, list)) and not v)
+            if v != self.DEFAULT_PARAMETER_PLACEHOLDER and not (isinstance(v, dict | list) and not v)
         }
         # Remove width/height if they are "0" after all processing
         if final_props_to_serialize.get("width") == "0":
