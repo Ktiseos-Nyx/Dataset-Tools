@@ -1,0 +1,498 @@
+2025-06-29 16:55:43,615 - dataset_tools_app - INFO - CRITICAL WARNING [DT.metadata_parser]: Failed to import VENDORED SDPR components: No module named 'vendored_sdpr'. AI Parsing will be severely limited.
+2025-06-29 16:55:43,771 - dataset_tools_app - INFO - Dataset Tools v0.0.0-dev launching...
+2025-06-29 16:55:43,774 - dataset_tools_app - INFO - Application log level set to: INFO
+2025-06-29 16:55:44,720 - dataset_tools_app - INFO - Initial theme loaded: dark_blue.xml
+2025-06-29 16:55:44,812 - dataset_tools_app - INFO - [UI] Window resized to: 1024x768
+2025-06-29 16:55:44,814 - dataset_tools_app - INFO - [UI] Clearing file list and selections.
+2025-06-29 16:55:44,816 - dataset_tools_app - INFO - [UI] Attempting to load files from: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:55:44,819 - dataset_tools_app - INFO - [UI] FileLoader thread started for: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:55:44,820 - dataset_tools_app - INFO - [FileLoader] Starting to scan directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:55:44,833 - dataset_tools_app - INFO - Application window displayed, entering event loop
+2025-06-29 16:55:44,837 - dataset_tools_app - INFO - [FileLoader] Scanned 973 items (files/dirs) in directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:55:44,866 - dataset_tools_app - INFO - [FileLoader] Categorized files: 972 images, 0 text/schema, 0 models.
+2025-06-29 16:55:44,868 - dataset_tools_app - INFO - [FileLoader] Scan finished. Emitting result for folder: /Users/duskfall/Downloads/Metadata Samples. File to select: None. Counts: Img=972, Txt=0, Mdl=0
+2025-06-29 16:55:44,898 - dataset_tools_app - INFO - [UI] FileLoader finished. Received result for folder: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:55:44,902 - dataset_tools_app - INFO - [LeftPanel] Added 972 items to file list
+2025-06-29 16:55:44,929 - dataset_tools_app - INFO - [UI] Status: Selected: 00000-1626107238.jpeg
+2025-06-29 16:55:44,930 - dataset_tools_app - INFO - [UI] File selected: '00000-1626107238.jpeg'
+2025-06-29 16:55:44,931 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 16:55:44,933 - dataset_tools_app - INFO - [UI] File matches image format: '.jpeg'
+2025-06-29 16:55:44,934 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 16:55:44,940 - dataset_tools_app - INFO - [UI] Image loaded successfully: 450x658
+2025-06-29 16:55:44,943 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 16:55:44,944 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:55:44,945 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg #####
+2025-06-29 16:55:44,947 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:55:44,947 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg (Engine Primary Flow)
+2025-06-29 16:55:44,949 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 16:55:45,020 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 16:55:45,021 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:55:45,025 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 16:55:45,026 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 16:55:45,027 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:55:45,029 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 16:55:45,030 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 16:55:45,031 - dataset_tools_app - INFO - [MDFileReader] Reading JPG with pyexiv2: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 16:55:45,037 - dataset_tools_app - INFO - [DT.process_pyexiv2_data] AI parse failed, processing raw UserComment as a fallback.
+2025-06-29 16:55:45,038 - dataset_tools_app - INFO - [DT.metadata_parser]: Added/merged standard EXIF/XMP data (via pyexiv2).
+2025-06-29 16:55:45,039 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['standard_exif_data_section', '_dt_internal_placeholder_']
+2025-06-29 16:55:45,181 - dataset_tools_app - INFO - [UI] Auto-selected first file in the list.
+2025-06-29 16:56:23,447 - dataset_tools_app - INFO - [UI] Close event triggered. Saving settings.
+2025-06-29 16:56:23,476 - dataset_tools_app - INFO - Layout state saved successfully
+2025-06-29 16:56:23,555 - dataset_tools_app - INFO - Application exiting with code: 0
+2025-06-29 16:56:28,231 - dataset_tools_app - INFO - [DT.metadata_parser]: Successfully imported VENDORED SDPR components.
+2025-06-29 16:56:28,237 - dataset_tools_app - INFO - Configured external logger 'DSVendored_SDPR' with RichHandler at level INFO
+2025-06-29 16:56:28,314 - dataset_tools_app - INFO - Dataset Tools v0.0.0-dev launching...
+2025-06-29 16:56:28,315 - dataset_tools_app - INFO - Application log level set to: INFO
+2025-06-29 16:56:28,863 - dataset_tools_app - INFO - Initial theme loaded: dark_blue.xml
+2025-06-29 16:56:28,883 - dataset_tools_app - INFO - [UI] Window resized to: 1024x768
+2025-06-29 16:56:28,885 - dataset_tools_app - INFO - [UI] Clearing file list and selections.
+2025-06-29 16:56:28,886 - dataset_tools_app - INFO - [UI] Attempting to load files from: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:56:28,889 - dataset_tools_app - INFO - [UI] FileLoader thread started for: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:56:28,889 - dataset_tools_app - INFO - [FileLoader] Starting to scan directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:56:28,902 - dataset_tools_app - INFO - Application window displayed, entering event loop
+2025-06-29 16:56:28,932 - dataset_tools_app - INFO - [FileLoader] Scanned 973 items (files/dirs) in directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:56:28,959 - dataset_tools_app - INFO - [FileLoader] Categorized files: 972 images, 0 text/schema, 0 models.
+2025-06-29 16:56:28,968 - dataset_tools_app - INFO - [FileLoader] Scan finished. Emitting result for folder: /Users/duskfall/Downloads/Metadata Samples. File to select: None. Counts: Img=972, Txt=0, Mdl=0
+2025-06-29 16:56:29,023 - dataset_tools_app - INFO - [UI] FileLoader finished. Received result for folder: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:56:29,025 - dataset_tools_app - INFO - [LeftPanel] Added 972 items to file list
+2025-06-29 16:56:29,055 - dataset_tools_app - INFO - [UI] Status: Selected: 00000-1626107238.jpeg
+2025-06-29 16:56:29,056 - dataset_tools_app - INFO - [UI] File selected: '00000-1626107238.jpeg'
+2025-06-29 16:56:29,057 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 16:56:29,059 - dataset_tools_app - INFO - [UI] File matches image format: '.jpeg'
+2025-06-29 16:56:29,060 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 16:56:29,065 - dataset_tools_app - INFO - [UI] Image loaded successfully: 450x658
+2025-06-29 16:56:29,067 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 16:56:29,069 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:56:29,070 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg #####
+2025-06-29 16:56:29,072 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:56:29,073 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg (Engine Primary Flow)
+2025-06-29 16:56:29,075 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 16:56:29,106 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 16:56:29,108 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:56:29,112 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 16:56:29,113 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 16:56:29,115 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:56:29,116 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 16:56:29,118 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 16:56:29,119 - dataset_tools_app - INFO - [MDFileReader] Reading JPG with pyexiv2: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 16:56:29,121 - dataset_tools_app - INFO - [DT.process_pyexiv2_data] AI parse failed, processing raw UserComment as a fallback.
+2025-06-29 16:56:29,123 - dataset_tools_app - INFO - [DT.metadata_parser]: Added/merged standard EXIF/XMP data (via pyexiv2).
+2025-06-29 16:56:29,124 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['standard_exif_data_section', '_dt_internal_placeholder_']
+2025-06-29 16:56:29,257 - dataset_tools_app - INFO - [UI] Auto-selected first file in the list.
+2025-06-29 16:57:40,128 - dataset_tools_app - INFO - [UI] Status: Selected: 00002-2747468857.png
+2025-06-29 16:57:40,135 - dataset_tools_app - INFO - [UI] File selected: '00002-2747468857.png'
+2025-06-29 16:57:40,136 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png'
+2025-06-29 16:57:40,138 - dataset_tools_app - INFO - [UI] File matches image format: '.png'
+2025-06-29 16:57:40,150 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png'
+2025-06-29 16:57:40,251 - dataset_tools_app - INFO - [UI] Image loaded successfully: 1664x2432
+2025-06-29 16:57:40,255 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png
+2025-06-29 16:57:40,256 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:57:40,257 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png #####
+2025-06-29 16:57:40,259 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:57:40,260 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png (Engine Primary Flow)
+2025-06-29 16:57:40,261 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 16:57:40,296 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 16:57:40,297 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:57:40,299 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 1369). Now testing all parsers on it...
+2025-06-29 16:57:40,313 - dataset_tools_app - INFO - [DT.metadata_parser]: A critical error occurred in the new fallback logic: name 'DrawThings' is not defined
+Traceback (most recent call last):
+  File "/Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/metadata_parser.py", line 512, in parse_metadata
+    DrawThings,
+NameError: name 'DrawThings' is not defined
+2025-06-29 16:57:40,449 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:57:40,451 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 1369). Now testing all parsers on it...
+2025-06-29 16:57:40,452 - dataset_tools_app - INFO - [DT.metadata_parser]: A critical error occurred in the new fallback logic: name 'DrawThings' is not defined
+Traceback (most recent call last):
+  File "/Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/metadata_parser.py", line 578, in parse_metadata
+    DrawThings,
+NameError: name 'DrawThings' is not defined
+2025-06-29 16:57:40,669 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 16:57:40,670 - dataset_tools_app - INFO - [MDFileReader] Reading PNG with pyexiv2 for standard metadata: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png
+2025-06-29 16:57:42,743 - dataset_tools_app - INFO - [MDFileReader] pyexiv2 found no standard EXIF/IPTC/XMP in PNG: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png
+2025-06-29 16:57:42,850 - dataset_tools_app - INFO - [MDFileReader] Attempting fallback with Pillow for EXIF data...
+2025-06-29 16:57:43,040 - dataset_tools_app - INFO - [MDFileReader] Pillow found no EXIF data in 00002-2747468857.png
+2025-06-29 16:57:43,043 - dataset_tools_app - INFO - [MDFileReader] Pillow also found no EXIF data for /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png.
+2025-06-29 16:57:43,044 - dataset_tools_app - INFO - Failed to find/load significant metadata for file: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png
+2025-06-29 16:57:43,053 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['_dt_internal_placeholder_']
+2025-06-29 16:57:43,055 - dataset_tools_app - INFO - No meaningful metadata for 00002-2747468857.png
+2025-06-29 16:57:50,892 - dataset_tools_app - INFO - [UI] Status: Selected: 00003-2747468858.png
+2025-06-29 16:57:50,894 - dataset_tools_app - INFO - [UI] File selected: '00003-2747468858.png'
+2025-06-29 16:57:50,896 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00003-2747468858.png'
+2025-06-29 16:57:50,897 - dataset_tools_app - INFO - [UI] File matches image format: '.png'
+2025-06-29 16:57:50,898 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00003-2747468858.png'
+2025-06-29 16:57:51,211 - dataset_tools_app - INFO - [UI] Image loaded successfully: 1664x2432
+2025-06-29 16:57:51,214 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00003-2747468858.png
+2025-06-29 16:57:51,215 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:57:51,217 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00003-2747468858.png #####
+2025-06-29 16:57:51,218 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:57:51,219 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00003-2747468858.png (Engine Primary Flow)
+2025-06-29 16:57:51,221 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 16:57:51,251 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 16:57:51,252 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:57:51,254 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 1369). Now testing all parsers on it...
+2025-06-29 16:57:51,256 - dataset_tools_app - INFO - [DT.metadata_parser]: A critical error occurred in the new fallback logic: name 'DrawThings' is not defined
+Traceback (most recent call last):
+  File "/Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/metadata_parser.py", line 512, in parse_metadata
+    DrawThings,
+NameError: name 'DrawThings' is not defined
+2025-06-29 16:57:51,332 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:57:51,334 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 1369). Now testing all parsers on it...
+2025-06-29 16:57:51,341 - dataset_tools_app - INFO - [DT.metadata_parser]: A critical error occurred in the new fallback logic: name 'DrawThings' is not defined
+Traceback (most recent call last):
+  File "/Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/metadata_parser.py", line 578, in parse_metadata
+    DrawThings,
+NameError: name 'DrawThings' is not defined
+2025-06-29 16:57:51,417 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 16:57:51,418 - dataset_tools_app - INFO - [MDFileReader] Reading PNG with pyexiv2 for standard metadata: /Users/duskfall/Downloads/Metadata Samples/00003-2747468858.png
+2025-06-29 16:57:51,421 - dataset_tools_app - INFO - [MDFileReader] pyexiv2 found no standard EXIF/IPTC/XMP in PNG: /Users/duskfall/Downloads/Metadata Samples/00003-2747468858.png
+2025-06-29 16:57:51,422 - dataset_tools_app - INFO - [MDFileReader] Attempting fallback with Pillow for EXIF data...
+2025-06-29 16:57:51,591 - dataset_tools_app - INFO - [MDFileReader] Pillow found no EXIF data in 00003-2747468858.png
+2025-06-29 16:57:51,594 - dataset_tools_app - INFO - [MDFileReader] Pillow also found no EXIF data for /Users/duskfall/Downloads/Metadata Samples/00003-2747468858.png.
+2025-06-29 16:57:51,595 - dataset_tools_app - INFO - Failed to find/load significant metadata for file: /Users/duskfall/Downloads/Metadata Samples/00003-2747468858.png
+2025-06-29 16:57:51,596 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['_dt_internal_placeholder_']
+2025-06-29 16:57:51,598 - dataset_tools_app - INFO - No meaningful metadata for 00003-2747468858.png
+2025-06-29 16:59:12,903 - dataset_tools_app - INFO - [UI] Close event triggered. Saving settings.
+2025-06-29 16:59:12,912 - dataset_tools_app - INFO - Layout state saved successfully
+2025-06-29 16:59:12,941 - dataset_tools_app - INFO - Application exiting with code: 0
+2025-06-29 16:59:17,090 - dataset_tools_app - INFO - [DT.metadata_parser]: Successfully imported VENDORED SDPR components.
+2025-06-29 16:59:17,098 - dataset_tools_app - INFO - Configured external logger 'DSVendored_SDPR' with RichHandler at level INFO
+2025-06-29 16:59:17,255 - dataset_tools_app - INFO - Dataset Tools v0.0.0-dev launching...
+2025-06-29 16:59:17,258 - dataset_tools_app - INFO - Application log level set to: INFO
+2025-06-29 16:59:18,036 - dataset_tools_app - INFO - Initial theme loaded: dark_blue.xml
+2025-06-29 16:59:18,052 - dataset_tools_app - INFO - [UI] Window resized to: 1024x768
+2025-06-29 16:59:18,053 - dataset_tools_app - INFO - [UI] Clearing file list and selections.
+2025-06-29 16:59:18,055 - dataset_tools_app - INFO - [UI] Attempting to load files from: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:59:18,057 - dataset_tools_app - INFO - [UI] FileLoader thread started for: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:59:18,058 - dataset_tools_app - INFO - [FileLoader] Starting to scan directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:59:18,066 - dataset_tools_app - INFO - Application window displayed, entering event loop
+2025-06-29 16:59:18,075 - dataset_tools_app - INFO - [FileLoader] Scanned 973 items (files/dirs) in directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:59:18,108 - dataset_tools_app - INFO - [FileLoader] Categorized files: 972 images, 0 text/schema, 0 models.
+2025-06-29 16:59:18,110 - dataset_tools_app - INFO - [FileLoader] Scan finished. Emitting result for folder: /Users/duskfall/Downloads/Metadata Samples. File to select: None. Counts: Img=972, Txt=0, Mdl=0
+2025-06-29 16:59:18,128 - dataset_tools_app - INFO - [UI] FileLoader finished. Received result for folder: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 16:59:18,131 - dataset_tools_app - INFO - [LeftPanel] Added 972 items to file list
+2025-06-29 16:59:18,156 - dataset_tools_app - INFO - [UI] Status: Selected: 00000-1626107238.jpeg
+2025-06-29 16:59:18,197 - dataset_tools_app - INFO - [UI] File selected: '00000-1626107238.jpeg'
+2025-06-29 16:59:18,200 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 16:59:18,201 - dataset_tools_app - INFO - [UI] File matches image format: '.jpeg'
+2025-06-29 16:59:18,202 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 16:59:18,227 - dataset_tools_app - INFO - [UI] Image loaded successfully: 450x658
+2025-06-29 16:59:18,229 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 16:59:18,231 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:59:18,232 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg #####
+2025-06-29 16:59:18,233 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:59:18,234 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg (Engine Primary Flow)
+2025-06-29 16:59:18,235 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 16:59:18,285 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 16:59:18,286 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:59:18,289 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 16:59:18,291 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 16:59:18,292 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:59:18,293 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 16:59:18,294 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 16:59:18,295 - dataset_tools_app - INFO - [MDFileReader] Reading JPG with pyexiv2: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 16:59:18,297 - dataset_tools_app - INFO - [DT.process_pyexiv2_data] AI parse failed, processing raw UserComment as a fallback.
+2025-06-29 16:59:18,299 - dataset_tools_app - INFO - [DT.metadata_parser]: Added/merged standard EXIF/XMP data (via pyexiv2).
+2025-06-29 16:59:18,300 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['standard_exif_data_section', '_dt_internal_placeholder_']
+2025-06-29 16:59:18,478 - dataset_tools_app - INFO - [UI] Auto-selected first file in the list.
+2025-06-29 16:59:19,595 - dataset_tools_app - INFO - [UI] Status: Selected: 00001-4144862781.png
+2025-06-29 16:59:19,616 - dataset_tools_app - INFO - [UI] File selected: '00001-4144862781.png'
+2025-06-29 16:59:19,620 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png'
+2025-06-29 16:59:19,622 - dataset_tools_app - INFO - [UI] File matches image format: '.png'
+2025-06-29 16:59:19,623 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png'
+2025-06-29 16:59:19,851 - dataset_tools_app - INFO - [UI] Image loaded successfully: 1024x1536
+2025-06-29 16:59:19,853 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png
+2025-06-29 16:59:19,854 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:59:19,855 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png #####
+2025-06-29 16:59:19,856 - dataset_tools_app - INFO - ####################################################
+2025-06-29 16:59:19,858 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png (Engine Primary Flow)
+2025-06-29 16:59:19,859 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 16:59:19,868 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 16:59:19,869 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:59:19,871 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 478). Now testing all parsers on it...
+2025-06-29 16:59:19,872 - dataset_tools_app - INFO - [DT.metadata_parser]: A critical error occurred in the new fallback logic: name 'TensorArt' is not defined
+Traceback (most recent call last):
+  File "/Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/metadata_parser.py", line 517, in parse_metadata
+    TensorArt,
+NameError: name 'TensorArt' is not defined
+2025-06-29 16:59:19,962 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 16:59:19,964 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 478). Now testing all parsers on it...
+2025-06-29 16:59:19,966 - dataset_tools_app - INFO - [DT.metadata_parser]: A critical error occurred in the new fallback logic: name 'TensorArt' is not defined
+Traceback (most recent call last):
+  File "/Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/metadata_parser.py", line 583, in parse_metadata
+    TensorArt,
+NameError: name 'TensorArt' is not defined
+2025-06-29 16:59:20,020 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 16:59:20,021 - dataset_tools_app - INFO - [MDFileReader] Reading PNG with pyexiv2 for standard metadata: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png
+2025-06-29 16:59:20,023 - dataset_tools_app - INFO - [MDFileReader] pyexiv2 found no standard EXIF/IPTC/XMP in PNG: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png
+2025-06-29 16:59:20,024 - dataset_tools_app - INFO - [MDFileReader] Attempting fallback with Pillow for EXIF data...
+2025-06-29 16:59:20,090 - dataset_tools_app - INFO - [MDFileReader] Pillow found no EXIF data in 00001-4144862781.png
+2025-06-29 16:59:20,092 - dataset_tools_app - INFO - [MDFileReader] Pillow also found no EXIF data for /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png.
+2025-06-29 16:59:20,094 - dataset_tools_app - INFO - Failed to find/load significant metadata for file: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png
+2025-06-29 16:59:20,096 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['_dt_internal_placeholder_']
+2025-06-29 16:59:20,097 - dataset_tools_app - INFO - No meaningful metadata for 00001-4144862781.png
+2025-06-29 17:00:23,043 - dataset_tools_app - INFO - [UI] Close event triggered. Saving settings.
+2025-06-29 17:00:23,069 - dataset_tools_app - INFO - Layout state saved successfully
+2025-06-29 17:00:23,100 - dataset_tools_app - INFO - Application exiting with code: 0
+2025-06-29 17:00:26,603 - dataset_tools_app - INFO - [DT.metadata_parser]: Successfully imported VENDORED SDPR components.
+2025-06-29 17:00:26,611 - dataset_tools_app - INFO - Configured external logger 'DSVendored_SDPR' with RichHandler at level INFO
+2025-06-29 17:00:26,770 - dataset_tools_app - INFO - Dataset Tools v0.0.0-dev launching...
+2025-06-29 17:00:26,771 - dataset_tools_app - INFO - Application log level set to: INFO
+2025-06-29 17:00:27,476 - dataset_tools_app - INFO - Initial theme loaded: dark_blue.xml
+2025-06-29 17:00:27,496 - dataset_tools_app - INFO - [UI] Window resized to: 1024x768
+2025-06-29 17:00:27,498 - dataset_tools_app - INFO - [UI] Clearing file list and selections.
+2025-06-29 17:00:27,499 - dataset_tools_app - INFO - [UI] Attempting to load files from: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:00:27,500 - dataset_tools_app - INFO - [UI] FileLoader thread started for: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:00:27,507 - dataset_tools_app - INFO - [FileLoader] Starting to scan directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:00:27,517 - dataset_tools_app - INFO - Application window displayed, entering event loop
+2025-06-29 17:00:27,525 - dataset_tools_app - INFO - [FileLoader] Scanned 973 items (files/dirs) in directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:00:27,563 - dataset_tools_app - INFO - [FileLoader] Categorized files: 972 images, 0 text/schema, 0 models.
+2025-06-29 17:00:27,565 - dataset_tools_app - INFO - [FileLoader] Scan finished. Emitting result for folder: /Users/duskfall/Downloads/Metadata Samples. File to select: None. Counts: Img=972, Txt=0, Mdl=0
+2025-06-29 17:00:27,580 - dataset_tools_app - INFO - [UI] FileLoader finished. Received result for folder: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:00:27,582 - dataset_tools_app - INFO - [LeftPanel] Added 972 items to file list
+2025-06-29 17:00:27,608 - dataset_tools_app - INFO - [UI] Status: Selected: 00000-1626107238.jpeg
+2025-06-29 17:00:27,610 - dataset_tools_app - INFO - [UI] File selected: '00000-1626107238.jpeg'
+2025-06-29 17:00:27,611 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 17:00:27,612 - dataset_tools_app - INFO - [UI] File matches image format: '.jpeg'
+2025-06-29 17:00:27,613 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 17:00:27,618 - dataset_tools_app - INFO - [UI] Image loaded successfully: 450x658
+2025-06-29 17:00:27,620 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 17:00:27,622 - dataset_tools_app - INFO - ####################################################
+2025-06-29 17:00:27,623 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg #####
+2025-06-29 17:00:27,624 - dataset_tools_app - INFO - ####################################################
+2025-06-29 17:00:27,625 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg (Engine Primary Flow)
+2025-06-29 17:00:27,627 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 17:00:27,666 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 17:00:27,668 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 17:00:27,671 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 17:00:27,673 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 17:00:27,674 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 17:00:27,676 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 17:00:27,677 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 17:00:27,679 - dataset_tools_app - INFO - [MDFileReader] Reading JPG with pyexiv2: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 17:00:27,680 - dataset_tools_app - INFO - [DT.process_pyexiv2_data] AI parse failed, processing raw UserComment as a fallback.
+2025-06-29 17:00:27,682 - dataset_tools_app - INFO - [DT.metadata_parser]: Added/merged standard EXIF/XMP data (via pyexiv2).
+2025-06-29 17:00:27,683 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['standard_exif_data_section', '_dt_internal_placeholder_']
+2025-06-29 17:00:27,826 - dataset_tools_app - INFO - [UI] Auto-selected first file in the list.
+2025-06-29 17:00:29,116 - dataset_tools_app - INFO - [UI] Status: Selected: 00002-2454401836.png
+2025-06-29 17:00:29,118 - dataset_tools_app - INFO - [UI] File selected: '00002-2454401836.png'
+2025-06-29 17:00:29,119 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00002-2454401836.png'
+2025-06-29 17:00:29,120 - dataset_tools_app - INFO - [UI] File matches image format: '.png'
+2025-06-29 17:00:29,122 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00002-2454401836.png'
+2025-06-29 17:00:29,199 - dataset_tools_app - INFO - [UI] Image loaded successfully: 1024x1536
+2025-06-29 17:00:29,201 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00002-2454401836.png
+2025-06-29 17:00:29,202 - dataset_tools_app - INFO - ####################################################
+2025-06-29 17:00:29,203 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00002-2454401836.png #####
+2025-06-29 17:00:29,204 - dataset_tools_app - INFO - ####################################################
+2025-06-29 17:00:29,205 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00002-2454401836.png (Engine Primary Flow)
+2025-06-29 17:00:29,206 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 17:00:29,214 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 17:00:29,216 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 17:00:29,217 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 1050). Now testing all parsers on it...
+2025-06-29 17:00:29,219 - dataset_tools_app - INFO - [DT.metadata_parser]: A critical error occurred in the new fallback logic: name 'TensorArt' is not defined
+Traceback (most recent call last):
+  File "/Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/metadata_parser.py", line 517, in parse_metadata
+    TensorArt,
+NameError: name 'TensorArt' is not defined
+2025-06-29 17:00:29,310 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 17:00:29,312 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 1050). Now testing all parsers on it...
+2025-06-29 17:00:29,320 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback text was rescued but not understood by any known parser.
+2025-06-29 17:00:29,321 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 17:00:29,322 - dataset_tools_app - INFO - [MDFileReader] Reading PNG with pyexiv2 for standard metadata: /Users/duskfall/Downloads/Metadata Samples/00002-2454401836.png
+2025-06-29 17:00:29,324 - dataset_tools_app - INFO - [MDFileReader] pyexiv2 found no standard EXIF/IPTC/XMP in PNG: /Users/duskfall/Downloads/Metadata Samples/00002-2454401836.png
+2025-06-29 17:00:29,326 - dataset_tools_app - INFO - [MDFileReader] Attempting fallback with Pillow for EXIF data...
+2025-06-29 17:00:29,403 - dataset_tools_app - INFO - [MDFileReader] Pillow found no EXIF data in 00002-2454401836.png
+2025-06-29 17:00:29,404 - dataset_tools_app - INFO - [MDFileReader] Pillow also found no EXIF data for /Users/duskfall/Downloads/Metadata Samples/00002-2454401836.png.
+2025-06-29 17:00:29,406 - dataset_tools_app - INFO - Failed to find/load significant metadata for file: /Users/duskfall/Downloads/Metadata Samples/00002-2454401836.png
+2025-06-29 17:00:29,407 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['_dt_internal_placeholder_']
+2025-06-29 17:00:29,408 - dataset_tools_app - INFO - No meaningful metadata for 00002-2454401836.png
+2025-06-29 17:01:00,064 - dataset_tools_app - INFO - [UI] Close event triggered. Saving settings.
+2025-06-29 17:01:00,066 - dataset_tools_app - INFO - Layout state saved successfully
+2025-06-29 17:01:00,116 - dataset_tools_app - INFO - Application exiting with code: 0
+2025-06-29 17:01:05,935 - dataset_tools_app - INFO - [DT.metadata_parser]: Successfully imported VENDORED SDPR components.
+2025-06-29 17:01:06,015 - dataset_tools_app - INFO - Configured external logger 'DSVendored_SDPR' with RichHandler at level INFO
+2025-06-29 17:01:06,141 - dataset_tools_app - INFO - Dataset Tools v0.0.0-dev launching...
+2025-06-29 17:01:06,143 - dataset_tools_app - INFO - Application log level set to: INFO
+2025-06-29 17:01:06,666 - dataset_tools_app - INFO - Initial theme loaded: dark_blue.xml
+2025-06-29 17:01:06,686 - dataset_tools_app - INFO - [UI] Window resized to: 1024x768
+2025-06-29 17:01:06,688 - dataset_tools_app - INFO - [UI] Clearing file list and selections.
+2025-06-29 17:01:06,689 - dataset_tools_app - INFO - [UI] Attempting to load files from: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:01:06,691 - dataset_tools_app - INFO - [UI] FileLoader thread started for: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:01:06,693 - dataset_tools_app - INFO - [FileLoader] Starting to scan directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:01:06,703 - dataset_tools_app - INFO - Application window displayed, entering event loop
+2025-06-29 17:01:06,713 - dataset_tools_app - INFO - [FileLoader] Scanned 973 items (files/dirs) in directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:01:06,742 - dataset_tools_app - INFO - [FileLoader] Categorized files: 972 images, 0 text/schema, 0 models.
+2025-06-29 17:01:06,745 - dataset_tools_app - INFO - [FileLoader] Scan finished. Emitting result for folder: /Users/duskfall/Downloads/Metadata Samples. File to select: None. Counts: Img=972, Txt=0, Mdl=0
+2025-06-29 17:01:06,787 - dataset_tools_app - INFO - [UI] FileLoader finished. Received result for folder: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:01:06,790 - dataset_tools_app - INFO - [LeftPanel] Added 972 items to file list
+2025-06-29 17:01:06,817 - dataset_tools_app - INFO - [UI] Status: Selected: 00000-1626107238.jpeg
+2025-06-29 17:01:06,818 - dataset_tools_app - INFO - [UI] File selected: '00000-1626107238.jpeg'
+2025-06-29 17:01:06,819 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 17:01:06,821 - dataset_tools_app - INFO - [UI] File matches image format: '.jpeg'
+2025-06-29 17:01:06,822 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 17:01:06,827 - dataset_tools_app - INFO - [UI] Image loaded successfully: 450x658
+2025-06-29 17:01:06,829 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 17:01:06,830 - dataset_tools_app - INFO - ####################################################
+2025-06-29 17:01:06,831 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg #####
+2025-06-29 17:01:06,832 - dataset_tools_app - INFO - ####################################################
+2025-06-29 17:01:06,833 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg (Engine Primary Flow)
+2025-06-29 17:01:06,835 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 17:01:06,869 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 17:01:06,870 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 17:01:06,873 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 17:01:06,875 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 17:01:06,876 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 17:01:06,878 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 17:01:06,879 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 17:01:06,881 - dataset_tools_app - INFO - [MDFileReader] Reading JPG with pyexiv2: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 17:01:06,882 - dataset_tools_app - INFO - [DT.process_pyexiv2_data] AI parse failed, processing raw UserComment as a fallback.
+2025-06-29 17:01:06,884 - dataset_tools_app - INFO - [DT.metadata_parser]: Added/merged standard EXIF/XMP data (via pyexiv2).
+2025-06-29 17:01:06,885 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['standard_exif_data_section', '_dt_internal_placeholder_']
+2025-06-29 17:01:07,024 - dataset_tools_app - INFO - [UI] Auto-selected first file in the list.
+2025-06-29 17:01:08,060 - dataset_tools_app - INFO - [UI] Status: Selected: 00001-4144862781.png
+2025-06-29 17:01:08,061 - dataset_tools_app - INFO - [UI] File selected: '00001-4144862781.png'
+2025-06-29 17:01:08,062 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png'
+2025-06-29 17:01:08,063 - dataset_tools_app - INFO - [UI] File matches image format: '.png'
+2025-06-29 17:01:08,064 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png'
+2025-06-29 17:01:08,271 - dataset_tools_app - INFO - [UI] Image loaded successfully: 1024x1536
+2025-06-29 17:01:08,273 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png
+2025-06-29 17:01:08,275 - dataset_tools_app - INFO - ####################################################
+2025-06-29 17:01:08,275 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png #####
+2025-06-29 17:01:08,277 - dataset_tools_app - INFO - ####################################################
+2025-06-29 17:01:08,278 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png (Engine Primary Flow)
+2025-06-29 17:01:08,280 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 17:01:08,287 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 17:01:08,289 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 17:01:08,290 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 478). Now testing all parsers on it...
+2025-06-29 17:01:08,296 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback text was rescued but not understood by any known parser.
+2025-06-29 17:01:08,298 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 17:01:08,299 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 17:01:08,300 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 478). Now testing all parsers on it...
+2025-06-29 17:01:08,307 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback text was rescued but not understood by any known parser.
+2025-06-29 17:01:08,308 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 17:01:08,310 - dataset_tools_app - INFO - [MDFileReader] Reading PNG with pyexiv2 for standard metadata: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png
+2025-06-29 17:01:08,311 - dataset_tools_app - INFO - [MDFileReader] pyexiv2 found no standard EXIF/IPTC/XMP in PNG: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png
+2025-06-29 17:01:08,313 - dataset_tools_app - INFO - [MDFileReader] Attempting fallback with Pillow for EXIF data...
+2025-06-29 17:01:08,378 - dataset_tools_app - INFO - [MDFileReader] Pillow found no EXIF data in 00001-4144862781.png
+2025-06-29 17:01:08,380 - dataset_tools_app - INFO - [MDFileReader] Pillow also found no EXIF data for /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png.
+2025-06-29 17:01:08,381 - dataset_tools_app - INFO - Failed to find/load significant metadata for file: /Users/duskfall/Downloads/Metadata Samples/00001-4144862781.png
+2025-06-29 17:01:08,382 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['_dt_internal_placeholder_']
+2025-06-29 17:01:08,384 - dataset_tools_app - INFO - No meaningful metadata for 00001-4144862781.png
+2025-06-29 17:58:34,291 - dataset_tools_app - INFO - [UI] Close event triggered. Saving settings.
+2025-06-29 17:58:34,320 - dataset_tools_app - INFO - Layout state saved successfully
+2025-06-29 17:58:34,366 - dataset_tools_app - INFO - Application exiting with code: 0
+2025-06-29 17:58:39,932 - dataset_tools_app - INFO - [DT.metadata_parser]: Successfully imported VENDORED SDPR components.
+2025-06-29 17:58:39,936 - dataset_tools_app - INFO - Configured external logger 'DSVendored_SDPR' with RichHandler at level INFO
+2025-06-29 17:58:40,122 - dataset_tools_app - INFO - Dataset Tools v0.0.0-dev launching...
+2025-06-29 17:58:40,123 - dataset_tools_app - INFO - Application log level set to: INFO
+2025-06-29 17:58:40,668 - dataset_tools_app - INFO - Initial theme loaded: dark_blue.xml
+2025-06-29 17:58:40,683 - dataset_tools_app - INFO - [UI] Window resized to: 1024x768
+2025-06-29 17:58:40,685 - dataset_tools_app - INFO - [UI] Clearing file list and selections.
+2025-06-29 17:58:40,686 - dataset_tools_app - INFO - [UI] Attempting to load files from: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:58:40,688 - dataset_tools_app - INFO - [UI] FileLoader thread started for: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:58:40,689 - dataset_tools_app - INFO - [FileLoader] Starting to scan directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:58:40,697 - dataset_tools_app - INFO - Application window displayed, entering event loop
+2025-06-29 17:58:40,705 - dataset_tools_app - INFO - [FileLoader] Scanned 973 items (files/dirs) in directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:58:40,733 - dataset_tools_app - INFO - [FileLoader] Categorized files: 972 images, 0 text/schema, 0 models.
+2025-06-29 17:58:40,735 - dataset_tools_app - INFO - [FileLoader] Scan finished. Emitting result for folder: /Users/duskfall/Downloads/Metadata Samples. File to select: None. Counts: Img=972, Txt=0, Mdl=0
+2025-06-29 17:58:40,759 - dataset_tools_app - INFO - [UI] FileLoader finished. Received result for folder: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 17:58:40,761 - dataset_tools_app - INFO - [LeftPanel] Added 972 items to file list
+2025-06-29 17:58:40,786 - dataset_tools_app - INFO - [UI] Status: Selected: 00000-1626107238.jpeg
+2025-06-29 17:58:40,787 - dataset_tools_app - INFO - [UI] File selected: '00000-1626107238.jpeg'
+2025-06-29 17:58:40,788 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 17:58:40,789 - dataset_tools_app - INFO - [UI] File matches image format: '.jpeg'
+2025-06-29 17:58:40,790 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 17:58:40,795 - dataset_tools_app - INFO - [UI] Image loaded successfully: 450x658
+2025-06-29 17:58:40,796 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 17:58:40,797 - dataset_tools_app - INFO - ####################################################
+2025-06-29 17:58:40,798 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg #####
+2025-06-29 17:58:40,799 - dataset_tools_app - INFO - ####################################################
+2025-06-29 17:58:40,800 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg (Engine Primary Flow)
+2025-06-29 17:58:40,802 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 17:58:40,868 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 17:58:40,870 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 17:58:40,881 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 17:58:40,884 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 17:58:40,885 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 17:58:40,888 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 17:58:40,889 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 17:58:40,890 - dataset_tools_app - INFO - [MDFileReader] Reading JPG with pyexiv2: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 17:58:40,892 - dataset_tools_app - INFO - [DT.process_pyexiv2_data] AI parse failed, processing raw UserComment as a fallback.
+2025-06-29 17:58:40,893 - dataset_tools_app - INFO - [DT.metadata_parser]: Added/merged standard EXIF/XMP data (via pyexiv2).
+2025-06-29 17:58:40,895 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['standard_exif_data_section', '_dt_internal_placeholder_']
+2025-06-29 17:58:41,181 - dataset_tools_app - INFO - [UI] Auto-selected first file in the list.
+2025-06-29 18:03:48,913 - dataset_tools_app - INFO - [UI] Close event triggered. Saving settings.
+2025-06-29 18:03:48,920 - dataset_tools_app - INFO - Layout state saved successfully
+2025-06-29 18:03:48,944 - dataset_tools_app - INFO - Application exiting with code: 0
+2025-06-29 18:03:52,640 - dataset_tools_app - INFO - [DT.metadata_parser]: Successfully imported VENDORED SDPR components.
+2025-06-29 18:03:52,645 - dataset_tools_app - INFO - Configured external logger 'DSVendored_SDPR' with RichHandler at level INFO
+2025-06-29 18:03:52,851 - dataset_tools_app - INFO - Dataset Tools v0.0.0-dev launching...
+2025-06-29 18:03:52,853 - dataset_tools_app - INFO - Application log level set to: INFO
+2025-06-29 18:03:53,379 - dataset_tools_app - INFO - Initial theme loaded: dark_blue.xml
+2025-06-29 18:03:53,396 - dataset_tools_app - INFO - [UI] Window resized to: 1024x768
+2025-06-29 18:03:53,398 - dataset_tools_app - INFO - [UI] Clearing file list and selections.
+2025-06-29 18:03:53,400 - dataset_tools_app - INFO - [UI] Attempting to load files from: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 18:03:53,401 - dataset_tools_app - INFO - [UI] FileLoader thread started for: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 18:03:53,402 - dataset_tools_app - INFO - [FileLoader] Starting to scan directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 18:03:53,411 - dataset_tools_app - INFO - Application window displayed, entering event loop
+2025-06-29 18:03:53,424 - dataset_tools_app - INFO - [FileLoader] Scanned 973 items (files/dirs) in directory: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 18:03:53,447 - dataset_tools_app - INFO - [FileLoader] Categorized files: 972 images, 0 text/schema, 0 models.
+2025-06-29 18:03:53,449 - dataset_tools_app - INFO - [FileLoader] Scan finished. Emitting result for folder: /Users/duskfall/Downloads/Metadata Samples. File to select: None. Counts: Img=972, Txt=0, Mdl=0
+2025-06-29 18:03:53,473 - dataset_tools_app - INFO - [UI] FileLoader finished. Received result for folder: /Users/duskfall/Downloads/Metadata Samples
+2025-06-29 18:03:53,476 - dataset_tools_app - INFO - [LeftPanel] Added 972 items to file list
+2025-06-29 18:03:53,506 - dataset_tools_app - INFO - [UI] Status: Selected: 00000-1626107238.jpeg
+2025-06-29 18:03:53,507 - dataset_tools_app - INFO - [UI] File selected: '00000-1626107238.jpeg'
+2025-06-29 18:03:53,508 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 18:03:53,510 - dataset_tools_app - INFO - [UI] File matches image format: '.jpeg'
+2025-06-29 18:03:53,511 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-06-29 18:03:53,516 - dataset_tools_app - INFO - [UI] Image loaded successfully: 450x658
+2025-06-29 18:03:53,517 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 18:03:53,518 - dataset_tools_app - INFO - ####################################################
+2025-06-29 18:03:53,520 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg #####
+2025-06-29 18:03:53,521 - dataset_tools_app - INFO - ####################################################
+2025-06-29 18:03:53,522 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg (Engine Primary Flow)
+2025-06-29 18:03:53,524 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 18:03:53,593 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 18:03:53,594 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 18:03:53,597 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 18:03:53,599 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 18:03:53,600 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 18:03:53,602 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback (get_generation_parameters) found no data in the file.
+2025-06-29 18:03:53,603 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 18:03:53,604 - dataset_tools_app - INFO - [MDFileReader] Reading JPG with pyexiv2: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-06-29 18:03:53,606 - dataset_tools_app - INFO - [DT.process_pyexiv2_data] AI parse failed, processing raw UserComment as a fallback.
+2025-06-29 18:03:53,607 - dataset_tools_app - INFO - [DT.metadata_parser]: Added/merged standard EXIF/XMP data (via pyexiv2).
+2025-06-29 18:03:53,608 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['standard_exif_data_section', '_dt_internal_placeholder_']
+2025-06-29 18:03:53,728 - dataset_tools_app - INFO - [UI] Auto-selected first file in the list.
+2025-06-29 18:03:55,098 - dataset_tools_app - INFO - [UI] Status: Selected: 00002-2747468857.png
+2025-06-29 18:03:55,099 - dataset_tools_app - INFO - [UI] File selected: '00002-2747468857.png'
+2025-06-29 18:03:55,100 - dataset_tools_app - INFO - [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png'
+2025-06-29 18:03:55,101 - dataset_tools_app - INFO - [UI] File matches image format: '.png'
+2025-06-29 18:03:55,102 - dataset_tools_app - INFO - [UI] Loading image for preview: '/Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png'
+2025-06-29 18:03:55,208 - dataset_tools_app - INFO - [UI] Image loaded successfully: 1664x2432
+2025-06-29 18:03:55,210 - dataset_tools_app - INFO - [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png
+2025-06-29 18:03:55,211 - dataset_tools_app - INFO - ####################################################
+2025-06-29 18:03:55,212 - dataset_tools_app - INFO - [ModelTool] ##### read_metadata_from CALLED for: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png #####
+2025-06-29 18:03:55,213 - dataset_tools_app - INFO - ####################################################
+2025-06-29 18:03:55,214 - dataset_tools_app - INFO - [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png (Engine Primary Flow)
+2025-06-29 18:03:55,215 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to parse with MetadataEngine (Model check temporarily disabled).
+2025-06-29 18:03:55,223 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 18:03:55,225 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 18:03:55,226 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 1369). Now testing all parsers on it...
+2025-06-29 18:03:55,233 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback text was rescued but not understood by any known parser.
+2025-06-29 18:03:55,234 - dataset_tools_app - INFO - [DT.metadata_parser]: MetadataEngine found no parser. Attempting NEW intelligent fallback.
+2025-06-29 18:03:55,235 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback: Calling get_generation_parameters to rescue garbled text...
+2025-06-29 18:03:55,236 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback success! Rescued clean text (len: 1369). Now testing all parsers on it...
+2025-06-29 18:03:55,242 - dataset_tools_app - INFO - [DT.metadata_parser]: Fallback text was rescued but not understood by any known parser.
+2025-06-29 18:03:55,243 - dataset_tools_app - INFO - [DT.metadata_parser]: Attempting to read standard photo EXIF/XMP with pyexiv2.
+2025-06-29 18:03:55,244 - dataset_tools_app - INFO - [MDFileReader] Reading PNG with pyexiv2 for standard metadata: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png
+2025-06-29 18:03:55,245 - dataset_tools_app - INFO - [MDFileReader] pyexiv2 found no standard EXIF/IPTC/XMP in PNG: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png
+2025-06-29 18:03:55,246 - dataset_tools_app - INFO - [MDFileReader] Attempting fallback with Pillow for EXIF data...
+2025-06-29 18:03:55,397 - dataset_tools_app - INFO - [MDFileReader] Pillow found no EXIF data in 00002-2747468857.png
+2025-06-29 18:03:55,400 - dataset_tools_app - INFO - [MDFileReader] Pillow also found no EXIF data for /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png.
+2025-06-29 18:03:55,401 - dataset_tools_app - INFO - Failed to find/load significant metadata for file: /Users/duskfall/Downloads/Metadata Samples/00002-2747468857.png
+2025-06-29 18:03:55,402 - dataset_tools_app - INFO - [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['_dt_internal_placeholder_']
+2025-06-29 18:03:55,404 - dataset_tools_app - INFO - No meaningful metadata for 00002-2747468857.png
+2025-06-29 18:40:42,744 - dataset_tools_app - INFO - [UI] Close event triggered. Saving settings.
+2025-06-29 18:40:42,754 - dataset_tools_app - INFO - Layout state saved successfully
+2025-06-29 18:40:42,787 - dataset_tools_app - INFO - Application exiting with code: 0
