@@ -181,6 +181,10 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 
 - [ ] Enhanced metadata display and editing for model files (.safetensors, .gguf).
 - [ ] Full metadata editing and saving capabilities for images.
+- [ ] Improving Prompt UI/UX issues
+- [ ] Eventually moving back to TKinter for easier development.
+- [ ] Keeping Dusk from Committing Crimes in Code and Minecraft.
+- [ ] Trying to teach Dusk to make better commit messages.
 - [ ] Batch operations: e.g., export all metadata from a folder, rename files based on metadata.
 - [ ] Advanced search and filtering capabilities within loaded datasets based on metadata content.
 - [ ] Support for more image, text, and model metadata formats.
