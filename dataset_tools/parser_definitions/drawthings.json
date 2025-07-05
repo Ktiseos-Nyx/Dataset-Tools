@@ -1,0 +1,173 @@
+{
+  "parser_name": "Draw_Things",
+  "priority": 95,
+  "description": "Draw Things - Mobile-first AI art app with XMP metadata integration 📱✨",
+  "version": "2.1",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP", "TIFF"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have a UserComment inside XMP that is valid JSON. (From TOML)",
+      "source_type": "exif_user_comment",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: The JSON within must contain 'c' (prompt) and 'uc' (negative prompt) keys. (From TOML)",
+      "source_type": "json_from_xmp_exif_user_comment",
+      "operator": "json_contains_all_keys",
+      "expected_keys": ["c", "uc"]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "comment": "CRITICAL FIX: Changed source_type to 'exif_user_comment' which is supported by the engine.",
+      "source_type": "exif_user_comment",
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "direct_json_path",
+        "json_path": "c",
+        "value_type": "string",
+        "fallback": ""
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "direct_json_path",
+        "json_path": "uc",
+        "value_type": "string",
+        "fallback": ""
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "direct_json_path",
+        "json_path": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "direct_json_path",
+        "json_path": "steps",
+        "value_type": "integer",
+        "fallback": 20
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "direct_json_path",
+        "json_path": "scale",
+        "value_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "direct_json_path",
+        "json_path": "sampler",
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "direct_json_path",
+        "json_path": "model",
+        "value_type": "string",
+        "fallback": "Unknown Model"
+      },
+      {
+        "target_key": "parameters.denoising_strength",
+        "method": "direct_json_path",
+        "json_path": "strength",
+        "value_type": "float",
+        "fallback": 1.0
+      },
+      {
+        "comment": "UPGRADE: Added modern v2 block parsing for richer data.",
+        "target_key": "v2_data.aesthetic_score",
+        "method": "direct_json_path",
+        "json_path": "v2.aestheticScore",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "v2_data.negative_aesthetic_score",
+        "method": "direct_json_path",
+        "json_path": "v2.negativeAestheticScore",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "v2_data.loras",
+        "method": "direct_json_path",
+        "json_path": "v2.loras",
+        "value_type": "array",
+        "optional": true
+      },
+      {
+        "comment": "Use context as fallback for dimensions, as Draw Things sometimes omits them.",
+        "target_key": "parameters.width",
+        "method": "direct_json_path",
+        "json_path": "width",
+        "value_type": "integer",
+        "fallback_variable": "$CONTEXT.width"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "direct_json_path",
+        "json_path": "height",
+        "value_type": "integer",
+        "fallback_variable": "$CONTEXT.height"
+      }
+    ],
+
+    "output_template": {
+      "tool": "Draw Things",
+      "format": "XMP with JSON UserComment",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "model": "$parameters.model",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "denoising_strength": "$parameters.denoising_strength"
+      },
+      "drawthings_details": {
+        "comment": "UPGRADE: Added section for new rich metadata from v2 block.",
+        "aesthetic_score": "$v2_data.aesthetic_score",
+        "negative_aesthetic_score": "$v2_data.negative_aesthetic_score",
+        "loras": "$v2_data.loras"
+      },
+      "workflow_metadata": {
+        "parser": "Draw_Things v2.1",
+        "source": "XMP exif:UserComment",
+        "parser_priority": 95,
+        "confidence": "high",
+        "filename": "$FILE_NAME"
+      }
+    }
+  },
+
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "moderate"
+  },
+
+  "notes": [
+    "V2.1: Corrected input source to match engine, adopted TOML rules, added v2 metadata parsing.",
+    "Draw Things is a mobile-first AI art app for iOS/macOS - the pocket artist! 📱",
+    "Uses compact JSON keys in XMP metadata: 'c' for prompt, 'uc' for negative.",
+    "Perfect for analyzing artwork created on-the-go! ⚡✨"
+  ]
+}

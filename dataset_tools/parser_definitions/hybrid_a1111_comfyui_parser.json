@@ -1,0 +1,114 @@
+{
+  "parser_name": "Hybrid_A1111_ComfyUI",
+  "priority": 118,
+  "description": "Hybrid systems using ComfyUI backend with A1111-style metadata output",
+  "version": "2.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have A1111-style parameter text.",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_all",
+      "regex_patterns": ["Steps:", "Sampler:", "CFG scale:"]
+    },
+    {
+      "comment": "Rule 2: But must also indicate ComfyUI backend.",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_any",
+      "regex_patterns": [
+        "Version: ComfyUI",
+        "Tool version: ComfyUI",
+        "Backend: ComfyUI"
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "pil_info_key", "source_key": "parameters"},
+        {"source_type": "exif_user_comment"}
+      ]
+    },
+    "extraction_strategy": "a1111_text_parsing",
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "a1111_extract_prompt_positive"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "a1111_extract_prompt_negative"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.sampler",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Sampler",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG scale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.backend_version",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Version",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_version",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Tool version",
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "tool": "Hybrid A1111/ComfyUI",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "sampler": "$parameters.sampler",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "backend_version": "$parameters.backend_version",
+        "tool_version": "$parameters.tool_version"
+      },
+      "system_info": {
+        "hybrid_setup": true,
+        "backend": "ComfyUI",
+        "output_format": "A1111"
+      },
+      "raw_metadata": "$INPUT_STRING_ORIGINAL_CHUNK",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+  "notes": [
+    "Updated to current MetadataEngine format",
+    "Detects hybrid systems using ComfyUI backend with A1111 output",
+    "Experimental detection for bridged architectures"
+  ]
+}

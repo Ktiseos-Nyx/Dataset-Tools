@@ -1,0 +1,96 @@
+{
+  "parser_name": "ComfyUI_ComfyRoll_Ecosystem",
+  "priority": 121,
+  "description": "Parses complex ComfyRoll workflows using regex.",
+  "version": "1.1-regex-enabled",
+  "maintainer": "Ktiseos Nyx & AI Co-pilot",
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be a valid ComfyUI workflow first.",
+      "condition": "OR",
+      "rules": [
+        { "source_type": "pil_info_key", "source_key": "workflow", "operator": "is_valid_json" },
+        { "source_type": "pil_info_key", "source_key": "prompt", "operator": "is_valid_json" }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain a ComfyRoll node signature.",
+      "condition": "OR",
+      "rules": [
+        { "source_type": "pil_info_key", "source_key": "workflow", "operator": "contains_text", "text": "\"class_type\": \"CR " },
+        { "source_type": "pil_info_key", "source_key": "prompt", "operator": "contains_text", "text": "\"class_type\": \"CR " }
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        { "source_type": "pil_info_key", "source_key": "workflow" },
+        { "source_type": "pil_info_key", "source_key": "prompt" }
+      ],
+      "transformations": [{ "type": "json_decode_string_itself" }]
+    },
+    "fields": [
+      {
+        "target_key": "raw_workflow_json",
+        "method": "direct_input_data_as_string"
+      },
+      {
+        "target_key": "prompt",
+        "method": "regex_on_input_data_string",
+        "regex_pattern": "\"title\": \"Positive Prompt\".*?\"widgets_values\":\\s*\\[\\s*\"([\\s\\S]*?)\"\\s*\\]",
+        "fallback": "N/A"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "regex_on_input_data_string",
+        "regex_pattern": "\"title\": \"Negative Prompt\".*?\"widgets_values\":\\s*\\[\\s*\"([\\s\\S]*?)\"\\s*\\]",
+        "fallback": ""
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "regex_on_input_data_string",
+        "regex_pattern": "\"title\": \"Base Model\".*?\"widgets_values\":\\s*\\[\\s*\"(.*?\\.safetensors)\"\\s*\\]",
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "regex_on_input_data_string",
+        "regex_pattern": "\"title\": \"Seed\".*?\"widgets_values\":\\s*\\[\\s*(\\d+)",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "regex_on_input_data_string",
+        "regex_pattern": "\"title\": \"KSampler\".*?\"widgets_values\":\\s*\\[\\d+,\\s*\".*?\",\\s*(\\d+)",
+        "value_type": "integer",
+        "fallback": 20
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "regex_on_input_data_string",
+        "regex_pattern": "\"title\": \"KSampler\".*?\"widgets_values\":\\s*\\[\\d+,\\s*\".*?\",\\s*\\d+,\\s*(\\d+)",
+        "value_type": "float",
+        "fallback": 7.0
+      }
+    ],
+
+    "output_template": {
+      "tool": "ComfyUI (ComfyRoll)",
+      "parser": "ComfyRoll_Regex_v1.1",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale"
+      },
+      "raw_workflow_for_debug": "$raw_workflow_json"
+    }
+  }
+}

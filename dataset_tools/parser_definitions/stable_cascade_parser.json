@@ -1,0 +1,176 @@
+{
+  "parser_name": "Stable_Cascade_Parser",
+  "priority": 141,
+  "description": "Multi-stage Stable Cascade (Würstchen) architecture parser for ComfyUI",
+  "version": "2.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be a valid ComfyUI workflow.",
+      "condition": "OR",
+      "rules": [
+        { "source_type": "pil_info_key", "source_key": "workflow", "operator": "is_valid_json" },
+        { "source_type": "pil_info_key", "source_key": "prompt", "operator": "is_valid_json" }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain Stable Cascade nodes.",
+      "condition": "OR",
+      "rules": [
+        { "source_type": "pil_info_key", "source_key": "workflow", "operator": "contains_text", "text": "StableCascade_EmptyLatentImage" },
+        { "source_type": "pil_info_key", "source_key": "prompt", "operator": "contains_text", "text": "StableCascade_EmptyLatentImage" },
+        { "source_type": "pil_info_key", "source_key": "workflow", "operator": "contains_text", "text": "StableCascade_StageB_Conditioning" },
+        { "source_type": "pil_info_key", "source_key": "prompt", "operator": "contains_text", "text": "StableCascade_StageB_Conditioning" }
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "pil_info_key", "source_key": "workflow"},
+        {"source_type": "pil_info_key", "source_key": "prompt"}
+      ],
+      "transformations": [{"type": "json_decode_string_itself"}]
+    },
+
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": ["StableCascade_StageC_Conditioning", "KSampler"],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": ["CLIPTextEncode", "CLIPTextEncodeSDXL"]
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": ["StableCascade_StageC_Conditioning", "KSampler"],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": ["CLIPTextEncode", "CLIPTextEncodeSDXL"]
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "cfg",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "scheduler",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.stage_c_model",
+        "method": "comfy_get_node_by_class",
+        "class_type": "UNETLoader",
+        "field_name": "unet_name",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.stage_b_strength",
+        "method": "comfy_get_node_by_class",
+        "class_type": "StableCascade_StageB_Conditioning",
+        "field_name": "strength",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.stage_c_strength",
+        "method": "comfy_get_node_by_class",
+        "class_type": "StableCascade_StageC_Conditioning",
+        "field_name": "strength",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_get_node_by_class",
+        "class_type": "StableCascade_EmptyLatentImage",
+        "field_name": "width",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_get_node_by_class",
+        "class_type": "StableCascade_EmptyLatentImage",
+        "field_name": "height",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.compression",
+        "method": "comfy_get_node_by_class",
+        "class_type": "StableCascade_EmptyLatentImage",
+        "field_name": "compression",
+        "value_type": "integer",
+        "optional": true
+      }
+    ],
+
+    "output_template": {
+      "tool": "ComfyUI (Stable Cascade)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "stage_c_model": "$parameters.stage_c_model",
+        "stage_b_strength": "$parameters.stage_b_strength",
+        "stage_c_strength": "$parameters.stage_c_strength",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "compression": "$parameters.compression"
+      },
+      "architecture_info": {
+        "detected_as": "Stable Cascade multi-stage architecture",
+        "supports": ["Multi-stage generation", "Stage B conditioning", "Stage C conditioning", "Compression control"]
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+
+  "notes": [
+    "Updated to current MetadataEngine format",
+    "Stable Cascade multi-stage architecture support",
+    "Handles Stage B and Stage C conditioning",
+    "Includes compression and stage strength parameters"
+  ]
+}

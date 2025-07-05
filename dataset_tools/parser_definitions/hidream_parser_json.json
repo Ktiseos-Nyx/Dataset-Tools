@@ -1,0 +1,156 @@
+{
+  "parser_name": "HiDream_NextGen",
+  "priority": 138,
+  "description": "HiDream next-generation architecture with quadruple text encoders and LLaMA integration",
+  "version": "2.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be a valid ComfyUI workflow.",
+      "condition": "OR",
+      "rules": [
+        { "source_type": "pil_info_key", "source_key": "workflow", "operator": "is_valid_json" },
+        { "source_type": "pil_info_key", "source_key": "prompt", "operator": "is_valid_json" }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain HiDream-specific QuadrupleCLIPLoader node.",
+      "condition": "OR",
+      "rules": [
+        { "source_type": "pil_info_key", "source_key": "workflow", "operator": "contains_text", "text": "QuadrupleCLIPLoader" },
+        { "source_type": "pil_info_key", "source_key": "prompt", "operator": "contains_text", "text": "QuadrupleCLIPLoader" }
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "pil_info_key", "source_key": "workflow"},
+        {"source_type": "pil_info_key", "source_key": "prompt"}
+      ],
+      "transformations": [{"type": "json_decode_string_itself"}]
+    },
+
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": ["CLIPTextEncode", "CLIPTextEncodeSDXL"]
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": ["CLIPTextEncode", "CLIPTextEncodeSDXL"]
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "cfg",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "scheduler",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.hidream_model",
+        "method": "comfy_get_node_by_class",
+        "class_type": "UNETLoader",
+        "field_name": "unet_name",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.clip_models",
+        "method": "comfy_get_node_by_class",
+        "class_type": "QuadrupleCLIPLoader",
+        "field_name": "clip_name1",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_get_node_by_class",
+        "class_type": "EmptyLatentImage",
+        "field_name": "width",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_get_node_by_class",
+        "class_type": "EmptyLatentImage",
+        "field_name": "height",
+        "value_type": "integer",
+        "optional": true
+      }
+    ],
+
+    "output_template": {
+      "tool": "HiDream NextGen",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "hidream_model": "$parameters.hidream_model",
+        "clip_models": "$parameters.clip_models",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "architecture_info": {
+        "detected_as": "HiDream NextGen architecture",
+        "features": ["4x text encoders", "Modular DiT", "LLaMA integration", "Separate UNET loading"],
+        "text_encoders": ["CLIP-L", "CLIP-G", "T5XXL", "LLaMA 3.1 8B"]
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+
+  "notes": [
+    "Updated to current MetadataEngine format",
+    "HiDream's revolutionary 4-encoder architecture",
+    "Features QuadrupleCLIPLoader and modular components",
+    "Next-generation AI with LLaMA integration"
+  ]
+}
