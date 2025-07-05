@@ -7,6 +7,10 @@
 
 import sys
 from importlib import metadata
+from pathlib import Path
+
+# Configuration path
+CONFIG_PATH = Path(__file__).parent / "config"
 
 # --- Default Log Level ---
 # This will be used if the application isn't run via main.py's argument parsing,

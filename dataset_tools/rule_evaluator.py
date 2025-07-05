@@ -155,11 +155,15 @@ class RuleEvaluator:
         # --- TODO: Implement logic for these complex types ---
         elif source_type in [
             "json_from_xmp_exif_user_comment",
-            "json_from_usercomment_or_png_chunk",
-            "pil_info_key_json_path_query"
+            "json_from_usercomment_or_png_chunk"
         ]:
             self.logger.warning("Source type '%s' is defined but not yet implemented.", source_type)
             return None, False
+            
+        # Handle pil_info_key_json_path_query - this IS implemented, check operator handling below
+        elif source_type == "pil_info_key_json_path_query":
+            value_at_path, found = self._get_data_from_json_path(rule, context_data)
+            return value_at_path, found
 
         else: # Final catch-all
             if source_type is not None:

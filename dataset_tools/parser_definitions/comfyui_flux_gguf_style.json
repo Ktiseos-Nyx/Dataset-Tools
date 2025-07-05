@@ -80,20 +80,73 @@
         "method": "comfy_get_node_by_class",
         "class_type": "KSamplerSelect",
         "field_name": "sampler_name"
+      },
+      {
+        "comment": "Extract T5 model from DualCLIPLoaderGGUF",
+        "target_key": "parameters.t5_model",
+        "method": "comfy_get_node_by_class",
+        "class_type": "DualCLIPLoaderGGUF",
+        "field_name": "clip_name1",
+        "optional": true
+      },
+      {
+        "comment": "Extract CLIP model from DualCLIPLoaderGGUF",
+        "target_key": "parameters.clip_model",
+        "method": "comfy_get_node_by_class",
+        "class_type": "DualCLIPLoaderGGUF",
+        "field_name": "clip_name2",
+        "optional": true
+      },
+      {
+        "comment": "Extract guidance scale from BasicGuider",
+        "target_key": "parameters.guidance_scale",
+        "method": "comfy_get_node_by_class",
+        "class_type": "BasicGuider",
+        "field_name": "guidance_scale",
+        "optional": true
+      },
+      {
+        "comment": "Extract steps from SamplerCustomAdvanced",
+        "target_key": "parameters.steps",
+        "method": "comfy_get_node_by_class",
+        "class_type": "SamplerCustomAdvanced",
+        "field_name": "steps",
+        "optional": true
+      },
+      {
+        "comment": "Extract seed from SamplerCustomAdvanced",
+        "target_key": "parameters.seed",
+        "method": "comfy_get_node_by_class",
+        "class_type": "SamplerCustomAdvanced",
+        "field_name": "seed",
+        "optional": true
       }
     ],
 
     "output_template": {
       "tool": "ComfyUI (FLUX/GGUF)",
-      "parser_version": "flux_specific",
+      "parser_version": "flux_specific_enhanced",
       "prompt": "$prompt",
       "parameters": {
         "model": "$parameters.model",
-        "sampler_name": "$parameters.sampler_name"
+        "sampler_name": "$parameters.sampler_name",
+        "t5_model": "$parameters.t5_model",
+        "clip_model": "$parameters.clip_model",
+        "guidance_scale": "$parameters.guidance_scale",
+        "steps": "$parameters.steps",
+        "seed": "$parameters.seed"
       },
       "workflow_info": {
         "detected_as": "FLUX workflow",
-        "uses_gguf": true
+        "uses_gguf": true,
+        "dual_clip": true,
+        "t5_enabled": true
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
       }
     }
   }

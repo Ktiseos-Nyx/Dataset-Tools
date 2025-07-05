@@ -354,6 +354,50 @@ def parse_metadata(file_path_named: str) -> dict:
         placeholder_key_str = "_dt_internal_placeholder_"
 
     nfo(f"[DT.metadata_parser]: >>> ENTERING parse_metadata for: {file_path_named}")
+    
+    # Try new MetadataEngine first (enhanced parsers including Forge, T5, Flux, etc.)
+    try:
+        from .metadata_engine import get_metadata_engine
+        
+        parser_definitions_path = Path(__file__).parent / "parser_definitions"
+        if parser_definitions_path.exists():
+            nfo("[DT.metadata_parser]: Attempting to use enhanced MetadataEngine")
+            engine = get_metadata_engine(str(parser_definitions_path))
+            result = engine.get_parser_for_file(file_path_named)
+            
+            if result and isinstance(result, dict):
+                nfo(f"[DT.metadata_parser]: Enhanced MetadataEngine succeeded. Tool: {result.get('tool', 'Unknown')}")
+                
+                # Convert MetadataEngine result to UI format
+                final_ui_dict[UpField.PROMPT.value] = {
+                    "Positive": result.get("prompt", ""),
+                    "Negative": result.get("negative_prompt", "")
+                }
+                
+                parameters = result.get("parameters", {})
+                if parameters:
+                    # Ensure parameters is a dictionary, not a string representation
+                    if isinstance(parameters, str):
+                        try:
+                            import json
+                            parameters = json.loads(parameters)
+                        except (json.JSONDecodeError, ValueError):
+                            parameters = {}
+                    if isinstance(parameters, dict):
+                        final_ui_dict[DownField.GENERATION_DATA.value] = parameters
+                    
+                final_ui_dict[DownField.RAW_DATA.value] = result.get("raw_metadata", str(result))
+                final_ui_dict.setdefault(placeholder_key_str, {})["Parser Used"] = f"Enhanced MetadataEngine ({result.get('tool', 'Unknown')})"
+                final_ui_dict.setdefault(placeholder_key_str, {})["Tool"] = result.get("tool", "Unknown")
+                potential_ai_parsed = True
+                
+                # If successful, skip vendored SDPR and return result
+                nfo(f"[DT.metadata_parser]: <<< EXITING parse_metadata (Enhanced). Returning keys: {list(final_ui_dict.keys())}")
+                return final_ui_dict
+            else:
+                nfo("[DT.metadata_parser]: Enhanced MetadataEngine found no matching parser, falling back to vendored SDPR")
+    except Exception as e:
+        nfo(f"[DT.metadata_parser]: Enhanced MetadataEngine failed: {e}, falling back to vendored SDPR")
 
     if VENDORED_SDPR_OK and ImageDataReader is not None and BaseFormat is not None:
         vendored_reader_instance = None

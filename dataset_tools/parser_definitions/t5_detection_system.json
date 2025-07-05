@@ -1,8 +1,8 @@
 {
   "parser_name": "ComfyUI_T5_Architecture",
   "priority": 85,
-  "description": "Detects T5-based model architectures in ComfyUI workflows - e.g., SD3, Flux, PixArt",
-  "version": "2.0",
+  "description": "Advanced T5-based model architecture detection for SD3, Flux, PixArt, AuraFlow, and HunyuanDiT",
+  "version": "3.0",
   "maintainer": "Ktiseos Nyx",
   "target_file_types": ["PNG"],
 
@@ -16,7 +16,7 @@
       ]
     },
     {
-      "comment": "Rule 2: The workflow must contain T5-based architecture nodes.",
+      "comment": "Rule 2: Enhanced T5 architecture detection with comprehensive node types",
       "source_type": "pil_info_key_json_path_query",
       "source_key_options": ["workflow", "prompt"],
       "json_query_type": "has_any_node_class_type",
@@ -28,7 +28,18 @@
         "T5TextEncode",
         "CLIPTextEncodeSD3",
         "PixArtTextEncode",
-        "AuraT5TextEncode"
+        "AuraT5TextEncode",
+        "SD3CheckpointLoader",
+        "FluxGuidance",
+        "PixArtCheckpointLoader",
+        "PixArtSampler",
+        "AuraFlowLoader",
+        "AuraFlowSampler",
+        "HunyuanDiTLoader",
+        "HyditTokenizer",
+        "HunyuanTextEncode",
+        "ModelSamplingFlux",
+        "BasicGuider"
       ]
     }
   ],
@@ -106,6 +117,18 @@
         "method": "comfy_get_node_by_class",
         "class_type": "DualCLIPLoader",
         "field_name": "clip_name2",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.architecture_type",
+        "method": "comfy_detect_t5_architecture",
+        "architecture_families": {
+          "sd3": ["SD3CheckpointLoader", "TripleCLIPLoader", "CLIPTextEncodeSD3"],
+          "flux": ["DualCLIPLoaderGGUF", "FluxGuidance", "ModelSamplingFlux"],
+          "pixart": ["PixArtCheckpointLoader", "PixArtTextEncode", "PixArtSampler"],
+          "auraflow": ["AuraFlowLoader", "AuraT5TextEncode", "AuraFlowSampler"],
+          "hunyuan": ["HunyuanDiTLoader", "HyditTokenizer", "HunyuanTextEncode"]
+        },
         "optional": true
       },
       {

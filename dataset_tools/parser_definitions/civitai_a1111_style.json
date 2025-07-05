@@ -1,6 +1,6 @@
 {
   "parser_name": "Civitai (A1111-Style String)",
-  "priority": 115,
+  "priority": 161,
   "target_file_types": [
     "PNG",
     "JPEG",

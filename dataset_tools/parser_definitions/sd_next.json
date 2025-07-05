@@ -1,6 +1,6 @@
 {
   "parser_name": "SD_Next",
-  "priority": 135,
+  "priority": 162,
   "description": "SD.Next - Modern Stable Diffusion WebUI with Diffusers backend",
   "version": "1.0",
   "maintainer": "Ktiseos Nyx",

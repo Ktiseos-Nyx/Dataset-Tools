@@ -31,6 +31,11 @@ class ComfyUIExtractor:
             "comfy_traverse_for_field": self._extract_comfy_traverse_field,
             "comfy_get_node_by_class": self._extract_comfy_node_by_class,
             "comfy_get_workflow_input": self._extract_comfy_workflow_input,
+            # Simple ComfyUI parser methods
+            "comfyui_extract_prompt_from_workflow": self._extract_prompt_from_workflow,
+            "comfyui_extract_negative_prompt_from_workflow": self._extract_negative_prompt_from_workflow,
+            "comfyui_extract_workflow_parameters": self._extract_workflow_parameters,
+            "comfyui_extract_raw_workflow": self._extract_raw_workflow,
         }
 
     def _extract_comfy_text_from_clip_encode_nodes(
@@ -42,41 +47,82 @@ class ComfyUIExtractor:
 
         prompts = {"positive": "", "negative": ""}
 
-        # Look for nodes in the data
-        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+        # Handle workflow format (nodes array)
+        if "nodes" in data and isinstance(data["nodes"], list):
+            nodes = data["nodes"]
+            for node in nodes:
+                if not isinstance(node, dict):
+                    continue
 
-        for node_id, node_data in nodes.items():
-            if not isinstance(node_data, dict):
-                continue
+                # Check if this is a CLIPTextEncode node
+                node_type = node.get("type", "")
+                if "CLIPTextEncode" not in node_type:
+                    continue
 
-            # Check if this is a CLIPTextEncode node
-            class_type = node_data.get("class_type", node_data.get("type", ""))
-            if "CLIPTextEncode" not in class_type:
-                continue
+                # Extract the text from widgets_values
+                widgets_values = node.get("widgets_values", [])
+                if widgets_values and len(widgets_values) > 0:
+                    text = str(widgets_values[0])
+                    
+                    if text:
+                        # Smart heuristic: detect negative prompts by content
+                        text_lower = text.lower()
+                        is_negative = (
+                            "embedding:negatives" in text or
+                            "negatives\\" in text or
+                            text.startswith("(") and ":" in text and len(text) < 100 or  # Often negative embeddings
+                            "bad" in text_lower or
+                            "worst" in text_lower or
+                            "low quality" in text_lower
+                        )
+                        
+                        if is_negative and not prompts["negative"]:
+                            prompts["negative"] = text
+                        elif not is_negative and not prompts["positive"]:
+                            prompts["positive"] = text
+                        elif not prompts["negative"] and prompts["positive"]:
+                            # If we have positive but no negative, this might be negative
+                            prompts["negative"] = text
+                        elif not prompts["positive"] and prompts["negative"]:
+                            # If we have negative but no positive, this might be positive
+                            prompts["positive"] = text
 
-            # Extract the text
-            text = ""
-            inputs = node_data.get("inputs", {})
-            if "text" in inputs:
-                text = str(inputs["text"])
-            else:
-                # Fallback to widget values
-                widgets = node_data.get("widgets_values", [])
-                if widgets:
-                    text = str(widgets[0])
+        # Handle prompt format (nodes dict) - fallback to original logic
+        else:
+            nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
 
-            if not text:
-                continue
+            for node_id, node_data in nodes.items():
+                if not isinstance(node_data, dict):
+                    continue
 
-            # Determine if it's positive or negative
-            meta = node_data.get("_meta", {})
-            title = meta.get("title", "").lower()
+                # Check if this is a CLIPTextEncode node
+                class_type = node_data.get("class_type", node_data.get("type", ""))
+                if "CLIPTextEncode" not in class_type:
+                    continue
 
-            if "negative" in title:
-                prompts["negative"] = text
-            elif "positive" in title or not prompts["positive"]:
-                # Use as positive if explicitly marked or if we don't have one yet
-                prompts["positive"] = text
+                # Extract the text
+                text = ""
+                inputs = node_data.get("inputs", {})
+                if "text" in inputs:
+                    text = str(inputs["text"])
+                else:
+                    # Fallback to widget values
+                    widgets = node_data.get("widgets_values", [])
+                    if widgets:
+                        text = str(widgets[0])
+
+                if not text:
+                    continue
+
+                # Determine if it's positive or negative
+                meta = node_data.get("_meta", {})
+                title = meta.get("title", "").lower()
+
+                if "negative" in title:
+                    prompts["negative"] = text
+                elif "positive" in title or not prompts["positive"]:
+                    # Use as positive if explicitly marked or if we don't have one yet
+                    prompts["positive"] = text
 
         return prompts
 
@@ -88,7 +134,14 @@ class ComfyUIExtractor:
             return {}
 
         settings = {}
-        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+        
+        # Handle workflow format (nodes array) vs prompt format (nodes dict)
+        if "nodes" in data and isinstance(data["nodes"], list):
+            # Workflow format - already handled in _extract_workflow_parameters
+            return settings
+        else:
+            # Prompt format
+            nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
 
         for node_id, node_data in nodes.items():
             if not isinstance(node_data, dict):
@@ -236,3 +289,138 @@ class ComfyUIExtractor:
                 return workflow["inputs"].get(input_name)
 
         return None
+
+    # Simple ComfyUI parser methods for ComfyUI_Simple parser
+    
+    def _extract_prompt_from_workflow(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> str:
+        """Extract positive prompt from ComfyUI workflow."""
+        # Parse JSON string if needed
+        if isinstance(data, str):
+            try:
+                import json
+                data = json.loads(data)
+            except (json.JSONDecodeError, ValueError):
+                self.logger.warning("ComfyUI: Failed to parse workflow JSON string")
+                return ""
+        
+        prompts = self._extract_comfy_text_from_clip_encode_nodes(data, method_def, context, fields)
+        return prompts.get("positive", "")
+    
+    def _extract_negative_prompt_from_workflow(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> str:
+        """Extract negative prompt from ComfyUI workflow."""
+        # Parse JSON string if needed
+        if isinstance(data, str):
+            try:
+                import json
+                data = json.loads(data)
+            except (json.JSONDecodeError, ValueError):
+                self.logger.warning("ComfyUI: Failed to parse workflow JSON string")
+                return ""
+        
+        prompts = self._extract_comfy_text_from_clip_encode_nodes(data, method_def, context, fields)
+        return prompts.get("negative", "")
+    
+    def _extract_workflow_parameters(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Dict[str, Any]:
+        """Extract workflow parameters from ComfyUI data."""
+        # Parse JSON string if needed
+        if isinstance(data, str):
+            try:
+                import json
+                data = json.loads(data)
+            except (json.JSONDecodeError, ValueError):
+                self.logger.warning("ComfyUI: Failed to parse workflow JSON string")
+                return {}
+        
+        # Get sampler settings
+        sampler_params = self._extract_comfy_sampler_settings(data, method_def, context, fields)
+        
+        # Add workflow metadata if available
+        parameters = {}
+        parameters.update(sampler_params)
+        
+        # Extract model information - handle both prompt and workflow formats
+        if isinstance(data, dict):
+            # Handle workflow format (nodes array)
+            if "nodes" in data and isinstance(data["nodes"], list):
+                nodes = data["nodes"]
+                for node in nodes:
+                    if not isinstance(node, dict):
+                        continue
+                    
+                    node_type = node.get("type", "")
+                    widgets_values = node.get("widgets_values", [])
+                    
+                    # Extract checkpoint/model info
+                    if "CheckpointLoader" in node_type:
+                        if widgets_values and len(widgets_values) > 0:
+                            parameters["model"] = str(widgets_values[0])
+                    
+                    # Extract KSampler parameters from widgets_values
+                    elif "KSampler" in node_type:
+                        if widgets_values and len(widgets_values) >= 6:
+                            try:
+                                parameters["seed"] = int(widgets_values[0]) if widgets_values[0] is not None else None
+                                parameters["steps"] = int(widgets_values[1]) if widgets_values[1] is not None else None
+                                parameters["cfg_scale"] = float(widgets_values[2]) if widgets_values[2] is not None else None
+                                parameters["sampler_name"] = str(widgets_values[3]) if widgets_values[3] is not None else None
+                                parameters["scheduler"] = str(widgets_values[4]) if widgets_values[4] is not None else None
+                                parameters["denoise"] = float(widgets_values[5]) if widgets_values[5] is not None else None
+                            except (ValueError, TypeError, IndexError):
+                                self.logger.debug(f"Could not parse KSampler widgets from workflow node")
+            
+            # Handle prompt format (nodes dict) - fallback to original logic
+            else:
+                nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+                
+                for node_id, node_data in nodes.items():
+                    if not isinstance(node_data, dict):
+                        continue
+                    
+                    class_type = node_data.get("class_type", node_data.get("type", ""))
+                    inputs = node_data.get("inputs", {})
+                    
+                    # Extract checkpoint/model info
+                    if "CheckpointLoader" in class_type or "ModelLoader" in class_type:
+                        if "ckpt_name" in inputs:
+                            parameters["model"] = inputs["ckpt_name"]
+                        elif "model_name" in inputs:
+                            parameters["model"] = inputs["model_name"]
+                    
+                    # Extract VAE info
+                    elif "VAELoader" in class_type:
+                        if "vae_name" in inputs:
+                            parameters["vae"] = inputs["vae_name"]
+                    
+                    # Extract LoRA info
+                    elif "LoraLoader" in class_type:
+                        if "lora_name" in inputs:
+                            lora_name = inputs["lora_name"]
+                            lora_strength = inputs.get("strength_model", inputs.get("strength_clip", 1.0))
+                            if "loras" not in parameters:
+                                parameters["loras"] = []
+                            parameters["loras"].append(f"{lora_name}:{lora_strength}")
+        
+        # Clean up None values
+        return {k: v for k, v in parameters.items() if v is not None}
+    
+    def _extract_raw_workflow(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> str:
+        """Extract raw workflow data as string."""
+        import json
+        
+        if isinstance(data, str):
+            return data
+        elif isinstance(data, dict):
+            try:
+                return json.dumps(data, indent=2)
+            except (TypeError, ValueError):
+                return str(data)
+        else:
+            return str(data)

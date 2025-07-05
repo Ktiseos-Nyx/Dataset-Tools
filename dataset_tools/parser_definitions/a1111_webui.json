@@ -7,21 +7,13 @@
   "target_file_types": ["PNG", "JPEG", "WEBP"],
   "detection_rules": [
     {
-      "comment": "Rule 1: EITHER PNG parameters chunk OR EXIF UserComment must exist",
-      "condition": "OR",
-      "rules": [
-        { "source_type": "pil_info_key", "source_key": "parameters", "operator": "exists" },
-        { "source_type": "exif_user_comment", "operator": "exists" }
-      ]
-    },
-    {
-      "comment": "Rule 2: The parameter string MUST contain A1111-style keywords",
+      "comment": "Rule 1: The parameter string MUST contain A1111-style keywords (works for both PNG and EXIF sources)",
       "source_type": "a1111_parameter_string_content",
       "operator": "regex_match_all",
       "regex_patterns": ["Steps:", "Sampler:", "CFG scale:", "Seed:", "Size:"]
     },
     {
-      "comment": "Rule 3: Differentiate from simple JSON formats",
+      "comment": "Rule 2: Differentiate from simple JSON formats",
       "source_type": "a1111_parameter_string_content",
       "operator": "not_strictly_simple_json_object_with_prompt_key"
     }
