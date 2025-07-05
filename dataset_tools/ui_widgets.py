@@ -4,8 +4,7 @@
 UI Widgets for Dataset-Tools.
 
 This module contains all the custom UI widgets used in the application.
-Each widget has a specific purpose and clean interface, like having
-different HUD elements in FFXIV that each do one thing well! 🎮✨
+Each widget has a specific purpose and clean interface
 """
 
 from pathlib import Path
