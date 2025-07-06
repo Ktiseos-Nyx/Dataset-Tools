@@ -356,14 +356,24 @@ def parse_metadata(file_path_named: str) -> dict:
     nfo(f"[DT.metadata_parser]: >>> ENTERING parse_metadata for: {file_path_named}")
     
     # Try new MetadataEngine first (enhanced parsers including Forge, T5, Flux, etc.)
+    nfo("[DT.metadata_parser]: About to attempt enhanced MetadataEngine import...")
     try:
+        nfo("[DT.metadata_parser]: Importing get_metadata_engine...")
         from .metadata_engine import get_metadata_engine
+        nfo("[DT.metadata_parser]: ✅ Successfully imported get_metadata_engine")
         
         parser_definitions_path = Path(__file__).parent / "parser_definitions"
+        nfo(f"[DT.metadata_parser]: Parser definitions path: {parser_definitions_path}")
+        nfo(f"[DT.metadata_parser]: Parser definitions path exists: {parser_definitions_path.exists()}")
+        
         if parser_definitions_path.exists():
-            nfo("[DT.metadata_parser]: Attempting to use enhanced MetadataEngine")
+            nfo("[DT.metadata_parser]: Attempting to create enhanced MetadataEngine...")
             engine = get_metadata_engine(str(parser_definitions_path))
+            nfo("[DT.metadata_parser]: ✅ Successfully created MetadataEngine, calling get_parser_for_file...")
+            
             result = engine.get_parser_for_file(file_path_named)
+            nfo(f"[DT.metadata_parser]: Enhanced MetadataEngine result type: {type(result)}")
+            nfo(f"[DT.metadata_parser]: Enhanced MetadataEngine result: {result}")
             
             if result and isinstance(result, dict):
                 nfo(f"[DT.metadata_parser]: Enhanced MetadataEngine succeeded. Tool: {result.get('tool', 'Unknown')}")
@@ -396,8 +406,14 @@ def parse_metadata(file_path_named: str) -> dict:
                 return final_ui_dict
             else:
                 nfo("[DT.metadata_parser]: Enhanced MetadataEngine found no matching parser, falling back to vendored SDPR")
+        else:
+            nfo(f"[DT.metadata_parser]: Parser definitions path does not exist: {parser_definitions_path}")
+    except ImportError as import_e:
+        nfo(f"[DT.metadata_parser]: ❌ Enhanced MetadataEngine import failed: {import_e}")
+        traceback.print_exc()
     except Exception as e:
-        nfo(f"[DT.metadata_parser]: Enhanced MetadataEngine failed: {e}, falling back to vendored SDPR")
+        nfo(f"[DT.metadata_parser]: ❌ Enhanced MetadataEngine failed: {e}")
+        traceback.print_exc()
 
     if VENDORED_SDPR_OK and ImageDataReader is not None and BaseFormat is not None:
         vendored_reader_instance = None

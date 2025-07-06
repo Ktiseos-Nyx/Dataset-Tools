@@ -127,6 +127,14 @@ class MetadataEngine:
 
             if xmp_str := context["pil_info"].get("XML:com.adobe.xmp"):
                 context["xmp_string"] = xmp_str
+                # Attempt to extract exif:UserComment from XMP if present
+                try:
+                    match = re.search(r'<exif:UserComment>(.*?)</exif:UserComment>', xmp_str)
+                    if match:
+                        context["xmp_user_comment_json_str"] = match.group(1)
+                        self.logger.debug("Extracted JSON string from XMP UserComment.")
+                except Exception as e_xmp_uc:
+                    self.logger.debug(f"Failed to extract exif:UserComment from XMP: {e_xmp_uc}")
 
             for key, val in context["pil_info"].items():
                 if isinstance(val, str):
@@ -234,6 +242,13 @@ class MetadataEngine:
         self.logger.debug(
             f"Prepared context for {original_file_path_str}. Keys: {list(k for k, v in context.items() if v is not None)}"
         )
+        self.logger.debug(f"Context Data Details for {original_file_path_str}:")
+        self.logger.debug(f"  raw_user_comment_str: {context.get("raw_user_comment_str")}")
+        self.logger.debug(f"  xmp_string: {context.get("xmp_string")[:200] if context.get("xmp_string") else None}...")
+        self.logger.debug(f"  xmp_user_comment_json_str: {context.get("xmp_user_comment_json_str")}")
+        self.logger.debug(f"  png_chunks: {context.get("png_chunks")}")
+        self.logger.debug(f"  file_format: {context.get("file_format")}")
+        self.logger.debug(f"  file_extension: {context.get("file_extension")}")
         return context
 
 # PASTE THIS ENTIRE BLOCK INTO metadata_engine.py, REPLACING THE OLD FUNCTION
@@ -623,34 +638,23 @@ class MetadataEngine:
                         current_input_data_for_fields = None
                         break
 
-                # THIS IS THE NEW ELIF BLOCK - Notice its indentation
-                elif transform_type == "conditional_json_unwrap_parameters_string":
+                elif transform_type == "extract_json_from_xmp_user_comment":
                     if isinstance(current_input_data_for_fields, str):
                         try:
-                            potential_json_wrapper = json.loads(current_input_data_for_fields)
-                            if (
-                                isinstance(potential_json_wrapper, dict)
-                                and "parameters" in potential_json_wrapper
-                                and isinstance(potential_json_wrapper["parameters"], str)
-                            ):
-                                current_input_data_for_fields = potential_json_wrapper["parameters"]
-                                self.logger.debug(
-                                    "Applied 'conditional_json_unwrap_parameters_string': unwrapped parameters."
-                                )
-                            # else: No change, it wasn't the specific wrapper structure.
-                            # self.logger.debug("Applied 'conditional_json_unwrap_parameters_string': no unwrap needed (not wrapper structure).")
-                        except json.JSONDecodeError:
-                            # Not JSON, so it's the direct string. No change needed.
-                            # self.logger.debug("Applied 'conditional_json_unwrap_parameters_string': no unwrap needed (not JSON).")
-                            pass
-                    # else: Not a string, no change.
-
-                elif transform_type == "json_decode_string_itself" and isinstance(current_input_data_for_fields, str):
-                    try:
-                        current_input_data_for_fields = json.loads(current_input_data_for_fields)
-                    except json.JSONDecodeError:
+                            # This is a simplified search. A robust solution would parse the XML.
+                            match = re.search(r'<exif:UserComment>(.*?)</exif:UserComment>', current_input_data_for_fields)
+                            if match:
+                                current_input_data_for_fields = match.group(1)
+                                self.logger.debug("Applied 'extract_json_from_xmp_user_comment': extracted JSON string.")
+                            else:
+                                current_input_data_for_fields = None
+                                self.logger.debug("Applied 'extract_json_from_xmp_user_comment': no match found.")
+                        except Exception as e:
+                            self.logger.warning(f"Error during 'extract_json_from_xmp_user_comment' transformation: {e}")
+                            current_input_data_for_fields = None
+                    else:
+                        self.logger.debug("Applied 'extract_json_from_xmp_user_comment': input not a string.")
                         current_input_data_for_fields = None
-                        break
             input_json_object_for_template = (
                 current_input_data_for_fields if isinstance(current_input_data_for_fields, dict | list) else None
             )

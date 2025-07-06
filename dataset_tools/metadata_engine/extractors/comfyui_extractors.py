@@ -31,6 +31,9 @@ class ComfyUIExtractor:
             "comfy_traverse_for_field": self._extract_comfy_traverse_field,
             "comfy_get_node_by_class": self._extract_comfy_node_by_class,
             "comfy_get_workflow_input": self._extract_comfy_workflow_input,
+            # Universal ComfyUI parser methods
+            "comfy_find_text_from_main_sampler_input": self._find_text_from_main_sampler_input,
+            "comfy_find_input_of_main_sampler": self._find_input_of_main_sampler,
             # Simple ComfyUI parser methods
             "comfyui_extract_prompt_from_workflow": self._extract_prompt_from_workflow,
             "comfyui_extract_negative_prompt_from_workflow": self._extract_negative_prompt_from_workflow,
@@ -424,3 +427,177 @@ class ComfyUIExtractor:
                 return str(data)
         else:
             return str(data)
+
+    def _find_text_from_main_sampler_input(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> str:
+        """
+        Find text from main sampler input by traversing ComfyUI workflow connections.
+        
+        This method:
+        1. Finds sampler nodes (KSampler, KSamplerAdvanced, etc.)
+        2. Follows their positive/negative input connections
+        3. Finds the connected text encoder nodes (CLIPTextEncode, etc.)
+        4. Extracts the text from those nodes
+        """
+        if not isinstance(data, dict):
+            return ""
+
+        # Get parameters from method definition
+        sampler_node_types = method_def.get("sampler_node_types", ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"])
+        positive_input_name = method_def.get("positive_input_name", "positive")
+        negative_input_name = method_def.get("negative_input_name", "negative")
+        text_input_name = method_def.get("text_input_name_in_encoder", "text")
+        text_encoder_types = method_def.get("text_encoder_node_types", ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"])
+
+        # Determine which input to follow (positive or negative)
+        target_input_name = positive_input_name  # Default to positive
+        if negative_input_name in method_def.get("target_key", ""):
+            target_input_name = negative_input_name
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+        
+        # Find the main sampler node
+        main_sampler = None
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+                
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if any(sampler_type in class_type for sampler_type in sampler_node_types):
+                main_sampler = (node_id, node_data)
+                break
+
+        if not main_sampler:
+            return ""
+
+        sampler_id, sampler_node = main_sampler
+        
+        # Get the input connection for positive/negative
+        inputs = sampler_node.get("inputs", {})
+        target_connection = inputs.get(target_input_name)
+        
+        if not target_connection:
+            return ""
+
+        # Handle connection format: usually [node_id, output_index]
+        if isinstance(target_connection, list) and len(target_connection) >= 1:
+            connected_node_id = target_connection[0]
+        else:
+            return ""
+
+        # Find the connected text encoder node
+        if isinstance(nodes, dict):
+            # Prompt format
+            connected_node = nodes.get(str(connected_node_id))
+        else:
+            # Workflow format - find by ID
+            connected_node = None
+            for node in nodes:
+                if node.get("id") == connected_node_id or str(node.get("id")) == str(connected_node_id):
+                    connected_node = node
+                    break
+
+        if not connected_node:
+            return ""
+
+        # Check if it's a text encoder node
+        connected_class_type = connected_node.get("class_type", connected_node.get("type", ""))
+        if not any(encoder_type in connected_class_type for encoder_type in text_encoder_types):
+            return ""
+
+        # Extract text from the encoder node
+        encoder_inputs = connected_node.get("inputs", {})
+        if text_input_name in encoder_inputs:
+            return str(encoder_inputs[text_input_name])
+        
+        # Fallback to widgets_values
+        widgets = connected_node.get("widgets_values", [])
+        if widgets:
+            return str(widgets[0])
+
+        return ""
+
+    def _find_input_of_main_sampler(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Any:
+        """
+        Find a specific input value from the main sampler node.
+        
+        This method:
+        1. Finds sampler nodes (KSampler, KSamplerAdvanced, etc.)
+        2. Extracts the specified input key (seed, steps, cfg, etc.)
+        3. Returns the value with proper type conversion
+        """
+        if not isinstance(data, dict):
+            return None
+
+        # Get parameters from method definition
+        sampler_node_types = method_def.get("sampler_node_types", ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"])
+        input_key = method_def.get("input_key")
+        value_type = method_def.get("value_type", "string")
+
+        if not input_key:
+            return None
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+        
+        # Find the main sampler node
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+                
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if any(sampler_type in class_type for sampler_type in sampler_node_types):
+                # Found a sampler node, extract the input
+                inputs = node_data.get("inputs", {})
+                value = inputs.get(input_key)
+                
+                if value is not None:
+                    # Type conversion
+                    try:
+                        if value_type == "integer":
+                            return int(value)
+                        elif value_type == "float":
+                            return float(value)
+                        elif value_type == "string":
+                            return str(value)
+                        else:
+                            return value
+                    except (ValueError, TypeError):
+                        self.logger.debug(f"Could not convert {input_key}={value} to {value_type}")
+                        return value
+                
+                # Fallback to widgets_values for workflow format
+                widgets = node_data.get("widgets_values", [])
+                if widgets:
+                    # Map common input keys to widget positions
+                    widget_mapping = {
+                        "seed": 0,
+                        "steps": 1, 
+                        "cfg": 2,
+                        "sampler_name": 3,
+                        "scheduler": 4,
+                        "denoise": 5
+                    }
+                    
+                    widget_index = widget_mapping.get(input_key)
+                    if widget_index is not None and len(widgets) > widget_index:
+                        value = widgets[widget_index]
+                        try:
+                            if value_type == "integer":
+                                return int(value)
+                            elif value_type == "float":
+                                return float(value)
+                            elif value_type == "string":
+                                return str(value)
+                            else:
+                                return value
+                        except (ValueError, TypeError):
+                            return value
+
+                break  # Found the main sampler, no need to continue
+
+        return None

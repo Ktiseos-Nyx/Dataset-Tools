@@ -198,7 +198,7 @@ class A1111(BaseFormat):
         # Enhanced regex to better identify the start of the settings block
         # Looks for a newline, then common parameter names, ensuring it's not mid-prompt.
         settings_marker_pattern = (
-            r"\n(?i)(?:Steps:|CFG scale:|Seed:|Size:|Model hash:|Model:|Sampler:|Face restoration:|"
+            r"(?i)\n(?:Steps:|CFG scale:|Seed:|Size:|Model hash:|Model:|Sampler:|Face restoration:|"
             r"Clip skip:|ENSD:|Hires fix:|Hires steps:|Hires upscale:|Hires upscaler:|Denoising strength:|Version:|"
             r"Schedule type:|NGMS:|Lora hashes:|TI hashes:|Hashes:|ADetailer model:|Ultimate SD upscale upscaler:)"
         )

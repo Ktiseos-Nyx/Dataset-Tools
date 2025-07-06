@@ -152,12 +152,43 @@ class RuleEvaluator:
             value_at_path, found = self._get_data_from_json_path(rule, context_data)
             return value_at_path, found
 
-        # --- TODO: Implement logic for these complex types ---
-        elif source_type in [
-            "json_from_xmp_exif_user_comment",
-            "json_from_usercomment_or_png_chunk"
-        ]:
-            self.logger.warning("Source type '%s' is defined but not yet implemented.", source_type)
+        elif source_type == "json_from_usercomment_or_png_chunk":
+            json_str = context_data.get("raw_user_comment_str")
+            if not json_str:
+                png_chunks = context_data.get("png_chunks", {})
+                for key in rule.get("chunk_source_key_options_for_png", ["parameters", "Comment"]):
+                    if key in png_chunks:
+                        json_str = png_chunks[key]
+                        break
+            if json_str:
+                try:
+                    self.logger.debug(f"Attempting to load JSON from user comment/PNG chunk: {json_str[:50]}...")
+                    return json.loads(json_str), True
+                except json.JSONDecodeError:
+                    self.logger.debug(f"Failed to decode JSON from user comment/PNG chunk: {json_str[:50]}...")
+                    return None, False
+            return None, False
+
+        elif source_type == "json_from_xmp_exif_user_comment":
+            json_str = context_data.get("xmp_user_comment_json_str")
+            if json_str:
+                self.logger.debug(f"Attempting to load JSON from extracted XMP UserComment: {json_str[:50]}...")
+                try:
+                    return json.loads(json_str), True
+                except json.JSONDecodeError:
+                    self.logger.debug(f"Failed to decode JSON from XMP UserComment: {json_str[:50]}...")
+                    return None, False
+            return None, False
+
+        elif source_type == "json_from_exif_user_comment":
+            json_str = context_data.get("raw_user_comment_str")
+            if json_str:
+                try:
+                    self.logger.debug(f"Attempting to load JSON from raw_user_comment_str: {json_str[:50]}...")
+                    return json.loads(json_str), True
+                except json.JSONDecodeError:
+                    self.logger.debug(f"Failed to decode JSON from raw_user_comment_str: {json_str[:50]}...")
+                    return None, False
             return None, False
             
         # Handle pil_info_key_json_path_query - this IS implemented, check operator handling below

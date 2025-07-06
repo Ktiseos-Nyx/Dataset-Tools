@@ -71,6 +71,10 @@ class EasyDiffusion(BaseFormat):
             return None
 
         self._logger.debug("Attempting to parse JSON from %s for %s.", source_description, self.tool)
+        if not isinstance(json_source_material, str) or not json_source_material.strip().startswith("{"):
+            self._logger.debug("Easy Diffusion: Source material is not a JSON string.")
+            self.status = self.Status.FORMAT_DETECTION_ERROR
+            return None
         try:
             data_json = json.loads(json_source_material)
             if not isinstance(data_json, dict):

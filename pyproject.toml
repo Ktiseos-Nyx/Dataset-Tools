@@ -9,7 +9,7 @@ name            = "kn-dataset-tools"
 description     = "A Simple Viewer for EXIF and AI Metadata."
 authors         = [{ name = "Ktiseos Nyx", email = "Dataset-Tools@noreply.github.com" }]
 requires-python = ">= 3.10"
-license         = { file = "LICENSE" }
+license         = "GPL-3.0-or-later"
 readme          = "README.md"
 urls            = { source = "https://github.com/Ktiseos-Nyx/Dataset-Tools" } # Corrected from your previous example to non-orgs
 dynamic         = ["version"]
@@ -30,7 +30,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Operating System :: OS Independent",
     "Environment :: X11 Applications :: Qt", # This implies Linux focus for X11
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
 ]
 dependencies = [
     "rich",
@@ -60,6 +59,10 @@ kn  = ["ruff", "pylint"] # For your personal linting/tooling
 
 [project.scripts]
 dataset-tools = "dataset_tools.main:main"
+
+[tool.setuptools.packages.find]
+include = ["dataset_tools*"]
+exclude = ["logs*", "config*", "tests*", "debug-analysis*", "dev-screenshots*"]
 
 [tool.setuptools_scm]
 write_to = "_version.py"

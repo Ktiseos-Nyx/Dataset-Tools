@@ -28,12 +28,12 @@ Coordinate with us by:
 
 </a>
 
-
 ## Contributing Code
 
-### Specifications :
+### Specifications
 
 > #### Formatting/Linting Specification
+>
 > ```
 > editor       = Visual Studio Code
 > formatting   = Ruff/Black/Better Align
@@ -45,6 +45,7 @@ Coordinate with us by:
 > ```
 
 > #### Variable dictionary
+>
 > ```
 > # Actions
 > Delegate / Arrange / Direct / Traffic / Filter / Coordinate / Assign
@@ -59,6 +60,7 @@ Coordinate with us by:
 > Advance / Skip / Exit / Leave / Cross / Structure / Fold
 
 > # Conditions
+>
 > Raw / Upstream / Downstream / Up / Down / Low / High
 > Active / Passive / Inactive / Public / Private
 > Extrinsic / Intrinsic / Static / Dynamic / Valid / Invalid
@@ -66,6 +68,7 @@ Coordinate with us by:
 > Maybe / Local / Remote / Persistent / Relevant
 
 > # Object
+>
 > File / Folder / Fragment / Component / Segment
 > Header/ Content / Pattern / Target / Aspect
 > State / Signal / Trigger / Level / Status / Attribute
@@ -73,6 +76,7 @@ Coordinate with us by:
 > Net / Disk
 
 > # Between bits
+>
 > Is / Has / Can
 
 > # File and Folder handling
@@ -92,6 +96,7 @@ Coordinate with us by:
 > empty_folder_name_and_path = relative or absolute path including name to be created
 
 > # Key and Value handling
+>
 > key_name
 > key_name_and_path
 > empty_key_name
@@ -102,37 +107,43 @@ Coordinate with us by:
 > empty_key_name
 > empty_key_name_and_path
 > new_key_name
+>
 > ```
 
 ## Setting Up For Development
 
 These are the instructions to follow for people who want to build the app with us!
 
-### Dev Installation:
+### Dev Installation
+>
 > ```
 > pip install -e .[dev]
 > ```
 
-### Update version:
+### Update version
+>
 > ```
 > python -m _version
 > ```
 >
 
-### Run with debug logging :
+### Run with debug logging
+>
 > ```
 > dataset-tools -d
 > ```
+>
 > or
+>
 > ```
 > python -m main --log debug
 > ```
 
-### Reinstallation:
+### Reinstallation
+>
 > ```
 > pip uninstall dataset-tools
 > ```
-
 
 ## Previous Builds
 
@@ -149,4 +160,3 @@ Here you can see some screenshots of previous versions of the application. Look 
 <img width="1678" alt="Screenshot 2024-06-15 at 00 04 16" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/bba4d2a7-9aaa-42f3-82f8-b866db8f0084">
 <img width="1183" alt="Screenshot 2024-06-15 at 14 06 00" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/a513f6df-1fca-421b-ae8b-401abc7741cb">
 <img width="1190" alt="Screenshot 2024-06-15 at 15 01 45" src="https://github.com/duskfallcrew/Dataset-Tools/assets/58930427/10d386f8-ae21-4672-964c-5d4ebc889275">
-
