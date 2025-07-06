@@ -46,6 +46,16 @@ class ComfyUIExtractor:
             "comfyui_extract_negative_prompt_from_workflow": self._extract_negative_prompt_from_workflow,
             "comfyui_extract_workflow_parameters": self._extract_workflow_parameters,
             "comfyui_extract_raw_workflow": self._extract_raw_workflow,
+            # Phase 2 Advanced missing methods - CRIME #2 PHASE 2 SHMANCY POWER!
+            "comfy_detect_custom_nodes": self._detect_custom_nodes,
+            "comfy_detect_t5_architecture": self._detect_t5_architecture,
+            "comfy_extract_loras_from_linked_loaders": self._extract_loras_from_linked_loaders,
+            "comfy_find_all_lora_nodes": self._find_all_lora_nodes,
+            "comfy_find_clip_skip_in_path": self._find_clip_skip_in_path,
+            "comfy_find_input_of_node_type": self._find_input_of_node_type,
+            "comfy_find_node_input": self._find_node_input,
+            "comfy_find_text_from_sampler_input": self._find_text_from_sampler_input,
+            "comfy_find_vae_from_checkpoint_loader": self._find_vae_from_checkpoint_loader,
         }
 
     def _extract_comfy_text_from_clip_encode_nodes(
@@ -1036,3 +1046,592 @@ class ComfyUIExtractor:
 
         self.logger.debug(f"[ComfyUI] Found {len(loras)} LoRAs total")
         return loras
+
+    # ==============================
+    # CRIME #2 PHASE 2: MAXIMUM FANCY SCHMANCY FUNCTIONALITY
+    # Advanced ComfyUI extraction methods for ultimate parsing power
+    # ==============================
+
+    def _detect_custom_nodes(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> list:
+        """
+        Detect custom nodes and extensions in ComfyUI workflow.
+        
+        Returns a list of detected custom node types and their usage.
+        """
+        self.logger.debug(f"[ComfyUI] _detect_custom_nodes called")
+        if not isinstance(data, dict):
+            return []
+
+        # Known built-in ComfyUI node types
+        builtin_nodes = {
+            "KSampler", "KSamplerAdvanced", "CLIPTextEncode", "CheckpointLoaderSimple",
+            "VAELoader", "VAEDecode", "VAEEncode", "LoraLoader", "EmptyLatentImage",
+            "LatentUpscale", "ImageScale", "SaveImage", "LoadImage", "PreviewImage",
+            "ConditioningCombine", "ConditioningAverage", "ConditioningConcat",
+            "ConditioningSetArea", "ConditioningSetMask", "ControlNetLoader",
+            "ControlNetApply", "ControlNetApplyAdvanced", "unCLIPCheckpointLoader",
+            "unCLIPConditioning", "PatchModelAddDownscale", "PhotoMakerLoader",
+            "DiffusersLoader", "UNETLoader", "DualCLIPLoader", "CLIPLoader",
+            "BasicGuider", "BasicScheduler", "KSamplerSelect", "SamplerCustomAdvanced"
+        }
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        detected_custom = []
+        custom_node_stats = {}
+
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if not class_type:
+                continue
+
+            # Check if this is a custom node (not in builtin list)
+            is_custom = class_type not in builtin_nodes
+            if is_custom:
+                # Count usage
+                if class_type not in custom_node_stats:
+                    custom_node_stats[class_type] = 0
+                custom_node_stats[class_type] += 1
+
+                # Analyze the node to determine its likely purpose
+                node_purpose = "unknown"
+                if any(word in class_type.lower() for word in ["lora", "lyco", "loha"]):
+                    node_purpose = "lora_management"
+                elif any(word in class_type.lower() for word in ["controlnet", "control", "cn"]):
+                    node_purpose = "controlnet"
+                elif any(word in class_type.lower() for word in ["sampler", "sample"]):
+                    node_purpose = "sampling"
+                elif any(word in class_type.lower() for word in ["text", "prompt", "clip"]):
+                    node_purpose = "text_processing"
+                elif any(word in class_type.lower() for word in ["upscale", "scale", "resize"]):
+                    node_purpose = "image_processing"
+                elif any(word in class_type.lower() for word in ["model", "checkpoint", "unet"]):
+                    node_purpose = "model_loading"
+                elif any(word in class_type.lower() for word in ["vae", "decode", "encode"]):
+                    node_purpose = "vae_processing"
+
+                detected_custom.append({
+                    "node_type": class_type,
+                    "purpose": node_purpose,
+                    "usage_count": custom_node_stats[class_type]
+                })
+
+        # Remove duplicates and sort by usage
+        unique_custom = []
+        seen_types = set()
+        for custom in sorted(detected_custom, key=lambda x: x["usage_count"], reverse=True):
+            if custom["node_type"] not in seen_types:
+                unique_custom.append(custom)
+                seen_types.add(custom["node_type"])
+
+        self.logger.debug(f"[ComfyUI] Detected {len(unique_custom)} custom node types")
+        return unique_custom
+
+    def _detect_t5_architecture(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> dict:
+        """
+        Detect T5-based architectures like SD3, Flux, PixArt, etc.
+        
+        Returns architecture information and confidence level.
+        """
+        self.logger.debug(f"[ComfyUI] _detect_t5_architecture called")
+        if not isinstance(data, dict):
+            return {"architecture": "unknown", "confidence": 0.0}
+
+        # T5 architecture indicators
+        t5_indicators = {
+            "flux": {
+                "nodes": ["FluxGuidance", "ModelSamplingFlux", "DualCLIPLoader"],
+                "keywords": ["flux", "schnell", "dev"],
+                "confidence_base": 0.9
+            },
+            "sd3": {
+                "nodes": ["SD3"],
+                "keywords": ["sd3", "stable diffusion 3"],
+                "confidence_base": 0.85
+            },
+            "pixart": {
+                "nodes": ["PixArt"],
+                "keywords": ["pixart", "pixel art"],
+                "confidence_base": 0.8
+            },
+            "hunyuan": {
+                "nodes": ["HunyuanDiT"],
+                "keywords": ["hunyuan"],
+                "confidence_base": 0.8
+            }
+        }
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        detected_architectures = {}
+
+        for arch_name, indicators in t5_indicators.items():
+            confidence = 0.0
+            evidence = []
+
+            # Check for specific node types
+            for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+                if not isinstance(node_data, dict):
+                    continue
+
+                class_type = node_data.get("class_type", node_data.get("type", ""))
+                if not class_type:
+                    continue
+
+                # Check for architecture-specific nodes
+                for indicator_node in indicators["nodes"]:
+                    if indicator_node.lower() in class_type.lower():
+                        confidence += 0.3
+                        evidence.append(f"Found {class_type} node")
+
+                # Check for T5 text encoders
+                if "T5" in class_type or "DualCLIP" in class_type:
+                    confidence += 0.2
+                    evidence.append(f"Found T5 encoder: {class_type}")
+
+                # Check inputs and widgets for keywords
+                inputs = node_data.get("inputs", {})
+                widgets = node_data.get("widgets_values", [])
+                
+                for keyword in indicators["keywords"]:
+                    # Check in input values
+                    for input_key, input_value in inputs.items():
+                        if isinstance(input_value, str) and keyword.lower() in input_value.lower():
+                            confidence += 0.15
+                            evidence.append(f"Found keyword '{keyword}' in {input_key}")
+
+                    # Check in widget values
+                    for widget_value in widgets:
+                        if isinstance(widget_value, str) and keyword.lower() in widget_value.lower():
+                            confidence += 0.1
+                            evidence.append(f"Found keyword '{keyword}' in widget")
+
+            if confidence > 0:
+                detected_architectures[arch_name] = {
+                    "confidence": min(confidence, 1.0),
+                    "evidence": evidence
+                }
+
+        # Return the most confident detection
+        if detected_architectures:
+            best_arch = max(detected_architectures.items(), key=lambda x: x[1]["confidence"])
+            result = {
+                "architecture": best_arch[0],
+                "confidence": best_arch[1]["confidence"],
+                "evidence": best_arch[1]["evidence"],
+                "all_detections": detected_architectures
+            }
+        else:
+            # Check for general T5 indicators
+            has_dual_clip = any("DualCLIP" in str(node_data.get("class_type", "")) 
+                              for node_data in (nodes.values() if isinstance(nodes, dict) else nodes))
+            
+            if has_dual_clip:
+                result = {
+                    "architecture": "t5_based",
+                    "confidence": 0.5,
+                    "evidence": ["Found DualCLIPLoader - likely T5-based architecture"],
+                    "all_detections": {}
+                }
+            else:
+                result = {
+                    "architecture": "unknown",
+                    "confidence": 0.0,
+                    "evidence": [],
+                    "all_detections": {}
+                }
+
+        self.logger.debug(f"[ComfyUI] T5 Architecture detection: {result['architecture']} (confidence: {result['confidence']})")
+        return result
+
+    def _extract_loras_from_linked_loaders(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> list:
+        """
+        Extract LoRAs by following the connection chain from loader nodes.
+        
+        This method provides more sophisticated LoRA extraction by tracing
+        connections between LoRA loaders and their usage in the workflow.
+        """
+        self.logger.debug(f"[ComfyUI] _extract_loras_from_linked_loaders called")
+        if not isinstance(data, dict):
+            return []
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        lora_chains = []
+        
+        # Find all LoRA loader nodes
+        lora_loaders = []
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if any(lora_type in class_type for lora_type in ["LoraLoader", "LoraTagLoader", "LoRALoader"]):
+                lora_loaders.append((str(node_id), node_data))
+
+        # For each LoRA loader, trace its connections
+        for loader_id, loader_data in lora_loaders:
+            inputs = loader_data.get("inputs", {})
+            
+            lora_info = {
+                "loader_id": loader_id,
+                "loader_type": loader_data.get("class_type", ""),
+                "name": inputs.get("lora_name", "Unknown"),
+                "strength_model": inputs.get("strength_model", 1.0),
+                "strength_clip": inputs.get("strength_clip", 1.0),
+                "connected_to": []
+            }
+
+            # Find what this LoRA is connected to
+            for target_id, target_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+                if str(target_id) == loader_id:
+                    continue
+                    
+                target_inputs = target_data.get("inputs", {})
+                for input_key, input_value in target_inputs.items():
+                    # Check if this input references our LoRA loader
+                    if isinstance(input_value, list) and len(input_value) >= 2:
+                        if str(input_value[0]) == loader_id:
+                            connection_info = {
+                                "target_node": str(target_id),
+                                "target_type": target_data.get("class_type", ""),
+                                "input_name": input_key,
+                                "output_index": input_value[1] if len(input_value) > 1 else 0
+                            }
+                            lora_info["connected_to"].append(connection_info)
+
+            lora_chains.append(lora_info)
+
+        self.logger.debug(f"[ComfyUI] Found {len(lora_chains)} LoRA chains")
+        return lora_chains
+
+    def _find_all_lora_nodes(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> list:
+        """
+        Find all LoRA-related nodes in the workflow.
+        
+        Returns comprehensive information about all LoRA usage.
+        """
+        self.logger.debug(f"[ComfyUI] _find_all_lora_nodes called")
+        if not isinstance(data, dict):
+            return []
+
+        # LoRA-related node types
+        lora_node_types = [
+            "LoraLoader", "LoraTagLoader", "LoRALoader", "LoraStack",
+            "LoraLoaderModelOnly", "LoraApply", "LoraComfy"
+        ]
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        all_lora_nodes = []
+
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            
+            # Check if this is a LoRA-related node
+            is_lora_node = any(lora_type.lower() in class_type.lower() for lora_type in lora_node_types)
+            
+            if is_lora_node:
+                inputs = node_data.get("inputs", {})
+                widgets = node_data.get("widgets_values", [])
+                
+                node_info = {
+                    "node_id": str(node_id),
+                    "node_type": class_type,
+                    "inputs": inputs,
+                    "widgets": widgets,
+                    "extracted_loras": []
+                }
+
+                # Extract LoRA information from this node
+                if "name" in inputs or "lora_name" in inputs:
+                    lora_name = inputs.get("lora_name") or inputs.get("name")
+                    if lora_name:
+                        lora_entry = {
+                            "name": str(lora_name),
+                            "strength_model": inputs.get("strength_model", 1.0),
+                            "strength_clip": inputs.get("strength_clip", 1.0)
+                        }
+                        node_info["extracted_loras"].append(lora_entry)
+
+                # For stack nodes, there might be multiple LoRAs
+                if "Stack" in class_type:
+                    # Try to extract multiple LoRAs from widgets
+                    for i, widget in enumerate(widgets):
+                        if isinstance(widget, str) and (".safetensors" in widget or ".ckpt" in widget):
+                            stack_lora = {
+                                "name": widget,
+                                "stack_position": i,
+                                "strength_model": widgets[i+1] if i+1 < len(widgets) else 1.0,
+                                "strength_clip": widgets[i+2] if i+2 < len(widgets) else 1.0
+                            }
+                            node_info["extracted_loras"].append(stack_lora)
+
+                all_lora_nodes.append(node_info)
+
+        self.logger.debug(f"[ComfyUI] Found {len(all_lora_nodes)} LoRA-related nodes")
+        return all_lora_nodes
+
+    def _find_clip_skip_in_path(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Optional[int]:
+        """
+        Find CLIP skip value by traversing connection paths.
+        
+        Looks for CLIP skip in CLIP loaders and text encoders.
+        """
+        self.logger.debug(f"[ComfyUI] _find_clip_skip_in_path called")
+        if not isinstance(data, dict):
+            return None
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        # Look for CLIP-related nodes
+        clip_nodes = ["CLIPLoader", "CheckpointLoaderSimple", "DualCLIPLoader", "CLIPTextEncode"]
+        
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            
+            if any(clip_node in class_type for clip_node in clip_nodes):
+                inputs = node_data.get("inputs", {})
+                widgets = node_data.get("widgets_values", [])
+
+                # Check for clip_skip in inputs
+                if "clip_skip" in inputs:
+                    try:
+                        clip_skip = int(inputs["clip_skip"])
+                        self.logger.debug(f"[ComfyUI] Found clip_skip={clip_skip} in {class_type}")
+                        return clip_skip
+                    except (ValueError, TypeError):
+                        pass
+
+                # Check for clip_skip in widgets (often the last widget in CLIP loaders)
+                for widget in widgets:
+                    if isinstance(widget, (int, float)) and 1 <= widget <= 12:
+                        # This could be a clip_skip value
+                        clip_skip = int(widget)
+                        self.logger.debug(f"[ComfyUI] Found potential clip_skip={clip_skip} in widget")
+                        return clip_skip
+
+        self.logger.debug(f"[ComfyUI] No clip_skip found in connection paths")
+        return None
+
+    def _find_input_of_node_type(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Any:
+        """
+        Find input value from a specific node type.
+        
+        More flexible version of finding inputs from specific node types.
+        """
+        self.logger.debug(f"[ComfyUI] _find_input_of_node_type called")
+        if not isinstance(data, dict):
+            return None
+
+        target_node_types = method_def.get("target_node_types", [])
+        input_key = method_def.get("input_key")
+        value_type = method_def.get("value_type", "string")
+
+        if not target_node_types or not input_key:
+            return None
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            
+            # Check if this node matches any target type
+            if any(target_type.lower() in class_type.lower() for target_type in target_node_types):
+                inputs = node_data.get("inputs", {})
+                
+                if input_key in inputs:
+                    value = inputs[input_key]
+                    self.logger.debug(f"[ComfyUI] Found {input_key}={value} in {class_type}")
+                    return self._convert_value_type(value, value_type)
+
+        return None
+
+    def _find_node_input(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Any:
+        """
+        Generic node input finder with flexible matching.
+        """
+        self.logger.debug(f"[ComfyUI] _find_node_input called")
+        if not isinstance(data, dict):
+            return None
+
+        node_id = method_def.get("node_id")
+        node_type = method_def.get("node_type") 
+        input_key = method_def.get("input_key")
+        value_type = method_def.get("value_type", "string")
+
+        if not input_key:
+            return None
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        for current_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+
+            # Check if this is the target node
+            match_found = False
+            
+            if node_id and str(current_id) == str(node_id):
+                match_found = True
+            elif node_type:
+                class_type = node_data.get("class_type", node_data.get("type", ""))
+                if node_type.lower() in class_type.lower():
+                    match_found = True
+
+            if match_found:
+                inputs = node_data.get("inputs", {})
+                if input_key in inputs:
+                    value = inputs[input_key]
+                    self.logger.debug(f"[ComfyUI] Found {input_key}={value} in node {current_id}")
+                    return self._convert_value_type(value, value_type)
+
+        return None
+
+    def _find_text_from_sampler_input(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Optional[str]:
+        """
+        Alternative implementation for finding text from sampler inputs.
+        
+        Similar to _find_text_from_main_sampler_input but with different parameter handling.
+        """
+        self.logger.debug(f"[ComfyUI] _find_text_from_sampler_input called")
+        if not isinstance(data, dict):
+            return None
+
+        # Get configuration from method definition
+        sampler_types = method_def.get("sampler_types", ["KSampler", "KSamplerAdvanced"])
+        input_name = method_def.get("input_name", "positive")
+        text_input = method_def.get("text_input", "text")
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        # Find sampler nodes
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if not any(sampler in class_type for sampler in sampler_types):
+                continue
+
+            # Found a sampler, now trace the input
+            inputs = node_data.get("inputs", {})
+            if input_name not in inputs:
+                continue
+
+            connection = inputs[input_name]
+            if not isinstance(connection, list) or len(connection) < 2:
+                continue
+
+            # Follow the connection to the text encoder
+            source_node_id = str(connection[0])
+            
+            # Find the source node
+            for src_id, src_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+                if str(src_id) == source_node_id:
+                    # Check if this is a text encoder
+                    src_class = src_data.get("class_type", src_data.get("type", ""))
+                    if "TextEncode" in src_class or "CLIP" in src_class:
+                        src_inputs = src_data.get("inputs", {})
+                        if text_input in src_inputs:
+                            text_value = src_inputs[text_input]
+                            self.logger.debug(f"[ComfyUI] Found text: {text_value[:100]}...")
+                            return str(text_value) if text_value else None
+
+        return None
+
+    def _find_vae_from_checkpoint_loader(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Optional[str]:
+        """
+        Find VAE information from checkpoint loader nodes.
+        
+        Returns VAE name or "baked-in" if using checkpoint VAE.
+        """
+        self.logger.debug(f"[ComfyUI] _find_vae_from_checkpoint_loader called")
+        if not isinstance(data, dict):
+            return None
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        # First, look for dedicated VAE loaders
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            
+            if "VAELoader" in class_type:
+                inputs = node_data.get("inputs", {})
+                vae_name = inputs.get("vae_name")
+                if vae_name:
+                    self.logger.debug(f"[ComfyUI] Found dedicated VAE: {vae_name}")
+                    return str(vae_name)
+
+        # If no dedicated VAE loader, check checkpoint loaders
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            
+            if "CheckpointLoader" in class_type:
+                # Check if VAE output is being used directly (baked-in VAE)
+                vae_connections = 0
+                
+                # Count how many nodes use the VAE output from this checkpoint
+                for other_id, other_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+                    if str(other_id) == str(node_id):
+                        continue
+                        
+                    other_inputs = other_data.get("inputs", {})
+                    for input_key, input_value in other_inputs.items():
+                        if isinstance(input_value, list) and len(input_value) >= 2:
+                            if str(input_value[0]) == str(node_id) and input_value[1] == 2:  # VAE output is typically index 2
+                                vae_connections += 1
+
+                if vae_connections > 0:
+                    inputs = node_data.get("inputs", {})
+                    checkpoint_name = inputs.get("ckpt_name", "checkpoint")
+                    self.logger.debug(f"[ComfyUI] Using baked-in VAE from {checkpoint_name}")
+                    return f"baked-in ({checkpoint_name})"
+
+        self.logger.debug(f"[ComfyUI] No VAE information found")
+        return None
