@@ -440,7 +440,11 @@ class ComfyUIExtractor:
         3. Finds the connected text encoder nodes (CLIPTextEncode, etc.)
         4. Extracts the text from those nodes
         """
+        self.logger.debug(f"[ComfyUI] _find_text_from_main_sampler_input called with data type: {type(data)}")
+        self.logger.debug(f"[ComfyUI] Method definition: {method_def}")
+        
         if not isinstance(data, dict):
+            self.logger.debug(f"[ComfyUI] Data is not dict, returning empty string")
             return ""
 
         # Get parameters from method definition
@@ -457,19 +461,26 @@ class ComfyUIExtractor:
 
         # Handle both prompt format (dict of nodes) and workflow format (nodes array)
         nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+        self.logger.debug(f"[ComfyUI] Data keys: {list(data.keys()) if isinstance(data, dict) else 'Not dict'}")
+        self.logger.debug(f"[ComfyUI] Nodes type: {type(nodes)}, count: {len(nodes) if nodes else 0}")
         
         # Find the main sampler node
         main_sampler = None
+        found_samplers = []
         for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if not isinstance(node_data, dict):
                 continue
                 
             class_type = node_data.get("class_type", node_data.get("type", ""))
+            found_samplers.append(class_type)
             if any(sampler_type in class_type for sampler_type in sampler_node_types):
                 main_sampler = (node_id, node_data)
+                self.logger.debug(f"[ComfyUI] Found sampler node {node_id}: {class_type}")
                 break
 
+        self.logger.debug(f"[ComfyUI] All node types found: {found_samplers[:10]}...")  # First 10 to avoid spam
         if not main_sampler:
+            self.logger.debug(f"[ComfyUI] No sampler found matching: {sampler_node_types}")
             return ""
 
         sampler_id, sampler_node = main_sampler
@@ -530,7 +541,9 @@ class ComfyUIExtractor:
         2. Extracts the specified input key (seed, steps, cfg, etc.)
         3. Returns the value with proper type conversion
         """
+        self.logger.debug(f"[ComfyUI] _find_input_of_main_sampler called for: {method_def.get('input_key')}")
         if not isinstance(data, dict):
+            self.logger.debug(f"[ComfyUI] Data is not dict, returning None")
             return None
 
         # Get parameters from method definition
@@ -552,7 +565,9 @@ class ComfyUIExtractor:
             class_type = node_data.get("class_type", node_data.get("type", ""))
             if any(sampler_type in class_type for sampler_type in sampler_node_types):
                 # Found a sampler node, extract the input
+                self.logger.debug(f"[ComfyUI] Found sampler {node_id}: {class_type}, looking for input: {input_key}")
                 inputs = node_data.get("inputs", {})
+                self.logger.debug(f"[ComfyUI] Sampler inputs: {list(inputs.keys())}")
                 value = inputs.get(input_key)
                 
                 if value is not None:
