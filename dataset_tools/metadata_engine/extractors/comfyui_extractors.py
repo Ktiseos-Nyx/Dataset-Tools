@@ -34,6 +34,9 @@ class ComfyUIExtractor:
             # Universal ComfyUI parser methods
             "comfy_find_text_from_main_sampler_input": self._find_text_from_main_sampler_input,
             "comfy_find_input_of_main_sampler": self._find_input_of_main_sampler,
+            # Fallback methods for simpler extraction
+            "comfy_simple_text_extraction": self._simple_text_extraction,
+            "comfy_simple_parameter_extraction": self._simple_parameter_extraction,
             # Simple ComfyUI parser methods
             "comfyui_extract_prompt_from_workflow": self._extract_prompt_from_workflow,
             "comfyui_extract_negative_prompt_from_workflow": self._extract_negative_prompt_from_workflow,
@@ -616,3 +619,135 @@ class ComfyUIExtractor:
                 break  # Found the main sampler, no need to continue
 
         return None
+
+    def _simple_text_extraction(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> str:
+        """
+        Simple fallback text extraction that looks for text in any CLIPTextEncode node.
+        This is a more robust fallback when advanced connection traversal fails.
+        """
+        self.logger.debug(f"[ComfyUI] _simple_text_extraction called")
+        if not isinstance(data, dict):
+            return ""
+
+        target_key = method_def.get("target_key", "")
+        is_negative = "negative" in target_key.lower()
+        
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+        
+        text_nodes = []
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+                
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if "CLIPTextEncode" in class_type or "TextEncode" in class_type:
+                # Extract text from this node
+                text = ""
+                inputs = node_data.get("inputs", {})
+                if "text" in inputs:
+                    text = str(inputs["text"])
+                else:
+                    widgets = node_data.get("widgets_values", [])
+                    if widgets:
+                        text = str(widgets[0])
+                
+                if text:
+                    # Try to determine if it's positive or negative based on content or metadata
+                    meta = node_data.get("_meta", {})
+                    title = meta.get("title", "").lower()
+                    
+                    is_node_negative = ("negative" in title or 
+                                      "bad" in text.lower() or 
+                                      "worst" in text.lower() or
+                                      len(text) < 50 and any(word in text.lower() for word in ["low", "quality", "blurry"]))
+                    
+                    text_nodes.append((text, is_node_negative, node_id))
+        
+        self.logger.debug(f"[ComfyUI] Found {len(text_nodes)} text nodes, looking for negative={is_negative}")
+        
+        # Return the first matching text based on positive/negative requirement
+        for text, is_node_negative, node_id in text_nodes:
+            if is_negative == is_node_negative:
+                self.logger.debug(f"[ComfyUI] Returning text from node {node_id}: {text[:50]}...")
+                return text
+        
+        # If no exact match, return first available text if we're looking for positive
+        if not is_negative and text_nodes:
+            text, _, node_id = text_nodes[0]
+            self.logger.debug(f"[ComfyUI] Fallback: returning first text from node {node_id}: {text[:50]}...")
+            return text
+            
+        return ""
+
+    def _simple_parameter_extraction(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Any:
+        """
+        Simple fallback parameter extraction that looks for parameters in any KSampler node.
+        This is a more robust fallback when advanced connection traversal fails.
+        """
+        input_key = method_def.get("input_key")
+        value_type = method_def.get("value_type", "string")
+        
+        self.logger.debug(f"[ComfyUI] _simple_parameter_extraction called for: {input_key}")
+        if not isinstance(data, dict) or not input_key:
+            return None
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+        
+        # Look for any sampler node
+        sampler_types = ["KSampler", "Sampler", "CustomSampler"]
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+                
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if any(sampler_type in class_type for sampler_type in sampler_types):
+                self.logger.debug(f"[ComfyUI] Found sampler node {node_id}: {class_type}")
+                
+                # Try to extract from inputs first
+                inputs = node_data.get("inputs", {})
+                if input_key in inputs:
+                    value = inputs[input_key]
+                    self.logger.debug(f"[ComfyUI] Found {input_key}={value} in inputs")
+                    return self._convert_value_type(value, value_type)
+                
+                # Fallback to widgets_values
+                widgets = node_data.get("widgets_values", [])
+                if widgets:
+                    widget_mapping = {
+                        "seed": 0, "steps": 1, "cfg": 2, "cfg_scale": 2,
+                        "sampler_name": 3, "scheduler": 4, "denoise": 5
+                    }
+                    widget_index = widget_mapping.get(input_key)
+                    if widget_index is not None and len(widgets) > widget_index:
+                        value = widgets[widget_index]
+                        self.logger.debug(f"[ComfyUI] Found {input_key}={value} in widgets[{widget_index}]")
+                        return self._convert_value_type(value, value_type)
+                
+                break  # Found a sampler, don't need to check others
+        
+        self.logger.debug(f"[ComfyUI] Could not find {input_key} in any sampler node")
+        return None
+
+    def _convert_value_type(self, value: Any, value_type: str) -> Any:
+        """Helper method to convert values to the specified type."""
+        if value is None:
+            return None
+            
+        try:
+            if value_type == "integer":
+                return int(value)
+            elif value_type == "float":
+                return float(value)
+            elif value_type == "string":
+                return str(value)
+            else:
+                return value
+        except (ValueError, TypeError):
+            self.logger.debug(f"[ComfyUI] Could not convert {value} to {value_type}")
+            return value
