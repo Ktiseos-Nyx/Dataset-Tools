@@ -37,6 +37,10 @@ class ComfyUIExtractor:
             # Fallback methods for simpler extraction
             "comfy_simple_text_extraction": self._simple_text_extraction,
             "comfy_simple_parameter_extraction": self._simple_parameter_extraction,
+            # Phase 1 Core missing methods - CRIME #2!
+            "comfy_find_ancestor_node_input_value": self._find_ancestor_node_input_value,
+            "comfy_find_node_input_or_widget_value": self._find_node_input_or_widget_value,
+            "comfy_extract_all_loras": self._extract_all_loras,
             # Simple ComfyUI parser methods
             "comfyui_extract_prompt_from_workflow": self._extract_prompt_from_workflow,
             "comfyui_extract_negative_prompt_from_workflow": self._extract_negative_prompt_from_workflow,
@@ -751,3 +755,284 @@ class ComfyUIExtractor:
         except (ValueError, TypeError):
             self.logger.debug(f"[ComfyUI] Could not convert {value} to {value_type}")
             return value
+
+    def _find_ancestor_node_input_value(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Any:
+        """
+        Find input value from ancestor nodes by traversing the workflow graph.
+        
+        This method:
+        1. Starts from nodes of specific types (start_node_types)
+        2. Follows connections through a specific input/output path
+        3. Finds ancestor nodes of target types
+        4. Extracts the specified input value from those ancestors
+        """
+        self.logger.debug(f"[ComfyUI] _find_ancestor_node_input_value called")
+        if not isinstance(data, dict):
+            return None
+
+        # Get parameters from method definition
+        start_node_types = method_def.get("start_node_types", [])
+        start_node_input_name = method_def.get("start_node_input_name", "model")
+        start_node_output_slot_name = method_def.get("start_node_output_slot_name")
+        target_ancestor_types = method_def.get("target_ancestor_types", [])
+        target_input_key = method_def.get("target_input_key_in_ancestor", "ckpt_name")
+        fallback_widget_key = method_def.get("fallback_widget_key_in_ancestor", "ckpt_name")
+        value_type = method_def.get("value_type", "string")
+
+        if not start_node_types or not target_ancestor_types:
+            self.logger.debug(f"[ComfyUI] Missing required node types in method definition")
+            return None
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        # Find the starting node
+        start_node = None
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+                
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if any(start_type in class_type for start_type in start_node_types):
+                start_node = (node_id, node_data)
+                self.logger.debug(f"[ComfyUI] Found start node {node_id}: {class_type}")
+                break
+
+        if not start_node:
+            self.logger.debug(f"[ComfyUI] No start node found matching: {start_node_types}")
+            return None
+
+        start_id, start_data = start_node
+        
+        # Get the connection to follow
+        if start_node_output_slot_name:
+            # Following an output connection (for VAE, etc.)
+            connection_id = None
+            # This would need more complex logic to follow output connections
+            # For now, let's implement the simpler input-following logic
+        else:
+            # Following an input connection (more common)
+            inputs = start_data.get("inputs", {})
+            connection = inputs.get(start_node_input_name)
+            
+            if not connection or not isinstance(connection, list) or len(connection) < 1:
+                self.logger.debug(f"[ComfyUI] No valid connection found for {start_node_input_name}")
+                return None
+                
+            connection_id = connection[0]
+
+        # Find the ancestor node
+        if isinstance(nodes, dict):
+            ancestor_node = nodes.get(str(connection_id))
+        else:
+            ancestor_node = None
+            for node in nodes:
+                if node.get("id") == connection_id or str(node.get("id")) == str(connection_id):
+                    ancestor_node = node
+                    break
+
+        if not ancestor_node:
+            self.logger.debug(f"[ComfyUI] Ancestor node {connection_id} not found")
+            return None
+
+        # Check if it's the target ancestor type
+        ancestor_class_type = ancestor_node.get("class_type", ancestor_node.get("type", ""))
+        if not any(target_type in ancestor_class_type for target_type in target_ancestor_types):
+            self.logger.debug(f"[ComfyUI] Ancestor {ancestor_class_type} doesn't match target types: {target_ancestor_types}")
+            return None
+
+        self.logger.debug(f"[ComfyUI] Found target ancestor: {ancestor_class_type}")
+
+        # Extract the value from the ancestor
+        ancestor_inputs = ancestor_node.get("inputs", {})
+        if target_input_key in ancestor_inputs:
+            value = ancestor_inputs[target_input_key]
+            self.logger.debug(f"[ComfyUI] Found {target_input_key}={value} in ancestor inputs")
+            return self._convert_value_type(value, value_type)
+
+        # Fallback to widget values
+        ancestor_widgets = ancestor_node.get("widgets_values", [])
+        if ancestor_widgets and fallback_widget_key:
+            # For now, assume the widget is the first value
+            value = ancestor_widgets[0] if ancestor_widgets else None
+            if value is not None:
+                self.logger.debug(f"[ComfyUI] Found {fallback_widget_key}={value} in ancestor widgets")
+                return self._convert_value_type(value, value_type)
+
+        self.logger.debug(f"[ComfyUI] Could not find {target_input_key} in ancestor node")
+        return None
+
+    def _find_node_input_or_widget_value(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Any:
+        """
+        Find value from either node inputs or widget values based on node criteria.
+        
+        This method:
+        1. Finds nodes matching the given criteria
+        2. Tries to extract from inputs first
+        3. Falls back to widget values if inputs don't have the value
+        4. Handles preset regex extraction for special cases
+        """
+        self.logger.debug(f"[ComfyUI] _find_node_input_or_widget_value called")
+        if not isinstance(data, dict):
+            return None
+
+        # Get parameters from method definition
+        node_criteria = method_def.get("node_criteria", [])
+        input_key = method_def.get("input_key", "width")
+        widget_key_for_preset = method_def.get("widget_key_for_preset")
+        preset_regex_width = method_def.get("preset_regex_width")
+        preset_regex_height = method_def.get("preset_regex_height")
+        value_type = method_def.get("value_type", "string")
+
+        if not node_criteria:
+            self.logger.debug(f"[ComfyUI] No node criteria provided")
+            return None
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        # Find nodes matching criteria
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+
+            # Check if node matches any of the criteria
+            node_class_type = node_data.get("class_type", node_data.get("type", ""))
+            matches_criteria = False
+            
+            for criteria in node_criteria:
+                required_class_type = criteria.get("class_type")
+                if required_class_type and required_class_type in node_class_type:
+                    matches_criteria = True
+                    break
+
+            if not matches_criteria:
+                continue
+
+            self.logger.debug(f"[ComfyUI] Found matching node {node_id}: {node_class_type}")
+
+            # Try to extract from inputs first
+            inputs = node_data.get("inputs", {})
+            if input_key in inputs:
+                value = inputs[input_key]
+                self.logger.debug(f"[ComfyUI] Found {input_key}={value} in node inputs")
+                return self._convert_value_type(value, value_type)
+
+            # Handle preset regex extraction
+            if widget_key_for_preset and (preset_regex_width or preset_regex_height):
+                widgets = node_data.get("widgets_values", [])
+                # Look for preset in inputs or widgets
+                preset_value = inputs.get(widget_key_for_preset)
+                if not preset_value and widgets:
+                    # Assume preset is the first widget if not in inputs
+                    preset_value = widgets[0] if widgets else None
+
+                if preset_value:
+                    import re
+                    preset_str = str(preset_value)
+                    
+                    if preset_regex_width and input_key == "width":
+                        match = re.search(preset_regex_width, preset_str)
+                        if match:
+                            value = match.group(1)
+                            self.logger.debug(f"[ComfyUI] Extracted width={value} from preset: {preset_str}")
+                            return self._convert_value_type(value, value_type)
+                    
+                    if preset_regex_height and input_key == "height":
+                        match = re.search(preset_regex_height, preset_str)
+                        if match:
+                            value = match.group(1)
+                            self.logger.debug(f"[ComfyUI] Extracted height={value} from preset: {preset_str}")
+                            return self._convert_value_type(value, value_type)
+
+            # Fallback to direct widget value (for simple cases)
+            widgets = node_data.get("widgets_values", [])
+            if widgets:
+                # For width/height, often the first two widgets
+                widget_mapping = {"width": 0, "height": 1}
+                widget_index = widget_mapping.get(input_key, 0)
+                if len(widgets) > widget_index:
+                    value = widgets[widget_index]
+                    self.logger.debug(f"[ComfyUI] Found {input_key}={value} in widget[{widget_index}]")
+                    return self._convert_value_type(value, value_type)
+
+            break  # Found matching node, no need to continue
+
+        self.logger.debug(f"[ComfyUI] Could not find {input_key} in any matching node")
+        return None
+
+    def _extract_all_loras(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> list:
+        """
+        Extract all LoRA information from the workflow.
+        
+        This method:
+        1. Finds all LoRA loader nodes
+        2. Extracts name, model strength, and clip strength
+        3. Returns a list of LoRA dictionaries
+        """
+        self.logger.debug(f"[ComfyUI] _extract_all_loras called")
+        if not isinstance(data, dict):
+            return []
+
+        # Get parameters from method definition
+        lora_node_types = method_def.get("lora_node_types", ["LoraLoader", "LoraTagLoader"])
+        name_input_key = method_def.get("name_input_key", "lora_name")
+        strength_model_key = method_def.get("strength_model_key", "strength_model")
+        strength_clip_key = method_def.get("strength_clip_key", "strength_clip")
+        text_key_for_tag_loader = method_def.get("text_key_for_tag_loader", "text")
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
+
+        loras = []
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if not any(lora_type in class_type for lora_type in lora_node_types):
+                continue
+
+            self.logger.debug(f"[ComfyUI] Found LoRA node {node_id}: {class_type}")
+
+            inputs = node_data.get("inputs", {})
+            lora_info = {}
+
+            # Extract LoRA name
+            lora_name = inputs.get(name_input_key)
+            if lora_name:
+                lora_info["name"] = str(lora_name)
+            elif "TagLoader" in class_type:
+                # For tag loaders, the name might be in the text field
+                lora_name = inputs.get(text_key_for_tag_loader)
+                if lora_name:
+                    lora_info["name"] = str(lora_name)
+
+            # Extract strengths
+            strength_model = inputs.get(strength_model_key)
+            if strength_model is not None:
+                try:
+                    lora_info["strength_model"] = float(strength_model)
+                except (ValueError, TypeError):
+                    lora_info["strength_model"] = 1.0
+
+            strength_clip = inputs.get(strength_clip_key)
+            if strength_clip is not None:
+                try:
+                    lora_info["strength_clip"] = float(strength_clip)
+                except (ValueError, TypeError):
+                    lora_info["strength_clip"] = 1.0
+
+            # Only add if we found a name
+            if "name" in lora_info:
+                loras.append(lora_info)
+                self.logger.debug(f"[ComfyUI] Added LoRA: {lora_info}")
+
+        self.logger.debug(f"[ComfyUI] Found {len(loras)} LoRAs total")
+        return loras
