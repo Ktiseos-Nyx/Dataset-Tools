@@ -1,6 +1,6 @@
 {
   "parser_name": "Draw_Things",
-  "priority": 95,
+  "priority": 175,
   "description": "Draw Things - Mobile-first AI art app with XMP metadata integration 📱✨",
   "version": "2.1",
   "maintainer": "Ktiseos Nyx",
@@ -8,23 +8,27 @@
 
   "detection_rules": [
     {
-      "comment": "Rule 1: Must have a UserComment inside XMP that is valid JSON. (From TOML)",
-      "source_type": "exif_user_comment",
-      "operator": "is_valid_json"
+      "comment": "Rule 1: Must have XMP CreatorTool indicating Draw Things",
+      "source_type": "xmp_string_content",
+      "operator": "contains",
+      "value": "Draw Things"
     },
     {
-      "comment": "Rule 2: The JSON within must contain 'c' (prompt) and 'uc' (negative prompt) keys. (From TOML)",
-      "source_type": "json_from_xmp_exif_user_comment",
-      "operator": "json_contains_all_keys",
-      "expected_keys": ["c", "uc"]
+      "comment": "Rule 2: Must have JSON data in XMP UserComment",
+      "source_type": "xmp_string_content",
+      "operator": "contains",
+      "value": "exif:UserComment"
     }
   ],
 
   "parsing_instructions": {
     "input_data": {
-      "comment": "CRITICAL FIX: Changed source_type to 'exif_user_comment' which is supported by the engine.",
-      "source_type": "exif_user_comment",
+      "comment": "Extract JSON from XMP's exif:UserComment.",
+      "source_type": "xmp_string_content",
       "transformations": [
+        {
+          "type": "extract_json_from_xmp_user_comment"
+        },
         {
           "type": "json_decode_string_itself"
         }

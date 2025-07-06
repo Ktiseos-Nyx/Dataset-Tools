@@ -13,30 +13,10 @@
       "operator": "is_valid_json"
     },
     {
-      "comment": "Rule 2: JSON must have ComfyUI workflow structure with numbered string keys",
-      "source_type": "json_from_exif_user_comment",
-      "operator": "json_has_numeric_string_keys"
-    },
-    {
-      "comment": "Rule 3: Must contain at least one recognized ComfyUI sampler node",
-      "source_type": "json_from_exif_user_comment",
-      "operator": "json_contains_any_node_class_type",
-      "class_types_to_check": [
-        "KSampler",
-        "KSamplerAdvanced",
-        "KSampler_A1111",
-        "SamplerCustom",
-        "SamplerCustomAdvanced",
-        "ClownsharKSampler_Beta",
-        "SamplerLCMDuoFusion",
-        "GlobalSampler //Inspire"
-      ]
-    },
-    {
-      "comment": "Rule 4: Ensure it's not Civitai ComfyUI with extraMetadata (handled by higher priority parser)",
-      "source_type": "json_from_exif_user_comment",
-      "operator": "json_path_not_exists",
-      "json_path": "extra.extraMetadata"
+      "comment": "Rule 2: Must contain ComfyUI sampler signatures",
+      "source_type": "exif_user_comment",
+      "operator": "contains",
+      "value": "KSampler"
     }
   ],
 

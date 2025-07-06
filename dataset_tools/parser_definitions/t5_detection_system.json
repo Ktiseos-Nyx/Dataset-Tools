@@ -1,6 +1,6 @@
 {
   "parser_name": "ComfyUI_T5_Architecture",
-  "priority": 85,
+  "priority": 190,
   "description": "Advanced T5-based model architecture detection for SD3, Flux, PixArt, AuraFlow, and HunyuanDiT",
   "version": "3.0",
   "maintainer": "Ktiseos Nyx",
@@ -8,39 +8,17 @@
 
   "detection_rules": [
     {
-      "comment": "Rule 1: First, ensure it's a valid ComfyUI workflow.",
-      "condition": "OR",
-      "rules": [
-        { "source_type": "pil_info_key", "source_key": "workflow", "operator": "is_valid_json" },
-        { "source_type": "pil_info_key", "source_key": "prompt", "operator": "is_valid_json" }
-      ]
+      "comment": "Rule 1: Must have prompt PNG chunk with valid JSON (primary ComfyUI format)",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "is_valid_json"
     },
     {
-      "comment": "Rule 2: Enhanced T5 architecture detection with comprehensive node types",
-      "source_type": "pil_info_key_json_path_query",
-      "source_key_options": ["workflow", "prompt"],
-      "json_query_type": "has_any_node_class_type",
-      "operator": "is_true",
-      "class_types_to_check": [
-        "DualCLIPLoader",
-        "DualCLIPLoaderGGUF",
-        "TripleCLIPLoader",
-        "T5TextEncode",
-        "CLIPTextEncodeSD3",
-        "PixArtTextEncode",
-        "AuraT5TextEncode",
-        "SD3CheckpointLoader",
-        "FluxGuidance",
-        "PixArtCheckpointLoader",
-        "PixArtSampler",
-        "AuraFlowLoader",
-        "AuraFlowSampler",
-        "HunyuanDiTLoader",
-        "HyditTokenizer",
-        "HunyuanTextEncode",
-        "ModelSamplingFlux",
-        "BasicGuider"
-      ]
+      "comment": "Rule 2: Must contain T5 architecture signatures (Flux, SD3, PixArt, etc.)",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "contains",
+      "value": "DualCLIPLoader"
     }
   ],
 

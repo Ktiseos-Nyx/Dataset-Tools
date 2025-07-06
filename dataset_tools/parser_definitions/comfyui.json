@@ -1,6 +1,6 @@
 {
   "parser_name": "ComfyUI Universal Parser",
-  "priority": 90,
+  "priority": 185,
   "description": "Advanced ComfyUI parser that handles any workflow type with robust detection and extraction",
   "version": "2.0_universal_edition",
   "maintainer": "DuskFall Crew",
@@ -8,53 +8,17 @@
 
   "detection_rules": [
     {
-      "comment": "Rule 1: Must have ComfyUI JSON structure (like detecting ceruleum signatures)",
-      "condition": "OR",
-      "rules": [
-        {
-          "source_type": "pil_info_key",
-          "source_key": "workflow",
-          "operator": "is_valid_json"
-        },
-        {
-          "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "is_valid_json"
-        }
-      ]
+      "comment": "Rule 1: Must have prompt PNG chunk with valid JSON (primary ComfyUI format)",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "is_valid_json"
     },
     {
-      "comment": "Rule 2: JSON must have node structure with numeric string keys",
-      "source_type": "pil_info_key_json_path_query",
-      "source_key_options": ["workflow", "prompt"],
-      "json_query_type": "has_numeric_string_keys",
-      "operator": "is_true"
-    },
-    {
-      "comment": "Rule 3: Must contain recognizable ComfyUI nodes (including FLUX samplers)",
-      "source_type": "pil_info_key_json_path_query",
-      "source_key_options": ["workflow", "prompt"],
-      "json_query_type": "has_any_node_class_type",
-      "class_types_to_check": [
-        "KSampler", "KSamplerAdvanced", "KSampler_A1111", "SamplerCustomAdvanced",
-        "SamplerDPMPP_2M", "SamplerEulerAncestral", "KSamplerSelect", "BasicGuider",
-
-        "CLIPTextEncode", "CLIPTextEncodeSDXL", "smZ CLIPTextEncode",
-        "DualCLIPLoader", "DualCLIPLoaderGGUF", "CLIPLoader",
-
-        "CheckpointLoaderSimple", "UNetLoader", "UnetLoaderGGUF",
-        "LoraLoader", "VAELoader", "FluxGuidance",
-
-        "EmptyLatentImage", "VAEDecode", "SaveImage", "PreviewImage"
-      ],
-      "operator": "is_true"
-    },
-    {
-      "comment": "Rule 4: Not a Civitai format (higher priority parsers handle those)",
-      "source_type": "pil_info_key_json_path",
-      "source_key_options": ["workflow", "prompt"],
-      "json_path": "extra.extraMetadata",
-      "operator": "not_exists"
+      "comment": "Rule 2: Must contain ComfyUI node signatures in the JSON",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "contains",
+      "value": "KSampler"
     }
   ],
 

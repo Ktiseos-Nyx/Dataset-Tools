@@ -8,23 +8,16 @@
   ],
   "detection_rules": [
     {
-      "comment": "Rule 1: Outer layer must be JSON with a 'parameters' key whose value is a string.",
-      "source_type": "pil_info_key_or_exif_user_comment_json_path",
-      "json_path": "parameters",
-      "operator": "is_string"
-    },
-    {
-      "comment": "Rule 2: The string value of 'parameters' (the inner data) must itself be valid JSON.",
-      "source_type": "pil_info_key_or_exif_user_comment_json_path_string_is_json",
-      "json_path": "parameters",
+      "comment": "Rule 1: Must have JSON data in PNG parameters chunk",
+      "source_type": "pil_info_key",
+      "source_key": "parameters",
       "operator": "is_valid_json"
     },
     {
-      "comment": "Rule 3: The INNER JSON (from the 'parameters' string value) must contain '\"software\": \"RuinedFooocus\"'.",
-      "source_type": "pil_info_key_or_exif_user_comment_json_path_string_json_path_value",
-      "outer_json_path": "parameters",
-      "inner_json_path": "software",
-      "operator": "equals_case_insensitive",
+      "comment": "Rule 2: Must contain RuinedFooocus software identifier in the JSON",
+      "source_type": "pil_info_key",
+      "source_key": "parameters",
+      "operator": "contains",
       "value": "RuinedFooocus"
     }
   ],
