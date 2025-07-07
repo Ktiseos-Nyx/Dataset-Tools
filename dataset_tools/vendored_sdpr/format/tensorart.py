@@ -18,8 +18,12 @@ class TensorArtConfig:
     IDENTIFICATION_PATTERNS: dict[str, Pattern[str]] = field(
         default_factory=lambda: {
             "ems_model": re.compile(r"EMS-\d+-EMS\.safetensors", re.IGNORECASE),
-            "ems_lora": re.compile(r"<lora:(EMS-\d+-EMS(?:\.safetensors)?)", re.IGNORECASE),
-            "tensorart_job_id": re.compile(r"^\d{10,}$"),  # Long numeric strings typical of TensorArt
+            "ems_lora": re.compile(
+                r"<lora:(EMS-\d+-EMS(?:\.safetensors)?)", re.IGNORECASE
+            ),
+            "tensorart_job_id": re.compile(
+                r"^\d{10,}$"
+            ),  # Long numeric strings typical of TensorArt
             "tensorart_prefix": re.compile(r"tensorart|tensor[_-]?art", re.IGNORECASE),
         }
     )
@@ -99,7 +103,9 @@ class TensorArtSignatureDetector:
         self.config = config
         self.logger = logger
 
-    def detect_tensorart_signatures(self, workflow_data: dict[str, Any]) -> dict[str, Any]:
+    def detect_tensorart_signatures(
+        self, workflow_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Comprehensive TensorArt signature detection.
         Returns detailed analysis of found signatures.
         """
@@ -123,10 +129,14 @@ class TensorArtSignatureDetector:
         self._analyze_metadata_signatures(workflow_data, detection_result)
 
         # Calculate overall confidence
-        detection_result["confidence_score"] = self._calculate_confidence_score(detection_result)
+        detection_result["confidence_score"] = self._calculate_confidence_score(
+            detection_result
+        )
 
         # Determine if this is definitively TensorArt
-        detection_result["is_tensorart"] = self._is_definitive_tensorart(detection_result)
+        detection_result["is_tensorart"] = self._is_definitive_tensorart(
+            detection_result
+        )
 
         self.logger.debug(
             f"TensorArt detection: confidence={detection_result['confidence_score']:.2f}, "
@@ -135,7 +145,9 @@ class TensorArtSignatureDetector:
 
         return detection_result
 
-    def _analyze_checkpoint_signatures(self, workflow_data: dict[str, Any], result: dict[str, Any]) -> None:
+    def _analyze_checkpoint_signatures(
+        self, workflow_data: dict[str, Any], result: dict[str, Any]
+    ) -> None:
         """Analyze checkpoint loader nodes for EMS patterns"""
         for node_id, node_data in workflow_data.items():
             if not isinstance(node_data, dict):
@@ -143,14 +155,17 @@ class TensorArtSignatureDetector:
 
             class_type = node_data.get("class_type", "")
             if not any(
-                class_type in node_types for node_types in [self.config.COMFYUI_NODE_TYPES["checkpoint_loader"]]
+                class_type in node_types
+                for node_types in [self.config.COMFYUI_NODE_TYPES["checkpoint_loader"]]
             ):
                 continue
 
             inputs = node_data.get("inputs", {})
             ckpt_name = inputs.get("ckpt_name", "")
 
-            if isinstance(ckpt_name, str) and self.config.IDENTIFICATION_PATTERNS["ems_model"].search(ckpt_name):
+            if isinstance(ckpt_name, str) and self.config.IDENTIFICATION_PATTERNS[
+                "ems_model"
+            ].search(ckpt_name):
                 result["ems_models_found"].append(
                     {
                         "node_id": node_id,
@@ -159,9 +174,13 @@ class TensorArtSignatureDetector:
                     }
                 )
                 result["signatures_found"].append("ems_checkpoint")
-                self.logger.debug(f"TensorArt: Found EMS model in {node_id}: {ckpt_name}")
+                self.logger.debug(
+                    f"TensorArt: Found EMS model in {node_id}: {ckpt_name}"
+                )
 
-    def _analyze_lora_signatures(self, workflow_data: dict[str, Any], result: dict[str, Any]) -> None:
+    def _analyze_lora_signatures(
+        self, workflow_data: dict[str, Any], result: dict[str, Any]
+    ) -> None:
         """Analyze LoRA loader nodes for EMS patterns"""
         for node_id, node_data in workflow_data.items():
             if not isinstance(node_data, dict):
@@ -173,12 +192,16 @@ class TensorArtSignatureDetector:
             # Check LoraLoader nodes
             if class_type in self.config.COMFYUI_NODE_TYPES["lora_loader"]:
                 lora_name = inputs.get("lora_name", "")
-                if isinstance(lora_name, str) and self.config.IDENTIFICATION_PATTERNS["ems_model"].search(lora_name):
+                if isinstance(lora_name, str) and self.config.IDENTIFICATION_PATTERNS[
+                    "ems_model"
+                ].search(lora_name):
                     result["ems_loras_found"].append(
                         {
                             "node_id": node_id,
                             "lora_name": lora_name,
-                            "strength": inputs.get("strength_model", inputs.get("strength", 1.0)),
+                            "strength": inputs.get(
+                                "strength_model", inputs.get("strength", 1.0)
+                            ),
                             "node_type": class_type,
                         }
                     )
@@ -187,7 +210,9 @@ class TensorArtSignatureDetector:
             # Check text inputs for embedded LoRA tags
             text_input = inputs.get("text", "")
             if isinstance(text_input, str) and "<lora:" in text_input:
-                lora_matches = self.config.IDENTIFICATION_PATTERNS["ems_lora"].findall(text_input)
+                lora_matches = self.config.IDENTIFICATION_PATTERNS["ems_lora"].findall(
+                    text_input
+                )
                 for lora_match in lora_matches:
                     result["ems_loras_found"].append(
                         {
@@ -199,7 +224,9 @@ class TensorArtSignatureDetector:
                     )
                     result["signatures_found"].append("ems_lora_embedded")
 
-    def _analyze_save_image_signatures(self, workflow_data: dict[str, Any], result: dict[str, Any]) -> None:
+    def _analyze_save_image_signatures(
+        self, workflow_data: dict[str, Any], result: dict[str, Any]
+    ) -> None:
         """Analyze SaveImage nodes for TensorArt job ID patterns"""
         for node_id, node_data in workflow_data.items():
             if not isinstance(node_data, dict):
@@ -212,7 +239,9 @@ class TensorArtSignatureDetector:
             inputs = node_data.get("inputs", {})
             filename_prefix = str(inputs.get("filename_prefix", ""))
 
-            if self.config.IDENTIFICATION_PATTERNS["tensorart_job_id"].match(filename_prefix):
+            if self.config.IDENTIFICATION_PATTERNS["tensorart_job_id"].match(
+                filename_prefix
+            ):
                 result["job_id_candidates"].append(
                     {
                         "node_id": node_id,
@@ -221,9 +250,13 @@ class TensorArtSignatureDetector:
                     }
                 )
                 result["signatures_found"].append("job_id_pattern")
-                self.logger.debug(f"TensorArt: Found potential job ID in {node_id}: {filename_prefix}")
+                self.logger.debug(
+                    f"TensorArt: Found potential job ID in {node_id}: {filename_prefix}"
+                )
 
-    def _analyze_metadata_signatures(self, workflow_data: dict[str, Any], result: dict[str, Any]) -> None:
+    def _analyze_metadata_signatures(
+        self, workflow_data: dict[str, Any], result: dict[str, Any]
+    ) -> None:
         """Analyze workflow metadata for TensorArt indicators"""
         # Check extraMetadata field
         extra_metadata = workflow_data.get("extraMetadata")
@@ -234,21 +267,29 @@ class TensorArtSignatureDetector:
                     # Look for TensorArt-specific metadata keys
                     tensorart_keys = []
                     for key in metadata.keys():
-                        if self.config.IDENTIFICATION_PATTERNS["tensorart_prefix"].search(str(key)):
+                        if self.config.IDENTIFICATION_PATTERNS[
+                            "tensorart_prefix"
+                        ].search(str(key)):
                             tensorart_keys.append(key)
 
                     if tensorart_keys:
                         result["signatures_found"].append("metadata_tensorart")
-                        result["node_analysis"]["tensorart_metadata_keys"] = tensorart_keys
+                        result["node_analysis"][
+                            "tensorart_metadata_keys"
+                        ] = tensorart_keys
 
             except json.JSONDecodeError:
                 pass
 
         # Check workflow-level fields for TensorArt indicators
         for key, value in workflow_data.items():
-            if isinstance(key, str) and self.config.IDENTIFICATION_PATTERNS["tensorart_prefix"].search(key):
+            if isinstance(key, str) and self.config.IDENTIFICATION_PATTERNS[
+                "tensorart_prefix"
+            ].search(key):
                 result["signatures_found"].append("workflow_field")
-                result["node_analysis"].setdefault("tensorart_workflow_keys", []).append(key)
+                result["node_analysis"].setdefault(
+                    "tensorart_workflow_keys", []
+                ).append(key)
 
     def _calculate_confidence_score(self, result: dict[str, Any]) -> float:
         """Calculate confidence score based on found signatures"""
@@ -265,7 +306,9 @@ class TensorArtSignatureDetector:
 
         # Metadata indicators are weak but supportive
         metadata_signatures = sum(
-            1 for sig in result["signatures_found"] if sig in ["metadata_tensorart", "workflow_field"]
+            1
+            for sig in result["signatures_found"]
+            if sig in ["metadata_tensorart", "workflow_field"]
         )
         score += metadata_signatures * 0.1
 
@@ -278,7 +321,10 @@ class TensorArtSignatureDetector:
             return True
 
         # High confidence with multiple signature types
-        if result["confidence_score"] >= 0.8 and len(set(result["signatures_found"])) >= 2:
+        if (
+            result["confidence_score"] >= 0.8
+            and len(set(result["signatures_found"])) >= 2
+        ):
             return True
 
         return False
@@ -314,14 +360,18 @@ class TensorArtWorkflowParser:
             result.update(prompts)
 
             # Extract generation parameters
-            parameters = self._extract_generation_parameters(workflow_data, node_analysis)
+            parameters = self._extract_generation_parameters(
+                workflow_data, node_analysis
+            )
             result["parameters"] = parameters
 
             # Extract LoRA information
             loras = self._extract_lora_information(workflow_data, node_analysis)
             result["loras"] = loras
 
-            self.logger.debug(f"TensorArt: Parsed workflow with {len(result['parameters'])} parameters")
+            self.logger.debug(
+                f"TensorArt: Parsed workflow with {len(result['parameters'])} parameters"
+            )
 
         except Exception as e:
             self.logger.error(f"TensorArt: Workflow parsing error: {e}")
@@ -329,7 +379,9 @@ class TensorArtWorkflowParser:
 
         return result
 
-    def _analyze_workflow_structure(self, workflow_data: dict[str, Any]) -> dict[str, Any]:
+    def _analyze_workflow_structure(
+        self, workflow_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Analyze the overall structure of the workflow"""
         analysis = {
             "total_nodes": len(workflow_data),
@@ -347,7 +399,9 @@ class TensorArtWorkflowParser:
                 continue
 
             class_type = node_data.get("class_type", "unknown")
-            analysis["node_types"][class_type] = analysis["node_types"].get(class_type, 0) + 1
+            analysis["node_types"][class_type] = (
+                analysis["node_types"].get(class_type, 0) + 1
+            )
 
             # Categorize nodes
             if class_type in self.config.COMFYUI_NODE_TYPES["ksampler"]:
@@ -365,7 +419,9 @@ class TensorArtWorkflowParser:
 
         return analysis
 
-    def _extract_prompts(self, workflow_data: dict[str, Any], analysis: dict[str, Any]) -> dict[str, str]:
+    def _extract_prompts(
+        self, workflow_data: dict[str, Any], analysis: dict[str, Any]
+    ) -> dict[str, str]:
         """Extract positive and negative prompts from text encode nodes"""
         prompts = {"positive": "", "negative": ""}
 
@@ -382,7 +438,9 @@ class TensorArtWorkflowParser:
         # This is complex in ComfyUI - for now, use heuristics
         if len(text_nodes) >= 2:
             # Heuristic: longer text is usually positive
-            sorted_texts = sorted(text_nodes.items(), key=lambda x: len(x[1]), reverse=True)
+            sorted_texts = sorted(
+                text_nodes.items(), key=lambda x: len(x[1]), reverse=True
+            )
             prompts["positive"] = sorted_texts[0][1]
             prompts["negative"] = sorted_texts[1][1]
         elif len(text_nodes) == 1:
@@ -391,7 +449,9 @@ class TensorArtWorkflowParser:
 
         return prompts
 
-    def _extract_generation_parameters(self, workflow_data: dict[str, Any], analysis: dict[str, Any]) -> dict[str, str]:
+    def _extract_generation_parameters(
+        self, workflow_data: dict[str, Any], analysis: dict[str, Any]
+    ) -> dict[str, str]:
         """Extract generation parameters from KSampler and other nodes"""
         parameters = {}
 
@@ -536,7 +596,9 @@ class TensorArtFormat(BaseFormat):
             return
 
         # Detect TensorArt signatures
-        self._detection_result = self.signature_detector.detect_tensorart_signatures(self.workflow_data)
+        self._detection_result = self.signature_detector.detect_tensorart_signatures(
+            self.workflow_data
+        )
 
         if not self._detection_result["is_tensorart"]:
             confidence = self._detection_result["confidence_score"]
@@ -549,12 +611,17 @@ class TensorArtFormat(BaseFormat):
             return
 
         # Parse workflow for parameters
-        self._parse_result = self.workflow_parser.parse_comfyui_workflow(self.workflow_data)
+        self._parse_result = self.workflow_parser.parse_comfyui_workflow(
+            self.workflow_data
+        )
 
         if self._parse_result["parse_errors"]:
             errors = self._parse_result["parse_errors"]
             self._logger.warning(f"{self.tool}: Parse errors: {errors}")
-            if not self._parse_result["parameters"] and not self._parse_result["positive"]:
+            if (
+                not self._parse_result["parameters"]
+                and not self._parse_result["positive"]
+            ):
                 self.status = self.Status.FORMAT_ERROR
                 self._error = f"TensorArt workflow parsing failed: {'; '.join(errors)}"
                 return
@@ -642,7 +709,9 @@ class TensorArtFormat(BaseFormat):
         # Add node type summary
         node_types = workflow_info.get("node_types", {})
         if node_types:
-            type_summary = ", ".join(f"{k}: {v}" for k, v in sorted(node_types.items()) if v > 0)
+            type_summary = ", ".join(
+                f"{k}: {v}" for k, v in sorted(node_types.items()) if v > 0
+            )
             if type_summary:
                 settings_parts.append(f"Node types: {type_summary}")
 
@@ -664,10 +733,18 @@ class TensorArtFormat(BaseFormat):
             "has_positive_prompt": bool(self._positive),
             "has_negative_prompt": bool(self._negative),
             "parameter_count": len(
-                [v for v in self._parameter.values() if v and v != self.DEFAULT_PARAMETER_PLACEHOLDER]
+                [
+                    v
+                    for v in self._parameter.values()
+                    if v and v != self.DEFAULT_PARAMETER_PLACEHOLDER
+                ]
             ),
             "has_dimensions": self._width != "0" or self._height != "0",
-            "dimensions": (f"{self._width}x{self._height}" if self._width != "0" and self._height != "0" else None),
+            "dimensions": (
+                f"{self._width}x{self._height}"
+                if self._width != "0" and self._height != "0"
+                else None
+            ),
             "tensorart_features": self._analyze_tensorart_features(),
         }
 
@@ -708,7 +785,9 @@ class TensorArtFormat(BaseFormat):
 
         # Community features
         signatures = self._detection_result["signatures_found"]
-        community_sigs = [sig for sig in signatures if "metadata" in sig or "workflow" in sig]
+        community_sigs = [
+            sig for sig in signatures if "metadata" in sig or "workflow" in sig
+        ]
         features["has_community_features"] = bool(community_sigs)
         if community_sigs:
             features["feature_summary"].append("Community features")
@@ -723,17 +802,27 @@ class TensorArtFormat(BaseFormat):
                 "raw_length": len(self._raw) if self._raw else 0,
                 "raw_preview": self._raw[:200] if self._raw else None,
                 "workflow_parsed": bool(self.workflow_data),
-                "workflow_node_count": (len(self.workflow_data) if self.workflow_data else 0),
+                "workflow_node_count": (
+                    len(self.workflow_data) if self.workflow_data else 0
+                ),
             },
             "detection_details": self._detection_result,
             "parsing_details": self._parse_result,
             "workflow_analysis": {
-                "workflow_structure": (self._parse_result.get("workflow_info", {}) if self._parse_result else {}),
+                "workflow_structure": (
+                    self._parse_result.get("workflow_info", {})
+                    if self._parse_result
+                    else {}
+                ),
                 "extracted_features": self._analyze_tensorart_features(),
             },
             "config_info": {
-                "identification_patterns": list(self.config.IDENTIFICATION_PATTERNS.keys()),
-                "supported_node_types": {k: len(v) for k, v in self.config.COMFYUI_NODE_TYPES.items()},
+                "identification_patterns": list(
+                    self.config.IDENTIFICATION_PATTERNS.keys()
+                ),
+                "supported_node_types": {
+                    k: len(v) for k, v in self.config.COMFYUI_NODE_TYPES.items()
+                },
                 "parameter_mappings": len(self.config.PARAMETER_MAPPINGS),
                 "tensorart_features": len(self.config.TENSORART_FEATURES),
             },

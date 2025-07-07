@@ -91,7 +91,9 @@ class FileReaderFactory:
                 return self._read_schema_file(file_path)
             if reader_type == "model":
                 return self._read_model_file(file_path)
-            return self._create_error_result(f"Unsupported file type: {file_path_obj.suffix}")
+            return self._create_error_result(
+                f"Unsupported file type: {file_path_obj.suffix}"
+            )
 
         except Exception as e:
             self.logger.error(f"Error reading file {file_path}: {e}", exc_info=True)
@@ -250,7 +252,9 @@ class FileReaderFactory:
                     break
 
             if workflow_data:
-                workflow_analysis = self.data_analyzer.analyze_comfyui_workflow(workflow_data)
+                workflow_analysis = self.data_analyzer.analyze_comfyui_workflow(
+                    workflow_data
+                )
                 result["workflow_analysis"] = workflow_analysis
 
         result["reader_type"] = "schema"
@@ -258,7 +262,9 @@ class FileReaderFactory:
 
     def _read_model_file(self, file_path: str) -> dict[str, Any] | None:
         """Read a model file."""
-        nfo(f"[FileReaderFactory] Attempting to read model file: {Path(file_path).name}")
+        nfo(
+            f"[FileReaderFactory] Attempting to read model file: {Path(file_path).name}"
+        )
 
         # Try to import and use ModelTool
         try:
@@ -336,7 +342,9 @@ class FileReaderManager:
         self._cache: dict[str, dict[str, Any]] = {}
         self._cache_max_size = 50
 
-    def read_file(self, file_path: str, use_cache: bool = True) -> dict[str, Any] | None:
+    def read_file(
+        self, file_path: str, use_cache: bool = True
+    ) -> dict[str, Any] | None:
         """Read a file with optional caching.
 
         Args:
@@ -361,7 +369,9 @@ class FileReaderManager:
 
         return result
 
-    def read_multiple_files(self, file_paths: list[str], use_cache: bool = True) -> dict[str, dict[str, Any] | None]:
+    def read_multiple_files(
+        self, file_paths: list[str], use_cache: bool = True
+    ) -> dict[str, dict[str, Any] | None]:
         """Read multiple files.
 
         Args:
@@ -384,7 +394,9 @@ class FileReaderManager:
 
         return results
 
-    def filter_by_reader_type(self, results: dict[str, dict[str, Any]], reader_type: str) -> dict[str, dict[str, Any]]:
+    def filter_by_reader_type(
+        self, results: dict[str, dict[str, Any]], reader_type: str
+    ) -> dict[str, dict[str, Any]]:
         """Filter results by reader type.
 
         Args:
@@ -395,7 +407,11 @@ class FileReaderManager:
             Filtered results dictionary
 
         """
-        return {path: result for path, result in results.items() if result and result.get("reader_type") == reader_type}
+        return {
+            path: result
+            for path, result in results.items()
+            if result and result.get("reader_type") == reader_type
+        }
 
     def get_reading_summary(self, results: dict[str, dict[str, Any]]) -> dict[str, Any]:
         """Get a summary of reading results.
@@ -425,12 +441,16 @@ class FileReaderManager:
 
                 # Count by reader type
                 reader_type = result.get("reader_type", "unknown")
-                summary["reader_type_counts"][reader_type] = summary["reader_type_counts"].get(reader_type, 0) + 1
+                summary["reader_type_counts"][reader_type] = (
+                    summary["reader_type_counts"].get(reader_type, 0) + 1
+                )
             else:
                 summary["failed_reads"] += 1
 
                 # Count error types
-                error = result.get(EmptyField.PLACEHOLDER.value, {}).get("Error", "Unknown error")
+                error = result.get(EmptyField.PLACEHOLDER.value, {}).get(
+                    "Error", "Unknown error"
+                )
                 summary["error_types"][error] = summary["error_types"].get(error, 0) + 1
 
         return summary

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Simple test for Draw Things extraction logic"""
 
@@ -8,8 +9,8 @@ import re
 
 def test_drawthings_extraction():
     """Test Draw Things extraction logic without complex imports."""
-    print("🎨 TESTING DRAW THINGS EXTRACTION LOGIC")
-    print("=" * 43)
+    print(  # noqa: T201"🎨 TESTING DRAW THINGS EXTRACTION LOGIC")
+    print(  # noqa: T201"=" * 43)
 
     # Mock XMP data similar to what Draw Things would produce
     xmp_data = """<?xml version='1.0' encoding='UTF-8'?>
@@ -26,37 +27,39 @@ dc:format='image/png'>
 </rdf:RDF>
 </x:xmpmeta>"""
 
-    print("🔍 STEP 1: DETECTION RULES")
-    print("-" * 28)
+    print(  # noqa: T201"🔍 STEP 1: DETECTION RULES")
+    print(  # noqa: T201"-" * 28)
 
     # Test detection rules
     rule1_pass = "Draw Things" in xmp_data
     rule2_pass = "exif:UserComment" in xmp_data
 
-    print(f"Rule 1 (Contains 'Draw Things'): {'✅ PASS' if rule1_pass else '❌ FAIL'}")
-    print(f"Rule 2 (Contains 'exif:UserComment'): {'✅ PASS' if rule2_pass else '❌ FAIL'}")
+    print(  # noqa: T201f"Rule 1 (Contains 'Draw Things'): {'✅ PASS' if rule1_pass else '❌ FAIL'}")
+    print(  # noqa: T201
+        f"Rule 2 (Contains 'exif:UserComment'): {'✅ PASS' if rule2_pass else '❌ FAIL'}"
+    )
 
     if not (rule1_pass and rule2_pass):
-        print("❌ Detection rules failed - parser would not trigger")
+        print(  # noqa: T201"❌ Detection rules failed - parser would not trigger")
         return
 
-    print("\n🔧 STEP 2: XMP TRANSFORMATION")
-    print("-" * 32)
+    print(  # noqa: T201"\n🔧 STEP 2: XMP TRANSFORMATION")
+    print(  # noqa: T201"-" * 32)
 
     # Test extract_json_from_xmp_user_comment transformation
     match = re.search(r"<exif:UserComment>(.*?)</exif:UserComment>", xmp_data)
     if match:
         json_string = match.group(1)
-        print(f"✅ Extracted JSON string ({len(json_string)} chars)")
-        print(f"   Preview: {json_string[:100]}...")
+        print(  # noqa: T201f"✅ Extracted JSON string ({len(json_string)} chars)")
+        print(  # noqa: T201f"   Preview: {json_string[:100]}...")
 
         # Test JSON decoding
         try:
             json_data = json.loads(json_string)
-            print(f"✅ JSON decoded successfully ({len(json_data)} keys)")
+            print(  # noqa: T201f"✅ JSON decoded successfully ({len(json_data)} keys)")
 
-            print("\n📊 STEP 3: FIELD EXTRACTION")
-            print("-" * 30)
+            print(  # noqa: T201"\n📊 STEP 3: FIELD EXTRACTION")
+            print(  # noqa: T201"-" * 30)
 
             # Simulate the field extraction logic from the Draw Things parser
             fields_to_test = [
@@ -112,24 +115,26 @@ dc:format='image/png'>
                             # Keep as-is for arrays
                             pass
 
-                        print(f"✅ {target_key}: {value}")
+                        print(  # noqa: T201f"✅ {target_key}: {value}")
                         successful_extractions += 1
                     except (ValueError, TypeError) as e:
-                        print(f"❌ {target_key}: Type conversion failed ({e})")
+                        print(  # noqa: T201f"❌ {target_key}: Type conversion failed ({e})")
                 else:
-                    print(f"❌ {target_key}: Not found in JSON")
+                    print(  # noqa: T201f"❌ {target_key}: Not found in JSON")
 
-            print("\n🎯 EXTRACTION SUMMARY:")
-            print("-" * 21)
-            print(f"✅ Successfully extracted: {successful_extractions}/{total_extractions} fields")
+            print(  # noqa: T201"\n🎯 EXTRACTION SUMMARY:")
+            print(  # noqa: T201"-" * 21)
+            print(  # noqa: T201
+                f"✅ Successfully extracted: {successful_extractions}/{total_extractions} fields"
+            )
 
             if successful_extractions >= 10:  # Most critical fields
-                print("🎉 Draw Things parser should work correctly!")
-                print("✅ All core fields (prompt, negative, parameters) extracted")
+                print(  # noqa: T201"🎉 Draw Things parser should work correctly!")
+                print(  # noqa: T201"✅ All core fields (prompt, negative, parameters) extracted")
 
                 # Show the expected output structure
-                print("\n📋 EXPECTED OUTPUT STRUCTURE:")
-                print("-" * 33)
+                print(  # noqa: T201"\n📋 EXPECTED OUTPUT STRUCTURE:")
+                print(  # noqa: T201"-" * 33)
 
                 expected_output = {
                     "tool": "Draw Things",
@@ -148,48 +153,48 @@ dc:format='image/png'>
                     },
                 }
 
-                print("✅ Prompt:", expected_output["prompt"][:60] + "...")
-                print("✅ Negative:", expected_output["negative_prompt"])
-                print("✅ Seed:", expected_output["parameters"]["seed"])
-                print("✅ Steps:", expected_output["parameters"]["steps"])
-                print("✅ Model:", expected_output["parameters"]["model"])
+                print(  # noqa: T201"✅ Prompt:", expected_output["prompt"][:60] + "...")
+                print(  # noqa: T201"✅ Negative:", expected_output["negative_prompt"])
+                print(  # noqa: T201"✅ Seed:", expected_output["parameters"]["seed"])
+                print(  # noqa: T201"✅ Steps:", expected_output["parameters"]["steps"])
+                print(  # noqa: T201"✅ Model:", expected_output["parameters"]["model"])
 
             else:
-                print("❌ Too many field extractions failed")
-                print("💡 Check if JSON structure matches parser expectations")
+                print(  # noqa: T201"❌ Too many field extractions failed")
+                print(  # noqa: T201"💡 Check if JSON structure matches parser expectations")
 
         except json.JSONDecodeError as e:
-            print(f"❌ JSON decoding failed: {e}")
+            print(  # noqa: T201f"❌ JSON decoding failed: {e}")
 
     else:
-        print("❌ XMP UserComment extraction failed")
-        print("💡 Check XMP structure and regex pattern")
+        print(  # noqa: T201"❌ XMP UserComment extraction failed")
+        print(  # noqa: T201"💡 Check XMP structure and regex pattern")
 
 
 def analyze_user_issue():
     """Analyze why the user's Draw Things image might not be extracting prompts."""
-    print("\n🔍 ANALYZING USER'S ISSUE:")
-    print("-" * 27)
+    print(  # noqa: T201"\n🔍 ANALYZING USER'S ISSUE:")
+    print(  # noqa: T201"-" * 27)
 
-    print("User reported: 'draw things needs a prompt extraction method'")
-    print("But the parser definition shows prompt extraction IS implemented:")
-    print("  - 'prompt' field uses 'direct_json_path' with json_path: 'c'")
-    print("  - 'negative_prompt' field uses 'direct_json_path' with json_path: 'uc'")
+    print(  # noqa: T201"User reported: 'draw things needs a prompt extraction method'")
+    print(  # noqa: T201"But the parser definition shows prompt extraction IS implemented:")
+    print(  # noqa: T201"  - 'prompt' field uses 'direct_json_path' with json_path: 'c'")
+    print(  # noqa: T201"  - 'negative_prompt' field uses 'direct_json_path' with json_path: 'uc'")
 
-    print("\n💡 POSSIBLE CAUSES:")
-    print("-" * 18)
-    print("1. ❓ JSON structure in XMP doesn't match expected format")
-    print("2. ❓ XMP UserComment extraction failing")
-    print("3. ❓ Missing extraction method implementation")
-    print("4. ❓ Parser priority conflict with other parsers")
-    print("5. ❓ Detection rules not matching the actual file")
+    print(  # noqa: T201"\n💡 POSSIBLE CAUSES:")
+    print(  # noqa: T201"-" * 18)
+    print(  # noqa: T201"1. ❓ JSON structure in XMP doesn't match expected format")
+    print(  # noqa: T201"2. ❓ XMP UserComment extraction failing")
+    print(  # noqa: T201"3. ❓ Missing extraction method implementation")
+    print(  # noqa: T201"4. ❓ Parser priority conflict with other parsers")
+    print(  # noqa: T201"5. ❓ Detection rules not matching the actual file")
 
-    print("\n🔧 DEBUGGING STEPS:")
-    print("-" * 19)
-    print("1. Check actual XMP content in the problematic file")
-    print("2. Verify 'direct_json_path' method is available")
-    print("3. Test extraction with real file data")
-    print("4. Check parser execution logs")
+    print(  # noqa: T201"\n🔧 DEBUGGING STEPS:")
+    print(  # noqa: T201"-" * 19)
+    print(  # noqa: T201"1. Check actual XMP content in the problematic file")
+    print(  # noqa: T201"2. Verify 'direct_json_path' method is available")
+    print(  # noqa: T201"3. Test extraction with real file data")
+    print(  # noqa: T201"4. Check parser execution logs")
 
 
 if __name__ == "__main__":

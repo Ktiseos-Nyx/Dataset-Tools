@@ -82,6 +82,10 @@ line-length    = 120
 include        = ["*.py", "*.pyi", "**/pyproject.toml"]
 extend-exclude = [
     ".venv",
+    "dataset_tools/debug_tools/",
+    "debug-analysis/",
+    "analyze_missing_nodes.py",
+    "convert_icons_to_theme_compatible.py",
     # "tests/", # I recommend REMOVING this line to lint/format your tests
     # "test_*.py", # And this one too
 ]
@@ -176,6 +180,13 @@ ignore = [
     "D415", # because emet selch said so
     "D205", # because i have a shark! 
     ]
+# For debug/test files that legitimately use print statements
+"dataset_tools/model_parsers/__init__.py" = ["T201"]  # Bootstrap debugging
+"dataset_tools/main.py" = ["T201"]  # CLI debugging
+"dataset_tools/test_comfyui_analyzer.py" = ["T201"]  # Test file
+"dataset_tools/ui_widgets.py" = ["T201"]  # Test UI file
+"dataset_tools/vendored_sdpr/format/novelai.py" = ["T201"]  # Vendored code
+
 # For your tests, you might want to ignore missing docstrings for test methods,
 # print statements, and magic value comparisons.
 "tests/*" = [

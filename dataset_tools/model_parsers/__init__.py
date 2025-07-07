@@ -108,7 +108,9 @@ if GGUFParser is not None:
 __all__ = _exportable_names
 
 print(f"DEBUG: model_parsers/__init__.py: FINISHED. __all__ is {__all__}.")
-_actually_available = [name for name in __all__ if name in globals() and globals()[name] is not None]
+_actually_available = [
+    name for name in __all__ if name in globals() and globals()[name] is not None
+]
 print(
     f"DEBUG: model_parsers/__init__.py: Names actually available and not None: {_actually_available}",
 )

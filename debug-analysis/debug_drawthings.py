@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Debug Draw Things parser prompt extraction"""
 
@@ -6,7 +7,9 @@ import json
 import re
 import sys
 
-sys.path.append("/Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools")
+sys.path.append(
+    "/Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools"
+)
 
 import logging
 
@@ -19,8 +22,8 @@ logger = logging.getLogger(__name__)
 
 def debug_drawthings_extraction():
     """Debug Draw Things parser prompt extraction."""
-    print("🎨 DEBUGGING DRAW THINGS EXTRACTION")
-    print("=" * 40)
+    print(  # noqa: T201"🎨 DEBUGGING DRAW THINGS EXTRACTION")
+    print(  # noqa: T201"=" * 40)
 
     # Mock XMP data with Draw Things JSON in UserComment
     xmp_data = """<?xml version='1.0' encoding='UTF-8'?>
@@ -37,44 +40,52 @@ dc:format='image/png'>
 </rdf:RDF>
 </x:xmpmeta>"""
 
-    print("📋 TEST DATA:")
-    print(f"XMP contains 'Draw Things': {'Draw Things' in xmp_data}")
-    print(f"XMP contains 'exif:UserComment': {'exif:UserComment' in xmp_data}")
+    print(  # noqa: T201"📋 TEST DATA:")
+    print(  # noqa: T201f"XMP contains 'Draw Things': {'Draw Things' in xmp_data}")
+    print(  # noqa: T201f"XMP contains 'exif:UserComment': {'exif:UserComment' in xmp_data}")
 
     # Test transformation: extract_json_from_xmp_user_comment
-    print("\n🔧 TESTING XMP JSON EXTRACTION:")
-    print("-" * 35)
+    print(  # noqa: T201"\n🔧 TESTING XMP JSON EXTRACTION:")
+    print(  # noqa: T201"-" * 35)
 
     match = re.search(r"<exif:UserComment>(.*?)</exif:UserComment>", xmp_data)
     if match:
         json_string = match.group(1)
-        print(f"✅ Extracted JSON string: {json_string[:100]}...")
+        print(  # noqa: T201f"✅ Extracted JSON string: {json_string[:100]}...")
 
         # Test JSON parsing
         try:
             json_data = json.loads(json_string)
-            print(f"✅ JSON parsed successfully: {len(json_data)} keys")
-            print(f"   Keys: {list(json_data.keys())}")
+            print(  # noqa: T201f"✅ JSON parsed successfully: {len(json_data)} keys")
+            print(  # noqa: T201f"   Keys: {list(json_data.keys())}")
 
             # Test field extraction
-            print("\n📊 TESTING FIELD EXTRACTION:")
-            print("-" * 32)
+            print(  # noqa: T201"\n📊 TESTING FIELD EXTRACTION:")
+            print(  # noqa: T201"-" * 32)
 
             extractor = DirectValueExtractor(logger)
 
             # Test prompt extraction (key 'c')
             prompt_method = {"json_path": "c", "value_type": "string"}
-            prompt_result = extractor._extract_direct_json_path(json_data, prompt_method, {}, {})
-            print(f"Prompt: {prompt_result[:50]}..." if prompt_result else "❌ No prompt found")
+            prompt_result = extractor._extract_direct_json_path(
+                json_data, prompt_method, {}, {}
+            )
+            print(  # noqa: T201
+                f"Prompt: {prompt_result[:50]}..."
+                if prompt_result
+                else "❌ No prompt found"
+            )
 
             # Test negative prompt extraction (key 'uc')
             negative_method = {"json_path": "uc", "value_type": "string"}
-            negative_result = extractor._extract_direct_json_path(json_data, negative_method, {}, {})
-            print(f"Negative: {negative_result}")
+            negative_result = extractor._extract_direct_json_path(
+                json_data, negative_method, {}, {}
+            )
+            print(  # noqa: T201f"Negative: {negative_result}")
 
             # Test parameters
-            print("\n🔧 TESTING PARAMETER EXTRACTION:")
-            print("-" * 35)
+            print(  # noqa: T201"\n🔧 TESTING PARAMETER EXTRACTION:")
+            print(  # noqa: T201"-" * 35)
 
             parameters = {
                 "seed": ("seed", "integer"),
@@ -90,11 +101,11 @@ dc:format='image/png'>
             for param_name, (json_key, value_type) in parameters.items():
                 method = {"json_path": json_key, "value_type": value_type}
                 result = extractor._extract_direct_json_path(json_data, method, {}, {})
-                print(f"  {param_name}: {result}")
+                print(  # noqa: T201f"  {param_name}: {result}")
 
             # Test v2 data extraction
-            print("\n🆕 TESTING V2 DATA EXTRACTION:")
-            print("-" * 32)
+            print(  # noqa: T201"\n🆕 TESTING V2 DATA EXTRACTION:")
+            print(  # noqa: T201"-" * 32)
 
             v2_fields = {
                 "aesthetic_score": "v2.aestheticScore",
@@ -105,31 +116,31 @@ dc:format='image/png'>
             for field_name, json_path in v2_fields.items():
                 method = {"json_path": json_path, "value_type": "auto"}
                 result = extractor._extract_direct_json_path(json_data, method, {}, {})
-                print(f"  {field_name}: {result}")
+                print(  # noqa: T201f"  {field_name}: {result}")
 
-            print("\n🎯 SUMMARY:")
-            print("-" * 12)
-            print("✅ Draw Things parser extraction methods working correctly!")
-            print("✅ All key fields extracted from XMP UserComment JSON")
-            print("✅ V2 metadata support confirmed")
+            print(  # noqa: T201"\n🎯 SUMMARY:")
+            print(  # noqa: T201"-" * 12)
+            print(  # noqa: T201"✅ Draw Things parser extraction methods working correctly!")
+            print(  # noqa: T201"✅ All key fields extracted from XMP UserComment JSON")
+            print(  # noqa: T201"✅ V2 metadata support confirmed")
 
         except json.JSONDecodeError as e:
-            print(f"❌ JSON parsing failed: {e}")
+            print(  # noqa: T201f"❌ JSON parsing failed: {e}")
 
     else:
-        print("❌ No XMP UserComment found")
+        print(  # noqa: T201"❌ No XMP UserComment found")
 
 
 def test_actual_file():
     """Test with the actual problematic file if provided."""
-    print("\n📁 TESTING WITH ACTUAL FILE:")
-    print("-" * 30)
+    print(  # noqa: T201"\n📁 TESTING WITH ACTUAL FILE:")
+    print(  # noqa: T201"-" * 30)
 
     # This would need the actual file path
     filename = "1920s__a_young_woman_stands_in_a_stunning_country_orchard__her_arms_wrapped_around_an_ancient_apple_tree_that_has_stood_tall_for_over_100_years__the_tree__with_its_gnarled_branches_and__1601874409.png"
 
-    print(f"Target file: {filename}")
-    print("💡 To test with actual file, need file path or provide sample XMP data")
+    print(  # noqa: T201f"Target file: {filename}")
+    print(  # noqa: T201"💡 To test with actual file, need file path or provide sample XMP data")
 
 
 if __name__ == "__main__":

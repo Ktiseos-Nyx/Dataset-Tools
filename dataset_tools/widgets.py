@@ -12,8 +12,10 @@ from typing import NamedTuple  # Removed List as TypingList, Optional if progres
 from PyQt6 import QtCore
 
 from dataset_tools.correct_types import ExtensionType as Ext
-from dataset_tools.logger import debug_message  # Import debug_message
-from dataset_tools.logger import debug_monitor
+from dataset_tools.logger import (
+    debug_message,  # Import debug_message
+    debug_monitor,
+)
 from dataset_tools.logger import info_monitor as nfo
 
 
@@ -100,7 +102,9 @@ class FileLoader(QtCore.QThread):
         folder_item_paths: list[str] | None,
     ) -> tuple[list[str], list[str], list[str]]:
         if folder_item_paths is None:
-            nfo("[FileLoader] populate_index_from_list received None. Returning empty lists.")
+            nfo(
+                "[FileLoader] populate_index_from_list received None. Returning empty lists."
+            )
             return [], [], []
 
         local_images: list[str] = []
@@ -108,7 +112,9 @@ class FileLoader(QtCore.QThread):
         local_model_files: list[str] = []
 
         if os.getenv("DEBUG_WIDGETS_EXT"):
-            debug_message("--- DEBUG WIDGETS: Inspecting Ext (ExtensionType) ---")  # CHANGED
+            debug_message(
+                "--- DEBUG WIDGETS: Inspecting Ext (ExtensionType) ---"
+            )  # CHANGED
             debug_message("DEBUG WIDGETS: Type of Ext: %s", type(Ext))  # CHANGED
             expected_attrs = [
                 "IMAGE",
@@ -130,7 +136,9 @@ class FileLoader(QtCore.QThread):
                 )
             debug_message("--- END DEBUG WIDGETS ---")  # CHANGED
 
-        all_image_exts = {ext for ext_set in getattr(Ext, "IMAGE", []) for ext in ext_set}
+        all_image_exts = {
+            ext for ext_set in getattr(Ext, "IMAGE", []) for ext in ext_set
+        }
         all_plain_exts_final = set()
         if hasattr(Ext, "PLAIN_TEXT_LIKE"):
             for ext_set in Ext.PLAIN_TEXT_LIKE:
@@ -150,7 +158,9 @@ class FileLoader(QtCore.QThread):
         all_text_like_exts = all_plain_exts_final.union(all_schema_exts)
         ignore_list = getattr(Ext, "IGNORE", [])
         if not isinstance(ignore_list, list):
-            nfo("[FileLoader] WARNING: Ext.IGNORE is not a list. Using empty ignore list.")
+            nfo(
+                "[FileLoader] WARNING: Ext.IGNORE is not a list. Using empty ignore list."
+            )
             ignore_list = []
 
         # Progress calculation and emission REMOVED

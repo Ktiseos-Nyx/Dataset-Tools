@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Test script to understand Forge version detection logic."""
 
@@ -15,7 +16,7 @@ from vendored_sdpr.format.forge_format import ForgeFormat
 
 def test_forge_version_detection():
     """Test the Forge version detection logic with various version strings."""
-    print("=== FORGE VERSION DETECTION TEST ===\n")
+    print(  # noqa: T201"=== FORGE VERSION DETECTION TEST ===\n")
 
     # Test cases with various version strings
     test_cases = [
@@ -67,17 +68,17 @@ def test_forge_version_detection():
         },
     ]
 
-    print("FORGE DETECTION REGEX PATTERNS:")
-    print("--------------------------------")
-    print('1. Version regex: r"Version:\\s*f" (case insensitive)')
-    print('2. Schedule type: "Schedule type: Automatic" (exact match)')
-    print('3. Hires Module: "Hires Module 1:" (exact match)')
-    print()
+    print(  # noqa: T201"FORGE DETECTION REGEX PATTERNS:")
+    print(  # noqa: T201"--------------------------------")
+    print(  # noqa: T201'1. Version regex: r"Version:\\s*f" (case insensitive)')
+    print(  # noqa: T201'2. Schedule type: "Schedule type: Automatic" (exact match)')
+    print(  # noqa: T201'3. Hires Module: "Hires Module 1:" (exact match)')
+    print(  # noqa: T201)
 
     for test_case in test_cases:
-        print(f"Testing: {test_case['name']}")
-        print(f"Version: {test_case['version']}")
-        print(f"Raw text: {test_case['raw_text']}")
+        print(  # noqa: T201f"Testing: {test_case['name']}")
+        print(  # noqa: T201f"Version: {test_case['version']}")
+        print(  # noqa: T201f"Raw text: {test_case['raw_text']}")
 
         # Test the actual regex patterns used in ForgeFormat
         raw_text = test_case["raw_text"]
@@ -89,36 +90,36 @@ def test_forge_version_detection():
 
         is_forge = forge_version_match or has_auto_scheduler or has_hires_module
 
-        print(f"  → Version regex match: {bool(forge_version_match)}")
-        print(f"  → Has auto scheduler: {has_auto_scheduler}")
-        print(f"  → Has hires module: {has_hires_module}")
-        print(f"  → Would be detected as Forge: {is_forge}")
+        print(  # noqa: T201f"  → Version regex match: {bool(forge_version_match)}")
+        print(  # noqa: T201f"  → Has auto scheduler: {has_auto_scheduler}")
+        print(  # noqa: T201f"  → Has hires module: {has_hires_module}")
+        print(  # noqa: T201f"  → Would be detected as Forge: {is_forge}")
 
         # Try to create a ForgeFormat instance to see if it works
         try:
             forge_parser = ForgeFormat(raw=raw_text)
             forge_parser.parse()
-            print(f"  → Parser status: {forge_parser.status}")
-            print(f"  → Parser tool: {forge_parser.tool}")
+            print(  # noqa: T201f"  → Parser status: {forge_parser.status}")
+            print(  # noqa: T201f"  → Parser tool: {forge_parser.tool}")
         except Exception as e:
-            print(f"  → Parser error: {e}")
+            print(  # noqa: T201f"  → Parser error: {e}")
 
-        print("-" * 60)
+        print(  # noqa: T201"-" * 60)
 
-    print("\nANALYSIS:")
-    print("--------")
-    print("The Forge detection logic looks for:")
-    print("1. Version field starting with 'f' (case insensitive)")
-    print("2. 'Schedule type: Automatic' marker")
-    print("3. 'Hires Module 1:' marker")
-    print()
-    print("Your version string 'f1.7.0-v1.10.1RC-latest-2190-g8731f1e9' SHOULD match")
-    print("the first pattern since it starts with 'f'.")
-    print()
-    print("If it's not being detected, the issue might be:")
-    print("1. ForgeFormat is not in the parser class lists in ImageDataReader")
-    print("2. The raw text extraction is not working properly")
-    print("3. There's an issue with the dispatcher integration")
+    print(  # noqa: T201"\nANALYSIS:")
+    print(  # noqa: T201"--------")
+    print(  # noqa: T201"The Forge detection logic looks for:")
+    print(  # noqa: T201"1. Version field starting with 'f' (case insensitive)")
+    print(  # noqa: T201"2. 'Schedule type: Automatic' marker")
+    print(  # noqa: T201"3. 'Hires Module 1:' marker")
+    print(  # noqa: T201)
+    print(  # noqa: T201"Your version string 'f1.7.0-v1.10.1RC-latest-2190-g8731f1e9' SHOULD match")
+    print(  # noqa: T201"the first pattern since it starts with 'f'.")
+    print(  # noqa: T201)
+    print(  # noqa: T201"If it's not being detected, the issue might be:")
+    print(  # noqa: T201"1. ForgeFormat is not in the parser class lists in ImageDataReader")
+    print(  # noqa: T201"2. The raw text extraction is not working properly")
+    print(  # noqa: T201"3. There's an issue with the dispatcher integration")
 
 
 if __name__ == "__main__":

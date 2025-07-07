@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Final comprehensive test for T5 Architecture Detection fixes"""
 
@@ -18,8 +19,8 @@ logger = logging.getLogger(__name__)
 
 def test_t5_parser_integration():
     """Test the complete T5 parser integration with MetadataEngine."""
-    print("🔧 TESTING T5 PARSER INTEGRATION")
-    print("=" * 40)
+    print(  # noqa: T201"🔧 TESTING T5 PARSER INTEGRATION")
+    print(  # noqa: T201"=" * 40)
 
     # Initialize MetadataEngine
     engine = MetadataEngine(logger)
@@ -30,15 +31,15 @@ def test_t5_parser_integration():
     )
 
     if not t5_parser_path.exists():
-        print(f"❌ T5 parser not found at {t5_parser_path}")
+        print(  # noqa: T201f"❌ T5 parser not found at {t5_parser_path}")
         return
 
     with open(t5_parser_path) as f:
         t5_parser_def = json.load(f)
 
-    print(f"✅ Loaded T5 parser: {t5_parser_def['parser_name']}")
-    print(f"   Priority: {t5_parser_def['priority']}")
-    print(f"   Version: {t5_parser_def['version']}")
+    print(  # noqa: T201f"✅ Loaded T5 parser: {t5_parser_def['parser_name']}")
+    print(  # noqa: T201f"   Priority: {t5_parser_def['priority']}")
+    print(  # noqa: T201f"   Version: {t5_parser_def['version']}")
 
     # Create mock T5 workflow data (from user's example)
     mock_image_data = {
@@ -95,23 +96,23 @@ def test_t5_parser_integration():
     }
 
     # Test detection rules
-    print("\n🔍 TESTING DETECTION RULES:")
-    print("-" * 30)
+    print(  # noqa: T201"\n🔍 TESTING DETECTION RULES:")
+    print(  # noqa: T201"-" * 30)
 
     rule_evaluator = RuleEvaluator(logger)
 
     for i, rule in enumerate(t5_parser_def["detection_rules"]):
-        print(f"Rule {i + 1}: {rule['comment']}")
+        print(  # noqa: T201f"Rule {i + 1}: {rule['comment']}")
 
         # Create context for rule evaluation
         context = {"pil_info": mock_image_data, "image_path": "test_image.png"}
 
         result = rule_evaluator.evaluate_rule(rule, context)
-        print(f"  ✅ Passed: {result}")
+        print(  # noqa: T201f"  ✅ Passed: {result}")
 
     # Test field extraction
-    print("\n📊 TESTING FIELD EXTRACTION:")
-    print("-" * 32)
+    print(  # noqa: T201"\n📊 TESTING FIELD EXTRACTION:")
+    print(  # noqa: T201"-" * 32)
 
     # Initialize extractors
     comfy_extractor = ComfyUIExtractor(logger)
@@ -127,7 +128,7 @@ def test_t5_parser_integration():
         target_key = field["target_key"]
         method = field["method"]
 
-        print(f"\n  Testing {target_key} using {method}:")
+        print(  # noqa: T201f"\n  Testing {target_key} using {method}:")
 
         # Get the appropriate extractor
         if method.startswith("comfy_"):
@@ -141,23 +142,25 @@ def test_t5_parser_integration():
             method_func = methods[method]
             try:
                 result = method_func(input_data, field, {}, {})
-                print(f"    Result: {result}")
+                print(  # noqa: T201f"    Result: {result}")
             except Exception as e:
-                print(f"    ❌ Error: {e}")
+                print(  # noqa: T201f"    ❌ Error: {e}")
         else:
-            print(f"    ❌ Method {method} not found")
+            print(  # noqa: T201f"    ❌ Method {method} not found")
 
-    print("\n🎯 EXPECTED RESULTS:")
-    print("-" * 20)
-    print("✅ Architecture: flux (confidence: 0.95)")
-    print("✅ Prompt: 'a woman with long red hair standing in a field of sunflowers...'")
-    print("✅ Negative: 'blurry, low quality, worst quality, bad anatomy, extra limbs'")
-    print("✅ Seed: 687842170175819")
-    print("✅ Steps: 20")
-    print("✅ Sampler: 'euler'")
-    print("✅ Scheduler: 'normal'")
-    print("✅ T5 Model: 't5xxl_fp16.safetensors'")
-    print("✅ CLIP Model: 'clip_l.safetensors'")
+    print(  # noqa: T201"\n🎯 EXPECTED RESULTS:")
+    print(  # noqa: T201"-" * 20)
+    print(  # noqa: T201"✅ Architecture: flux (confidence: 0.95)")
+    print(  # noqa: T201
+        "✅ Prompt: 'a woman with long red hair standing in a field of sunflowers...'"
+    )
+    print(  # noqa: T201"✅ Negative: 'blurry, low quality, worst quality, bad anatomy, extra limbs'")
+    print(  # noqa: T201"✅ Seed: 687842170175819")
+    print(  # noqa: T201"✅ Steps: 20")
+    print(  # noqa: T201"✅ Sampler: 'euler'")
+    print(  # noqa: T201"✅ Scheduler: 'normal'")
+    print(  # noqa: T201"✅ T5 Model: 't5xxl_fp16.safetensors'")
+    print(  # noqa: T201"✅ CLIP Model: 'clip_l.safetensors'")
 
 
 if __name__ == "__main__":

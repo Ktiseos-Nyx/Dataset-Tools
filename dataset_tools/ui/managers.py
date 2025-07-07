@@ -27,6 +27,7 @@ from .components import EnhancedImageLabel, EnhancedLeftPanelWidget
 # Import icon manager
 try:
     from .icon_manager import get_icon_manager
+
     ICON_MANAGER_AVAILABLE = True
 except ImportError:
     ICON_MANAGER_AVAILABLE = False
@@ -105,13 +106,15 @@ class ThemeManager:
             if not initial_load:
                 self.settings.setValue("theme", theme_name)
 
-            action_text = "Initial theme loaded" if initial_load else "Theme applied and saved"
+            action_text = (
+                "Initial theme loaded" if initial_load else "Theme applied and saved"
+            )
             nfo("%s: %s", action_text, theme_name)
-            
+
             # Update icon manager colors when theme changes
             if ICON_MANAGER_AVAILABLE and not initial_load:
                 self._update_icon_colors_for_theme(theme_name)
-            
+
             return True
 
         except Exception as e:
@@ -164,33 +167,39 @@ class ThemeManager:
 
     def _update_icon_colors_for_theme(self, theme_name: str) -> None:
         """Update icon manager colors based on the current theme.
-        
+
         Args:
             theme_name: Name of the applied theme
+
         """
         try:
             icon_manager = get_icon_manager()
-            
+
             # Determine colors based on theme name
-            if any(dark_indicator in theme_name.lower() for dark_indicator in ['dark', 'black']):
+            if any(
+                dark_indicator in theme_name.lower()
+                for dark_indicator in ["dark", "black"]
+            ):
                 # Dark theme colors
                 from PyQt6.QtGui import QColor
+
                 icon_manager.set_theme_colors(
-                    primary=QColor(255, 255, 255),    # White
+                    primary=QColor(255, 255, 255),  # White
                     secondary=QColor(180, 180, 180),  # Light gray
-                    accent=QColor(0, 188, 212)        # Cyan
+                    accent=QColor(0, 188, 212),  # Cyan
                 )
             else:
                 # Light theme colors
                 from PyQt6.QtGui import QColor
+
                 icon_manager.set_theme_colors(
-                    primary=QColor(33, 33, 33),       # Dark gray
-                    secondary=QColor(117, 117, 117),  # Medium gray  
-                    accent=QColor(0, 150, 136)        # Teal
+                    primary=QColor(33, 33, 33),  # Dark gray
+                    secondary=QColor(117, 117, 117),  # Medium gray
+                    accent=QColor(0, 150, 136),  # Teal
                 )
-                
+
             nfo(f"Updated icon colors for theme: {theme_name}")
-            
+
         except Exception as e:
             nfo(f"Error updating icon colors: {e}")
 
@@ -370,7 +379,9 @@ class LayoutManager:
         middle_right_layout.setSpacing(5)
 
         # Metadata-Image splitter
-        self.main_window.metadata_image_splitter = Qw.QSplitter(QtCore.Qt.Orientation.Horizontal)
+        self.main_window.metadata_image_splitter = Qw.QSplitter(
+            QtCore.Qt.Orientation.Horizontal
+        )
         middle_right_layout.addWidget(self.main_window.metadata_image_splitter)
 
         # Setup panels
@@ -412,7 +423,9 @@ class LayoutManager:
             # Create text box
             text_box = Qw.QTextEdit()
             text_box.setReadOnly(True)
-            text_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
+            text_box.setSizePolicy(
+                Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred
+            )
 
             box_attr = f"{box_name}_box"
             setattr(self.main_window, box_attr, text_box)
@@ -421,7 +434,9 @@ class LayoutManager:
     def _setup_image_panel(self) -> None:
         """Setup the image preview panel."""
         self.main_window.image_preview = EnhancedImageLabel()
-        self.main_window.metadata_image_splitter.addWidget(self.main_window.image_preview)
+        self.main_window.metadata_image_splitter.addWidget(
+            self.main_window.image_preview
+        )
 
     def _setup_bottom_bar(self) -> None:
         """Setup the bottom action button bar."""
@@ -469,13 +484,17 @@ class LayoutManager:
 
             # Main splitter
             main_default = self._calculate_main_splitter_sizes(window_width)
-            main_saved = self.settings.value("mainSplitterSizes", main_default, type=list)
+            main_saved = self.settings.value(
+                "mainSplitterSizes", main_default, type=list
+            )
             main_sizes = [int(s) for s in main_saved]
             self.main_window.main_splitter.setSizes(main_sizes)
 
             # Metadata-image splitter
             meta_default = self._calculate_metadata_image_sizes(window_width)
-            meta_saved = self.settings.value("metaImageSplitterSizes", meta_default, type=list)
+            meta_saved = self.settings.value(
+                "metaImageSplitterSizes", meta_default, type=list
+            )
             meta_sizes = [int(s) for s in meta_saved]
             self.main_window.metadata_image_splitter.setSizes(meta_sizes)
 
@@ -613,7 +632,9 @@ class MetadataDisplayManager:
         ]
 
         for box_attr, label_attr, default_label in box_configs:
-            content = self._get_box_content_with_label(box_attr, label_attr, default_label)
+            content = self._get_box_content_with_label(
+                box_attr, label_attr, default_label
+            )
             if content:
                 text_parts.append(content)
 
@@ -621,7 +642,9 @@ class MetadataDisplayManager:
         separator = "\n\n" + "═" * 20 + "\n\n"
         return separator.join(text_parts)
 
-    def _get_box_content_with_label(self, box_attr: str, label_attr: str, default_label: str) -> str | None:
+    def _get_box_content_with_label(
+        self, box_attr: str, label_attr: str, default_label: str
+    ) -> str | None:
         """Get formatted content from a text box with its label."""
         if not hasattr(self.main_window, box_attr):
             return None
@@ -647,7 +670,9 @@ class MetadataDisplayManager:
 
         return f"{label_text}:\n{content}"
 
-    def format_metadata_section(self, metadata_dict: dict[str, Any], section_enum: Any) -> str:
+    def format_metadata_section(
+        self, metadata_dict: dict[str, Any], section_enum: Any
+    ) -> str:
         """Format a specific metadata section for display.
 
         Args:
@@ -674,7 +699,11 @@ class MetadataDisplayManager:
             for key, value in sorted(data.items()):
                 if value is not None:
                     if isinstance(value, dict):
-                        nested_parts = [f"  {k}: {v}" for k, v in sorted(value.items()) if v is not None]
+                        nested_parts = [
+                            f"  {k}: {v}"
+                            for k, v in sorted(value.items())
+                            if v is not None
+                        ]
                         if nested_parts:
                             parts.append(f"{key}:")
                             parts.extend(nested_parts)

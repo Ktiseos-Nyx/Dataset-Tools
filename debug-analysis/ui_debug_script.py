@@ -1,17 +1,20 @@
 # ui_debug_script.py
+# ruff: noqa: T201
 # Debug what data flows from parser to UI
 
 import json
 import logging
 
 # Configure detailed logging
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 
 
 def debug_json_parser_output(image_path, parser_defs_path):
     """Debug what the JSON parser actually returns"""
-    print("🔍 DEBUGGING JSON PARSER OUTPUT")
-    print("=" * 60)
+    print(  # noqa: T201"🔍 DEBUGGING JSON PARSER OUTPUT")
+    print(  # noqa: T201"=" * 60)
 
     try:
         engine_logger = logging.getLogger("MetadataEngine")
@@ -21,24 +24,24 @@ def debug_json_parser_output(image_path, parser_defs_path):
         result = engine.get_parser_for_file(image_path)
 
         if result:
-            print("✅ JSON PARSER SUCCEEDED!")
-            print(f"📦 Result type: {type(result)}")
+            print(  # noqa: T201"✅ JSON PARSER SUCCEEDED!")
+            print(  # noqa: T201f"📦 Result type: {type(result)}")
 
             if isinstance(result, dict):
-                print(f"📋 Result keys: {list(result.keys())}")
+                print(  # noqa: T201f"📋 Result keys: {list(result.keys())}")
 
                 # Print the full structure
-                print("\n🗂️ FULL JSON PARSER OUTPUT:")
-                print(json.dumps(result, indent=2, default=str))
+                print(  # noqa: T201"\n🗂️ FULL JSON PARSER OUTPUT:")
+                print(  # noqa: T201json.dumps(result, indent=2, default=str))
 
                 return result
-            print(f"⚠️ Result is not a dict: {result}")
+            print(  # noqa: T201f"⚠️ Result is not a dict: {result}")
             return result
-        print("❌ JSON PARSER RETURNED NONE!")
+        print(  # noqa: T201"❌ JSON PARSER RETURNED NONE!")
         return None
 
     except Exception as e:
-        print(f"💥 ERROR IN JSON PARSER: {e}")
+        print(  # noqa: T201f"💥 ERROR IN JSON PARSER: {e}")
         import traceback
 
         traceback.print_exc()
@@ -47,8 +50,8 @@ def debug_json_parser_output(image_path, parser_defs_path):
 
 def debug_vendored_parser_output(image_path):
     """Debug what the vendored parser returns for comparison"""
-    print("\n🔍 DEBUGGING VENDORED PARSER OUTPUT (for comparison)")
-    print("=" * 60)
+    print(  # noqa: T201"\n🔍 DEBUGGING VENDORED PARSER OUTPUT (for comparison)")
+    print(  # noqa: T201"=" * 60)
 
     try:
         from dataset_tools.vendored_sdpr.image_data_reader import ImageDataReader
@@ -61,8 +64,8 @@ def debug_vendored_parser_output(image_path):
         else:
             status_name = str(status)
 
-        print(f"📊 Vendored status: {status_name}")
-        print(f"🔧 Vendored tool: {getattr(reader, 'tool', 'Unknown')}")
+        print(  # noqa: T201f"📊 Vendored status: {status_name}")
+        print(  # noqa: T201f"🔧 Vendored tool: {getattr(reader, 'tool', 'Unknown')}")
 
         # Extract key properties that UI uses
         vendored_data = {
@@ -77,13 +80,13 @@ def debug_vendored_parser_output(image_path):
             "status": status_name,
         }
 
-        print("\n🗂️ VENDORED PARSER DATA STRUCTURE:")
-        print(json.dumps(vendored_data, indent=2, default=str))
+        print(  # noqa: T201"\n🗂️ VENDORED PARSER DATA STRUCTURE:")
+        print(  # noqa: T201json.dumps(vendored_data, indent=2, default=str))
 
         return vendored_data
 
     except Exception as e:
-        print(f"💥 ERROR IN VENDORED PARSER: {e}")
+        print(  # noqa: T201f"💥 ERROR IN VENDORED PARSER: {e}")
         import traceback
 
         traceback.print_exc()
@@ -92,13 +95,13 @@ def debug_vendored_parser_output(image_path):
 
 def debug_ui_population_expectations():
     """Debug what the UI population code expects"""
-    print("\n🎨 DEBUGGING UI POPULATION EXPECTATIONS")
-    print("=" * 60)
+    print(  # noqa: T201"\n🎨 DEBUGGING UI POPULATION EXPECTATIONS")
+    print(  # noqa: T201"=" * 60)
 
     try:
         # Look at the metadata_parser.py to see what _populate_ui expects
 
-        print("📋 Looking at metadata_parser.py for UI population logic...")
+        print(  # noqa: T201"📋 Looking at metadata_parser.py for UI population logic...")
 
         # Check what fields the UI population code looks for
         expected_fields = [
@@ -116,71 +119,71 @@ def debug_ui_population_expectations():
             "negative_sdxl",
         ]
 
-        print(f"🎯 UI expects these fields from parser: {expected_fields}")
+        print(  # noqa: T201f"🎯 UI expects these fields from parser: {expected_fields}")
 
         return expected_fields
 
     except Exception as e:
-        print(f"💥 ERROR CHECKING UI EXPECTATIONS: {e}")
+        print(  # noqa: T201f"💥 ERROR CHECKING UI EXPECTATIONS: {e}")
         return []
 
 
 def debug_data_format_mismatch(json_result, vendored_result):
     """Compare JSON vs vendored data formats"""
-    print("\n🔗 DEBUGGING DATA FORMAT MISMATCH")
-    print("=" * 60)
+    print(  # noqa: T201"\n🔗 DEBUGGING DATA FORMAT MISMATCH")
+    print(  # noqa: T201"=" * 60)
 
     if not json_result:
-        print("❌ No JSON result to compare")
+        print(  # noqa: T201"❌ No JSON result to compare")
         return
 
     if not vendored_result:
-        print("❌ No vendored result to compare")
+        print(  # noqa: T201"❌ No vendored result to compare")
         return
 
-    print("🆚 COMPARING DATA FORMATS:")
+    print(  # noqa: T201"🆚 COMPARING DATA FORMATS:")
 
     # Check if JSON result has the same structure as vendored
     vendored_keys = set(vendored_result.keys())
     json_keys = set(json_result.keys()) if isinstance(json_result, dict) else set()
 
-    print(f"📋 Vendored keys: {sorted(vendored_keys)}")
-    print(f"📋 JSON keys: {sorted(json_keys)}")
+    print(  # noqa: T201f"📋 Vendored keys: {sorted(vendored_keys)}")
+    print(  # noqa: T201f"📋 JSON keys: {sorted(json_keys)}")
 
     missing_in_json = vendored_keys - json_keys
     extra_in_json = json_keys - vendored_keys
 
     if missing_in_json:
-        print(f"❌ Missing in JSON: {sorted(missing_in_json)}")
+        print(  # noqa: T201f"❌ Missing in JSON: {sorted(missing_in_json)}")
     if extra_in_json:
-        print(f"✨ Extra in JSON: {sorted(extra_in_json)}")
+        print(  # noqa: T201f"✨ Extra in JSON: {sorted(extra_in_json)}")
 
     # Check specific key values
     common_keys = vendored_keys & json_keys
-    print("\n🔍 COMPARING COMMON KEYS:")
+    print(  # noqa: T201"\n🔍 COMPARING COMMON KEYS:")
     for key in sorted(common_keys):
         v_val = vendored_result[key]
         j_val = json_result[key]
 
         if str(v_val) != str(j_val):
-            print(f"  🔧 {key}:")
-            print(f"    Vendored: {v_val!r}")
-            print(f"    JSON:     {j_val!r}")
+            print(  # noqa: T201f"  🔧 {key}:")
+            print(  # noqa: T201f"    Vendored: {v_val!r}")
+            print(  # noqa: T201f"    JSON:     {j_val!r}")
         else:
-            print(f"  ✅ {key}: {v_val!r}")
+            print(  # noqa: T201f"  ✅ {key}: {v_val!r}")
 
 
 def suggest_ui_fix(json_result, expected_fields):
     """Suggest how to fix the UI data format"""
-    print("\n🛠️ SUGGESTED UI FIX")
-    print("=" * 60)
+    print(  # noqa: T201"\n🛠️ SUGGESTED UI FIX")
+    print(  # noqa: T201"=" * 60)
 
     if not json_result or not isinstance(json_result, dict):
-        print("❌ Can't suggest fix - JSON result invalid")
+        print(  # noqa: T201"❌ Can't suggest fix - JSON result invalid")
         return
 
-    print("💡 PROPOSED SOLUTION:")
-    print("The UI expects a BaseFormat-like object with these properties:")
+    print(  # noqa: T201"💡 PROPOSED SOLUTION:")
+    print(  # noqa: T201"The UI expects a BaseFormat-like object with these properties:")
 
     # Create a mapping from JSON to UI format
     suggested_mapping = {}
@@ -199,9 +202,9 @@ def suggest_ui_fix(json_result, expected_fields):
         else:
             suggested_mapping[field] = f"json_result.get('{field}', '')"
 
-    print("\n📝 SUGGESTED FIELD MAPPING:")
+    print(  # noqa: T201"\n📝 SUGGESTED FIELD MAPPING:")
     for ui_field, json_path in suggested_mapping.items():
-        print(f"  {ui_field}: {json_path}")
+        print(  # noqa: T201f"  {ui_field}: {json_path}")
 
 
 if __name__ == "__main__":
@@ -220,8 +223,8 @@ if __name__ == "__main__":
     if json_result and expected_fields:
         suggest_ui_fix(json_result, expected_fields)
 
-    print("\n🎯 NEXT STEPS:")
-    print("1. Check if JSON result has all the fields UI expects")
-    print("2. Create a converter function to map JSON format → UI format")
-    print("3. Update metadata_parser.py to use the converter")
-    print("4. Test the UI updates!")
+    print(  # noqa: T201"\n🎯 NEXT STEPS:")
+    print(  # noqa: T201"1. Check if JSON result has all the fields UI expects")
+    print(  # noqa: T201"2. Create a converter function to map JSON format → UI format")
+    print(  # noqa: T201"3. Update metadata_parser.py to use the converter")
+    print(  # noqa: T201"4. Test the UI updates!")

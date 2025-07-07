@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Debug T5 parser traversal issue using the new MetadataEngine."""
 
@@ -16,13 +17,15 @@ from dataset_tools.metadata_engine.engine import create_metadata_engine
 
 def test_t5_traversal(file_path: str):
     """Test T5 parser traversal with a real workflow file."""
-    print(f"🔧 DEBUGGING T5 PARSER TRAVERSAL FOR: {file_path}")
-    print("=" * (42 + len(file_path)))
+    print(  # noqa: T201f"🔧 DEBUGGING T5 PARSER TRAVERSAL FOR: {file_path}")
+    print(  # noqa: T201"=" * (42 + len(file_path)))
 
     parser_definitions_path = project_root / "dataset_tools" / "parser_definitions"
 
     if not parser_definitions_path.is_dir():
-        print(f"❌ Error: Parser definitions directory not found at: {parser_definitions_path}")
+        print(  # noqa: T201
+            f"❌ Error: Parser definitions directory not found at: {parser_definitions_path}"
+        )
         return
 
     try:
@@ -34,11 +37,11 @@ def test_t5_traversal(file_path: str):
 
         if result:
             tool_name = getattr(result, "tool", result.get("tool", "Unknown"))
-            print(f"✅ Matched Parser: {tool_name}")
+            print(  # noqa: T201f"✅ Matched Parser: {tool_name}")
 
-            print("\n📋 Extracted Data:")
+            print(  # noqa: T201"\n📋 Extracted Data:")
             if isinstance(result, dict):
-                print(json.dumps(result, indent=2))
+                print(  # noqa: T201json.dumps(result, indent=2))
             else:
                 # For BaseFormat objects, print their attributes
                 data = {
@@ -50,12 +53,12 @@ def test_t5_traversal(file_path: str):
                     "height": getattr(result, "height", 0),
                     "raw": getattr(result, "raw", ""),
                 }
-                print(json.dumps(data, indent=2))
+                print(  # noqa: T201json.dumps(data, indent=2))
         else:
-            print("❌ No parser matched for this file.")
+            print(  # noqa: T201"❌ No parser matched for this file.")
 
     except Exception as e:
-        print(f"❌ An error occurred: {e}")
+        print(  # noqa: T201f"❌ An error occurred: {e}")
         import traceback
 
         traceback.print_exc()
@@ -65,7 +68,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Test T5 parser traversal with a given file using the new MetadataEngine."
     )
-    parser.add_argument("file_path", type=str, help="The absolute path to the T5 workflow file to test.")
+    parser.add_argument(
+        "file_path", type=str, help="The absolute path to the T5 workflow file to test."
+    )
     args = parser.parse_args()
 
     test_t5_traversal(args.file_path)

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Debug script to test individual sub-rules."""
 
@@ -16,8 +17,8 @@ def debug_subrules():
     test_file = "/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg"
     parser_definitions_path = Path(__file__).parent / "parser_definitions"
 
-    print("🔍 DEBUGGING SUB-RULES")
-    print("=" * 50)
+    print(  # noqa: T201"🔍 DEBUGGING SUB-RULES")
+    print(  # noqa: T201"=" * 50)
 
     # Create engine
     engine = get_metadata_engine(str(parser_definitions_path))
@@ -31,22 +32,22 @@ def debug_subrules():
     }
     subrule2 = {"source_type": "exif_user_comment", "operator": "exists"}
 
-    print("🧪 TESTING SUB-RULE 1:")
-    print(f"Rule: {subrule1}")
+    print(  # noqa: T201"🧪 TESTING SUB-RULE 1:")
+    print(  # noqa: T201f"Rule: {subrule1}")
     result1 = engine.rule_evaluator.evaluate_rule(subrule1, context)
-    print(f"Result: {result1}")
-    print()
+    print(  # noqa: T201f"Result: {result1}")
+    print(  # noqa: T201)
 
-    print("🧪 TESTING SUB-RULE 2:")
-    print(f"Rule: {subrule2}")
+    print(  # noqa: T201"🧪 TESTING SUB-RULE 2:")
+    print(  # noqa: T201f"Rule: {subrule2}")
     result2 = engine.rule_evaluator.evaluate_rule(subrule2, context)
-    print(f"Result: {result2}")
-    print()
+    print(  # noqa: T201f"Result: {result2}")
+    print(  # noqa: T201)
 
-    print("🧮 EXPECTED OR RESULT:")
+    print(  # noqa: T201"🧮 EXPECTED OR RESULT:")
     expected_or = result1 or result2
-    print(f"({result1} OR {result2}) = {expected_or}")
-    print()
+    print(  # noqa: T201f"({result1} OR {result2}) = {expected_or}")
+    print(  # noqa: T201)
 
     # Test the complex rule
     complex_rule = {
@@ -55,23 +56,23 @@ def debug_subrules():
         "rules": [subrule1, subrule2],
     }
 
-    print("🧪 TESTING COMPLEX OR RULE:")
-    print(f"Rule: {complex_rule}")
+    print(  # noqa: T201"🧪 TESTING COMPLEX OR RULE:")
+    print(  # noqa: T201f"Rule: {complex_rule}")
     complex_result = engine.rule_evaluator.evaluate_rule(complex_rule, context)
-    print(f"Result: {complex_result}")
-    print()
+    print(  # noqa: T201f"Result: {complex_result}")
+    print(  # noqa: T201)
 
-    print("📊 SUMMARY:")
-    print(f"Sub-rule 1 (pil_info_key parameters exists): {result1}")
-    print(f"Sub-rule 2 (exif_user_comment exists): {result2}")
-    print(f"Expected OR result: {expected_or}")
-    print(f"Actual complex rule result: {complex_result}")
-    print(f"Match: {expected_or == complex_result}")
+    print(  # noqa: T201"📊 SUMMARY:")
+    print(  # noqa: T201f"Sub-rule 1 (pil_info_key parameters exists): {result1}")
+    print(  # noqa: T201f"Sub-rule 2 (exif_user_comment exists): {result2}")
+    print(  # noqa: T201f"Expected OR result: {expected_or}")
+    print(  # noqa: T201f"Actual complex rule result: {complex_result}")
+    print(  # noqa: T201f"Match: {expected_or == complex_result}")
 
     return expected_or == complex_result
 
 
 if __name__ == "__main__":
     success = debug_subrules()
-    print(f"\n{'🎉 SUCCESS' if success else '❌ FAILED'}")
+    print(  # noqa: T201f"\n{'🎉 SUCCESS' if success else '❌ FAILED'}")
     sys.exit(0 if success else 1)

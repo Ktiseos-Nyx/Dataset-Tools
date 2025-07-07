@@ -18,16 +18,16 @@ from defusedxml import minidom
 from PIL import Image, UnidentifiedImageError
 
 from .constants import PARAMETER_PLACEHOLDER
-from .format import CivitaiFormat  # YodayoFormat,
-from .format import MochiDiffusionFormat  # Now expects IPTC data
 from .format import (
     A1111,
     BaseFormat,
+    CivitaiFormat,  # YodayoFormat,
     ComfyUI,
     DrawThings,
     EasyDiffusion,
     Fooocus,
     InvokeAI,
+    MochiDiffusionFormat,  # Now expects IPTC data
     NovelAI,
     RuinedFooocusFormat,
     SwarmUI,
@@ -93,7 +93,9 @@ class ImageDataReader:
             if isinstance(base_param_key_attr, list)
             else ["model", "sampler", "seed", "cfg", "steps", "size"]
         )
-        self._parameter: dict[str, Any] = dict.fromkeys(self._parameter_key, PARAMETER_PLACEHOLDER)
+        self._parameter: dict[str, Any] = dict.fromkeys(
+            self._parameter_key, PARAMETER_PLACEHOLDER
+        )
         self._is_txt: bool = is_txt
         self._is_sdxl: bool = False
         self._format_str: str = ""
@@ -125,7 +127,9 @@ class ImageDataReader:
         self._format_str = ""
         self._exif_software_tag = None
 
-    def _get_display_name(self, file_path_or_obj: str | Path | TextIO | BinaryIO) -> str:
+    def _get_display_name(
+        self, file_path_or_obj: str | Path | TextIO | BinaryIO
+    ) -> str:
         # ... (as before) ...
         if hasattr(file_path_or_obj, "name") and file_path_or_obj.name:
             try:
@@ -153,7 +157,9 @@ class ImageDataReader:
             if k == "info" and isinstance(v_val, dict):
                 kwarg_keys_for_log.append("info=<dict>")
             else:
-                kwarg_keys_for_log.append(f"{k}='{v_val}'" if isinstance(v_val, str) else f"{k}={v_val}")
+                kwarg_keys_for_log.append(
+                    f"{k}='{v_val}'" if isinstance(v_val, str) else f"{k}={v_val}"
+                )
 
         self._logger.debug(
             "Attempting parser: %s with kwargs: [%s]",
@@ -181,11 +187,15 @@ class ImageDataReader:
             # Add parsed IPTC info if Mochi is being tried (or make it general)
             # If MochiDiffusionFormat, ensure it gets the IPTC fields
             if parser_class is MochiDiffusionFormat and self._parsed_iptc_info:
-                parser_info_arg.update(self._parsed_iptc_info)  # Add all parsed IPTC fields
+                parser_info_arg.update(
+                    self._parsed_iptc_info
+                )  # Add all parsed IPTC fields
 
             if parser_info_arg:  # Only pass info if it has content
                 kwargs["info"] = parser_info_arg
-            elif "info" in kwargs and not parser_info_arg:  # Remove empty info from kwargs
+            elif (
+                "info" in kwargs and not parser_info_arg
+            ):  # Remove empty info from kwargs
                 del kwargs["info"]
 
             parser_kwargs = kwargs.copy()
@@ -207,10 +217,16 @@ class ImageDataReader:
 
             if parser_own_status != BaseFormat.Status.FORMAT_DETECTION_ERROR:
                 parser_error_msg = getattr(temp_parser, "error", "Unknown parser error")
-                if parser_error_msg and (self._status == BaseFormat.Status.UNREAD or not self._error):
+                if parser_error_msg and (
+                    self._status == BaseFormat.Status.UNREAD or not self._error
+                ):
                     self._error = parser_error_msg
 
-            status_name = parser_own_status.name if hasattr(parser_own_status, "name") else str(parser_own_status)
+            status_name = (
+                parser_own_status.name
+                if hasattr(parser_own_status, "name")
+                else str(parser_own_status)
+            )
             self._logger.debug(
                 "%s parsing attempt: Status %s. Error: %s",
                 parser_class.__name__,
@@ -237,7 +253,9 @@ class ImageDataReader:
                 exc_info=True,
             )
             if self._status == BaseFormat.Status.UNREAD:
-                self._error = f"Runtime error in {parser_class.__name__}: {general_exception}"
+                self._error = (
+                    f"Runtime error in {parser_class.__name__}: {general_exception}"
+                )
             return False
 
     def _handle_text_file(self, file_obj: TextIO) -> None:
@@ -246,7 +264,9 @@ class ImageDataReader:
         try:
             raw_text_content = file_obj.read()
         except Exception as e_read:
-            self._logger.error("Error reading text file object: %s", e_read, exc_info=True)
+            self._logger.error(
+                "Error reading text file object: %s", e_read, exc_info=True
+            )
             self._status = BaseFormat.Status.FORMAT_ERROR
             self._error = f"Could not read text file content: {e_read!s}"
             return
@@ -257,7 +277,9 @@ class ImageDataReader:
                 self._error = "Failed to parse text file as A1111 format."
         if not self._parser:
             self._raw = raw_text_content
-        log_status_name = self._status.name if hasattr(self._status, "name") else str(self._status)
+        log_status_name = (
+            self._status.name if hasattr(self._status, "name") else str(self._status)
+        )
         self._logger.info(
             "Text file processed. Final Status: %s, Tool: %s",
             log_status_name,
@@ -270,19 +292,30 @@ class ImageDataReader:
             return
         try:
             exif_pil = image_obj.getexif()
-            if exif_pil and (exif_json_str := exif_pil.get(0x0110)) and isinstance(exif_json_str, (str, bytes)):
+            if (
+                exif_pil
+                and (exif_json_str := exif_pil.get(0x0110))
+                and isinstance(exif_json_str, (str, bytes))
+            ):
                 if isinstance(exif_json_str, bytes):
                     exif_json_str = exif_json_str.decode("utf-8", errors="ignore")
                 if "sui_image_params" in exif_json_str:
                     try:
                         exif_dict = json.loads(exif_json_str)
-                        if isinstance(exif_dict, dict) and "sui_image_params" in exif_dict:
+                        if (
+                            isinstance(exif_dict, dict)
+                            and "sui_image_params" in exif_dict
+                        ):
                             if self._try_parser(SwarmUI, info=exif_dict):
                                 return
                     except json.JSONDecodeError as json_err:
-                        self._logger.debug("SwarmUI legacy EXIF (0x0110): Invalid JSON: %s", json_err)
+                        self._logger.debug(
+                            "SwarmUI legacy EXIF (0x0110): Invalid JSON: %s", json_err
+                        )
         except Exception as e:
-            self._logger.debug("SwarmUI legacy EXIF (0x0110) check failed: %s", e, exc_info=False)
+            self._logger.debug(
+                "SwarmUI legacy EXIF (0x0110) check failed: %s", e, exc_info=False
+            )
 
     def _process_png_chunks(self, image_obj: Image.Image) -> None:
         # ... (as before, but ensure MochiDiffusionFormat is called appropriately if it might use info for PNGs) ...
@@ -301,7 +334,9 @@ class ImageDataReader:
 
             # Provide 'raw' preferentially if a specific chunk is the known primary source
             if (parser_class is A1111 and png_params_chunk) or (
-                parser_class is SwarmUI and png_params_chunk and "sui_image_params" in png_params_chunk
+                parser_class is SwarmUI
+                and png_params_chunk
+                and "sui_image_params" in png_params_chunk
             ):
                 kwargs_for_parser["raw"] = png_params_chunk
             elif parser_class is MochiDiffusionFormat:
@@ -361,7 +396,9 @@ class ImageDataReader:
         except (minidom.ExpatError, json.JSONDecodeError) as e:
             self._logger.warning("DrawThings PNG XMP: Parse error: %s", e)
         except Exception as e:
-            self._logger.warning("DrawThings PNG XMP: Unexpected error: %s", e, exc_info=True)
+            self._logger.warning(
+                "DrawThings PNG XMP: Unexpected error: %s", e, exc_info=True
+            )
 
     def _parse_novelai_lsb(self, image_obj: Image.Image) -> None:
         # ... (as before) ...
@@ -373,13 +410,18 @@ class ImageDataReader:
                 self._logger.debug("NovelAI LSB: Extractor found no data.")
                 return
             magic_bytes = extractor.get_next_n_bytes(len(self.NOVELAI_MAGIC))
-            if magic_bytes and magic_bytes.decode("utf-8", "ignore") == self.NOVELAI_MAGIC:
+            if (
+                magic_bytes
+                and magic_bytes.decode("utf-8", "ignore") == self.NOVELAI_MAGIC
+            ):
                 if self._try_parser(NovelAI, extractor=extractor):
                     return
             else:
                 self._logger.debug("NovelAI LSB: Magic bytes not found.")
         except Exception as e:
-            self._logger.warning("NovelAI LSB check encountered an error: %s", e, exc_info=True)
+            self._logger.warning(
+                "NovelAI LSB check encountered an error: %s", e, exc_info=True
+            )
 
     def _process_jpeg_webp_exif(self, image_obj: Image.Image) -> None:
         if self._parser:
@@ -397,20 +439,31 @@ class ImageDataReader:
                 # A better way would be to store the loaded piexif_dict itself.
                 # Let's reload here for simplicity, or assume it's already available via a helper.
                 temp_exif_dict = piexif.load(exif_bytes)
-                user_comment_bytes = temp_exif_dict.get("Exif", {}).get(piexif.ExifIFD.UserComment)
+                user_comment_bytes = temp_exif_dict.get("Exif", {}).get(
+                    piexif.ExifIFD.UserComment
+                )
                 if user_comment_bytes:
-                    raw_user_comment_str = piexif.helper.UserComment.load(user_comment_bytes)
+                    raw_user_comment_str = piexif.helper.UserComment.load(
+                        user_comment_bytes
+                    )
             except Exception:  # piexif.InvalidImageDataError or others
                 self._logger.debug("Could not load UserComment via piexif from EXIF.")
 
         jfif_comment_bytes = self._info.get("comment", b"")
-        jfif_comment_str = jfif_comment_bytes.decode("utf-8", "ignore") if isinstance(jfif_comment_bytes, bytes) else ""
+        jfif_comment_str = (
+            jfif_comment_bytes.decode("utf-8", "ignore")
+            if isinstance(jfif_comment_bytes, bytes)
+            else ""
+        )
 
         # --- Attempt RuinedFooocus (very specific UserComment JSON) ---
         if raw_user_comment_str and raw_user_comment_str.strip().startswith("{"):
             try:
                 uc_json = json.loads(raw_user_comment_str)
-                if isinstance(uc_json, dict) and uc_json.get("software") == "RuinedFooocus":
+                if (
+                    isinstance(uc_json, dict)
+                    and uc_json.get("software") == "RuinedFooocus"
+                ):
                     if self._try_parser(RuinedFooocusFormat, raw=raw_user_comment_str):
                         return
             except json.JSONDecodeError:
@@ -427,9 +480,13 @@ class ImageDataReader:
                 if xmp_chunk := self._info.get("XML:com.adobe.xmp"):
                     try:
                         xmp_dom = minidom.parseString(xmp_chunk)
-                        description_nodes = xmp_dom.getElementsByTagName("rdf:Description")
+                        description_nodes = xmp_dom.getElementsByTagName(
+                            "rdf:Description"
+                        )
                         for desc_node in description_nodes:
-                            uc_nodes = desc_node.getElementsByTagName("exif:UserComment")
+                            uc_nodes = desc_node.getElementsByTagName(
+                                "exif:UserComment"
+                            )
                             if uc_nodes and uc_nodes[0].childNodes:
                                 data_str = uc_nodes[0].childNodes[0].data
                                 if data_str:
@@ -442,7 +499,9 @@ class ImageDataReader:
                     continue
             elif parser_class is MochiDiffusionFormat:
                 iptc_caption = self._parsed_iptc_info.get("iptc_caption_abstract", "")
-                if iptc_caption:  # Only try Mochi if we actually found its main data source
+                if (
+                    iptc_caption
+                ):  # Only try Mochi if we actually found its main data source
                     kwargs_for_parser["raw"] = iptc_caption
                     # info kwarg with other IPTC fields is added by _try_parser if self._parsed_iptc_info is populated
                 else:  # No caption, Mochi parser won't work with raw=None
@@ -472,7 +531,9 @@ class ImageDataReader:
         if not self._parser and image_obj.mode == "RGBA":
             self._parse_novelai_lsb(image_obj)
 
-    def _process_image_file(self, file_path_or_obj: str | Path | BinaryIO, file_display_name: str) -> None:
+    def _process_image_file(
+        self, file_path_or_obj: str | Path | BinaryIO, file_display_name: str
+    ) -> None:
         try:
             with Image.open(file_path_or_obj) as img:
                 self._width = img.width
@@ -492,10 +553,16 @@ class ImageDataReader:
                     try:
                         exif_data_dict = piexif.load(exif_bytes)
                         # Software Tag
-                        sw_bytes = exif_data_dict.get("0th", {}).get(piexif.ImageIFD.Software)
+                        sw_bytes = exif_data_dict.get("0th", {}).get(
+                            piexif.ImageIFD.Software
+                        )
                         if sw_bytes and isinstance(sw_bytes, bytes):
-                            self._exif_software_tag = sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
-                            self._logger.debug("Found EXIF:Software tag: %s", self._exif_software_tag)
+                            self._exif_software_tag = (
+                                sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
+                            )
+                            self._logger.debug(
+                                "Found EXIF:Software tag: %s", self._exif_software_tag
+                            )
 
                         # IPTC Data for MochiDiffusion and potentially others
                         iptc_dict_from_exif = exif_data_dict.get("IPTC", {})
@@ -504,32 +571,42 @@ class ImageDataReader:
                             caption_b = iptc_dict_from_exif.get(IPTC_CAPTION_ABSTRACT)
                             if caption_b:
                                 try:
-                                    self._parsed_iptc_info["iptc_caption_abstract"] = caption_b.decode(
-                                        "utf-8", "replace"
+                                    self._parsed_iptc_info["iptc_caption_abstract"] = (
+                                        caption_b.decode("utf-8", "replace")
                                     )
                                 except AttributeError:
-                                    self._parsed_iptc_info["iptc_caption_abstract"] = str(caption_b)
+                                    self._parsed_iptc_info["iptc_caption_abstract"] = (
+                                        str(caption_b)
+                                    )
 
-                            program_b = iptc_dict_from_exif.get(IPTC_ORIGINATING_PROGRAM)
+                            program_b = iptc_dict_from_exif.get(
+                                IPTC_ORIGINATING_PROGRAM
+                            )
                             if program_b:
                                 try:
-                                    self._parsed_iptc_info["iptc_originating_program"] = program_b.decode(
-                                        "utf-8", "replace"
-                                    )
+                                    self._parsed_iptc_info[
+                                        "iptc_originating_program"
+                                    ] = program_b.decode("utf-8", "replace")
                                 except AttributeError:
-                                    self._parsed_iptc_info["iptc_originating_program"] = str(program_b)
+                                    self._parsed_iptc_info[
+                                        "iptc_originating_program"
+                                    ] = str(program_b)
 
                             version_b = iptc_dict_from_exif.get(IPTC_PROGRAM_VERSION)
                             if version_b:
                                 try:
-                                    self._parsed_iptc_info["iptc_program_version"] = version_b.decode(
-                                        "utf-8", "replace"
+                                    self._parsed_iptc_info["iptc_program_version"] = (
+                                        version_b.decode("utf-8", "replace")
                                     )
                                 except AttributeError:
-                                    self._parsed_iptc_info["iptc_program_version"] = str(version_b)
+                                    self._parsed_iptc_info["iptc_program_version"] = (
+                                        str(version_b)
+                                    )
 
                             if self._parsed_iptc_info:
-                                self._logger.debug("Parsed IPTC fields: %s", self._parsed_iptc_info)
+                                self._logger.debug(
+                                    "Parsed IPTC fields: %s", self._parsed_iptc_info
+                                )
 
                     except Exception as e_exif_load:
                         self._logger.debug(
@@ -553,11 +630,17 @@ class ImageDataReader:
                             # This part requires checking what getiptcinfo() actually returns.
                             # For example:
                             if val := pil_iptc_info.get((2, 120)):
-                                self._parsed_iptc_info["iptc_caption_abstract"] = str(val)
+                                self._parsed_iptc_info["iptc_caption_abstract"] = str(
+                                    val
+                                )
                             if val := pil_iptc_info.get((2, 65)):
-                                self._parsed_iptc_info["iptc_originating_program"] = str(val)
+                                self._parsed_iptc_info["iptc_originating_program"] = (
+                                    str(val)
+                                )
                             if val := pil_iptc_info.get((2, 70)):
-                                self._parsed_iptc_info["iptc_program_version"] = str(val)
+                                self._parsed_iptc_info["iptc_program_version"] = str(
+                                    val
+                                )
                             if self._parsed_iptc_info:
                                 self._logger.debug(
                                     "Parsed IPTC fields from Pillow: %s",
@@ -586,10 +669,14 @@ class ImageDataReader:
                         ):  # Re-check if not parsed by IPTC path
                             try:
                                 exif_d = piexif.load(exif_b)
-                                uc_b = exif_d.get("Exif", {}).get(piexif.ExifIFD.UserComment)
+                                uc_b = exif_d.get("Exif", {}).get(
+                                    piexif.ExifIFD.UserComment
+                                )
                                 if uc_b:
                                     uc_s = piexif.helper.UserComment.load(uc_b)
-                                    if uc_s and not uc_s.strip().startswith("{"):  # A1111 is text
+                                    if uc_s and not uc_s.strip().startswith(
+                                        "{"
+                                    ):  # A1111 is text
                                         if self._try_parser(A1111, raw=uc_s):
                                             pass
                             except Exception as e_gen_exif:
@@ -605,7 +692,9 @@ class ImageDataReader:
         except UnidentifiedImageError as e:
             self._status = BaseFormat.Status.FORMAT_ERROR
             self._error = f"Cannot identify image: {e!s}"
-            self._logger.error("Cannot identify image file '%s': %s", file_display_name, e)
+            self._logger.error(
+                "Cannot identify image file '%s': %s", file_display_name, e
+            )
         except OSError as e:
             self._status = BaseFormat.Status.FORMAT_ERROR
             self._error = f"File system error: {e!s}"
@@ -629,7 +718,9 @@ class ImageDataReader:
         # ... (as before) ...
         self._initialize_state()
         file_display_name = self._get_display_name(file_path_or_obj)
-        self._logger.debug("Reading data for: %s (is_txt: %s)", file_display_name, self._is_txt)
+        self._logger.debug(
+            "Reading data for: %s (is_txt: %s)", file_display_name, self._is_txt
+        )
         if self._is_txt:
             if hasattr(file_path_or_obj, "read") and callable(file_path_or_obj.read):
                 self._handle_text_file(file_path_or_obj)
@@ -638,7 +729,9 @@ class ImageDataReader:
                     with open(file_path_or_obj, encoding="utf-8") as f_obj:
                         self._handle_text_file(f_obj)
                 except Exception as e_open:
-                    self._logger.error("Error opening text file '%s': %s", file_display_name, e_open)
+                    self._logger.error(
+                        "Error opening text file '%s': %s", file_display_name, e_open
+                    )
                     self._status = BaseFormat.Status.FORMAT_ERROR
                     self._error = f"Could not open text file: {e_open!s}"
         else:
@@ -650,9 +743,13 @@ class ImageDataReader:
             )
             self._status = BaseFormat.Status.FORMAT_ERROR
             if not self._error:
-                self._error = "No suitable metadata parser or file unreadable/corrupted."
+                self._error = (
+                    "No suitable metadata parser or file unreadable/corrupted."
+                )
         log_tool = self._tool or "None"
-        log_status_name = self._status.name if hasattr(self._status, "name") else str(self._status)
+        log_status_name = (
+            self._status.name if hasattr(self._status, "name") else str(self._status)
+        )
         self._logger.info(
             "Final Reading Status for '%s': %s, Tool: %s",
             file_display_name,
@@ -664,7 +761,9 @@ class ImageDataReader:
             if self._status != BaseFormat.Status.READ_SUCCESS or not final_error_to_log:
                 final_error_to_log = self._parser.error
         if self._status != BaseFormat.Status.READ_SUCCESS and final_error_to_log:
-            self._logger.warning("Error details for '%s': %s", file_display_name, final_error_to_log)
+            self._logger.warning(
+                "Error details for '%s': %s", file_display_name, final_error_to_log
+            )
 
     # ... (remove_data, save_image, construct_data, prompt_to_line, and all properties remain the same) ...
     # --- Properties ---
@@ -692,7 +791,11 @@ class ImageDataReader:
             getattr(
                 self._parser,
                 "positive",
-                (self._positive_sdxl.get("positive", "") if self._positive_sdxl else self._positive),
+                (
+                    self._positive_sdxl.get("positive", "")
+                    if self._positive_sdxl
+                    else self._positive
+                ),
             )
         )
 
@@ -702,7 +805,11 @@ class ImageDataReader:
             getattr(
                 self._parser,
                 "negative",
-                (self._negative_sdxl.get("negative", "") if self._negative_sdxl else self._negative),
+                (
+                    self._negative_sdxl.get("negative", "")
+                    if self._negative_sdxl
+                    else self._negative
+                ),
             )
         )
 
@@ -726,12 +833,18 @@ class ImageDataReader:
     @property
     def tool(self) -> str:
         parser_tool = getattr(self._parser, "tool", None)
-        return str(parser_tool if parser_tool and parser_tool != "Unknown" else self._tool)
+        return str(
+            parser_tool if parser_tool and parser_tool != "Unknown" else self._tool
+        )
 
     @property
     def parameter(self) -> dict[str, Any]:
         parser_param = getattr(self._parser, "parameter", None)
-        return parser_param.copy() if parser_param is not None else (self._parameter.copy() if self._parameter else {})
+        return (
+            parser_param.copy()
+            if parser_param is not None
+            else (self._parameter.copy() if self._parameter else {})
+        )
 
     @property
     def format(self) -> str:
@@ -756,7 +869,9 @@ class ImageDataReader:
             "tool": self.tool,
             "setting": self.setting,
             "is_sdxl": self.is_sdxl,
-            "status": (self.status.name if hasattr(self.status, "name") else str(self.status)),
+            "status": (
+                self.status.name if hasattr(self.status, "name") else str(self.status)
+            ),
             "error": self.error,
             "format": self.format,
         }
@@ -768,8 +883,12 @@ class ImageDataReader:
         try:
             return json.dumps(fb_props, indent=2)
         except TypeError as json_type_err:
-            self._logger.error("Error serializing props to JSON: %s. Data: %s", json_type_err, fb_props)
-            return f'{{"error": "Failed to serialize props to JSON: {json_type_err!s}"}}'
+            self._logger.error(
+                "Error serializing props to JSON: %s. Data: %s", json_type_err, fb_props
+            )
+            return (
+                f'{{"error": "Failed to serialize props to JSON: {json_type_err!s}"}}'
+            )
 
     @property
     def status(self) -> BaseFormat.Status:

@@ -66,7 +66,9 @@ class TestParseMetadataIntegration(unittest.TestCase):
         self.comfy_example_workflow_str = json.dumps({"nodes": [], "links": []})
 
     @patch("dataset_tools.metadata_parser.ImageDataReader")
-    def test_parse_metadata_a1111_success(self, mock_image_data_reader: MagicMock) -> None:
+    def test_parse_metadata_a1111_success(
+        self, mock_image_data_reader: MagicMock
+    ) -> None:
         """Test successful parsing of A1111 metadata via parse_metadata."""
         mock_reader_instance = mock_image_data_reader.return_value
         mock_reader_instance.status = BaseFormat.Status.READ_SUCCESS
@@ -113,7 +115,9 @@ class TestParseMetadataIntegration(unittest.TestCase):
         self.assertEqual(gen_data.get("Sampler"), "DPM++ 2M Karras")
         self.assertEqual(gen_data.get("Model"), "test_model_a1111.safetensors")
         self.assertIn(UpField.METADATA.value, result)
-        self.assertEqual(result[UpField.METADATA.value].get("Detected Tool"), "A1111 webUI")
+        self.assertEqual(
+            result[UpField.METADATA.value].get("Detected Tool"), "A1111 webUI"
+        )
 
     # ... (other test methods with similar docstring and type hint additions) ...
 
@@ -124,7 +128,9 @@ class TestParseMetadataIntegration(unittest.TestCase):
             {"Steps": "20", "Sampler": "Euler"},
         )
         self.assertEqual(
-            make_paired_str_dict('Lora hashes: "lora1:hashA, lora2:hashB", TI hashes: "ti1:hashC"'),
+            make_paired_str_dict(
+                'Lora hashes: "lora1:hashA, lora2:hashB", TI hashes: "ti1:hashC"'
+            ),
             {"Lora hashes": "lora1:hashA, lora2:hashB", "TI hashes": "ti1:hashC"},
         )
         a1111_settings = (
@@ -144,7 +150,9 @@ class TestParseMetadataIntegration(unittest.TestCase):
         self.assertEqual(make_paired_str_dict(None), {})  # type: ignore
 
     @patch("dataset_tools.metadata_parser.nfo")
-    def test_process_pyexiv2_data_full(self, mock_nfo_logger: MagicMock) -> None:  # Renamed and typed mock
+    def test_process_pyexiv2_data_full(
+        self, mock_nfo_logger: MagicMock
+    ) -> None:  # Renamed and typed mock
         """Test processing of full EXIF, XMP, and IPTC data from pyexiv2 format."""
         # ... (rest of the test, ensuring long strings or dicts are formatted for readability)
         pyexiv2_input = {
@@ -191,7 +199,9 @@ class TestParseMetadataIntegration(unittest.TestCase):
                 "EXIF data mismatch",
             )
         else:
-            self.assertNotIn(DownField.EXIF.value, actual_output, "EXIF section unexpectedly present")
+            self.assertNotIn(
+                DownField.EXIF.value, actual_output, "EXIF section unexpectedly present"
+            )
         if UpField.TAGS.value in expected_output:
             self.assertIn(UpField.TAGS.value, actual_output, "TAGS section missing")
             self.assertDictEqual(
@@ -200,8 +210,12 @@ class TestParseMetadataIntegration(unittest.TestCase):
                 "TAGS data mismatch",
             )
         else:
-            self.assertNotIn(UpField.TAGS.value, actual_output, "TAGS section unexpectedly present")
-        actual_output_ai_parsed = process_pyexiv2_data(pyexiv2_input, ai_tool_parsed=True)
+            self.assertNotIn(
+                UpField.TAGS.value, actual_output, "TAGS section unexpectedly present"
+            )
+        actual_output_ai_parsed = process_pyexiv2_data(
+            pyexiv2_input, ai_tool_parsed=True
+        )
         if DownField.EXIF.value in actual_output_ai_parsed:
             self.assertNotIn(
                 "Usercomment (std.)",

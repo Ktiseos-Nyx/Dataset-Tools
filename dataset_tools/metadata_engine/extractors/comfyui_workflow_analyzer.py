@@ -27,7 +27,9 @@ class ComfyUIWorkflowAnalyzer:
         self.logger = logger
         self.node_dictionary = self._load_node_dictionary(dictionary_path)
 
-    def _load_node_dictionary(self, dictionary_path: str | None = None) -> dict[str, Any]:
+    def _load_node_dictionary(
+        self, dictionary_path: str | None = None
+    ) -> dict[str, Any]:
         """Load the ComfyUI node dictionary."""
         if dictionary_path is None:
             # Default path relative to this file
@@ -102,12 +104,19 @@ class ComfyUIWorkflowAnalyzer:
         if "nodes" in workflow_data:
             # Format: {"nodes": [{"id": 1, "type": "...", ...}, ...]}
             if isinstance(workflow_data["nodes"], list):
-                return {str(node.get("id", i)): node for i, node in enumerate(workflow_data["nodes"])}
+                return {
+                    str(node.get("id", i)): node
+                    for i, node in enumerate(workflow_data["nodes"])
+                }
             if isinstance(workflow_data["nodes"], dict):
                 return workflow_data["nodes"]
 
         # Format: {"1": {"type": "...", ...}, "2": {...}, ...}
-        if all(key.isdigit() for key in workflow_data.keys() if isinstance(workflow_data[key], dict)):
+        if all(
+            key.isdigit()
+            for key in workflow_data.keys()
+            if isinstance(workflow_data[key], dict)
+        ):
             return {k: v for k, v in workflow_data.items() if isinstance(v, dict)}
 
         return {}
@@ -153,7 +162,9 @@ class ComfyUIWorkflowAnalyzer:
                 return types[node_type]
         return None
 
-    def _extract_parameters_by_priority(self, nodes: dict[str, NodeData]) -> dict[str, Any]:
+    def _extract_parameters_by_priority(
+        self, nodes: dict[str, NodeData]
+    ) -> dict[str, Any]:
         """Extract parameters using the priority system from the dictionary."""
         parameters = {}
         priorities = self.node_dictionary.get("extraction_priorities", {})
@@ -167,7 +178,9 @@ class ComfyUIWorkflowAnalyzer:
 
         return parameters
 
-    def _find_parameter_in_nodes(self, nodes: dict[str, NodeData], node_type: str, param_name: str) -> Any:
+    def _find_parameter_in_nodes(
+        self, nodes: dict[str, NodeData], node_type: str, param_name: str
+    ) -> Any:
         """Find a specific parameter from nodes of a given type."""
         node_def = self._get_node_definition(node_type)
         if not node_def:
@@ -175,7 +188,9 @@ class ComfyUIWorkflowAnalyzer:
 
         # Find nodes of this type
         matching_nodes = [
-            node for node in nodes.values() if node.get("type") == node_type or node.get("class_type") == node_type
+            node
+            for node in nodes.values()
+            if node.get("type") == node_type or node.get("class_type") == node_type
         ]
 
         if not matching_nodes:
@@ -238,7 +253,9 @@ class ComfyUIWorkflowAnalyzer:
                 return node.get(extraction_path)
 
         except Exception as e:
-            self.logger.debug(f"Error extracting value with path '{extraction_path}': {e}")
+            self.logger.debug(
+                f"Error extracting value with path '{extraction_path}': {e}"
+            )
 
         return None
 
@@ -261,7 +278,9 @@ class ComfyUIWorkflowAnalyzer:
 
             elif node_type in ["LoraLoader", "LoraLoaderModelOnly"]:
                 if len(widgets) >= 2:
-                    model_info["loras"].append({"name": widgets[0], "strength": widgets[1]})
+                    model_info["loras"].append(
+                        {"name": widgets[0], "strength": widgets[1]}
+                    )
 
             elif node_type == "LoraTagLoader":
                 if inputs and "text" in inputs:
@@ -274,7 +293,11 @@ class ComfyUIWorkflowAnalyzer:
                         model_info["loras"].append(
                             {
                                 "name": name,
-                                "strength": (float(strength) if strength.replace(".", "").isdigit() else strength),
+                                "strength": (
+                                    float(strength)
+                                    if strength.replace(".", "").isdigit()
+                                    else strength
+                                ),
                             }
                         )
 
@@ -410,7 +433,9 @@ class ComfyUIWorkflowAnalyzer:
 
         return sampling_info
 
-    def _analyze_workflow_chains(self, nodes: dict[str, NodeData], links: list[Any]) -> dict[str, list[str]]:
+    def _analyze_workflow_chains(
+        self, nodes: dict[str, NodeData], links: list[Any]
+    ) -> dict[str, list[str]]:
         """Analyze the workflow connection chains."""
         chains = {
             "model_chain": [],
@@ -435,7 +460,9 @@ class ComfyUIWorkflowAnalyzer:
 
 
 # Convenience function for easy access
-def analyze_comfyui_workflow(workflow_data: WorkflowData, logger: logging.Logger | None = None) -> dict[str, Any]:
+def analyze_comfyui_workflow(
+    workflow_data: WorkflowData, logger: logging.Logger | None = None
+) -> dict[str, Any]:
     """Convenience function to analyze a ComfyUI workflow.
 
     Args:

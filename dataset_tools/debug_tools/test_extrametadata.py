@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Parse the extraMetadata to see if it contains resource descriptions."""
 
@@ -12,7 +13,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def test_extrametadata():
     """Parse the extraMetadata to see what resource info it contains."""
-    test_file = "/Users/duskfall/Downloads/Metadata Samples/B4V0V3FKDVZHZZRERKQ31YFR10.jpeg"
+    test_file = (
+        "/Users/duskfall/Downloads/Metadata Samples/B4V0V3FKDVZHZZRERKQ31YFR10.jpeg"
+    )
 
     try:
         from dataset_tools.metadata_engine.context_preparation import ContextDataPreparer
@@ -24,13 +27,13 @@ def test_extrametadata():
         if user_comment:
             data = json.loads(user_comment)
 
-            print("🔍 CHECKING EXTRAMETADATA CONTENT:")
-            print("=" * 40)
+            print(  # noqa: T201"🔍 CHECKING EXTRAMETADATA CONTENT:")
+            print(  # noqa: T201"=" * 40)
 
             if "extraMetadata" in data:
                 extra_meta_str = data["extraMetadata"]
-                print("📄 Raw extraMetadata string:")
-                print(f"   {extra_meta_str[:200]}...")
+                print(  # noqa: T201"📄 Raw extraMetadata string:")
+                print(  # noqa: T201f"   {extra_meta_str[:200]}...")
 
                 # Try to parse the escaped JSON
                 try:
@@ -38,38 +41,38 @@ def test_extrametadata():
                     import codecs
 
                     decoded = codecs.decode(extra_meta_str, "unicode_escape")
-                    print("\n📋 Decoded extraMetadata string:")
-                    print(f"   {decoded[:200]}...")
+                    print(  # noqa: T201"\n📋 Decoded extraMetadata string:")
+                    print(  # noqa: T201f"   {decoded[:200]}...")
 
                     # Then parse as JSON
                     extra_meta = json.loads(decoded)
-                    print("\n✅ PARSED EXTRAMETADATA:")
+                    print(  # noqa: T201"\n✅ PARSED EXTRAMETADATA:")
                     for key, value in extra_meta.items():
                         if key == "resources" and isinstance(value, list):
-                            print(f"   📦 {key}: [")
+                            print(  # noqa: T201f"   📦 {key}: [")
                             for i, resource in enumerate(value):
-                                print(f"      Resource {i + 1}: {resource}")
-                            print("   ]")
+                                print(  # noqa: T201f"      Resource {i + 1}: {resource}")
+                            print(  # noqa: T201"   ]")
                         else:
-                            print(f"   {key}: {value}")
+                            print(  # noqa: T201f"   {key}: {value}")
 
                 except Exception as e:
-                    print(f"   ❌ Failed to parse extraMetadata: {e}")
+                    print(  # noqa: T201f"   ❌ Failed to parse extraMetadata: {e}")
 
-            print("\n🏷️ COMPARING WITH AIRS ARRAY:")
+            print(  # noqa: T201"\n🏷️ COMPARING WITH AIRS ARRAY:")
             if "extra" in data and "airs" in data["extra"]:
                 airs = data["extra"]["airs"]
-                print(f"   AIRS count: {len(airs)}")
+                print(  # noqa: T201f"   AIRS count: {len(airs)}")
                 for i, urn in enumerate(airs):
-                    print(f"   URN {i + 1}: {urn}")
+                    print(  # noqa: T201f"   URN {i + 1}: {urn}")
 
                     # Extract the model version ID from URN
                     if "@" in urn:
                         version_id = urn.split("@")[-1]
-                        print(f"           Version ID: {version_id}")
+                        print(  # noqa: T201f"           Version ID: {version_id}")
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(  # noqa: T201f"❌ Error: {e}")
         import traceback
 
         traceback.print_exc()

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Final test for T5 parser after fixing the traversal methods."""
 
@@ -22,25 +23,27 @@ def load_module_from_file(file_path, module_name):
 # Mock logger
 class MockLogger:
     def debug(self, msg):
-        print(f"DEBUG: {msg}")
+        print(  # noqa: T201f"DEBUG: {msg}")
 
     def warning(self, msg):
-        print(f"WARNING: {msg}")
+        print(  # noqa: T201f"WARNING: {msg}")
 
     def error(self, msg):
-        print(f"ERROR: {msg}")
+        print(  # noqa: T201f"ERROR: {msg}")
 
     def info(self, msg):
-        print(f"INFO: {msg}")
+        print(  # noqa: T201f"INFO: {msg}")
 
 
 def test_t5_parser_final():
     """Test the complete T5 parser after fixing the traversal."""
-    print("🔧 FINAL T5 PARSER TEST - COMPLETE PIPELINE")
-    print("=" * 46)
+    print(  # noqa: T201"🔧 FINAL T5 PARSER TEST - COMPLETE PIPELINE")
+    print(  # noqa: T201"=" * 46)
 
     # Load the field extractor
-    field_extractor_path = os.path.join(os.path.dirname(__file__), "metadata_engine", "field_extraction.py")
+    field_extractor_path = os.path.join(
+        os.path.dirname(__file__), "metadata_engine", "field_extraction.py"
+    )
     field_module = load_module_from_file(field_extractor_path, "field_extraction")
 
     # Create the field extractor
@@ -48,12 +51,14 @@ def test_t5_parser_final():
     field_extractor = field_module.FieldExtractor(logger)
 
     # Load the T5 parser definition
-    t5_parser_path = os.path.join(os.path.dirname(__file__), "parser_definitions", "t5_detection_system.json")
+    t5_parser_path = os.path.join(
+        os.path.dirname(__file__), "parser_definitions", "t5_detection_system.json"
+    )
     with open(t5_parser_path) as f:
         t5_parser_def = json.load(f)
 
-    print(f"Loaded T5 parser: {t5_parser_def['parser_name']}")
-    print(f"Version: {t5_parser_def['version']}")
+    print(  # noqa: T201f"Loaded T5 parser: {t5_parser_def['parser_name']}")
+    print(  # noqa: T201f"Version: {t5_parser_def['version']}")
 
     # Sample T5 workflow data that matches what would be in a PNG prompt chunk
     sample_t5_data = {
@@ -100,7 +105,7 @@ def test_t5_parser_final():
         },
     }
 
-    print("\\n1. Testing individual field extractions:")
+    print(  # noqa: T201"\\n1. Testing individual field extractions:")
 
     # Test each field from the T5 parser definition
     parsing_fields = t5_parser_def["parsing_instructions"]["fields"]
@@ -109,57 +114,57 @@ def test_t5_parser_final():
         target_key = field_def["target_key"]
         method = field_def["method"]
 
-        print(f"\\n   Testing {target_key} (method: {method}):")
+        print(  # noqa: T201f"\\n   Testing {target_key} (method: {method}):")
 
         try:
             result = field_extractor.extract_field(field_def, sample_t5_data, {}, {})
-            print(f"     Result: {result}")
+            print(  # noqa: T201f"     Result: {result}")
 
             # Validate specific fields
             if target_key == "prompt":
                 expected = "beautiful landscape with mountains and trees, sunset, dramatic lighting"
                 if result == expected:
-                    print("     ✅ SUCCESS: Prompt extracted correctly!")
+                    print(  # noqa: T201"     ✅ SUCCESS: Prompt extracted correctly!")
                 else:
-                    print(f"     ❌ FAILED: Expected '{expected}', got '{result}'")
+                    print(  # noqa: T201f"     ❌ FAILED: Expected '{expected}', got '{result}'")
 
             elif target_key == "negative_prompt":
                 expected = "low quality, blurry, distorted"
                 if result == expected:
-                    print("     ✅ SUCCESS: Negative prompt extracted correctly!")
+                    print(  # noqa: T201"     ✅ SUCCESS: Negative prompt extracted correctly!")
                 else:
-                    print(f"     ❌ FAILED: Expected '{expected}', got '{result}'")
+                    print(  # noqa: T201f"     ❌ FAILED: Expected '{expected}', got '{result}'")
 
             elif target_key == "parameters.seed":
                 expected = 987654321
                 if result == expected:
-                    print("     ✅ SUCCESS: Seed extracted correctly!")
+                    print(  # noqa: T201"     ✅ SUCCESS: Seed extracted correctly!")
                 else:
-                    print(f"     ❌ FAILED: Expected {expected}, got {result}")
+                    print(  # noqa: T201f"     ❌ FAILED: Expected {expected}, got {result}")
 
             elif target_key == "parameters.steps":
                 expected = 30
                 if result == expected:
-                    print("     ✅ SUCCESS: Steps extracted correctly!")
+                    print(  # noqa: T201"     ✅ SUCCESS: Steps extracted correctly!")
                 else:
-                    print(f"     ❌ FAILED: Expected {expected}, got {result}")
+                    print(  # noqa: T201f"     ❌ FAILED: Expected {expected}, got {result}")
 
             elif target_key == "parameters.cfg_scale":
                 expected = 8.5
                 if result == expected:
-                    print("     ✅ SUCCESS: CFG scale extracted correctly!")
+                    print(  # noqa: T201"     ✅ SUCCESS: CFG scale extracted correctly!")
                 else:
-                    print(f"     ❌ FAILED: Expected {expected}, got {result}")
+                    print(  # noqa: T201f"     ❌ FAILED: Expected {expected}, got {result}")
 
             elif result is not None:
-                print(f"     ✅ SUCCESS: Field extracted (value: {result})")
+                print(  # noqa: T201f"     ✅ SUCCESS: Field extracted (value: {result})")
             else:
-                print("     ⚠️  OPTIONAL: Field is optional and returned None")
+                print(  # noqa: T201"     ⚠️  OPTIONAL: Field is optional and returned None")
 
         except Exception as e:
-            print(f"     ❌ ERROR: Exception occurred: {e}")
+            print(  # noqa: T201f"     ❌ ERROR: Exception occurred: {e}")
 
-    print("\\n2. Testing with SamplerCustomAdvanced:")
+    print(  # noqa: T201"\\n2. Testing with SamplerCustomAdvanced:")
 
     # Test with SamplerCustomAdvanced (different parameter mapping)
     sample_t5_data_advanced = sample_t5_data.copy()
@@ -180,17 +185,21 @@ def test_t5_parser_final():
     }
 
     # Test seed extraction with SamplerCustomAdvanced
-    seed_field_def = next(f for f in parsing_fields if f["target_key"] == "parameters.seed")
-    seed_result = field_extractor.extract_field(seed_field_def, sample_t5_data_advanced, {}, {})
-    print(f"   SamplerCustomAdvanced seed result: {seed_result}")
+    seed_field_def = next(
+        f for f in parsing_fields if f["target_key"] == "parameters.seed"
+    )
+    seed_result = field_extractor.extract_field(
+        seed_field_def, sample_t5_data_advanced, {}, {}
+    )
+    print(  # noqa: T201f"   SamplerCustomAdvanced seed result: {seed_result}")
 
     if seed_result == 555666777:
-        print("   ✅ SUCCESS: SamplerCustomAdvanced seed mapping works!")
+        print(  # noqa: T201"   ✅ SUCCESS: SamplerCustomAdvanced seed mapping works!")
     else:
-        print(f"   ❌ FAILED: Expected 555666777, got {seed_result}")
+        print(  # noqa: T201f"   ❌ FAILED: Expected 555666777, got {seed_result}")
 
-    print("\\n🎯 SUMMARY:")
-    print("-" * 12)
+    print(  # noqa: T201"\\n🎯 SUMMARY:")
+    print(  # noqa: T201"-" * 12)
 
     core_tests = [
         ("Prompt extraction", True),  # We verified this works above
@@ -202,22 +211,22 @@ def test_t5_parser_final():
     passed_tests = sum(1 for _, passed in core_tests if passed)
     total_tests = len(core_tests)
 
-    print(f"✅ Passed: {passed_tests}/{total_tests} core tests")
+    print(  # noqa: T201f"✅ Passed: {passed_tests}/{total_tests} core tests")
 
     for test_name, passed in core_tests:
         status = "✅ PASS" if passed else "❌ FAIL"
-        print(f"   {test_name}: {status}")
+        print(  # noqa: T201f"   {test_name}: {status}")
 
     if passed_tests == total_tests:
-        print("\\n🎉 ALL TESTS PASSED! T5 parser is now working correctly!")
-        print("✅ Traversal methods fixed")
-        print("✅ Prompt extraction working")
-        print("✅ Parameter extraction working")
-        print("✅ SamplerCustomAdvanced support working")
-        print("✅ T5 detection + parsing pipeline complete!")
+        print(  # noqa: T201"\\n🎉 ALL TESTS PASSED! T5 parser is now working correctly!")
+        print(  # noqa: T201"✅ Traversal methods fixed")
+        print(  # noqa: T201"✅ Prompt extraction working")
+        print(  # noqa: T201"✅ Parameter extraction working")
+        print(  # noqa: T201"✅ SamplerCustomAdvanced support working")
+        print(  # noqa: T201"✅ T5 detection + parsing pipeline complete!")
     else:
-        print(f"\\n❌ {total_tests - passed_tests} test(s) failed")
-        print("🔍 Some issues remain to be fixed")
+        print(  # noqa: T201f"\\n❌ {total_tests - passed_tests} test(s) failed")
+        print(  # noqa: T201"🔍 Some issues remain to be fixed")
 
 
 if __name__ == "__main__":

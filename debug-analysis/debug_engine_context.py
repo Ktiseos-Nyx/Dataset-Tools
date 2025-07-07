@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Debug script to see what context data the MetadataEngine is actually getting."""
 
@@ -13,8 +14,8 @@ from dataset_tools.metadata_engine import get_metadata_engine
 
 def debug_engine_context():
     """Debug what context data the MetadataEngine is actually receiving."""
-    print("🔍 DEBUGGING METADATA ENGINE CONTEXT")
-    print("=" * 50)
+    print(  # noqa: T201"🔍 DEBUGGING METADATA ENGINE CONTEXT")
+    print(  # noqa: T201"=" * 50)
 
     # The test metadata (same as in user's report)
     forge_metadata = """score_9, score_8_up,score_7_up, source_anime, rating_safe, 1girl, solo, <lora:EPhsrKafka:1> ,EPhsrKafka, purple hair, long hair, low ponytail, pink eyes, hair between eyes, eyewear on head, sunglasses, 
@@ -41,47 +42,53 @@ Steps: 24, Sampler: Euler a, CFG scale: 7, Seed: 2340366286, Size: 832x1216, Mod
         img_bytes.name = "test_forge_image.jpg"
 
         # Let's peek into the context preparation by accessing the engine's internal method
-        print("📝 PREPARING CONTEXT DATA:")
-        print("-" * 30)
+        print(  # noqa: T201"📝 PREPARING CONTEXT DATA:")
+        print(  # noqa: T201"-" * 30)
 
         # Access the engine's context preparation method
         context_data = engine._prepare_context_data(img_bytes)
 
         if context_data:
-            print("✅ Context data prepared successfully")
-            print(f"📊 Context keys: {list(context_data.keys())}")
-            print()
+            print(  # noqa: T201"✅ Context data prepared successfully")
+            print(  # noqa: T201f"📊 Context keys: {list(context_data.keys())}")
+            print(  # noqa: T201)
 
             # Check the key areas that Forge detection relies on
-            print("🔍 CHECKING KEY CONTEXT VALUES:")
-            print("-" * 30)
+            print(  # noqa: T201"🔍 CHECKING KEY CONTEXT VALUES:")
+            print(  # noqa: T201"-" * 30)
 
             # Check pil_info
             pil_info = context_data.get("pil_info", {})
-            print(f"📷 pil_info keys: {list(pil_info.keys())}")
+            print(  # noqa: T201f"📷 pil_info keys: {list(pil_info.keys())}")
 
             if "parameters" in pil_info:
                 params = pil_info["parameters"]
-                print(f"⚙️  parameters type: {type(params)}")
-                print(f"⚙️  parameters length: {len(params) if isinstance(params, str) else 'N/A'}")
-                print(f"⚙️  parameters preview: {params[:100] if isinstance(params, str) else params}...")
+                print(  # noqa: T201f"⚙️  parameters type: {type(params)}")
+                print(  # noqa: T201
+                    f"⚙️  parameters length: {len(params) if isinstance(params, str) else 'N/A'}"
+                )
+                print(  # noqa: T201
+                    f"⚙️  parameters preview: {params[:100] if isinstance(params, str) else params}..."
+                )
             else:
-                print("❌ No 'parameters' key in pil_info")
+                print(  # noqa: T201"❌ No 'parameters' key in pil_info")
 
             # Check raw_user_comment_str
             user_comment = context_data.get("raw_user_comment_str")
-            print(f"📄 raw_user_comment_str: {user_comment}")
+            print(  # noqa: T201f"📄 raw_user_comment_str: {user_comment}")
 
             # Check what the rule evaluator would get
-            print()
-            print("🧪 TESTING RULE EVALUATOR ACCESS:")
-            print("-" * 30)
+            print(  # noqa: T201)
+            print(  # noqa: T201"🧪 TESTING RULE EVALUATOR ACCESS:")
+            print(  # noqa: T201"-" * 30)
 
             # Simulate what _get_a1111_param_string would return
             param_str = context_data.get("pil_info", {}).get("parameters")
             if isinstance(param_str, str):
-                print("✅ Rule evaluator would get A1111 string from pil_info['parameters']")
-                print(f"📏 Length: {len(param_str)}")
+                print(  # noqa: T201
+                    "✅ Rule evaluator would get A1111 string from pil_info['parameters']"
+                )
+                print(  # noqa: T201f"📏 Length: {len(param_str)}")
 
                 # Test the actual Forge version pattern
                 import re
@@ -89,19 +96,21 @@ Steps: 24, Sampler: Euler a, CFG scale: 7, Seed: 2340366286, Size: 832x1216, Mod
                 forge_pattern = r"Version: f\d+\.\d+\.\d+.*"
                 forge_match = re.search(forge_pattern, param_str)
                 if forge_match:
-                    print(f"✅ Forge pattern FOUND: '{forge_match.group()}'")
+                    print(  # noqa: T201f"✅ Forge pattern FOUND: '{forge_match.group()}'")
                 else:
-                    print("❌ Forge pattern NOT FOUND")
+                    print(  # noqa: T201"❌ Forge pattern NOT FOUND")
             else:
                 fallback = context_data.get("raw_user_comment_str")
-                print(f"⚠️  Rule evaluator would fall back to raw_user_comment_str: {fallback}")
+                print(  # noqa: T201
+                    f"⚠️  Rule evaluator would fall back to raw_user_comment_str: {fallback}"
+                )
 
         else:
-            print("❌ Failed to prepare context data")
+            print(  # noqa: T201"❌ Failed to prepare context data")
             return False
 
     except Exception as e:
-        print(f"💥 ERROR during debug: {e}")
+        print(  # noqa: T201f"💥 ERROR during debug: {e}")
         import traceback
 
         traceback.print_exc()
@@ -112,5 +121,5 @@ Steps: 24, Sampler: Euler a, CFG scale: 7, Seed: 2340366286, Size: 832x1216, Mod
 
 if __name__ == "__main__":
     success = debug_engine_context()
-    print(f"\n{'🎉 SUCCESS' if success else '❌ FAILED'}")
+    print(  # noqa: T201f"\n{'🎉 SUCCESS' if success else '❌ FAILED'}")
     sys.exit(0 if success else 1)

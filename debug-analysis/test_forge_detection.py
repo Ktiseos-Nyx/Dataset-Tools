@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Test script to verify Forge WebUI detection is working with our enhanced MetadataEngine."""
 
@@ -13,8 +14,8 @@ from dataset_tools.metadata_engine import get_metadata_engine
 
 def test_forge_detection():
     """Test that our Forge parser correctly identifies Forge WebUI images."""
-    print("🔧 TESTING FORGE WEBUI DETECTION")
-    print("=" * 50)
+    print(  # noqa: T201"🔧 TESTING FORGE WEBUI DETECTION")
+    print(  # noqa: T201"=" * 50)
 
     # Sample Forge metadata (like the one you showed)
     forge_metadata = """score_9, score_8_up,score_7_up, source_anime, rating_safe, 1girl, solo, <lora:EPhsrKafka:1> ,EPhsrKafka, purple hair, long hair, low ponytail, pink eyes, hair between eyes, eyewear on head, sunglasses, 
@@ -25,29 +26,29 @@ Steps: 24, Sampler: Euler a, CFG scale: 7, Seed: 2340366286, Size: 832x1216, Mod
 
     # Check what parsers we have available
     parser_definitions_path = Path(__file__).parent / "parser_definitions"
-    print(f"📂 Parser definitions path: {parser_definitions_path}")
+    print(  # noqa: T201f"📂 Parser definitions path: {parser_definitions_path}")
 
     if not parser_definitions_path.exists():
-        print("❌ Parser definitions folder not found!")
+        print(  # noqa: T201"❌ Parser definitions folder not found!")
         return False
 
     # List available parsers
     forge_parsers = list(parser_definitions_path.glob("*[Ff]orge*.json"))
     a1111_parsers = list(parser_definitions_path.glob("*a1111*.json"))
 
-    print(f"🔧 Found {len(forge_parsers)} Forge parsers:")
+    print(  # noqa: T201f"🔧 Found {len(forge_parsers)} Forge parsers:")
     for p in forge_parsers:
-        print(f"   - {p.name}")
+        print(  # noqa: T201f"   - {p.name}")
 
-    print(f"🤖 Found {len(a1111_parsers)} A1111 parsers:")
+    print(  # noqa: T201f"🤖 Found {len(a1111_parsers)} A1111 parsers:")
     for p in a1111_parsers[:3]:  # Show first 3
-        print(f"   - {p.name}")
+        print(  # noqa: T201f"   - {p.name}")
     if len(a1111_parsers) > 3:
-        print(f"   ... and {len(a1111_parsers) - 3} more")
+        print(  # noqa: T201f"   ... and {len(a1111_parsers) - 3} more")
 
     try:
         engine = get_metadata_engine(str(parser_definitions_path))
-        print("✅ MetadataEngine initialized successfully")
+        print(  # noqa: T201"✅ MetadataEngine initialized successfully")
 
         # Create a fake image with Forge metadata for testing
         from io import BytesIO
@@ -66,19 +67,19 @@ Steps: 24, Sampler: Euler a, CFG scale: 7, Seed: 2340366286, Size: 832x1216, Mod
         img_bytes.seek(0)
         img_bytes.name = "test_forge_image.jpg"
 
-        print("\n🧪 TESTING PARSER DETECTION:")
-        print("-" * 30)
+        print(  # noqa: T201"\n🧪 TESTING PARSER DETECTION:")
+        print(  # noqa: T201"-" * 30)
 
         result = engine.get_parser_for_file(img_bytes)
 
         if result and isinstance(result, dict):
             tool = result.get("tool", "Unknown")
-            print("✅ Detection successful!")
-            print(f"🔧 Detected tool: {tool}")
+            print(  # noqa: T201"✅ Detection successful!")
+            print(  # noqa: T201f"🔧 Detected tool: {tool}")
 
             # Check if it correctly identifies as Forge
             if "forge" in tool.lower():
-                print("🎉 CORRECT! Identified as Forge WebUI")
+                print(  # noqa: T201"🎉 CORRECT! Identified as Forge WebUI")
 
                 # Show some parsed details
                 prompt = (
@@ -86,30 +87,32 @@ Steps: 24, Sampler: Euler a, CFG scale: 7, Seed: 2340366286, Size: 832x1216, Mod
                     if len(result.get("prompt", "")) > 100
                     else result.get("prompt", "")
                 )
-                print(f"📝 Prompt preview: {prompt}")
+                print(  # noqa: T201f"📝 Prompt preview: {prompt}")
 
                 params = result.get("parameters", {})
                 if params:
-                    print("⚙️  Parsed parameters:")
+                    print(  # noqa: T201"⚙️  Parsed parameters:")
                     for key in ["steps", "sampler", "seed", "model", "forge_version"]:
                         if key in params:
-                            print(f"   - {key}: {params[key]}")
+                            print(  # noqa: T201f"   - {key}: {params[key]}")
 
                 return True
-            print(f"❌ INCORRECT! Should be Forge but detected as: {tool}")
-            print("💡 This means A1111 parser caught it before Forge parser")
+            print(  # noqa: T201f"❌ INCORRECT! Should be Forge but detected as: {tool}")
+            print(  # noqa: T201"💡 This means A1111 parser caught it before Forge parser")
 
             # Show what was detected
             if "parameters" in result:
-                print(f"📊 Still parsed some data: {list(result.get('parameters', {}).keys())}")
+                print(  # noqa: T201
+                    f"📊 Still parsed some data: {list(result.get('parameters', {}).keys())}"
+                )
 
             return False
-        print("❌ No parser matched the test data")
-        print("💡 This suggests the parsers couldn't detect the format")
+        print(  # noqa: T201"❌ No parser matched the test data")
+        print(  # noqa: T201"💡 This suggests the parsers couldn't detect the format")
         return False
 
     except Exception as e:
-        print(f"💥 ERROR during test: {e}")
+        print(  # noqa: T201f"💥 ERROR during test: {e}")
         import traceback
 
         traceback.print_exc()
@@ -118,5 +121,5 @@ Steps: 24, Sampler: Euler a, CFG scale: 7, Seed: 2340366286, Size: 832x1216, Mod
 
 if __name__ == "__main__":
     success = test_forge_detection()
-    print(f"\n{'🎉 SUCCESS' if success else '❌ FAILED'}")
+    print(  # noqa: T201f"\n{'🎉 SUCCESS' if success else '❌ FAILED'}")
     sys.exit(0 if success else 1)

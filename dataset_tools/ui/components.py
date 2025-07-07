@@ -58,17 +58,23 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
 
         # File list
         self.files_list_widget = Qw.QListWidget()
-        self.files_list_widget.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
-        self.files_list_widget.setSizePolicy(Qw.QSizePolicy.Policy.Preferred, Qw.QSizePolicy.Policy.Expanding)
-        
+        self.files_list_widget.setSelectionMode(
+            Qw.QAbstractItemView.SelectionMode.SingleSelection
+        )
+        self.files_list_widget.setSizePolicy(
+            Qw.QSizePolicy.Policy.Preferred, Qw.QSizePolicy.Policy.Expanding
+        )
+
         # Enable word wrap for long filenames
         self.files_list_widget.setWordWrap(True)
         self.files_list_widget.setResizeMode(Qw.QListView.ResizeMode.Adjust)
-        
+
         # Set uniform item sizes and spacing
-        self.files_list_widget.setUniformItemSizes(False)  # Allow variable heights for wrapped text
+        self.files_list_widget.setUniformItemSizes(
+            False
+        )  # Allow variable heights for wrapped text
         self.files_list_widget.setSpacing(2)  # Add some space between items
-        
+
         # Enhanced tooltip for file list
         self.files_list_widget.setToolTip(
             "<b>File List</b><br/>"
@@ -76,7 +82,7 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
             "Long filenames will wrap to multiple lines for better readability.<br/>"
             "<i>Use arrow keys to navigate between files</i>"
         )
-        
+
         layout.addWidget(self.files_list_widget, 1)
 
     def _setup_action_buttons(self, layout: Qw.QVBoxLayout) -> None:
@@ -86,14 +92,11 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
 
         # Get icon manager for themed icons
         icon_manager = get_icon_manager()
-        
+
         self.open_folder_button = Qw.QPushButton("Open Folder")
         # Add Font Awesome icon to button
         icon_manager.add_icon_to_button(
-            self.open_folder_button, 
-            "folder-open-solid", 
-            "primary", 
-            QSize(16, 16)
+            self.open_folder_button, "folder-open-solid", "primary", QSize(16, 16)
         )
         self.open_folder_button.setToolTip(
             "<b>Open Folder</b><br/>"
@@ -106,10 +109,7 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
         self.sort_button = Qw.QPushButton("Sort Files")
         # Add Font Awesome icon to button
         icon_manager.add_icon_to_button(
-            self.sort_button,
-            "arrow-up-a-z-solid",
-            "primary",
-            QSize(16, 16)
+            self.sort_button, "arrow-up-a-z-solid", "primary", QSize(16, 16)
         )
         self.sort_button.setToolTip(
             "<b>Sort Files</b><br/>"
@@ -158,7 +158,9 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
             True if file was found and selected, False otherwise
 
         """
-        found_items = self.files_list_widget.findItems(file_name, QtCore.Qt.MatchFlag.MatchExactly)
+        found_items = self.files_list_widget.findItems(
+            file_name, QtCore.Qt.MatchFlag.MatchExactly
+        )
         if found_items:
             self.files_list_widget.setCurrentItem(found_items[0])
             return True

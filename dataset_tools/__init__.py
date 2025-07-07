@@ -22,7 +22,7 @@ LOG_LEVEL = "INFO"  # Sensible default
 if "pytest" in sys.modules:
     LOG_LEVEL = "DEBUG"
     # For clarity
-    print("DEBUG (__init__.py): Pytest detected, setting LOG_LEVEL to DEBUG.")
+    print("DEBUG (__init__.py): Pytest detected, setting LOG_LEVEL to DEBUG.")  # noqa: T201
 
 # --- Version ---
 try:
@@ -72,7 +72,7 @@ def set_package_log_level(level_input: str):
         LOG_LEVEL = "INFO"
 
     # This print is for debugging the mechanism itself. Your actual app logs will come from logger.py
-    print(f"DEBUG (__init__.py): Package LOG_LEVEL variable updated to: {LOG_LEVEL}")
+    print(f"DEBUG (__init__.py): Package LOG_LEVEL variable updated to: {LOG_LEVEL}")  # noqa: T201
 
     # IMPORTANT: This only sets the LOG_LEVEL *variable* in this __init__.py.
     # Your logger.py (which imports LOG_LEVEL from here) will use this value when it's

@@ -65,10 +65,14 @@ class RegexExtractor:
             if match and len(match.groups()) >= group_num:
                 extracted_value = match.group(group_num)
                 return self._convert_value_type(extracted_value, value_type)
-            self.logger.debug(f"regex_extract_group: no match found for pattern '{pattern}' in data")
+            self.logger.debug(
+                f"regex_extract_group: no match found for pattern '{pattern}' in data"
+            )
             return None
         except re.error as e:
-            self.logger.error(f"regex_extract_group: invalid regex pattern '{pattern}': {e}")
+            self.logger.error(
+                f"regex_extract_group: invalid regex pattern '{pattern}': {e}"
+            )
             return None
 
     def _extract_before_pattern(
@@ -106,7 +110,9 @@ class RegexExtractor:
             )
             return self._convert_value_type(data.strip(), value_type)
         except re.error as e:
-            self.logger.error(f"regex_extract_before_pattern: invalid regex pattern '{pattern}': {e}")
+            self.logger.error(
+                f"regex_extract_before_pattern: invalid regex pattern '{pattern}': {e}"
+            )
             return None
 
     def _extract_after_pattern(
@@ -138,10 +144,14 @@ class RegexExtractor:
             if match:
                 extracted_value = data[match.end() :].strip()
                 return self._convert_value_type(extracted_value, value_type)
-            self.logger.debug(f"regex_extract_after_pattern: no match found for pattern '{pattern}'")
+            self.logger.debug(
+                f"regex_extract_after_pattern: no match found for pattern '{pattern}'"
+            )
             return None
         except re.error as e:
-            self.logger.error(f"regex_extract_after_pattern: invalid regex pattern '{pattern}': {e}")
+            self.logger.error(
+                f"regex_extract_after_pattern: invalid regex pattern '{pattern}': {e}"
+            )
             return None
 
     def _extract_between_patterns(
@@ -166,7 +176,9 @@ class RegexExtractor:
         end_pattern = method_def.get("end_pattern")
 
         if not start_pattern or not end_pattern:
-            self.logger.warning("regex_extract_between_patterns method missing 'start_pattern' or 'end_pattern'")
+            self.logger.warning(
+                "regex_extract_between_patterns method missing 'start_pattern' or 'end_pattern'"
+            )
             return None
 
         value_type = method_def.get("value_type", "string")
@@ -174,7 +186,9 @@ class RegexExtractor:
         try:
             start_match = re.search(start_pattern, data, re.IGNORECASE)
             if not start_match:
-                self.logger.debug(f"regex_extract_between_patterns: no match found for start pattern '{start_pattern}'")
+                self.logger.debug(
+                    f"regex_extract_between_patterns: no match found for start pattern '{start_pattern}'"
+                )
                 return None
 
             remaining_text = data[start_match.end() :]
@@ -188,7 +202,9 @@ class RegexExtractor:
 
             return self._convert_value_type(extracted_value, value_type)
         except re.error as e:
-            self.logger.error(f"regex_extract_between_patterns: invalid regex pattern: {e}")
+            self.logger.error(
+                f"regex_extract_between_patterns: invalid regex pattern: {e}"
+            )
             return None
 
     def _replace_pattern(
@@ -222,7 +238,9 @@ class RegexExtractor:
             result = re.sub(pattern, replacement, data, flags=re.IGNORECASE)
             return self._convert_value_type(result, value_type)
         except re.error as e:
-            self.logger.error(f"regex_replace_pattern: invalid regex pattern '{pattern}': {e}")
+            self.logger.error(
+                f"regex_replace_pattern: invalid regex pattern '{pattern}': {e}"
+            )
             return None
 
     def _split_on_pattern(
@@ -261,7 +279,9 @@ class RegexExtractor:
             )
             return None
         except re.error as e:
-            self.logger.error(f"regex_split_on_pattern: invalid regex pattern '{pattern}': {e}")
+            self.logger.error(
+                f"regex_split_on_pattern: invalid regex pattern '{pattern}': {e}"
+            )
             return None
 
     def _convert_value_type(self, value: Any, value_type: str) -> Any:
@@ -275,7 +295,11 @@ class RegexExtractor:
             if value_type == "float":
                 return float(value)
             if value_type == "boolean":
-                return bool(value) if not isinstance(value, str) else value.lower() in ("true", "1", "yes", "on")
+                return (
+                    bool(value)
+                    if not isinstance(value, str)
+                    else value.lower() in ("true", "1", "yes", "on")
+                )
             # string or any other type
             return str(value).strip()
         except (ValueError, TypeError) as e:

@@ -1,10 +1,13 @@
 # debug_metadata_test.py
+# ruff: noqa: T201
 # Quick script to debug what the MetadataEngine is seeing
 
 import logging
 
 # Configure detailed logging
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 
 
 def debug_context_data(image_path):

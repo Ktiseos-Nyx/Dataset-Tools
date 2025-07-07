@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Test with a real file that has the mojibake issue."""
 
@@ -12,8 +13,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def test_live_mojibake():
     """Test with a real file to see the mojibake issue."""
-    print("🔍 LIVE MOJIBAKE TEST")
-    print("=" * 20)
+    print(  # noqa: T201"🔍 LIVE MOJIBAKE TEST")
+    print(  # noqa: T201"=" * 20)
 
     # We need to find a file that has this issue
     # Let's check some common CivitAI ComfyUI files
@@ -26,11 +27,11 @@ def test_live_mojibake():
     existing_files = [f for f in test_files if Path(f).exists()]
 
     if not existing_files:
-        print("❌ No test files found")
+        print(  # noqa: T201"❌ No test files found")
         return
 
     for test_file in existing_files:
-        print(f"\n📁 Testing: {Path(test_file).name}")
+        print(  # noqa: T201f"\n📁 Testing: {Path(test_file).name}")
 
         try:
             import logging
@@ -38,27 +39,31 @@ def test_live_mojibake():
             from dataset_tools.metadata_engine.context_preparation import ContextDataPreparer
 
             # Enable debug logging to see what's happening
-            logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(message)s")
+            logging.basicConfig(
+                level=logging.DEBUG, format="%(levelname)s: %(message)s"
+            )
 
             preparer = ContextDataPreparer()
             context = preparer.prepare_context(test_file)
 
             user_comment = context.get("raw_user_comment_str")
             if user_comment:
-                print(f"✅ UserComment extracted: {len(user_comment)} chars")
+                print(  # noqa: T201f"✅ UserComment extracted: {len(user_comment)} chars")
 
                 # Check if it looks like mojibake
-                has_chinese_chars = any("\u4e00" <= char <= "\u9fff" for char in user_comment[:100])
+                has_chinese_chars = any(
+                    "\u4e00" <= char <= "\u9fff" for char in user_comment[:100]
+                )
                 starts_with_charset = user_comment.startswith("charset=Unicode")
 
                 if has_chinese_chars or starts_with_charset:
-                    print("⚠️ POTENTIAL MOJIBAKE DETECTED!")
-                    print(f"   Starts with charset=Unicode: {starts_with_charset}")
-                    print(f"   Contains Chinese chars: {has_chinese_chars}")
-                    print(f"   Preview: {user_comment[:100]}...")
+                    print(  # noqa: T201"⚠️ POTENTIAL MOJIBAKE DETECTED!")
+                    print(  # noqa: T201f"   Starts with charset=Unicode: {starts_with_charset}")
+                    print(  # noqa: T201f"   Contains Chinese chars: {has_chinese_chars}")
+                    print(  # noqa: T201f"   Preview: {user_comment[:100]}...")
 
                     # This suggests our Unicode decoding isn't working
-                    print("\n🔧 RAW ANALYSIS:")
+                    print(  # noqa: T201"\n🔧 RAW ANALYSIS:")
 
                     # Let's check the raw bytes from PIL directly
                     from PIL import Image
@@ -67,30 +72,39 @@ def test_live_mojibake():
                         exif_data = img.getexif()
                         if exif_data:
                             raw_comment = exif_data.get(37510)
-                            print(f"   PIL getexif type: {type(raw_comment)}")
+                            print(  # noqa: T201f"   PIL getexif type: {type(raw_comment)}")
                             if isinstance(raw_comment, bytes):
-                                print(f"   Raw bytes: {raw_comment[:50]}...")
+                                print(  # noqa: T201f"   Raw bytes: {raw_comment[:50]}...")
 
                                 # Try our decoder on the raw bytes
-                                decoded = preparer._decode_usercomment_bytes_robust(raw_comment)
+                                decoded = preparer._decode_usercomment_bytes_robust(
+                                    raw_comment
+                                )
                                 if decoded:
-                                    print(f"   Manual decode: {decoded[:100]}...")
+                                    print(  # noqa: T201f"   Manual decode: {decoded[:100]}...")
                                     if decoded != user_comment:
-                                        print("   ❌ MISMATCH! Our decoder works but context prep doesn't use it")
+                                        print(  # noqa: T201
+                                            "   ❌ MISMATCH! Our decoder works but context prep doesn't use it"
+                                        )
 
                             elif isinstance(raw_comment, str):
-                                print(f"   PIL already decoded: {raw_comment[:100]}...")
-                                if "charset=Unicode" in raw_comment and has_chinese_chars:
-                                    print("   ❌ PIL decoded incorrectly, creating mojibake")
+                                print(  # noqa: T201f"   PIL already decoded: {raw_comment[:100]}...")
+                                if (
+                                    "charset=Unicode" in raw_comment
+                                    and has_chinese_chars
+                                ):
+                                    print(  # noqa: T201
+                                        "   ❌ PIL decoded incorrectly, creating mojibake"
+                                    )
                 else:
-                    print("✅ No mojibake detected - looks clean")
+                    print(  # noqa: T201"✅ No mojibake detected - looks clean")
                     if user_comment.startswith('{"') and '"class_type"' in user_comment:
-                        print("   Looks like valid ComfyUI JSON")
+                        print(  # noqa: T201"   Looks like valid ComfyUI JSON")
             else:
-                print("❌ No UserComment extracted")
+                print(  # noqa: T201"❌ No UserComment extracted")
 
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(  # noqa: T201f"❌ Error: {e}")
             import traceback
 
             traceback.print_exc()

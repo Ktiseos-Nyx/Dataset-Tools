@@ -39,13 +39,19 @@ class FluxFormat(BaseFormat):
                 return
 
         # If identified, try to get specific version from software_tag if possible
-        self.tool = self._info.get("software_tag", self.tool)  # e.g., "AI generated;txt2img;flux"
+        self.tool = self._info.get(
+            "software_tag", self.tool
+        )  # e.g., "AI generated;txt2img;flux"
 
-        self._positive = self._info.get("image_description_tag", "").strip()  # This is the prompt
+        self._positive = self._info.get(
+            "image_description_tag", ""
+        ).strip()  # This is the prompt
 
         model_variant = self._info.get("model_tag", "")  # e.g., "flux-dev"
         if model_variant:
-            self._parameter["model"] = model_variant  # Or a more specific key like "flux_model_variant"
+            self._parameter["model"] = (
+                model_variant  # Or a more specific key like "flux_model_variant"
+            )
             # Could refine self.tool based on model_variant too
             self.tool += f" ({model_variant})"
 

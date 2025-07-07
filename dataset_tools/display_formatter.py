@@ -16,21 +16,37 @@ def format_metadata_for_display(metadata_dict: dict[str, Any] | None) -> dict[st
     This function is a "pure" formatter; it does not interact with the UI.
     """
     if metadata_dict is None:
-        return {"positive": "", "negative": "", "details": "Info/Error:\nNo metadata to display."}
-    
+        return {
+            "positive": "",
+            "negative": "",
+            "details": "Info/Error:\nNo metadata to display.",
+        }
+
     # Check for empty/error states - handle both old and new formats
     if len(metadata_dict) == 1:
         # Old format: _dt_internal_placeholder_
         if EmptyField.PLACEHOLDER.value in metadata_dict:
             content = metadata_dict.get(EmptyField.PLACEHOLDER.value, {})
-            error_msg = content.get("Error", content.get("Info", "No metadata to display."))
-            return {"positive": "", "negative": "", "details": f"Info/Error:\n{error_msg}"}
-        
+            error_msg = content.get(
+                "Error", content.get("Info", "No metadata to display.")
+            )
+            return {
+                "positive": "",
+                "negative": "",
+                "details": f"Info/Error:\n{error_msg}",
+            }
+
         # New format: info
         if "info" in metadata_dict:
             content = metadata_dict.get("info", {})
-            error_msg = content.get("Error", content.get("Info", "No metadata to display."))
-            return {"positive": "", "negative": "", "details": f"Info/Error:\n{error_msg}"}
+            error_msg = content.get(
+                "Error", content.get("Info", "No metadata to display.")
+            )
+            return {
+                "positive": "",
+                "negative": "",
+                "details": f"Info/Error:\n{error_msg}",
+            }
 
     # If we are here, metadata_dict is valid.
     positive, negative = _format_prompts(metadata_dict)
@@ -68,7 +84,9 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
 
         # 🚨 CRIME #3: MAKE TOOL DETECTION LOUD AND PROUD! 🚨
         # Add detected tool as the FIRST parameter for maximum visibility
-        if "Detected Tool" in (metadata_s := metadata_dict.get(UpField.METADATA.value, {})):
+        if "Detected Tool" in (
+            metadata_s := metadata_dict.get(UpField.METADATA.value, {})
+        ):
             param_strings.append(f"Tool: {metadata_s['Detected Tool']}")
 
         # Add all other generation parameters (sorted for consistency)
@@ -92,7 +110,11 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
 
     # Raw Data / Workflow
     if raw_content := str(metadata_dict.get(DownField.RAW_DATA.value, "")):
-        title = "Raw Data / Workflow (JSON)" if raw_content.strip().startswith("{") else "Raw Data / Workflow"
+        title = (
+            "Raw Data / Workflow (JSON)"
+            if raw_content.strip().startswith("{")
+            else "Raw Data / Workflow"
+        )
         details_parts.append(f"{title}:\n{raw_content}")
 
     # This return is now correctly inside the function
@@ -104,7 +126,9 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
 # --- Formatting Logic Moved from ui.py ---
 
 
-def _unpack_content_of(metadata_dict: dict[str, Any], labels_to_extract: list[Any]) -> str:
+def _unpack_content_of(
+    metadata_dict: dict[str, Any], labels_to_extract: list[Any]
+) -> str:
     """Unpacks and formats data from specified sections of the metadata."""
     all_texts: list[str] = []
     for section_enum in labels_to_extract:

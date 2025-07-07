@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Test the Civitai ComfyUI parser priority fix using the new MetadataEngine."""
 
@@ -16,13 +17,15 @@ from dataset_tools.metadata_engine.engine import create_metadata_engine
 
 def test_civitai_priority_fix(file_path: str):
     """Test the Civitai ComfyUI parser priority fix."""
-    print(f"🔧 CIVITAI COMFYUI PARSER PRIORITY FIX TEST FOR: {file_path}")
-    print("=" * (50 + len(file_path)))
+    print(  # noqa: T201f"🔧 CIVITAI COMFYUI PARSER PRIORITY FIX TEST FOR: {file_path}")
+    print(  # noqa: T201"=" * (50 + len(file_path)))
 
     parser_definitions_path = project_root / "dataset_tools" / "parser_definitions"
 
     if not parser_definitions_path.is_dir():
-        print(f"❌ Error: Parser definitions directory not found at: {parser_definitions_path}")
+        print(  # noqa: T201
+            f"❌ Error: Parser definitions directory not found at: {parser_definitions_path}"
+        )
         return
 
     try:
@@ -34,16 +37,16 @@ def test_civitai_priority_fix(file_path: str):
 
         if result:
             tool_name = getattr(result, "tool", result.get("tool", "Unknown"))
-            print(f"✅ Matched Parser: {tool_name}")
+            print(  # noqa: T201f"✅ Matched Parser: {tool_name}")
 
             if "civitai" in tool_name.lower():
-                print("🎉 SUCCESS: Civitai parser was correctly prioritized!")
+                print(  # noqa: T201"🎉 SUCCESS: Civitai parser was correctly prioritized!")
             else:
-                print("⚠️ WARNING: A non-Civitai parser was matched. Check priorities.")
+                print(  # noqa: T201"⚠️ WARNING: A non-Civitai parser was matched. Check priorities.")
 
-            print("\n📋 Extracted Data:")
+            print(  # noqa: T201"\n📋 Extracted Data:")
             if isinstance(result, dict):
-                print(json.dumps(result, indent=2))
+                print(  # noqa: T201json.dumps(result, indent=2))
             else:
                 # For BaseFormat objects, print their attributes
                 data = {
@@ -55,12 +58,12 @@ def test_civitai_priority_fix(file_path: str):
                     "height": getattr(result, "height", 0),
                     "raw": getattr(result, "raw", ""),
                 }
-                print(json.dumps(data, indent=2))
+                print(  # noqa: T201json.dumps(data, indent=2))
         else:
-            print("❌ No parser matched for this file.")
+            print(  # noqa: T201"❌ No parser matched for this file.")
 
     except Exception as e:
-        print(f"❌ An error occurred: {e}")
+        print(  # noqa: T201f"❌ An error occurred: {e}")
         import traceback
 
         traceback.print_exc()

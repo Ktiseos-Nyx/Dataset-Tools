@@ -56,10 +56,14 @@ class NovelAI(BaseFormat):
             # Ensure data is a list of pixel data. getdata() can return other types for some modes.
             try:
                 pixel_data = list(img_pil_object.getdata())
-            except Exception as e_getdata:  # Catch potential errors from getdata() itself
+            except (
+                Exception
+            ) as e_getdata:  # Catch potential errors from getdata() itself
                 # If a logger was available here, it would be good to log this.
                 # For now, if getdata() fails, LSB extraction is not possible.
-                print(f"Warning: Could not get pixel data for LSBExtractor: {e_getdata}")  # Basic print
+                print(
+                    f"Warning: Could not get pixel data for LSBExtractor: {e_getdata}"
+                )  # Basic print
                 self.data = []
                 self.width, self.height = 0, 0  # Or img_pil_object.size if it's safe
                 self.lsb_bytes_list = bytearray()
@@ -71,7 +75,11 @@ class NovelAI(BaseFormat):
             self.byte_cursor = 0
             self.lsb_bytes_list = bytearray()
 
-            if not (img_pil_object.mode == "RGBA" and isinstance(self.data, list) and self.data):
+            if not (
+                img_pil_object.mode == "RGBA"
+                and isinstance(self.data, list)
+                and self.data
+            ):
                 # Logger not available here, but ideally log if mode isn't RGBA or data is empty
                 # print("Warning: Image not RGBA or no pixel data for LSBExtractor.")
                 return  # lsb_bytes_list will remain empty
@@ -85,7 +93,9 @@ class NovelAI(BaseFormat):
         def get_next_n_bytes(self, n_bytes: int) -> bytes | None:  # Use Optional
             if self.byte_cursor + n_bytes > len(self.lsb_bytes_list):
                 return None
-            result_bytes = self.lsb_bytes_list[self.byte_cursor : self.byte_cursor + n_bytes]
+            result_bytes = self.lsb_bytes_list[
+                self.byte_cursor : self.byte_cursor + n_bytes
+            ]
             self.byte_cursor += n_bytes
             return bytes(result_bytes)
 
@@ -111,7 +121,9 @@ class NovelAI(BaseFormat):
         parsed_successfully = False
 
         if self._info and self._info.get("Software") == "NovelAI":
-            self._logger.debug("Found 'Software: NovelAI' tag, attempting legacy PNG parse.")
+            self._logger.debug(
+                "Found 'Software: NovelAI' tag, attempting legacy PNG parse."
+            )
             parsed_successfully = self._parse_nai_legacy_png()
         elif self._extractor:  # Check if extractor was provided and is valid
             if (
@@ -127,26 +139,38 @@ class NovelAI(BaseFormat):
             self._logger.debug("LSB Extractor provided, attempting stealth PNG parse.")
             parsed_successfully = self._parse_nai_stealth_png()
         else:
-            self._logger.warning("%s: Neither legacy PNG info nor LSB extractor provided.", self.tool)
+            self._logger.warning(
+                "%s: Neither legacy PNG info nor LSB extractor provided.", self.tool
+            )
             self.status = self.Status.FORMAT_ERROR
-            self._error = "No data source for NovelAI parser (legacy info or LSB extractor)."
+            self._error = (
+                "No data source for NovelAI parser (legacy info or LSB extractor)."
+            )
             return
 
         if parsed_successfully:
             self._logger.info("%s: Data parsed successfully.", self.tool)
             # self.status = self.Status.READ_SUCCESS; # Let BaseFormat.parse() handle this
         else:
-            if self.status != self.Status.FORMAT_ERROR:  # If not already set by a sub-parser
+            if (
+                self.status != self.Status.FORMAT_ERROR
+            ):  # If not already set by a sub-parser
                 self.status = self.Status.FORMAT_ERROR
             if not self._error:
                 self._error = f"{self.tool}: Failed to parse metadata."
 
-    def _parse_common_nai_json(self, data_json: dict[str, Any], source_description: str) -> bool:
+    def _parse_common_nai_json(
+        self, data_json: dict[str, Any], source_description: str
+    ) -> bool:
         handled_keys_in_data_json = set()
         custom_settings_for_display: dict[str, str] = {}
 
-        self._populate_parameters_from_map(data_json, NAI_PARAMETER_MAP, handled_keys_in_data_json)
-        self._extract_and_set_dimensions(data_json, "width", "height", handled_keys_in_data_json)
+        self._populate_parameters_from_map(
+            data_json, NAI_PARAMETER_MAP, handled_keys_in_data_json
+        )
+        self._extract_and_set_dimensions(
+            data_json, "width", "height", handled_keys_in_data_json
+        )
 
         exclude_from_settings = {
             "uc",
@@ -160,7 +184,9 @@ class NovelAI(BaseFormat):
 
         for k, v_val in data_json.items():
             if k not in exclude_from_settings and k not in handled_keys_in_data_json:
-                custom_settings_for_display[self._format_key_for_display(k)] = str(v_val)
+                custom_settings_for_display[self._format_key_for_display(k)] = str(
+                    v_val
+                )
                 handled_keys_in_data_json.add(k)
 
         self._setting = self._build_settings_string(
@@ -204,7 +230,9 @@ class NovelAI(BaseFormat):
             return True
         except Exception as general_err:
             self._error = f"Error parsing NovelAI legacy PNG: {general_err}"
-            self._logger.error("NovelAI legacy parsing error: %s", general_err, exc_info=True)
+            self._logger.error(
+                "NovelAI legacy parsing error: %s", general_err, exc_info=True
+            )
             return False
 
     def _parse_nai_stealth_png(self) -> bool:
@@ -243,8 +271,12 @@ class NovelAI(BaseFormat):
                 try:
                     comment_data_dict = json.loads(comment_json_str)
                     if isinstance(comment_data_dict, dict):
-                        self._logger.debug("Using nested 'Comment' JSON for NAI stealth.")
-                        self._positive = str(comment_data_dict.get("prompt", "")).strip()
+                        self._logger.debug(
+                            "Using nested 'Comment' JSON for NAI stealth."
+                        )
+                        self._positive = str(
+                            comment_data_dict.get("prompt", "")
+                        ).strip()
                         self._negative = str(comment_data_dict.get("uc", "")).strip()
                         data_to_use_for_prompts_params = comment_data_dict
                     else:
@@ -252,7 +284,9 @@ class NovelAI(BaseFormat):
                             "NAI stealth 'Comment' not a dict. Using main. Snippet: %s",
                             comment_json_str[:200],
                         )
-                        self._positive = str(main_json_data.get("Description", "")).strip()
+                        self._positive = str(
+                            main_json_data.get("Description", "")
+                        ).strip()
                 except json.JSONDecodeError:
                     self._logger.warning(
                         "NAI stealth 'Comment' invalid JSON. Using main. Snippet: %s",
@@ -263,9 +297,13 @@ class NovelAI(BaseFormat):
             else:
                 self._logger.debug("No 'Comment' in NAI stealth, using 'Description'.")
                 self._positive = str(main_json_data.get("Description", "")).strip()
-                self._negative = str(main_json_data.get("uc", "")).strip()  # Try to get 'uc' from main JSON too
+                self._negative = str(
+                    main_json_data.get("uc", "")
+                ).strip()  # Try to get 'uc' from main JSON too
 
-            return self._parse_common_nai_json(data_to_use_for_prompts_params, "stealth PNG JSON")
+            return self._parse_common_nai_json(
+                data_to_use_for_prompts_params, "stealth PNG JSON"
+            )
 
         except gzip.BadGzipFile as e_gzip:
             self._error = f"Invalid GZip in NAI stealth: {e_gzip}"
@@ -277,5 +315,7 @@ class NovelAI(BaseFormat):
             return False
         except Exception as general_err:
             self._error = f"Error parsing NAI stealth: {general_err}"
-            self._logger.error("NAI stealth parsing error: %s", general_err, exc_info=True)
+            self._logger.error(
+                "NAI stealth parsing error: %s", general_err, exc_info=True
+            )
             return False

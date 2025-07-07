@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Test the implementations of Gemini's suggestions."""
 
@@ -20,8 +21,8 @@ logger = logging.getLogger(__name__)
 
 def test_prompt_cleaning():
     """Test the prompt cleaning functionality."""
-    print("🧼 TESTING PROMPT CLEANING")
-    print("=" * 30)
+    print(  # noqa: T201"🧼 TESTING PROMPT CLEANING")
+    print(  # noqa: T201"=" * 30)
 
     extractor = ComfyUIExtractor(logger)
 
@@ -36,15 +37,15 @@ def test_prompt_cleaning():
     for input_text, expected in test_cases:
         result = extractor._clean_prompt_text(input_text)
         status = "✅" if result == expected else "❌"
-        print(f"{status} '{input_text}' → '{result}' (expected: '{expected}')")
+        print(  # noqa: T201f"{status} '{input_text}' → '{result}' (expected: '{expected}')")
 
     return True
 
 
 def test_json_path_exists():
     """Test the json_path_exists_boolean method."""
-    print("\n🔍 TESTING JSON PATH EXISTS")
-    print("=" * 35)
+    print(  # noqa: T201"\n🔍 TESTING JSON PATH EXISTS")
+    print(  # noqa: T201"=" * 35)
 
     extractor = JSONExtractor(logger)
 
@@ -68,15 +69,15 @@ def test_json_path_exists():
         method_def = {"json_path": path}
         result = extractor._json_path_exists_boolean(test_data, method_def, {}, {})
         status = "✅" if result == expected else "❌"
-        print(f"{status} Path '{path}': {result} (expected: {expected})")
+        print(  # noqa: T201f"{status} Path '{path}': {result} (expected: {expected})")
 
     return True
 
 
 def test_comfyui_with_embeddings():
     """Test ComfyUI extraction with embedding prefixes."""
-    print("\n🎨 TESTING COMFYUI WITH EMBEDDINGS")
-    print("=" * 40)
+    print(  # noqa: T201"\n🎨 TESTING COMFYUI WITH EMBEDDINGS")
+    print(  # noqa: T201"=" * 40)
 
     # Mock ComfyUI workflow with embedding prefixes
     mock_data = {
@@ -113,22 +114,26 @@ def test_comfyui_with_embeddings():
     expected_positive = "beautiful woman, portrait"
     expected_negative = "bad quality, worst"
 
-    print(f"Positive prompt: '{result.get('positive', '')}' (expected: '{expected_positive}')")
-    print(f"Negative prompt: '{result.get('negative', '')}' (expected: '{expected_negative}')")
+    print(  # noqa: T201
+        f"Positive prompt: '{result.get('positive', '')}' (expected: '{expected_positive}')"
+    )
+    print(  # noqa: T201
+        f"Negative prompt: '{result.get('negative', '')}' (expected: '{expected_negative}')"
+    )
 
     positive_ok = result.get("positive") == expected_positive
     negative_ok = result.get("negative") == expected_negative
 
-    print(f"✅ Positive cleaned correctly: {positive_ok}")
-    print(f"✅ Negative cleaned correctly: {negative_ok}")
+    print(  # noqa: T201f"✅ Positive cleaned correctly: {positive_ok}")
+    print(  # noqa: T201f"✅ Negative cleaned correctly: {negative_ok}")
 
     return positive_ok and negative_ok
 
 
 def test_universal_parser_integration():
     """Test the Universal Parser with all fixes."""
-    print("\n🚀 TESTING UNIVERSAL PARSER INTEGRATION")
-    print("=" * 45)
+    print(  # noqa: T201"\n🚀 TESTING UNIVERSAL PARSER INTEGRATION")
+    print(  # noqa: T201"=" * 45)
 
     # Create test ComfyUI data with embeddings
     prompt_data = {
@@ -175,36 +180,38 @@ def test_universal_parser_integration():
         result = engine.get_parser_for_file(temp_file.name)
 
         if result and result.get("tool") == "ComfyUI (Universal Parser)":
-            print("✅ Universal Parser detected correctly")
+            print(  # noqa: T201"✅ Universal Parser detected correctly")
 
             # Check cleaned prompts
             prompt = result.get("prompt", "")
             negative = result.get("negative_prompt", "")
 
-            print(f"Extracted prompt: '{prompt}'")
-            print(f"Extracted negative: '{negative}'")
+            print(  # noqa: T201f"Extracted prompt: '{prompt}'")
+            print(  # noqa: T201f"Extracted negative: '{negative}'")
 
             # These should be clean (no embedding: prefixes)
             prompt_clean = "embedding:" not in prompt
             negative_clean = "embedding:" not in negative
 
-            print(f"✅ Prompt cleaned: {prompt_clean}")
-            print(f"✅ Negative cleaned: {negative_clean}")
+            print(  # noqa: T201f"✅ Prompt cleaned: {prompt_clean}")
+            print(  # noqa: T201f"✅ Negative cleaned: {negative_clean}")
 
             return prompt_clean and negative_clean
-        print(f"❌ Parser issue: {result.get('tool', 'No result') if result else 'No result'}")
+        print(  # noqa: T201
+            f"❌ Parser issue: {result.get('tool', 'No result') if result else 'No result'}"
+        )
         return False
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(  # noqa: T201f"❌ Error: {e}")
         return False
     finally:
         Path(temp_file.name).unlink()
 
 
 if __name__ == "__main__":
-    print("🔍 TESTING GEMINI'S SUGGESTIONS IMPLEMENTATION")
-    print("=" * 55)
+    print(  # noqa: T201"🔍 TESTING GEMINI'S SUGGESTIONS IMPLEMENTATION")
+    print(  # noqa: T201"=" * 55)
 
     tests = [
         ("Prompt Cleaning", test_prompt_cleaning),
@@ -219,14 +226,14 @@ if __name__ == "__main__":
             success = test_func()
             results.append((test_name, success))
         except Exception as e:
-            print(f"❌ {test_name} failed with error: {e}")
+            print(  # noqa: T201f"❌ {test_name} failed with error: {e}")
             results.append((test_name, False))
 
-    print("\n📊 SUMMARY:")
-    print("=" * 15)
+    print(  # noqa: T201"\n📊 SUMMARY:")
+    print(  # noqa: T201"=" * 15)
     for test_name, success in results:
         status = "✅" if success else "❌"
-        print(f"{status} {test_name}")
+        print(  # noqa: T201f"{status} {test_name}")
 
     all_passed = all(success for _, success in results)
-    print(f"\n{'🎉 ALL TESTS PASSED!' if all_passed else '⚠️ SOME TESTS FAILED'}")
+    print(  # noqa: T201f"\n{'🎉 ALL TESTS PASSED!' if all_passed else '⚠️ SOME TESTS FAILED'}")

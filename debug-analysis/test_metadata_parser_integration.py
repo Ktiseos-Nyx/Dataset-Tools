@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Test script to verify our MetadataEngine integration in metadata_parser.py is working."""
 
@@ -13,8 +14,8 @@ from dataset_tools.metadata_parser import parse_metadata
 
 def test_metadata_parser_integration():
     """Test that our enhanced MetadataEngine integration is being called."""
-    print("🔧 TESTING METADATA_PARSER INTEGRATION")
-    print("=" * 50)
+    print(  # noqa: T201"🔧 TESTING METADATA_PARSER INTEGRATION")
+    print(  # noqa: T201"=" * 50)
 
     # Create a test image with Forge metadata
     forge_metadata = """score_9, score_8_up,score_7_up, source_anime, rating_safe, 1girl, solo, <lora:EPhsrKafka:1> ,EPhsrKafka, purple hair, long hair, low ponytail, pink eyes, hair between eyes, eyewear on head, sunglasses, 
@@ -41,24 +42,28 @@ Steps: 24, Sampler: Euler a, CFG scale: 7, Seed: 2340366286, Size: 832x1216, Mod
         import piexif.helper
 
         # Create EXIF data with UserComment
-        user_comment = piexif.helper.UserComment.dump(forge_metadata, encoding="unicode")
+        user_comment = piexif.helper.UserComment.dump(
+            forge_metadata, encoding="unicode"
+        )
         exif_data = {"Exif": {piexif.ExifIFD.UserComment: user_comment}}
         exif_bytes = piexif.dump(exif_data)
 
         img.save(tmp_path, format="JPEG", exif=exif_bytes)
 
-        print(f"📷 Created test image: {tmp_path}")
-        print("📝 Contains Forge metadata with version: f0.0.17v1.8.0rc-latest-277-g0af28699")
-        print()
+        print(  # noqa: T201f"📷 Created test image: {tmp_path}")
+        print(  # noqa: T201
+            "📝 Contains Forge metadata with version: f0.0.17v1.8.0rc-latest-277-g0af28699"
+        )
+        print(  # noqa: T201)
 
-        print("🚀 CALLING parse_metadata():")
-        print("-" * 30)
+        print(  # noqa: T201"🚀 CALLING parse_metadata():")
+        print(  # noqa: T201"-" * 30)
 
         result = parse_metadata(tmp_path)
 
-        print("✅ parse_metadata returned successfully")
-        print(f"📊 Result keys: {list(result.keys())}")
-        print()
+        print(  # noqa: T201"✅ parse_metadata returned successfully")
+        print(  # noqa: T201f"📊 Result keys: {list(result.keys())}")
+        print(  # noqa: T201)
 
         # Check what parser was used
         if "_dt_internal_placeholder_" in result:
@@ -66,26 +71,26 @@ Steps: 24, Sampler: Euler a, CFG scale: 7, Seed: 2340366286, Size: 832x1216, Mod
             parser_used = placeholder_data.get("Parser Used", "Unknown")
             tool_detected = placeholder_data.get("Tool", "Unknown")
 
-            print(f"🔧 Parser Used: {parser_used}")
-            print(f"🛠️  Tool Detected: {tool_detected}")
+            print(  # noqa: T201f"🔧 Parser Used: {parser_used}")
+            print(  # noqa: T201f"🛠️  Tool Detected: {tool_detected}")
 
             if "Enhanced MetadataEngine" in parser_used:
-                print("🎉 SUCCESS! Enhanced MetadataEngine was used")
+                print(  # noqa: T201"🎉 SUCCESS! Enhanced MetadataEngine was used")
 
                 if "forge" in tool_detected.lower():
-                    print("🎉 DOUBLE SUCCESS! Correctly detected as Forge")
+                    print(  # noqa: T201"🎉 DOUBLE SUCCESS! Correctly detected as Forge")
                     return True
-                print(f"⚠️  Used enhanced engine but detected as: {tool_detected}")
-                print("💡 This means our Forge parser needs more work")
+                print(  # noqa: T201f"⚠️  Used enhanced engine but detected as: {tool_detected}")
+                print(  # noqa: T201"💡 This means our Forge parser needs more work")
                 return True  # Still progress
-            print(f"❌ Still using old system: {parser_used}")
-            print("💡 Our integration might not be working")
+            print(  # noqa: T201f"❌ Still using old system: {parser_used}")
+            print(  # noqa: T201"💡 Our integration might not be working")
             return False
-        print("❌ No parser information found in result")
+        print(  # noqa: T201"❌ No parser information found in result")
         return False
 
     except Exception as e:
-        print(f"💥 ERROR during test: {e}")
+        print(  # noqa: T201f"💥 ERROR during test: {e}")
         import traceback
 
         traceback.print_exc()
@@ -101,5 +106,5 @@ Steps: 24, Sampler: Euler a, CFG scale: 7, Seed: 2340366286, Size: 832x1216, Mod
 
 if __name__ == "__main__":
     success = test_metadata_parser_integration()
-    print(f"\n{'🎉 SUCCESS' if success else '❌ FAILED'}")
+    print(  # noqa: T201f"\n{'🎉 SUCCESS' if success else '❌ FAILED'}")
     sys.exit(0 if success else 1)

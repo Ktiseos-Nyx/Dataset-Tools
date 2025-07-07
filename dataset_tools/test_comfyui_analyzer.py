@@ -173,7 +173,9 @@ workflow_data = {
                 {"name": "samples", "type": "LATENT", "link": 24},
                 {"name": "vae", "type": "VAE", "link": 12},
             ],
-            "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": [9], "slot_index": 0}],
+            "outputs": [
+                {"name": "IMAGE", "type": "IMAGE", "links": [9], "slot_index": 0}
+            ],
             "properties": {"Node name for S&R": "VAEDecode"},
         },
         {
@@ -208,7 +210,9 @@ workflow_data = {
             "order": 2,
             "mode": 0,
             "inputs": [],
-            "outputs": [{"name": "SAMPLER", "type": "SAMPLER", "links": [19], "shape": 3}],
+            "outputs": [
+                {"name": "SAMPLER", "type": "SAMPLER", "links": [19], "shape": 3}
+            ],
             "properties": {"Node name for S&R": "KSamplerSelect"},
             "widgets_values": ["euler"],
         },
@@ -247,7 +251,9 @@ workflow_data = {
                     "widget": {"name": "height"},
                 },
             ],
-            "outputs": [{"name": "LATENT", "type": "LATENT", "links": [23], "slot_index": 0}],
+            "outputs": [
+                {"name": "LATENT", "type": "LATENT", "links": [23], "slot_index": 0}
+            ],
             "properties": {"Node name for S&R": "EmptyLatentImage"},
             "widgets_values": [832, 1216, 1],
         },
@@ -260,7 +266,9 @@ workflow_data = {
             "order": 15,
             "mode": 0,
             "inputs": [{"name": "model", "type": "MODEL", "link": 93, "slot_index": 0}],
-            "outputs": [{"name": "SIGMAS", "type": "SIGMAS", "links": [20], "shape": 3}],
+            "outputs": [
+                {"name": "SIGMAS", "type": "SIGMAS", "links": [20], "shape": 3}
+            ],
             "properties": {"Node name for S&R": "BasicScheduler"},
             "widgets_values": ["beta", 25, 1],
         },

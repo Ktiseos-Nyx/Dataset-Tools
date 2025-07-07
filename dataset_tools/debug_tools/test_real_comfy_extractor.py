@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Test the real ComfyUI extractor after the fix."""
 
@@ -23,19 +24,19 @@ def load_module_from_file(file_path, module_name):
 # Mock logger
 class MockLogger:
     def debug(self, msg):
-        print(f"DEBUG: {msg}")
+        print(  # noqa: T201f"DEBUG: {msg}")
 
     def warning(self, msg):
-        print(f"WARNING: {msg}")
+        print(  # noqa: T201f"WARNING: {msg}")
 
     def error(self, msg):
-        print(f"ERROR: {msg}")
+        print(  # noqa: T201f"ERROR: {msg}")
 
 
 def test_real_extractor():
     """Test the real ComfyUI extractor."""
-    print("🔧 TESTING REAL COMFYUI EXTRACTOR AFTER FIX")
-    print("=" * 44)
+    print(  # noqa: T201"🔧 TESTING REAL COMFYUI EXTRACTOR AFTER FIX")
+    print(  # noqa: T201"=" * 44)
 
     # Load the real ComfyUI extractor
     extractor_path = os.path.join(
@@ -95,7 +96,7 @@ def test_real_extractor():
         },
     }
 
-    print("1. Testing positive prompt extraction:")
+    print(  # noqa: T201"1. Testing positive prompt extraction:")
     method_def = {
         "sampler_node_types": ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
         "positive_input_name": "positive",
@@ -109,15 +110,17 @@ def test_real_extractor():
         ],
     }
 
-    result = extractor._find_text_from_main_sampler_input(sample_t5_data, method_def, {}, {})
-    print(f"   Result: '{result}'")
+    result = extractor._find_text_from_main_sampler_input(
+        sample_t5_data, method_def, {}, {}
+    )
+    print(  # noqa: T201f"   Result: '{result}'")
 
     if result == "beautiful landscape with mountains and trees":
-        print("   ✅ SUCCESS: Real extractor works correctly!")
+        print(  # noqa: T201"   ✅ SUCCESS: Real extractor works correctly!")
     else:
-        print("   ❌ FAILED: Real extractor still has issues")
+        print(  # noqa: T201"   ❌ FAILED: Real extractor still has issues")
 
-    print("\n2. Testing negative prompt extraction:")
+    print(  # noqa: T201"\n2. Testing negative prompt extraction:")
     method_def = {
         "sampler_node_types": ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
         "negative_input_name": "negative",
@@ -131,28 +134,32 @@ def test_real_extractor():
         ],
     }
 
-    result = extractor._find_text_from_main_sampler_input(sample_t5_data, method_def, {}, {})
-    print(f"   Result: '{result}'")
+    result = extractor._find_text_from_main_sampler_input(
+        sample_t5_data, method_def, {}, {}
+    )
+    print(  # noqa: T201f"   Result: '{result}'")
 
     if result == "low quality, blurry":
-        print("   ✅ SUCCESS: Real extractor negative prompt works!")
+        print(  # noqa: T201"   ✅ SUCCESS: Real extractor negative prompt works!")
     else:
-        print("   ❌ FAILED: Real extractor negative prompt failed")
+        print(  # noqa: T201"   ❌ FAILED: Real extractor negative prompt failed")
 
-    print("\n3. Testing parameter extraction:")
+    print(  # noqa: T201"\n3. Testing parameter extraction:")
     method_def = {
         "sampler_node_types": ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
         "input_key": "seed",
         "value_type": "integer",
     }
 
-    seed_result = extractor._find_input_of_main_sampler(sample_t5_data, method_def, {}, {})
-    print(f"   Seed result: {seed_result}")
+    seed_result = extractor._find_input_of_main_sampler(
+        sample_t5_data, method_def, {}, {}
+    )
+    print(  # noqa: T201f"   Seed result: {seed_result}")
 
     if seed_result == 123456:
-        print("   ✅ SUCCESS: Parameter extraction works!")
+        print(  # noqa: T201"   ✅ SUCCESS: Parameter extraction works!")
     else:
-        print("   ❌ FAILED: Parameter extraction failed")
+        print(  # noqa: T201"   ❌ FAILED: Parameter extraction failed")
 
 
 if __name__ == "__main__":

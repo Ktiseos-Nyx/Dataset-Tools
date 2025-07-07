@@ -94,7 +94,9 @@ class ContextDataPreparer:
             return str(file_input.name)
         return str(file_input)
 
-    def _process_as_image(self, file_input: FileInput, context: ContextData) -> ContextData:
+    def _process_as_image(
+        self, file_input: FileInput, context: ContextData
+    ) -> ContextData:
         """Process the input as an image file with memory optimization."""
         self.logger.debug(f"Processing as image: {context['file_path_original']}")
 
@@ -103,7 +105,9 @@ class ContextDataPreparer:
             # First pass: get basic info without loading pixels
             with Image.open(file_input) as img:
                 # Check image size before full processing
-                if img.width * img.height > 50_000_000:  # ~50MP limit (catches rare phone cameras)
+                if (
+                    img.width * img.height > 50_000_000
+                ):  # ~50MP limit (catches rare phone cameras)
                     self.logger.warning(
                         f"Large image detected ({img.width}x{img.height}), using minimal processing. For full metadata extraction on very large images, consider using exiftool or similar specialized tools."
                     )
@@ -127,9 +131,13 @@ class ContextDataPreparer:
             # File extension
             image_filename = getattr(img, "filename", None)
             if image_filename:
-                context["file_extension"] = Path(image_filename).suffix.lstrip(".").lower()
+                context["file_extension"] = (
+                    Path(image_filename).suffix.lstrip(".").lower()
+                )
             elif isinstance(file_input, (str, Path)):
-                context["file_extension"] = Path(str(file_input)).suffix.lstrip(".").lower()
+                context["file_extension"] = (
+                    Path(str(file_input)).suffix.lstrip(".").lower()
+                )
 
             # EXIF data processing
             self._extract_exif_data(context)
@@ -152,7 +160,9 @@ class ContextDataPreparer:
 
         return context
 
-    def _process_large_image_minimal(self, img: Image.Image, context: ContextData) -> ContextData:
+    def _process_large_image_minimal(
+        self, img: Image.Image, context: ContextData
+    ) -> ContextData:
         """Process large images with minimal memory usage."""
         # Only extract essential metadata without loading pixel data
         context["pil_info"] = img.info.copy() if img.info else {}
@@ -168,10 +178,14 @@ class ContextDataPreparer:
         # Extract only critical metadata (EXIF, PNG chunks) without deep processing
         self._extract_minimal_metadata(context)
 
-        self.logger.info(f"Completed minimal processing for large image: {context['width']}x{context['height']}")
+        self.logger.info(
+            f"Completed minimal processing for large image: {context['width']}x{context['height']}"
+        )
         return context
 
-    def _process_large_image_minimal_fallback(self, file_input: FileInput, context: ContextData) -> ContextData:
+    def _process_large_image_minimal_fallback(
+        self, file_input: FileInput, context: ContextData
+    ) -> ContextData:
         """Fallback minimal processing when memory errors occur."""
         try:
             # Try to get just basic info using PIL's lazy loading
@@ -200,7 +214,9 @@ class ContextDataPreparer:
                 # Only extract software tag, skip UserComment for large images
                 sw_bytes = loaded_exif.get("0th", {}).get(piexif.ImageIFD.Software)
                 if sw_bytes and isinstance(sw_bytes, bytes):
-                    context["software_tag"] = sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
+                    context["software_tag"] = (
+                        sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
+                    )
             except Exception as e:
                 self.logger.debug(f"Minimal EXIF extraction failed: {e}")
 
@@ -223,7 +239,9 @@ class ContextDataPreparer:
 
             # User comment extraction with enhanced handling
             uc_bytes = loaded_exif.get("Exif", {}).get(piexif.ExifIFD.UserComment)
-            self.logger.debug(f"EXIF UserComment raw bytes (uc_bytes): {uc_bytes[:50] if uc_bytes else 'None'}...")
+            self.logger.debug(
+                f"EXIF UserComment raw bytes (uc_bytes): {uc_bytes[:50] if uc_bytes else 'None'}..."
+            )
             if uc_bytes:
                 # Try standard piexif extraction first
                 try:
@@ -233,7 +251,9 @@ class ContextDataPreparer:
                     )
                     if user_comment and len(user_comment.strip()) > 0:
                         context["raw_user_comment_str"] = user_comment
-                        self.logger.debug(f"Standard EXIF UserComment extracted: {len(user_comment)} chars")
+                        self.logger.debug(
+                            f"Standard EXIF UserComment extracted: {len(user_comment)} chars"
+                        )
                     else:
                         # Empty or whitespace-only result, try robust decoding
                         self.logger.debug(
@@ -243,27 +263,43 @@ class ContextDataPreparer:
                         self.logger.debug(
                             f"Robust decoder input (uc_bytes): {uc_bytes[:50] if uc_bytes else 'None'}..."
                         )
-                        self.logger.debug(f"Robust decoder output: {decoded_uc[:50] if decoded_uc else 'None'}...")
+                        self.logger.debug(
+                            f"Robust decoder output: {decoded_uc[:50] if decoded_uc else 'None'}..."
+                        )
                         if decoded_uc:
                             context["raw_user_comment_str"] = decoded_uc
-                            self.logger.debug(f"Robust UserComment extracted: {len(decoded_uc)} chars")
+                            self.logger.debug(
+                                f"Robust UserComment extracted: {len(decoded_uc)} chars"
+                            )
                 except Exception as e:
-                    self.logger.debug(f"Standard UserComment extraction failed: {e}, trying robust method")
+                    self.logger.debug(
+                        f"Standard UserComment extraction failed: {e}, trying robust method"
+                    )
                     decoded_uc = self._decode_usercomment_bytes_robust(uc_bytes)
-                    self.logger.debug(f"Robust decoder input (uc_bytes): {uc_bytes[:50] if uc_bytes else 'None'}...")
-                    self.logger.debug(f"Robust decoder output: {decoded_uc[:50] if decoded_uc else 'None'}...")
+                    self.logger.debug(
+                        f"Robust decoder input (uc_bytes): {uc_bytes[:50] if uc_bytes else 'None'}..."
+                    )
+                    self.logger.debug(
+                        f"Robust decoder output: {decoded_uc[:50] if decoded_uc else 'None'}..."
+                    )
                     if decoded_uc:
                         context["raw_user_comment_str"] = decoded_uc
-                        self.logger.debug(f"Robust UserComment extracted: {len(decoded_uc)} chars")
+                        self.logger.debug(
+                            f"Robust UserComment extracted: {len(decoded_uc)} chars"
+                        )
             else:
-                self.logger.debug("No uc_bytes found from piexif. Trying PIL getexif() as fallback.")
+                self.logger.debug(
+                    "No uc_bytes found from piexif. Trying PIL getexif() as fallback."
+                )
                 # No UserComment in piexif, try PIL's getexif() which might have already decoded it
                 self._extract_usercomment_from_pil_getexif(context)
 
             # Software tag extraction
             sw_bytes = loaded_exif.get("0th", {}).get(piexif.ImageIFD.Software)
             if sw_bytes and isinstance(sw_bytes, bytes):
-                context["software_tag"] = sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
+                context["software_tag"] = (
+                    sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
+                )
 
         except Exception as e:
             self.logger.debug(f"Failed to extract EXIF data: {e}")
@@ -289,16 +325,23 @@ class ContextDataPreparer:
                         if isinstance(user_comment, str):
                             # PIL already decoded it successfully
                             context["raw_user_comment_str"] = user_comment
-                            self.logger.debug(f"PIL getexif UserComment extracted: {len(user_comment)} chars")
+                            self.logger.debug(
+                                f"PIL getexif UserComment extracted: {len(user_comment)} chars"
+                            )
 
                             # If this is a large ComfyUI JSON, also try to parse it
-                            if user_comment.startswith('{"') and '"prompt":' in user_comment:
+                            if (
+                                user_comment.startswith('{"')
+                                and '"prompt":' in user_comment
+                            ):
                                 try:
                                     import json
 
                                     workflow_data = json.loads(user_comment)
                                     context["comfyui_workflow_json"] = workflow_data
-                                    self.logger.debug("Parsed ComfyUI workflow JSON from PIL getexif")
+                                    self.logger.debug(
+                                        "Parsed ComfyUI workflow JSON from PIL getexif"
+                                    )
                                 except json.JSONDecodeError:
                                     self.logger.debug(
                                         "PIL getexif UserComment contains JSON-like data but failed to parse"
@@ -306,10 +349,14 @@ class ContextDataPreparer:
 
                         elif isinstance(user_comment, bytes):
                             # PIL returned raw bytes, try robust decoding
-                            decoded = self._decode_usercomment_bytes_robust(user_comment)
+                            decoded = self._decode_usercomment_bytes_robust(
+                                user_comment
+                            )
                             if decoded:
                                 context["raw_user_comment_str"] = decoded
-                                self.logger.debug(f"PIL getexif robust UserComment extracted: {len(decoded)} chars")
+                                self.logger.debug(
+                                    f"PIL getexif robust UserComment extracted: {len(decoded)} chars"
+                                )
 
                                 # Check for ComfyUI JSON
                                 if decoded.startswith('{"') and '"prompt":' in decoded:
@@ -318,13 +365,17 @@ class ContextDataPreparer:
 
                                         workflow_data = json.loads(decoded)
                                         context["comfyui_workflow_json"] = workflow_data
-                                        self.logger.debug("Parsed ComfyUI workflow JSON from PIL getexif robust")
+                                        self.logger.debug(
+                                            "Parsed ComfyUI workflow JSON from PIL getexif robust"
+                                        )
                                     except json.JSONDecodeError:
                                         self.logger.debug(
                                             "PIL getexif robust UserComment contains JSON-like data but failed to parse"
                                         )
                         else:
-                            self.logger.debug(f"PIL getexif UserComment unexpected type: {type(user_comment)}")
+                            self.logger.debug(
+                                f"PIL getexif UserComment unexpected type: {type(user_comment)}"
+                            )
                 else:
                     self.logger.debug("No EXIF data found in PIL getexif")
                     # Final fallback to manual extraction
@@ -358,10 +409,14 @@ class ContextDataPreparer:
                     user_comment_raw = exif_data.get(37510)  # UserComment tag
                     if user_comment_raw and isinstance(user_comment_raw, bytes):
                         # Use the same robust decoding as the main path
-                        decoded = self._decode_usercomment_bytes_robust(user_comment_raw)
+                        decoded = self._decode_usercomment_bytes_robust(
+                            user_comment_raw
+                        )
                         if decoded:
                             context["raw_user_comment_str"] = decoded
-                            self.logger.debug(f"Manual robust UserComment extracted: {len(decoded)} chars")
+                            self.logger.debug(
+                                f"Manual robust UserComment extracted: {len(decoded)} chars"
+                            )
 
                             # If this is a large ComfyUI JSON, also try to parse it
                             if decoded.startswith('{"') and '"prompt":' in decoded:
@@ -370,9 +425,13 @@ class ContextDataPreparer:
 
                                     workflow_data = json.loads(decoded)
                                     context["comfyui_workflow_json"] = workflow_data
-                                    self.logger.debug("Parsed ComfyUI workflow JSON from manual extraction")
+                                    self.logger.debug(
+                                        "Parsed ComfyUI workflow JSON from manual extraction"
+                                    )
                                 except json.JSONDecodeError:
-                                    self.logger.debug("UserComment contains JSON-like data but failed to parse")
+                                    self.logger.debug(
+                                        "UserComment contains JSON-like data but failed to parse"
+                                    )
 
         except Exception as e:
             self.logger.debug(f"Manual Unicode extraction failed: {e}")
@@ -427,10 +486,15 @@ class ContextDataPreparer:
                 context["png_chunks"][key] = val
 
         # Ensure UserComment is in png_chunks if it exists
-        if "UserComment" in context["pil_info"] and "UserComment" not in context["png_chunks"]:
+        if (
+            "UserComment" in context["pil_info"]
+            and "UserComment" not in context["png_chunks"]
+        ):
             context["png_chunks"]["UserComment"] = context["pil_info"]["UserComment"]
 
-    def _process_as_non_image(self, file_input: FileInput, context: ContextData) -> ContextData | None:
+    def _process_as_non_image(
+        self, file_input: FileInput, context: ContextData
+    ) -> ContextData | None:
         """Process the input as a non-image file."""
         self.logger.info(f"Processing as non-image: {context['file_path_original']}")
 
@@ -448,16 +512,22 @@ class ContextDataPreparer:
             return self._process_safetensors_file(file_input, context)
         if context["file_extension"] == "gguf":
             return self._process_gguf_file(file_input, context)
-        self.logger.info(f"File extension '{context['file_extension']}' not specifically handled")
+        self.logger.info(
+            f"File extension '{context['file_extension']}' not specifically handled"
+        )
         # Try to read as binary for generic processing
         self._read_as_binary(file_input, context)
         return context
 
-    def _process_json_file(self, file_input: FileInput, context: ContextData) -> ContextData:
+    def _process_json_file(
+        self, file_input: FileInput, context: ContextData
+    ) -> ContextData:
         """Process a JSON file with memory limits."""
         try:
             # Limit JSON files to 50MB to prevent memory issues
-            content_str = self._read_file_content(file_input, mode="r", encoding="utf-8", max_size=50_000_000)
+            content_str = self._read_file_content(
+                file_input, mode="r", encoding="utf-8", max_size=50_000_000
+            )
             context["raw_file_content_text"] = content_str
 
             # Parse JSON with memory error handling
@@ -483,7 +553,9 @@ class ContextDataPreparer:
 
         return context
 
-    def _process_text_file(self, file_input: FileInput, context: ContextData) -> ContextData | None:
+    def _process_text_file(
+        self, file_input: FileInput, context: ContextData
+    ) -> ContextData | None:
         """Process a text file with memory limits."""
         try:
             # Limit text files to 10MB to prevent memory issues
@@ -501,7 +573,9 @@ class ContextDataPreparer:
 
         return context
 
-    def _process_safetensors_file(self, file_input: FileInput, context: ContextData) -> ContextData:
+    def _process_safetensors_file(
+        self, file_input: FileInput, context: ContextData
+    ) -> ContextData:
         """Process a SafeTensors model file."""
         try:
             # Import here to avoid dependency issues if not available
@@ -516,7 +590,9 @@ class ContextDataPreparer:
                 context["safetensors_main_header"] = parser.main_header
                 self.logger.debug("Successfully parsed SafeTensors file")
             else:
-                self.logger.warning(f"SafeTensors parser failed: {parser._error_message}")
+                self.logger.warning(
+                    f"SafeTensors parser failed: {parser._error_message}"
+                )
 
         except ImportError:
             self.logger.error("SafetensorsParser not available")
@@ -525,7 +601,9 @@ class ContextDataPreparer:
 
         return context
 
-    def _process_gguf_file(self, file_input: FileInput, context: ContextData) -> ContextData:
+    def _process_gguf_file(
+        self, file_input: FileInput, context: ContextData
+    ) -> ContextData:
         """Process a GGUF model file."""
         try:
             # Import here to avoid dependency issues if not available
@@ -557,7 +635,9 @@ class ContextDataPreparer:
         """Read file as binary data with memory limits."""
         with contextlib.suppress(Exception):
             # Limit binary files to 20MB to prevent memory issues
-            context["raw_file_content_bytes"] = self._read_file_content(file_input, mode="rb", max_size=20_000_000)
+            context["raw_file_content_bytes"] = self._read_file_content(
+                file_input, mode="rb", max_size=20_000_000
+            )
 
     def _read_file_content(
         self,
@@ -587,7 +667,9 @@ class ContextDataPreparer:
             if max_size:
                 content = file_input.read(max_size)
                 if len(content) == max_size:
-                    self.logger.warning(f"File truncated to {max_size} bytes due to size limit")
+                    self.logger.warning(
+                        f"File truncated to {max_size} bytes due to size limit"
+                    )
             else:
                 content = file_input.read()
 
@@ -620,7 +702,9 @@ class ContextDataPreparer:
             if max_size:
                 content = f.read(max_size)
                 if len(content) == max_size:
-                    self.logger.warning(f"File {file_path} truncated to {max_size} bytes")
+                    self.logger.warning(
+                        f"File {file_path} truncated to {max_size} bytes"
+                    )
                 return content
             return f.read()
 
@@ -630,7 +714,9 @@ class ContextDataPreparer:
 # ============================================================================
 
 
-def prepare_context_data(file_input: FileInput, logger: logging.Logger | None = None) -> ContextData | None:
+def prepare_context_data(
+    file_input: FileInput, logger: logging.Logger | None = None
+) -> ContextData | None:
     """Convenience function to prepare context data from a file.
 
     Args:

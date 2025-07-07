@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Test the enhanced EXIF integration with the metadata engine."""
 
@@ -12,8 +13,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def test_enhanced_integration():
     """Test that enhanced EXIF extraction works with the metadata engine."""
-    print("🧪 ENHANCED EXIF INTEGRATION TEST")
-    print("=" * 33)
+    print(  # noqa: T201"🧪 ENHANCED EXIF INTEGRATION TEST")
+    print(  # noqa: T201"=" * 33)
 
     # Test files
     test_files = [
@@ -29,43 +30,43 @@ def test_enhanced_integration():
 
         for test_file in test_files:
             if not os.path.exists(test_file):
-                print(f"❌ File not found: {Path(test_file).name}")
+                print(  # noqa: T201f"❌ File not found: {Path(test_file).name}")
                 continue
 
-            print(f"\\n📁 Testing: {Path(test_file).name}")
+            print(  # noqa: T201f"\\n📁 Testing: {Path(test_file).name}")
 
             try:
                 context = preparer.prepare_context(test_file)
 
                 if not context:
-                    print("❌ No context data prepared")
+                    print(  # noqa: T201"❌ No context data prepared")
                     continue
 
-                print(f"✅ Context prepared with {len(context)} keys")
+                print(  # noqa: T201f"✅ Context prepared with {len(context)} keys")
 
                 # Check for UserComment extraction
                 user_comment = context.get("raw_user_comment_str")
                 if user_comment:
-                    print(f"✅ UserComment extracted: {len(user_comment)} characters")
+                    print(  # noqa: T201f"✅ UserComment extracted: {len(user_comment)} characters")
 
                     # Analyze the content
                     if "Steps:" in user_comment and "Sampler:" in user_comment:
-                        print("   Type: A1111-style parameters")
+                        print(  # noqa: T201"   Type: A1111-style parameters")
                         if "flux" in user_comment.lower():
-                            print("   Model type: FLUX detected")
+                            print(  # noqa: T201"   Model type: FLUX detected")
                     elif user_comment.startswith('{"') and '"prompt":' in user_comment:
-                        print("   Type: ComfyUI JSON workflow")
+                        print(  # noqa: T201"   Type: ComfyUI JSON workflow")
                         if "comfyui_workflow_json" in context:
-                            print("   ✅ Parsed as structured JSON")
+                            print(  # noqa: T201"   ✅ Parsed as structured JSON")
                         else:
-                            print("   ⚠️ Not parsed as structured JSON")
+                            print(  # noqa: T201"   ⚠️ Not parsed as structured JSON")
 
                     # Show preview
                     preview = user_comment[:100].replace("\\n", " ")
-                    print(f"   Preview: {preview}...")
+                    print(  # noqa: T201f"   Preview: {preview}...")
 
                 else:
-                    print("❌ No UserComment extracted")
+                    print(  # noqa: T201"❌ No UserComment extracted")
 
                 # Check other important context keys
                 important_keys = [
@@ -76,26 +77,26 @@ def test_enhanced_integration():
                 ]
                 for key in important_keys:
                     if key in context:
-                        print(f"   ✅ {key}: present")
+                        print(  # noqa: T201f"   ✅ {key}: present")
                     else:
-                        print(f"   ❌ {key}: missing")
+                        print(  # noqa: T201f"   ❌ {key}: missing")
 
             except Exception as e:
-                print(f"❌ Error processing {Path(test_file).name}: {e}")
+                print(  # noqa: T201f"❌ Error processing {Path(test_file).name}: {e}")
 
     except ImportError as e:
-        print(f"❌ Import error: {e}")
-        print("   Make sure you're running from the correct directory")
+        print(  # noqa: T201f"❌ Import error: {e}")
+        print(  # noqa: T201"   Make sure you're running from the correct directory")
 
-    print("\\n🎯 EXPECTED RESULTS:")
-    print("   • ComfyUI_01803_.jpeg: Should extract A1111-style FLUX parameters")
-    print("   • ComfyUI_08965_.jpeg: Should extract large ComfyUI JSON workflow")
-    print("   • Both should now be detectable by appropriate parsers")
+    print(  # noqa: T201"\\n🎯 EXPECTED RESULTS:")
+    print(  # noqa: T201"   • ComfyUI_01803_.jpeg: Should extract A1111-style FLUX parameters")
+    print(  # noqa: T201"   • ComfyUI_08965_.jpeg: Should extract large ComfyUI JSON workflow")
+    print(  # noqa: T201"   • Both should now be detectable by appropriate parsers")
 
-    print("\\n📝 NEXT STEPS:")
-    print("   1. If UserComment extraction works → Test with full metadata engine")
-    print("   2. If parsers still don't match → Debug detection rules")
-    print("   3. Monitor logs for 'Enhanced EXIF UserComment extracted' messages")
+    print(  # noqa: T201"\\n📝 NEXT STEPS:")
+    print(  # noqa: T201"   1. If UserComment extraction works → Test with full metadata engine")
+    print(  # noqa: T201"   2. If parsers still don't match → Debug detection rules")
+    print(  # noqa: T201"   3. Monitor logs for 'Enhanced EXIF UserComment extracted' messages")
 
 
 if __name__ == "__main__":

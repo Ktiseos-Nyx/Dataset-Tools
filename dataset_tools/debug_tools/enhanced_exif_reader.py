@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Enhanced EXIF reader that bypasses PIL limitations for UserComment extraction."""
 
@@ -41,7 +42,7 @@ class EnhancedExifReader:
             return ""
 
         except Exception as e:
-            print(f"❌ PIL extraction failed: {e}")
+            print(  # noqa: T201f"❌ PIL extraction failed: {e}")
             return ""
 
     def _decode_usercomment_bytes(self, data: bytes) -> str:
@@ -83,8 +84,8 @@ class EnhancedExifReader:
 
 def test_enhanced_reader():
     """Test the enhanced EXIF reader."""
-    print("🔧 ENHANCED EXIF READER TEST")
-    print("=" * 29)
+    print(  # noqa: T201"🔧 ENHANCED EXIF READER TEST")
+    print(  # noqa: T201"=" * 29)
 
     reader = EnhancedExifReader()
 
@@ -96,16 +97,16 @@ def test_enhanced_reader():
 
     for test_file in test_files:
         if Path(test_file).exists():  # Use Path.exists() for robustness
-            print(f"\n📁 Testing: {Path(test_file).name}")
+            print(  # noqa: T201f"\n📁 Testing: {Path(test_file).name}")
 
             usercomment = reader.extract_usercomment(test_file)
 
             if usercomment:
-                print(f"✅ Extracted {len(usercomment)} characters")
+                print(  # noqa: T201f"✅ Extracted {len(usercomment)} characters")
 
                 # Check what type of metadata this is
                 if "Steps:" in usercomment and "Sampler:" in usercomment:
-                    print("   Type: A1111-style parameters")
+                    print(  # noqa: T201"   Type: A1111-style parameters")
                     # Extract key parameters
                     if "Model:" in usercomment:
                         model_start = usercomment.find("Model:") + 6
@@ -113,36 +114,36 @@ def test_enhanced_reader():
                         if model_end == -1:
                             model_end = len(usercomment)
                         model = usercomment[model_start:model_end].strip()
-                        print(f"   Model: {model}")
+                        print(  # noqa: T201f"   Model: {model}")
 
                 elif usercomment.startswith('{"') and '"prompt":' in usercomment:
-                    print("   Type: ComfyUI JSON workflow")
+                    print(  # noqa: T201"   Type: ComfyUI JSON workflow")
                     try:
                         # Try to parse as JSON
                         workflow_data = json.loads(usercomment)
                         if "prompt" in workflow_data:
                             node_count = len(workflow_data["prompt"])
-                            print(f"   Nodes: {node_count}")
+                            print(  # noqa: T201f"   Nodes: {node_count}")
 
                         # Look for key node types
                         workflow_str = json.dumps(workflow_data)
                         if "KSampler" in workflow_str:
-                            print("   Contains: KSampler nodes")
+                            print(  # noqa: T201"   Contains: KSampler nodes")
                         if "CLIPTextEncode" in workflow_str:
-                            print("   Contains: Text encoding nodes")
+                            print(  # noqa: T201"   Contains: Text encoding nodes")
                         if "DualCLIPLoader" in workflow_str:
-                            print("   Contains: T5/FLUX components")
+                            print(  # noqa: T201"   Contains: T5/FLUX components")
 
                     except json.JSONDecodeError:
-                        print("   Warning: Invalid JSON structure")
+                        print(  # noqa: T201"   Warning: Invalid JSON structure")
 
                 else:
-                    print("   Type: Unknown/Other")
-                    print(f"   Preview: {usercomment[:100]}...")
+                    print(  # noqa: T201"   Type: Unknown/Other")
+                    print(  # noqa: T201f"   Preview: {usercomment[:100]}...")
             else:
-                print("❌ No UserComment found")
+                print(  # noqa: T201"❌ No UserComment found")
         else:
-            print(f"❌ File not found: {test_file}")
+            print(  # noqa: T201f"❌ File not found: {test_file}")
 
 
 if __name__ == "__main__":

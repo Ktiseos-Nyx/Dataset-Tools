@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Test the ComfyUI extraction methods directly using the new FieldExtractor."""
 
@@ -17,8 +18,8 @@ from dataset_tools.metadata_engine.field_extraction import FieldExtractor
 
 def test_extraction(file_path: str):
     """Test the extraction methods using a real workflow file."""
-    print(f"🔧 TESTING COMFYUI EXTRACTION FOR: {file_path}")
-    print("=" * (38 + len(file_path)))
+    print(  # noqa: T201f"🔧 TESTING COMFYUI EXTRACTION FOR: {file_path}")
+    print(  # noqa: T201"=" * (38 + len(file_path)))
 
     logger = get_logger("TestExtraction")
     extractor = FieldExtractor(logger)
@@ -27,13 +28,13 @@ def test_extraction(file_path: str):
         with open(file_path) as f:
             workflow_data = json.load(f)
     except (OSError, json.JSONDecodeError) as e:
-        print(f"❌ Error reading or parsing workflow file: {e}")
+        print(  # noqa: T201f"❌ Error reading or parsing workflow file: {e}")
         return
 
     # The context data would normally be prepared by the ContextDataPreparer
     context_data = {"parsed_root_json_object": workflow_data}
 
-    print("1. Testing positive prompt extraction:")
+    print(  # noqa: T201"1. Testing positive prompt extraction:")
     positive_field_def = {
         "target_key": "prompt",
         "method": "find_text_from_main_sampler_input",
@@ -54,15 +55,17 @@ def test_extraction(file_path: str):
         },
     }
 
-    positive_result = extractor.extract_field(positive_field_def, workflow_data, context_data, {})
-    print(f"   Result: '{positive_result}'")
+    positive_result = extractor.extract_field(
+        positive_field_def, workflow_data, context_data, {}
+    )
+    print(  # noqa: T201f"   Result: '{positive_result}'")
 
     if positive_result:
-        print("   ✅ SUCCESS: Positive prompt extracted.")
+        print(  # noqa: T201"   ✅ SUCCESS: Positive prompt extracted.")
     else:
-        print("   ❌ FAILED: Positive prompt extraction failed.")
+        print(  # noqa: T201"   ❌ FAILED: Positive prompt extraction failed.")
 
-    print("\n2. Testing negative prompt extraction:")
+    print(  # noqa: T201"\n2. Testing negative prompt extraction:")
     negative_field_def = {
         "target_key": "negative_prompt",
         "method": "find_text_from_main_sampler_input",
@@ -83,13 +86,15 @@ def test_extraction(file_path: str):
         },
     }
 
-    negative_result = extractor.extract_field(negative_field_def, workflow_data, context_data, {})
-    print(f"   Result: '{negative_result}'")
+    negative_result = extractor.extract_field(
+        negative_field_def, workflow_data, context_data, {}
+    )
+    print(  # noqa: T201f"   Result: '{negative_result}'")
 
     if negative_result:
-        print("   ✅ SUCCESS: Negative prompt extracted.")
+        print(  # noqa: T201"   ✅ SUCCESS: Negative prompt extracted.")
     else:
-        print("   ❌ FAILED: Negative prompt extraction failed.")
+        print(  # noqa: T201"   ❌ FAILED: Negative prompt extraction failed.")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Prepare ComfyUI workflow files for analysis with Gemini.
 This script extracts workflows from image metadata and prepares them for batch analysis.
@@ -54,22 +55,30 @@ def extract_workflow_from_file(file_path: str) -> dict[str, Any]:
                 "file_name": Path(file_path).name,
                 "source": source,
                 "workflow": workflow_data,
-                "node_count": len([k for k, v in workflow_data.items() if isinstance(v, dict) and "class_type" in v]),
+                "node_count": len(
+                    [
+                        k
+                        for k, v in workflow_data.items()
+                        if isinstance(v, dict) and "class_type" in v
+                    ]
+                ),
             }
 
     except Exception as e:
-        print(f"❌ Error extracting from {Path(file_path).name}: {e}")
+        print(  # noqa: T201f"❌ Error extracting from {Path(file_path).name}: {e}")
 
     return None
 
 
-def prepare_workflow_batch(source_directory: str, output_directory: str, max_files: int = 100):
+def prepare_workflow_batch(
+    source_directory: str, output_directory: str, max_files: int = 100
+):
     """Prepare a batch of workflow files for Gemini analysis."""
     source_path = Path(source_directory)
     output_path = Path(output_directory)
     output_path.mkdir(exist_ok=True)
 
-    print(f"🔍 Scanning {source_path} for ComfyUI workflows...")
+    print(  # noqa: T201f"🔍 Scanning {source_path} for ComfyUI workflows...")
 
     # Find image files
     image_extensions = {".jpg", ".jpeg", ".png", ".webp"}
@@ -79,14 +88,14 @@ def prepare_workflow_batch(source_directory: str, output_directory: str, max_fil
         image_files.extend(source_path.glob(f"*{ext}"))
         image_files.extend(source_path.glob(f"*{ext.upper()}"))
 
-    print(f"📁 Found {len(image_files)} image files")
+    print(  # noqa: T201f"📁 Found {len(image_files)} image files")
 
     workflows_extracted = 0
     batch_number = 1
     current_batch = []
 
     for image_file in image_files[:max_files]:
-        print(f"📄 Processing: {image_file.name}")
+        print(  # noqa: T201f"📄 Processing: {image_file.name}")
 
         workflow_info = extract_workflow_from_file(str(image_file))
         if workflow_info:
@@ -107,7 +116,9 @@ def prepare_workflow_batch(source_directory: str, output_directory: str, max_fil
                         indent=2,
                     )
 
-                print(f"💾 Saved batch {batch_number} with {len(current_batch)} workflows")
+                print(  # noqa: T201
+                    f"💾 Saved batch {batch_number} with {len(current_batch)} workflows"
+                )
                 current_batch = []
                 batch_number += 1
 
@@ -124,12 +135,14 @@ def prepare_workflow_batch(source_directory: str, output_directory: str, max_fil
                 f,
                 indent=2,
             )
-        print(f"💾 Saved final batch {batch_number} with {len(current_batch)} workflows")
+        print(  # noqa: T201
+            f"💾 Saved final batch {batch_number} with {len(current_batch)} workflows"
+        )
 
-    print("\n✅ EXTRACTION COMPLETE:")
-    print(f"   📊 Total workflows extracted: {workflows_extracted}")
-    print(f"   📦 Batches created: {batch_number}")
-    print(f"   📁 Output directory: {output_path}")
+    print(  # noqa: T201"\n✅ EXTRACTION COMPLETE:")
+    print(  # noqa: T201f"   📊 Total workflows extracted: {workflows_extracted}")
+    print(  # noqa: T201f"   📦 Batches created: {batch_number}")
+    print(  # noqa: T201f"   📁 Output directory: {output_path}")
 
     # Create analysis instructions
     instructions_file = output_path / "analysis_instructions.md"
@@ -174,7 +187,7 @@ Focus on discovering new node types and understanding their usage patterns.
 """
         )
 
-    print(f"📋 Created analysis instructions: {instructions_file}")
+    print(  # noqa: T201f"📋 Created analysis instructions: {instructions_file}")
 
 
 def create_sample_analysis():
@@ -257,13 +270,15 @@ def create_sample_analysis():
     with open(sample_output, "w", encoding="utf-8") as f:
         json.dump(sample, f, indent=2)
 
-    print(f"📝 Created sample analysis output: {sample_output}")
+    print(  # noqa: T201f"📝 Created sample analysis output: {sample_output}")
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: python prepare_workflows_for_analysis.py <source_dir> <output_dir> [max_files]")
-        print(
+        print(  # noqa: T201
+            "Usage: python prepare_workflows_for_analysis.py <source_dir> <output_dir> [max_files]"
+        )
+        print(  # noqa: T201
             "Example: python prepare_workflows_for_analysis.py '/Users/duskfall/Downloads/Metadata Samples' './workflow_analysis' 100"
         )
         sys.exit(1)

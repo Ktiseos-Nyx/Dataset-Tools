@@ -66,17 +66,21 @@ def parse_metadata(file_path_named: str) -> dict[str, Any]:
     try:
         # Create the metadata engine
         engine = create_metadata_engine(PARSER_DEFINITIONS_PATH)
-        
+
         # Process the file
         result = engine.get_parser_for_file(file_path_named)
-        
+
         if result and isinstance(result, dict) and result:
             # Transform the engine result to UI format
             _transform_engine_result_to_ui_dict(result, final_ui_dict)
             potential_ai_parsed = True
-            nfo(f"[DT.metadata_parser]: Successfully parsed metadata with engine. Keys: {list(result.keys())}")
+            nfo(
+                f"[DT.metadata_parser]: Successfully parsed metadata with engine. Keys: {list(result.keys())}"
+            )
         else:
-            nfo("[DT.metadata_parser]: Engine found no matching parser or returned invalid data.")
+            nfo(
+                "[DT.metadata_parser]: Engine found no matching parser or returned invalid data."
+            )
             potential_ai_parsed = False
 
     except Exception as e:
@@ -98,11 +102,15 @@ def parse_metadata(file_path_named: str) -> dict[str, Any]:
         }
         nfo(f"Failed to find/load any metadata for file: {file_path_named}")
 
-    nfo(f"[DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: {list(final_ui_dict.keys())}")
+    nfo(
+        f"[DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: {list(final_ui_dict.keys())}"
+    )
     return final_ui_dict
 
 
-def _transform_engine_result_to_ui_dict(result: dict[str, Any], ui_dict: dict[str, Any]) -> None:
+def _transform_engine_result_to_ui_dict(
+    result: dict[str, Any], ui_dict: dict[str, Any]
+) -> None:
     """Transforms the raw result from the metadata engine into the structured UI dictionary."""
     # --- Main Prompts ---
     prompt_data = {

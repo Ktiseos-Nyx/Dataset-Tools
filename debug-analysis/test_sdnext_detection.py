@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 
 """Test SD.Next detection with the updated priority."""
 
@@ -20,20 +21,20 @@ Steps: 30, Size: 832x1216, Sampler: DPM++ 2M, Seed: 3873706916, CFG scale: 6, CF
 
     parser_definitions_path = Path(__file__).parent / "parser_definitions"
 
-    print("🔍 TESTING SD.NEXT DETECTION")
-    print("=" * 50)
+    print(  # noqa: T201"🔍 TESTING SD.NEXT DETECTION")
+    print(  # noqa: T201"=" * 50)
 
     # Create engine
     engine = get_metadata_engine(str(parser_definitions_path))
 
     # Show parser priorities
-    print("📋 PARSER PRIORITIES:")
-    print("-" * 20)
+    print(  # noqa: T201"📋 PARSER PRIORITIES:")
+    print(  # noqa: T201"-" * 20)
     for parser_data in engine.sorted_definitions[:10]:  # Show top 10
         parser_name = parser_data.get("parser_name", "Unknown")
         priority = parser_data.get("priority", 0)
-        print(f"  {parser_name}: {priority}")
-    print()
+        print(  # noqa: T201f"  {parser_name}: {priority}")
+    print(  # noqa: T201)
 
     # Create test context
     context = {
@@ -53,42 +54,42 @@ Steps: 30, Size: 832x1216, Sampler: DPM++ 2M, Seed: 3873706916, CFG scale: 6, CF
             a1111_parser = parser_data
 
     if sdnext_parser:
-        print("🧪 TESTING SD.NEXT PARSER:")
-        print(f"Priority: {sdnext_parser.get('priority', 0)}")
+        print(  # noqa: T201"🧪 TESTING SD.NEXT PARSER:")
+        print(  # noqa: T201f"Priority: {sdnext_parser.get('priority', 0)}")
 
         detection_rules = sdnext_parser.get("detection_rules", [])
         all_pass = True
         for i, rule in enumerate(detection_rules):
             result = engine.rule_evaluator.evaluate_rule(rule, context)
-            print(f"  Rule {i + 1}: {result} - {rule.get('comment', 'No comment')}")
+            print(  # noqa: T201f"  Rule {i + 1}: {result} - {rule.get('comment', 'No comment')}")
             if not result:
                 all_pass = False
 
-        print(f"  Overall SD.Next match: {all_pass}")
-        print()
+        print(  # noqa: T201f"  Overall SD.Next match: {all_pass}")
+        print(  # noqa: T201)
 
     if a1111_parser:
-        print("🧪 TESTING A1111 PARSER:")
-        print(f"Priority: {a1111_parser.get('priority', 0)}")
+        print(  # noqa: T201"🧪 TESTING A1111 PARSER:")
+        print(  # noqa: T201f"Priority: {a1111_parser.get('priority', 0)}")
 
         detection_rules = a1111_parser.get("detection_rules", [])
         all_pass = True
         for i, rule in enumerate(detection_rules):
             result = engine.rule_evaluator.evaluate_rule(rule, context)
-            print(f"  Rule {i + 1}: {result} - {rule.get('comment', 'No comment')}")
+            print(  # noqa: T201f"  Rule {i + 1}: {result} - {rule.get('comment', 'No comment')}")
             if not result:
                 all_pass = False
 
-        print(f"  Overall A1111 match: {all_pass}")
-        print()
+        print(  # noqa: T201f"  Overall A1111 match: {all_pass}")
+        print(  # noqa: T201)
 
-    print("🎯 EXPECTED RESULT:")
-    print("SD.Next should be detected (higher priority + more specific rules)")
+    print(  # noqa: T201"🎯 EXPECTED RESULT:")
+    print(  # noqa: T201"SD.Next should be detected (higher priority + more specific rules)")
 
     return True
 
 
 if __name__ == "__main__":
     success = test_sdnext_detection()
-    print(f"\n{'🎉 SUCCESS' if success else '❌ FAILED'}")
+    print(  # noqa: T201f"\n{'🎉 SUCCESS' if success else '❌ FAILED'}")
     sys.exit(0 if success else 1)
