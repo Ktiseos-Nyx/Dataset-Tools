@@ -64,6 +64,18 @@ def parse_metadata(file_path_named: str) -> dict[str, Any]:
     final_ui_dict: dict[str, Any] = {}
 
     try:
+        # Create the metadata engine
+        engine = create_metadata_engine(PARSER_DEFINITIONS_PATH)
+        
+        # Process the file
+        result = engine.get_parser_for_file(file_path_named)
+        
+        if result and isinstance(result, dict) and result:
+            # Transform the engine result to UI format
+            _transform_engine_result_to_ui_dict(result, final_ui_dict)
+            potential_ai_parsed = True
+            nfo(f"[DT.metadata_parser]: Successfully parsed metadata with engine. Keys: {list(result.keys())}")
+        else:
             nfo("[DT.metadata_parser]: Engine found no matching parser or returned invalid data.")
             potential_ai_parsed = False
 

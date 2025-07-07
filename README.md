@@ -154,15 +154,6 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 
 **After installation, run the application from your terminal:**
 
-<<<<<<< HEAD
-#### Command-line Options
-
-```bash
-    python -m dataset_tools.main [options]
-```
-
-=======
-
  ```bash
     dataset-tools
   ```
@@ -176,8 +167,6 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
   ```bash
    python -m dataset_tools.main [options]
   ```
-
->>>>>>> 054ce97670f1142380c2b1fcb3725441b539cb08
 > [!TIP]
 >
 > ```bash

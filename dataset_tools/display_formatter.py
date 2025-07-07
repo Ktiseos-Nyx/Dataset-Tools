@@ -15,10 +15,22 @@ def format_metadata_for_display(metadata_dict: dict[str, Any] | None) -> dict[st
     """Takes raw metadata and returns a dictionary of formatted strings for UI display.
     This function is a "pure" formatter; it does not interact with the UI.
     """
-    if metadata_dict is None or (len(metadata_dict) == 1 and EmptyField.PLACEHOLDER.value in metadata_dict):
-        content = metadata_dict.get(EmptyField.PLACEHOLDER.value, {}) if metadata_dict else {}
-        error_msg = content.get("Error", content.get("Info", "No metadata to display."))
-        return {"positive": "", "negative": "", "details": f"Info/Error:\n{error_msg}"}
+    if metadata_dict is None:
+        return {"positive": "", "negative": "", "details": "Info/Error:\nNo metadata to display."}
+    
+    # Check for empty/error states - handle both old and new formats
+    if len(metadata_dict) == 1:
+        # Old format: _dt_internal_placeholder_
+        if EmptyField.PLACEHOLDER.value in metadata_dict:
+            content = metadata_dict.get(EmptyField.PLACEHOLDER.value, {})
+            error_msg = content.get("Error", content.get("Info", "No metadata to display."))
+            return {"positive": "", "negative": "", "details": f"Info/Error:\n{error_msg}"}
+        
+        # New format: info
+        if "info" in metadata_dict:
+            content = metadata_dict.get("info", {})
+            error_msg = content.get("Error", content.get("Info", "No metadata to display."))
+            return {"positive": "", "negative": "", "details": f"Info/Error:\n{error_msg}"}
 
     # If we are here, metadata_dict is valid.
     positive, negative = _format_prompts(metadata_dict)
