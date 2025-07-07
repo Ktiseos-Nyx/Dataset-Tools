@@ -359,7 +359,7 @@ def parse_metadata(file_path_named: str) -> dict:
     nfo("[DT.metadata_parser]: About to attempt enhanced MetadataEngine import...")
     try:
         nfo("[DT.metadata_parser]: Importing get_metadata_engine...")
-        from .metadata_engine import get_metadata_engine
+# from .metadata_engine import get_metadata_engine # Move to top of file
         nfo("[DT.metadata_parser]: ✅ Successfully imported get_metadata_engine")
         
         parser_definitions_path = Path(__file__).parent / "parser_definitions"
