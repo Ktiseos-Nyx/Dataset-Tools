@@ -31,8 +31,12 @@ def handle_file_selection(main_window: "MainWindow", current_item: Qw.QListWidge
         log.warning("Folder/file context is missing, cannot proceed.")
         # We can now directly call the formatter, but since MainWindow already does this...
         # ...it's better to just call the method on MainWindow. Your original code was correct.
+<<<<<<< HEAD
         from .display_formatter import format_metadata_for_display
 
+=======
+# from .display_formatter import format_metadata_for_display # Move to top of file
+>>>>>>> 054ce97670f1142380c2b1fcb3725441b539cb08
         formatted_data = format_metadata_for_display(
             {main_window.EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}}
         )

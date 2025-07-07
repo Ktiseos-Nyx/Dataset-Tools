@@ -64,20 +64,6 @@ def parse_metadata(file_path_named: str) -> dict[str, Any]:
     final_ui_dict: dict[str, Any] = {}
 
     try:
-        # 1. Create an instance of the new metadata engine
-        engine = create_metadata_engine(PARSER_DEFINITIONS_PATH)
-        nfo("[DT.metadata_parser]: Successfully created MetadataEngine.")
-
-        # 2. Get the appropriate parser for the file and extract metadata
-        result = engine.get_parser_for_file(file_path_named)
-        nfo(f"[DT.metadata_parser]: MetadataEngine result: {result}")
-
-        if result and isinstance(result, dict):
-            nfo(f"[DT.metadata_parser]: Engine succeeded. Tool: {result.get('tool', 'Unknown')}")
-            # 3. Transform the engine's result into the final UI dictionary
-            _transform_engine_result_to_ui_dict(result, final_ui_dict)
-            potential_ai_parsed = True
-        else:
             nfo("[DT.metadata_parser]: Engine found no matching parser or returned invalid data.")
             potential_ai_parsed = False
 
