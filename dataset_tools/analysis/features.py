@@ -71,7 +71,8 @@ def check_for_sd15(parser_instance: ImageReaderInstance | None) -> bool:
     """Check if the image is likely from the SD 1.5 architecture using a heuristic scoring system."""
     if not _is_parser_report_valid(parser_instance): return False
     if check_for_ponyx(parser_instance) or check_for_illustriousxl(parser_instance) or check_for_flux(parser_instance): return False
-    params = getattr(parser_instance, "parameter", {}); score = 0
+    params = getattr(parser_instance, "parameter", {})
+    score = 0
     if "xl" in params.get("Model", "").lower(): score += 2
     if "xl" in params.get("Vae model", "").lower(): score += 2
     try:
