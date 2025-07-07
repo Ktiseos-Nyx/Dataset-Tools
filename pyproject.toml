@@ -187,6 +187,14 @@ ignore = [
 "dataset_tools/ui_widgets.py" = ["T201"]  # Test UI file
 "dataset_tools/vendored_sdpr/format/novelai.py" = ["T201"]  # Vendored code
 
+# For debug/test files that legitimately use print statements
+"debug-analysis/*" = ["T201"] # Ignore print statements in debug analysis files
+"dataset_tools/model_parsers/__init__.py" = ["T201"]  # Bootstrap debugging
+"dataset_tools/main.py" = ["T201"]  # CLI debugging
+"dataset_tools/test_comfyui_analyzer.py" = ["T201"]  # Test file
+"dataset_tools/ui_widgets.py" = ["T201"]  # Test UI file
+"dataset_tools/vendored_sdpr/format/novelai.py" = ["T201"]  # Vendored code
+
 # For your tests, you might want to ignore missing docstrings for test methods,
 # print statements, and magic value comparisons.
 "tests/*" = [

@@ -26,7 +26,7 @@ except ImportError:
     YAML_AVAILABLE = False
 
 try:
-    import xml.etree.ElementTree as ET
+    import defusedxml.ElementTree as ET
 
     XML_AVAILABLE = True
 except ImportError:
@@ -191,9 +191,7 @@ class SchemaFileReader:
 
         try:
             # Create a secure parser that prevents XXE attacks
-            parser = ET.XMLParser()
-            # Disable entity processing to prevent XXE
-            parser.entity = {}
+            # defusedxml handles XXE prevention by default
 
             # Parse with the secure parser
             tree = ET.parse(file_path, parser=parser)
