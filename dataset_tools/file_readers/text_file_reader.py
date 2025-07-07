@@ -8,7 +8,7 @@ detection and error handling. Think of it as your text specialist who can
 read any scroll or tome in the realm! 📜✨
 """
 
-import logging
+import re
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 
