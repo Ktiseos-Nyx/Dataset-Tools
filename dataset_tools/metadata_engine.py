@@ -476,11 +476,8 @@ class MetadataEngine:
             )
             if not type_match:
                 continue
-            if not chosen_parser_def:
-                self.logger.info("No suitable parser definition was matched for this file.")
-                return None # Return gracefully instead of crashing
-            if "parsing_instructions" in chosen_parser_def:
-                instructions = chosen_parser_def["parsing_instructions"]
+            
+            # Check detection rules for this parser definition
             all_rules_pass = True
             detection_rules = parser_def.get("detection_rules", [])
             if (not detection_rules and target_types != ["*"]) or \
