@@ -24,6 +24,13 @@ from ..display_formatter import format_metadata_for_display
 from ..logger import info_monitor as nfo
 from .components import EnhancedImageLabel, EnhancedLeftPanelWidget
 
+# Import icon manager
+try:
+    from .icon_manager import get_icon_manager
+    ICON_MANAGER_AVAILABLE = True
+except ImportError:
+    ICON_MANAGER_AVAILABLE = False
+
 # Import theme functionality with fallback
 try:
     from qt_material import apply_stylesheet, list_themes
@@ -100,6 +107,11 @@ class ThemeManager:
 
             action_text = "Initial theme loaded" if initial_load else "Theme applied and saved"
             nfo("%s: %s", action_text, theme_name)
+            
+            # Update icon manager colors when theme changes
+            if ICON_MANAGER_AVAILABLE and not initial_load:
+                self._update_icon_colors_for_theme(theme_name)
+            
             return True
 
         except Exception as e:
@@ -149,6 +161,38 @@ class ThemeManager:
             themes_menu.addAction(action)
             theme_group.addAction(action)
             self.theme_actions[theme_xml] = action
+
+    def _update_icon_colors_for_theme(self, theme_name: str) -> None:
+        """Update icon manager colors based on the current theme.
+        
+        Args:
+            theme_name: Name of the applied theme
+        """
+        try:
+            icon_manager = get_icon_manager()
+            
+            # Determine colors based on theme name
+            if any(dark_indicator in theme_name.lower() for dark_indicator in ['dark', 'black']):
+                # Dark theme colors
+                from PyQt6.QtGui import QColor
+                icon_manager.set_theme_colors(
+                    primary=QColor(255, 255, 255),    # White
+                    secondary=QColor(180, 180, 180),  # Light gray
+                    accent=QColor(0, 188, 212)        # Cyan
+                )
+            else:
+                # Light theme colors
+                from PyQt6.QtGui import QColor
+                icon_manager.set_theme_colors(
+                    primary=QColor(33, 33, 33),       # Dark gray
+                    secondary=QColor(117, 117, 117),  # Medium gray  
+                    accent=QColor(0, 150, 136)        # Teal
+                )
+                
+            nfo(f"Updated icon colors for theme: {theme_name}")
+            
+        except Exception as e:
+            nfo(f"Error updating icon colors: {e}")
 
     def _on_theme_action_triggered(self) -> None:
         """Handle theme action being triggered."""

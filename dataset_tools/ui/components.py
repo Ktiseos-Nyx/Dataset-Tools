@@ -11,8 +11,10 @@ and provides improved versions of core UI components.
 
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
+from PyQt6.QtCore import QSize
 
 from ..logger import info_monitor as nfo
+from .icon_manager import get_icon_manager
 
 
 class EnhancedLeftPanelWidget(Qw.QWidget):
@@ -58,6 +60,23 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
         self.files_list_widget = Qw.QListWidget()
         self.files_list_widget.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
         self.files_list_widget.setSizePolicy(Qw.QSizePolicy.Policy.Preferred, Qw.QSizePolicy.Policy.Expanding)
+        
+        # Enable word wrap for long filenames
+        self.files_list_widget.setWordWrap(True)
+        self.files_list_widget.setResizeMode(Qw.QListView.ResizeMode.Adjust)
+        
+        # Set uniform item sizes and spacing
+        self.files_list_widget.setUniformItemSizes(False)  # Allow variable heights for wrapped text
+        self.files_list_widget.setSpacing(2)  # Add some space between items
+        
+        # Enhanced tooltip for file list
+        self.files_list_widget.setToolTip(
+            "<b>File List</b><br/>"
+            "Click on any file to view its metadata and preview.<br/>"
+            "Long filenames will wrap to multiple lines for better readability.<br/>"
+            "<i>Use arrow keys to navigate between files</i>"
+        )
+        
         layout.addWidget(self.files_list_widget, 1)
 
     def _setup_action_buttons(self, layout: Qw.QVBoxLayout) -> None:
@@ -65,12 +84,39 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
         button_layout = Qw.QHBoxLayout()
         button_layout.setSpacing(5)
 
+        # Get icon manager for themed icons
+        icon_manager = get_icon_manager()
+        
         self.open_folder_button = Qw.QPushButton("Open Folder")
-        self.open_folder_button.setToolTip("Select a folder to load files from")
+        # Add themed icon to button
+        icon_manager.add_icon_to_button(
+            self.open_folder_button, 
+            "folder-open", 
+            "primary", 
+            QSize(16, 16)
+        )
+        self.open_folder_button.setToolTip(
+            "<b>Open Folder</b><br/>"
+            "Select a folder to load image files from.<br/>"
+            "Supported formats: JPG, PNG, WebP, and more.<br/>"
+            "<i>Shortcut: Ctrl+O</i>"
+        )
         button_layout.addWidget(self.open_folder_button)
 
         self.sort_button = Qw.QPushButton("Sort Files")
-        self.sort_button.setToolTip("Sort the current file list alphabetically")
+        # Add themed icon to button  
+        icon_manager.add_icon_to_button(
+            self.sort_button,
+            "sort-alphabetical",
+            "primary",
+            QSize(16, 16)
+        )
+        self.sort_button.setToolTip(
+            "<b>Sort Files</b><br/>"
+            "Sort the current file list alphabetically.<br/>"
+            "Files will be arranged in ascending order by name.<br/>"
+            "<i>Useful for organizing large collections</i>"
+        )
         button_layout.addWidget(self.sort_button)
 
         layout.addLayout(button_layout)
