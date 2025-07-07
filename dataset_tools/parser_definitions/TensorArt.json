@@ -1,0 +1,239 @@
+{
+  "parser_name": "TensorArt",
+  "priority": 150,
+  "description": "Parser for TensorArt generated images using ComfyUI backend workflows",
+  "version": "1.0",
+  "maintainer": "Dataset Tools",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have PNG workflow chunk containing TensorArt-specific nodes",
+      "source_type": "png_chunk",
+      "source_key": "workflow",
+      "operator": "contains",
+      "value": "BNK_CLIPTextEncodeAdvanced"
+    },
+    {
+      "comment": "Rule 2: OR must have PNG workflow chunk containing other TensorArt nodes",
+      "source_type": "png_chunk", 
+      "source_key": "workflow",
+      "operator": "contains",
+      "value": "ECHOCheckpointLoaderSimple"
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "comment": "Extract workflow data from PNG chunks or ComfyUI workflow format",
+      "source_options": [
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "transformations": [
+            {
+              "type": "json_decode_string_itself"
+            },
+            {
+              "type": "filter_dict_nodes_only"
+            }
+          ]
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "prompt",
+          "transformations": [
+            {
+              "type": "json_decode_string_itself"
+            },
+            {
+              "type": "filter_dict_nodes_only"
+            }
+          ]
+        }
+      ]
+    },
+
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced", 
+          "KSampler_A1111"
+        ],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced"
+        ],
+        "value_type": "string",
+        "fallback": ""
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111"
+        ],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text", 
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced"
+        ],
+        "value_type": "string",
+        "fallback": ""
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_checkpoint_model_name",
+        "checkpoint_node_types": [
+          "CheckpointLoaderSimple",
+          "ECHOCheckpointLoaderSimple"
+        ],
+        "model_name_field": "ckpt_name",
+        "value_type": "string",
+        "fallback": "Unknown Model"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_sampler_scheduler_info",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111"
+        ],
+        "field_name": "sampler_name",
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_sampler_scheduler_info",
+        "sampler_node_types": [
+          "KSampler", 
+          "KSamplerAdvanced",
+          "KSampler_A1111"
+        ],
+        "field_name": "scheduler",
+        "value_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_sampler_scheduler_info",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced", 
+          "KSampler_A1111"
+        ],
+        "field_name": "steps",
+        "value_type": "integer",
+        "fallback": 20
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_sampler_scheduler_info",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111"
+        ],
+        "field_name": "cfg",
+        "value_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_sampler_scheduler_info",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111"
+        ],
+        "field_name": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_latent_image_dimensions",
+        "latent_node_types": [
+          "EmptyLatentImage",
+          "LatentUpscale"
+        ],
+        "dimension": "width",
+        "value_type": "integer",
+        "fallback_variable": "$CONTEXT.width"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_latent_image_dimensions",
+        "latent_node_types": [
+          "EmptyLatentImage",
+          "LatentUpscale"
+        ],
+        "dimension": "height",
+        "value_type": "integer",
+        "fallback_variable": "$CONTEXT.height"
+      },
+      {
+        "target_key": "parameters.denoising_strength",
+        "method": "comfy_find_sampler_scheduler_info",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111"
+        ],
+        "field_name": "denoise",
+        "value_type": "float",
+        "fallback": 1.0
+      }
+    ],
+
+    "output_template": {
+      "tool": "TensorArt",
+      "format": "ComfyUI Workflow (TensorArt)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "denoising_strength": "$parameters.denoising_strength"
+      },
+      "workflow_metadata": {
+        "parser": "TensorArt v1.0",
+        "source": "ComfyUI Workflow JSON",
+        "parser_priority": 150,
+        "confidence": "high",
+        "platform": "TensorArt",
+        "backend_engine": "ComfyUI",
+        "filename": "$FILE_NAME"
+      }
+    }
+  },
+
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "moderate"
+  },
+
+  "notes": [
+    "TensorArt parser for ComfyUI-backend workflows",
+    "Detects TensorArt-specific nodes like BNK_CLIPTextEncodeAdvanced and ECHOCheckpointLoaderSimple",
+    "Prioritizes advanced ComfyUI extraction methods for comprehensive metadata",
+    "Supports both workflow and prompt PNG chunks as data sources"
+  ]
+}

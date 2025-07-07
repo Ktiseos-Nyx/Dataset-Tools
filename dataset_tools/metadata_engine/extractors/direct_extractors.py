@@ -1,20 +1,19 @@
 # dataset_tools/metadata_engine/extractors/direct_extractors.py
 
-"""
-Direct value extraction methods.
+"""Direct value extraction methods.
 
 Simple extractors that work with basic data types and direct value access.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
-from ...metadata_utils import json_path_get_utility
+from ..utils import json_path_get_utility
 
 # Type aliases
-ContextData = Dict[str, Any]
-ExtractedFields = Dict[str, Any]
-MethodDefinition = Dict[str, Any]
+ContextData = dict[str, Any]
+ExtractedFields = dict[str, Any]
+MethodDefinition = dict[str, Any]
 
 
 class DirectValueExtractor:
@@ -24,7 +23,7 @@ class DirectValueExtractor:
         """Initialize the direct value extractor."""
         self.logger = logger
 
-    def get_methods(self) -> Dict[str, callable]:
+    def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
             "direct_json_path": self._extract_direct_json_path,
@@ -34,7 +33,11 @@ class DirectValueExtractor:
         }
 
     def _extract_direct_json_path(
-        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
     ) -> Any:
         """Extract value using JSON path query."""
         json_path = method_def.get("json_path")
@@ -45,19 +48,31 @@ class DirectValueExtractor:
         return json_path_get_utility(data, json_path)
 
     def _extract_static_value(
-        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
     ) -> Any:
         """Return a static value."""
         return method_def.get("value")
 
     def _extract_direct_context_value(
-        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
     ) -> Any:
         """Return the data directly."""
         return data
 
     def _extract_direct_string_value(
-        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
-    ) -> Optional[str]:
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> str | None:
         """Convert data to string."""
         return str(data) if data is not None else None

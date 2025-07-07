@@ -1,7 +1,6 @@
 # dataset_tools/metadata_engine/extractors/json_extractors.py
 
-"""
-JSON processing extraction methods.
+"""JSON processing extraction methods.
 
 Handles parsing and extraction from JSON data structures,
 including variable-based JSON parsing.
@@ -9,12 +8,12 @@ including variable-based JSON parsing.
 
 import json
 import logging
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 # Type aliases
-ContextData = Dict[str, Any]
-ExtractedFields = Dict[str, Any]
-MethodDefinition = Dict[str, Any]
+ContextData = dict[str, Any]
+ExtractedFields = dict[str, Any]
+MethodDefinition = dict[str, Any]
 
 
 class JSONExtractor:
@@ -24,7 +23,7 @@ class JSONExtractor:
         """Initialize the JSON extractor."""
         self.logger = logger
 
-    def get_methods(self) -> Dict[str, callable]:
+    def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
             "json_from_string_variable": self._extract_json_from_string_variable,
@@ -32,8 +31,12 @@ class JSONExtractor:
         }
 
     def _extract_json_from_string_variable(
-        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
-    ) -> Optional[Union[Dict, List]]:
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> dict | list | None:
         """Parse JSON from a string stored in a variable."""
         source_var_key = method_def.get("source_variable_key")
         if not source_var_key:
@@ -46,8 +49,7 @@ class JSONExtractor:
         if not isinstance(string_to_parse, str):
             if string_to_parse is not None:
                 self.logger.warning(
-                    f"Variable '{variable_name}' is not a string "
-                    f"(type: {type(string_to_parse)}), cannot parse as JSON"
+                    f"Variable '{variable_name}' is not a string (type: {type(string_to_parse)}), cannot parse as JSON"
                 )
             return None
 
@@ -56,17 +58,18 @@ class JSONExtractor:
             self.logger.debug(f"Successfully parsed JSON from variable '{variable_name}'")
             return result
         except json.JSONDecodeError as e:
-            self.logger.warning(
-                f"Failed to parse JSON from variable '{variable_name}': {e}"
-            )
+            self.logger.warning(f"Failed to parse JSON from variable '{variable_name}': {e}")
             return None
 
     def _json_path_exists_boolean(
-        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
     ) -> bool:
-        """
-        Check if a JSON path exists in the data and return a boolean.
-        
+        """Check if a JSON path exists in the data and return a boolean.
+
         This method addresses the missing 'json_path_exists_boolean' error mentioned by Gemini.
         Returns True if the specified JSON path exists, False otherwise.
         """
@@ -78,8 +81,8 @@ class JSONExtractor:
         try:
             # Navigate the JSON path
             current = data
-            path_parts = json_path.split('.')
-            
+            path_parts = json_path.split(".")
+
             for part in path_parts:
                 if isinstance(current, dict):
                     if part in current:
@@ -97,10 +100,10 @@ class JSONExtractor:
                         return False
                 else:
                     return False
-            
+
             # If we made it here, the path exists
             return True
-            
+
         except Exception as e:
             self.logger.debug(f"Error checking JSON path '{json_path}': {e}")
             return False

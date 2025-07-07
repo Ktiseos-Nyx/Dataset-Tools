@@ -5,8 +5,8 @@ This directory contains debugging and testing utilities for the Dataset Tools me
 ## 🔧 Debug Scripts
 
 ### Core Engine Testing
-- `debug_extraction_methods.py` - Test ComfyUI extraction methods
-- `debug_parser_matching.py` - Debug parser detection and matching
+- `debug_parser_matching.py` - Takes a file path and uses the new `MetadataEngine` to identify which parser is matched.
+- `debug_extraction_methods.py` - Takes a ComfyUI workflow JSON file and tests prompt extraction using the new `FieldExtractor`.
 - `debug_jpeg_metadata.py` - Debug JPEG EXIF metadata extraction
 
 ### Format-Specific Testing
@@ -33,14 +33,15 @@ This directory contains debugging and testing utilities for the Dataset Tools me
 
 ## 🚀 Usage
 
-Most scripts can be run directly:
+Most scripts can be run directly. The updated scripts now take file paths as arguments:
+
 ```bash
 cd debug_tools
-python test_final_output.py
-python debug_extraction_methods.py
+python debug_parser_matching.py /path/to/your/image.png
+python debug_extraction_methods.py /path/to/your/workflow.json
 ```
 
-Some scripts may require sample files in specific locations. Check individual script headers for requirements.
+Check individual script headers for specific requirements.
 
 ## 📝 Contributing
 

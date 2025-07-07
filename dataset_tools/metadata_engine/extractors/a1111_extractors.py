@@ -1,22 +1,21 @@
 # dataset_tools/metadata_engine/extractors/a1111_extractors.py
 
-"""
-AUTOMATIC1111 extraction methods.
+"""AUTOMATIC1111 extraction methods.
 
 Handles parsing of A1111 WebUI parameter strings, including prompts,
 negative prompts, and generation parameters.
 """
 
-import re
 import logging
-from typing import Any, Dict, Optional
+import re
+from typing import Any
 
-from ...metadata_utils import get_a1111_kv_block_utility
+from ..utils import get_a1111_kv_block_utility
 
 # Type aliases
-ContextData = Dict[str, Any]
-ExtractedFields = Dict[str, Any]
-MethodDefinition = Dict[str, Any]
+ContextData = dict[str, Any]
+ExtractedFields = dict[str, Any]
+MethodDefinition = dict[str, Any]
 
 
 class A1111Extractor:
@@ -26,7 +25,7 @@ class A1111Extractor:
         """Initialize the A1111 extractor."""
         self.logger = logger
 
-    def get_methods(self) -> Dict[str, callable]:
+    def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
             "a1111_extract_prompt_positive": self._extract_a1111_prompt_positive,
@@ -36,8 +35,12 @@ class A1111Extractor:
         }
 
     def _extract_a1111_prompt_positive(
-        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
-    ) -> Optional[str]:
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> str | None:
         """Extract positive prompt from A1111 format."""
         if not isinstance(data, str):
             return None
@@ -64,7 +67,11 @@ class A1111Extractor:
         return data[:end_index].strip()
 
     def _extract_a1111_prompt_negative(
-        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
     ) -> str:
         """Extract negative prompt from A1111 format."""
         if not isinstance(data, str):
@@ -80,8 +87,12 @@ class A1111Extractor:
         return neg_match.group(1).strip() if neg_match else ""
 
     def _extract_a1111_key_value(
-        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
-    ) -> Optional[str]:
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> str | None:
         """Extract a specific key-value pair from A1111 parameter block."""
         if not isinstance(data, str):
             return None
@@ -101,17 +112,17 @@ class A1111Extractor:
         )
 
         key_pattern = re.escape(key_name)
-        match = re.search(
-            rf"{key_pattern}:\s*(.*?)(?={lookahead_pattern})",
-            kv_block,
-            re.IGNORECASE
-        )
+        match = re.search(rf"{key_pattern}:\s*(.*?)(?={lookahead_pattern})", kv_block, re.IGNORECASE)
 
         return match.group(1).strip() if match else None
 
     def _extract_a1111_key_value_transform(
-        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
-    ) -> Optional[str]:
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> str | None:
         """Extract and transform a key-value pair from A1111 format."""
         # First extract the raw value
         raw_value = self._extract_a1111_key_value(data, method_def, context, fields)

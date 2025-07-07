@@ -41,7 +41,7 @@ class ModelTool:
                 return parser_instance.get_ui_data()
 
             if status == ModelParserStatus.FAILURE:
-                error_msg = parser_instance._error_message or "Unknown parsing error"  # noqa: SLF001
+                error_msg = parser_instance._error_message or "Unknown parsing error"
                 nfo(
                     "[ModelTool] Parser %s failed: %s",
                     parser_instance.tool_name,

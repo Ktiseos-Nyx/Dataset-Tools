@@ -1,40 +1,38 @@
 # dataset_tools/metadata_engine/field_extraction.py
 
-"""
-Clean, focused field extraction system.
+"""Clean, focused field extraction system.
 
 This is the main FieldExtractor class that coordinates all extraction methods.
 Individual extraction logic is split into separate modules for maintainability.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 from ..logger import get_logger
-
-# Import extraction modules
-from .extractors.direct_extractors import DirectValueExtractor
 from .extractors.a1111_extractors import A1111Extractor
 from .extractors.civitai_extractors import CivitaiExtractor
 from .extractors.comfyui_extractors import ComfyUIExtractor
+
+# Import extraction modules
+from .extractors.direct_extractors import DirectValueExtractor
 from .extractors.json_extractors import JSONExtractor
 from .extractors.regex_extractors import RegexExtractor
 
 # Type aliases
-ContextData = Dict[str, Any]
-ExtractedFields = Dict[str, Any]
-MethodDefinition = Dict[str, Any]
+ContextData = dict[str, Any]
+ExtractedFields = dict[str, Any]
+MethodDefinition = dict[str, Any]
 
 
 class FieldExtractor:
-    """
-    Main field extraction coordinator.
+    """Main field extraction coordinator.
 
     This class delegates extraction work to specialized extractor modules,
     keeping the code organized and maintainable.
     """
 
-    def __init__(self, logger: Optional[logging.Logger] = None):
+    def __init__(self, logger: logging.Logger | None = None):
         """Initialize the field extractor with all sub-extractors."""
         self.logger = logger or get_logger("FieldExtractor")
 
@@ -77,8 +75,7 @@ class FieldExtractor:
         context_data: ContextData,
         extracted_fields: ExtractedFields,
     ) -> Any:
-        """
-        Extract a field using the specified method.
+        """Extract a field using the specified method.
 
         Args:
             method_def: Method definition containing extraction instructions
@@ -88,6 +85,7 @@ class FieldExtractor:
 
         Returns:
             Extracted value or None if extraction failed
+
         """
         method_name = method_def.get("method")
         if not method_name:
@@ -95,9 +93,7 @@ class FieldExtractor:
             return None
 
         # Get the actual data to work with
-        data_for_method = self._get_source_data(
-            method_def, input_data, context_data, extracted_fields
-        )
+        data_for_method = self._get_source_data(method_def, input_data, context_data, extracted_fields)
 
         # Get the extraction method
         extraction_method = self._method_registry.get(method_name)
@@ -113,10 +109,7 @@ class FieldExtractor:
             return self._apply_type_conversion(value, method_def)
 
         except Exception as e:
-            self.logger.error(
-                f"Error in extraction method '{method_name}': {e}",
-                exc_info=True
-            )
+            self.logger.error(f"Error in extraction method '{method_name}': {e}", exc_info=True)
             return None
 
     def _get_source_data(
@@ -149,9 +142,8 @@ class FieldExtractor:
         getter = source_map.get(source_type)
         if getter:
             return getter()
-        else:
-            self.logger.warning(f"Unknown source type: '{source_type}'")
-            return input_data
+        self.logger.warning(f"Unknown source type: '{source_type}'")
+        return input_data
 
     def _apply_type_conversion(self, value: Any, method_def: MethodDefinition) -> Any:
         """Apply type conversion to the extracted value."""
@@ -167,15 +159,14 @@ class FieldExtractor:
                 "integer": lambda v: int(float(str(v))),
                 "float": lambda v: float(str(v)),
                 "string": lambda v: str(v),
-                "boolean": lambda v: v if isinstance(v, bool) else str(v).lower() in ("true", "1", "yes", "on"),
+                "boolean": lambda v: (v if isinstance(v, bool) else str(v).lower() in ("true", "1", "yes", "on")),
             }
 
             converter = converters.get(value_type)
             if converter:
                 return converter(value)
-            else:
-                self.logger.warning(f"Unknown value type: '{value_type}'")
-                return value
+            self.logger.warning(f"Unknown value type: '{value_type}'")
+            return value
 
         except (ValueError, TypeError) as e:
             self.logger.debug(f"Could not convert value to '{value_type}': {e}")
@@ -186,7 +177,8 @@ class FieldExtractor:
 # CONVENIENCE FUNCTIONS
 # ============================================================================
 
-def create_field_extractor(logger: Optional[logging.Logger] = None) -> FieldExtractor:
+
+def create_field_extractor(logger: logging.Logger | None = None) -> FieldExtractor:
     """Create a field extractor instance."""
     return FieldExtractor(logger)
 
@@ -194,6 +186,7 @@ def create_field_extractor(logger: Optional[logging.Logger] = None) -> FieldExtr
 # ============================================================================
 # TESTING
 # ============================================================================
+
 
 def test_field_extraction():
     """Test the field extraction system."""
@@ -203,10 +196,7 @@ def test_field_extraction():
     extractor = create_field_extractor(logger)
 
     # Test direct string extraction
-    method_def = {
-        "method": "direct_string_value",
-        "value_type": "string"
-    }
+    method_def = {"method": "direct_string_value", "value_type": "string"}
 
     result = extractor.extract_field(method_def, "test data", {}, {})
     logger.info(f"Direct string extraction result: {result}")
@@ -224,8 +214,7 @@ if __name__ == "__main__":
 # ============================================================================
 
 # Import the extractors so other code can still access them
-from .extractors.a1111_extractors import A1111Extractor
-from .extractors.comfyui_extractors import ComfyUIExtractor
+
 
 # Create compatibility classes for existing imports
 class A1111ParameterExtractor:
@@ -234,7 +223,7 @@ class A1111ParameterExtractor:
     def __init__(self, logger=None):
         self.extractor = A1111Extractor(logger or get_logger("A1111ParameterExtractor"))
 
-    def extract_all_parameters(self, param_string: str) -> Dict[str, Any]:
+    def extract_all_parameters(self, param_string: str) -> dict[str, Any]:
         """Extract all parameters from an A1111 parameter string."""
         if not isinstance(param_string, str):
             return {}
@@ -247,8 +236,12 @@ class A1111ParameterExtractor:
         methods = self.extractor.get_methods()
 
         result = {}
-        result["positive_prompt"] = methods["a1111_extract_prompt_positive"](param_string, method_def, context, fields) or ""
-        result["negative_prompt"] = methods["a1111_extract_prompt_negative"](param_string, method_def, context, fields) or ""
+        result["positive_prompt"] = (
+            methods["a1111_extract_prompt_positive"](param_string, method_def, context, fields) or ""
+        )
+        result["negative_prompt"] = (
+            methods["a1111_extract_prompt_negative"](param_string, method_def, context, fields) or ""
+        )
 
         return result
 
@@ -259,7 +252,7 @@ class ComfyUIWorkflowExtractor:
     def __init__(self, logger=None):
         self.extractor = ComfyUIExtractor(logger or get_logger("ComfyUIWorkflowExtractor"))
 
-    def extract_workflow_metadata(self, workflow_data: Dict[str, Any]) -> Dict[str, Any]:
+    def extract_workflow_metadata(self, workflow_data: dict[str, Any]) -> dict[str, Any]:
         """Extract metadata from a ComfyUI workflow."""
         if not isinstance(workflow_data, dict):
             return {}
@@ -273,13 +266,13 @@ class ComfyUIWorkflowExtractor:
 
 
 # Keep the convenience functions for backward compatibility
-def extract_a1111_parameters(param_string: str, logger=None) -> Dict[str, Any]:
+def extract_a1111_parameters(param_string: str, logger=None) -> dict[str, Any]:
     """Convenience function to extract all A1111 parameters."""
     extractor = A1111ParameterExtractor(logger)
     return extractor.extract_all_parameters(param_string)
 
 
-def extract_comfyui_metadata(workflow_data: Dict[str, Any], logger=None) -> Dict[str, Any]:
+def extract_comfyui_metadata(workflow_data: dict[str, Any], logger=None) -> dict[str, Any]:
     """Convenience function to extract ComfyUI workflow metadata."""
     extractor = ComfyUIWorkflowExtractor(logger)
     return extractor.extract_workflow_metadata(workflow_data)

@@ -4,10 +4,8 @@
 import logging
 
 # Configure detailed logging
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
 
 def debug_context_data(image_path):
     """Debug what context data is being prepared."""
@@ -19,7 +17,6 @@ def debug_context_data(image_path):
 
         if not context:
             return None
-
 
         # Check specific A1111 data sources
 
@@ -42,6 +39,7 @@ def debug_context_data(image_path):
     except Exception:
         return None
 
+
 def debug_rule_matching(context, rules_path):
     """Debug rule matching."""
     try:
@@ -61,7 +59,6 @@ def debug_rule_matching(context, rules_path):
                 except Exception:
                     pass
 
-
         # Check if a1111_webui specifically matches
         if "a1111_webui" in matching_parsers:
             pass
@@ -73,11 +70,11 @@ def debug_rule_matching(context, rules_path):
     except Exception:
         return []
 
+
 def debug_field_extraction(input_data) -> None:
     """Debug field extraction."""
     if not isinstance(input_data, str):
         return
-
 
     try:
         from dataset_tools.metadata_engine.field_extraction import FieldExtractor
@@ -95,15 +92,22 @@ def debug_field_extraction(input_data) -> None:
         extractor.extract_field(method_def, input_data, {}, {})
 
         # Test steps extraction
-        method_def = {"method": "key_value_extract_from_a1111_block", "key_name": "Steps"}
+        method_def = {
+            "method": "key_value_extract_from_a1111_block",
+            "key_name": "Steps",
+        }
         extractor.extract_field(method_def, input_data, {}, {})
 
         # Test seed extraction
-        method_def = {"method": "key_value_extract_from_a1111_block", "key_name": "Seed"}
+        method_def = {
+            "method": "key_value_extract_from_a1111_block",
+            "key_name": "Seed",
+        }
         extractor.extract_field(method_def, input_data, {}, {})
 
     except Exception:
         pass
+
 
 def debug_full_engine(image_path, parser_defs_path):
     """Debug the full MetadataEngine."""
@@ -117,12 +121,10 @@ def debug_full_engine(image_path, parser_defs_path):
         # Pass the logger explicitly to avoid None logger issues
         engine = MetadataEngine(parser_defs_path, engine_logger)
 
-
         result = engine.get_parser_for_file(image_path)
 
         if result:
             if isinstance(result, dict):
-
                 # Print key values safely
                 for key in ["tool", "prompt", "negative_prompt", "parameters"]:
                     if key in result:
@@ -140,8 +142,10 @@ def debug_full_engine(image_path, parser_defs_path):
 
     except Exception:
         import traceback
+
         traceback.print_exc()
         return None
+
 
 if __name__ == "__main__":
     # Test with your sample image

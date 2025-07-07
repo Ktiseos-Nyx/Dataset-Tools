@@ -1,94 +1,80 @@
 #!/usr/bin/env python3
 
-"""
-Test the Civitai ComfyUI parser priority fix.
-"""
+"""Test the Civitai ComfyUI parser priority fix using the new MetadataEngine."""
 
-print("🔧 CIVITAI COMFYUI PARSER PRIORITY FIX TEST")
-print("=" * 44)
+import argparse
+import json
+import sys
+from pathlib import Path
 
-# Sample data structures to test detection rules
+# Add the project root to the Python path to allow importing dataset_tools
+project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
 
-# Standard ComfyUI file (should match Universal parser)
-standard_comfyui_data = {
-    "workflow_chunk": {
-        "nodes": [
-            {"class_type": "KSampler", "inputs": {"seed": 123}},
-            {"class_type": "CLIPTextEncode", "inputs": {"text": "test prompt"}}
-        ]
-    },
-    "prompt_chunk": {
-        "1": {"class_type": "KSampler"},
-        "2": {"class_type": "CLIPTextEncode"}
-    }
-}
+from dataset_tools.metadata_engine.engine import create_metadata_engine
 
-# Civitai ComfyUI file (should match Civitai parser, NOT Universal)
-civitai_comfyui_data = {
-    "workflow_chunk": {
-        "nodes": [
-            {"class_type": "KSampler", "inputs": {"seed": 123}},
-            {"class_type": "CLIPTextEncode", "inputs": {"text": "test prompt"}}
-        ],
-        "extraMetadata": {
-            "civitai": {"modelId": 12345, "version": "v1.0"}
-        }
-    },
-    "prompt_chunk": {
-        "1": {"class_type": "KSampler"},
-        "2": {"class_type": "CLIPTextEncode"},
-        "extraMetadata": {
-            "civitai": {"modelId": 12345, "version": "v1.0"}
-        }
-    }
-}
 
-print("1. Detection Rule Analysis:")
-print("   ✅ Standard ComfyUI: Has workflow/prompt + ComfyUI nodes, NO extraMetadata")
-print("   ✅ Civitai ComfyUI: Has workflow/prompt + ComfyUI nodes + extraMetadata")
+def test_civitai_priority_fix(file_path: str):
+    """Test the Civitai ComfyUI parser priority fix."""
+    print(f"🔧 CIVITAI COMFYUI PARSER PRIORITY FIX TEST FOR: {file_path}")
+    print("=" * (50 + len(file_path)))
 
-print("\n2. Expected Behavior:")
-print("   📋 Parser Priorities:")
-print("      - Civitai ComfyUI: Priority 195 (highest)")
-print("      - Universal ComfyUI: Priority 185 (lower)")
+    parser_definitions_path = project_root / "dataset_tools" / "parser_definitions"
 
-print("\n   🎯 Expected Matching:")
-print("      - Standard ComfyUI → Universal ComfyUI parser (priority 185)")
-print("      - Civitai ComfyUI → Civitai ComfyUI parser (priority 195)")
+    if not parser_definitions_path.is_dir():
+        print(f"❌ Error: Parser definitions directory not found at: {parser_definitions_path}")
+        return
 
-print("\n3. Universal Parser Detection Rules (UPDATED):")
-print("   ✅ Rule 1: workflow chunk + valid JSON + ComfyUI nodes + NO extraMetadata")
-print("   ✅ Rule 2: prompt chunk + valid JSON + ComfyUI nodes + NO extraMetadata") 
-print("   ✅ Rule 3: NOT (EXIF UserComment + valid JSON + extraMetadata)")
+    try:
+        # Create a metadata engine instance
+        engine = create_metadata_engine(str(parser_definitions_path))
 
-print("\n4. Civitai Parser Detection Rules:")
-print("   ✅ PNG: prompt chunk + extraMetadata")
-print("   ✅ JPEG: EXIF UserComment + extraMetadata")
+        # Get the parser for the file
+        result = engine.get_parser_for_file(file_path)
 
-print("\n🔧 WHAT WAS FIXED:")
-print("   - Added 'does_not_contain extraMetadata' rules to Universal parser")
-print("   - Added NOT rule to exclude Civitai JPEG files")
-print("   - Universal parser now defers to Civitai parser for extraMetadata files")
+        if result:
+            tool_name = getattr(result, "tool", result.get("tool", "Unknown"))
+            print(f"✅ Matched Parser: {tool_name}")
 
-print("\n🎯 DETECTION FLOW:")
-print("   1. Civitai parser (priority 195) tries first")
-print("      - If extraMetadata found → Civitai parser handles it ✅")
-print("      - If no extraMetadata → Civitai parser rejects it")
-print("   2. Universal parser (priority 185) tries next")  
-print("      - If ComfyUI nodes found AND no extraMetadata → Universal parser handles it ✅")
-print("      - If extraMetadata found → Universal parser rejects it (defers to Civitai)")
+            if "civitai" in tool_name.lower():
+                print("🎉 SUCCESS: Civitai parser was correctly prioritized!")
+            else:
+                print("⚠️ WARNING: A non-Civitai parser was matched. Check priorities.")
 
-print("\n✅ RESULT:")
-print("   🎉 Civitai ComfyUI files will be correctly identified as 'Civitai ComfyUI'!")
-print("   🎉 Standard ComfyUI files will be correctly identified as 'ComfyUI Universal'!")
-print("   🎉 No more parser priority conflicts!")
+            print("\n📋 Extracted Data:")
+            if isinstance(result, dict):
+                print(json.dumps(result, indent=2))
+            else:
+                # For BaseFormat objects, print their attributes
+                data = {
+                    "tool": getattr(result, "tool", "Unknown"),
+                    "positive": getattr(result, "positive", ""),
+                    "negative": getattr(result, "negative", ""),
+                    "parameters": getattr(result, "parameter", {}),
+                    "width": getattr(result, "width", 0),
+                    "height": getattr(result, "height", 0),
+                    "raw": getattr(result, "raw", ""),
+                }
+                print(json.dumps(data, indent=2))
+        else:
+            print("❌ No parser matched for this file.")
 
-print("\n📝 SUMMARY OF CHANGES:")
-print("   Modified: comfyui.json (Universal ComfyUI parser)")
-print("   Added: 3 exclusion rules to prevent eating Civitai files")
-print("   - Rule 1: workflow chunk must not contain 'extraMetadata'")
-print("   - Rule 2: prompt chunk must not contain 'extraMetadata'")
-print("   - Rule 3: NOT (EXIF UserComment with extraMetadata)")
+    except Exception as e:
+        print(f"❌ An error occurred: {e}")
+        import traceback
+
+        traceback.print_exc()
+
 
 if __name__ == "__main__":
-    pass
+    parser = argparse.ArgumentParser(
+        description="Test the Civitai ComfyUI parser priority fix using the new MetadataEngine."
+    )
+    parser.add_argument(
+        "file_path",
+        type=str,
+        help="The absolute path to the Civitai ComfyUI file to test.",
+    )
+    args = parser.parse_args()
+
+    test_civitai_priority_fix(args.file_path)

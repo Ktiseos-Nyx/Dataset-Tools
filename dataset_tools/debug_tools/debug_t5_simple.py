@@ -1,127 +1,66 @@
 #!/usr/bin/env python3
 
-"""
-Simple debug test for T5 traversal methods.
-"""
+"""Simple debug test for T5 traversal methods using the new MetadataEngine."""
 
-import json
-import logging
+import argparse
+import sys
+from pathlib import Path
 
-# Configure logging to see debug messages
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
-logger = logging.getLogger(__name__)
+# Add the project root to the Python path to allow importing dataset_tools
+project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
 
-def test_simple_traversal():
+from dataset_tools.metadata_engine.engine import create_metadata_engine
+
+
+def test_t5_simple(file_path: str):
     """Simple test to understand the T5 traversal issue."""
-    
-    print("🔧 SIMPLE T5 TRAVERSAL DEBUG")
-    print("=" * 30)
-    
-    # Sample T5 workflow data (minimal example)
-    sample_t5_data = {
-        "1": {
-            "class_type": "DualCLIPLoader",
-            "inputs": {
-                "clip_name1": "t5xxl_fp16.safetensors",
-                "clip_name2": "clip_l.safetensors"
-            }
-        },
-        "2": {
-            "class_type": "CLIPTextEncode",
-            "inputs": {
-                "text": "beautiful landscape with mountains and trees",
-                "clip": [1, 0]
-            }
-        },
-        "3": {
-            "class_type": "CLIPTextEncode", 
-            "inputs": {
-                "text": "low quality, blurry",
-                "clip": [1, 0]
-            }
-        },
-        "4": {
-            "class_type": "KSampler",
-            "inputs": {
-                "model": [5, 0],
-                "positive": [2, 0],
-                "negative": [3, 0],
-                "latent_image": [6, 0],
-                "seed": 123456,
-                "steps": 20,
-                "cfg": 7.5,
-                "sampler_name": "euler",
-                "scheduler": "normal",
-                "denoise": 1.0
-            }
-        },
-        "5": {
-            "class_type": "CheckpointLoaderSimple",
-            "inputs": {
-                "ckpt_name": "sd3_medium_incl_clips_t5xxlfp16.safetensors"
-            }
-        },
-        "6": {
-            "class_type": "EmptyLatentImage",
-            "inputs": {
-                "width": 1024,
-                "height": 1024,
-                "batch_size": 1
-            }
-        }
-    }
-    
-    print("1. Manual traversal test:")
-    print(f"   Sample data has {len(sample_t5_data)} nodes")
-    
-    # Find the sampler node
-    sampler_node = None
-    for node_id, node_data in sample_t5_data.items():
-        print(f"   Node {node_id}: {node_data.get('class_type')}")
-        if node_data.get('class_type') == 'KSampler':
-            sampler_node = node_data
-            sampler_id = node_id
-            print(f"   ✅ Found sampler node: {node_id}")
-    
-    if sampler_node:
-        print(f"   Sampler inputs: {sampler_node.get('inputs', {})}")
-        
-        # Get positive connection
-        positive_connection = sampler_node.get('inputs', {}).get('positive')
-        print(f"   Positive connection: {positive_connection}")
-        
-        if positive_connection and isinstance(positive_connection, list):
-            positive_node_id = str(positive_connection[0])
-            print(f"   Looking for node {positive_node_id}")
-            
-            positive_node = sample_t5_data.get(positive_node_id)
-            if positive_node:
-                print(f"   ✅ Found positive node: {positive_node.get('class_type')}")
-                print(f"   Positive node inputs: {positive_node.get('inputs', {})}")
-                
-                # Extract text
-                text = positive_node.get('inputs', {}).get('text')
-                print(f"   ✅ Extracted text: '{text}'")
+    print(f"🔧 SIMPLE T5 TRAVERSAL DEBUG FOR: {file_path}")
+    print("=" * (33 + len(file_path)))
+
+    parser_definitions_path = project_root / "dataset_tools" / "parser_definitions"
+
+    if not parser_definitions_path.is_dir():
+        print(f"❌ Error: Parser definitions directory not found at: {parser_definitions_path}")
+        return
+
+    try:
+        # Create a metadata engine instance
+        engine = create_metadata_engine(str(parser_definitions_path))
+
+        # Get the parser for the file
+        result = engine.get_parser_for_file(file_path)
+
+        if result:
+            tool_name = getattr(result, "tool", result.get("tool", "Unknown"))
+            print(f"✅ Matched Parser: {tool_name}")
+
+            print("\n📋 Extracted Prompts:")
+            if isinstance(result, dict):
+                positive_prompt = result.get("prompt", "Not found")
+                negative_prompt = result.get("negative_prompt", "Not found")
+                print(f"  - Positive: {positive_prompt}")
+                print(f"  - Negative: {negative_prompt}")
             else:
-                print(f"   ❌ Node {positive_node_id} not found")
+                positive_prompt = getattr(result, "positive", "Not found")
+                negative_prompt = getattr(result, "negative", "Not found")
+                print(f"  - Positive: {positive_prompt}")
+                print(f"  - Negative: {negative_prompt}")
         else:
-            print("   ❌ No positive connection found")
-    else:
-        print("   ❌ No sampler node found")
-    
-    print("\n2. Connection format analysis:")
-    print("   The issue might be in the connection format or traversal logic")
-    
-    # Test the connection format
-    for node_id, node_data in sample_t5_data.items():
-        inputs = node_data.get('inputs', {})
-        if inputs and any(isinstance(v, list) for v in inputs.values()):
-            print(f"   Node {node_id} has connections:")
-            for key, value in inputs.items():
-                if isinstance(value, list):
-                    print(f"     {key}: {value} (connection)")
-                else:
-                    print(f"     {key}: {value} (direct value)")
+            print("❌ No parser matched for this file.")
+
+    except Exception as e:
+        print(f"❌ An error occurred: {e}")
+        import traceback
+
+        traceback.print_exc()
+
 
 if __name__ == "__main__":
-    test_simple_traversal()
+    parser = argparse.ArgumentParser(
+        description="Test T5 prompt extraction from a given file using the new MetadataEngine."
+    )
+    parser.add_argument("file_path", type=str, help="The absolute path to the T5 workflow file to test.")
+    args = parser.parse_args()
+
+    test_t5_simple(args.file_path)

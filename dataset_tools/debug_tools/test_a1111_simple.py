@@ -1,69 +1,67 @@
 #!/usr/bin/env python3
 
-"""
-Simple A1111 JPEG test.
-"""
+"""Simple A1111 JPEG test using the new MetadataEngine."""
 
+import argparse
+import json
 import sys
-import os
 from pathlib import Path
 
-# Add the parent directory to sys.path for imports
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add the project root to the Python path to allow importing dataset_tools
+project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
 
-def test_a1111_simple():
+from dataset_tools.metadata_engine.engine import create_metadata_engine
+
+
+def test_a1111_simple(file_path: str):
     """Simple A1111 JPEG test."""
-    
-    print("🔧 SIMPLE A1111 JPEG TEST")
-    print("=" * 26)
-    
-    test_file = "/Users/duskfall/Desktop/Comfy_UI_DATA/ComfyUI_01803_.jpeg"
-    
-    if not Path(test_file).exists():
-        print(f"❌ Test file not found: {Path(test_file).name}")
+    print(f"🔧 SIMPLE A1111 JPEG TEST FOR: {file_path}")
+    print("=" * (30 + len(file_path)))
+
+    parser_definitions_path = project_root / "dataset_tools" / "parser_definitions"
+
+    if not parser_definitions_path.is_dir():
+        print(f"❌ Error: Parser definitions directory not found at: {parser_definitions_path}")
         return
-    
-    print(f"📁 Testing: {Path(test_file).name}")
-    
+
     try:
-        from dataset_tools.metadata_engine import MetadataEngine
-        import logging
-        
-        # Enable debug logging
-        logging.basicConfig(level=logging.DEBUG)
-        
-        parser_definitions_path = os.path.join(os.path.dirname(__file__), "parser_definitions")
-        engine = MetadataEngine(parser_definitions_path)
-        
-        print("\n🔍 Running MetadataEngine...")
-        result = engine.get_parser_for_file(test_file)
-        
+        # Create a metadata engine instance
+        engine = create_metadata_engine(str(parser_definitions_path))
+
+        # Get the parser for the file
+        result = engine.get_parser_for_file(file_path)
+
         if result:
-            print(f"✅ SUCCESS: {type(result)}")
+            print("✅ Metadata extracted successfully!")
+            print("\n📋 Extracted Data:")
             if isinstance(result, dict):
-                tool = result.get("tool", "Unknown")
-                print(f"   Tool: {tool}")
-                
-                if "prompt" in result:
-                    prompt = result.get("prompt", "")
-                    print(f"   Prompt: {prompt[:50]}..." if prompt else "   No prompt")
-                
-                if "parameters" in result:
-                    params = result.get("parameters", {})
-                    print(f"   Parameters: {list(params.keys())}")
-                    if "steps" in params:
-                        print(f"   Steps: {params['steps']}")
-                    if "seed" in params:
-                        print(f"   Seed: {params['seed']}")
+                print(json.dumps(result, indent=2))
             else:
-                print(f"   Parser instance: {result}")
+                # For BaseFormat objects, print their attributes
+                data = {
+                    "tool": getattr(result, "tool", "Unknown"),
+                    "positive": getattr(result, "positive", ""),
+                    "negative": getattr(result, "negative", ""),
+                    "parameters": getattr(result, "parameter", {}),
+                    "width": getattr(result, "width", 0),
+                    "height": getattr(result, "height", 0),
+                    "raw": getattr(result, "raw", ""),
+                }
+                print(json.dumps(data, indent=2))
         else:
-            print("❌ FAILED: MetadataEngine returned None")
-            
+            print("❌ No metadata could be extracted from this file.")
+
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"❌ An error occurred: {e}")
         import traceback
+
         traceback.print_exc()
 
+
 if __name__ == "__main__":
-    test_a1111_simple()
+    parser = argparse.ArgumentParser(description="Test A1111 JPEG metadata extraction using the new MetadataEngine.")
+    parser.add_argument("file_path", type=str, help="The absolute path to the A1111 JPEG file to test.")
+    args = parser.parse_args()
+
+    test_a1111_simple(args.file_path)

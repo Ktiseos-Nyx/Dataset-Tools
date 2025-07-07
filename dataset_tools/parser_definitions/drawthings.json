@@ -1,5 +1,5 @@
 {
-  "parser_name": "Draw_Things",
+  "parser_name": "Draw Things",
   "priority": 185,
   "description": "Draw Things - Mobile-first AI art app with XMP metadata integration 📱✨",
   "version": "2.1",
@@ -8,13 +8,13 @@
 
   "detection_rules": [
     {
-      "comment": "Rule 1: Must have XMP CreatorTool indicating Draw Things",
+      "comment": "Rule 1: Must have XMP metadata containing Draw Things creator tool",
       "source_type": "xmp_string_content",
-      "operator": "contains",
+      "operator": "contains", 
       "value": "Draw Things"
     },
     {
-      "comment": "Rule 2: Must have JSON data in XMP UserComment",
+      "comment": "Rule 2: Must have XMP exif:UserComment with JSON data",
       "source_type": "xmp_string_content",
       "operator": "contains",
       "value": "exif:UserComment"
@@ -23,7 +23,7 @@
 
   "parsing_instructions": {
     "input_data": {
-      "comment": "Extract JSON from XMP's exif:UserComment.",
+      "comment": "Extract JSON from XMP exif:UserComment (Draw Things stores JSON in XMP metadata).",
       "source_type": "xmp_string_content",
       "transformations": [
         {
@@ -147,7 +147,6 @@
         "denoising_strength": "$parameters.denoising_strength"
       },
       "drawthings_details": {
-        "comment": "UPGRADE: Added section for new rich metadata from v2 block.",
         "aesthetic_score": "$v2_data.aesthetic_score",
         "negative_aesthetic_score": "$v2_data.negative_aesthetic_score",
         "loras": "$v2_data.loras"

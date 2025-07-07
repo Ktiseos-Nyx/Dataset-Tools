@@ -1,16 +1,18 @@
 # dataset_tools/vendored_sdpr/format/midjourney.py
 
-import re
 import logging
-from typing import Any, Dict, List, Optional, Pattern, Set, Tuple, Union
+import re
 from dataclasses import dataclass, field
 from enum import Enum
+from re import Pattern
+from typing import Any
 
 from .base_format import BaseFormat
 
 
 class MidjourneySignatureType(Enum):
     """Types of Midjourney signatures for identification"""
+
     XMP_DIGITAL_GUID = "xmp_digital_guid"
     EXIF_MAKE = "exif_make"
     PARAMETER_PATTERNS = "parameter_patterns"
@@ -22,80 +24,94 @@ class MidjourneyConfig:
     """Configuration for Midjourney format parsing - systematically organized"""
 
     # Parameter regex patterns for Midjourney commands
-    PARAMETER_PATTERNS: Dict[str, Pattern[str]] = field(default_factory=lambda: {
-        "ar": re.compile(r"--ar\s+([\d:\.]+)", re.IGNORECASE),
-        "v": re.compile(r"--v(?:ersion)?\s+([\d\.]+)", re.IGNORECASE),
-        "style": re.compile(r"--style\s+([a-zA-Z0-9_-]+(?:\s+raw)?)", re.IGNORECASE),
-        "stylize": re.compile(r"--s(?:tylize)?\s+(\d+)", re.IGNORECASE),
-        "niji": re.compile(r"--niji\s*(\d*)", re.IGNORECASE),
-        "chaos": re.compile(r"--c(?:haos)?\s+(\d+)", re.IGNORECASE),
-        "iw": re.compile(r"--iw\s+([\d\.]+)", re.IGNORECASE),
-        "sref": re.compile(r"--sref\s+((?:https?://\S+\s*)+)", re.IGNORECASE),
-        "cref": re.compile(r"--cref\s+((?:https?://\S+\s*)+)", re.IGNORECASE),
-        "cw": re.compile(r"--cw\s+(\d+)", re.IGNORECASE),
-        "weird": re.compile(r"--weird\s+(\d+)", re.IGNORECASE),
-        "tile": re.compile(r"--tile", re.IGNORECASE),
-        "quality": re.compile(r"--q(?:uality)?\s+([\d\.]+)", re.IGNORECASE),
-        "seed": re.compile(r"--seed\s+(\d+)", re.IGNORECASE),
-        "stop": re.compile(r"--stop\s+(\d+)", re.IGNORECASE),
-        "no": re.compile(r"--no\s+([^-]+?)(?=\s*--|\s*$)", re.IGNORECASE),
-        "aspect": re.compile(r"--aspect\s+([\d:\.]+)", re.IGNORECASE),  # Alternative to --ar
-    })
+    PARAMETER_PATTERNS: dict[str, Pattern[str]] = field(
+        default_factory=lambda: {
+            "ar": re.compile(r"--ar\s+([\d:\.]+)", re.IGNORECASE),
+            "v": re.compile(r"--v(?:ersion)?\s+([\d\.]+)", re.IGNORECASE),
+            "style": re.compile(r"--style\s+([a-zA-Z0-9_-]+(?:\s+raw)?)", re.IGNORECASE),
+            "stylize": re.compile(r"--s(?:tylize)?\s+(\d+)", re.IGNORECASE),
+            "niji": re.compile(r"--niji\s*(\d*)", re.IGNORECASE),
+            "chaos": re.compile(r"--c(?:haos)?\s+(\d+)", re.IGNORECASE),
+            "iw": re.compile(r"--iw\s+([\d\.]+)", re.IGNORECASE),
+            "sref": re.compile(r"--sref\s+((?:https?://\S+\s*)+)", re.IGNORECASE),
+            "cref": re.compile(r"--cref\s+((?:https?://\S+\s*)+)", re.IGNORECASE),
+            "cw": re.compile(r"--cw\s+(\d+)", re.IGNORECASE),
+            "weird": re.compile(r"--weird\s+(\d+)", re.IGNORECASE),
+            "tile": re.compile(r"--tile", re.IGNORECASE),
+            "quality": re.compile(r"--q(?:uality)?\s+([\d\.]+)", re.IGNORECASE),
+            "seed": re.compile(r"--seed\s+(\d+)", re.IGNORECASE),
+            "stop": re.compile(r"--stop\s+(\d+)", re.IGNORECASE),
+            "no": re.compile(r"--no\s+([^-]+?)(?=\s*--|\s*$)", re.IGNORECASE),
+            "aspect": re.compile(r"--aspect\s+([\d:\.]+)", re.IGNORECASE),  # Alternative to --ar
+        }
+    )
 
     # Flag parameters (no values)
-    FLAG_PARAMETERS: Set[str] = field(default_factory=lambda: {
-        "tile", "hd", "fast", "relax", "turbo"
-    })
+    FLAG_PARAMETERS: set[str] = field(default_factory=lambda: {"tile", "hd", "fast", "relax", "turbo"})
 
     # Parameter mapping to standard names
-    PARAMETER_MAPPINGS: Dict[str, str] = field(default_factory=lambda: {
-        "v": "version",
-        "ar": "aspect_ratio",
-        "aspect": "aspect_ratio",
-        "stylize": "stylize",
-        "s": "stylize",
-        "chaos": "chaos",
-        "c": "chaos",
-        "quality": "quality",
-        "q": "quality",
-        "seed": "seed",
-        "stop": "stop",
-        "iw": "image_weight",
-        "cw": "character_weight",
-        "weird": "weird",
-        "sref": "style_reference_urls",
-        "cref": "character_reference_urls",
-        "no": "negative_elements",
-        "style": "style_preset",
-        "niji": "niji_version",
-        "tile": "tile_mode",
-    })
+    PARAMETER_MAPPINGS: dict[str, str] = field(
+        default_factory=lambda: {
+            "v": "version",
+            "ar": "aspect_ratio",
+            "aspect": "aspect_ratio",
+            "stylize": "stylize",
+            "s": "stylize",
+            "chaos": "chaos",
+            "c": "chaos",
+            "quality": "quality",
+            "q": "quality",
+            "seed": "seed",
+            "stop": "stop",
+            "iw": "image_weight",
+            "cw": "character_weight",
+            "weird": "weird",
+            "sref": "style_reference_urls",
+            "cref": "character_reference_urls",
+            "no": "negative_elements",
+            "style": "style_preset",
+            "niji": "niji_version",
+            "tile": "tile_mode",
+        }
+    )
 
     # XMP keys for Midjourney identification
-    XMP_IDENTIFICATION_KEYS: Set[str] = field(default_factory=lambda: {
-        "Xmp.iptcExt.DigImageGUID",
-        "iptcExt:DigImageGUID",
-        "Xmp.dc.description",
-        "dc:description",
-    })
+    XMP_IDENTIFICATION_KEYS: set[str] = field(
+        default_factory=lambda: {
+            "Xmp.iptcExt.DigImageGUID",
+            "iptcExt:DigImageGUID",
+            "Xmp.dc.description",
+            "dc:description",
+        }
+    )
 
     # EXIF keys that might contain Midjourney signatures
-    EXIF_IDENTIFICATION_KEYS: Set[str] = field(default_factory=lambda: {
-        "Exif.Image.Make",
-        "Exif.Image.Software",
-        "Exif.Photo.UserComment",
-    })
+    EXIF_IDENTIFICATION_KEYS: set[str] = field(
+        default_factory=lambda: {
+            "Exif.Image.Make",
+            "Exif.Image.Software",
+            "Exif.Photo.UserComment",
+        }
+    )
 
     # Job ID pattern
-    JOB_ID_PATTERN: Pattern[str] = field(default_factory=lambda: re.compile(
-        r"Job ID:\s*([0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12})",
-        re.IGNORECASE
-    ))
+    JOB_ID_PATTERN: Pattern[str] = field(
+        default_factory=lambda: re.compile(
+            r"Job ID:\s*([0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12})",
+            re.IGNORECASE,
+        )
+    )
 
     # Midjourney-specific identifiers in text
-    MIDJOURNEY_IDENTIFIERS: Set[str] = field(default_factory=lambda: {
-        "midjourney", "discord.gg/midjourney", "/imagine", "mj_", "--"
-    })
+    MIDJOURNEY_IDENTIFIERS: set[str] = field(
+        default_factory=lambda: {
+            "midjourney",
+            "discord.gg/midjourney",
+            "/imagine",
+            "mj_",
+            "--",
+        }
+    )
 
 
 class MidjourneySignatureDetector:
@@ -105,9 +121,8 @@ class MidjourneySignatureDetector:
         self.config = config
         self.logger = logger
 
-    def detect_midjourney_signatures(self, info_data: Dict[str, Any], raw_data: str = "") -> Dict[str, Any]:
-        """
-        Comprehensive Midjourney signature detection.
+    def detect_midjourney_signatures(self, info_data: dict[str, Any], raw_data: str = "") -> dict[str, Any]:
+        """Comprehensive Midjourney signature detection.
         Returns detailed analysis of found signatures.
         """
         detection_result = {
@@ -135,12 +150,14 @@ class MidjourneySignatureDetector:
         # Determine if this is definitively Midjourney
         detection_result["is_midjourney"] = self._is_definitive_midjourney(detection_result)
 
-        self.logger.debug(f"Midjourney detection: confidence={detection_result['confidence_score']:.2f}, "
-                         f"signatures={len(detection_result['signatures_found'])}")
+        self.logger.debug(
+            f"Midjourney detection: confidence={detection_result['confidence_score']:.2f}, "
+            f"signatures={len(detection_result['signatures_found'])}"
+        )
 
         return detection_result
 
-    def _analyze_xmp_signatures(self, info_data: Dict[str, Any], result: Dict[str, Any]) -> float:
+    def _analyze_xmp_signatures(self, info_data: dict[str, Any], result: dict[str, Any]) -> float:
         """Analyze XMP data for Midjourney signatures"""
         xmp_data = info_data.get("XMP", {})
         if not isinstance(xmp_data, dict):
@@ -174,7 +191,9 @@ class MidjourneySignatureDetector:
                 else:
                     continue
 
-                if description and any(identifier in description.lower() for identifier in self.config.MIDJOURNEY_IDENTIFIERS):
+                if description and any(
+                    identifier in description.lower() for identifier in self.config.MIDJOURNEY_IDENTIFIERS
+                ):
                     xmp_analysis["has_description"] = True
                     xmp_analysis["description_source"] = desc_key
                     score += 0.3
@@ -182,7 +201,7 @@ class MidjourneySignatureDetector:
         result["xmp_analysis"] = xmp_analysis
         return score
 
-    def _analyze_exif_signatures(self, info_data: Dict[str, Any], result: Dict[str, Any]) -> float:
+    def _analyze_exif_signatures(self, info_data: dict[str, Any], result: dict[str, Any]) -> float:
         """Analyze EXIF data for Midjourney signatures"""
         exif_data = info_data.get("EXIF", {})
         if not isinstance(exif_data, dict):
@@ -220,7 +239,9 @@ class MidjourneySignatureDetector:
         result["exif_analysis"] = exif_analysis
         return score
 
-    def _analyze_description_signatures(self, info_data: Dict[str, Any], raw_data: str, result: Dict[str, Any]) -> float:
+    def _analyze_description_signatures(
+        self, info_data: dict[str, Any], raw_data: str, result: dict[str, Any]
+    ) -> float:
         """Analyze description/text content for Midjourney signatures"""
         description_texts = self._extract_all_description_sources(info_data, raw_data)
 
@@ -265,7 +286,7 @@ class MidjourneySignatureDetector:
         result["description_analysis"] = desc_analysis
         return score
 
-    def _extract_all_description_sources(self, info_data: Dict[str, Any], raw_data: str) -> Dict[str, str]:
+    def _extract_all_description_sources(self, info_data: dict[str, Any], raw_data: str) -> dict[str, str]:
         """Extract description text from all possible sources"""
         descriptions = {}
 
@@ -323,29 +344,31 @@ class MidjourneySignatureDetector:
     def _calculate_confidence(self, xmp_score: float, exif_score: float, desc_score: float) -> float:
         """Calculate overall confidence score with weighted components"""
         # XMP has highest weight, then description analysis, then EXIF
-        weighted_score = (xmp_score * 3.0 + desc_score * 2.0 + exif_score * 1.5)
+        weighted_score = xmp_score * 3.0 + desc_score * 2.0 + exif_score * 1.5
         max_possible_score = 6.5  # Reasonable maximum for normalization
         return min(weighted_score / max_possible_score, 1.0)
 
-    def _is_definitive_midjourney(self, result: Dict[str, Any]) -> bool:
+    def _is_definitive_midjourney(self, result: dict[str, Any]) -> bool:
         """Determine if we have definitive proof this is Midjourney"""
         # XMP Digital GUID is definitive
         if result["xmp_analysis"].get("has_digital_guid"):
             return True
 
         # EXIF Make + parameters in description
-        if (result["exif_analysis"].get("make_is_midjourney") and
-            result["description_analysis"].get("has_mj_parameters")):
+        if result["exif_analysis"].get("make_is_midjourney") and result["description_analysis"].get(
+            "has_mj_parameters"
+        ):
             return True
 
         # Job ID + multiple parameters
-        if (result["description_analysis"].get("has_job_id") and
-            result["description_analysis"].get("parameter_count", 0) >= 2):
+        if (
+            result["description_analysis"].get("has_job_id")
+            and result["description_analysis"].get("parameter_count", 0) >= 2
+        ):
             return True
 
         # High confidence with multiple signature types
-        if (result["confidence_score"] >= 0.8 and
-            len(set(result["signatures_found"])) >= 2):
+        if result["confidence_score"] >= 0.8 and len(set(result["signatures_found"])) >= 2:
             return True
 
         return False
@@ -358,9 +381,8 @@ class MidjourneyParameterExtractor:
         self.config = config
         self.logger = logger
 
-    def extract_parameters_from_text(self, text: str) -> Tuple[str, Dict[str, str]]:
-        """
-        Extract Midjourney parameters from text and return cleaned prompt.
+    def extract_parameters_from_text(self, text: str) -> tuple[str, dict[str, str]]:
+        """Extract Midjourney parameters from text and return cleaned prompt.
         Returns (cleaned_prompt, extracted_parameters)
         """
         if not text:
@@ -377,15 +399,14 @@ class MidjourneyParameterExtractor:
                 if param_key in self.config.FLAG_PARAMETERS:
                     # Flag parameter (no value)
                     extracted_params[param_key] = "true"
-                else:
-                    # Parameter with value
-                    if match.groups():
-                        param_value = match.group(1).strip()
-                        if param_value:  # Only store non-empty values
-                            extracted_params[param_key] = param_value
+                # Parameter with value
+                elif match.groups():
+                    param_value = match.group(1).strip()
+                    if param_value:  # Only store non-empty values
+                        extracted_params[param_key] = param_value
 
                 # Remove the matched parameter from text
-                cleaned_text = cleaned_text[:match.start()] + cleaned_text[match.end():]
+                cleaned_text = cleaned_text[: match.start()] + cleaned_text[match.end() :]
 
         # Clean up the text after parameter removal
         cleaned_text = re.sub(r"\s{2,}", " ", cleaned_text).strip(" ,.-")
@@ -393,7 +414,7 @@ class MidjourneyParameterExtractor:
         self.logger.debug(f"Midjourney: Extracted {len(extracted_params)} parameters from text")
         return cleaned_text, extracted_params
 
-    def standardize_parameters(self, raw_params: Dict[str, str]) -> Dict[str, str]:
+    def standardize_parameters(self, raw_params: dict[str, str]) -> dict[str, str]:
         """Convert Midjourney parameters to standardized names"""
         standardized = {}
 
@@ -417,15 +438,15 @@ class MidjourneyParameterExtractor:
             return self._normalize_aspect_ratio(value)
 
         # Handle style references (URLs)
-        elif param_key in ["sref", "cref"]:
+        if param_key in ["sref", "cref"]:
             return self._normalize_reference_urls(value)
 
         # Handle negative elements
-        elif param_key == "no":
+        if param_key == "no":
             return self._normalize_negative_elements(value)
 
         # Handle boolean flags
-        elif param_key in self.config.FLAG_PARAMETERS:
+        if param_key in self.config.FLAG_PARAMETERS:
             return "true"
 
         # Default: clean and return
@@ -438,7 +459,13 @@ class MidjourneyParameterExtractor:
             try:
                 decimal_value = float(value)
                 # Convert common decimals to ratios
-                ratio_map = {1.0: "1:1", 1.33: "4:3", 1.5: "3:2", 1.78: "16:9", 2.0: "2:1"}
+                ratio_map = {
+                    1.0: "1:1",
+                    1.33: "4:3",
+                    1.5: "3:2",
+                    1.78: "16:9",
+                    2.0: "2:1",
+                }
                 for ratio_decimal, ratio_str in ratio_map.items():
                     if abs(decimal_value - ratio_decimal) < 0.05:
                         return ratio_str
@@ -463,8 +490,7 @@ class MidjourneyParameterExtractor:
 
 
 class MidjourneyFormat(BaseFormat):
-    """
-    Enhanced Midjourney format parser with comprehensive signature detection.
+    """Enhanced Midjourney format parser with comprehensive signature detection.
 
     Handles multiple Midjourney identification methods:
     - XMP Digital Image GUID (strongest indicator)
@@ -477,11 +503,11 @@ class MidjourneyFormat(BaseFormat):
 
     def __init__(
         self,
-        info: Optional[Dict[str, Any]] = None,
+        info: dict[str, Any] | None = None,
         raw: str = "",
         width: Any = 0,
         height: Any = 0,
-        logger_obj: Optional[logging.Logger] = None,
+        logger_obj: logging.Logger | None = None,
         **kwargs: Any,
     ):
         super().__init__(
@@ -499,7 +525,7 @@ class MidjourneyFormat(BaseFormat):
         self.parameter_extractor = MidjourneyParameterExtractor(self.config, self._logger)
 
         # Store detection results
-        self._detection_result: Optional[Dict[str, Any]] = None
+        self._detection_result: dict[str, Any] | None = None
 
     def _process(self) -> None:
         """Main processing pipeline for Midjourney format"""
@@ -519,7 +545,9 @@ class MidjourneyFormat(BaseFormat):
         if not self._detection_result["is_midjourney"]:
             confidence = self._detection_result["confidence_score"]
             signatures = len(self._detection_result["signatures_found"])
-            self._logger.debug(f"{self.tool}: Not identified as Midjourney (confidence: {confidence:.2f}, signatures: {signatures})")
+            self._logger.debug(
+                f"{self.tool}: Not identified as Midjourney (confidence: {confidence:.2f}, signatures: {signatures})"
+            )
             self.status = self.Status.FORMAT_DETECTION_ERROR
             self._error = "No definitive Midjourney signatures found"
             return
@@ -529,7 +557,9 @@ class MidjourneyFormat(BaseFormat):
         if not success:
             return  # Error already set
 
-        self._logger.info(f"{self.tool}: Successfully parsed with {self._detection_result['confidence_score']:.2f} confidence")
+        self._logger.info(
+            f"{self.tool}: Successfully parsed with {self._detection_result['confidence_score']:.2f} confidence"
+        )
 
     def _extract_midjourney_data(self) -> bool:
         """Extract Midjourney-specific data from detected sources"""
@@ -574,7 +604,7 @@ class MidjourneyFormat(BaseFormat):
 
             # Add detection metadata
             self._parameter["midjourney_confidence"] = f"{self._detection_result['confidence_score']:.2f}"
-            self._parameter["detection_signatures"] = str(len(self._detection_result['signatures_found']))
+            self._parameter["detection_signatures"] = str(len(self._detection_result["signatures_found"]))
 
             # Handle dimensions
             self._apply_dimensions()
@@ -601,7 +631,7 @@ class MidjourneyFormat(BaseFormat):
                 desc_data = xmp_data[xmp_key]
                 if isinstance(desc_data, dict):
                     return desc_data.get("x-default", "")
-                elif isinstance(desc_data, str):
+                if isinstance(desc_data, str):
                     return desc_data
         elif source == "EXIF_UserComment":
             exif_data = self._info.get("EXIF", {})
@@ -623,7 +653,7 @@ class MidjourneyFormat(BaseFormat):
             self._parameter["size"] = f"{self._width}x{self._height}"
         # Could also calculate from aspect ratio if needed
 
-    def get_midjourney_analysis(self) -> Dict[str, Any]:
+    def get_midjourney_analysis(self) -> dict[str, Any]:
         """Get detailed analysis of Midjourney detection and features"""
         if not self._detection_result:
             return {"error": "No detection analysis available"}
@@ -642,7 +672,7 @@ class MidjourneyFormat(BaseFormat):
             "extracted_features": self._analyze_midjourney_features(),
         }
 
-    def _analyze_midjourney_features(self) -> Dict[str, Any]:
+    def _analyze_midjourney_features(self) -> dict[str, Any]:
         """Analyze Midjourney-specific features detected"""
         features = {
             "has_version": False,
@@ -656,7 +686,12 @@ class MidjourneyFormat(BaseFormat):
         # Analyze parameters
         param_count = 0
         for key, value in self._parameter.items():
-            if key.startswith("mj_") or key in ["version", "aspect_ratio", "stylize", "chaos"]:
+            if key.startswith("mj_") or key in [
+                "version",
+                "aspect_ratio",
+                "stylize",
+                "chaos",
+            ]:
                 param_count += 1
 
         features["parameter_count"] = param_count
@@ -665,7 +700,9 @@ class MidjourneyFormat(BaseFormat):
         features["has_version"] = "version" in self._parameter
         features["has_aspect_ratio"] = "aspect_ratio" in self._parameter
         features["has_style_settings"] = any(key in self._parameter for key in ["stylize", "style_preset", "chaos"])
-        features["has_reference_images"] = any(key in self._parameter for key in ["style_reference_urls", "character_reference_urls"])
+        features["has_reference_images"] = any(
+            key in self._parameter for key in ["style_reference_urls", "character_reference_urls"]
+        )
 
         # Advanced features
         if "niji_version" in self._parameter:
@@ -677,7 +714,7 @@ class MidjourneyFormat(BaseFormat):
 
         return features
 
-    def debug_midjourney_detection(self) -> Dict[str, Any]:
+    def debug_midjourney_detection(self) -> dict[str, Any]:
         """Get comprehensive debugging information"""
         if not self._detection_result:
             return {"error": "No detection data available"}
@@ -694,7 +731,11 @@ class MidjourneyFormat(BaseFormat):
             "detection_details": self._detection_result,
             "parameter_extraction": {
                 "total_parameters": len(self._parameter),
-                "midjourney_parameters": [k for k in self._parameter.keys() if k.startswith("mj_") or k in self.config.PARAMETER_MAPPINGS.values()],
+                "midjourney_parameters": [
+                    k
+                    for k in self._parameter.keys()
+                    if k.startswith("mj_") or k in self.config.PARAMETER_MAPPINGS.values()
+                ],
                 "prompt_length": len(self._positive) if self._positive else 0,
             },
             "config_info": {
@@ -702,5 +743,5 @@ class MidjourneyFormat(BaseFormat):
                 "flag_parameters": list(self.config.FLAG_PARAMETERS),
                 "xmp_keys_checked": list(self.config.XMP_IDENTIFICATION_KEYS),
                 "exif_keys_checked": list(self.config.EXIF_IDENTIFICATION_KEYS),
-            }
+            },
         }

@@ -16,6 +16,7 @@ log = logging.getLogger(__name__)
 
 # --- Main Handler Function (The Conductor) ---
 
+
 def handle_file_selection(main_window: "MainWindow", current_item: Qw.QListWidgetItem | None):
     """Orchestrates all actions when a new file is selected."""
     if not current_item:
@@ -31,6 +32,7 @@ def handle_file_selection(main_window: "MainWindow", current_item: Qw.QListWidge
         # We can now directly call the formatter, but since MainWindow already does this...
         # ...it's better to just call the method on MainWindow. Your original code was correct.
         from .display_formatter import format_metadata_for_display
+
         formatted_data = format_metadata_for_display(
             {main_window.EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}}
         )
@@ -38,7 +40,7 @@ def handle_file_selection(main_window: "MainWindow", current_item: Qw.QListWidge
         return
 
     full_file_path = os.path.join(main_window.current_folder, file_name)
-    
+
     # Do the file check once at the beginning
     if not Path(full_file_path).is_file():
         log.warning("Path check FAILED for '%s'. It is not a file.", full_file_path)
@@ -48,11 +50,13 @@ def handle_file_selection(main_window: "MainWindow", current_item: Qw.QListWidge
         return
 
     _process_image_preview(main_window, full_file_path, file_name)
-    
+
     metadata_dict = main_window.load_metadata(file_name)
     main_window.display_text_of(metadata_dict)
 
+
 # --- Helper functions for this module ---
+
 
 def _handle_no_selection(main_window: "MainWindow"):
     """Clears UI elements when no file is selected."""
@@ -62,6 +66,7 @@ def _handle_no_selection(main_window: "MainWindow"):
     main_window.main_status_bar.showMessage("No file selected.", 3000)
     log.info("File selection cleared or current_item is None.")
 
+
 def _update_status_for_selection(main_window: "MainWindow", file_name: str):
     """Updates the status bar and other UI text for a new selection."""
     if hasattr(main_window, "left_panel"):
@@ -70,6 +75,7 @@ def _update_status_for_selection(main_window: "MainWindow", file_name: str):
         main_window.left_panel.set_message_text(f"{count} file(s) in {folder_name}")
     main_window.main_status_bar.showMessage(f"Selected: {file_name}", 4000)
     log.info("File selected: '%s' in folder '%s'", file_name, main_window.current_folder)
+
 
 def _process_image_preview(main_window: "MainWindow", full_file_path: str, file_name: str):
     """Checks if a file is an image and calls the display function if it is."""

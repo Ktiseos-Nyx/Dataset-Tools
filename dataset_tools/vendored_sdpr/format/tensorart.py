@@ -1,10 +1,11 @@
 # dataset_tools/vendored_sdpr/format/tensorart.py
 
 import json
-import re
 import logging
-from typing import Any, Dict, List, Optional, Pattern, Set, Tuple, Union
+import re
 from dataclasses import dataclass, field
+from re import Pattern
+from typing import Any
 
 from .base_format import BaseFormat
 
@@ -14,54 +15,81 @@ class TensorArtConfig:
     """Configuration for TensorArt format parsing - systematically organized"""
 
     # TensorArt-specific identification patterns
-    IDENTIFICATION_PATTERNS: Dict[str, Pattern[str]] = field(default_factory=lambda: {
-        "ems_model": re.compile(r"EMS-\d+-EMS\.safetensors", re.IGNORECASE),
-        "ems_lora": re.compile(r"<lora:(EMS-\d+-EMS(?:\.safetensors)?)", re.IGNORECASE),
-        "tensorart_job_id": re.compile(r"^\d{10,}$"),  # Long numeric strings typical of TensorArt
-        "tensorart_prefix": re.compile(r"tensorart|tensor[_-]?art", re.IGNORECASE),
-    })
+    IDENTIFICATION_PATTERNS: dict[str, Pattern[str]] = field(
+        default_factory=lambda: {
+            "ems_model": re.compile(r"EMS-\d+-EMS\.safetensors", re.IGNORECASE),
+            "ems_lora": re.compile(r"<lora:(EMS-\d+-EMS(?:\.safetensors)?)", re.IGNORECASE),
+            "tensorart_job_id": re.compile(r"^\d{10,}$"),  # Long numeric strings typical of TensorArt
+            "tensorart_prefix": re.compile(r"tensorart|tensor[_-]?art", re.IGNORECASE),
+        }
+    )
 
     # ComfyUI node types for parameter extraction
-    COMFYUI_NODE_TYPES: Dict[str, Set[str]] = field(default_factory=lambda: {
-        "ksampler": {
-            "KSampler", "KSamplerAdvanced", "KSampler (Efficient)",
-            "KSamplerSelect", "KSampler_A1111", "KSamplerCustom"
-        },
-        "checkpoint_loader": {
-            "CheckpointLoader", "CheckpointLoaderSimple", "ECHOCheckpointLoaderSimple",
-            "unCLIPCheckpointLoader", "CheckpointLoaderNF4"
-        },
-        "clip_text_encode": {
-            "CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "CLIPTextEncodeSDXL",
-            "smZ CLIPTextEncode", "CLIPTextEncodeFlux"
-        },
-        "lora_loader": {
-            "LoraLoader", "LoraTagLoader", "LoraLoaderModelOnly", "LoRA_Loader"
-        },
-        "save_image": {
-            "SaveImage", "Image Save", "SaveImageWebsocket", "JWImageSave"
-        },
-        "empty_latent": {"EmptyLatentImage", "LatentFromBatch"},
-    })
+    COMFYUI_NODE_TYPES: dict[str, set[str]] = field(
+        default_factory=lambda: {
+            "ksampler": {
+                "KSampler",
+                "KSamplerAdvanced",
+                "KSampler (Efficient)",
+                "KSamplerSelect",
+                "KSampler_A1111",
+                "KSamplerCustom",
+            },
+            "checkpoint_loader": {
+                "CheckpointLoader",
+                "CheckpointLoaderSimple",
+                "ECHOCheckpointLoaderSimple",
+                "unCLIPCheckpointLoader",
+                "CheckpointLoaderNF4",
+            },
+            "clip_text_encode": {
+                "CLIPTextEncode",
+                "BNK_CLIPTextEncodeAdvanced",
+                "CLIPTextEncodeSDXL",
+                "smZ CLIPTextEncode",
+                "CLIPTextEncodeFlux",
+            },
+            "lora_loader": {
+                "LoraLoader",
+                "LoraTagLoader",
+                "LoraLoaderModelOnly",
+                "LoRA_Loader",
+            },
+            "save_image": {
+                "SaveImage",
+                "Image Save",
+                "SaveImageWebsocket",
+                "JWImageSave",
+            },
+            "empty_latent": {"EmptyLatentImage", "LatentFromBatch"},
+        }
+    )
 
     # Parameter mapping for ComfyUI node inputs to standard names
-    PARAMETER_MAPPINGS: Dict[str, str] = field(default_factory=lambda: {
-        "seed": "seed",
-        "steps": "steps",
-        "cfg": "cfg_scale",
-        "sampler_name": "sampler_name",
-        "scheduler": "scheduler",
-        "denoise": "denoising_strength",
-        "width": "width",
-        "height": "height",
-        "batch_size": "batch_size",
-        "ckpt_name": "model",
-    })
+    PARAMETER_MAPPINGS: dict[str, str] = field(
+        default_factory=lambda: {
+            "seed": "seed",
+            "steps": "steps",
+            "cfg": "cfg_scale",
+            "sampler_name": "sampler_name",
+            "scheduler": "scheduler",
+            "denoise": "denoising_strength",
+            "width": "width",
+            "height": "height",
+            "batch_size": "batch_size",
+            "ckpt_name": "model",
+        }
+    )
 
     # TensorArt-specific features to detect
-    TENSORART_FEATURES: Set[str] = field(default_factory=lambda: {
-        "EMS", "tensorart_workflow", "community_model", "shared_workflow"
-    })
+    TENSORART_FEATURES: set[str] = field(
+        default_factory=lambda: {
+            "EMS",
+            "tensorart_workflow",
+            "community_model",
+            "shared_workflow",
+        }
+    )
 
 
 class TensorArtSignatureDetector:
@@ -71,9 +99,8 @@ class TensorArtSignatureDetector:
         self.config = config
         self.logger = logger
 
-    def detect_tensorart_signatures(self, workflow_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Comprehensive TensorArt signature detection.
+    def detect_tensorart_signatures(self, workflow_data: dict[str, Any]) -> dict[str, Any]:
+        """Comprehensive TensorArt signature detection.
         Returns detailed analysis of found signatures.
         """
         detection_result = {
@@ -101,36 +128,40 @@ class TensorArtSignatureDetector:
         # Determine if this is definitively TensorArt
         detection_result["is_tensorart"] = self._is_definitive_tensorart(detection_result)
 
-        self.logger.debug(f"TensorArt detection: confidence={detection_result['confidence_score']:.2f}, "
-                         f"signatures={len(detection_result['signatures_found'])}")
+        self.logger.debug(
+            f"TensorArt detection: confidence={detection_result['confidence_score']:.2f}, "
+            f"signatures={len(detection_result['signatures_found'])}"
+        )
 
         return detection_result
 
-    def _analyze_checkpoint_signatures(self, workflow_data: Dict[str, Any], result: Dict[str, Any]) -> None:
+    def _analyze_checkpoint_signatures(self, workflow_data: dict[str, Any], result: dict[str, Any]) -> None:
         """Analyze checkpoint loader nodes for EMS patterns"""
         for node_id, node_data in workflow_data.items():
             if not isinstance(node_data, dict):
                 continue
 
             class_type = node_data.get("class_type", "")
-            if not any(class_type in node_types for node_types in [
-                self.config.COMFYUI_NODE_TYPES["checkpoint_loader"]
-            ]):
+            if not any(
+                class_type in node_types for node_types in [self.config.COMFYUI_NODE_TYPES["checkpoint_loader"]]
+            ):
                 continue
 
             inputs = node_data.get("inputs", {})
             ckpt_name = inputs.get("ckpt_name", "")
 
             if isinstance(ckpt_name, str) and self.config.IDENTIFICATION_PATTERNS["ems_model"].search(ckpt_name):
-                result["ems_models_found"].append({
-                    "node_id": node_id,
-                    "model_name": ckpt_name,
-                    "node_type": class_type
-                })
+                result["ems_models_found"].append(
+                    {
+                        "node_id": node_id,
+                        "model_name": ckpt_name,
+                        "node_type": class_type,
+                    }
+                )
                 result["signatures_found"].append("ems_checkpoint")
                 self.logger.debug(f"TensorArt: Found EMS model in {node_id}: {ckpt_name}")
 
-    def _analyze_lora_signatures(self, workflow_data: Dict[str, Any], result: Dict[str, Any]) -> None:
+    def _analyze_lora_signatures(self, workflow_data: dict[str, Any], result: dict[str, Any]) -> None:
         """Analyze LoRA loader nodes for EMS patterns"""
         for node_id, node_data in workflow_data.items():
             if not isinstance(node_data, dict):
@@ -143,12 +174,14 @@ class TensorArtSignatureDetector:
             if class_type in self.config.COMFYUI_NODE_TYPES["lora_loader"]:
                 lora_name = inputs.get("lora_name", "")
                 if isinstance(lora_name, str) and self.config.IDENTIFICATION_PATTERNS["ems_model"].search(lora_name):
-                    result["ems_loras_found"].append({
-                        "node_id": node_id,
-                        "lora_name": lora_name,
-                        "strength": inputs.get("strength_model", inputs.get("strength", 1.0)),
-                        "node_type": class_type
-                    })
+                    result["ems_loras_found"].append(
+                        {
+                            "node_id": node_id,
+                            "lora_name": lora_name,
+                            "strength": inputs.get("strength_model", inputs.get("strength", 1.0)),
+                            "node_type": class_type,
+                        }
+                    )
                     result["signatures_found"].append("ems_lora")
 
             # Check text inputs for embedded LoRA tags
@@ -156,15 +189,17 @@ class TensorArtSignatureDetector:
             if isinstance(text_input, str) and "<lora:" in text_input:
                 lora_matches = self.config.IDENTIFICATION_PATTERNS["ems_lora"].findall(text_input)
                 for lora_match in lora_matches:
-                    result["ems_loras_found"].append({
-                        "node_id": node_id,
-                        "lora_name": lora_match,
-                        "source": "text_embedding",
-                        "node_type": class_type
-                    })
+                    result["ems_loras_found"].append(
+                        {
+                            "node_id": node_id,
+                            "lora_name": lora_match,
+                            "source": "text_embedding",
+                            "node_type": class_type,
+                        }
+                    )
                     result["signatures_found"].append("ems_lora_embedded")
 
-    def _analyze_save_image_signatures(self, workflow_data: Dict[str, Any], result: Dict[str, Any]) -> None:
+    def _analyze_save_image_signatures(self, workflow_data: dict[str, Any], result: dict[str, Any]) -> None:
         """Analyze SaveImage nodes for TensorArt job ID patterns"""
         for node_id, node_data in workflow_data.items():
             if not isinstance(node_data, dict):
@@ -178,15 +213,17 @@ class TensorArtSignatureDetector:
             filename_prefix = str(inputs.get("filename_prefix", ""))
 
             if self.config.IDENTIFICATION_PATTERNS["tensorart_job_id"].match(filename_prefix):
-                result["job_id_candidates"].append({
-                    "node_id": node_id,
-                    "job_id": filename_prefix,
-                    "node_type": class_type
-                })
+                result["job_id_candidates"].append(
+                    {
+                        "node_id": node_id,
+                        "job_id": filename_prefix,
+                        "node_type": class_type,
+                    }
+                )
                 result["signatures_found"].append("job_id_pattern")
                 self.logger.debug(f"TensorArt: Found potential job ID in {node_id}: {filename_prefix}")
 
-    def _analyze_metadata_signatures(self, workflow_data: Dict[str, Any], result: Dict[str, Any]) -> None:
+    def _analyze_metadata_signatures(self, workflow_data: dict[str, Any], result: dict[str, Any]) -> None:
         """Analyze workflow metadata for TensorArt indicators"""
         # Check extraMetadata field
         extra_metadata = workflow_data.get("extraMetadata")
@@ -213,7 +250,7 @@ class TensorArtSignatureDetector:
                 result["signatures_found"].append("workflow_field")
                 result["node_analysis"].setdefault("tensorart_workflow_keys", []).append(key)
 
-    def _calculate_confidence_score(self, result: Dict[str, Any]) -> float:
+    def _calculate_confidence_score(self, result: dict[str, Any]) -> float:
         """Calculate confidence score based on found signatures"""
         score = 0.0
 
@@ -227,13 +264,14 @@ class TensorArtSignatureDetector:
         score += len(result["job_id_candidates"]) * 0.2
 
         # Metadata indicators are weak but supportive
-        metadata_signatures = sum(1 for sig in result["signatures_found"]
-                                if sig in ["metadata_tensorart", "workflow_field"])
+        metadata_signatures = sum(
+            1 for sig in result["signatures_found"] if sig in ["metadata_tensorart", "workflow_field"]
+        )
         score += metadata_signatures * 0.1
 
         return min(score, 1.0)  # Cap at 1.0
 
-    def _is_definitive_tensorart(self, result: Dict[str, Any]) -> bool:
+    def _is_definitive_tensorart(self, result: dict[str, Any]) -> bool:
         """Determine if we have definitive proof this is TensorArt"""
         # Any EMS model or LoRA is definitive
         if result["ems_models_found"] or result["ems_loras_found"]:
@@ -253,9 +291,8 @@ class TensorArtWorkflowParser:
         self.config = config
         self.logger = logger
 
-    def parse_comfyui_workflow(self, workflow_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Parse TensorArt ComfyUI workflow for generation parameters.
+    def parse_comfyui_workflow(self, workflow_data: dict[str, Any]) -> dict[str, Any]:
+        """Parse TensorArt ComfyUI workflow for generation parameters.
         Returns structured extraction results.
         """
         result = {
@@ -292,7 +329,7 @@ class TensorArtWorkflowParser:
 
         return result
 
-    def _analyze_workflow_structure(self, workflow_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_workflow_structure(self, workflow_data: dict[str, Any]) -> dict[str, Any]:
         """Analyze the overall structure of the workflow"""
         analysis = {
             "total_nodes": len(workflow_data),
@@ -328,7 +365,7 @@ class TensorArtWorkflowParser:
 
         return analysis
 
-    def _extract_prompts(self, workflow_data: Dict[str, Any], analysis: Dict[str, Any]) -> Dict[str, str]:
+    def _extract_prompts(self, workflow_data: dict[str, Any], analysis: dict[str, Any]) -> dict[str, str]:
         """Extract positive and negative prompts from text encode nodes"""
         prompts = {"positive": "", "negative": ""}
 
@@ -354,7 +391,7 @@ class TensorArtWorkflowParser:
 
         return prompts
 
-    def _extract_generation_parameters(self, workflow_data: Dict[str, Any], analysis: Dict[str, Any]) -> Dict[str, str]:
+    def _extract_generation_parameters(self, workflow_data: dict[str, Any], analysis: dict[str, Any]) -> dict[str, str]:
         """Extract generation parameters from KSampler and other nodes"""
         parameters = {}
 
@@ -394,7 +431,9 @@ class TensorArtWorkflowParser:
 
         return parameters
 
-    def _extract_lora_information(self, workflow_data: Dict[str, Any], analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _extract_lora_information(
+        self, workflow_data: dict[str, Any], analysis: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """Extract LoRA information from LoRA loader nodes"""
         loras = []
 
@@ -434,8 +473,7 @@ class TensorArtWorkflowParser:
 
 
 class TensorArtFormat(BaseFormat):
-    """
-    Enhanced TensorArt format parser with ComfyUI workflow intelligence.
+    """Enhanced TensorArt format parser with ComfyUI workflow intelligence.
 
     TensorArt uses ComfyUI workflows with specific identifiers:
     - EMS-numbered model files (EMS-####-EMS.safetensors)
@@ -447,11 +485,11 @@ class TensorArtFormat(BaseFormat):
 
     def __init__(
         self,
-        info: Optional[Dict[str, Any]] = None,
+        info: dict[str, Any] | None = None,
         raw: str = "",
         width: Any = 0,
         height: Any = 0,
-        logger_obj: Optional[logging.Logger] = None,
+        logger_obj: logging.Logger | None = None,
         **kwargs: Any,
     ):
         super().__init__(
@@ -469,9 +507,9 @@ class TensorArtFormat(BaseFormat):
         self.workflow_parser = TensorArtWorkflowParser(self.config, self._logger)
 
         # Store processing results
-        self.workflow_data: Optional[Dict[str, Any]] = None
-        self._detection_result: Optional[Dict[str, Any]] = None
-        self._parse_result: Optional[Dict[str, Any]] = None
+        self.workflow_data: dict[str, Any] | None = None
+        self._detection_result: dict[str, Any] | None = None
+        self._parse_result: dict[str, Any] | None = None
 
     def _process(self) -> None:
         """Main processing pipeline for TensorArt format"""
@@ -503,7 +541,9 @@ class TensorArtFormat(BaseFormat):
         if not self._detection_result["is_tensorart"]:
             confidence = self._detection_result["confidence_score"]
             signatures = len(self._detection_result["signatures_found"])
-            self._logger.debug(f"{self.tool}: Not identified as TensorArt (confidence: {confidence:.2f}, signatures: {signatures})")
+            self._logger.debug(
+                f"{self.tool}: Not identified as TensorArt (confidence: {confidence:.2f}, signatures: {signatures})"
+            )
             self.status = self.Status.FORMAT_DETECTION_ERROR
             self._error = "ComfyUI JSON does not have TensorArt-specific markers"
             return
@@ -529,7 +569,9 @@ class TensorArtFormat(BaseFormat):
             self._error = "TensorArt parsing yielded no meaningful data"
             return
 
-        self._logger.info(f"{self.tool}: Successfully parsed with {self._detection_result['confidence_score']:.2f} confidence")
+        self._logger.info(
+            f"{self.tool}: Successfully parsed with {self._detection_result['confidence_score']:.2f} confidence"
+        )
 
     def _apply_parse_results(self) -> None:
         """Apply parsing results to instance variables"""
@@ -568,7 +610,7 @@ class TensorArtFormat(BaseFormat):
         # Build settings string
         self._build_tensorart_settings()
 
-    def _format_loras_for_display(self, loras: List[Dict[str, Any]]) -> str:
+    def _format_loras_for_display(self, loras: list[dict[str, Any]]) -> str:
         """Format LoRA information for display"""
         if not loras:
             return ""
@@ -614,20 +656,22 @@ class TensorArtFormat(BaseFormat):
 
         return has_prompts or has_parameters or has_dimensions
 
-    def get_format_info(self) -> Dict[str, Any]:
+    def get_format_info(self) -> dict[str, Any]:
         """Get detailed information about the parsed TensorArt data"""
         return {
             "format_name": self.tool,
             "detection_result": self._detection_result,
             "has_positive_prompt": bool(self._positive),
             "has_negative_prompt": bool(self._negative),
-            "parameter_count": len([v for v in self._parameter.values() if v and v != self.DEFAULT_PARAMETER_PLACEHOLDER]),
+            "parameter_count": len(
+                [v for v in self._parameter.values() if v and v != self.DEFAULT_PARAMETER_PLACEHOLDER]
+            ),
             "has_dimensions": self._width != "0" or self._height != "0",
-            "dimensions": f"{self._width}x{self._height}" if self._width != "0" and self._height != "0" else None,
+            "dimensions": (f"{self._width}x{self._height}" if self._width != "0" and self._height != "0" else None),
             "tensorart_features": self._analyze_tensorart_features(),
         }
 
-    def _analyze_tensorart_features(self) -> Dict[str, Any]:
+    def _analyze_tensorart_features(self) -> dict[str, Any]:
         """Analyze TensorArt-specific features detected"""
         features = {
             "has_ems_models": False,
@@ -671,7 +715,7 @@ class TensorArtFormat(BaseFormat):
 
         return features
 
-    def debug_tensorart_detection(self) -> Dict[str, Any]:
+    def debug_tensorart_detection(self) -> dict[str, Any]:
         """Get comprehensive debugging information about TensorArt detection"""
         return {
             "input_data": {
@@ -679,12 +723,12 @@ class TensorArtFormat(BaseFormat):
                 "raw_length": len(self._raw) if self._raw else 0,
                 "raw_preview": self._raw[:200] if self._raw else None,
                 "workflow_parsed": bool(self.workflow_data),
-                "workflow_node_count": len(self.workflow_data) if self.workflow_data else 0,
+                "workflow_node_count": (len(self.workflow_data) if self.workflow_data else 0),
             },
             "detection_details": self._detection_result,
             "parsing_details": self._parse_result,
             "workflow_analysis": {
-                "workflow_structure": self._parse_result.get("workflow_info", {}) if self._parse_result else {},
+                "workflow_structure": (self._parse_result.get("workflow_info", {}) if self._parse_result else {}),
                 "extracted_features": self._analyze_tensorart_features(),
             },
             "config_info": {
@@ -692,5 +736,5 @@ class TensorArtFormat(BaseFormat):
                 "supported_node_types": {k: len(v) for k, v in self.config.COMFYUI_NODE_TYPES.items()},
                 "parameter_mappings": len(self.config.PARAMETER_MAPPINGS),
                 "tensorart_features": len(self.config.TENSORART_FEATURES),
-            }
+            },
         }

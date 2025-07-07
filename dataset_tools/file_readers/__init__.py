@@ -1,7 +1,6 @@
 # dataset_tools/file_readers/__init__.py
 
-"""
-File reader factory and main interface.
+"""File reader factory and main interface.
 
 This module provides a unified interface for reading different types of files
 by coordinating the specialized readers.
@@ -16,19 +15,19 @@ Public API:
 """
 
 from pathlib import Path
-from typing import Dict, Any, Optional, List, Type
+from typing import Any, Dict, List, Optional, Type
 
-from .image_metadata_reader import ImageMetadataReader, ImageMetadataExtractor
-from .text_file_reader import TextFileReader, PromptFileReader, TextContentAnalyzer
+from ..correct_types import EmptyField
+from ..correct_types import ExtensionType as Ext
+from ..logger import debug_monitor, get_logger
+from ..logger import info_monitor as nfo
+from .image_metadata_reader import ImageMetadataExtractor, ImageMetadataReader
 from .schema_file_reader import SchemaFileReader, StructuredDataAnalyzer
-
-from ..correct_types import EmptyField, ExtensionType as Ext
-from ..logger import get_logger, debug_monitor, info_monitor as nfo
+from .text_file_reader import PromptFileReader, TextContentAnalyzer, TextFileReader
 
 
 class FileReaderFactory:
-    """
-    Factory class that coordinates different file readers.
+    """Factory class that coordinates different file readers.
 
     This class determines which specialized reader to use for each file
     and provides a unified interface for file reading operations.
@@ -52,15 +51,15 @@ class FileReaderFactory:
         self.logger.info("FileReaderFactory initialized with all specialized readers")
 
     @debug_monitor
-    def read_file(self, file_path: str) -> Optional[Dict[str, Any]]:
-        """
-        Read a file using the appropriate specialized reader.
+    def read_file(self, file_path: str) -> dict[str, Any] | None:
+        """Read a file using the appropriate specialized reader.
 
         Args:
             file_path: Path to the file to read
 
         Returns:
             Dictionary containing file data and metadata, or None if reading failed
+
         """
         if not file_path:
             self.logger.warning("Empty file path provided")
@@ -84,30 +83,29 @@ class FileReaderFactory:
         try:
             if reader_type == "image":
                 return self._read_image_file(file_path)
-            elif reader_type == "text":
+            if reader_type == "text":
                 return self._read_text_file(file_path)
-            elif reader_type == "prompt":
+            if reader_type == "prompt":
                 return self._read_prompt_file(file_path)
-            elif reader_type == "schema":
+            if reader_type == "schema":
                 return self._read_schema_file(file_path)
-            elif reader_type == "model":
+            if reader_type == "model":
                 return self._read_model_file(file_path)
-            else:
-                return self._create_error_result(f"Unsupported file type: {file_path_obj.suffix}")
+            return self._create_error_result(f"Unsupported file type: {file_path_obj.suffix}")
 
         except Exception as e:
             self.logger.error(f"Error reading file {file_path}: {e}", exc_info=True)
-            return self._create_error_result(f"Error reading file: {str(e)}")
+            return self._create_error_result(f"Error reading file: {e!s}")
 
     def _determine_reader_type(self, file_path: str) -> str:
-        """
-        Determine which reader type should handle this file.
+        """Determine which reader type should handle this file.
 
         Args:
             file_path: Path to the file
 
         Returns:
             Reader type string
+
         """
         file_path_obj = Path(file_path)
         suffix = file_path_obj.suffix.lower()
@@ -115,27 +113,34 @@ class FileReaderFactory:
         # Check against extension configurations
         if self._is_extension_in_group(suffix, "IMAGE"):
             return "image"
-        elif self._is_extension_in_group(suffix, "SCHEMA_FILES"):
+        if self._is_extension_in_group(suffix, "SCHEMA_FILES"):
             return "schema"
-        elif self._is_extension_in_group(suffix, "MODEL_FILES"):
+        if self._is_extension_in_group(suffix, "MODEL_FILES"):
             return "model"
-        elif self._is_extension_in_group(suffix, "PLAIN_TEXT_LIKE"):
+        if self._is_extension_in_group(suffix, "PLAIN_TEXT_LIKE"):
             # Check if it might be a prompt file
             if self._might_be_prompt_file(file_path):
                 return "prompt"
             return "text"
-        else:
-            # Try to guess based on file extension
-            if suffix in {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.tiff', '.tif'}:
-                return "image"
-            elif suffix in {'.json', '.toml', '.yaml', '.yml', '.xml'}:
-                return "schema"
-            elif suffix in {'.txt', '.md', '.markdown', '.rst'}:
-                return "text"
-            elif suffix in {'.ckpt', '.safetensors', '.pt', '.pth', '.gguf', '.bin'}:
-                return "model"
-            else:
-                return "unknown"
+        # Try to guess based on file extension
+        if suffix in {
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".gif",
+            ".bmp",
+            ".webp",
+            ".tiff",
+            ".tif",
+        }:
+            return "image"
+        if suffix in {".json", ".toml", ".yaml", ".yml", ".xml"}:
+            return "schema"
+        if suffix in {".txt", ".md", ".markdown", ".rst"}:
+            return "text"
+        if suffix in {".ckpt", ".safetensors", ".pt", ".pth", ".gguf", ".bin"}:
+            return "model"
+        return "unknown"
 
     def _is_extension_in_group(self, extension: str, group_name: str) -> bool:
         """Check if an extension is in a specific ExtensionType group."""
@@ -147,31 +152,35 @@ class FileReaderFactory:
             # Handle both list of sets and single set formats
             if isinstance(group, list):
                 return any(extension in ext_set for ext_set in group)
-            else:
-                return extension in group
+            return extension in group
 
         except Exception as e:
             self.logger.debug(f"Error checking extension group {group_name}: {e}")
             return False
 
     def _might_be_prompt_file(self, file_path: str) -> bool:
-        """
-        Quick check if a text file might be an AI prompt.
+        """Quick check if a text file might be an AI prompt.
 
         Args:
             file_path: Path to the file
 
         Returns:
             True if file might be a prompt
+
         """
         try:
             # Quick content check - read first few lines
-            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            with open(file_path, encoding="utf-8", errors="ignore") as f:
                 first_lines = f.read(500).lower()  # First 500 characters
 
             prompt_indicators = [
-                'masterpiece', 'best quality', 'negative prompt:',
-                'steps:', 'sampler:', 'cfg scale:', 'detailed'
+                "masterpiece",
+                "best quality",
+                "negative prompt:",
+                "steps:",
+                "sampler:",
+                "cfg scale:",
+                "detailed",
             ]
 
             return any(indicator in first_lines for indicator in prompt_indicators)
@@ -179,7 +188,7 @@ class FileReaderFactory:
         except Exception:
             return False
 
-    def _read_image_file(self, file_path: str) -> Optional[Dict[str, Any]]:
+    def _read_image_file(self, file_path: str) -> dict[str, Any] | None:
         """Read an image file."""
         nfo(f"[FileReaderFactory] Using image reader for: {Path(file_path).name}")
 
@@ -202,7 +211,7 @@ class FileReaderFactory:
 
         return enhanced_result
 
-    def _read_text_file(self, file_path: str) -> Optional[Dict[str, Any]]:
+    def _read_text_file(self, file_path: str) -> dict[str, Any] | None:
         """Read a text file."""
         nfo(f"[FileReaderFactory] Using text reader for: {Path(file_path).name}")
 
@@ -213,7 +222,7 @@ class FileReaderFactory:
         result["reader_type"] = "text"
         return result
 
-    def _read_prompt_file(self, file_path: str) -> Optional[Dict[str, Any]]:
+    def _read_prompt_file(self, file_path: str) -> dict[str, Any] | None:
         """Read a prompt file."""
         nfo(f"[FileReaderFactory] Using prompt reader for: {Path(file_path).name}")
 
@@ -224,7 +233,7 @@ class FileReaderFactory:
         result["reader_type"] = "prompt"
         return result
 
-    def _read_schema_file(self, file_path: str) -> Optional[Dict[str, Any]]:
+    def _read_schema_file(self, file_path: str) -> dict[str, Any] | None:
         """Read a schema file."""
         nfo(f"[FileReaderFactory] Using schema reader for: {Path(file_path).name}")
 
@@ -236,7 +245,7 @@ class FileReaderFactory:
         if result.get("appears_to_be_workflow"):
             workflow_data = None
             for key, value in result.items():
-                if key.endswith('_DATA') and isinstance(value, dict):
+                if key.endswith("_DATA") and isinstance(value, dict):
                     workflow_data = value
                     break
 
@@ -247,7 +256,7 @@ class FileReaderFactory:
         result["reader_type"] = "schema"
         return result
 
-    def _read_model_file(self, file_path: str) -> Optional[Dict[str, Any]]:
+    def _read_model_file(self, file_path: str) -> dict[str, Any] | None:
         """Read a model file."""
         nfo(f"[FileReaderFactory] Attempting to read model file: {Path(file_path).name}")
 
@@ -261,32 +270,29 @@ class FileReaderFactory:
             if result:
                 result["reader_type"] = "model"
                 return result
-            else:
-                return self._create_error_result("ModelTool could not read file")
+            return self._create_error_result("ModelTool could not read file")
 
         except ImportError:
             self.logger.warning("ModelTool not available for model file reading")
             return self._create_error_result("ModelTool not available")
         except Exception as e:
             self.logger.error(f"Error using ModelTool: {e}")
-            return self._create_error_result(f"ModelTool error: {str(e)}")
+            return self._create_error_result(f"ModelTool error: {e!s}")
 
-    def _create_error_result(self, error_message: str) -> Dict[str, Any]:
+    def _create_error_result(self, error_message: str) -> dict[str, Any]:
         """Create a standardized error result."""
         return {
-            EmptyField.PLACEHOLDER.value: {
-                "Error": error_message
-            },
+            EmptyField.PLACEHOLDER.value: {"Error": error_message},
             "reader_type": "error",
             "reading_success": False,
         }
 
-    def get_supported_formats(self) -> Dict[str, List[str]]:
-        """
-        Get all supported file formats by reader type.
+    def get_supported_formats(self) -> dict[str, list[str]]:
+        """Get all supported file formats by reader type.
 
         Returns:
             Dictionary mapping reader types to supported extensions
+
         """
         return {
             "image": list(self.image_reader.get_supported_formats()),
@@ -295,45 +301,43 @@ class FileReaderFactory:
         }
 
     def can_read_file(self, file_path: str) -> bool:
-        """
-        Check if the factory can read a given file.
+        """Check if the factory can read a given file.
 
         Args:
             file_path: Path to the file
 
         Returns:
             True if any reader can handle this file
+
         """
         reader_type = self._determine_reader_type(file_path)
         return reader_type != "unknown"
 
 
 class FileReaderManager:
-    """
-    High-level manager for file reading operations.
+    """High-level manager for file reading operations.
 
     This class provides additional functionality like batch reading,
     caching, and result filtering. Like your squadron leader who
     coordinates multiple operations! 👥✨
     """
 
-    def __init__(self, factory: Optional[FileReaderFactory] = None):
-        """
-        Initialize the file reader manager.
+    def __init__(self, factory: FileReaderFactory | None = None):
+        """Initialize the file reader manager.
 
         Args:
             factory: FileReaderFactory instance to use
+
         """
         self.factory = factory or FileReaderFactory()
         self.logger = get_logger(f"{__name__}.FileReaderManager")
 
         # Simple cache for recently read files
-        self._cache: Dict[str, Dict[str, Any]] = {}
+        self._cache: dict[str, dict[str, Any]] = {}
         self._cache_max_size = 50
 
-    def read_file(self, file_path: str, use_cache: bool = True) -> Optional[Dict[str, Any]]:
-        """
-        Read a file with optional caching.
+    def read_file(self, file_path: str, use_cache: bool = True) -> dict[str, Any] | None:
+        """Read a file with optional caching.
 
         Args:
             file_path: Path to the file
@@ -341,6 +345,7 @@ class FileReaderManager:
 
         Returns:
             File data dictionary or None
+
         """
         # Check cache first
         if use_cache and file_path in self._cache:
@@ -356,9 +361,8 @@ class FileReaderManager:
 
         return result
 
-    def read_multiple_files(self, file_paths: List[str], use_cache: bool = True) -> Dict[str, Optional[Dict[str, Any]]]:
-        """
-        Read multiple files.
+    def read_multiple_files(self, file_paths: list[str], use_cache: bool = True) -> dict[str, dict[str, Any] | None]:
+        """Read multiple files.
 
         Args:
             file_paths: List of file paths to read
@@ -366,6 +370,7 @@ class FileReaderManager:
 
         Returns:
             Dictionary mapping file paths to results
+
         """
         results = {}
 
@@ -379,9 +384,8 @@ class FileReaderManager:
 
         return results
 
-    def filter_by_reader_type(self, results: Dict[str, Dict[str, Any]], reader_type: str) -> Dict[str, Dict[str, Any]]:
-        """
-        Filter results by reader type.
+    def filter_by_reader_type(self, results: dict[str, dict[str, Any]], reader_type: str) -> dict[str, dict[str, Any]]:
+        """Filter results by reader type.
 
         Args:
             results: Dictionary of file reading results
@@ -389,21 +393,19 @@ class FileReaderManager:
 
         Returns:
             Filtered results dictionary
-        """
-        return {
-            path: result for path, result in results.items()
-            if result and result.get("reader_type") == reader_type
-        }
 
-    def get_reading_summary(self, results: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
         """
-        Get a summary of reading results.
+        return {path: result for path, result in results.items() if result and result.get("reader_type") == reader_type}
+
+    def get_reading_summary(self, results: dict[str, dict[str, Any]]) -> dict[str, Any]:
+        """Get a summary of reading results.
 
         Args:
             results: Dictionary of file reading results
 
         Returns:
             Summary dictionary
+
         """
         summary = {
             "total_files": len(results),
@@ -433,7 +435,7 @@ class FileReaderManager:
 
         return summary
 
-    def _add_to_cache(self, file_path: str, result: Dict[str, Any]) -> None:
+    def _add_to_cache(self, file_path: str, result: dict[str, Any]) -> None:
         """Add result to cache with size management."""
         # Remove oldest entries if cache is full
         if len(self._cache) >= self._cache_max_size:
@@ -448,7 +450,7 @@ class FileReaderManager:
         self._cache.clear()
         self.logger.debug("File reading cache cleared")
 
-    def get_cache_info(self) -> Dict[str, Any]:
+    def get_cache_info(self) -> dict[str, Any]:
         """Get information about the current cache state."""
         return {
             "cached_files": len(self._cache),
@@ -482,9 +484,8 @@ def get_default_manager() -> FileReaderManager:
     return _default_manager
 
 
-def read_file_metadata(file_path: str) -> Optional[Dict[str, Any]]:
-    """
-    Main convenience function to read any supported file.
+def read_file_metadata(file_path: str) -> dict[str, Any] | None:
+    """Main convenience function to read any supported file.
 
     This is the primary public API function that most users should use.
 
@@ -493,29 +494,30 @@ def read_file_metadata(file_path: str) -> Optional[Dict[str, Any]]:
 
     Returns:
         Dictionary containing file data and metadata, or None if reading failed
+
     """
     return get_default_factory().read_file(file_path)
 
 
-def read_multiple_files(file_paths: List[str]) -> Dict[str, Optional[Dict[str, Any]]]:
-    """
-    Convenience function to read multiple files.
+def read_multiple_files(file_paths: list[str]) -> dict[str, dict[str, Any] | None]:
+    """Convenience function to read multiple files.
 
     Args:
         file_paths: List of file paths to read
 
     Returns:
         Dictionary mapping file paths to results
+
     """
     return get_default_manager().read_multiple_files(file_paths)
 
 
-def get_supported_formats() -> Dict[str, List[str]]:
-    """
-    Get all supported file formats.
+def get_supported_formats() -> dict[str, list[str]]:
+    """Get all supported file formats.
 
     Returns:
         Dictionary mapping reader types to supported extensions
+
     """
     return get_default_factory().get_supported_formats()
 
@@ -523,6 +525,7 @@ def get_supported_formats() -> Dict[str, List[str]]:
 # ============================================================================
 # TESTING UTILITIES
 # ============================================================================
+
 
 def test_file_reader_factory():
     """Test the file reader factory with various file types."""
@@ -563,10 +566,10 @@ def test_file_reader_factory():
                 logger.info(f"  Reader type: {result.get('reader_type')}")
                 logger.info(f"  Success: {result.get('reading_success', True)}")
 
-                if 'basic_info' in result:
-                    info = result['basic_info']
+                if "basic_info" in result:
+                    info = result["basic_info"]
                     logger.info(f"  File size: {info.get('file_size')} bytes")
-                    if 'image_size' in info:
+                    if "image_size" in info:
                         logger.info(f"  Image size: {info['image_size']}")
             else:
                 logger.info("  Reading failed")

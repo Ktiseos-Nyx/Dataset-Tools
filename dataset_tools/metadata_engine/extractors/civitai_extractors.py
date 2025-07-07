@@ -1,7 +1,6 @@
 # dataset_tools/metadata_engine/extractors/civitai_extractors.py
 
-"""
-Civitai-specific extraction methods.
+"""Civitai-specific extraction methods.
 
 Handles extraction from Civitai's special metadata formats, including
 their ComfyUI extraMetadata injection system.
@@ -9,14 +8,14 @@ their ComfyUI extraMetadata injection system.
 
 import json
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
-from ...metadata_utils import json_path_get_utility
+from ..utils import json_path_get_utility
 
 # Type aliases
-ContextData = Dict[str, Any]
-ExtractedFields = Dict[str, Any]
-MethodDefinition = Dict[str, Any]
+ContextData = dict[str, Any]
+ExtractedFields = dict[str, Any]
+MethodDefinition = dict[str, Any]
 
 
 class CivitaiExtractor:
@@ -26,17 +25,20 @@ class CivitaiExtractor:
         """Initialize the Civitai extractor."""
         self.logger = logger
 
-    def get_methods(self) -> Dict[str, callable]:
+    def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
             "extract_from_extraMetadata": self._extract_from_extraMetadata,
         }
 
     def _extract_from_extraMetadata(
-        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
     ) -> Any:
-        """
-        Extract data from Civitai's extraMetadata field.
+        """Extract data from Civitai's extraMetadata field.
 
         This handles Civitai's ComfyUI format where they inject clean metadata
         into the extra.extraMetadata field as a JSON string.
@@ -65,9 +67,8 @@ class CivitaiExtractor:
         self.logger.debug(f"Extracted '{field_name}' from extraMetadata: {value}")
         return value
 
-    def _get_civitai_extra_metadata(self, context: ContextData) -> Optional[Dict[str, Any]]:
-        """
-        Extract and parse Civitai's extraMetadata from context.
+    def _get_civitai_extra_metadata(self, context: ContextData) -> dict[str, Any] | None:
+        """Extract and parse Civitai's extraMetadata from context.
 
         Returns the parsed extraMetadata dictionary or None if not found.
         """

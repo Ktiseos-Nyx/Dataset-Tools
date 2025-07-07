@@ -9,9 +9,9 @@ from .widgets import ImageLabel, LeftPanelWidget
 
 log = logging.getLogger(__name__)
 
+
 def setup_ui_layout(main_window: Qw.QMainWindow):
-    """
-    Creates and arranges all the visual widgets inside the MainWindow.
+    """Creates and arranges all the visual widgets inside the MainWindow.
     This function takes the main_window object and adds attributes (like .main_splitter) to it.
     """
     log.info("Setting up main UI layout...")
@@ -39,31 +39,31 @@ def setup_ui_layout(main_window: Qw.QMainWindow):
     middle_right_layout = Qw.QHBoxLayout(middle_right_area_widget)
     middle_right_layout.setContentsMargins(0, 0, 0, 0)
     middle_right_layout.setSpacing(5)
-    
+
     main_window.metadata_image_splitter = Qw.QSplitter(QtCore.Qt.Orientation.Horizontal)
     middle_right_layout.addWidget(main_window.metadata_image_splitter)
-    
+
     # --- Metadata Panel (the text boxes) ---
     metadata_panel_widget = Qw.QWidget()
     metadata_layout = Qw.QVBoxLayout(metadata_panel_widget)
     metadata_layout.setContentsMargins(10, 20, 10, 20)
     metadata_layout.setSpacing(15)
     metadata_layout.addStretch(1)
-    
+
     main_window.positive_prompt_label = Qw.QLabel("Positive Prompt")
     metadata_layout.addWidget(main_window.positive_prompt_label)
     main_window.positive_prompt_box = Qw.QTextEdit()
     main_window.positive_prompt_box.setReadOnly(True)
     main_window.positive_prompt_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
     metadata_layout.addWidget(main_window.positive_prompt_box)
-    
+
     main_window.negative_prompt_label = Qw.QLabel("Negative Prompt")
     metadata_layout.addWidget(main_window.negative_prompt_label)
     main_window.negative_prompt_box = Qw.QTextEdit()
     main_window.negative_prompt_box.setReadOnly(True)
     main_window.negative_prompt_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
     metadata_layout.addWidget(main_window.negative_prompt_box)
-    
+
     main_window.generation_data_label = Qw.QLabel("Generation Details & Metadata")
     metadata_layout.addWidget(main_window.generation_data_label)
     main_window.generation_data_box = Qw.QTextEdit()
@@ -71,7 +71,7 @@ def setup_ui_layout(main_window: Qw.QMainWindow):
     main_window.generation_data_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
     metadata_layout.addWidget(main_window.generation_data_box)
     metadata_layout.addStretch(1)
-    
+
     main_window.metadata_image_splitter.addWidget(metadata_panel_widget)
 
     # --- Image Preview Panel ---
@@ -88,19 +88,19 @@ def setup_ui_layout(main_window: Qw.QMainWindow):
     bottom_layout.addStretch(1)
     action_buttons_layout = Qw.QHBoxLayout()
     action_buttons_layout.setSpacing(10)
-    
+
     main_window.copy_metadata_button = Qw.QPushButton("Copy All Metadata")
     main_window.copy_metadata_button.clicked.connect(main_window.copy_metadata_to_clipboard)
     action_buttons_layout.addWidget(main_window.copy_metadata_button)
-    
+
     main_window.settings_button = Qw.QPushButton("Settings")
     main_window.settings_button.clicked.connect(main_window.open_settings_dialog)
     action_buttons_layout.addWidget(main_window.settings_button)
-    
+
     main_window.exit_button = Qw.QPushButton("Exit Application")
     main_window.exit_button.clicked.connect(main_window.close)
     action_buttons_layout.addWidget(main_window.exit_button)
-    
+
     bottom_layout.addLayout(action_buttons_layout)
     bottom_layout.addStretch(1)
     overall_layout.addWidget(bottom_bar, 0)
@@ -110,10 +110,12 @@ def setup_ui_layout(main_window: Qw.QMainWindow):
         win_width = main_window.width() if main_window.isVisible() else 1024
     except RuntimeError:
         win_width = 1024
-        
-    main_splitter_sizes = main_window.settings.value("mainSplitterSizes", [win_width // 4, win_width * 3 // 4], type=list)
+
+    main_splitter_sizes = main_window.settings.value(
+        "mainSplitterSizes", [win_width // 4, win_width * 3 // 4], type=list
+    )
     main_window.main_splitter.setSizes([int(s) for s in main_splitter_sizes])
-    
+
     meta_img_splitter_sizes = main_window.settings.value(
         "metaImageSplitterSizes", [win_width // 3, win_width * 2 // 3], type=list
     )

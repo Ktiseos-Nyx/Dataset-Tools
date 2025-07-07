@@ -1,7 +1,6 @@
 # dataset_tools/metadata_engine/__init__.py
 
-"""
-Metadata Engine - Modular metadata parsing system.
+"""Metadata Engine - Modular metadata parsing system.
 
 This package provides a sophisticated, modular system for parsing metadata
 from various file types. Think of it as your complete crafting guild with
@@ -16,55 +15,41 @@ Main Components:
 
 Quick Start:
     from dataset_tools.metadata_engine import MetadataEngine
-    
+
     engine = MetadataEngine(parser_definitions_path, logger)
     result = engine.get_parser_for_file(file_path)
 
 Advanced Usage:
     from dataset_tools.metadata_engine import (
-        MetadataEngine, MetadataEngineBuilder, 
+        MetadataEngine, MetadataEngineBuilder,
         ContextDataPreparer, FieldExtractor
     )
 """
 
 # Main engine components
+# Core processing components
+from .context_preparation import ContextDataPreparer, prepare_context_data
 from .engine import (
     MetadataEngine,
     MetadataEngineBuilder,
     MetadataEngineManager,
     create_metadata_engine,
-    parse_file_metadata
+    parse_file_metadata,
 )
-
-# Core processing components
-from .context_preparation import (
-    ContextDataPreparer,
-    prepare_context_data
-)
-
-from .field_extraction import (
-    FieldExtractor,
-    A1111ParameterExtractor,
-    ComfyUIWorkflowExtractor,
-    create_field_extractor
-)
-
+from .field_extraction import A1111ParameterExtractor, ComfyUIWorkflowExtractor, FieldExtractor, create_field_extractor
 from .template_system import (
-    TemplateProcessor,
-    TemplateBuilder,
     OutputFormatter,
     StandardTemplates,
+    TemplateBuilder,
+    TemplateProcessor,
+    format_template_output,
     process_template,
-    format_template_output
 )
 
 # Rule evaluation (if you want to expose it)
 try:
-    from .rule_engine import (
-        RuleEngine,
-        RuleBuilder,
-        create_rule_engine
-    )
+    from .rule_engine import RuleBuilder, RuleEngine, create_rule_engine
+
     RULE_ENGINE_AVAILABLE = True
 except ImportError:
     RULE_ENGINE_AVAILABLE = False
@@ -80,28 +65,23 @@ __author__ = "KTISEOS NYX"
 __all__ = [
     # Main engine interface
     "MetadataEngine",
-    "MetadataEngineBuilder", 
+    "MetadataEngineBuilder",
     "MetadataEngineManager",
-    
     # Convenience functions
     "create_metadata_engine",
     "parse_file_metadata",
     "prepare_context_data",
-    
     # Core components for advanced usage
     "ContextDataPreparer",
-    "FieldExtractor", 
+    "FieldExtractor",
     "TemplateProcessor",
     "OutputFormatter",
-    
     # Specialized extractors
     "A1111ParameterExtractor",
     "ComfyUIWorkflowExtractor",
-    
     # Template tools
     "TemplateBuilder",
     "StandardTemplates",
-    
     # Utility functions
     "create_field_extractor",
     "process_template",
@@ -110,28 +90,26 @@ __all__ = [
 
 # Add rule engine components if available
 if RULE_ENGINE_AVAILABLE:
-    __all__.extend([
-        "RuleEngine",
-        "RuleBuilder", 
-        "create_rule_engine"
-    ])
+    __all__.extend(["RuleBuilder", "RuleEngine", "create_rule_engine"])
+
 
 # Convenience imports for backward compatibility
 def get_metadata_engine(parser_definitions_path, logger=None):
-    """
-    Convenience function to create a MetadataEngine instance.
-    
+    """Convenience function to create a MetadataEngine instance.
+
     This provides backward compatibility with older code that might
     expect a simple factory function.
-    
+
     Args:
         parser_definitions_path: Path to parser definition files
         logger: Optional logger instance
-        
+
     Returns:
         MetadataEngine instance
+
     """
     return MetadataEngine(parser_definitions_path, logger)
+
 
 # Add to public API
 __all__.append("get_metadata_engine")
@@ -168,19 +146,21 @@ Advanced Usage:
 For more examples and documentation, see the individual module docstrings.
 """
 
+
 # Perform any necessary initialization
 def _initialize_metadata_engine():
     """Initialize the metadata engine package."""
     import logging
-    
+
     # Set up a default logger for the package if none exists
     logger = logging.getLogger(__name__)
     if not logger.handlers:
         # Add a null handler to prevent logging errors
         logger.addHandler(logging.NullHandler())
-    
+
     # Log successful initialization at debug level
     logger.debug("MetadataEngine package initialized successfully")
+
 
 # Initialize on import
 _initialize_metadata_engine()

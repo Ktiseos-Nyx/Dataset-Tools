@@ -3,10 +3,12 @@
 
 _PARSER_CLASS_REGISTRY = {}
 
+
 def register_parser_class(name: str, cls) -> None:  # noqa: ANN001
     """Adds a Python-based parser class to the central registry."""  # noqa: D401
     print(f"--- REGISTRY: Registering class '{name}' ---")
     _PARSER_CLASS_REGISTRY[name] = cls
+
 
 def get_parser_class_by_name(name: str):  # noqa: ANN201
     """Gets a Python-based parser class from the central registry."""  # noqa: D401

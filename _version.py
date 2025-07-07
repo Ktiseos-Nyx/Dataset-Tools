@@ -5,8 +5,7 @@ __all__ = ["__version__", "__version_tuple__", "version", "version_tuple"]
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Tuple
-    from typing import Union
+    from typing import Tuple, Union
 
     VERSION_TUPLE = Tuple[Union[int, str], ...]
 else:

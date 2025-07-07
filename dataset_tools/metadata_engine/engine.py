@@ -1,7 +1,6 @@
 # dataset_tools/metadata_engine/engine.py
 
-"""
-Refactored MetadataEngine - Main Orchestrator
+"""Refactored MetadataEngine - Main Orchestrator
 
 This is the main engine that coordinates all the metadata parsing components.
 Think of it as your main job class in FFXIV - it brings together all your
@@ -18,13 +17,16 @@ The engine handles:
 import json
 import logging
 from pathlib import Path
-from typing import Any, BinaryIO, Dict, List, Optional, Union
+from typing import Any, BinaryIO, Union
+
 
 # Simplified imports - use standard logging instead of custom logger
 def get_logger(name=None):
     """Fallback logger function"""
     import logging
+
     return logging.getLogger(name or __name__)
+
 
 try:
     from .parser_registry import get_parser_class_by_name
@@ -33,6 +35,7 @@ except ImportError:
     def get_parser_class_by_name(name):
         return None
 
+
 try:
     from ..rule_evaluator import RuleEvaluator
 except ImportError:
@@ -40,8 +43,10 @@ except ImportError:
     class RuleEvaluator:
         def __init__(self, *args, **kwargs):
             pass
+
         def evaluate_detection_rules(self, *args, **kwargs):
             return True
+
 
 try:
     from ..vendored_sdpr.format.base_format import BaseFormat
@@ -50,49 +55,59 @@ except ImportError:
     class BaseFormat:
         pass
 
+
 try:
     from .context_preparation import ContextDataPreparer
 except ImportError:
+
     class ContextDataPreparer:
         def __init__(self, *args, **kwargs):
             pass
+
         def prepare_context_data(self, *args, **kwargs):
             return {}
+
 
 try:
     from .field_extraction import FieldExtractor
 except ImportError:
+
     class FieldExtractor:
         def __init__(self, *args, **kwargs):
             pass
+
         def extract_fields(self, *args, **kwargs):
             return {}
 
+
 try:
-    from .template_system import TemplateProcessor, OutputFormatter
+    from .template_system import OutputFormatter, TemplateProcessor
 except ImportError:
+
     class TemplateProcessor:
         def __init__(self, *args, **kwargs):
             pass
+
         def process_template(self, *args, **kwargs):
             return {}
-    
+
     class OutputFormatter:
         def __init__(self, *args, **kwargs):
             pass
+
         def format_output(self, *args, **kwargs):
             return {}
 
+
 # Type aliases
 FileInput = Union[str, Path, BinaryIO]
-ContextData = Dict[str, Any]
-ParserDefinition = Dict[str, Any]
-ExtractedFields = Dict[str, Any]
+ContextData = dict[str, Any]
+ParserDefinition = dict[str, Any]
+ExtractedFields = dict[str, Any]
 
 
 class MetadataEngine:
-    """
-    Main metadata parsing engine.
+    """Main metadata parsing engine.
 
     This class coordinates all the components to provide a unified
     interface for metadata extraction from various file types.
@@ -100,15 +115,15 @@ class MetadataEngine:
 
     def __init__(
         self,
-        parser_definitions_path: Union[str, Path],
-        logger_obj: Optional[logging.Logger] = None,
+        parser_definitions_path: str | Path,
+        logger_obj: logging.Logger | None = None,
     ):
-        """
-        Initialize the metadata engine.
+        """Initialize the metadata engine.
 
         Args:
             parser_definitions_path: Path to parser definition files
             logger_obj: Optional logger instance
+
         """
         self.parser_definitions_path = Path(parser_definitions_path)
         self.logger = logger_obj or get_logger("MetadataEngine")
@@ -129,15 +144,15 @@ class MetadataEngine:
             f"parser definitions from {self.parser_definitions_path}"
         )
 
-    def get_parser_for_file(self, file_input: FileInput) -> Optional[Union[Dict[str, Any], BaseFormat]]:
-        """
-        Get the appropriate parser result for a file.
+    def get_parser_for_file(self, file_input: FileInput) -> dict[str, Any] | BaseFormat | None:
+        """Get the appropriate parser result for a file.
 
         Args:
             file_input: File path string, Path object, or BinaryIO object
 
         Returns:
             Parser result (dict or BaseFormat instance) or None if no parser found
+
         """
         display_name = getattr(file_input, "name", str(file_input))
         self.logger.info(f"MetadataEngine: Starting metadata parsing for: {display_name}")
@@ -160,22 +175,17 @@ class MetadataEngine:
         # Process based on parser type
         if "parsing_instructions" in chosen_parser_def:
             return self._process_json_instructions(chosen_parser_def, context_data)
-        elif "base_format_class" in chosen_parser_def:
+        if "base_format_class" in chosen_parser_def:
             return self._process_python_class(chosen_parser_def, context_data)
-        else:
-            self.logger.error(
-                f"Parser definition '{parser_name}' has neither instructions nor class"
-            )
-            return None
+        self.logger.error(f"Parser definition '{parser_name}' has neither instructions nor class")
+        return None
 
-    def _load_parser_definitions(self) -> List[ParserDefinition]:
+    def _load_parser_definitions(self) -> list[ParserDefinition]:
         """Load parser definitions from JSON files."""
         definitions = []
 
         if not self.parser_definitions_path.is_dir():
-            self.logger.error(
-                f"Parser definitions path is not a directory: {self.parser_definitions_path}"
-            )
+            self.logger.error(f"Parser definitions path is not a directory: {self.parser_definitions_path}")
             return definitions
 
         for filepath in self.parser_definitions_path.glob("*.json"):
@@ -189,9 +199,7 @@ class MetadataEngine:
                     definitions.append(definition)
                     self.logger.debug(f"Loaded parser: {definition['parser_name']}")
                 else:
-                    self.logger.warning(
-                        f"Skipping invalid parser definition (missing parser_name): {filepath.name}"
-                    )
+                    self.logger.warning(f"Skipping invalid parser definition (missing parser_name): {filepath.name}")
 
             except json.JSONDecodeError as e:
                 self.logger.error(f"Failed to decode JSON from {filepath.name}: {e}")
@@ -200,23 +208,19 @@ class MetadataEngine:
 
         return definitions
 
-    def _sort_definitions_by_priority(self) -> List[ParserDefinition]:
+    def _sort_definitions_by_priority(self) -> list[ParserDefinition]:
         """Sort parser definitions by priority (highest first)."""
-        return sorted(
-            self.parser_definitions,
-            key=lambda p: p.get("priority", 0),
-            reverse=True
-        )
+        return sorted(self.parser_definitions, key=lambda p: p.get("priority", 0), reverse=True)
 
-    def _find_matching_parser(self, context_data: ContextData) -> Optional[ParserDefinition]:
-        """
-        Find the first parser definition that matches the context data.
+    def _find_matching_parser(self, context_data: ContextData) -> ParserDefinition | None:
+        """Find the first parser definition that matches the context data.
 
         Args:
             context_data: Prepared context data
 
         Returns:
             Matching parser definition or None
+
         """
         for parser_def in self.sorted_definitions:
             if self._parser_matches_context(parser_def, context_data):
@@ -224,11 +228,8 @@ class MetadataEngine:
 
         return None
 
-    def _parser_matches_context(
-        self, parser_def: ParserDefinition, context_data: ContextData
-    ) -> bool:
-        """
-        Check if a parser definition matches the context data.
+    def _parser_matches_context(self, parser_def: ParserDefinition, context_data: ContextData) -> bool:
+        """Check if a parser definition matches the context data.
 
         Args:
             parser_def: Parser definition to check
@@ -236,6 +237,7 @@ class MetadataEngine:
 
         Returns:
             True if parser matches, False otherwise
+
         """
         # Check target file types
         if not self._check_file_type_match(parser_def, context_data):
@@ -245,11 +247,9 @@ class MetadataEngine:
         self.logger.debug(f"Evaluating detection rules for parser: {parser_def['parser_name']}")
         return self._check_detection_rules(parser_def, context_data)
 
-    def _check_file_type_match(
-        self, parser_def: ParserDefinition, context_data: ContextData
-    ) -> bool:
+    def _check_file_type_match(self, parser_def: ParserDefinition, context_data: ContextData) -> bool:
         """Check if file type matches parser target types."""
-        parser_name = parser_def['parser_name']
+        parser_name = parser_def["parser_name"]
         target_types_cfg = parser_def.get("target_file_types", ["*"])
         if not isinstance(target_types_cfg, list):
             target_types_cfg = [str(target_types_cfg)]
@@ -270,9 +270,7 @@ class MetadataEngine:
         self.logger.debug(f"    File type match result for {parser_name}: {match}")
         return match
 
-    def _check_detection_rules(
-        self, parser_def: ParserDefinition, context_data: ContextData
-    ) -> bool:
+    def _check_detection_rules(self, parser_def: ParserDefinition, context_data: ContextData) -> bool:
         """Check if detection rules pass for this parser."""
         detection_rules = parser_def.get("detection_rules", [])
 
@@ -283,16 +281,11 @@ class MetadataEngine:
 
         # All rules must pass
         for rule in detection_rules:
-            rule_comment = rule.get('comment', 'Unnamed Rule')
+            rule_comment = rule.get("comment", "Unnamed Rule")
             rule_passed = self.rule_evaluator.evaluate_rule(rule, context_data)
-            self.logger.debug(
-                f"  Rule '{rule_comment}' for {parser_def['parser_name']} evaluated to: {rule_passed}"
-            )
+            self.logger.debug(f"  Rule '{rule_comment}' for {parser_def['parser_name']} evaluated to: {rule_passed}")
             if not rule_passed:
-                self.logger.debug(
-                    f"Rule failed for {parser_def['parser_name']}: "
-                    f"{rule.get('comment', rule)}"
-                )
+                self.logger.debug(f"Rule failed for {parser_def['parser_name']}: {rule.get('comment', rule)}")
                 return False
 
         self.logger.debug(f"All detection rules passed for parser: {parser_def['parser_name']}")
@@ -300,9 +293,8 @@ class MetadataEngine:
 
     def _process_json_instructions(
         self, parser_def: ParserDefinition, context_data: ContextData
-    ) -> Optional[Dict[str, Any]]:
-        """
-        Process parser definition with JSON instructions.
+    ) -> dict[str, Any] | None:
+        """Process parser definition with JSON instructions.
 
         Args:
             parser_def: Parser definition with parsing_instructions
@@ -310,6 +302,7 @@ class MetadataEngine:
 
         Returns:
             Processed result dictionary or None
+
         """
         parser_name = parser_def["parser_name"]
         instructions = parser_def["parsing_instructions"]
@@ -323,28 +316,22 @@ class MetadataEngine:
             return None
 
         # Transform input data if needed
-        transformed_data = self._transform_input_data(
-            input_data, instructions, original_input
-        )
+        transformed_data = self._transform_input_data(input_data, instructions, original_input)
 
         # Extract fields
-        extracted_fields = self._extract_fields(
-            instructions, transformed_data, context_data
-        )
+        extracted_fields = self._extract_fields(instructions, transformed_data, context_data)
 
         # Process output template
         return self._process_output_template(
             parser_def, extracted_fields, context_data, original_input, transformed_data
         )
 
-    def _prepare_input_data(
-        self, instructions: Dict[str, Any], context_data: ContextData
-    ) -> tuple[Any, Any]:
-        """
-        Prepare input data based on instruction configuration.
+    def _prepare_input_data(self, instructions: dict[str, Any], context_data: ContextData) -> tuple[Any, Any]:
+        """Prepare input data based on instruction configuration.
 
         Returns:
             Tuple of (input_data, original_input_for_template)
+
         """
         input_data_def = instructions.get("input_data", {})
         source_options = input_data_def.get("source_options", [])
@@ -361,9 +348,7 @@ class MetadataEngine:
 
         return None, None
 
-    def _get_data_from_source(
-        self, source_def: Dict[str, Any], context_data: ContextData
-    ) -> Any:
+    def _get_data_from_source(self, source_def: dict[str, Any], context_data: ContextData) -> Any:
         """Get data from a specific source definition."""
         source_type = source_def.get("source_type")
         source_key = source_def.get("source_key")
@@ -384,9 +369,7 @@ class MetadataEngine:
         self.logger.warning(f"Unknown source type: {source_type}")
         return None
 
-    def _transform_input_data(
-        self, input_data: Any, instructions: Dict[str, Any], original_input: Any
-    ) -> Any:
+    def _transform_input_data(self, input_data: Any, instructions: dict[str, Any], original_input: Any) -> Any:
         """Apply transformations to input data."""
         transformations = instructions.get("input_data", {}).get("transformations", [])
         current_data = input_data
@@ -399,9 +382,7 @@ class MetadataEngine:
 
         return current_data
 
-    def _apply_single_transformation(
-        self, transform: Dict[str, Any], data: Any
-    ) -> Any:
+    def _apply_single_transformation(self, transform: dict[str, Any], data: Any) -> Any:
         """Apply a single transformation to data."""
         transform_type = transform.get("type")
 
@@ -410,7 +391,8 @@ class MetadataEngine:
                 json_obj = json.loads(data)
                 path = transform.get("path")
                 if path:
-                    from .metadata_utils import json_path_get_utility
+                    from .utils import json_path_get_utility
+
                     return json_path_get_utility(json_obj, path)
                 return json_obj
             except json.JSONDecodeError:
@@ -439,10 +421,38 @@ class MetadataEngine:
             # Filter out non-dict values to keep only node data for ComfyUI workflows
             return {k: v for k, v in data.items() if isinstance(v, dict)}
 
+        elif transform_type == "extract_json_from_xmp_user_comment" and isinstance(data, str):
+            # Extract JSON from XMP exif:UserComment element (for Draw Things)
+            try:
+                from xml.dom import minidom
+
+                xmp_dom = minidom.parseString(data)
+                description_nodes = xmp_dom.getElementsByTagName("rdf:Description")
+                for desc_node in description_nodes:
+                    uc_nodes = desc_node.getElementsByTagName("exif:UserComment")
+                    if not uc_nodes or not uc_nodes[0].childNodes:
+                        continue
+                    first_child = uc_nodes[0].childNodes[0]
+                    if first_child.nodeType == first_child.TEXT_NODE:
+                        return first_child.data.strip()
+                    if first_child.nodeName == "rdf:Alt":
+                        alt_node = first_child
+                        li_nodes = alt_node.getElementsByTagName("rdf:li")
+                        if (
+                            li_nodes
+                            and li_nodes[0].childNodes
+                            and li_nodes[0].childNodes[0].nodeType == li_nodes[0].TEXT_NODE
+                        ):
+                            return li_nodes[0].childNodes[0].data.strip()
+                return None
+            except Exception as e:
+                self.logger.debug(f"Failed to extract JSON from XMP UserComment: {e}")
+                return None
+
         return data
 
     def _extract_fields(
-        self, instructions: Dict[str, Any], input_data: Any, context_data: ContextData
+        self, instructions: dict[str, Any], input_data: Any, context_data: ContextData
     ) -> ExtractedFields:
         """Extract fields according to instruction definitions."""
         extracted_fields: ExtractedFields = {"parameters": {}}
@@ -454,9 +464,7 @@ class MetadataEngine:
                 continue
 
             # Extract the field value
-            value = self.field_extractor.extract_field(
-                field_def, input_data, context_data, extracted_fields
-            )
+            value = self.field_extractor.extract_field(field_def, input_data, context_data, extracted_fields)
 
             # Store in cache for variable references
             cache_key = target_key_path.replace(".", "_VAR_")
@@ -469,10 +477,10 @@ class MetadataEngine:
 
     def _set_nested_value(
         self,
-        target_dict: Dict[str, Any],
+        target_dict: dict[str, Any],
         key_path: str,
         value: Any,
-        field_def: Dict[str, Any]
+        field_def: dict[str, Any],
     ) -> None:
         """Set a nested value in the target dictionary."""
         keys = key_path.split(".")
@@ -494,7 +502,7 @@ class MetadataEngine:
         context_data: ContextData,
         original_input: Any,
         transformed_data: Any,
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Process the output template with extracted data."""
         # Get template from instructions or parser definition
         instructions = parser_def.get("parsing_instructions", {})
@@ -504,22 +512,13 @@ class MetadataEngine:
             self.logger.debug("No output template found, returning raw extracted fields")
             # Return fields without variable cache keys
             return {
-                k: v for k, v in extracted_fields.items()
-                if "_VAR_" not in k and k != "_input_data_object_for_template"
+                k: v for k, v in extracted_fields.items() if "_VAR_" not in k and k != "_input_data_object_for_template"
             }
 
         # Prepare data for template processing
-        original_input_str = (
-            str(original_input)
-            if isinstance(original_input, (str, int, float, bool))
-            else None
-        )
+        original_input_str = str(original_input) if isinstance(original_input, (str, int, float, bool)) else None
 
-        input_json_object = (
-            transformed_data
-            if isinstance(transformed_data, (dict, list))
-            else None
-        )
+        input_json_object = transformed_data if isinstance(transformed_data, (dict, list)) else None
 
         # Process template with variable substitution
         processed_template = self.template_processor.process_template(
@@ -540,17 +539,10 @@ class MetadataEngine:
                     params["height"] = context_data["height"]
 
         # Format the final output
-        return self.output_formatter.format_output(
-            processed_template,
-            format_type="standard",
-            cleanup_empty=True
-        )
+        return self.output_formatter.format_output(processed_template, format_type="standard", cleanup_empty=True)
 
-    def _process_python_class(
-        self, parser_def: ParserDefinition, context_data: ContextData
-    ) -> Optional[BaseFormat]:
-        """
-        Process parser definition with Python class.
+    def _process_python_class(self, parser_def: ParserDefinition, context_data: ContextData) -> BaseFormat | None:
+        """Process parser definition with Python class.
 
         Args:
             parser_def: Parser definition with base_format_class
@@ -558,6 +550,7 @@ class MetadataEngine:
 
         Returns:
             BaseFormat instance or None if processing failed
+
         """
         parser_name = parser_def["parser_name"]
         class_name = parser_def["base_format_class"]
@@ -589,22 +582,18 @@ class MetadataEngine:
             if parser_status == BaseFormat.Status.READ_SUCCESS:
                 self.logger.info(f"Python Parser {parser_instance.tool} succeeded")
                 return parser_instance
-            else:
-                status_name = getattr(parser_status, "name", str(parser_status))
-                error_msg = getattr(parser_instance, "error", "No error details")
-                self.logger.warning(
-                    f"Python Parser {parser_instance.tool} failed. "
-                    f"Status: {status_name}. Error: {error_msg}"
-                )
-                return None
+            status_name = getattr(parser_status, "name", str(parser_status))
+            error_msg = getattr(parser_instance, "error", "No error details")
+            self.logger.warning(
+                f"Python Parser {parser_instance.tool} failed. Status: {status_name}. Error: {error_msg}"
+            )
+            return None
 
         except Exception as e:
             self.logger.error(f"Exception in Python parser {class_name}: {e}", exc_info=True)
             return None
 
-    def _prepare_raw_input_for_class(
-        self, parser_def: ParserDefinition, context_data: ContextData
-    ) -> str:
+    def _prepare_raw_input_for_class(self, parser_def: ParserDefinition, context_data: ContextData) -> str:
         """Prepare raw input string for Python class parser."""
         primary_data_def = parser_def.get("primary_data_source_for_raw", {})
         source_type = primary_data_def.get("source_type")
@@ -612,22 +601,20 @@ class MetadataEngine:
 
         if source_type == "png_chunk" and source_key:
             return context_data.get("png_chunks", {}).get(source_key, "")
-        elif source_type == "exif_user_comment":
+        if source_type == "exif_user_comment":
             return context_data.get("raw_user_comment_str", "")
-        elif source_type == "xmp_string_content":
+        if source_type == "xmp_string_content":
             return context_data.get("xmp_string", "")
-        else:
-            # Default fallback - try common sources
-            return (
-                context_data.get("pil_info", {}).get("parameters", "") or
-                context_data.get("raw_user_comment_str", "") or
-                context_data.get("raw_file_content_text", "")
-            )
+        # Default fallback - try common sources
+        return (
+            context_data.get("pil_info", {}).get("parameters", "")
+            or context_data.get("raw_user_comment_str", "")
+            or context_data.get("raw_file_content_text", "")
+        )
 
 
 class MetadataEngineBuilder:
-    """
-    Builder class for creating MetadataEngine instances with custom configuration.
+    """Builder class for creating MetadataEngine instances with custom configuration.
 
     This provides a fluent interface for setting up the engine with
     different components and settings.
@@ -635,13 +622,13 @@ class MetadataEngineBuilder:
 
     def __init__(self):
         """Initialize the builder."""
-        self.parser_definitions_path: Optional[Path] = None
-        self.logger: Optional[logging.Logger] = None
-        self.custom_context_preparer: Optional[ContextDataPreparer] = None
-        self.custom_field_extractor: Optional[FieldExtractor] = None
-        self.custom_template_processor: Optional[TemplateProcessor] = None
+        self.parser_definitions_path: Path | None = None
+        self.logger: logging.Logger | None = None
+        self.custom_context_preparer: ContextDataPreparer | None = None
+        self.custom_field_extractor: FieldExtractor | None = None
+        self.custom_template_processor: TemplateProcessor | None = None
 
-    def with_parser_definitions(self, path: Union[str, Path]) -> "MetadataEngineBuilder":
+    def with_parser_definitions(self, path: str | Path) -> "MetadataEngineBuilder":
         """Set the parser definitions path."""
         self.parser_definitions_path = Path(path)
         return self
@@ -688,27 +675,26 @@ class MetadataEngineBuilder:
 
 
 class MetadataEngineManager:
-    """
-    Manager class for handling multiple MetadataEngine instances.
+    """Manager class for handling multiple MetadataEngine instances.
 
     This is useful when you need different engine configurations
     for different types of files or use cases.
     """
 
-    def __init__(self, logger: Optional[logging.Logger] = None):
+    def __init__(self, logger: logging.Logger | None = None):
         """Initialize the manager."""
         self.logger = logger or get_logger("MetadataEngineManager")
-        self.engines: Dict[str, MetadataEngine] = {}
-        self.default_engine: Optional[str] = None
+        self.engines: dict[str, MetadataEngine] = {}
+        self.default_engine: str | None = None
 
     def register_engine(self, name: str, engine: MetadataEngine, set_as_default: bool = False) -> None:
-        """
-        Register a MetadataEngine instance.
+        """Register a MetadataEngine instance.
 
         Args:
             name: Name identifier for the engine
             engine: MetadataEngine instance
             set_as_default: Whether to set this as the default engine
+
         """
         self.engines[name] = engine
         self.logger.info(f"Registered MetadataEngine: {name}")
@@ -717,15 +703,15 @@ class MetadataEngineManager:
             self.default_engine = name
             self.logger.info(f"Set default engine to: {name}")
 
-    def get_engine(self, name: Optional[str] = None) -> Optional[MetadataEngine]:
-        """
-        Get a MetadataEngine by name.
+    def get_engine(self, name: str | None = None) -> MetadataEngine | None:
+        """Get a MetadataEngine by name.
 
         Args:
             name: Engine name, or None to get the default engine
 
         Returns:
             MetadataEngine instance or None if not found
+
         """
         if name is None:
             name = self.default_engine
@@ -736,9 +722,8 @@ class MetadataEngineManager:
 
         return self.engines.get(name)
 
-    def parse_file(self, file_input: FileInput, engine_name: Optional[str] = None) -> Optional[Union[Dict[str, Any], BaseFormat]]:
-        """
-        Parse a file using the specified or default engine.
+    def parse_file(self, file_input: FileInput, engine_name: str | None = None) -> dict[str, Any] | BaseFormat | None:
+        """Parse a file using the specified or default engine.
 
         Args:
             file_input: File to parse
@@ -746,6 +731,7 @@ class MetadataEngineManager:
 
         Returns:
             Parser result or None if parsing failed
+
         """
         engine = self.get_engine(engine_name)
         if not engine:
@@ -754,7 +740,7 @@ class MetadataEngineManager:
 
         return engine.get_parser_for_file(file_input)
 
-    def list_engines(self) -> List[str]:
+    def list_engines(self) -> list[str]:
         """Get list of registered engine names."""
         return list(self.engines.keys())
 
@@ -763,12 +749,12 @@ class MetadataEngineManager:
 # CONVENIENCE FUNCTIONS
 # ============================================================================
 
+
 def create_metadata_engine(
-    parser_definitions_path: Union[str, Path],
-    logger: Optional[logging.Logger] = None,
+    parser_definitions_path: str | Path,
+    logger: logging.Logger | None = None,
 ) -> MetadataEngine:
-    """
-    Convenience function to create a MetadataEngine.
+    """Convenience function to create a MetadataEngine.
 
     Args:
         parser_definitions_path: Path to parser definition files
@@ -776,27 +762,27 @@ def create_metadata_engine(
 
     Returns:
         Configured MetadataEngine instance
+
     """
     return MetadataEngine(parser_definitions_path, logger)
 
 
 def create_engine_builder() -> MetadataEngineBuilder:
-    """
-    Convenience function to create a MetadataEngineBuilder.
+    """Convenience function to create a MetadataEngineBuilder.
 
     Returns:
         MetadataEngineBuilder instance
+
     """
     return MetadataEngineBuilder()
 
 
 def parse_file_metadata(
     file_input: FileInput,
-    parser_definitions_path: Union[str, Path],
-    logger: Optional[logging.Logger] = None,
-) -> Optional[Union[Dict[str, Any], BaseFormat]]:
-    """
-    Convenience function to parse file metadata.
+    parser_definitions_path: str | Path,
+    logger: logging.Logger | None = None,
+) -> dict[str, Any] | BaseFormat | None:
+    """Convenience function to parse file metadata.
 
     Args:
         file_input: File to parse
@@ -805,6 +791,7 @@ def parse_file_metadata(
 
     Returns:
         Parser result or None if parsing failed
+
     """
     engine = create_metadata_engine(parser_definitions_path, logger)
     return engine.get_parser_for_file(file_input)
@@ -813,6 +800,7 @@ def parse_file_metadata(
 # ============================================================================
 # TESTING UTILITIES
 # ============================================================================
+
 
 def test_metadata_engine():
     """Test the refactored metadata engine."""
@@ -832,28 +820,18 @@ def test_metadata_engine():
             {
                 "source_type": "file_extension",
                 "operator": "equals_case_insensitive",
-                "value": "txt"
+                "value": "txt",
             }
         ],
         "parsing_instructions": {
-            "input_data": {
-                "source_type": "file_content_raw_text"
-            },
-            "fields": [
-                {
-                    "target_key": "content",
-                    "method": "direct_string_value"
-                }
-            ],
+            "input_data": {"source_type": "file_content_raw_text"},
+            "fields": [{"target_key": "content", "method": "direct_string_value"}],
             "output_template": {
                 "tool": "TestTextParser",
                 "content": "$content",
-                "file_info": {
-                    "name": "$FILE_NAME",
-                    "extension": "$FILE_EXTENSION"
-                }
-            }
-        }
+                "file_info": {"name": "$FILE_NAME", "extension": "$FILE_EXTENSION"},
+            },
+        },
     }
 
     # Save test definition
@@ -881,10 +859,7 @@ def test_metadata_engine():
         # Test engine builder
         logger.info("Testing engine builder...")
         builder_engine = (
-            create_engine_builder()
-            .with_parser_definitions(test_definitions_path)
-            .with_logger(logger)
-            .build()
+            create_engine_builder().with_parser_definitions(test_definitions_path).with_logger(logger).build()
         )
 
         builder_result = builder_engine.get_parser_for_file(test_file)

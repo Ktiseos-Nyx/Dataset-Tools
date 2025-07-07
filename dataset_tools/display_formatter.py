@@ -9,9 +9,10 @@ from .correct_types import DownField, EmptyField, UpField
 log = logging.getLogger(__name__)
 
 # This is the main public function for this module
+
+
 def format_metadata_for_display(metadata_dict: dict[str, Any] | None) -> dict[str, str]:
-    """
-    Takes raw metadata and returns a dictionary of formatted strings for UI display.
+    """Takes raw metadata and returns a dictionary of formatted strings for UI display.
     This function is a "pure" formatter; it does not interact with the UI.
     """
     if metadata_dict is None or (len(metadata_dict) == 1 and EmptyField.PLACEHOLDER.value in metadata_dict):
@@ -28,12 +29,13 @@ def format_metadata_for_display(metadata_dict: dict[str, Any] | None) -> dict[st
 
 # --- Private Helper Functions for this Module ---
 
+
 def _format_prompts(metadata_dict: dict[str, Any]) -> tuple[str, str]:
     """Extracts and formats positive and negative prompts."""
     prompt_section = metadata_dict.get(UpField.PROMPT.value, {})
     if not isinstance(prompt_section, dict):
         return "", ""
-        
+
     positive = str(prompt_section.get("Positive", "")).strip()
     negative = str(prompt_section.get("Negative", "")).strip()
     return positive, negative
@@ -51,26 +53,26 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
     # Generation Parameters
     if gen_params := metadata_dict.get(DownField.GENERATION_DATA.value):
         param_strings = []
-        
+
         # 🚨 CRIME #3: MAKE TOOL DETECTION LOUD AND PROUD! 🚨
         # Add detected tool as the FIRST parameter for maximum visibility
         if "Detected Tool" in (metadata_s := metadata_dict.get(UpField.METADATA.value, {})):
             param_strings.append(f"Tool: {metadata_s['Detected Tool']}")
-        
+
         # Add all other generation parameters (sorted for consistency)
         other_params = [f"{k}: {v}" for k, v in sorted(gen_params.items())]
         param_strings.extend(other_params)
-        
+
         if param_strings:
             joined_params = "\n".join(param_strings)
             details_parts.append(f"Generation Parameters:\n{joined_params}")
-    
+
     # --- START OF THE CORRECTLY INDENTED BLOCK ---
-    
+
     # This is a nested function, defined *inside* _build_details_string
     # It has access to 'details_parts' and 'metadata_dict' from its parent scope.
-    def append_unpacked_section(title: str, field: Any): # noqa: ANN401
-        if (display_text := _unpack_content_of(metadata_dict, [field]).strip()):
+    def append_unpacked_section(title: str, field: Any):  # noqa: ANN401
+        if display_text := _unpack_content_of(metadata_dict, [field]).strip():
             details_parts.append(f"{title}:\n{display_text}")
 
     append_unpacked_section("EXIF Details", DownField.EXIF)
@@ -89,24 +91,25 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
 
 # --- Formatting Logic Moved from ui.py ---
 
+
 def _unpack_content_of(metadata_dict: dict[str, Any], labels_to_extract: list[Any]) -> str:
     """Unpacks and formats data from specified sections of the metadata."""
     all_texts: list[str] = []
     for section_enum in labels_to_extract:
-        if (section_data := metadata_dict.get(section_enum.value)):
+        if section_data := metadata_dict.get(section_enum.value):
             all_texts.extend(_format_single_section_data(section_data))
     return "\n".join(all_texts)
 
 
 def _format_single_section_data(data_item: Any) -> list[str]:  # noqa: ANN401
-    """
-    Recursively formats a piece of data (dict, list, or primitive) into a list of strings.
+    """Recursively formats a piece of data (dict, list, or primitive) into a list of strings.
     This function is intentionally dynamic, so we suppress the ANN401 warning.
     """
     parts: list[str] = []
     if isinstance(data_item, dict):
         for key, value in sorted(data_item.items()):
-            if value is None: continue
+            if value is None:
+                continue
             if isinstance(value, dict):
                 # Format sub-dictionary with indentation
                 nested_parts = _format_single_section_data(value)

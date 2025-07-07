@@ -1,64 +1,63 @@
 #!/usr/bin/env python3
 
-"""
-Debug which parsers are being tried for JPEG files.
-"""
+"""Debug which parser is matched for a given file using the new MetadataEngine."""
 
-import json
-import os
+import argparse
+import sys
 from pathlib import Path
 
-def debug_parser_matching():
-    """Debug which parsers target JPEG files."""
-    
-    print("🔍 PARSER MATCHING DIAGNOSTIC")
-    print("=" * 29)
-    
-    parser_dir = Path(__file__).parent / "parser_definitions"
-    
-    jpeg_parsers = []
-    
-    # Check all parser definitions
-    for parser_file in parser_dir.glob("*.json"):
-        try:
-            with open(parser_file, 'r') as f:
-                parser_def = json.load(f)
-            
-            target_types = parser_def.get("target_file_types", [])
-            if any(t.upper() in ["JPEG", "JPG"] for t in target_types):
-                jpeg_parsers.append({
-                    "name": parser_def.get("parser_name", parser_file.name),
-                    "priority": parser_def.get("priority", 0),
-                    "file_types": target_types,
-                    "file": parser_file.name
-                })
-                
-        except Exception as e:
-            print(f"❌ Error reading {parser_file}: {e}")
-    
-    # Sort by priority
-    jpeg_parsers.sort(key=lambda x: x["priority"], reverse=True)
-    
-    print(f"\\n📋 PARSERS TARGETING JPEG FILES ({len(jpeg_parsers)} found):")
-    print("   (Ordered by priority - highest first)")
-    
-    for i, parser in enumerate(jpeg_parsers, 1):
-        print(f"\\n   {i}. {parser['name']}")
-        print(f"      Priority: {parser['priority']}")
-        print(f"      File types: {parser['file_types']}")
-        print(f"      Definition: {parser['file']}")
-    
-    print("\\n🎯 DEBUGGING STEPS:")
-    print("   1. Check if ComfyUI_01803_.jpeg has any EXIF UserComment data")
-    print("   2. Verify each parser's detection rules in order of priority")
-    print("   3. Most likely: File has no AI metadata (which is normal)")
-    
-    print("\\n📝 COMMON JPEG METADATA LOCATIONS:")
-    print("   • EXIF UserComment (A1111, ComfyUI JPEG)")
-    print("   • EXIF ImageDescription (some tools)")
-    print("   • EXIF Software tag (tool identification)")
-    print("   • XMP data (Adobe tools)")
-    print("   • APP segments (custom metadata)")
+# Add the project root to the Python path to allow importing dataset_tools
+project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
+
+from dataset_tools.metadata_engine.engine import create_metadata_engine
+
+
+def debug_parser_matching(file_path: str):
+    """Debug which parser is matched for a given file."""
+    print(f"🔍 PARSER MATCHING DIAGNOSTIC FOR: {file_path}")
+    print("=" * (33 + len(file_path)))
+
+    parser_definitions_path = project_root / "dataset_tools" / "parser_definitions"
+
+    if not parser_definitions_path.is_dir():
+        print(f"❌ Error: Parser definitions directory not found at: {parser_definitions_path}")
+        return
+
+    try:
+        # Create a metadata engine instance
+        engine = create_metadata_engine(str(parser_definitions_path))
+
+        # Get the parser for the file
+        result = engine.get_parser_for_file(file_path)
+
+        if result:
+            tool_name = getattr(result, "tool", result.get("tool", "Unknown"))
+            print(f"✅ Matched Parser: {tool_name}")
+
+            if isinstance(result, dict):
+                print("\n📋 Extracted Data:")
+                import json
+
+                print(json.dumps(result, indent=2))
+            else:
+                print("\n📋 Reader Instance Attributes:")
+                for attr in dir(result):
+                    if not attr.startswith("_") and not callable(getattr(result, attr)):
+                        print(f"  - {attr}: {getattr(result, attr)}")
+        else:
+            print("❌ No parser matched for this file.")
+
+    except Exception as e:
+        print(f"❌ An error occurred: {e}")
+        import traceback
+
+        traceback.print_exc()
+
 
 if __name__ == "__main__":
-    debug_parser_matching()
+    parser = argparse.ArgumentParser(description="Debug which parser from the new MetadataEngine matches a given file.")
+    parser.add_argument("file_path", type=str, help="The absolute path to the file to test.")
+    args = parser.parse_args()
+
+    debug_parser_matching(args.file_path)

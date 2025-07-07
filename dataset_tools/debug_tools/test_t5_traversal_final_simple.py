@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-"""
-Simple final test to confirm T5 traversal is working.
-"""
+"""Simple final test to confirm T5 traversal is working."""
 
 print("🔧 T5 TRAVERSAL FIX VERIFICATION")
 print("=" * 33)
@@ -13,22 +11,19 @@ sample_t5_data = {
         "class_type": "DualCLIPLoader",
         "inputs": {
             "clip_name1": "t5xxl_fp16.safetensors",
-            "clip_name2": "clip_l.safetensors"
-        }
+            "clip_name2": "clip_l.safetensors",
+        },
     },
     "2": {
         "class_type": "CLIPTextEncode",
         "inputs": {
             "text": "beautiful landscape with mountains and trees, sunset, dramatic lighting",
-            "clip": [1, 0]
-        }
+            "clip": [1, 0],
+        },
     },
     "3": {
-        "class_type": "CLIPTextEncode", 
-        "inputs": {
-            "text": "low quality, blurry, distorted",
-            "clip": [1, 0]
-        }
+        "class_type": "CLIPTextEncode",
+        "inputs": {"text": "low quality, blurry, distorted", "clip": [1, 0]},
     },
     "4": {
         "class_type": "KSampler",
@@ -42,30 +37,24 @@ sample_t5_data = {
             "cfg": 8.5,
             "sampler_name": "dpmpp_2m",
             "scheduler": "karras",
-            "denoise": 1.0
-        }
+            "denoise": 1.0,
+        },
     },
     "5": {
         "class_type": "CheckpointLoaderSimple",
-        "inputs": {
-            "ckpt_name": "sd3_medium_incl_clips_t5xxlfp16.safetensors"
-        }
+        "inputs": {"ckpt_name": "sd3_medium_incl_clips_t5xxlfp16.safetensors"},
     },
     "6": {
         "class_type": "EmptyLatentImage",
-        "inputs": {
-            "width": 1024,
-            "height": 1024,
-            "batch_size": 1
-        }
-    }
+        "inputs": {"width": 1024, "height": 1024, "batch_size": 1},
+    },
 }
 
 print("1. Data Structure Verification:")
 print(f"   ✅ Sample has {len(sample_t5_data)} nodes")
-print(f"   ✅ Contains DualCLIPLoader (T5 architecture signature)")
-print(f"   ✅ Contains KSampler with positive/negative connections")
-print(f"   ✅ Contains CLIPTextEncode nodes with actual text")
+print("   ✅ Contains DualCLIPLoader (T5 architecture signature)")
+print("   ✅ Contains KSampler with positive/negative connections")
+print("   ✅ Contains CLIPTextEncode nodes with actual text")
 
 print("\n2. Manual Traversal Test:")
 
@@ -115,8 +104,8 @@ advanced_sampler_data["4"] = {
         "cfg": 7.0,
         "sampler_name": "euler_ancestral",
         "scheduler": "simple",
-        "denoise": 0.9
-    }
+        "denoise": 0.9,
+    },
 }
 
 advanced_sampler = advanced_sampler_data["4"]
@@ -128,7 +117,10 @@ print("-" * 12)
 
 test_results = [
     ("T5 architecture detection", "DualCLIPLoader" in str(sample_t5_data)),
-    ("Positive prompt traversal", positive_text == "beautiful landscape with mountains and trees, sunset, dramatic lighting"),
+    (
+        "Positive prompt traversal",
+        positive_text == "beautiful landscape with mountains and trees, sunset, dramatic lighting",
+    ),
     ("Negative prompt traversal", negative_text == "low quality, blurry, distorted"),
     ("Parameter extraction", seed == 987654321 and steps == 30 and cfg == 8.5),
     ("SamplerCustomAdvanced support", noise_seed == 555666777),
@@ -158,7 +150,7 @@ else:
 
 print("\n🔄 NEXT STEPS:")
 print("   1. The T5 parser should now correctly extract prompts from T5 workflows")
-print("   2. Both positive and negative prompts will be found via traversal")  
+print("   2. Both positive and negative prompts will be found via traversal")
 print("   3. Parameters (seed, steps, cfg, etc.) will be extracted correctly")
 print("   4. SamplerCustomAdvanced nodes are properly supported")
 print("   5. The detection + parsing pipeline is complete!")

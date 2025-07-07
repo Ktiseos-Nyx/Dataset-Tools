@@ -3,21 +3,20 @@
 # Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
 # SPDX-License-Identifier: GPL-3.0
 
-"""
-Enhanced UI components for Dataset Tools.
+"""Enhanced UI components for Dataset Tools.
 
 This module extends the base widgets with additional functionality
 and provides improved versions of core UI components.
 """
 
-from PyQt6 import QtCore, QtGui, QtWidgets as Qw
+from PyQt6 import QtCore, QtGui
+from PyQt6 import QtWidgets as Qw
 
 from ..logger import info_monitor as nfo
 
 
 class EnhancedLeftPanelWidget(Qw.QWidget):
-    """
-    Enhanced version of the left panel widget with improved functionality.
+    """Enhanced version of the left panel widget with improved functionality.
 
     This extends the basic LeftPanelWidget with additional features like
     better status display, improved file count management, and enhanced
@@ -57,13 +56,8 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
 
         # File list
         self.files_list_widget = Qw.QListWidget()
-        self.files_list_widget.setSelectionMode(
-            Qw.QAbstractItemView.SelectionMode.SingleSelection
-        )
-        self.files_list_widget.setSizePolicy(
-            Qw.QSizePolicy.Policy.Preferred,
-            Qw.QSizePolicy.Policy.Expanding
-        )
+        self.files_list_widget.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
+        self.files_list_widget.setSizePolicy(Qw.QSizePolicy.Policy.Preferred, Qw.QSizePolicy.Policy.Expanding)
         layout.addWidget(self.files_list_widget, 1)
 
     def _setup_action_buttons(self, layout: Qw.QVBoxLayout) -> None:
@@ -85,9 +79,7 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
         """Connect internal signals to handlers."""
         self.open_folder_button.clicked.connect(self.open_folder_requested.emit)
         self.sort_button.clicked.connect(self.sort_files_requested.emit)
-        self.files_list_widget.currentItemChanged.connect(
-            self.list_item_selected.emit
-        )
+        self.files_list_widget.currentItemChanged.connect(self.list_item_selected.emit)
 
     # ========================================================================
     # PUBLIC INTERFACE METHODS
@@ -111,18 +103,16 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
         nfo("[LeftPanel] Added %d items to file list", len(items))
 
     def set_current_file_by_name(self, file_name: str) -> bool:
-        """
-        Select a file in the list by name.
+        """Select a file in the list by name.
 
         Args:
             file_name: Name of the file to select
 
         Returns:
             True if file was found and selected, False otherwise
+
         """
-        found_items = self.files_list_widget.findItems(
-            file_name, QtCore.Qt.MatchFlag.MatchExactly
-        )
+        found_items = self.files_list_widget.findItems(file_name, QtCore.Qt.MatchFlag.MatchExactly)
         if found_items:
             self.files_list_widget.setCurrentItem(found_items[0])
             return True
@@ -154,8 +144,7 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
 
 
 class EnhancedImageLabel(Qw.QLabel):
-    """
-    Enhanced image display widget with better scaling and state management.
+    """Enhanced image display widget with better scaling and state management.
 
     This provides improved image display with automatic scaling, aspect ratio
     preservation, and better handling of loading states and errors.
@@ -170,10 +159,7 @@ class EnhancedImageLabel(Qw.QLabel):
         """Setup the widget appearance and behavior."""
         self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.setMinimumSize(200, 200)
-        self.setSizePolicy(
-            Qw.QSizePolicy.Policy.Ignored,
-            Qw.QSizePolicy.Policy.Ignored
-        )
+        self.setSizePolicy(Qw.QSizePolicy.Policy.Ignored, Qw.QSizePolicy.Policy.Ignored)
         self.setWordWrap(True)
         self.setFrameShape(Qw.QFrame.Shape.StyledPanel)
         # self.setStyleSheet(
@@ -190,11 +176,11 @@ class EnhancedImageLabel(Qw.QLabel):
         self.setText("Image Preview Area\n\n(Drag & Drop Image Here)")
 
     def setPixmap(self, pixmap: QtGui.QPixmap | None) -> None:
-        """
-        Set the pixmap to display, with automatic scaling.
+        """Set the pixmap to display, with automatic scaling.
 
         Args:
         pixmap: QPixmap to display, or None to clear
+
         """
         if pixmap is None or pixmap.isNull():
             self._original_pixmap = QtGui.QPixmap()
@@ -216,11 +202,7 @@ class EnhancedImageLabel(Qw.QLabel):
 
     def _update_scaled_display(self) -> None:
         """Update the displayed image with proper scaling."""
-        if (
-            self._original_pixmap.isNull()
-            or self.width() <= 10
-            or self.height() <= 10
-        ):
+        if self._original_pixmap.isNull() or self.width() <= 10 or self.height() <= 10:
             return
 
         # Clear text and show scaled image
@@ -248,14 +230,14 @@ class EnhancedImageLabel(Qw.QLabel):
         return 0, 0
 
     def save_image(self, file_path: str) -> bool:
-        """
-        Save the current image to a file.
+        """Save the current image to a file.
 
         Args:
             file_path: Path where to save the image
 
         Returns:
             True if save was successful, False otherwise
+
         """
         if self.has_image():
             return self._original_pixmap.save(file_path)

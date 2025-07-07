@@ -71,7 +71,9 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 * **ComfyUI:**
   * Standard PNGs (embedded workflow JSON in "prompt" chunk).
   * Civitai-generated JPEGs/PNGs (UserComment JSON with "extraMetadata").
+  * T5/FLux and advanced models are currently 50/50 due to workflow discrepancies - We're getting there! provide your data or workflows to speed it up!
 * **NovelAI:** PNG (Legacy "Software" tag & "Comment" JSON; Stealth LSB in alpha channel).
+* **Midjourney** Popularity rules! This is the old. gold standard of the old discord way (Shh I wrote this at 1 am)
 * **InvokeAI:** PNG (parsing "invokeai_metadata", "sd-metadata", or "Dream" chunks).
 * **Easy Diffusion:** PNG, JPEG, WEBP (embedded JSON metadata).
 * **Fooocus:** PNG ("Comment" chunk JSON), JPEG (JFIF comment JSON).
@@ -79,6 +81,8 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 * **Draw Things:** PNG (XMP metadata containing JSON).
 * **StableSwarmUI:** PNG, JPEG (EXIF or "sui_image_params" in PNG/UserComment).
 * *(Support for other formats may be implicitly included via the adapted sd-prompt-reader core.)*
+
+### File Types that are COMING SOON AND/or have partial capability
 
 **Model File Metadata (Header Information):**
 
@@ -136,13 +140,17 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 
 ### Launching the Application
 
+```bash
+    python dataset_tools
+```
+
 **After installation, run the application from your terminal:**
+
+#### Command-line Options
 
 ```bash
     python -m dataset_tools.main [options]
 ```
-
-#### Command-line Options
 
 > [!TIP]
 >

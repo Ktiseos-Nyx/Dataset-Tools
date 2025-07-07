@@ -152,19 +152,29 @@ class SwarmUI(BaseFormat):
         if self._info and "software_tag" in self._info:
             software_tag = str(self._info["software_tag"]).lower()
             non_swarmui_software = [
-                "adobe", "photoshop", "gimp", "paint.net", "affinity", 
-                "canva", "figma", "sketch", "procreate", "clip studio"
+                "adobe",
+                "photoshop",
+                "gimp",
+                "paint.net",
+                "affinity",
+                "canva",
+                "figma",
+                "sketch",
+                "procreate",
+                "clip studio",
             ]
-            
+
             for non_swarm_software in non_swarmui_software:
                 if non_swarm_software in software_tag:
                     self._logger.debug(
                         "%s: Detected non-SwarmUI software tag ('%s'). This is not a SwarmUI image.",
                         self.tool,
-                        self._info["software_tag"]
+                        self._info["software_tag"],
                     )
                     self.status = self.Status.FORMAT_DETECTION_ERROR
-                    self._error = f"Non-SwarmUI software detected ('{self._info['software_tag']}') - not SwarmUI format."
+                    self._error = (
+                        f"Non-SwarmUI software detected ('{self._info['software_tag']}') - not SwarmUI format."
+                    )
                     return
 
         data_json = self._get_data_json_for_processing()

@@ -3,8 +3,7 @@
 # Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
 # SPDX-License-Identifier: GPL-3.0
 
-"""
-Main application window for Dataset Tools.
+"""Main application window for Dataset Tools.
 
 This module contains the core MainWindow class that orchestrates the entire
 application interface, handling file management, metadata display, and user interactions.
@@ -12,24 +11,30 @@ application interface, handling file management, metadata display, and user inte
 
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
 from PyQt6.QtCore import QSettings, QTimer
-# from PyQt6.QtWidgets import QApplication
 
-from ..correct_types import EmptyField # pylint: disable=relative-beyond-top-level
+# from PyQt6.QtWidgets import QApplication
+from ..correct_types import EmptyField  # pylint: disable=relative-beyond-top-level
 from ..correct_types import ExtensionType as Ext  # pylint: disable=relative-beyond-top-level
 from ..logger import debug_monitor  # pylint: disable=relative-beyond-top-level
 from ..logger import info_monitor as nfo  # pylint: disable=relative-beyond-top-level
 from ..metadata_parser import parse_metadata  # pylint: disable=relative-beyond-top-level
-from .dialogs import AboutDialog, SettingsDialog  # pylint: disable=relative-beyond-top-level
+from ..widgets import (
+    FileLoader,  # pylint: disable=relative-beyond-top-level
+    FileLoadResult,
+)
+from .dialogs import (
+    AboutDialog,  # pylint: disable=relative-beyond-top-level
+    SettingsDialog,
+)
 from .managers import LayoutManager  # pylint: disable=relative-beyond-top-level
 from .managers import MenuManager  # pylint: disable=relative-beyond-top-level
-from .managers import MetadataDisplayManager  # pylint: disable=relative-beyond-top-level
 from .managers import ThemeManager  # pylint: disable=relative-beyond-top-level
-from ..widgets import FileLoader, FileLoadResult  # pylint: disable=relative-beyond-top-level
+from .managers import MetadataDisplayManager  # pylint: disable=relative-beyond-top-level
 
 # ============================================================================
 # CONSTANTS
@@ -47,9 +52,9 @@ APPLICATION_NAME = "DatasetViewer"
 # MAIN WINDOW CLASS
 # ============================================================================
 
+
 class MainWindow(Qw.QMainWindow):
-    """
-    Main application window for Dataset Tools.
+    """Main application window for Dataset Tools.
 
     This class serves as the central coordinator for the entire application,
     managing UI components, file operations, metadata display, and user interactions.
@@ -82,14 +87,14 @@ class MainWindow(Qw.QMainWindow):
         self.setAcceptDrops(True)
 
         # File management
-        self.file_loader: Optional[FileLoader] = None  # Ensure file_loader is always defined
+        self.file_loader: FileLoader | None = None  # Ensure file_loader is always defined
         self.current_files_in_list: list[str] = []
         self.current_folder: str = ""
 
         # UI state
         self.main_status_bar = self.statusBar()
         self.datetime_label = Qw.QLabel()
-        self.status_timer: Optional[QTimer] = None
+        self.status_timer: QTimer | None = None
 
     def _initialize_managers(self) -> None:
         """Initialize UI and functionality managers."""
@@ -131,7 +136,7 @@ class MainWindow(Qw.QMainWindow):
 
     def _connect_ui_signals(self) -> None:
         """Connect UI component signals to handlers."""
-        if hasattr(self, 'left_panel'):
+        if hasattr(self, "left_panel"):
             self.left_panel.open_folder_requested.connect(self.open_folder)
             self.left_panel.sort_files_requested.connect(self.sort_files_list)
             self.left_panel.list_item_selected.connect(self.on_file_selected)
@@ -183,9 +188,7 @@ class MainWindow(Qw.QMainWindow):
         nfo("[UI] 'Open Folder' action triggered.")
 
         start_dir = self._get_start_directory()
-        folder_path = Qw.QFileDialog.getExistingDirectory(
-            self, "Select Folder to Load", start_dir
-        )
+        folder_path = Qw.QFileDialog.getExistingDirectory(self, "Select Folder to Load", start_dir)
 
         if folder_path:
             nfo("[UI] Folder selected via dialog: %s", folder_path)
@@ -210,13 +213,13 @@ class MainWindow(Qw.QMainWindow):
         self.show_status_message(message)
 
     @debug_monitor
-    def load_files(self, folder_path: str, file_to_select_after_load: Optional[str] = None) -> None:
-        """
-        Load files from a folder in a background thread.
+    def load_files(self, folder_path: str, file_to_select_after_load: str | None = None) -> None:
+        """Load files from a folder in a background thread.
 
         Args:
             folder_path: Path to the folder to load
             file_to_select_after_load: Optional file to select after loading
+
         """
         nfo("[UI] Attempting to load files from: %s", folder_path)
 
@@ -247,7 +250,7 @@ class MainWindow(Qw.QMainWindow):
             self.left_panel.set_message_text(f"Loading files from {folder_name}...")
             self.left_panel.set_buttons_enabled(False)
 
-    def _start_file_loading(self, file_to_select: Optional[str]) -> None:
+    def _start_file_loading(self, file_to_select: str | None) -> None:
         """Start the file loading thread."""
         self.file_loader = FileLoader(self.current_folder, file_to_select)
         self.file_loader.finished.connect(self.on_files_loaded)
@@ -256,13 +259,16 @@ class MainWindow(Qw.QMainWindow):
 
     @debug_monitor
     def on_files_loaded(self, result: FileLoadResult) -> None:
-        """
-        Handle completion of file loading.
+        """Handle completion of file loading.
 
         Args:
             result: Result from the file loading thread
+
         """
-        nfo("[UI] FileLoader finished. Received result for folder: %s", result.folder_path)
+        nfo(
+            "[UI] FileLoader finished. Received result for folder: %s",
+            result.folder_path,
+        )
 
         if not hasattr(self, "left_panel"):
             nfo("[UI] Error: Left panel not available in on_files_loaded.")
@@ -286,7 +292,8 @@ class MainWindow(Qw.QMainWindow):
         """Handle stale file loading results."""
         nfo(
             "[UI] Discarding stale FileLoader result for: %s (current is %s)",
-            result.folder_path, self.current_folder
+            result.folder_path,
+            self.current_folder,
         )
         if hasattr(self, "left_panel"):
             self.left_panel.set_buttons_enabled(True)
@@ -338,7 +345,10 @@ class MainWindow(Qw.QMainWindow):
         self.left_panel.set_message_text(message)
         self.show_status_message(message, 5000)
 
-        nfo("[UI] No compatible files found or result was empty for %s.", result.folder_path)
+        nfo(
+            "[UI] No compatible files found or result was empty for %s.",
+            result.folder_path,
+        )
 
         self.current_files_in_list = []
         self.left_panel.clear_file_list_display()
@@ -410,20 +420,23 @@ class MainWindow(Qw.QMainWindow):
 
     def clear_selection(self) -> None:
         """Clear current file selection and reset displays."""
-        if hasattr(self, 'image_preview'):
+        if hasattr(self, "image_preview"):
             self.image_preview.clear()
 
         self.metadata_display.clear_all_displays()
 
     @debug_monitor
-    def on_file_selected(self, current_item: Optional[Qw.QListWidgetItem],
-                         _previous_item: Optional[Qw.QListWidgetItem] = None) -> None:
-        """
-        Handle file selection from the file list.
+    def on_file_selected(
+        self,
+        current_item: Qw.QListWidgetItem | None,
+        _previous_item: Qw.QListWidgetItem | None = None,
+    ) -> None:
+        """Handle file selection from the file list.
 
         Args:
             current_item: Currently selected list item
             _previous_item: Previously selected item (unused)
+
         """
         if not current_item:
             self._handle_no_file_selected()
@@ -465,9 +478,7 @@ class MainWindow(Qw.QMainWindow):
         """Validate that we have proper file context."""
         if not self.current_folder or not file_name:
             nfo("[UI] Folder/file context missing.")
-            error_data = {
-                EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}
-            }
+            error_data = {EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}}
             self.metadata_display.display_metadata(error_data)
             return False
         return True
@@ -518,7 +529,12 @@ class MainWindow(Qw.QMainWindow):
                 nfo("No metadata for %s (load_metadata returned None)", file_name)
 
         except Exception as e:
-            nfo("Error loading/displaying metadata for %s: %s", file_name, e, exc_info=True)
+            nfo(
+                "Error loading/displaying metadata for %s: %s",
+                file_name,
+                e,
+                exc_info=True,
+            )
             self.metadata_display.display_metadata(None)
 
     # ========================================================================
@@ -526,23 +542,19 @@ class MainWindow(Qw.QMainWindow):
     # ========================================================================
 
     @debug_monitor
-    def load_metadata(self, file_name: str) -> Optional[Dict[str, Any]]:
-        """
-        Load metadata from a file.
+    def load_metadata(self, file_name: str) -> dict[str, Any] | None:
+        """Load metadata from a file.
 
         Args:
             file_name: Name of the file to load metadata from
 
         Returns:
             Dictionary containing metadata or None if failed
+
         """
         if not self.current_folder or not file_name:
             nfo("[UI] Cannot load metadata: folder/file name missing.")
-            return {
-                EmptyField.PLACEHOLDER.value: {
-                    "Error": "Cannot load metadata, folder/file name missing."
-                }
-            }
+            return {EmptyField.PLACEHOLDER.value: {"Error": "Cannot load metadata, folder/file name missing."}}
 
         full_file_path = os.path.join(self.current_folder, file_name)
         nfo("[UI] Loading metadata from: %s", full_file_path)
@@ -558,11 +570,11 @@ class MainWindow(Qw.QMainWindow):
     # ========================================================================
 
     def display_image_of(self, image_file_path: str) -> None:
-        """
-        Display an image in the preview panel.
+        """Display an image in the preview panel.
 
         Args:
             image_file_path: Path to the image file
+
         """
         nfo("[UI] Loading image for preview: '%s'", image_file_path)
 
@@ -571,16 +583,25 @@ class MainWindow(Qw.QMainWindow):
 
             if pixmap.isNull():
                 nfo("[UI] Failed to load image: '%s'", image_file_path)
-                if hasattr(self, 'image_preview'):
+                if hasattr(self, "image_preview"):
                     self.image_preview.setPixmap(None)
             else:
-                nfo("[UI] Image loaded successfully: %dx%d", pixmap.width(), pixmap.height())
-                if hasattr(self, 'image_preview'):
+                nfo(
+                    "[UI] Image loaded successfully: %dx%d",
+                    pixmap.width(),
+                    pixmap.height(),
+                )
+                if hasattr(self, "image_preview"):
                     self.image_preview.setPixmap(pixmap)
 
         except Exception as e:
-            nfo("[UI] Exception loading image '%s': %s", image_file_path, e, exc_info=True)
-            if hasattr(self, 'image_preview'):
+            nfo(
+                "[UI] Exception loading image '%s': %s",
+                image_file_path,
+                e,
+                exc_info=True,
+            )
+            if hasattr(self, "image_preview"):
                 self.image_preview.setPixmap(None)
 
     # ========================================================================
@@ -668,26 +689,29 @@ class MainWindow(Qw.QMainWindow):
             event.ignore()
             nfo("[UI] Drop ignored: invalid file/folder.")
 
-    def _process_dropped_path(self, dropped_path: str) -> tuple[str, Optional[str]]:
-        """
-        Process a dropped file/folder path.
+    def _process_dropped_path(self, dropped_path: str) -> tuple[str, str | None]:
+        """Process a dropped file/folder path.
 
         Args:
             dropped_path: Path that was dropped
 
         Returns:
             Tuple of (folder_to_load, file_to_select)
+
         """
         path_obj = Path(dropped_path)
 
         if path_obj.is_file():
             folder_to_load = str(path_obj.parent)
             file_to_select = path_obj.name
-            nfo("[UI] Dropped file. Loading folder: '%s', selecting: '%s'",
-                folder_to_load, file_to_select)
+            nfo(
+                "[UI] Dropped file. Loading folder: '%s', selecting: '%s'",
+                folder_to_load,
+                file_to_select,
+            )
             return folder_to_load, file_to_select
 
-        elif path_obj.is_dir():
+        if path_obj.is_dir():
             folder_to_load = str(path_obj)
             nfo("[UI] Dropped folder. Loading: '%s'", folder_to_load)
             return folder_to_load, None
@@ -714,12 +738,12 @@ class MainWindow(Qw.QMainWindow):
         super().closeEvent(event)
 
     def resize_window(self, width: int, height: int) -> None:
-        """
-        Resize the window to specified dimensions.
+        """Resize the window to specified dimensions.
 
         Args:
             width: New window width
             height: New window height
+
         """
         self.resize(width, height)
         nfo("[UI] Window resized to: %dx%d", width, height)

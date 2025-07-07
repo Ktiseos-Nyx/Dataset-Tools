@@ -6,11 +6,7 @@ import unittest
 from unittest.mock import MagicMock, patch  # Added MagicMock
 
 from dataset_tools.correct_types import DownField, UpField
-from dataset_tools.metadata_parser import (
-    make_paired_str_dict,
-    parse_metadata,
-    process_pyexiv2_data,
-)
+from dataset_tools.metadata_parser import make_paired_str_dict, parse_metadata, process_pyexiv2_data
 from dataset_tools.vendored_sdpr.format import BaseFormat
 
 

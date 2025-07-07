@@ -1,15 +1,15 @@
 # dataset_tools/ui_widgets.py
 
-"""
-UI Widgets for Dataset-Tools.
+"""UI Widgets for Dataset-Tools.
 
 This module contains all the custom UI widgets used in the application.
 Each widget has a specific purpose and clean interface
 """
 
 from pathlib import Path
-from typing import Optional, List, Callable
-from PyQt6 import QtCore, QtGui, QtWidgets as Qw
+
+from PyQt6 import QtCore, QtGui
+from PyQt6 import QtWidgets as Qw
 
 from .logger import get_logger
 
@@ -20,9 +20,9 @@ log = get_logger(__name__)
 # FILE LIST WIDGET
 # ============================================================================
 
+
 class FileListWidget(Qw.QWidget):
-    """
-    Widget for displaying and managing a list of files.
+    """Widget for displaying and managing a list of files.
 
     This combines a file list with controls for sorting and filtering.
     Think of it as your inventory screen with sorting options! 📦
@@ -30,15 +30,15 @@ class FileListWidget(Qw.QWidget):
 
     # Signals
     file_selected = QtCore.pyqtSignal(str)  # Emits selected filename
-    sort_changed = QtCore.pyqtSignal(str)   # Emits sort option
+    sort_changed = QtCore.pyqtSignal(str)  # Emits sort option
 
     def __init__(self, parent=None):
         """Initialize the file list widget."""
         super().__init__(parent)
         self.logger = get_logger(f"{__name__}.FileListWidget")
 
-        self._current_files: List[str] = []
-        self._filtered_files: List[str] = []
+        self._current_files: list[str] = []
+        self._filtered_files: list[str] = []
 
         self._setup_ui()
         self._connect_signals()
@@ -60,13 +60,7 @@ class FileListWidget(Qw.QWidget):
         sort_layout.addWidget(Qw.QLabel("Sort:"))
 
         self.sort_combo = Qw.QComboBox()
-        self.sort_combo.addItems([
-            "Name (A-Z)",
-            "Name (Z-A)",
-            "Type",
-            "Size",
-            "Date Modified"
-        ])
+        self.sort_combo.addItems(["Name (A-Z)", "Name (Z-A)", "Type", "Size", "Date Modified"])
         sort_layout.addWidget(self.sort_combo)
         sort_layout.addStretch()
 
@@ -93,23 +87,23 @@ class FileListWidget(Qw.QWidget):
         self.filter_edit.textChanged.connect(self._on_filter_changed)
         self.clear_filter_btn.clicked.connect(self._clear_filter)
 
-    def set_files(self, files: List[str]) -> None:
-        """
-        Set the list of files to display.
+    def set_files(self, files: list[str]) -> None:
+        """Set the list of files to display.
 
         Args:
             files: List of filenames to display
+
         """
         self._current_files = files.copy()
         self._apply_filter_and_sort()
         self.logger.debug(f"Set {len(files)} files in list")
 
-    def add_files(self, files: List[str]) -> None:
-        """
-        Add files to the current list.
+    def add_files(self, files: list[str]) -> None:
+        """Add files to the current list.
 
         Args:
             files: List of filenames to add
+
         """
         self._current_files.extend(files)
         self._apply_filter_and_sort()
@@ -122,25 +116,25 @@ class FileListWidget(Qw.QWidget):
         self.list_widget.clear()
         self.logger.debug("Cleared file list")
 
-    def get_selected_file(self) -> Optional[str]:
-        """
-        Get the currently selected filename.
+    def get_selected_file(self) -> str | None:
+        """Get the currently selected filename.
 
         Returns:
             Selected filename or None if no selection
+
         """
         current_item = self.list_widget.currentItem()
         return current_item.text() if current_item else None
 
     def select_file(self, filename: str) -> bool:
-        """
-        Select a specific file in the list.
+        """Select a specific file in the list.
 
         Args:
             filename: Name of file to select
 
         Returns:
             True if file was found and selected
+
         """
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
@@ -165,10 +159,7 @@ class FileListWidget(Qw.QWidget):
         # Apply filter
         filter_text = self.filter_edit.text().lower()
         if filter_text:
-            self._filtered_files = [
-                f for f in self._current_files
-                if filter_text in f.lower()
-            ]
+            self._filtered_files = [f for f in self._current_files if filter_text in f.lower()]
         else:
             self._filtered_files = self._current_files.copy()
 
@@ -199,15 +190,15 @@ class FileListWidget(Qw.QWidget):
 
             self.list_widget.addItem(item)
 
-    def _get_file_icon(self, filename: str) -> Optional[QtGui.QIcon]:
-        """
-        Get an appropriate icon for a file.
+    def _get_file_icon(self, filename: str) -> QtGui.QIcon | None:
+        """Get an appropriate icon for a file.
 
         Args:
             filename: Name of the file
 
         Returns:
             QIcon or None
+
         """
         # You could enhance this with your file categorization system
         suffix = Path(filename).suffix.lower()
@@ -215,14 +206,13 @@ class FileListWidget(Qw.QWidget):
         # Use standard style icons
         style = self.style()
 
-        if suffix in {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'}:
+        if suffix in {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"}:
             return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileIcon)
-        elif suffix in {'.txt', '.json', '.yaml', '.xml'}:
+        if suffix in {".txt", ".json", ".yaml", ".xml"}:
             return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileDialogDetailedView)
-        elif suffix in {'.ckpt', '.safetensors', '.pt', '.pth'}:
+        if suffix in {".ckpt", ".safetensors", ".pt", ".pth"}:
             return style.standardIcon(Qw.QStyle.StandardPixmap.SP_ComputerIcon)
-        else:
-            return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileIcon)
+        return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileIcon)
 
     def _on_selection_changed(self, current: Qw.QListWidgetItem, previous: Qw.QListWidgetItem) -> None:
         """Handle selection change."""
@@ -251,9 +241,9 @@ class FileListWidget(Qw.QWidget):
 # FOLDER CONTROL WIDGET
 # ============================================================================
 
+
 class FolderControlWidget(Qw.QWidget):
-    """
-    Widget for folder path display and navigation controls.
+    """Widget for folder path display and navigation controls.
 
     This shows the current folder and provides controls for changing folders.
     Like your minimap showing your current location! 🗺️
@@ -311,11 +301,11 @@ class FolderControlWidget(Qw.QWidget):
         self.refresh_button.clicked.connect(self._refresh_folder)
 
     def set_folder_path(self, folder_path: str) -> None:
-        """
-        Set the current folder path.
+        """Set the current folder path.
 
         Args:
             folder_path: Path to the current folder
+
         """
         self._current_folder = folder_path
         self.path_display.setText(folder_path)
@@ -352,9 +342,9 @@ class FolderControlWidget(Qw.QWidget):
 # IMAGE PREVIEW WIDGET
 # ============================================================================
 
+
 class ImagePreviewWidget(Qw.QLabel):
-    """
-    Widget for displaying image previews with proper scaling.
+    """Widget for displaying image previews with proper scaling.
 
     This shows images with aspect ratio preservation and smooth scaling.
     Like your glamour preview in FFXIV! ✨🖼️
@@ -365,7 +355,7 @@ class ImagePreviewWidget(Qw.QLabel):
         super().__init__(parent)
         self.logger = get_logger(f"{__name__}.ImagePreviewWidget")
 
-        self._original_pixmap: Optional[QtGui.QPixmap] = None
+        self._original_pixmap: QtGui.QPixmap | None = None
         self._placeholder_text = "No image selected"
 
         self._setup_ui()
@@ -381,21 +371,21 @@ class ImagePreviewWidget(Qw.QLabel):
         self.set_placeholder_text(self._placeholder_text)
 
     def set_image(self, image_path: str) -> bool:
-        """
-        Set the image to display.
+        """Set the image to display.
 
         Args:
             image_path: Path to the image file
 
         Returns:
             True if image was loaded successfully
+
         """
         try:
             pixmap = QtGui.QPixmap(image_path)
 
             if pixmap.isNull():
                 self.logger.warning(f"Failed to load image: {image_path}")
-                self.set_error_text(f"Could not load image")
+                self.set_error_text("Could not load image")
                 return False
 
             self._original_pixmap = pixmap
@@ -406,15 +396,15 @@ class ImagePreviewWidget(Qw.QLabel):
 
         except Exception as e:
             self.logger.error(f"Error loading image '{image_path}': {e}")
-            self.set_error_text(f"Error loading image: {str(e)}")
+            self.set_error_text(f"Error loading image: {e!s}")
             return False
 
     def set_pixmap_direct(self, pixmap: QtGui.QPixmap) -> None:
-        """
-        Set a pixmap directly.
+        """Set a pixmap directly.
 
         Args:
             pixmap: QPixmap to display
+
         """
         if pixmap and not pixmap.isNull():
             self._original_pixmap = pixmap
@@ -430,11 +420,11 @@ class ImagePreviewWidget(Qw.QLabel):
         self.logger.debug("Image cleared")
 
     def set_placeholder_text(self, text: str) -> None:
-        """
-        Set placeholder text to display when no image is loaded.
+        """Set placeholder text to display when no image is loaded.
 
         Args:
             text: Placeholder text
+
         """
         self._placeholder_text = text
         if not self._original_pixmap:
@@ -442,23 +432,23 @@ class ImagePreviewWidget(Qw.QLabel):
             self.setStyleSheet("color: gray; font-style: italic;")
 
     def set_error_text(self, text: str) -> None:
-        """
-        Set error text to display when image loading fails.
+        """Set error text to display when image loading fails.
 
         Args:
             text: Error text
+
         """
         self._original_pixmap = None
         self.clear()
         self.setText(text)
         self.setStyleSheet("color: red; font-style: italic;")
 
-    def get_image_size(self) -> Optional[tuple[int, int]]:
-        """
-        Get the original image size.
+    def get_image_size(self) -> tuple[int, int] | None:
+        """Get the original image size.
 
         Returns:
             Tuple of (width, height) or None if no image
+
         """
         if self._original_pixmap:
             return (self._original_pixmap.width(), self._original_pixmap.height())
@@ -479,7 +469,7 @@ class ImagePreviewWidget(Qw.QLabel):
         scaled_pixmap = self._original_pixmap.scaled(
             self.size(),
             QtCore.Qt.AspectRatioMode.KeepAspectRatio,
-            QtCore.Qt.TransformationMode.SmoothTransformation
+            QtCore.Qt.TransformationMode.SmoothTransformation,
         )
 
         super().setPixmap(scaled_pixmap)
@@ -490,9 +480,9 @@ class ImagePreviewWidget(Qw.QLabel):
 # STATUS INFO WIDGET
 # ============================================================================
 
+
 class StatusInfoWidget(Qw.QWidget):
-    """
-    Widget for displaying status information and file counts.
+    """Widget for displaying status information and file counts.
 
     This shows information about the current folder and files.
     Like your party status display! 👥📊
@@ -544,23 +534,23 @@ class StatusInfoWidget(Qw.QWidget):
         layout.addStretch()
 
     def set_status_text(self, text: str) -> None:
-        """
-        Set the main status text.
+        """Set the main status text.
 
         Args:
             text: Status text to display
+
         """
         self.status_label.setText(text)
         self.logger.debug(f"Status text set to: {text}")
 
     def set_file_counts(self, images: int = 0, texts: int = 0, models: int = 0) -> None:
-        """
-        Set the file count displays.
+        """Set the file count displays.
 
         Args:
             images: Number of image files
             texts: Number of text files
             models: Number of model files
+
         """
         total = images + texts + models
 
@@ -580,9 +570,9 @@ class StatusInfoWidget(Qw.QWidget):
 # LEFT PANEL WIDGET (COMPOSITE)
 # ============================================================================
 
+
 class LeftPanelWidget(Qw.QWidget):
-    """
-    Composite widget for the left panel containing folder controls and file list.
+    """Composite widget for the left panel containing folder controls and file list.
 
     This combines multiple widgets into a cohesive left panel interface.
     Like your main UI panel that contains multiple components! 🎮
@@ -633,7 +623,7 @@ class LeftPanelWidget(Qw.QWidget):
         folder_name = Path(folder_path).name if folder_path else "No folder"
         self.status_info.set_status_text(f"Folder: {folder_name}")
 
-    def set_files(self, images: List[str], texts: List[str], models: List[str]) -> None:
+    def set_files(self, images: list[str], texts: list[str], models: list[str]) -> None:
         """Set the files to display."""
         all_files = images + texts + models
         self.file_list.set_files(all_files)
@@ -643,7 +633,7 @@ class LeftPanelWidget(Qw.QWidget):
         """Select a specific file."""
         return self.file_list.select_file(filename)
 
-    def get_selected_file(self) -> Optional[str]:
+    def get_selected_file(self) -> str | None:
         """Get the currently selected file."""
         return self.file_list.get_selected_file()
 
@@ -661,9 +651,11 @@ class LeftPanelWidget(Qw.QWidget):
 # TESTING UTILITIES
 # ============================================================================
 
+
 def test_ui_widgets():
     """Test the UI widgets."""
     import sys
+
     from PyQt6.QtWidgets import QApplication, QMainWindow, QSplitter
 
     app = QApplication(sys.argv)
