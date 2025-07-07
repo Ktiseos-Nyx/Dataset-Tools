@@ -371,8 +371,7 @@ class TextContentAnalyzer:
         }
         
         # Look for negative prompt section
-        neg_match = re.search(r'negative prompt:\s*(.*?)(?=\n(?:steps:|sampler:|cfg|seed:|model:|$))', 
-                             content, re.IGNORECASE | re.DOTALL)
+        neg_match = re.search(r'negative prompt:\s*(.*?)(?=\n(?:steps:|sampler:|cfg scale:|seed:|model:|$))',
         
         if neg_match:
             sections["negative_prompt"] = neg_match.group(1).strip()
