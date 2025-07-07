@@ -88,10 +88,10 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
         icon_manager = get_icon_manager()
         
         self.open_folder_button = Qw.QPushButton("Open Folder")
-        # Add themed icon to button
+        # Add Font Awesome icon to button
         icon_manager.add_icon_to_button(
             self.open_folder_button, 
-            "folder-open", 
+            "folder-open-solid", 
             "primary", 
             QSize(16, 16)
         )
@@ -104,10 +104,10 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
         button_layout.addWidget(self.open_folder_button)
 
         self.sort_button = Qw.QPushButton("Sort Files")
-        # Add themed icon to button  
+        # Add Font Awesome icon to button
         icon_manager.add_icon_to_button(
             self.sort_button,
-            "sort-alphabetical",
+            "arrow-up-a-z-solid",
             "primary",
             QSize(16, 16)
         )

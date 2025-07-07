@@ -113,9 +113,8 @@ class IconManager:
             return self._create_fallback_icon(icon_name, size)
         
         try:
-            # Load and colorize the SVG
-            colored_pixmap = self._colorize_svg(str(icon_path), color_type, size)
-            icon = QIcon(colored_pixmap)
+            # For now, just load the SVG as-is (Font Awesome icons work well in dark themes)
+            icon = QIcon(str(icon_path))
             
             self.icon_cache[cache_key] = icon
             return icon
