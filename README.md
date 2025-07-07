@@ -75,10 +75,12 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 * **InvokeAI:** PNG (parsing "invokeai_metadata", "sd-metadata", or "Dream" chunks).
 * **Easy Diffusion:** PNG, JPEG, WEBP (embedded JSON metadata).
 * **Fooocus:** PNG ("Comment" chunk JSON), JPEG (JFIF comment JSON).
+* **Midjorney** YAY
 * **RuinedFooocus:** JPEG (UserComment JSON).
 * **Draw Things:** PNG (XMP metadata containing JSON).
 * **StableSwarmUI:** PNG, JPEG (EXIF or "sui_image_params" in PNG/UserComment).
-* *(Support for other formats may be implicitly included via the adapted sd-prompt-reader core.)*
+*   *(Support for other formats may be on the way, please see issues and/or discussions for details)*
+
 
 **Model File Metadata (Header Information):**
 
@@ -132,17 +134,32 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 
     This command will read `pyproject.toml` and install `Dataset-Tools` along with all libraries listed as dependencies (e.g., `PyQt6`, `Pillow`, `qt-material`, `piexif`, `pyexiv2`, `toml`, `rich`, `pydantic`).
 
+4. **Optional Installation**
+  You're now able to use PYPI packages to install Dataset Tools.
+   ```bash
+     pip install kn-dataset-tools
+   ```
+
 ## Usage
 
 ### Launching the Application
 
 **After installation, run the application from your terminal:**
 
-```bash
-    python -m dataset_tools.main [options]
-```
 
-#### Command-line Options
+ ```bash
+    dataset-tools
+  ```
+
+
+ 
+  
+####  Advanced Command-line Options:
+
+
+  ```bash
+   python -m dataset_tools.main [options]
+  ```
 
 > [!TIP]
 >
