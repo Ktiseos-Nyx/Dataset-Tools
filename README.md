@@ -50,12 +50,15 @@ This project is inspired by tools within the AI art community, notably [stable-d
 * **Image Preview:** Clear, rescalable preview for selected images.
 * **Copy Metadata:** One-click copy of parsed metadata to the clipboard.
 * **Themeable UI:** Supports themes via `qt-material` (e.g., dark_pink, light_lightgreen_500).
-* **Extensible Parser System:**
-  * Utilizes a significantly adapted and enhanced version of `sd-prompt-reader` for robust parsing of many common AI image metadata formats.
-  * **New Custom Parsers:** Includes dedicated parsers for:
-    * `RuinedFooocus` (UserComment JSON).
-    * `Civitai ComfyUI` (UserComment JSON with "extraMetadata").
-  * **Model File Support:** Basic metadata viewing for `.safetensors` and `.gguf` model files.
+* **Advanced Metadata Engine:**
+  * **Completely Rebuilt Parser System:** New MetadataEngine with priority-based detection, robust Unicode handling, and comprehensive format support.
+  * **Enhanced ComfyUI Support:** Advanced workflow traversal, node connection analysis, and support for modern custom nodes (smZ CLIPTextEncode, etc.).
+  * **CivitAI Integration:** Full support for CivitAI's dual metadata formats with URN resource extraction and workflow parsing.
+  * **Bulletproof Unicode Handling:** Eliminates mojibake issues with comprehensive fallback chains and robust encoding detection.
+  * **A1111 Format Restoration:** Fixed and enhanced A1111 JPEG support with improved detection rules.
+  * **Intelligent Fallback System:** When specialized parsers can't handle a file, the system gracefully falls back to vendored parsers ensuring maximum compatibility.
+  * **25+ Specialized Parsers:** Dedicated parsers for various AI tools and platforms with ongoing expansion.
+  * **Model File Support:** Enhanced metadata viewing capabilities (Safetensors and GGUF support coming soon!).
 * **Configurable Logging:** Control application log verbosity via command-line arguments for easier debugging.
 
 ## Supported Formats
@@ -187,25 +190,36 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 | Screenshot 4: Screen Sizes | Screenshot 5: Civitai Metadata | |
 | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.21.png" alt="Screen Sizes" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.10.png" alt="Civitai Metadata" width="250"> |
 
-### Future Ideas (TODO)
+### Future Development Roadmap
 
-* [ ] Enhanced metadata display and editing for model files (.safetensors, .gguf).
-* [ ] Full metadata editing and saving capabilities for images.
-* [ ] Improving Prompt UI/UX issues
-* [ ] Eventually moving back to T-Kinter for easier development.
-* [ ] Keeping Dusk from Committing Crimes in Code and Minecraft.
-* [ ] Trying to teach Dusk to make better commit messages.
-* [ ] Batch operations: e.g., export all metadata from a folder, rename files based on metadata.
-* [ ] Advanced search and filtering capabilities within loaded datasets based on metadata content.
-* [ ] Support for more image, text, and model metadata formats.
-* [ ] A plugin architecture to allow for easier addition of custom parsers or functionalities.
-* [ ] Improved UI/UX for text/schema file viewing (e.g., syntax highlighting for JSON/TOML, better text wrapping).
-* [ ] Packaging for PyPI for easier pip install dataset-tools. This is in progress currently.
-* [ ] Creation of standalone executables for Windows, macOS, and Linux.
-* [ ] Comprehensive automated test suite to ensure stability and prevent regressions.
-* [ ] Re-configuring Foocus, Ruined Foocus as well as Invoke & other Misc platforms & UIs. This includes website detection.
-* [ ] Future Focus: CivitaiAPI lookup for images & models.
-* [ ] Future combining with other special tools to complete the Dataset nature of the program: Huggingface Backup & Downloader, WebP Conversion & other tools that have been developed by us before.
+**Core Features:**
+* [ ] **Model File Support:** Complete Safetensors and GGUF metadata display and editing capabilities.
+* [ ] **Full Metadata Editing:** Advanced editing and saving capabilities for image metadata.
+* [ ] **Plugin Architecture:** Extensible plugin system for easy addition of custom parsers and functionality.
+* [ ] **Batch Operations:** Export metadata from folders, rename files based on metadata, bulk processing.
+* [ ] **Advanced Search & Filtering:** Dataset search and filtering based on metadata content and parameters.
+
+**User Experience:**
+* [ ] **Enhanced UI/UX:** Improved prompt display, better text file viewing with syntax highlighting.
+* [ ] **Theme System Expansion:** Additional themes and customization options.
+* [ ] **Keyboard Shortcuts:** Comprehensive hotkey support for power users.
+
+**Platform & Integration:**
+* [ ] **Standalone Executables:** Native builds for Windows, macOS, and Linux.
+* [ ] **PyPI Distribution:** Official package distribution for easy `pip install dataset-tools`.
+* [ ] **CivitAI API Integration:** Direct model and resource lookup capabilities.
+* [ ] **Cross-Platform Compatibility:** Enhanced support across different operating systems.
+
+**Technical Improvements:**
+* [ ] **Comprehensive Test Suite:** Automated testing to ensure stability and prevent regressions.
+* [ ] **Enhanced Format Support:** Additional AI tool formats and metadata standards.
+* [ ] **Performance Optimization:** Faster loading and processing for large datasets.
+* [ ] **Error Handling:** Improved error reporting and recovery mechanisms.
+
+**Ecosystem Integration:**
+* [ ] **Dataset Management Tools:** Integration with HuggingFace, model downloaders, and conversion utilities.
+* [ ] **Workflow Integration:** Support for AI generation workflows and pipeline management.
+* [ ] **Community Features:** Parser sharing, format contribution system.
 
 ## Contributing
 
