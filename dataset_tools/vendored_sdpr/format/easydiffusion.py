@@ -114,10 +114,44 @@ class EasyDiffusion(BaseFormat):
         # self.status is managed by BaseFormat.parse()
         self._logger.debug("Attempting to parse using %s logic.", self.tool)
 
+        # Check if this is a non-Easy Diffusion software - Easy Diffusion should not parse these
+        if self._info and "software_tag" in self._info:
+            software_tag = str(self._info["software_tag"]).lower()
+            non_easydiffusion_software = [
+                "celsys", "clip studio", "adobe", "photoshop", "gimp", "paint.net",
+                "automatic1111", "forge", "comfyui", "invokeai", "novelai", "stable diffusion"
+            ]
+            
+            for non_ed_software in non_easydiffusion_software:
+                if non_ed_software in software_tag:
+                    self._logger.debug(
+                        "%s: Detected non-Easy Diffusion software tag ('%s'). This is not an Easy Diffusion image.",
+                        self.tool,
+                        self._info["software_tag"]
+                    )
+                    self.status = self.Status.FORMAT_DETECTION_ERROR
+                    self._error = f"Non-Easy Diffusion software detected ('{self._info['software_tag']}') - not Easy Diffusion format."
+                    return
+
         data_json = self._get_json_data_to_parse()
         if data_json is None:
             # _get_json_data_to_parse already sets status and error
             return
+
+        # Additional check: Must have Easy Diffusion-specific fields
+        if data_json and isinstance(data_json, dict):
+            ed_specific_fields = ["num_inference_steps", "guidance_scale", "use_stable_diffusion_model"]
+            has_ed_fields = any(field in data_json for field in ed_specific_fields)
+            
+            if not has_ed_fields:
+                self._logger.debug(
+                    "%s: No Easy Diffusion-specific fields found (%s). This may not be an Easy Diffusion image.",
+                    self.tool,
+                    ed_specific_fields
+                )
+                self.status = self.Status.FORMAT_DETECTION_ERROR
+                self._error = f"No Easy Diffusion-specific fields found - not Easy Diffusion format."
+                return
 
         # --- Positive and Negative Prompts ---
         # Easy Diffusion uses "prompt" or "Prompt"

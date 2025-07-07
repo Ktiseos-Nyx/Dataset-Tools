@@ -1,6 +1,6 @@
 {
   "parser_name": "Civitai (A1111-Style String)",
-  "priority": 161,
+  "priority": 172,
   "target_file_types": [
     "PNG",
     "JPEG",
@@ -119,7 +119,7 @@
       {
         "target_key": "parameters.civitai_resources_data",
         "method": "json_from_string_variable",
-        "source_variable_key": "parameters.tool_specific.civitai_resources_str_VAR_",
+        "source_variable_key": "parameters.tool_specific.civitai_resources_str",
         "value_type": "array",
         "optional": true
       },
@@ -133,7 +133,7 @@
       {
         "target_key": "parameters.civitai_metadata",
         "method": "json_from_string_variable",
-        "source_variable_key": "parameters.tool_specific.civitai_metadata_str_VAR_",
+        "source_variable_key": "parameters.tool_specific.civitai_metadata_str",
         "value_type": "object",
         "optional": true
       }
@@ -147,8 +147,8 @@
         "sampler": "$parameters.sampler",
         "cfg_scale": "$parameters.cfg_scale",
         "seed": "$parameters.seed",
-        "width": "$CONTEXT.width",
-        "height": "$CONTEXT.height",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
         "clip_skip": "$parameters.clip_skip",
         "civitai_resources": "$parameters.civitai_resources_data",
         "civitai_metadata_obj": "$parameters.civitai_metadata",

@@ -28,6 +28,7 @@ class JSONExtractor:
         """Return dictionary of method name -> method function."""
         return {
             "json_from_string_variable": self._extract_json_from_string_variable,
+            "json_path_exists_boolean": self._json_path_exists_boolean,
         }
 
     def _extract_json_from_string_variable(
@@ -59,3 +60,47 @@ class JSONExtractor:
                 f"Failed to parse JSON from variable '{variable_name}': {e}"
             )
             return None
+
+    def _json_path_exists_boolean(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> bool:
+        """
+        Check if a JSON path exists in the data and return a boolean.
+        
+        This method addresses the missing 'json_path_exists_boolean' error mentioned by Gemini.
+        Returns True if the specified JSON path exists, False otherwise.
+        """
+        json_path = method_def.get("json_path", method_def.get("path"))
+        if not json_path:
+            self.logger.warning("json_path_exists_boolean missing 'json_path' or 'path' parameter")
+            return False
+
+        try:
+            # Navigate the JSON path
+            current = data
+            path_parts = json_path.split('.')
+            
+            for part in path_parts:
+                if isinstance(current, dict):
+                    if part in current:
+                        current = current[part]
+                    else:
+                        return False
+                elif isinstance(current, list):
+                    try:
+                        index = int(part)
+                        if 0 <= index < len(current):
+                            current = current[index]
+                        else:
+                            return False
+                    except ValueError:
+                        return False
+                else:
+                    return False
+            
+            # If we made it here, the path exists
+            return True
+            
+        except Exception as e:
+            self.logger.debug(f"Error checking JSON path '{json_path}': {e}")
+            return False

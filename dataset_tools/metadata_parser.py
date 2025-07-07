@@ -399,6 +399,15 @@ def parse_metadata(file_path_named: str) -> dict:
                 final_ui_dict[DownField.RAW_DATA.value] = result.get("raw_metadata", str(result))
                 final_ui_dict.setdefault(placeholder_key_str, {})["Parser Used"] = f"Enhanced MetadataEngine ({result.get('tool', 'Unknown')})"
                 final_ui_dict.setdefault(placeholder_key_str, {})["Tool"] = result.get("tool", "Unknown")
+                
+                # 🚨 CRIME #3 FIX: Map enhanced MetadataEngine tool to UI format 🚨
+                # This mirrors the vendored SDPR mapping logic for "Detected Tool"
+                tool_name = result.get("tool", "Unknown")
+                if tool_name and tool_name != "Unknown":
+                    if UpField.METADATA.value not in final_ui_dict:
+                        final_ui_dict[UpField.METADATA.value] = {}
+                    final_ui_dict[UpField.METADATA.value]["Detected Tool"] = tool_name
+                
                 potential_ai_parsed = True
                 
                 # If successful, skip vendored SDPR and return result

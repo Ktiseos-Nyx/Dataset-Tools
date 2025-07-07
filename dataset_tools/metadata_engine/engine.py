@@ -242,12 +242,14 @@ class MetadataEngine:
             return False
 
         # Check detection rules
+        self.logger.debug(f"Evaluating detection rules for parser: {parser_def['parser_name']}")
         return self._check_detection_rules(parser_def, context_data)
 
     def _check_file_type_match(
         self, parser_def: ParserDefinition, context_data: ContextData
     ) -> bool:
         """Check if file type matches parser target types."""
+        parser_name = parser_def['parser_name']
         target_types_cfg = parser_def.get("target_file_types", ["*"])
         if not isinstance(target_types_cfg, list):
             target_types_cfg = [str(target_types_cfg)]
@@ -256,11 +258,17 @@ class MetadataEngine:
         current_file_format = context_data.get("file_format", "").upper()
         current_file_ext = context_data.get("file_extension", "").upper()
 
-        return (
+        self.logger.debug(f"  Checking file type for parser: {parser_name}")
+        self.logger.debug(f"    Parser target types: {target_types}")
+        self.logger.debug(f"    Current file format: {current_file_format}, extension: {current_file_ext}")
+
+        match = (
             "*" in target_types
             or (current_file_format and current_file_format in target_types)
             or (current_file_ext and current_file_ext in target_types)
         )
+        self.logger.debug(f"    File type match result for {parser_name}: {match}")
+        return match
 
     def _check_detection_rules(
         self, parser_def: ParserDefinition, context_data: ContextData
@@ -270,17 +278,24 @@ class MetadataEngine:
 
         # No rules means match (file type was already checked)
         if not detection_rules:
+            self.logger.debug(f"No detection rules for {parser_def['parser_name']}, matching.")
             return True
 
         # All rules must pass
         for rule in detection_rules:
-            if not self.rule_evaluator.evaluate_rule(rule, context_data):
+            rule_comment = rule.get('comment', 'Unnamed Rule')
+            rule_passed = self.rule_evaluator.evaluate_rule(rule, context_data)
+            self.logger.debug(
+                f"  Rule '{rule_comment}' for {parser_def['parser_name']} evaluated to: {rule_passed}"
+            )
+            if not rule_passed:
                 self.logger.debug(
                     f"Rule failed for {parser_def['parser_name']}: "
                     f"{rule.get('comment', rule)}"
                 )
                 return False
 
+        self.logger.debug(f"All detection rules passed for parser: {parser_def['parser_name']}")
         return True
 
     def _process_json_instructions(
@@ -359,6 +374,8 @@ class MetadataEngine:
             "xmp_string_content": lambda: context_data.get("xmp_string"),
             "file_content_raw_text": lambda: context_data.get("raw_file_content_text"),
             "file_content_json_object": lambda: context_data.get("parsed_root_json_object"),
+            "png_chunk": lambda: context_data.get("png_chunks", {}).get(source_key),
+            "exif_field": lambda: context_data.get("exif_data", {}).get(source_key),
         }
 
         if source_type in source_map:
@@ -417,6 +434,10 @@ class MetadataEngine:
                 return json.loads(data)
             except json.JSONDecodeError:
                 return None
+
+        elif transform_type == "filter_dict_nodes_only" and isinstance(data, dict):
+            # Filter out non-dict values to keep only node data for ComfyUI workflows
+            return {k: v for k, v in data.items() if isinstance(v, dict)}
 
         return data
 

@@ -14,6 +14,12 @@
       "source": "image_metadata_text",
       "required_patterns": ["Steps:", "Seed:"],
       "match_type": "all"
+    },
+    {
+      "comment": "Rule to prevent misidentification of ComfyUI workflows: Must NOT contain ComfyUI workflow JSON",
+      "source_type": "png_chunk",
+      "source_key": "workflow",
+      "operator": "does_not_exist"
     }
   ],
 

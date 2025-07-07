@@ -50,7 +50,17 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
 
     # Generation Parameters
     if gen_params := metadata_dict.get(DownField.GENERATION_DATA.value):
-        param_strings = [f"{k}: {v}" for k, v in sorted(gen_params.items())]
+        param_strings = []
+        
+        # 🚨 CRIME #3: MAKE TOOL DETECTION LOUD AND PROUD! 🚨
+        # Add detected tool as the FIRST parameter for maximum visibility
+        if "Detected Tool" in (metadata_s := metadata_dict.get(UpField.METADATA.value, {})):
+            param_strings.append(f"Tool: {metadata_s['Detected Tool']}")
+        
+        # Add all other generation parameters (sorted for consistency)
+        other_params = [f"{k}: {v}" for k, v in sorted(gen_params.items())]
+        param_strings.extend(other_params)
+        
         if param_strings:
             joined_params = "\n".join(param_strings)
             details_parts.append(f"Generation Parameters:\n{joined_params}")

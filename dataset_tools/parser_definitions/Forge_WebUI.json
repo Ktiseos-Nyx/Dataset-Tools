@@ -1,6 +1,6 @@
 {
   "parser_name": "Forge_WebUI",
-  "priority": 165,
+  "priority": 180,
   "description": "Forge WebUI - Enhanced fork of Automatic1111 with advanced features and better performance",
   "version": "1.0",
   "maintainer": "Ktiseos Nyx",

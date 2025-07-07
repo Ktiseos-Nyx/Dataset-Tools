@@ -408,6 +408,9 @@ class DataSourceHandler:
         elif source_type == "a1111_parameter_string_content":
             return self._handle_a1111_parameter_string(context)
         
+        elif source_type == "any_metadata_source":
+            return self._handle_any_metadata_source(rule, context)
+        
         elif source_type == "pil_info_key_json_path":
             return self._handle_pil_info_json_path(rule, context)
         
@@ -498,6 +501,28 @@ class DataSourceHandler:
         except json.JSONDecodeError:
             self.logger.debug("Could not parse JSON for JSON path rule")
             return None, False
+    
+    def _handle_any_metadata_source(self, rule: RuleDict, context: ContextData) -> tuple[Any, bool]:
+        """Handle any metadata source - checks PNG chunks, EXIF UserComment, etc."""
+        # Try PNG chunks first (for PNG files)
+        png_chunks = context.get("pil_info", {})
+        for chunk_key in ["prompt", "workflow", "parameters"]:
+            chunk_data = png_chunks.get(chunk_key)
+            if chunk_data is not None:
+                return chunk_data, True
+        
+        # Try EXIF UserComment (for JPEG files)  
+        user_comment = context.get("raw_user_comment_str")
+        if user_comment is not None:
+            return user_comment, True
+        
+        # Try XMP string
+        xmp_string = context.get("xmp_string")
+        if xmp_string is not None:
+            return xmp_string, True
+        
+        # No metadata found
+        return None, False
 
 
 # ============================================================================

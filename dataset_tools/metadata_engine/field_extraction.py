@@ -18,6 +18,7 @@ from .extractors.a1111_extractors import A1111Extractor
 from .extractors.civitai_extractors import CivitaiExtractor
 from .extractors.comfyui_extractors import ComfyUIExtractor
 from .extractors.json_extractors import JSONExtractor
+from .extractors.regex_extractors import RegexExtractor
 
 # Type aliases
 ContextData = Dict[str, Any]
@@ -43,6 +44,7 @@ class FieldExtractor:
         self.civitai_extractor = CivitaiExtractor(self.logger)
         self.comfyui_extractor = ComfyUIExtractor(self.logger)
         self.json_extractor = JSONExtractor(self.logger)
+        self.regex_extractor = RegexExtractor(self.logger)
 
         # Build method registry from all extractors
         self._method_registry = {}
@@ -64,6 +66,9 @@ class FieldExtractor:
 
         # JSON methods
         self._method_registry.update(self.json_extractor.get_methods())
+
+        # Regex methods
+        self._method_registry.update(self.regex_extractor.get_methods())
 
     def extract_field(
         self,
@@ -138,6 +143,7 @@ class FieldExtractor:
             "file_content_json_object": lambda: context_data.get("parsed_root_json_object"),
             "direct_context_key": lambda: context_data.get(source_key),
             "variable": lambda: extracted_fields.get(source_key.replace(".", "_") + "_VAR_"),
+            "exif_field": lambda: context_data.get("exif_data", {}).get(source_key),
         }
 
         getter = source_map.get(source_type)

@@ -50,11 +50,81 @@ class RuleEvaluator:
             self.logger.error("Failed to load or parse rules from %s: %s", filepath, e, exc_info=True)
 
     def _get_a1111_param_string(self, context_data: dict) -> str | None:
-        """Help to extract the A1111 parameter string from common locations."""
+        """Help to extract the A1111 parameter string from common locations with Unicode handling."""
         param_str = context_data.get("pil_info", {}).get("parameters")
         if isinstance(param_str, str):
             return param_str
-        return context_data.get("raw_user_comment_str")
+        
+        # Try enhanced UserComment extraction with Unicode decoding
+        user_comment = context_data.get("raw_user_comment_str")
+        if user_comment:
+            # If it's already decoded, return it
+            if "Steps:" in user_comment:
+                return user_comment
+        
+        # If no decoded UserComment or it doesn't contain A1111 patterns, try enhanced extraction
+        return self._extract_usercomment_for_detection(context_data)
+
+    def _extract_usercomment_for_detection(self, context_data: dict) -> str | None:
+        """Enhanced UserComment extraction for detection phase (Unicode handling)."""
+        file_path = context_data.get("file_path_original")
+        if not file_path:
+            return None
+        
+        try:
+            # First try exiftool if available
+            import subprocess
+            result = subprocess.run(
+                ['exiftool', '-UserComment', '-b', str(file_path)],
+                capture_output=True,
+                text=True,
+                timeout=5,
+                check=False
+            )
+            
+            if result.returncode == 0 and result.stdout.strip():
+                user_comment = result.stdout.strip()
+                if "Steps:" in user_comment:
+                    self.logger.debug(f"Detection: Enhanced EXIF extracted {len(user_comment)} chars with A1111 patterns")
+                    return user_comment
+        except:
+            pass
+        
+        # Fallback: Manual Unicode decoding
+        try:
+            from PIL import Image
+            with Image.open(file_path) as img:
+                exif_data = img.getexif()
+                if exif_data:
+                    user_comment_raw = exif_data.get(37510)  # UserComment tag
+                    if user_comment_raw and isinstance(user_comment_raw, bytes):
+                        
+                        # Strategy 1: Unicode prefix with UTF-16
+                        if user_comment_raw.startswith(b'UNICODE\x00\x00'):
+                            try:
+                                utf16_data = user_comment_raw[9:]
+                                decoded = utf16_data.decode('utf-16le')
+                                if "Steps:" in decoded:
+                                    self.logger.debug(f"Detection: Manual Unicode extracted {len(decoded)} chars with A1111 patterns")
+                                    return decoded
+                            except:
+                                pass
+                        
+                        # Strategy 2: charset=Unicode prefix  
+                        if user_comment_raw.startswith(b'charset=Unicode'):
+                            try:
+                                unicode_part = user_comment_raw[len(b'charset=Unicode '):]
+                                decoded = unicode_part.decode('utf-16le', errors='ignore')
+                                if "Steps:" in decoded:
+                                    self.logger.debug(f"Detection: charset=Unicode extracted {len(decoded)} chars with A1111 patterns")
+                                    return decoded
+                            except:
+                                pass
+        except:
+            pass
+        
+        self.logger.debug("Detection: No A1111 patterns found in UserComment")
+        return None
 
     def _get_data_from_json_path(self, rule: dict, context_data: dict) -> tuple[any, bool]:
         """Handle source_types that need to query a JSON object via a path."""
@@ -144,6 +214,27 @@ class RuleEvaluator:
                     return wrapper["parameters"], True
             except json.JSONDecodeError: pass
             return a1111_string, True
+
+        elif source_type == "any_metadata_source":
+            # Check PNG chunks first (for PNG files)
+            png_chunks = context_data.get("pil_info", {})
+            for chunk_key in ["prompt", "workflow", "parameters"]:
+                chunk_data = png_chunks.get(chunk_key)
+                if chunk_data is not None:
+                    return chunk_data, True
+            
+            # Check EXIF UserComment (for JPEG files)
+            user_comment = context_data.get("raw_user_comment_str")
+            if user_comment is not None:
+                return user_comment, True
+            
+            # Check XMP string
+            xmp_string = context_data.get("xmp_string")
+            if xmp_string is not None:
+                return xmp_string, True
+            
+            # No metadata found
+            return None, False
 
         elif source_type == "pil_info_key_json_path":
             return self._get_data_from_json_path(rule, context_data)
@@ -406,6 +497,10 @@ class RuleEvaluator:
                 return not is_simple_json_with_prompt
 
             # <<< INSERT THE NEW OPERATOR *BEFORE* THE FINAL 'else' >>>
+
+            elif operator == "does_not_contain":
+                if not isinstance(data_to_check, str): return False
+                return str(expected_value) not in data_to_check
 
             elif operator == "exists_and_is_dictionary":
                 # For source_type "pil_info_object", data_to_check should be context_data.get("pil_info")

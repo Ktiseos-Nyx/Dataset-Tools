@@ -1,6 +1,6 @@
 {
   "parser_name": "a1111_webui",
-  "priority": 160,
+  "priority": 170,
   "description": "Parses Automatic1111 WebUI image metadata",
   "version": "1.0",
   "maintainer": "Ktiseos Nyx",
@@ -16,6 +16,18 @@
       "comment": "Rule 2: Differentiate from simple JSON formats",
       "source_type": "a1111_parameter_string_content",
       "operator": "not_strictly_simple_json_object_with_prompt_key"
+    },
+    {
+      "comment": "Rule 3: Must not have PNG workflow chunk",
+      "source_type": "png_chunk",
+      "source_key": "workflow",
+      "operator": "not_exists"
+    },
+    {
+      "comment": "Rule 4: UserComment must not contain ComfyUI workflow patterns",
+      "source_type": "exif_user_comment",
+      "operator": "does_not_contain",
+      "value": "\"class_type\""
     }
   ],
   "parsing_instructions": {

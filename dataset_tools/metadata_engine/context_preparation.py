@@ -126,7 +126,7 @@ class ContextDataPreparer:
         return context
 
     def _extract_exif_data(self, context: ContextData) -> None:
-        """Extract EXIF data from PIL info."""
+        """Extract EXIF data from PIL info with enhanced UserComment handling."""
         exif_bytes = context["pil_info"].get("exif")
         if not exif_bytes:
             return
@@ -135,10 +135,38 @@ class ContextDataPreparer:
             loaded_exif = piexif.load(exif_bytes)
             context["exif_dict"] = loaded_exif
 
-            # User comment extraction
+            # User comment extraction with enhanced handling
             uc_bytes = loaded_exif.get("Exif", {}).get(piexif.ExifIFD.UserComment)
+            self.logger.debug(f"EXIF UserComment raw bytes (uc_bytes): {uc_bytes[:50] if uc_bytes else 'None'}...")
             if uc_bytes:
-                context["raw_user_comment_str"] = piexif.helper.UserComment.load(uc_bytes)
+                # Try standard piexif extraction first
+                try:
+                    user_comment = piexif.helper.UserComment.load(uc_bytes)
+                    self.logger.debug(f"piexif.helper.UserComment.load result: {user_comment[:50] if user_comment else 'None'}...")
+                    if user_comment and len(user_comment.strip()) > 0:
+                        context["raw_user_comment_str"] = user_comment
+                        self.logger.debug(f"Standard EXIF UserComment extracted: {len(user_comment)} chars")
+                    else:
+                        # Empty or whitespace-only result, try robust decoding
+                        self.logger.debug("Standard piexif UserComment empty or whitespace-only, trying robust decoding.")
+                        decoded_uc = self._decode_usercomment_bytes_robust(uc_bytes)
+                        self.logger.debug(f"Robust decoder input (uc_bytes): {uc_bytes[:50] if uc_bytes else 'None'}...")
+                        self.logger.debug(f"Robust decoder output: {decoded_uc[:50] if decoded_uc else 'None'}...")
+                        if decoded_uc:
+                            context["raw_user_comment_str"] = decoded_uc
+                            self.logger.debug(f"Robust UserComment extracted: {len(decoded_uc)} chars")
+                except Exception as e:
+                    self.logger.debug(f"Standard UserComment extraction failed: {e}, trying robust method")
+                    decoded_uc = self._decode_usercomment_bytes_robust(uc_bytes)
+                    self.logger.debug(f"Robust decoder input (uc_bytes): {uc_bytes[:50] if uc_bytes else 'None'}...")
+                    self.logger.debug(f"Robust decoder output: {decoded_uc[:50] if decoded_uc else 'None'}...")
+                    if decoded_uc:
+                        context["raw_user_comment_str"] = decoded_uc
+                        self.logger.debug(f"Robust UserComment extracted: {len(decoded_uc)} chars")
+            else:
+                self.logger.debug("No uc_bytes found from piexif. Trying PIL getexif() as fallback.")
+                # No UserComment in piexif, try PIL's getexif() which might have already decoded it
+                self._extract_usercomment_from_pil_getexif(context)
 
             # Software tag extraction
             sw_bytes = loaded_exif.get("0th", {}).get(piexif.ImageIFD.Software)
@@ -149,6 +177,146 @@ class ContextDataPreparer:
 
         except Exception as e:
             self.logger.debug(f"Failed to extract EXIF data: {e}")
+            # Try PIL getexif as complete fallback
+            self._extract_usercomment_from_pil_getexif(context)
+        
+        self.logger.debug(f"Final raw_user_comment_str in context: {context['raw_user_comment_str'][:50] if context['raw_user_comment_str'] else 'None'}...")
+
+    def _extract_usercomment_from_pil_getexif(self, context: ContextData) -> None:
+        """Extract UserComment using PIL's getexif() method which can handle some Unicode cases directly."""
+        file_path = context.get("file_path_original")
+        if not file_path:
+            return
+            
+        try:
+            from PIL import Image
+            
+            with Image.open(file_path) as img:
+                exif_data = img.getexif()
+                if exif_data:
+                    user_comment = exif_data.get(37510)  # UserComment tag
+                    if user_comment:
+                        if isinstance(user_comment, str):
+                            # PIL already decoded it successfully
+                            context["raw_user_comment_str"] = user_comment
+                            self.logger.debug(f"PIL getexif UserComment extracted: {len(user_comment)} chars")
+                            
+                            # If this is a large ComfyUI JSON, also try to parse it
+                            if user_comment.startswith('{"') and '"prompt":' in user_comment:
+                                try:
+                                    import json
+                                    workflow_data = json.loads(user_comment)
+                                    context["comfyui_workflow_json"] = workflow_data
+                                    self.logger.debug("Parsed ComfyUI workflow JSON from PIL getexif")
+                                except json.JSONDecodeError:
+                                    self.logger.debug("PIL getexif UserComment contains JSON-like data but failed to parse")
+                                    
+                        elif isinstance(user_comment, bytes):
+                            # PIL returned raw bytes, try robust decoding
+                            decoded = self._decode_usercomment_bytes_robust(user_comment)
+                            if decoded:
+                                context["raw_user_comment_str"] = decoded
+                                self.logger.debug(f"PIL getexif robust UserComment extracted: {len(decoded)} chars")
+                                
+                                # Check for ComfyUI JSON
+                                if decoded.startswith('{"') and '"prompt":' in decoded:
+                                    try:
+                                        import json
+                                        workflow_data = json.loads(decoded)
+                                        context["comfyui_workflow_json"] = workflow_data
+                                        self.logger.debug("Parsed ComfyUI workflow JSON from PIL getexif robust")
+                                    except json.JSONDecodeError:
+                                        self.logger.debug("PIL getexif robust UserComment contains JSON-like data but failed to parse")
+                        else:
+                            self.logger.debug(f"PIL getexif UserComment unexpected type: {type(user_comment)}")
+                else:
+                    self.logger.debug("No EXIF data found in PIL getexif")
+                    # Final fallback to manual extraction
+                    self._extract_usercomment_enhanced(context)
+                    
+        except Exception as e:
+            self.logger.debug(f"PIL getexif extraction failed: {e}")
+            # Final fallback to manual extraction
+            self._extract_usercomment_enhanced(context)
+
+    def _extract_usercomment_enhanced(self, context: ContextData) -> None:
+        """Enhanced UserComment extraction using robust PIL-based decoding for problematic cases."""
+        file_path = context.get("file_path_original")
+        if not file_path:
+            return
+
+        # Use robust PIL-based extraction (no external dependencies)
+        self._extract_usercomment_manual_unicode(context)
+
+    def _extract_usercomment_manual_unicode(self, context: ContextData) -> None:
+        """Manual Unicode UserComment extraction using robust decoding strategies."""
+        try:
+            from PIL import Image
+            file_path = context.get("file_path_original")
+            if not file_path:
+                return
+                
+            # Try to get raw UserComment bytes directly from PIL
+            with Image.open(file_path) as img:
+                exif_data = img.getexif()
+                if exif_data:
+                    user_comment_raw = exif_data.get(37510)  # UserComment tag
+                    if user_comment_raw and isinstance(user_comment_raw, bytes):
+                        # Use the same robust decoding as the main path
+                        decoded = self._decode_usercomment_bytes_robust(user_comment_raw)
+                        if decoded:
+                            context["raw_user_comment_str"] = decoded
+                            self.logger.debug(f"Manual robust UserComment extracted: {len(decoded)} chars")
+                            
+                            # If this is a large ComfyUI JSON, also try to parse it
+                            if decoded.startswith('{"') and '"prompt":' in decoded:
+                                try:
+                                    import json
+                                    workflow_data = json.loads(decoded)
+                                    context["comfyui_workflow_json"] = workflow_data
+                                    self.logger.debug("Parsed ComfyUI workflow JSON from manual extraction")
+                                except json.JSONDecodeError:
+                                    self.logger.debug("UserComment contains JSON-like data but failed to parse")
+                            
+        except Exception as e:
+            self.logger.debug(f"Manual Unicode extraction failed: {e}")
+
+    def _decode_usercomment_bytes_robust(self, data: bytes) -> str:
+        """Try various decoding strategies for UserComment bytes."""
+
+        # Strategy 1: Unicode prefix with UTF-16
+        if data.startswith(b'UNICODE\x00\x00'):
+            try:
+                utf16_data = data[9:]  # Skip "UNICODE\0\0"
+                return utf16_data.decode('utf-16le')
+            except:
+                pass
+
+        # Strategy 2: charset=Unicode prefix (mojibake format)
+        if data.startswith(b'charset=Unicode'):
+            try:
+                unicode_part = data[len(b'charset=Unicode '):]
+                return unicode_part.decode('utf-16le', errors='ignore')
+            except:
+                pass
+
+        # Strategy 3: Direct UTF-8
+        try:
+            return data.decode('utf-8')
+        except:
+            pass
+
+        # Strategy 4: Latin-1 (preserves all bytes)
+        try:
+            return data.decode('latin-1')
+        except:
+            pass
+
+        # Strategy 5: Ignore errors
+        try:
+            return data.decode('utf-8', errors='ignore')
+        except:
+            return ""
 
     def _extract_xmp_data(self, context: ContextData) -> None:
         """Extract XMP data from PIL info."""

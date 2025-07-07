@@ -4,21 +4,81 @@
   "description": "Advanced ComfyUI parser that handles any workflow type with robust detection and extraction",
   "version": "2.0_universal_edition",
   "maintainer": "DuskFall Crew",
-  "target_file_types": ["PNG"],
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
 
   "detection_rules": [
     {
-      "comment": "Rule 1: Must have prompt PNG chunk with valid JSON (primary ComfyUI format)",
-      "source_type": "pil_info_key",
-      "source_key": "prompt",
-      "operator": "is_valid_json"
+      "comment": "Rule 1: Must have 'workflow' PNG chunk with valid JSON and ComfyUI node signatures",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "exists"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "json_path_exists_boolean",
+          "json_path": "$.nodes[?(@.class_type =~ /KSampler|SamplerCustomAdvanced|CLIPTextEncode/i)]"
+        },
+        {
+          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "extraMetadata"
+        }
+      ]
     },
     {
-      "comment": "Rule 2: Must contain ComfyUI node signatures in the JSON",
-      "source_type": "pil_info_key",
-      "source_key": "prompt",
-      "operator": "contains",
-      "value": "KSampler"
+      "comment": "Rule 2: OR, must have 'prompt' pil_info_key with valid JSON and ComfyUI node signatures (for older/different formats)",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "json_path_exists_boolean",
+          "json_path": "$.nodes[?(@.class_type =~ /KSampler|SamplerCustomAdvanced|CLIPTextEncode/i)]"
+        },
+        {
+          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "does_not_contain",
+          "value": "extraMetadata"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 3: Must NOT be a Civitai JPEG ComfyUI file (exclude EXIF UserComment with extraMetadata)",
+      "operator": "NOT",
+      "rules": [
+        {
+          "operator": "AND",
+          "rules": [
+            {
+              "source_type": "exif_user_comment",
+              "operator": "is_valid_json"
+            },
+            {
+              "source_type": "exif_user_comment",
+              "operator": "contains",
+              "value": "extraMetadata"
+            }
+          ]
+        }
+      ]
     }
   ],
 
@@ -38,14 +98,16 @@
         "method": "comfy_find_text_from_main_sampler_input",
         "sampler_node_types": [
           "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced"
+          "KSamplerAdvanced", 
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
         ],
         "positive_input_name": "positive",
         "text_input_name_in_encoder": "text",
         "text_encoder_node_types": [
           "CLIPTextEncode",
-          "BNK_CLIPTextEncodeAdvanced"
+          "BNK_CLIPTextEncodeAdvanced",
+          "CLIPTextEncodeAdvanced"
         ]
       },
       {
@@ -54,14 +116,16 @@
         "method": "comfy_find_text_from_main_sampler_input",
         "sampler_node_types": [
           "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced"
+          "KSamplerAdvanced", 
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
         ],
         "negative_input_name": "negative",
         "text_input_name_in_encoder": "text",
         "text_encoder_node_types": [
           "CLIPTextEncode",
-          "BNK_CLIPTextEncodeAdvanced"
+          "BNK_CLIPTextEncodeAdvanced",
+          "CLIPTextEncodeAdvanced"
         ]
       },
       {
@@ -70,8 +134,9 @@
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced"
+          "KSamplerAdvanced", 
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
         ],
         "input_key": "seed",
         "value_type": "integer"
@@ -82,8 +147,9 @@
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced"
+          "KSamplerAdvanced", 
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
         ],
         "input_key": "steps",
         "value_type": "integer"
@@ -94,8 +160,9 @@
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced"
+          "KSamplerAdvanced", 
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
         ],
         "input_key": "cfg",
         "value_type": "float"
@@ -106,11 +173,34 @@
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced"
+          "KSamplerAdvanced", 
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
         ],
         "input_key": "sampler_name",
         "value_type": "string"
+      },
+      {
+        "comment": "Extract width from latent image nodes",
+        "target_key": "parameters.width",
+        "method": "comfy_find_node_input_or_widget_value",
+        "node_criteria": [
+          {"class_type": "EmptyLatentImage"},
+          {"class_type": "LatentUpscale"}
+        ],
+        "input_key": "width",
+        "value_type": "integer"
+      },
+      {
+        "comment": "Extract height from latent image nodes",
+        "target_key": "parameters.height",
+        "method": "comfy_find_node_input_or_widget_value",
+        "node_criteria": [
+          {"class_type": "EmptyLatentImage"},
+          {"class_type": "LatentUpscale"}
+        ],
+        "input_key": "height",
+        "value_type": "integer"
       }
     ],
 
@@ -126,7 +216,9 @@
         "seed": "$parameters.seed",
         "steps": "$parameters.steps",
         "cfg_scale": "$parameters.cfg_scale",
-        "sampler_name": "$parameters.sampler_name"
+        "sampler_name": "$parameters.sampler_name",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
       },
 
       "workflow_info": {

@@ -1,6 +1,6 @@
 {
   "parser_name": "Draw_Things",
-  "priority": 175,
+  "priority": 185,
   "description": "Draw Things - Mobile-first AI art app with XMP metadata integration 📱✨",
   "version": "2.1",
   "maintainer": "Ktiseos Nyx",
@@ -155,7 +155,7 @@
       "workflow_metadata": {
         "parser": "Draw_Things v2.1",
         "source": "XMP exif:UserComment",
-        "parser_priority": 95,
+        "parser_priority": 185,
         "confidence": "high",
         "filename": "$FILE_NAME"
       }

@@ -13,10 +13,16 @@
       "operator": "is_valid_json"
     },
     {
-      "comment": "Rule 2: Must contain ComfyUI sampler signatures",
+      "comment": "Rule 2: Must contain ComfyUI class_type signatures",
       "source_type": "exif_user_comment",
       "operator": "contains",
-      "value": "KSampler"
+      "value": "\"class_type\""
+    },
+    {
+      "comment": "Rule 3: Must NOT contain Civitai extra.extraMetadata structure (defer to Civitai ComfyUI parser)",
+      "source_type": "exif_user_comment",
+      "operator": "does_not_contain",
+      "value": "\"extra\":{\"extraMetadata\""
     }
   ],
 
@@ -26,6 +32,9 @@
       "transformations": [
         {
           "type": "json_decode_string_itself"
+        },
+        {
+          "type": "filter_dict_nodes_only"
         }
       ]
     },
@@ -52,7 +61,8 @@
           "BNK_CLIPTextEncodeAdvanced",
           "PixArtT5TextEncode",
           "T5TextEncode",
-          "CLIPTextEncodeSDXLRefiner"
+          "CLIPTextEncodeSDXLRefiner",
+          "smZ CLIPTextEncode"
         ],
         "fallback": "Could not extract prompt"
       },
@@ -78,7 +88,8 @@
           "BNK_CLIPTextEncodeAdvanced",
           "PixArtT5TextEncode",
           "T5TextEncode",
-          "CLIPTextEncodeSDXLRefiner"
+          "CLIPTextEncodeSDXLRefiner",
+          "smZ CLIPTextEncode"
         ],
         "fallback": ""
       },

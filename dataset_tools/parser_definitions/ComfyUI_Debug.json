@@ -1,6 +1,6 @@
 {
   "parser_name": "ComfyUI_Debug",
-  "priority": 200,
+  "priority": 50,
   "description": "Debug ComfyUI parser using simple extraction methods to test field mapping",
   "version": "1.0_debug",
   "maintainer": "Chaos Bean Crew",

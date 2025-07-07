@@ -1,0 +1,198 @@
+{
+  "parser_name": "CivitAI API",
+  "priority": 174,
+  "description": "CivitAI API and training inference - detects API-generated images with specific CivitAI API signatures and numbered models 🎨🔗",
+  "version": "1.0",
+  "maintainer": "Chaos Bean Crew",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have A1111-style parameters (Steps, Sampler, CFG scale, etc.)",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_all",
+      "regex_patterns": ["Steps:", "Sampler:", "CFG scale:", "Seed:", "Model:"]
+    },
+    {
+      "comment": "Rule 2: Must contain specific CivitAI API indicators (numbered models, API patterns, or inference signatures)",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_any",
+      "regex_patterns": [
+        "Model: \\d{5,7}\\.safetensors",
+        "Model: \\d{5,7}\\.ckpt",
+        "civitai\\.com",
+        "api\\.civitai",
+        "CivitAI API",
+        "inference\\.civitai",
+        "training\\.civitai",
+        "Version: \\d+\\.\\d+\\.\\d+",
+        "API Key:",
+        "Request ID:",
+        "Job ID:"
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "pil_info_key", "source_key": "parameters"},
+        {"source_type": "exif_user_comment"},
+        {"source_type": "pil_info_key", "source_key": "Comment"}
+      ],
+      "transformations": [
+        {"type": "conditional_json_unwrap_parameters_string"}
+      ]
+    },
+
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "a1111_extract_prompt_positive"
+      },
+      {
+        "target_key": "negative_prompt", 
+        "method": "a1111_extract_prompt_negative"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.sampler",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Sampler", 
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG scale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.original_size",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Size",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.model_name",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.model_hash",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model hash",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.clip_skip",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Clip skip",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.hires_upscaler",
+        "method": "key_value_extract_from_a1111_block", 
+        "key_name": "Hires upscaler",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.hires_steps",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Hires steps", 
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.denoising_strength",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Denoising strength",
+        "value_type": "float",
+        "optional": true
+      }
+    ],
+
+    "output_template": {
+      "tool": "CivitAI API",
+      "category": "API Generation / Training Inference",
+      "platform": "CivitAI",
+      
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+
+      "parameters": {
+        "steps": "$parameters.steps",
+        "sampler": "$parameters.sampler", 
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height",
+        "original_size": "$parameters.original_size",
+        "clip_skip": "$parameters.clip_skip"
+      },
+
+      "model_info": {
+        "model_name": "$parameters.model_name",
+        "model_hash": "$parameters.model_hash",
+        "likely_civitai_model": true,
+        "model_analysis": {
+          "is_illustrious": "$parameters.model_name CONTAINS illustrious",
+          "is_pony": "$parameters.model_name CONTAINS pony",
+          "is_numbered_model": "$parameters.model_name MATCHES \\d{5,7}",
+          "model_type": "CivitAI Community Model"
+        }
+      },
+
+      "generation_context": {
+        "source": "CivitAI API or Training Inference",
+        "format": "A1111-compatible parameters",
+        "upscaling": {
+          "hires_upscaler": "$parameters.hires_upscaler",
+          "hires_steps": "$parameters.hires_steps", 
+          "denoising_strength": "$parameters.denoising_strength",
+          "size_change": "$parameters.original_size → $CONTEXT.width x $CONTEXT.height"
+        }
+      },
+
+      "detection_confidence": {
+        "civitai_indicators": [
+          "A1111-style formatting",
+          "CivitAI model patterns detected",
+          "Community model naming conventions"
+        ],
+        "confidence_level": "high"
+      },
+
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine", 
+        "template_processed": true,
+        "note": "CivitAI API or training inference with A1111-compatible formatting"
+      }
+    }
+  },
+
+  "notes": [
+    "Detects CivitAI API-generated images and LoRA training inference outputs",
+    "Uses specific API signatures (numbered models, API URLs, inference markers)",
+    "Distinguishes from regular A1111 WebUI usage by requiring actual API indicators",
+    "Priority 174 - higher than A1111 WebUI (170) for specific CivitAI API detection", 
+    "Supports both direct API calls and training inference workflows",
+    "Requires numbered model files (12345.safetensors) or explicit API markers",
+    "No longer matches just model names - requires actual CivitAI API evidence"
+  ]
+}

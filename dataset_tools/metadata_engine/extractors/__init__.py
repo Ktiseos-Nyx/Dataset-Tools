@@ -9,6 +9,7 @@ This package contains specialized extractors for different AI image formats:
 - CivitaiExtractor: Civitai platform formats
 - ComfyUIExtractor: ComfyUI workflow format
 - JSONExtractor: JSON processing utilities
+- RegexExtractor: Regular expression text extraction
 """
 
 from .direct_extractors import DirectValueExtractor
@@ -16,6 +17,7 @@ from .a1111_extractors import A1111Extractor
 from .civitai_extractors import CivitaiExtractor
 from .comfyui_extractors import ComfyUIExtractor
 from .json_extractors import JSONExtractor
+from .regex_extractors import RegexExtractor
 
 __all__ = [
     "DirectValueExtractor",
@@ -23,4 +25,5 @@ __all__ = [
     "CivitaiExtractor",
     "ComfyUIExtractor",
     "JSONExtractor",
+    "RegexExtractor",
 ]

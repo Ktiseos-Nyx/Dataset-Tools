@@ -68,6 +68,8 @@ def reconfigure_all_loggers(new_log_level_name_str: str):
         for handler in logger.handlers:
             if isinstance(handler, RichHandler):
                 handler.setLevel(actual_level_enum)
+        # Also set the root logger's level to ensure all child loggers inherit it
+        pylog.root.setLevel(actual_level_enum)
         # Use the logger's own method for consistency after reconfiguration
         debug_message("Dataset-Tools Logger internal level object set to: %s", actual_level_enum)
         info_monitor(  # Use info_monitor which is now fixed

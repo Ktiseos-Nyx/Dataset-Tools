@@ -193,19 +193,60 @@ class ImageMetadataReader:
                 "IPTC": iptc_tags,
                 "XMP": xmp_tags,
             }
-            
+
+            # Attempt to correct UserComment decoding if pyexiv2 returned a mojibaked string
+            if "Exif.Photo.UserComment" in exif_tags:
+                uc_value = exif_tags["Exif.Photo.UserComment"]
+                corrected_uc = uc_value # Default to original
+
+                if isinstance(uc_value, bytes):
+                    # If pyexiv2 returns bytes, use the robust byte decoder
+                    corrected_uc = self._decode_usercomment_bytes(uc_value)
+                elif isinstance(uc_value, str):
+                    # If pyexiv2 returns a string, try to correct it if it looks like mojibake
+                    corrected_uc = self._decode_pyexiv2_usercomment_string(uc_value)
+                else:
+                    # Fallback for other types
+                    corrected_uc = str(uc_value)
+
+                if corrected_uc != uc_value:
+                    metadata["EXIF"]["Exif.Photo.UserComment"] = corrected_uc
+                    self.logger.debug(f"Corrected UserComment for {Path(file_path).name}")
+
             # Check if we actually found any metadata
             if not any(metadata.values()):
                 nfo(f"[ImageReader] pyexiv2 found no metadata in: {Path(file_path).name}")
                 return None
-            
+
             nfo(f"[ImageReader] pyexiv2 successfully read metadata from: {Path(file_path).name}")
             return metadata
-            
+
         except Exception as e:
             self.logger.debug(f"pyexiv2 error for {file_path}: {e}")
             return None
-    
+
+    def _decode_pyexiv2_usercomment_string(self, data_str: str) -> str:
+        """
+        Attempts to decode a pyexiv2-returned UserComment string if it appears mojibaked.
+        Specifically targets strings starting with 'charset=Unicode'.
+        """
+        if data_str.startswith("charset=Unicode"):
+            try:
+                # Extract the part after 'charset=Unicode '
+                prefix_len = len("charset=Unicode ")
+                if len(data_str) > prefix_len:
+                    unicode_part_str = data_str[prefix_len:]
+
+                    # Convert the string back to bytes using 'latin-1'.
+                    # This assumes pyexiv2 has treated each byte of the original
+                    # UTF-16LE data as a separate Latin-1 character when forming the string.
+                    # Then, decode these bytes as UTF-16LE.
+                    return unicode_part_str.encode('latin-1').decode('utf-16le', errors='ignore')
+            except Exception as e:
+                self.logger.debug(f"Failed to re-decode UserComment string with charset prefix: {e}")
+        # If it doesn't have the charset prefix or the above failed, return the original string
+        return data_str
+
     def _fallback_to_pillow(self, file_path: str, context: str) -> Optional[Dict[str, Any]]:
         """
         Fallback to Pillow for EXIF reading.
@@ -255,18 +296,20 @@ class ImageMetadataReader:
                 exif_data = {}
                 for tag_id, value in exif_info.items():
                     tag_name = TAGS.get(tag_id, f"Tag_{tag_id}")
-                    
-                    # Handle bytes values
-                    if isinstance(value, bytes):
+
+                    # Specifically handle UserComment decoding for Pillow fallback
+                    if tag_name == "UserComment" and isinstance(value, bytes):
+                        value = self._decode_usercomment_bytes(value)
+                    elif isinstance(value, bytes):
                         try:
                             value = value.decode('utf-8', errors='replace')
                         except UnicodeDecodeError:
                             value = str(value)
-                    
+
                     exif_data[tag_name] = value
-                
+
                 return exif_data
-                
+
         except FileNotFoundError:
             self.logger.error(f"Image file not found: {file_path}")
             return None
@@ -276,7 +319,44 @@ class ImageMetadataReader:
         except Exception as e:
             self.logger.error(f"Unexpected error reading image {file_path}: {e}", exc_info=True)
             return None
-    
+
+    def _decode_usercomment_bytes(self, data: bytes) -> str:
+        """Try various decoding strategies for UserComment bytes."""
+
+        # Strategy 1: Unicode prefix with UTF-16
+        if data.startswith(b'UNICODE\x00\x00'):
+            try:
+                utf16_data = data[9:]  # Skip "UNICODE\0\0"
+                return utf16_data.decode('utf-16le')
+            except:
+                pass
+
+        # Strategy 2: charset=Unicode prefix (mojibake format)
+        if data.startswith(b'charset=Unicode'):
+            try:
+                unicode_part = data[len(b'charset=Unicode '):]
+                return unicode_part.decode('utf-16le', errors='ignore')
+            except:
+                pass
+
+        # Strategy 3: Direct UTF-8
+        try:
+            return data.decode('utf-8')
+        except:
+            pass
+
+        # Strategy 4: Latin-1 (preserves all bytes)
+        try:
+            return data.decode('latin-1')
+        except:
+            pass
+
+        # Strategy 5: Ignore errors
+        try:
+            return data.decode('utf-8', errors='ignore')
+        except:
+            return ""
+
     def _log_user_comment_info(self, metadata: Dict[str, Any], file_path: str) -> None:
         """Log information about UserComment field for debugging."""
         exif_data = metadata.get("EXIF", {})

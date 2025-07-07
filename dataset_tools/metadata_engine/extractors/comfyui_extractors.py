@@ -8,7 +8,8 @@ including node traversal and parameter extraction.
 """
 
 import logging
-from typing import Any, Dict, Optional
+import re
+from typing import Any, Dict, Optional, Union
 
 # Type aliases
 ContextData = Dict[str, Any]
@@ -56,6 +57,11 @@ class ComfyUIExtractor:
             "comfy_find_node_input": self._find_node_input,
             "comfy_find_text_from_sampler_input": self._find_text_from_sampler_input,
             "comfy_find_vae_from_checkpoint_loader": self._find_vae_from_checkpoint_loader,
+            # T5/FLUX specialized extraction methods
+            "t5_extract_prompt_from_dual_clip_loader": self._t5_extract_prompt_from_dual_clip_loader,
+            "t5_extract_parameters_from_modular_sampler": self._t5_extract_parameters_from_modular_sampler,
+            "t5_extract_model_from_dual_clip_loader": self._t5_extract_model_from_dual_clip_loader,
+            "t5_extract_dimensions_from_empty_latent": self._t5_extract_dimensions_from_empty_latent,
         }
 
     def _extract_comfy_text_from_clip_encode_nodes(
@@ -83,7 +89,7 @@ class ComfyUIExtractor:
                 widgets_values = node.get("widgets_values", [])
                 if widgets_values and len(widgets_values) > 0:
                     text = str(widgets_values[0])
-                    
+
                     if text:
                         # Smart heuristic: detect negative prompts by content
                         text_lower = text.lower()
@@ -95,7 +101,7 @@ class ComfyUIExtractor:
                             "worst" in text_lower or
                             "low quality" in text_lower
                         )
-                        
+
                         if is_negative and not prompts["negative"]:
                             prompts["negative"] = text
                         elif not is_negative and not prompts["positive"]:
@@ -144,7 +150,15 @@ class ComfyUIExtractor:
                     # Use as positive if explicitly marked or if we don't have one yet
                     prompts["positive"] = text
 
-        return prompts
+        # Clean embedding prefixes from prompts as suggested by Gemini
+        cleaned_prompts = {}
+        for key, text in prompts.items():
+            if text:
+                cleaned_prompts[key] = self._clean_prompt_text(text)
+            else:
+                cleaned_prompts[key] = text
+
+        return cleaned_prompts
 
     def _extract_comfy_sampler_settings(
         self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
@@ -154,7 +168,7 @@ class ComfyUIExtractor:
             return {}
 
         settings = {}
-        
+
         # Handle workflow format (nodes array) vs prompt format (nodes dict)
         if "nodes" in data and isinstance(data["nodes"], list):
             # Workflow format - already handled in _extract_workflow_parameters
@@ -277,7 +291,7 @@ class ComfyUIExtractor:
 
         nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", data)
 
-        for node_id, node_data in nodes.items():
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if not isinstance(node_data, dict):
                 continue
 
@@ -311,7 +325,7 @@ class ComfyUIExtractor:
         return None
 
     # Simple ComfyUI parser methods for ComfyUI_Simple parser
-    
+
     def _extract_prompt_from_workflow(
         self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
     ) -> str:
@@ -324,10 +338,10 @@ class ComfyUIExtractor:
             except (json.JSONDecodeError, ValueError):
                 self.logger.warning("ComfyUI: Failed to parse workflow JSON string")
                 return ""
-        
+
         prompts = self._extract_comfy_text_from_clip_encode_nodes(data, method_def, context, fields)
         return prompts.get("positive", "")
-    
+
     def _extract_negative_prompt_from_workflow(
         self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
     ) -> str:
@@ -340,10 +354,10 @@ class ComfyUIExtractor:
             except (json.JSONDecodeError, ValueError):
                 self.logger.warning("ComfyUI: Failed to parse workflow JSON string")
                 return ""
-        
+
         prompts = self._extract_comfy_text_from_clip_encode_nodes(data, method_def, context, fields)
         return prompts.get("negative", "")
-    
+
     def _extract_workflow_parameters(
         self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
     ) -> Dict[str, Any]:
@@ -356,14 +370,14 @@ class ComfyUIExtractor:
             except (json.JSONDecodeError, ValueError):
                 self.logger.warning("ComfyUI: Failed to parse workflow JSON string")
                 return {}
-        
+
         # Get sampler settings
         sampler_params = self._extract_comfy_sampler_settings(data, method_def, context, fields)
-        
+
         # Add workflow metadata if available
         parameters = {}
         parameters.update(sampler_params)
-        
+
         # Extract model information - handle both prompt and workflow formats
         if isinstance(data, dict):
             # Handle workflow format (nodes array)
@@ -372,15 +386,15 @@ class ComfyUIExtractor:
                 for node in nodes:
                     if not isinstance(node, dict):
                         continue
-                    
+
                     node_type = node.get("type", "")
                     widgets_values = node.get("widgets_values", [])
-                    
+
                     # Extract checkpoint/model info
                     if "CheckpointLoader" in node_type:
                         if widgets_values and len(widgets_values) > 0:
                             parameters["model"] = str(widgets_values[0])
-                    
+
                     # Extract KSampler parameters from widgets_values
                     elif "KSampler" in node_type:
                         if widgets_values and len(widgets_values) >= 6:
@@ -392,31 +406,31 @@ class ComfyUIExtractor:
                                 parameters["scheduler"] = str(widgets_values[4]) if widgets_values[4] is not None else None
                                 parameters["denoise"] = float(widgets_values[5]) if widgets_values[5] is not None else None
                             except (ValueError, TypeError, IndexError):
-                                self.logger.debug(f"Could not parse KSampler widgets from workflow node")
-            
+                                self.logger.debug("Could not parse KSampler widgets from workflow node")
+
             # Handle prompt format (nodes dict) - fallback to original logic
             else:
                 nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
-                
+
                 for node_id, node_data in nodes.items():
                     if not isinstance(node_data, dict):
                         continue
-                    
+
                     class_type = node_data.get("class_type", node_data.get("type", ""))
                     inputs = node_data.get("inputs", {})
-                    
+
                     # Extract checkpoint/model info
                     if "CheckpointLoader" in class_type or "ModelLoader" in class_type:
                         if "ckpt_name" in inputs:
                             parameters["model"] = inputs["ckpt_name"]
                         elif "model_name" in inputs:
                             parameters["model"] = inputs["model_name"]
-                    
+
                     # Extract VAE info
                     elif "VAELoader" in class_type:
                         if "vae_name" in inputs:
                             parameters["vae"] = inputs["vae_name"]
-                    
+
                     # Extract LoRA info
                     elif "LoraLoader" in class_type:
                         if "lora_name" in inputs:
@@ -425,16 +439,30 @@ class ComfyUIExtractor:
                             if "loras" not in parameters:
                                 parameters["loras"] = []
                             parameters["loras"].append(f"{lora_name}:{lora_strength}")
-        
+
         # Clean up None values
         return {k: v for k, v in parameters.items() if v is not None}
-    
+
+    def _clean_prompt_text(self, text: str) -> str:
+        """
+        Clean embedding prefixes and other artifacts from prompt text.
+        """
+        if not isinstance(text, str):
+            return text
+
+        text = re.sub(r'^embedding:negatives\\?', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'^embedding:', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'^negatives\\', '', text, flags=re.IGNORECASE)
+        text = text.strip()
+
+        return text
+
     def _extract_raw_workflow(
         self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
     ) -> str:
         """Extract raw workflow data as string."""
         import json
-        
+
         if isinstance(data, str):
             return data
         elif isinstance(data, dict):
@@ -445,106 +473,135 @@ class ComfyUIExtractor:
         else:
             return str(data)
 
+    def _find_node_by_id(self, nodes: Any, node_id: Union[int, str]) -> Optional[Dict[str, Any]]:
+        """Find a node by its ID in either list or dict format."""
+        if isinstance(nodes, dict):
+            return nodes.get(str(node_id))
+        elif isinstance(nodes, list):
+            for node in nodes:
+                if str(node.get("id", "")) == str(node_id):
+                    return node
+        return None
+
     def _find_text_from_main_sampler_input(
         self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
     ) -> str:
         """
         Find text from main sampler input by traversing ComfyUI workflow connections.
-        
-        This method:
-        1. Finds sampler nodes (KSampler, KSamplerAdvanced, etc.)
-        2. Follows their positive/negative input connections
-        3. Finds the connected text encoder nodes (CLIPTextEncode, etc.)
-        4. Extracts the text from those nodes
+        This method now performs a backward traversal from the sampler to find the
+        originating text encoder, navigating through reroute nodes.
         """
-        self.logger.debug(f"[ComfyUI] _find_text_from_main_sampler_input called with data type: {type(data)}")
-        self.logger.debug(f"[ComfyUI] Method definition: {method_def}")
-        
+        self.logger.debug("[ComfyUI] Starting advanced text traversal...")
         if not isinstance(data, dict):
-            self.logger.debug(f"[ComfyUI] Data is not dict, returning empty string")
             return ""
 
-        # Get parameters from method definition
         sampler_node_types = method_def.get("sampler_node_types", ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"])
-        positive_input_name = method_def.get("positive_input_name", "positive")
-        negative_input_name = method_def.get("negative_input_name", "negative")
-        text_input_name = method_def.get("text_input_name_in_encoder", "text")
+        text_input_name_in_encoder = method_def.get("text_input_name_in_encoder", "text")
         text_encoder_types = method_def.get("text_encoder_node_types", ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"])
 
         # Determine which input to follow (positive or negative)
-        target_input_name = positive_input_name  # Default to positive
-        if negative_input_name in method_def.get("target_key", ""):
-            target_input_name = negative_input_name
+        if method_def.get("positive_input_name"):
+            target_input_name = method_def.get("positive_input_name")
+        elif method_def.get("negative_input_name"):
+            target_input_name = method_def.get("negative_input_name")
+        else:
+            target_input_name = "positive"
 
         # Handle both prompt format (dict of nodes) and workflow format (nodes array)
-        nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
-        self.logger.debug(f"[ComfyUI] Data keys: {list(data.keys()) if isinstance(data, dict) else 'Not dict'}")
-        self.logger.debug(f"[ComfyUI] Nodes type: {type(nodes)}, count: {len(nodes) if nodes else 0}")
+        if isinstance(data, dict) and "nodes" in data:
+            # Workflow format: {"nodes": [...]}
+            nodes = data["nodes"]
+        elif isinstance(data, dict) and all(isinstance(v, dict) for v in data.values()):
+            # Prompt format: {"1": {...}, "2": {...}, ...}
+            nodes = data
+        else:
+            return ""
         
-        # Find the main sampler node
+        if not isinstance(nodes, (dict, list)):
+            return ""
+
+        # 1. Find the main sampler node
         main_sampler = None
-        found_samplers = []
-        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
-            if not isinstance(node_data, dict):
-                continue
-                
-            class_type = node_data.get("class_type", node_data.get("type", ""))
-            found_samplers.append(class_type)
-            if any(sampler_type in class_type for sampler_type in sampler_node_types):
-                main_sampler = (node_id, node_data)
-                self.logger.debug(f"[ComfyUI] Found sampler node {node_id}: {class_type}")
-                break
-
-        self.logger.debug(f"[ComfyUI] All node types found: {found_samplers[:10]}...")  # First 10 to avoid spam
-        if not main_sampler:
-            self.logger.debug(f"[ComfyUI] No sampler found matching: {sampler_node_types}")
-            return ""
-
-        sampler_id, sampler_node = main_sampler
-        
-        # Get the input connection for positive/negative
-        inputs = sampler_node.get("inputs", {})
-        target_connection = inputs.get(target_input_name)
-        
-        if not target_connection:
-            return ""
-
-        # Handle connection format: usually [node_id, output_index]
-        if isinstance(target_connection, list) and len(target_connection) >= 1:
-            connected_node_id = target_connection[0]
-        else:
-            return ""
-
-        # Find the connected text encoder node
-        if isinstance(nodes, dict):
-            # Prompt format
-            connected_node = nodes.get(str(connected_node_id))
-        else:
-            # Workflow format - find by ID
-            connected_node = None
-            for node in nodes:
-                if node.get("id") == connected_node_id or str(node.get("id")) == str(connected_node_id):
-                    connected_node = node
+        node_iterator = nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
+        for node_id, node_data in node_iterator:
+            if isinstance(node_data, dict):
+                class_type = node_data.get("class_type", node_data.get("type", ""))
+                if any(sampler_type in class_type for sampler_type in sampler_node_types):
+                    main_sampler = node_data
+                    self.logger.debug(f"[ComfyUI] Found main sampler: {class_type} (ID: {node_data.get('id', node_id)})")
                     break
 
-        if not connected_node:
+        if not main_sampler:
+            self.logger.debug("[ComfyUI] No main sampler node found.")
             return ""
 
-        # Check if it's a text encoder node
-        connected_class_type = connected_node.get("class_type", connected_node.get("type", ""))
-        if not any(encoder_type in connected_class_type for encoder_type in text_encoder_types):
+        # 2. Get the initial connection from the sampler
+        inputs = main_sampler.get("inputs", {})
+        target_connection = None
+        if isinstance(inputs, dict):
+            target_connection = inputs.get(target_input_name)
+        elif isinstance(inputs, list):
+            for input_item in inputs:
+                if isinstance(input_item, dict) and input_item.get("name") == target_input_name:
+                    link_id = input_item.get("link")
+                    if link_id is not None:
+                        target_connection = [link_id, 0]
+                    break
+
+        if not target_connection or not isinstance(target_connection, list) or len(target_connection) == 0:
+            self.logger.debug(f"[ComfyUI] No initial connection found for '{target_input_name}'.")
             return ""
 
-        # Extract text from the encoder node
-        encoder_inputs = connected_node.get("inputs", {})
-        if text_input_name in encoder_inputs:
-            return str(encoder_inputs[text_input_name])
-        
-        # Fallback to widgets_values
-        widgets = connected_node.get("widgets_values", [])
-        if widgets:
-            return str(widgets[0])
+        # 3. Traverse backwards from the connection
+        current_node_id = target_connection[0]
 
+        MAX_TRAVERSAL_DEPTH = 20
+        for i in range(MAX_TRAVERSAL_DEPTH):
+            self.logger.debug(f"[ComfyUI] Traversal depth {i+1}, current node ID: {current_node_id}")
+
+            current_node = self._find_node_by_id(nodes, current_node_id)
+            if not current_node:
+                self.logger.debug(f"[ComfyUI] Traversal failed: Node ID {current_node_id} not found.")
+                return ""
+
+            class_type = current_node.get("class_type", current_node.get("type", ""))
+
+            # 4a. Check if we found a text encoder
+            if any(encoder_type in class_type for encoder_type in text_encoder_types):
+                self.logger.debug(f"[ComfyUI] Found text encoder: {class_type}")
+                encoder_inputs = current_node.get("inputs", {})
+                if text_input_name_in_encoder in encoder_inputs:
+                    text = str(encoder_inputs[text_input_name_in_encoder])
+                    return self._clean_prompt_text(text)
+
+                widgets = current_node.get("widgets_values", [])
+                if widgets:
+                    text = str(widgets[0])
+                    return self._clean_prompt_text(text)
+                return ""
+
+            # 4b. Check if it's a passthrough/reroute node
+            node_inputs = current_node.get("inputs", {})
+            if "Reroute" in class_type or len(node_inputs) == 1:
+                self.logger.debug(f"[ComfyUI] Traversing through passthrough node: {class_type}.")
+
+                next_connection = None
+                if isinstance(node_inputs, dict) and node_inputs:
+                    first_input_key = next(iter(node_inputs))
+                    next_connection = node_inputs.get(first_input_key)
+                elif isinstance(node_inputs, list) and node_inputs:
+                    link_id = node_inputs[0].get("link")
+                    if link_id is not None:
+                        next_connection = [link_id, 0]
+
+                if isinstance(next_connection, list) and len(next_connection) > 0:
+                    current_node_id = next_connection[0]
+                    continue
+
+            self.logger.debug(f"[ComfyUI] Traversal stopped at node type: {class_type}. Not a recognized text encoder or passthrough node.")
+            return ""
+
+        self.logger.warning("[ComfyUI] Traversal depth limit reached, could not find text encoder.")
         return ""
 
     def _find_input_of_main_sampler(
@@ -552,7 +609,7 @@ class ComfyUIExtractor:
     ) -> Any:
         """
         Find a specific input value from the main sampler node.
-        
+
         This method:
         1. Finds sampler nodes (KSampler, KSamplerAdvanced, etc.)
         2. Extracts the specified input key (seed, steps, cfg, etc.)
@@ -560,7 +617,7 @@ class ComfyUIExtractor:
         """
         self.logger.debug(f"[ComfyUI] _find_input_of_main_sampler called for: {method_def.get('input_key')}")
         if not isinstance(data, dict):
-            self.logger.debug(f"[ComfyUI] Data is not dict, returning None")
+            self.logger.debug("[ComfyUI] Data is not dict, returning None")
             return None
 
         # Get parameters from method definition
@@ -571,22 +628,44 @@ class ComfyUIExtractor:
         if not input_key:
             return None
 
+        # Handle different parameter names for different node types
+        def get_input_key_for_node_type(node_type: str, requested_key: str) -> str:
+            """Map requested input key to actual key used by specific node types."""
+            if "SamplerCustomAdvanced" in node_type:
+                if requested_key == "seed":
+                    return "noise_seed"  # SamplerCustomAdvanced uses noise_seed
+            return requested_key
+
         # Handle both prompt format (dict of nodes) and workflow format (nodes array)
         nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
-        
+
         # Find the main sampler node
         for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", node_data.get("type", ""))
             if any(sampler_type in class_type for sampler_type in sampler_node_types):
                 # Found a sampler node, extract the input
-                self.logger.debug(f"[ComfyUI] Found sampler {node_id}: {class_type}, looking for input: {input_key}")
+                actual_input_key = get_input_key_for_node_type(class_type, input_key)
+                self.logger.debug(f"[ComfyUI] Found sampler {node_id}: {class_type}, looking for input: {input_key} -> {actual_input_key}")
                 inputs = node_data.get("inputs", {})
-                self.logger.debug(f"[ComfyUI] Sampler inputs: {list(inputs.keys())}")
-                value = inputs.get(input_key)
-                
+
+                # Handle both dictionary format (prompt) and list format (workflow)
+                value = None
+                if isinstance(inputs, dict):
+                    self.logger.debug(f"[ComfyUI] Sampler inputs (dict): {list(inputs.keys())}")
+                    value = inputs.get(actual_input_key)
+                elif isinstance(inputs, list):
+                    self.logger.debug(f"[ComfyUI] Sampler inputs (list): {len(inputs)} items")
+                    # For workflow format, inputs is a list of objects with "name" and "link"
+                    # We can't get values directly from connections, but we might find widget values
+                    for input_item in inputs:
+                        if isinstance(input_item, dict) and input_item.get("name") == input_key:
+                            # This input exists but we need the actual value from connections
+                            # For now, we'll fall back to widgets below
+                            break
+
                 if value is not None:
                     # Type conversion
                     try:
@@ -601,21 +680,32 @@ class ComfyUIExtractor:
                     except (ValueError, TypeError):
                         self.logger.debug(f"Could not convert {input_key}={value} to {value_type}")
                         return value
-                
+
                 # Fallback to widgets_values for workflow format
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     # Map common input keys to widget positions
-                    widget_mapping = {
-                        "seed": 0,
-                        "steps": 1, 
-                        "cfg": 2,
-                        "sampler_name": 3,
-                        "scheduler": 4,
-                        "denoise": 5
-                    }
-                    
-                    widget_index = widget_mapping.get(input_key)
+                    # Different node types may have different widget orders
+                    if "SamplerCustomAdvanced" in class_type:
+                        widget_mapping = {
+                            "noise_seed": 0,  # SamplerCustomAdvanced uses noise_seed
+                            "steps": 1,
+                            "cfg": 2,
+                            "sampler_name": 3,
+                            "scheduler": 4,
+                            "denoise": 5
+                        }
+                    else:
+                        widget_mapping = {
+                            "seed": 0,
+                            "steps": 1,
+                            "cfg": 2,
+                            "sampler_name": 3,
+                            "scheduler": 4,
+                            "denoise": 5
+                        }
+
+                    widget_index = widget_mapping.get(actual_input_key)
                     if widget_index is not None and len(widgets) > widget_index:
                         value = widgets[widget_index]
                         try:
@@ -641,21 +731,21 @@ class ComfyUIExtractor:
         Simple fallback text extraction that looks for text in any CLIPTextEncode node.
         This is a more robust fallback when advanced connection traversal fails.
         """
-        self.logger.debug(f"[ComfyUI] _simple_text_extraction called")
+        self.logger.debug("[ComfyUI] _simple_text_extraction called")
         if not isinstance(data, dict):
             return ""
 
         target_key = method_def.get("target_key", "")
         is_negative = "negative" in target_key.lower()
-        
+
         # Handle both prompt format (dict of nodes) and workflow format (nodes array)
         nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
-        
+
         text_nodes = []
         for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", node_data.get("type", ""))
             if "CLIPTextEncode" in class_type or "TextEncode" in class_type:
                 # Extract text from this node
@@ -667,33 +757,35 @@ class ComfyUIExtractor:
                     widgets = node_data.get("widgets_values", [])
                     if widgets:
                         text = str(widgets[0])
-                
+
                 if text:
                     # Try to determine if it's positive or negative based on content or metadata
                     meta = node_data.get("_meta", {})
                     title = meta.get("title", "").lower()
-                    
-                    is_node_negative = ("negative" in title or 
-                                      "bad" in text.lower() or 
-                                      "worst" in text.lower() or
-                                      len(text) < 50 and any(word in text.lower() for word in ["low", "quality", "blurry"]))
-                    
+
+                    is_node_negative = (
+                        "negative" in title or
+                        "bad" in text.lower() or
+                        "worst" in text.lower() or
+                        len(text) < 50 and any(word in text.lower() for word in ["low", "quality", "blurry"])
+                    )
+
                     text_nodes.append((text, is_node_negative, node_id))
-        
+
         self.logger.debug(f"[ComfyUI] Found {len(text_nodes)} text nodes, looking for negative={is_negative}")
-        
+
         # Return the first matching text based on positive/negative requirement
         for text, is_node_negative, node_id in text_nodes:
             if is_negative == is_node_negative:
                 self.logger.debug(f"[ComfyUI] Returning text from node {node_id}: {text[:50]}...")
-                return text
-        
+                return self._clean_prompt_text(text)
+
         # If no exact match, return first available text if we're looking for positive
         if not is_negative and text_nodes:
             text, _, node_id = text_nodes[0]
             self.logger.debug(f"[ComfyUI] Fallback: returning first text from node {node_id}: {text[:50]}...")
-            return text
-            
+            return self._clean_prompt_text(text)
+
         return ""
 
     def _simple_parameter_extraction(
@@ -705,31 +797,31 @@ class ComfyUIExtractor:
         """
         input_key = method_def.get("input_key")
         value_type = method_def.get("value_type", "string")
-        
+
         self.logger.debug(f"[ComfyUI] _simple_parameter_extraction called for: {input_key}")
         if not isinstance(data, dict) or not input_key:
             return None
 
         # Handle both prompt format (dict of nodes) and workflow format (nodes array)
         nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
-        
+
         # Look for any sampler node
         sampler_types = ["KSampler", "Sampler", "CustomSampler"]
         for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", node_data.get("type", ""))
             if any(sampler_type in class_type for sampler_type in sampler_types):
                 self.logger.debug(f"[ComfyUI] Found sampler node {node_id}: {class_type}")
-                
+
                 # Try to extract from inputs first
                 inputs = node_data.get("inputs", {})
                 if input_key in inputs:
                     value = inputs[input_key]
                     self.logger.debug(f"[ComfyUI] Found {input_key}={value} in inputs")
                     return self._convert_value_type(value, value_type)
-                
+
                 # Fallback to widgets_values
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
@@ -742,9 +834,9 @@ class ComfyUIExtractor:
                         value = widgets[widget_index]
                         self.logger.debug(f"[ComfyUI] Found {input_key}={value} in widgets[{widget_index}]")
                         return self._convert_value_type(value, value_type)
-                
+
                 break  # Found a sampler, don't need to check others
-        
+
         self.logger.debug(f"[ComfyUI] Could not find {input_key} in any sampler node")
         return None
 
@@ -752,7 +844,7 @@ class ComfyUIExtractor:
         """Helper method to convert values to the specified type."""
         if value is None:
             return None
-            
+
         try:
             if value_type == "integer":
                 return int(value)
@@ -766,19 +858,43 @@ class ComfyUIExtractor:
             self.logger.debug(f"[ComfyUI] Could not convert {value} to {value_type}")
             return value
 
+    def _clean_prompt_text(self, text: str) -> str:
+        """
+        Clean embedding prefixes and other artifacts from prompt text.
+
+        As suggested by Gemini: Remove 'embedding:' or 'embedding:negatives\' prefixes
+        from the extracted prompt text for cleaner output.
+        """
+        if not isinstance(text, str):
+            return text
+
+        import re
+
+        # Remove embedding prefixes
+        text = re.sub(r'^embedding:negatives\\?', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'^embedding:', '', text, flags=re.IGNORECASE)
+
+        # Remove other common ComfyUI artifacts
+        text = re.sub(r'^negatives\\', '', text, flags=re.IGNORECASE)
+
+        # Clean up whitespace
+        text = text.strip()
+
+        return text
+
     def _find_ancestor_node_input_value(
         self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
     ) -> Any:
         """
         Find input value from ancestor nodes by traversing the workflow graph.
-        
+
         This method:
         1. Starts from nodes of specific types (start_node_types)
         2. Follows connections through a specific input/output path
         3. Finds ancestor nodes of target types
         4. Extracts the specified input value from those ancestors
         """
-        self.logger.debug(f"[ComfyUI] _find_ancestor_node_input_value called")
+        self.logger.debug("[ComfyUI] _find_ancestor_node_input_value called")
         if not isinstance(data, dict):
             return None
 
@@ -792,7 +908,7 @@ class ComfyUIExtractor:
         value_type = method_def.get("value_type", "string")
 
         if not start_node_types or not target_ancestor_types:
-            self.logger.debug(f"[ComfyUI] Missing required node types in method definition")
+            self.logger.debug("[ComfyUI] Missing required node types in method definition")
             return None
 
         # Handle both prompt format (dict of nodes) and workflow format (nodes array)
@@ -803,7 +919,7 @@ class ComfyUIExtractor:
         for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", node_data.get("type", ""))
             if any(start_type in class_type for start_type in start_node_types):
                 start_node = (node_id, node_data)
@@ -815,7 +931,7 @@ class ComfyUIExtractor:
             return None
 
         start_id, start_data = start_node
-        
+
         # Get the connection to follow
         if start_node_output_slot_name:
             # Following an output connection (for VAE, etc.)
@@ -826,11 +942,11 @@ class ComfyUIExtractor:
             # Following an input connection (more common)
             inputs = start_data.get("inputs", {})
             connection = inputs.get(start_node_input_name)
-            
+
             if not connection or not isinstance(connection, list) or len(connection) < 1:
                 self.logger.debug(f"[ComfyUI] No valid connection found for {start_node_input_name}")
                 return None
-                
+
             connection_id = connection[0]
 
         # Find the ancestor node
@@ -879,14 +995,14 @@ class ComfyUIExtractor:
     ) -> Any:
         """
         Find value from either node inputs or widget values based on node criteria.
-        
+
         This method:
         1. Finds nodes matching the given criteria
         2. Tries to extract from inputs first
         3. Falls back to widget values if inputs don't have the value
         4. Handles preset regex extraction for special cases
         """
-        self.logger.debug(f"[ComfyUI] _find_node_input_or_widget_value called")
+        self.logger.debug("[ComfyUI] _find_node_input_or_widget_value called")
         if not isinstance(data, dict):
             return None
 
@@ -899,7 +1015,7 @@ class ComfyUIExtractor:
         value_type = method_def.get("value_type", "string")
 
         if not node_criteria:
-            self.logger.debug(f"[ComfyUI] No node criteria provided")
+            self.logger.debug("[ComfyUI] No node criteria provided")
             return None
 
         # Handle both prompt format (dict of nodes) and workflow format (nodes array)
@@ -913,7 +1029,7 @@ class ComfyUIExtractor:
             # Check if node matches any of the criteria
             node_class_type = node_data.get("class_type", node_data.get("type", ""))
             matches_criteria = False
-            
+
             for criteria in node_criteria:
                 required_class_type = criteria.get("class_type")
                 if required_class_type and required_class_type in node_class_type:
@@ -944,14 +1060,14 @@ class ComfyUIExtractor:
                 if preset_value:
                     import re
                     preset_str = str(preset_value)
-                    
+
                     if preset_regex_width and input_key == "width":
                         match = re.search(preset_regex_width, preset_str)
                         if match:
                             value = match.group(1)
                             self.logger.debug(f"[ComfyUI] Extracted width={value} from preset: {preset_str}")
                             return self._convert_value_type(value, value_type)
-                    
+
                     if preset_regex_height and input_key == "height":
                         match = re.search(preset_regex_height, preset_str)
                         if match:
@@ -980,13 +1096,13 @@ class ComfyUIExtractor:
     ) -> list:
         """
         Extract all LoRA information from the workflow.
-        
+
         This method:
         1. Finds all LoRA loader nodes
         2. Extracts name, model strength, and clip strength
         3. Returns a list of LoRA dictionaries
         """
-        self.logger.debug(f"[ComfyUI] _extract_all_loras called")
+        self.logger.debug("[ComfyUI] _extract_all_loras called")
         if not isinstance(data, dict):
             return []
 
@@ -1057,10 +1173,10 @@ class ComfyUIExtractor:
     ) -> list:
         """
         Detect custom nodes and extensions in ComfyUI workflow.
-        
+
         Returns a list of detected custom node types and their usage.
         """
-        self.logger.debug(f"[ComfyUI] _detect_custom_nodes called")
+        self.logger.debug("[ComfyUI] _detect_custom_nodes called")
         if not isinstance(data, dict):
             return []
 
@@ -1138,10 +1254,10 @@ class ComfyUIExtractor:
     ) -> dict:
         """
         Detect T5-based architectures like SD3, Flux, PixArt, etc.
-        
+
         Returns architecture information and confidence level.
         """
-        self.logger.debug(f"[ComfyUI] _detect_t5_architecture called")
+        self.logger.debug("[ComfyUI] _detect_t5_architecture called")
         if not isinstance(data, dict):
             return {"architecture": "unknown", "confidence": 0.0}
 
@@ -1201,13 +1317,14 @@ class ComfyUIExtractor:
                 # Check inputs and widgets for keywords
                 inputs = node_data.get("inputs", {})
                 widgets = node_data.get("widgets_values", [])
-                
+
                 for keyword in indicators["keywords"]:
                     # Check in input values
-                    for input_key, input_value in inputs.items():
-                        if isinstance(input_value, str) and keyword.lower() in input_value.lower():
-                            confidence += 0.15
-                            evidence.append(f"Found keyword '{keyword}' in {input_key}")
+                    if isinstance(inputs, dict):
+                        for input_key, input_value in inputs.items():
+                            if isinstance(input_value, str) and keyword.lower() in input_value.lower():
+                                confidence += 0.15
+                                evidence.append(f"Found keyword '{keyword}' in {input_key}")
 
                     # Check in widget values
                     for widget_value in widgets:
@@ -1232,9 +1349,11 @@ class ComfyUIExtractor:
             }
         else:
             # Check for general T5 indicators
-            has_dual_clip = any("DualCLIP" in str(node_data.get("class_type", "")) 
-                              for node_data in (nodes.values() if isinstance(nodes, dict) else nodes))
-            
+            has_dual_clip = any(
+                "DualCLIP" in str(node_data.get("class_type", ""))
+                for node_data in (nodes.values() if isinstance(nodes, dict) else nodes)
+            )
+
             if has_dual_clip:
                 result = {
                     "architecture": "t5_based",
@@ -1258,11 +1377,11 @@ class ComfyUIExtractor:
     ) -> list:
         """
         Extract LoRAs by following the connection chain from loader nodes.
-        
+
         This method provides more sophisticated LoRA extraction by tracing
         connections between LoRA loaders and their usage in the workflow.
         """
-        self.logger.debug(f"[ComfyUI] _extract_loras_from_linked_loaders called")
+        self.logger.debug("[ComfyUI] _extract_loras_from_linked_loaders called")
         if not isinstance(data, dict):
             return []
 
@@ -1270,7 +1389,7 @@ class ComfyUIExtractor:
         nodes = data if all(isinstance(v, dict) for v in data.values()) else data.get("nodes", {})
 
         lora_chains = []
-        
+
         # Find all LoRA loader nodes
         lora_loaders = []
         for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
@@ -1284,7 +1403,7 @@ class ComfyUIExtractor:
         # For each LoRA loader, trace its connections
         for loader_id, loader_data in lora_loaders:
             inputs = loader_data.get("inputs", {})
-            
+
             lora_info = {
                 "loader_id": loader_id,
                 "loader_type": loader_data.get("class_type", ""),
@@ -1298,7 +1417,7 @@ class ComfyUIExtractor:
             for target_id, target_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
                 if str(target_id) == loader_id:
                     continue
-                    
+
                 target_inputs = target_data.get("inputs", {})
                 for input_key, input_value in target_inputs.items():
                     # Check if this input references our LoRA loader
@@ -1322,10 +1441,10 @@ class ComfyUIExtractor:
     ) -> list:
         """
         Find all LoRA-related nodes in the workflow.
-        
+
         Returns comprehensive information about all LoRA usage.
         """
-        self.logger.debug(f"[ComfyUI] _find_all_lora_nodes called")
+        self.logger.debug("[ComfyUI] _find_all_lora_nodes called")
         if not isinstance(data, dict):
             return []
 
@@ -1345,14 +1464,14 @@ class ComfyUIExtractor:
                 continue
 
             class_type = node_data.get("class_type", node_data.get("type", ""))
-            
+
             # Check if this is a LoRA-related node
             is_lora_node = any(lora_type.lower() in class_type.lower() for lora_type in lora_node_types)
-            
+
             if is_lora_node:
                 inputs = node_data.get("inputs", {})
                 widgets = node_data.get("widgets_values", [])
-                
+
                 node_info = {
                     "node_id": str(node_id),
                     "node_type": class_type,
@@ -1395,10 +1514,10 @@ class ComfyUIExtractor:
     ) -> Optional[int]:
         """
         Find CLIP skip value by traversing connection paths.
-        
+
         Looks for CLIP skip in CLIP loaders and text encoders.
         """
-        self.logger.debug(f"[ComfyUI] _find_clip_skip_in_path called")
+        self.logger.debug("[ComfyUI] _find_clip_skip_in_path called")
         if not isinstance(data, dict):
             return None
 
@@ -1407,13 +1526,13 @@ class ComfyUIExtractor:
 
         # Look for CLIP-related nodes
         clip_nodes = ["CLIPLoader", "CheckpointLoaderSimple", "DualCLIPLoader", "CLIPTextEncode"]
-        
+
         for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if not isinstance(node_data, dict):
                 continue
 
             class_type = node_data.get("class_type", node_data.get("type", ""))
-            
+
             if any(clip_node in class_type for clip_node in clip_nodes):
                 inputs = node_data.get("inputs", {})
                 widgets = node_data.get("widgets_values", [])
@@ -1432,10 +1551,10 @@ class ComfyUIExtractor:
                     if isinstance(widget, (int, float)) and 1 <= widget <= 12:
                         # This could be a clip_skip value
                         clip_skip = int(widget)
-                        self.logger.debug(f"[ComfyUI] Found potential clip_skip={clip_skip} in widget")
+                        self.logger.debug("[ComfyUI] Found potential clip_skip={clip_skip} in widget")
                         return clip_skip
 
-        self.logger.debug(f"[ComfyUI] No clip_skip found in connection paths")
+        self.logger.debug("[ComfyUI] No clip_skip found in connection paths")
         return None
 
     def _find_input_of_node_type(
@@ -1443,10 +1562,10 @@ class ComfyUIExtractor:
     ) -> Any:
         """
         Find input value from a specific node type.
-        
+
         More flexible version of finding inputs from specific node types.
         """
-        self.logger.debug(f"[ComfyUI] _find_input_of_node_type called")
+        self.logger.debug("[ComfyUI] _find_input_of_node_type called")
         if not isinstance(data, dict):
             return None
 
@@ -1465,11 +1584,11 @@ class ComfyUIExtractor:
                 continue
 
             class_type = node_data.get("class_type", node_data.get("type", ""))
-            
+
             # Check if this node matches any target type
             if any(target_type.lower() in class_type.lower() for target_type in target_node_types):
                 inputs = node_data.get("inputs", {})
-                
+
                 if input_key in inputs:
                     value = inputs[input_key]
                     self.logger.debug(f"[ComfyUI] Found {input_key}={value} in {class_type}")
@@ -1483,12 +1602,12 @@ class ComfyUIExtractor:
         """
         Generic node input finder with flexible matching.
         """
-        self.logger.debug(f"[ComfyUI] _find_node_input called")
+        self.logger.debug("[ComfyUI] _find_node_input called")
         if not isinstance(data, dict):
             return None
 
         node_id = method_def.get("node_id")
-        node_type = method_def.get("node_type") 
+        node_type = method_def.get("node_type")
         input_key = method_def.get("input_key")
         value_type = method_def.get("value_type", "string")
 
@@ -1504,7 +1623,7 @@ class ComfyUIExtractor:
 
             # Check if this is the target node
             match_found = False
-            
+
             if node_id and str(current_id) == str(node_id):
                 match_found = True
             elif node_type:
@@ -1526,10 +1645,10 @@ class ComfyUIExtractor:
     ) -> Optional[str]:
         """
         Alternative implementation for finding text from sampler inputs.
-        
+
         Similar to _find_text_from_main_sampler_input but with different parameter handling.
         """
-        self.logger.debug(f"[ComfyUI] _find_text_from_sampler_input called")
+        self.logger.debug("[ComfyUI] _find_text_from_sampler_input called")
         if not isinstance(data, dict):
             return None
 
@@ -1561,7 +1680,7 @@ class ComfyUIExtractor:
 
             # Follow the connection to the text encoder
             source_node_id = str(connection[0])
-            
+
             # Find the source node
             for src_id, src_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
                 if str(src_id) == source_node_id:
@@ -1581,10 +1700,10 @@ class ComfyUIExtractor:
     ) -> Optional[str]:
         """
         Find VAE information from checkpoint loader nodes.
-        
+
         Returns VAE name or "baked-in" if using checkpoint VAE.
         """
-        self.logger.debug(f"[ComfyUI] _find_vae_from_checkpoint_loader called")
+        self.logger.debug("[ComfyUI] _find_vae_from_checkpoint_loader called")
         if not isinstance(data, dict):
             return None
 
@@ -1597,12 +1716,12 @@ class ComfyUIExtractor:
                 continue
 
             class_type = node_data.get("class_type", node_data.get("type", ""))
-            
+
             if "VAELoader" in class_type:
                 inputs = node_data.get("inputs", {})
                 vae_name = inputs.get("vae_name")
                 if vae_name:
-                    self.logger.debug(f"[ComfyUI] Found dedicated VAE: {vae_name}")
+                    self.logger.debug("[ComfyUI] Found dedicated VAE: {vae_name}")
                     return str(vae_name)
 
         # If no dedicated VAE loader, check checkpoint loaders
@@ -1611,16 +1730,16 @@ class ComfyUIExtractor:
                 continue
 
             class_type = node_data.get("class_type", node_data.get("type", ""))
-            
+
             if "CheckpointLoader" in class_type:
                 # Check if VAE output is being used directly (baked-in VAE)
                 vae_connections = 0
-                
+
                 # Count how many nodes use the VAE output from this checkpoint
                 for other_id, other_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
                     if str(other_id) == str(node_id):
                         continue
-                        
+
                     other_inputs = other_data.get("inputs", {})
                     for input_key, input_value in other_inputs.items():
                         if isinstance(input_value, list) and len(input_value) >= 2:
@@ -1633,5 +1752,266 @@ class ComfyUIExtractor:
                     self.logger.debug(f"[ComfyUI] Using baked-in VAE from {checkpoint_name}")
                     return f"baked-in ({checkpoint_name})"
 
-        self.logger.debug(f"[ComfyUI] No VAE information found")
+        self.logger.debug("[ComfyUI] No VAE information found")
         return None
+
+    # T5/FLUX SPECIALIZED EXTRACTION METHODS
+    # These methods handle the modern T5/Flux workflow architecture that uses
+    # modular sampling (SamplerCustomAdvanced, BasicScheduler, RandomNoise, FluxGuidance)
+    # instead of traditional KSampler workflows
+
+    def _t5_extract_prompt_from_dual_clip_loader(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> str:
+        """Extract prompt from T5/FLUX workflows using DualCLIPLoader architecture."""
+        self.logger.debug("[ComfyUI T5] _t5_extract_prompt_from_dual_clip_loader called")
+        if not isinstance(data, dict):
+            return ""
+
+        # Handle both prompt format (dict of nodes) and workflow format (nodes array)
+        nodes = self._get_nodes_from_data(data)
+        if not nodes:
+            return ""
+
+        # Find DualCLIPLoader node
+        dual_clip_node = None
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+            
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if "DualCLIPLoader" in class_type:
+                dual_clip_node = (node_id, node_data)
+                break
+
+        if not dual_clip_node:
+            self.logger.debug("[ComfyUI T5] No DualCLIPLoader found")
+            return ""
+
+        # Find T5 text encoder nodes connected to DualCLIPLoader
+        dual_clip_id, dual_clip_data = dual_clip_node
+        
+        # Look for T5TextEncode nodes that use the DualCLIPLoader's T5 output
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+            
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if "T5TextEncode" in class_type:
+                inputs = node_data.get("inputs", {})
+                
+                # Check if this T5TextEncode uses the DualCLIPLoader's T5 output
+                clip_input = inputs.get("clip")
+                if isinstance(clip_input, list) and len(clip_input) >= 2:
+                    if str(clip_input[0]) == str(dual_clip_id) and clip_input[1] == 0:  # T5 output is typically index 0
+                        # Extract the text from this T5TextEncode
+                        text = inputs.get("text", "")
+                        if text:
+                            self.logger.debug(f"[ComfyUI T5] Found T5 prompt: {text[:100]}...")
+                            return str(text)
+
+        self.logger.debug("[ComfyUI T5] No T5TextEncode prompt found")
+        return ""
+
+    def _t5_extract_parameters_from_modular_sampler(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Any:
+        """Extract specific parameter from T5/FLUX modular sampling nodes."""
+        self.logger.debug("[ComfyUI T5] _t5_extract_parameters_from_modular_sampler called")
+        if not isinstance(data, dict):
+            return None
+
+        # Get the specific parameter to extract
+        parameter_key = method_def.get("parameter_key")
+        if not parameter_key:
+            self.logger.warning("[ComfyUI T5] No parameter_key specified in method_def")
+            return None
+
+        nodes = self._get_nodes_from_data(data)
+        if not nodes:
+            return None
+
+        # Find the main SamplerCustomAdvanced node
+        sampler_node = None
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+            
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if "SamplerCustomAdvanced" in class_type:
+                sampler_node = (node_id, node_data)
+                break
+
+        if not sampler_node:
+            self.logger.debug("[ComfyUI T5] No SamplerCustomAdvanced found")
+            return None
+
+        sampler_id, sampler_data = sampler_node
+        sampler_inputs = sampler_data.get("inputs", {})
+
+        # Extract specific parameter based on parameter_key
+        if parameter_key == "seed":
+            # Extract from RandomNoise node
+            noise_input = sampler_inputs.get("noise")
+            if isinstance(noise_input, list) and len(noise_input) >= 2:
+                noise_node_id = noise_input[0]
+                noise_node = self._get_node_by_id(nodes, noise_node_id)
+                if noise_node:
+                    noise_class = noise_node.get("class_type", "")
+                    if "RandomNoise" in noise_class:
+                        noise_inputs = noise_node.get("inputs", {})
+                        seed = noise_inputs.get("noise_seed")
+                        if seed is not None:
+                            self.logger.debug(f"[ComfyUI T5] Found seed: {seed}")
+                            return int(seed)
+
+        elif parameter_key in ["steps", "scheduler"]:
+            # Extract from BasicScheduler node
+            scheduler_input = sampler_inputs.get("sigmas")
+            if isinstance(scheduler_input, list) and len(scheduler_input) >= 2:
+                scheduler_node_id = scheduler_input[0]
+                scheduler_node = self._get_node_by_id(nodes, scheduler_node_id)
+                if scheduler_node:
+                    scheduler_class = scheduler_node.get("class_type", "")
+                    if "BasicScheduler" in scheduler_class:
+                        scheduler_inputs = scheduler_node.get("inputs", {})
+                        if parameter_key == "steps":
+                            steps = scheduler_inputs.get("steps")
+                            if steps is not None:
+                                self.logger.debug(f"[ComfyUI T5] Found steps: {steps}")
+                                return int(steps)
+                        elif parameter_key == "scheduler":
+                            scheduler = scheduler_inputs.get("scheduler")
+                            if scheduler:
+                                self.logger.debug(f"[ComfyUI T5] Found scheduler: {scheduler}")
+                                return str(scheduler)
+
+        elif parameter_key == "cfg_scale":
+            # Extract from FluxGuidance node
+            guider_input = sampler_inputs.get("guider")
+            if isinstance(guider_input, list) and len(guider_input) >= 2:
+                guider_node_id = guider_input[0]
+                guider_node = self._get_node_by_id(nodes, guider_node_id)
+                if guider_node:
+                    guider_class = guider_node.get("class_type", "")
+                    if "FluxGuidance" in guider_class:
+                        guider_inputs = guider_node.get("inputs", {})
+                        guidance = guider_inputs.get("guidance")
+                        if guidance is not None:
+                            self.logger.debug(f"[ComfyUI T5] Found guidance: {guidance}")
+                            return float(guidance)
+
+        elif parameter_key == "sampler_name":
+            # Extract from SamplerCustomAdvanced directly
+            sampler = sampler_inputs.get("sampler")
+            if sampler:
+                self.logger.debug(f"[ComfyUI T5] Found sampler: {sampler}")
+                return str(sampler)
+
+        self.logger.debug(f"[ComfyUI T5] No {parameter_key} found")
+        return None
+
+    def _t5_extract_model_from_dual_clip_loader(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> str:
+        """Extract model name from T5/FLUX DualCLIPLoader."""
+        self.logger.debug("[ComfyUI T5] _t5_extract_model_from_dual_clip_loader called")
+        if not isinstance(data, dict):
+            return ""
+
+        nodes = self._get_nodes_from_data(data)
+        if not nodes:
+            return ""
+
+        # Find DualCLIPLoader node
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+            
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if "DualCLIPLoader" in class_type:
+                inputs = node_data.get("inputs", {})
+                
+                # DualCLIPLoader typically has clip_name1 and clip_name2 for T5 and CLIP
+                clip_name1 = inputs.get("clip_name1", "")
+                clip_name2 = inputs.get("clip_name2", "")
+                
+                if clip_name1 and clip_name2:
+                    model_name = f"{clip_name1} + {clip_name2}"
+                elif clip_name1:
+                    model_name = clip_name1
+                elif clip_name2:
+                    model_name = clip_name2
+                else:
+                    model_name = "DualCLIP Model"
+                
+                self.logger.debug(f"[ComfyUI T5] Found DualCLIP model: {model_name}")
+                return model_name
+
+        self.logger.debug("[ComfyUI T5] No DualCLIPLoader model found")
+        return ""
+
+    def _t5_extract_dimensions_from_empty_latent(
+        self, data: Any, method_def: MethodDefinition, context: ContextData, fields: ExtractedFields
+    ) -> Any:
+        """Extract width/height from EmptyLatentImage nodes in T5/FLUX workflows."""
+        self.logger.debug("[ComfyUI T5] _t5_extract_dimensions_from_empty_latent called")
+        if not isinstance(data, dict):
+            return None
+
+        # Get the specific parameter to extract
+        parameter_key = method_def.get("parameter_key")
+        if not parameter_key:
+            self.logger.warning("[ComfyUI T5] No parameter_key specified in method_def")
+            return None
+
+        nodes = self._get_nodes_from_data(data)
+        if not nodes:
+            return None
+
+        # Find EmptyLatentImage or similar nodes
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            if not isinstance(node_data, dict):
+                continue
+            
+            class_type = node_data.get("class_type", node_data.get("type", ""))
+            if "EmptyLatentImage" in class_type:
+                inputs = node_data.get("inputs", {})
+                
+                if parameter_key == "width":
+                    width = inputs.get("width")
+                    if width is not None:
+                        self.logger.debug(f"[ComfyUI T5] Found width: {width}")
+                        return int(width)
+                elif parameter_key == "height":
+                    height = inputs.get("height")
+                    if height is not None:
+                        self.logger.debug(f"[ComfyUI T5] Found height: {height}")
+                        return int(height)
+
+        self.logger.debug(f"[ComfyUI T5] No {parameter_key} found")
+        return None
+
+    def _get_node_by_id(self, nodes: Union[Dict, list], node_id: str) -> Optional[Dict]:
+        """Helper method to get a node by its ID from nodes dict or list."""
+        if isinstance(nodes, dict):
+            return nodes.get(str(node_id))
+        elif isinstance(nodes, list):
+            try:
+                idx = int(node_id)
+                if 0 <= idx < len(nodes):
+                    return nodes[idx]
+            except (ValueError, IndexError):
+                pass
+        return None
+
+    def _get_nodes_from_data(self, data: Dict) -> Union[Dict, list]:
+        """Helper method to extract nodes from data, handling both prompt and workflow formats."""
+        if isinstance(data, dict) and "nodes" in data:
+            # Workflow format: {"nodes": [...]}
+            return data["nodes"]
+        elif isinstance(data, dict) and all(isinstance(v, dict) for v in data.values()):
+            # Prompt format: {"1": {...}, "2": {...}, ...}
+            return data
+        else:
+            return {}
