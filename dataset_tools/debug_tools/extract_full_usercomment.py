@@ -40,7 +40,8 @@ def extract_full_usercomment(filepath):
                     print("✅ Found UNICODE prefix")
                     
                     # Extract UTF-16 data
-                    utf16_data = user_comment[9:]  # Skip "UNICODE\0\0"
+                    UNICODE_PREFIX = b'UNICODE\x00\x00'
+                    utf16_data = user_comment[len(UNICODE_PREFIX):]  # Skip prefix
                     print(f"UTF-16 data length: {len(utf16_data)} bytes")
                     
                     try:
