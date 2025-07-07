@@ -153,7 +153,7 @@ class FileLoaderTask(BackgroundTask):
                 folder_path=result.folder_path,
                 file_to_select=self.file_to_select,
                 total_files=result.total_files,
-                scan_duration=0  # We could track this if needed
+                scan_duration=result.scan_duration
             )
             
             self.emit_progress(100, "Scan completed!")
