@@ -52,9 +52,7 @@ class FileListWidget(Qw.QWidget):
         # File list
         self.list_widget = Qw.QListWidget()
         self.list_widget.setAlternatingRowColors(True)
-        self.list_widget.setSelectionMode(
-            Qw.QAbstractItemView.SelectionMode.SingleSelection
-        )
+        self.list_widget.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
         layout.addWidget(self.list_widget, 1)  # Give it most of the space
 
         # Sort controls
@@ -62,9 +60,7 @@ class FileListWidget(Qw.QWidget):
         sort_layout.addWidget(Qw.QLabel("Sort:"))
 
         self.sort_combo = Qw.QComboBox()
-        self.sort_combo.addItems(
-            ["Name (A-Z)", "Name (Z-A)", "Type", "Size", "Date Modified"]
-        )
+        self.sort_combo.addItems(["Name (A-Z)", "Name (Z-A)", "Type", "Size", "Date Modified"])
         sort_layout.addWidget(self.sort_combo)
         sort_layout.addStretch()
 
@@ -163,9 +159,7 @@ class FileListWidget(Qw.QWidget):
         # Apply filter
         filter_text = self.filter_edit.text().lower()
         if filter_text:
-            self._filtered_files = [
-                f for f in self._current_files if filter_text in f.lower()
-            ]
+            self._filtered_files = [f for f in self._current_files if filter_text in f.lower()]
         else:
             self._filtered_files = self._current_files.copy()
 
@@ -215,16 +209,12 @@ class FileListWidget(Qw.QWidget):
         if suffix in {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"}:
             return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileIcon)
         if suffix in {".txt", ".json", ".yaml", ".xml"}:
-            return style.standardIcon(
-                Qw.QStyle.StandardPixmap.SP_FileDialogDetailedView
-            )
+            return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileDialogDetailedView)
         if suffix in {".ckpt", ".safetensors", ".pt", ".pth"}:
             return style.standardIcon(Qw.QStyle.StandardPixmap.SP_ComputerIcon)
         return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileIcon)
 
-    def _on_selection_changed(
-        self, current: Qw.QListWidgetItem, previous: Qw.QListWidgetItem
-    ) -> None:
+    def _on_selection_changed(self, current: Qw.QListWidgetItem, previous: Qw.QListWidgetItem) -> None:
         """Handle selection change."""
         if current:
             filename = current.text()
@@ -401,9 +391,7 @@ class ImagePreviewWidget(Qw.QLabel):
             self._original_pixmap = pixmap
             self._update_scaled_pixmap()
 
-            self.logger.debug(
-                f"Loaded image: {Path(image_path).name} ({pixmap.width()}x{pixmap.height()})"
-            )
+            self.logger.debug(f"Loaded image: {Path(image_path).name} ({pixmap.width()}x{pixmap.height()})")
             return True
 
         except Exception as e:
@@ -571,9 +559,7 @@ class StatusInfoWidget(Qw.QWidget):
         self.models_label.setText(str(models))
         self.total_label.setText(str(total))
 
-        self.logger.debug(
-            f"File counts updated: {images}i, {texts}t, {models}m = {total} total"
-        )
+        self.logger.debug(f"File counts updated: {images}i, {texts}t, {models}m = {total} total")
 
     def clear_counts(self) -> None:
         """Clear all file counts."""
@@ -626,9 +612,7 @@ class LeftPanelWidget(Qw.QWidget):
 
     def _connect_signals(self) -> None:
         """Connect internal widget signals to external signals."""
-        self.folder_control.open_folder_requested.connect(
-            self.open_folder_requested.emit
-        )
+        self.folder_control.open_folder_requested.connect(self.open_folder_requested.emit)
         self.folder_control.folder_path_changed.connect(self.folder_path_changed.emit)
         self.file_list.file_selected.connect(self.file_selected.emit)
         self.file_list.sort_changed.connect(self.sort_changed.emit)

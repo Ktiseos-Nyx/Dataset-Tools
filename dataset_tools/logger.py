@@ -42,9 +42,7 @@ APP_LOGGER_NAME = "dataset_tools_app"
 logger = pylog.getLogger(APP_LOGGER_NAME)
 
 _current_log_level_str_for_dt = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper()
-_initial_log_level_enum_for_dt = getattr(
-    pylog, _current_log_level_str_for_dt, pylog.INFO
-)
+_initial_log_level_enum_for_dt = getattr(pylog, _current_log_level_str_for_dt, pylog.INFO)
 logger.setLevel(_initial_log_level_enum_for_dt)
 
 if not logger.handlers:
@@ -73,9 +71,7 @@ def reconfigure_all_loggers(new_log_level_name_str: str):
         # Also set the root logger's level to ensure all child loggers inherit it
         pylog.root.setLevel(actual_level_enum)
         # Use the logger's own method for consistency after reconfiguration
-        debug_message(
-            "Dataset-Tools Logger internal level object set to: %s", actual_level_enum
-        )
+        debug_message("Dataset-Tools Logger internal level object set to: %s", actual_level_enum)
         info_monitor(  # Use info_monitor which is now fixed
             "Dataset-Tools Logger level reconfigured to: %s",
             _current_log_level_str_for_dt,
@@ -90,10 +86,7 @@ def reconfigure_all_loggers(new_log_level_name_str: str):
         external_parent_logger = pylog.getLogger(prefix)
         was_configured_by_us = False
         for handler in external_parent_logger.handlers:
-            if (
-                isinstance(handler, RichHandler)
-                and handler.console == _dataset_tools_main_rich_console
-            ):
+            if isinstance(handler, RichHandler) and handler.console == _dataset_tools_main_rich_console:
                 was_configured_by_us = True
                 handler.setLevel(actual_level_enum)
                 break
@@ -147,9 +140,7 @@ def debug_monitor(func):
         log_msg_part1 = f"Call: {func.__name__}("
         log_msg_part2 = ")"
         # Max length for the arguments part of the log message
-        max_arg_len_for_display = (
-            200 - len(log_msg_part1) - len(log_msg_part2) - 3
-        )  # 3 for "..."
+        max_arg_len_for_display = 200 - len(log_msg_part1) - len(log_msg_part2) - 3  # 3 for "..."
 
         if len(all_args_str) > max_arg_len_for_display:
             all_args_str_display = all_args_str[:max_arg_len_for_display] + "..."
@@ -168,9 +159,7 @@ def debug_monitor(func):
             max_ret_len_for_display = 200 - len(log_ret_msg_part1) - 3  # 3 for "..."
 
             if len(return_data_str) > max_ret_len_for_display:
-                return_data_str_display = (
-                    return_data_str[:max_ret_len_for_display] + "..."
-                )
+                return_data_str_display = return_data_str[:max_ret_len_for_display] + "..."
             else:
                 return_data_str_display = return_data_str
 
@@ -185,9 +174,7 @@ def debug_monitor(func):
                 "ALL",
             ]
             # Use %-formatting for the error log as it's a direct call to logger.error
-            logger.error(
-                "Exception in %s: %s", func.__name__, e_dec, exc_info=show_exc_info
-            )
+            logger.error("Exception in %s: %s", func.__name__, e_dec, exc_info=show_exc_info)
             raise  # Re-raise the exception
 
     return wrapper
@@ -215,15 +202,12 @@ def info_monitor(msg: str, *args, **kwargs):  # Renamed from nfo for clarity
     # Check if exc_info is explicitly passed by the caller
     if "exc_info" not in kwargs:
         # Default exc_info behavior: add it if an exception is active and log level is permissive
-        should_add_exc_info_automatically = (
-            INITIAL_LOG_LEVEL_FROM_INIT.strip().upper()
-            in [
-                "DEBUG",
-                "TRACE",
-                "NOTSET",  # Usually means log everything
-                "ALL",  # Custom "ALL" level if you define it
-            ]
-        )
+        should_add_exc_info_automatically = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in [
+            "DEBUG",
+            "TRACE",
+            "NOTSET",  # Usually means log everything
+            "ALL",  # Custom "ALL" level if you define it
+        ]
         # Check if there's an active exception
         current_exception = sys.exc_info()[0]
         if should_add_exc_info_automatically and current_exception is not None:

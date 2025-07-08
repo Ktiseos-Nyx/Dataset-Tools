@@ -100,9 +100,7 @@ class FileLoaderTask(BackgroundTask):
     basic gathering class to a specialist! 📦⚡
     """
 
-    def __init__(
-        self, folder_path: str, file_to_select: str | None = None, parent=None
-    ):
+    def __init__(self, folder_path: str, file_to_select: str | None = None, parent=None):
         """Initialize the file loader task.
 
         Args:
@@ -227,9 +225,7 @@ class MetadataLoaderTask(BackgroundTask):
     do other things! 📜⚡
     """
 
-    def __init__(
-        self, file_paths: list[str], metadata_loader: Callable[[str], Any], parent=None
-    ):
+    def __init__(self, file_paths: list[str], metadata_loader: Callable[[str], Any], parent=None):
         """Initialize the metadata loader task.
 
         Args:
@@ -315,9 +311,7 @@ class TaskManager(QtCore.QObject):
             task_id = f"task_{self._task_counter}"
 
         # Connect task signals
-        task.task_completed.connect(
-            lambda result: self._on_task_completed(task_id, result)
-        )
+        task.task_completed.connect(lambda result: self._on_task_completed(task_id, result))
         task.error_occurred.connect(lambda error: self._on_task_error(task_id, error))
         task.finished.connect(lambda: self._cleanup_task(task_id))
 

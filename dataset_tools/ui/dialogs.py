@@ -10,7 +10,15 @@ including settings configuration and about information dialogs.
 """
 
 from PyQt6.QtCore import QSettings
-from PyQt6.QtWidgets import QComboBox, QDialog, QDialogButtonBox, QLabel, QMessageBox, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import (
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QLabel,
+    QMessageBox,
+    QVBoxLayout,
+    QWidget,
+)
 
 from ..logger import info_monitor as nfo
 
@@ -138,9 +146,7 @@ class SettingsDialog(QDialog):
         # Connect button signals
         self.button_box.accepted.connect(self.accept_settings)
         self.button_box.rejected.connect(self.reject_settings)
-        self.button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(
-            self.apply_all_settings
-        )
+        self.button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.apply_all_settings)
 
         self.layout.addWidget(self.button_box)
 
@@ -186,11 +192,7 @@ class SettingsDialog(QDialog):
             return
 
         selected_theme_xml = self.theme_combo.currentData()
-        if (
-            selected_theme_xml
-            and self.parent_window
-            and hasattr(self.parent_window, "apply_theme")
-        ):
+        if selected_theme_xml and self.parent_window and hasattr(self.parent_window, "apply_theme"):
             self.parent_window.apply_theme(selected_theme_xml, initial_load=False)
 
     def apply_window_settings(self) -> None:
@@ -216,9 +218,7 @@ class SettingsDialog(QDialog):
         """Check if parent window can be resized."""
         return self.parent_window and hasattr(self.parent_window, "resize_window")
 
-    def _apply_size_preset_setting(
-        self, preset_name: str, size_tuple: tuple[int, int]
-    ) -> None:
+    def _apply_size_preset_setting(self, preset_name: str, size_tuple: tuple[int, int]) -> None:
         """Apply a specific size preset."""
         self.settings.setValue("rememberGeometry", False)
         self.settings.setValue("windowSizePreset", preset_name)
@@ -273,9 +273,7 @@ class SettingsDialog(QDialog):
     def _revert_theme(self) -> None:
         """Revert to the original theme."""
         if self.parent_window and hasattr(self.parent_window, "apply_theme"):
-            self.parent_window.apply_theme(
-                self.current_theme_on_open, initial_load=False
-            )
+            self.parent_window.apply_theme(self.current_theme_on_open, initial_load=False)
             nfo("Theme reverted to: %s", self.current_theme_on_open)
 
 
@@ -341,9 +339,7 @@ class AboutDialog(QDialog):
 
     def _get_contributors_text(self) -> str:
         """Get formatted contributors text."""
-        contributors = [
-            "KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA (Lead Developer)"
-        ]
+        contributors = ["KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA (Lead Developer)"]
 
         contributor_lines = [f"- {contributor}" for contributor in contributors]
         return "Contributors:<br>" + "<br>".join(contributor_lines)
@@ -436,9 +432,7 @@ class DialogFactory:
     """
 
     @staticmethod
-    def create_settings_dialog(
-        parent: QWidget, current_theme: str = ""
-    ) -> SettingsDialog:
+    def create_settings_dialog(parent: QWidget, current_theme: str = "") -> SettingsDialog:
         """Create a settings dialog.
 
         Args:

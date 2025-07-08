@@ -35,23 +35,17 @@ class BaseModelParser(ABC):
         try:
             self._process()
             # If _process completes without raising an exception, and hasn't set status to FAILURE/NOT_APPLICABLE itself:
-            if (
-                self.status == ModelParserStatus.UNATTEMPTED
-            ):  # Or if it could be PARTIAL
+            if self.status == ModelParserStatus.UNATTEMPTED:  # Or if it could be PARTIAL
                 self.status = ModelParserStatus.SUCCESS
             # Log success only if status is indeed SUCCESS
             if self.status == ModelParserStatus.SUCCESS:
-                info_monitor(
-                    "[%s] Successfully parsed: %s", self._logger_name, self.file_path
-                )
+                info_monitor("[%s] Successfully parsed: %s", self._logger_name, self.file_path)
         except FileNotFoundError:
             info_monitor("[%s] File not found: %s", self._logger_name, self.file_path)
             self._error_message = "File not found."
             self.status = ModelParserStatus.FAILURE
         except self.NotApplicableError as e_na:
-            self._error_message = (
-                str(e_na) or "File format not applicable for this parser."
-            )
+            self._error_message = str(e_na) or "File format not applicable for this parser."
             # Optional: Log this at DEBUG or INFO if desired for NotApplicable cases
             # info_monitor("[%s] Not applicable for %s: %s", self._logger_name, self.file_path, self._error_message)
             self.status = ModelParserStatus.NOT_APPLICABLE
@@ -92,14 +86,9 @@ class BaseModelParser(ABC):
     def get_ui_data(self) -> dict:
         if self.status != ModelParserStatus.SUCCESS:
             # Provide more context if available, even for partial success if implemented
-            error_info = (
-                self._error_message
-                or "Model parsing failed, not applicable, or no data extracted."
-            )
+            error_info = self._error_message or "Model parsing failed, not applicable, or no data extracted."
             if self.status == ModelParserStatus.NOT_APPLICABLE:
-                error_info = (
-                    self._error_message or "Format not applicable for this model type."
-                )
+                error_info = self._error_message or "Format not applicable for this model type."
 
             return {
                 EmptyField.PLACEHOLDER.value: {"Error": error_info},

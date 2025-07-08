@@ -19,10 +19,14 @@ from PyQt6.QtCore import QSettings, QTimer
 
 # from PyQt6.QtWidgets import QApplication
 from ..correct_types import EmptyField  # pylint: disable=relative-beyond-top-level
-from ..correct_types import ExtensionType as Ext  # pylint: disable=relative-beyond-top-level
+from ..correct_types import (
+    ExtensionType as Ext,
+)  # pylint: disable=relative-beyond-top-level
 from ..logger import debug_monitor  # pylint: disable=relative-beyond-top-level
 from ..logger import info_monitor as nfo  # pylint: disable=relative-beyond-top-level
-from ..metadata_parser import parse_metadata  # pylint: disable=relative-beyond-top-level
+from ..metadata_parser import (
+    parse_metadata,
+)  # pylint: disable=relative-beyond-top-level
 from ..widgets import (
     FileLoader,  # pylint: disable=relative-beyond-top-level
     FileLoadResult,
@@ -89,9 +93,7 @@ class MainWindow(Qw.QMainWindow):
         self.setAcceptDrops(True)
 
         # File management
-        self.file_loader: FileLoader | None = (
-            None  # Ensure file_loader is always defined
-        )
+        self.file_loader: FileLoader | None = None  # Ensure file_loader is always defined
         self.current_files_in_list: list[str] = []
         self.current_folder: str = ""
 
@@ -177,9 +179,7 @@ class MainWindow(Qw.QMainWindow):
         time_string = current_time.toString(QtCore.Qt.DateFormat.RFC2822Date)
         self.datetime_label.setText(time_string)
 
-    def show_status_message(
-        self, message: str, timeout: int = STATUS_MESSAGE_TIMEOUT
-    ) -> None:
+    def show_status_message(self, message: str, timeout: int = STATUS_MESSAGE_TIMEOUT) -> None:
         """Show a message in the status bar."""
         self.main_status_bar.showMessage(message, timeout)
         nfo("[UI] Status: %s", message)
@@ -194,9 +194,7 @@ class MainWindow(Qw.QMainWindow):
         nfo("[UI] 'Open Folder' action triggered.")
 
         start_dir = self._get_start_directory()
-        folder_path = Qw.QFileDialog.getExistingDirectory(
-            self, "Select Folder to Load", start_dir
-        )
+        folder_path = Qw.QFileDialog.getExistingDirectory(self, "Select Folder to Load", start_dir)
 
         if folder_path:
             nfo("[UI] Folder selected via dialog: %s", folder_path)
@@ -221,9 +219,7 @@ class MainWindow(Qw.QMainWindow):
         self.show_status_message(message)
 
     @debug_monitor
-    def load_files(
-        self, folder_path: str, file_to_select_after_load: str | None = None
-    ) -> None:
+    def load_files(self, folder_path: str, file_to_select_after_load: str | None = None) -> None:
         """Load files from a folder in a background thread.
 
         Args:
@@ -256,9 +252,7 @@ class MainWindow(Qw.QMainWindow):
 
         if hasattr(self, "left_panel"):
             folder_name = Path(self.current_folder).name
-            self.left_panel.set_current_folder_text(
-                f"Current Folder: {self.current_folder}"
-            )
+            self.left_panel.set_current_folder_text(f"Current Folder: {self.current_folder}")
             self.left_panel.set_message_text(f"Loading files from {folder_name}...")
             self.left_panel.set_buttons_enabled(False)
 
@@ -327,9 +321,7 @@ class MainWindow(Qw.QMainWindow):
         # Set status message
         folder_name = Path(result.folder_path).name
         file_count = len(self.current_files_in_list)
-        self.left_panel.set_message_text(
-            f"Loaded {file_count} file(s) from {folder_name}."
-        )
+        self.left_panel.set_message_text(f"Loaded {file_count} file(s) from {folder_name}.")
 
         # Auto-select file
         self._auto_select_file(result)
@@ -423,9 +415,7 @@ class MainWindow(Qw.QMainWindow):
 
         if hasattr(self, "left_panel"):
             self.left_panel.clear_file_list_display()
-            self.left_panel.set_message_text(
-                "Select a folder or drop files/folder here."
-            )
+            self.left_panel.set_message_text("Select a folder or drop files/folder here.")
 
         self.current_files_in_list = []
         self.clear_selection()
@@ -484,11 +474,7 @@ class MainWindow(Qw.QMainWindow):
         """Update UI to reflect current file selection."""
         if hasattr(self, "left_panel"):
             count = len(self.current_files_in_list)
-            folder_name = (
-                Path(self.current_folder).name
-                if self.current_folder
-                else "Unknown Folder"
-            )
+            folder_name = Path(self.current_folder).name if self.current_folder else "Unknown Folder"
             self.left_panel.set_message_text(f"{count} file(s) in {folder_name}")
 
         self.show_status_message(f"Selected: {file_name}", 4000)
@@ -498,9 +484,7 @@ class MainWindow(Qw.QMainWindow):
         """Validate that we have proper file context."""
         if not self.current_folder or not file_name:
             nfo("[UI] Folder/file context missing.")
-            error_data = {
-                EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}
-            }
+            error_data = {EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}}
             self.metadata_display.display_metadata(error_data)
             return False
         return True
@@ -530,10 +514,7 @@ class MainWindow(Qw.QMainWindow):
         # Check against image format sets
         if hasattr(Ext, "IMAGE") and isinstance(Ext.IMAGE, list):
             for image_format_set in Ext.IMAGE:
-                if (
-                    isinstance(image_format_set, set)
-                    and file_suffix in image_format_set
-                ):
+                if isinstance(image_format_set, set) and file_suffix in image_format_set:
                     nfo("[UI] File matches image format: '%s'", file_suffix)
                     return True
 
@@ -579,11 +560,7 @@ class MainWindow(Qw.QMainWindow):
         """
         if not self.current_folder or not file_name:
             nfo("[UI] Cannot load metadata: folder/file name missing.")
-            return {
-                EmptyField.PLACEHOLDER.value: {
-                    "Error": "Cannot load metadata, folder/file name missing."
-                }
-            }
+            return {EmptyField.PLACEHOLDER.value: {"Error": "Cannot load metadata, folder/file name missing."}}
 
         full_file_path = os.path.join(self.current_folder, file_name)
         nfo("[UI] Loading metadata from: %s", full_file_path)

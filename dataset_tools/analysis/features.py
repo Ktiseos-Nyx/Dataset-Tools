@@ -39,10 +39,7 @@ def check_for_flux(parser_instance: ImageReaderInstance | None) -> bool:
                 return True
     raw_data = getattr(parser_instance, "raw", "")
     if "ComfyUI" in getattr(parser_instance, "tool", "") and isinstance(raw_data, str):
-        if (
-            '"class_type": "FluxGuidance"' in raw_data
-            or '"unet_name": "flux' in raw_data
-        ):
+        if '"class_type": "FluxGuidance"' in raw_data or '"unet_name": "flux' in raw_data:
             return True
     return False
 
@@ -93,11 +90,7 @@ def check_for_sd15(parser_instance: ImageReaderInstance | None) -> bool:
     """Check if the image is likely from the SD 1.5 architecture using a heuristic scoring system."""
     if not _is_parser_report_valid(parser_instance):
         return False
-    if (
-        check_for_ponyx(parser_instance)
-        or check_for_illustriousxl(parser_instance)
-        or check_for_flux(parser_instance)
-    ):
+    if check_for_ponyx(parser_instance) or check_for_illustriousxl(parser_instance) or check_for_flux(parser_instance):
         return False
     params = getattr(parser_instance, "parameter", {})
     score = 0
@@ -133,13 +126,9 @@ def analyze_features(
         "is_illustriousxl": check_for_illustriousxl(parser_instance),
         "has_lora": check_for_lora(parser_instance),
     }
-    raw_results["architecture"] = (
-        "SD1.5" if check_for_sd15(parser_instance) else "SDXL/Other"
-    )
+    raw_results["architecture"] = "SD1.5" if check_for_sd15(parser_instance) else "SDXL/Other"
     raw_results["has_known_finetune_or_lora"] = (
-        raw_results["is_ponyx"]
-        or raw_results["is_illustriousxl"]
-        or raw_results["has_lora"]
+        raw_results["is_ponyx"] or raw_results["is_illustriousxl"] or raw_results["has_lora"]
     )
 
     # Return the validated Pydantic object, ensuring data integrity.

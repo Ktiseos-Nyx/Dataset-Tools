@@ -29,9 +29,7 @@ class TestDiskInterface(unittest.TestCase):  # D203/D211 handled by formatter
         self.jpg_file_no_exif = self.test_data_folder / "test_img_no_exif.jpg"
         self.text_file_utf8 = self.test_data_folder / "test_text_utf8.txt"
         self.text_file_utf16be = self.test_data_folder / "test_text_utf16be.txt"
-        self.text_file_complex_utf8 = (
-            self.test_data_folder / "test_text_complex_utf8.txt"
-        )
+        self.text_file_complex_utf8 = self.test_data_folder / "test_text_complex_utf8.txt"
         self.binary_content_in_txt_file = self.test_data_folder / "binary_content.txt"
         self.json_file = self.test_data_folder / "test_schema.json"
         self.invalid_json_file = self.test_data_folder / "invalid_schema.json"
@@ -47,15 +45,9 @@ class TestDiskInterface(unittest.TestCase):  # D203/D211 handled by formatter
                 b"\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\nIDAT\x08\xd7c`"
                 b"\x00\x00\x00\x02\x00\x01\xe2!\xbc\x33\x00\x00\x00\x00IEND\xaeB`\x82"
             )
-        if (
-            not self.jpg_file_with_exif.exists()
-        ):  # Example for one file, apply to others if needed
-            with self.jpg_file_with_exif.open(
-                "wb"
-            ) as f_obj:  # Requires actual EXIF for a meaningful test
-                f_obj.write(
-                    b"\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x00\x00\x01\x00\x01\x00\x00\xff\xd9"
-                )
+        if not self.jpg_file_with_exif.exists():  # Example for one file, apply to others if needed
+            with self.jpg_file_with_exif.open("wb") as f_obj:  # Requires actual EXIF for a meaningful test
+                f_obj.write(b"\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x00\x00\x01\x00\x01\x00\x00\xff\xd9")
         with self.jpg_file_no_exif.open("wb") as f_obj:
             f_obj.write(
                 b"\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x00\x00\x01\x00\x01\x00\x00"
@@ -108,9 +100,7 @@ class TestDiskInterface(unittest.TestCase):  # D203/D211 handled by formatter
                     f_path.unlink()  # Use pathlib
                 except OSError as os_err:  # Keep OSError for broad catch here
                     # Replace print with logging if desired, or keep for test output
-                    print(
-                        f"Warning: Could not remove test file {f_path}: {os_err}"
-                    )  # T201
+                    print(f"Warning: Could not remove test file {f_path}: {os_err}")  # T201
 
         if self.test_data_folder.exists():  # Use pathlib
             try:
@@ -118,20 +108,14 @@ class TestDiskInterface(unittest.TestCase):  # D203/D211 handled by formatter
                 if not any(self.test_data_folder.iterdir()):  # Check if dir is empty
                     self.test_data_folder.rmdir()  # Use pathlib
                 else:
-                    print(
-                        f"Warning: Test data folder {self.test_data_folder} not empty, not removing."
-                    )  # T201
+                    print(f"Warning: Test data folder {self.test_data_folder} not empty, not removing.")  # T201
             except OSError as os_err_dir:  # pragma: no cover
-                print(
-                    f"Warning: Could not remove test data folder {self.test_data_folder}: {os_err_dir}"
-                )  # T201
+                print(f"Warning: Could not remove test data folder {self.test_data_folder}: {os_err_dir}")  # T201
 
     # --- Tests for pyexiv2 based image readers (called directly) ---
     def test_read_jpg_header_pyexiv2_no_exif(self):  # D102
         """Test reading JPG with no EXIF data returns None or empty dicts."""
-        result = self.reader.read_jpg_header_pyexiv2(
-            str(self.jpg_file_no_exif)
-        )  # Pass str path
+        result = self.reader.read_jpg_header_pyexiv2(str(self.jpg_file_no_exif))  # Pass str path
         if result is not None:
             self.assertIsInstance(result, dict)
             self.assertEqual(result.get("EXIF"), {})
@@ -142,9 +126,7 @@ class TestDiskInterface(unittest.TestCase):  # D203/D211 handled by formatter
 
     def test_read_png_header_pyexiv2_no_standard_meta(self):  # D102
         """Test reading PNG with no standard EXIF/XMP/IPTC returns None or empty dicts."""
-        result = self.reader.read_png_header_pyexiv2(
-            str(self.png_file_no_meta)
-        )  # Pass str path
+        result = self.reader.read_png_header_pyexiv2(str(self.png_file_no_meta))  # Pass str path
         if result is not None:
             self.assertIsInstance(result, dict)
             self.assertEqual(result.get("EXIF"), {})
@@ -190,9 +172,7 @@ class TestDiskInterface(unittest.TestCase):  # D203/D211 handled by formatter
 
     def test_read_txt_fail_encoding_via_dispatcher(self):  # D102
         """Test reading text file with undecodable binary content."""
-        metadata = self.reader.read_file_data_by_type(
-            str(self.binary_content_in_txt_file)
-        )
+        metadata = self.reader.read_file_data_by_type(str(self.binary_content_in_txt_file))
         self.assertIsNone(metadata, "Should be None for undecodable binary .txt")
 
     def test_read_json_succeed_via_dispatcher(self):  # D102
@@ -201,9 +181,7 @@ class TestDiskInterface(unittest.TestCase):  # D203/D211 handled by formatter
         self.assertIsNotNone(metadata)
         self.assertIsInstance(metadata, dict)
         self.assertIn(DownField.JSON_DATA.value, metadata)
-        self.assertEqual(
-            metadata[DownField.JSON_DATA.value]["name"], "Test JSON Schema"
-        )
+        self.assertEqual(metadata[DownField.JSON_DATA.value]["name"], "Test JSON Schema")
 
     def test_read_json_fail_syntax_via_dispatcher(self):  # D102
         """Test JSON file with syntax error via dispatcher."""
@@ -211,9 +189,7 @@ class TestDiskInterface(unittest.TestCase):  # D203/D211 handled by formatter
         self.assertIsNotNone(result)
         self.assertIn(EmptyField.PLACEHOLDER.value, result)
         self.assertIn("Error", result[EmptyField.PLACEHOLDER.value])
-        self.assertIn(
-            "Invalid .json format", result[EmptyField.PLACEHOLDER.value]["Error"]
-        )
+        self.assertIn("Invalid .json format", result[EmptyField.PLACEHOLDER.value]["Error"])
 
     def test_read_toml_succeed_via_dispatcher(self):  # D102
         """Test successful TOML file reading via dispatcher."""
@@ -221,9 +197,7 @@ class TestDiskInterface(unittest.TestCase):  # D203/D211 handled by formatter
         self.assertIsNotNone(metadata)
         self.assertIsInstance(metadata, dict)
         self.assertIn(DownField.TOML_DATA.value, metadata)
-        self.assertEqual(
-            metadata[DownField.TOML_DATA.value]["title"], "Test TOML Schema"
-        )
+        self.assertEqual(metadata[DownField.TOML_DATA.value]["title"], "Test TOML Schema")
 
     def test_read_toml_fail_syntax_via_dispatcher(self):  # D102
         """Test TOML file with syntax error via dispatcher."""
@@ -231,26 +205,18 @@ class TestDiskInterface(unittest.TestCase):  # D203/D211 handled by formatter
         self.assertIsNotNone(result)
         self.assertIn(EmptyField.PLACEHOLDER.value, result)
         self.assertIn("Error", result[EmptyField.PLACEHOLDER.value])
-        self.assertIn(
-            "Invalid .toml format", result[EmptyField.PLACEHOLDER.value]["Error"]
-        )
+        self.assertIn("Invalid .toml format", result[EmptyField.PLACEHOLDER.value]["Error"])
 
     @patch("dataset_tools.access_disk.ModelTool")
-    def test_read_model_file_via_dispatcher(
-        self, MockModelTool: unittest.mock.Mock
-    ):  # Added type hint for mock
+    def test_read_model_file_via_dispatcher(self, MockModelTool: unittest.mock.Mock):  # Added type hint for mock
         """Test model file reading via dispatcher (mocked ModelTool)."""
         mock_model_tool_instance = MockModelTool.return_value
-        mock_model_tool_instance.read_metadata_from.return_value = {
-            "model_metadata": "mock data"
-        }
+        mock_model_tool_instance.read_metadata_from.return_value = {"model_metadata": "mock data"}
 
         metadata = self.reader.read_file_data_by_type(str(self.fake_model_file_path))
 
         MockModelTool.assert_called_once()
-        mock_model_tool_instance.read_metadata_from.assert_called_once_with(
-            str(self.fake_model_file_path)
-        )
+        mock_model_tool_instance.read_metadata_from.assert_called_once_with(str(self.fake_model_file_path))
         self.assertEqual(metadata, {"model_metadata": "mock data"})
 
     def test_read_unhandled_extension_via_dispatcher(self):  # D102

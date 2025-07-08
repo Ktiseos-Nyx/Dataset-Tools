@@ -128,6 +128,8 @@ select = [
 ]
 ignore = [
     "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107", # Ignore missing docstrings initially
+    "D203", # Incompatible with D211 (no blank line before class docstring)
+    "D213", # Incompatible with D212 (multi-line summary on first line)
     # ANN101, ANN102 were removed by Ruff as deprecated/handled differently
     "COM812", # Add this to ignore the formatter conflict with trailing commas
 ]

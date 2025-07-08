@@ -113,17 +113,13 @@ class SchemaFileReader:
             parsed_data = handler(file_path)
 
             if parsed_data is None:
-                return self._create_error_result(
-                    f"Failed to parse {suffix.upper()} file", suffix
-                )
+                return self._create_error_result(f"Failed to parse {suffix.upper()} file", suffix)
 
             # Add metadata about the parsing
             result = {
                 self._get_data_field(suffix).value: parsed_data,
                 "file_format": suffix.upper().lstrip("."),
-                "file_size": (
-                    file_path_obj.stat().st_size if file_path_obj.exists() else 0
-                ),
+                "file_size": (file_path_obj.stat().st_size if file_path_obj.exists() else 0),
                 "parsing_success": True,
             }
 
@@ -135,9 +131,7 @@ class SchemaFileReader:
 
         except Exception as e:
             self.logger.error(f"Error reading schema file {file_path}: {e}")
-            return self._create_error_result(
-                f"Error reading {suffix.upper()}: {e!s}", suffix
-            )
+            return self._create_error_result(f"Error reading {suffix.upper()}: {e!s}", suffix)
 
     def _read_json_file(self, file_path: str) -> dict | list | None:
         """Read and parse a JSON file."""
@@ -234,7 +228,9 @@ class SchemaFileReader:
         return (
             result
             if len(result) > 1 or "@attributes" in result
-            else result.get(list(result.keys())[0]) if result else {}
+            else result.get(list(result.keys())[0])
+            if result
+            else {}
         )
 
     def _get_data_field(self, suffix: str) -> DownField:
@@ -244,13 +240,9 @@ class SchemaFileReader:
         if suffix == ".toml":
             return DownField.TOML_DATA
         if suffix in {".yaml", ".yml"}:
-            return getattr(
-                DownField, "YAML_DATA", DownField.JSON_DATA
-            )  # Fallback to JSON_DATA
+            return getattr(DownField, "YAML_DATA", DownField.JSON_DATA)  # Fallback to JSON_DATA
         if suffix == ".xml":
-            return getattr(
-                DownField, "XML_DATA", DownField.JSON_DATA
-            )  # Fallback to JSON_DATA
+            return getattr(DownField, "XML_DATA", DownField.JSON_DATA)  # Fallback to JSON_DATA
         return DownField.JSON_DATA
 
     def _create_error_result(self, error_message: str, suffix: str) -> dict[str, Any]:
@@ -427,15 +419,9 @@ class StructuredDataAnalyzer:
                 analysis["node_types"] = list(set(node_types))
 
                 # Check for specific node types
-                analysis["has_prompt_nodes"] = any(
-                    "text" in nt.lower() or "prompt" in nt.lower() for nt in node_types
-                )
-                analysis["has_sampler_nodes"] = any(
-                    "sampler" in nt.lower() for nt in node_types
-                )
-                analysis["has_model_nodes"] = any(
-                    "model" in nt.lower() for nt in node_types
-                )
+                analysis["has_prompt_nodes"] = any("text" in nt.lower() or "prompt" in nt.lower() for nt in node_types)
+                analysis["has_sampler_nodes"] = any("sampler" in nt.lower() for nt in node_types)
+                analysis["has_model_nodes"] = any("model" in nt.lower() for nt in node_types)
 
             # Look for connections/links
             if "links" in data:
@@ -612,9 +598,7 @@ def test_schema_file_reader():
                     logger.info(f"Top level keys: {result['top_level_keys']}")
 
                 # Test pattern detection
-                patterns = {
-                    k: v for k, v in result.items() if k.startswith("appears_to_be")
-                }
+                patterns = {k: v for k, v in result.items() if k.startswith("appears_to_be")}
                 if patterns:
                     logger.info(f"Detected patterns: {patterns}")
 

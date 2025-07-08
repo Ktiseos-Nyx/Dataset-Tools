@@ -34,11 +34,7 @@ class IconManager:
             icons_directory: Path to directory containing SVG icons
 
         """
-        self.icons_directory = (
-            Path(icons_directory)
-            if icons_directory
-            else Path(__file__).parent / "icons"
-        )
+        self.icons_directory = Path(icons_directory) if icons_directory else Path(__file__).parent / "icons"
         self.icon_cache: dict[str, QIcon] = {}
         self.current_theme_colors: dict[str, QColor] = {}
 
@@ -79,9 +75,7 @@ class IconManager:
             self.current_theme_colors = self.theme_color_schemes["dark"].copy()
             nfo("No QApplication instance found, defaulting to dark theme colors")
 
-    def set_theme_colors(
-        self, primary: QColor, secondary: QColor, accent: QColor
-    ) -> None:
+    def set_theme_colors(self, primary: QColor, secondary: QColor, accent: QColor) -> None:
         """Manually set theme colors for icon generation.
 
         Args:
@@ -94,18 +88,14 @@ class IconManager:
             "primary": primary,
             "secondary": secondary,
             "accent": accent,
-            "disabled": QColor(
-                primary.red() // 3, primary.green() // 3, primary.blue() // 3
-            ),
+            "disabled": QColor(primary.red() // 3, primary.green() // 3, primary.blue() // 3),
         }
 
         # Clear cache to force regeneration with new colors
         self.icon_cache.clear()
         nfo("Icon colors updated, cache cleared")
 
-    def get_icon(
-        self, icon_name: str, color_type: str = "primary", size: QSize = QSize(24, 24)
-    ) -> QIcon:
+    def get_icon(self, icon_name: str, color_type: str = "primary", size: QSize = QSize(24, 24)) -> QIcon:
         """Get a theme-aware icon.
 
         Args:
@@ -238,9 +228,7 @@ class IconManager:
 
         # Add text if space allows
         if size.width() >= 16:
-            painter.setPen(
-                self.current_theme_colors.get("primary", QColor(255, 255, 255))
-            )
+            painter.setPen(self.current_theme_colors.get("primary", QColor(255, 255, 255)))
             painter.drawText(
                 pixmap.rect(),
                 QtCore.Qt.AlignmentFlag.AlignCenter,
@@ -288,21 +276,14 @@ class IconManager:
         return [f.stem for f in self.icons_directory.glob("*.svg")]
 
 
-# Global icon manager instance
-_icon_manager: IconManager | None = None
-
-
 def get_icon_manager() -> IconManager:
     """Get the global icon manager instance."""
-    global _icon_manager
-    if _icon_manager is None:
-        _icon_manager = IconManager()
-    return _icon_manager
+    if not hasattr(get_icon_manager, "_icon_manager"):
+        get_icon_manager._icon_manager = IconManager()
+    return get_icon_manager._icon_manager
 
 
-def get_themed_icon(
-    icon_name: str, color_type: str = "primary", size: QSize = QSize(24, 24)
-) -> QIcon:
+def get_themed_icon(icon_name: str, color_type: str = "primary", size: QSize = QSize(24, 24)) -> QIcon:
     """Convenience function to get a themed icon.
 
     Args:

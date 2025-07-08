@@ -36,7 +36,12 @@ from .engine import (
     create_metadata_engine,
     parse_file_metadata,
 )
-from .field_extraction import A1111ParameterExtractor, ComfyUIWorkflowExtractor, FieldExtractor, create_field_extractor
+from .field_extraction import (
+    A1111ParameterExtractor,
+    ComfyUIWorkflowExtractor,
+    FieldExtractor,
+    create_field_extractor,
+)
 from .template_system import (
     OutputFormatter,
     StandardTemplates,
