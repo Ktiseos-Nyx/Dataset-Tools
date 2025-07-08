@@ -6,10 +6,10 @@ The Dataset Tools app now has a comprehensive SVG icon system that automatically
 
 ## 📁 Icon Directory Structure
 
-```
+``` bash
 dataset_tools/ui/icons/
 ├── folder-open.svg          # Open folder button
-├── sort-alphabetical.svg    # Sort files button  
+├── sort-alphabetical.svg    # Sort files button
 ├── image-multiple.svg       # Image-related actions
 └── [your-custom-icons].svg  # Add more here!
 ```
@@ -17,11 +17,13 @@ dataset_tools/ui/icons/
 ## 🎯 How to Add Your SVG Icons
 
 ### 1. **Prepare Your SVG Files**
+
 - Name them descriptively (e.g., `settings.svg`, `refresh.svg`, `search.svg`)
 - Use `fill="currentColor"` in your SVG paths (this allows theme-based coloring)
 - Keep them simple and clean (24x24px viewBox works best)
 
 ### 2. **Example SVG Format**
+
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
   <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
@@ -29,6 +31,7 @@ dataset_tools/ui/icons/
 ```
 
 ### 3. **Add Icons to Buttons**
+
 ```python
 # In your UI code:
 from .icon_manager import get_icon_manager
@@ -49,21 +52,23 @@ icon_manager.add_icon_to_button(
 ## 🎨 Color Types Available
 
 - **`primary`**: Main icon color (white in dark themes, dark gray in light themes)
-- **`secondary`**: Subtle icon color (light gray in dark, medium gray in light) 
+- **`secondary`**: Subtle icon color (light gray in dark, medium gray in light)
 - **`accent`**: Highlight color (cyan in dark themes, teal in light themes)
 - **`disabled`**: Muted color for disabled states
 
 ## 🔧 Current Icon Implementations
 
-### ✅ Already Implemented:
+### ✅ Already Implemented
+
 - **Open Folder button**: `folder-open.svg` with primary color
 - **Sort Files button**: `sort-alphabetical.svg` with primary color
 
-### 🎯 Great Icons to Add Next:
+### 🎯 Great Icons to Add Next
+
 ```bash
 # Place these in dataset_tools/ui/icons/
 refresh.svg         # Refresh/reload button
-settings.svg        # Settings/preferences  
+settings.svg        # Settings/preferences
 search.svg          # Search functionality
 filter.svg          # Filter files
 view-grid.svg       # Grid view toggle
@@ -79,6 +84,7 @@ fullscreen.svg      # Fullscreen mode
 ## 🚀 Advanced Usage
 
 ### Get Icons Programmatically
+
 ```python
 from .icon_manager import get_themed_icon
 from PyQt6.QtCore import QSize
@@ -89,6 +95,7 @@ my_action.setIcon(icon)
 ```
 
 ### Custom Color Updates
+
 ```python
 # The icon manager automatically detects theme changes, but you can manually update:
 icon_manager = get_icon_manager()
@@ -110,8 +117,9 @@ icon_manager.set_theme_colors(
 ## 📝 Icon Naming Conventions
 
 Use descriptive, kebab-case names:
+
 - ✅ `folder-open.svg`
-- ✅ `sort-alphabetical.svg` 
+- ✅ `sort-alphabetical.svg`
 - ✅ `image-multiple.svg`
 - ❌ `icon1.svg`
 - ❌ `FolderOpen.svg`
@@ -134,7 +142,7 @@ Use descriptive, kebab-case names:
 
 - Icons automatically scale well from 12px to 32px
 - Use `primary` color for most buttons
-- Use `accent` color for important/active states  
+- Use `accent` color for important/active states
 - Use `secondary` color for subtle/helper buttons
 - Use `disabled` color for inactive states
 

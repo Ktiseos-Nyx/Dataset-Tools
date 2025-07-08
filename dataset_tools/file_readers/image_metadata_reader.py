@@ -217,8 +217,8 @@ class ImageMetadataReader:
             nfo(f"[ImageReader] pyexiv2 successfully read metadata from: {Path(file_path).name}")
             return metadata
 
-        except Exception as e:
-            self.logger.debug(f"pyexiv2 error for {file_path}: {e}")
+        except Exception:
+            self.logger.exception(f"pyexiv2 error for {file_path}")
             return None
 
     def _decode_pyexiv2_usercomment_string(self, data_str: str) -> str:
@@ -321,33 +321,34 @@ class ImageMetadataReader:
             try:
                 utf16_data = data[9:]  # Skip "UNICODE\0\0"
                 return utf16_data.decode("utf-16le")
-            except:
-                pass
+            except Exception as e:
+                self.logger.debug(f"Failed to decode UserComment bytes as UTF-16: {e}")
 
         # Strategy 2: charset=Unicode prefix (mojibake format)
         if data.startswith(b"charset=Unicode"):
             try:
                 unicode_part = data[len(b"charset=Unicode ") :]
                 return unicode_part.decode("utf-16le", errors="ignore")
-            except:
-                pass
+            except Exception as e:
+                self.logger.debug(f"Failed to decode UserComment bytes as UTF-16: {e}")
 
         # Strategy 3: Direct UTF-8
         try:
             return data.decode("utf-8")
-        except:
-            pass
+        except Exception as e:
+            self.logger.debug(f"Failed to decode UserComment bytes as UTF-8: {e}")
 
         # Strategy 4: Latin-1 (preserves all bytes)
         try:
             return data.decode("latin-1")
-        except:
-            pass
+        except Exception as e:
+            self.logger.debug(f"Failed to decode UserComment bytes as Latin-1: {e}")
 
         # Strategy 5: Ignore errors
         try:
             return data.decode("utf-8", errors="ignore")
-        except:
+        except Exception:
+            self.logger.exception("Failed to decode UserComment bytes with errors ignored")
             return ""
 
     def _log_user_comment_info(self, metadata: dict[str, Any], file_path: str) -> None:
@@ -357,8 +358,8 @@ class ImageMetadataReader:
             uc_value = exif_data["Exif.Photo.UserComment"]
             self.logger.debug(f"UserComment type for {Path(file_path).name}: {type(uc_value)}")
 
-            if isinstance(uc_value, str) and uc_value.startswith("charset="):
-                self.logger.debug(f"UserComment appears to be pre-decoded with charset prefix: {Path(file_path).name}")
+        if isinstance(uc_value, str) and uc_value.startswith("charset="):
+            self.logger.debug(f"UserComment appears to be pre-decoded with charset prefix: {Path(file_path).name}")
 
     def get_supported_formats(self) -> set[str]:
         """Get the set of supported image formats."""
@@ -447,8 +448,8 @@ class ImageMetadataExtractor:
                 try:
                     with Image.open(file_path) as img:
                         info["image_size"] = (img.width, img.height)
-                except Exception:
-                    pass
+                except Exception as e:
+                    self.logger.debug(f"Error getting image size for {file_path}: {e}")
 
             # Check for metadata presence
             metadata = self.reader.read_metadata(file_path)

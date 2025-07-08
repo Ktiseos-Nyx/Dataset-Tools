@@ -114,10 +114,13 @@ version = "1.0"
 # --- Rules for ComfyUI (Flux/GGUF Style) ---
 [[parsers.ComfyUI_Flux_GGUF_Style.detection_rules]]
   comment = "Rules to detect workflow chunk, presence of KSampler/SamplerCustomAdvanced AND specific nodes like UnetLoaderGGUF, DualCLIPLoaderGGUF with type: 'flux'"
+  source_type = "pil_info_key_json_path_query"
+  source_key_options = ["workflow", "prompt"]
   json_query_type = "has_node_with_class_and_input_value"
   class_type = "DualCLIPLoaderGGUF"
   input_key = "type"
   expected_input_value = "flux"
+  operator = "is_true"
 
 # --- Rules for Draw Things (XMP JSON) ---
 [[parsers.Draw_Things.detection_rules]]

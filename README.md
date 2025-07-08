@@ -1,5 +1,6 @@
 <div align="center">
-     <h1>Dataset Tools: An AI Metadata Viewer</h1>
+
+    # Dataset Tools: An AI Metadata Viewer
 
 [![Dependency review](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/dependency-review.yml) [![CodeQL](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/github-code-scanning/codeql) ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 
@@ -77,12 +78,11 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 * **InvokeAI:** PNG (parsing "invokeai_metadata", "sd-metadata", or "Dream" chunks).
 * **Easy Diffusion:** PNG, JPEG, WEBP (embedded JSON metadata).
 * **Fooocus:** PNG ("Comment" chunk JSON), JPEG (JFIF comment JSON).
-* **Midjorney** YAY
+* **Midjourney** YAY
 * **RuinedFooocus:** JPEG (UserComment JSON).
 * **Draw Things:** PNG (XMP metadata containing JSON).
 * **StableSwarmUI:** PNG, JPEG (EXIF or "sui_image_params" in PNG/UserComment).
-*   *(Support for other formats may be on the way, please see issues and/or discussions for details)*
-
+* *(Support for other formats may be on the way, please see issues and/or discussions for details)*
 
 ### File Types that are COMING SOON AND/or have partial capability
 
@@ -140,6 +140,7 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 
 4. **Optional Installation**
   You're now able to use PYPI packages to install Dataset Tools.
+
    ```bash
      pip install kn-dataset-tools
    ```
@@ -158,15 +159,12 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
     dataset-tools
   ```
 
-
- 
-  
-####  Advanced Command-line Options:
-
+#### Advanced Command-line Options
 
   ```bash
    python -m dataset_tools.main [options]
   ```
+
 > [!TIP]
 >
 > ```bash
@@ -216,6 +214,7 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 ### Future Development Roadmap
 
 **Core Features:**
+
 * [ ] **Model File Support:** Complete Safetensors and GGUF metadata display and editing capabilities.
 * [ ] **Full Metadata Editing:** Advanced editing and saving capabilities for image metadata.
 * [ ] **Plugin Architecture:** Extensible plugin system for easy addition of custom parsers and functionality.
@@ -223,23 +222,27 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 * [ ] **Advanced Search & Filtering:** Dataset search and filtering based on metadata content and parameters.
 
 **User Experience:**
+
 * [ ] **Enhanced UI/UX:** Improved prompt display, better text file viewing with syntax highlighting.
 * [ ] **Theme System Expansion:** Additional themes and customization options.
 * [ ] **Keyboard Shortcuts:** Comprehensive hotkey support for power users.
 
 **Platform & Integration:**
+
 * [ ] **Standalone Executables:** Native builds for Windows, macOS, and Linux.
 * [ ] **PyPI Distribution:** Official package distribution for easy `pip install dataset-tools`.
 * [ ] **CivitAI API Integration:** Direct model and resource lookup capabilities.
 * [ ] **Cross-Platform Compatibility:** Enhanced support across different operating systems.
 
 **Technical Improvements:**
+
 * [ ] **Comprehensive Test Suite:** Automated testing to ensure stability and prevent regressions.
 * [ ] **Enhanced Format Support:** Additional AI tool formats and metadata standards.
 * [ ] **Performance Optimization:** Faster loading and processing for large datasets.
 * [ ] **Error Handling:** Improved error reporting and recovery mechanisms.
 
 **Ecosystem Integration:**
+
 * [ ] **Dataset Management Tools:** Integration with HuggingFace, model downloaders, and conversion utilities.
 * [ ] **Workflow Integration:** Support for AI generation workflows and pipeline management.
 * [ ] **Community Features:** Parser sharing, format contribution system.

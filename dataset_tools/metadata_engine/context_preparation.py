@@ -384,28 +384,28 @@ class ContextDataPreparer:
             try:
                 utf16_data = data[9:]  # Skip "UNICODE\0\0"
                 return utf16_data.decode("utf-16le")
-            except:
-                pass
+            except Exception as e:
+                self.logger.debug(f"Failed to decode UserComment bytes as UTF-16: {e}")
 
         # Strategy 2: charset=Unicode prefix (mojibake format)
         if data.startswith(b"charset=Unicode"):
             try:
                 unicode_part = data[len(b"charset=Unicode ") :]
                 return unicode_part.decode("utf-16le", errors="ignore")
-            except:
-                pass
+            except Exception as e:
+                self.logger.debug(f"Failed to decode UserComment bytes as UTF-16 (charset): {e}")
 
         # Strategy 3: Direct UTF-8
         try:
             return data.decode("utf-8")
-        except:
-            pass
+        except Exception as e:
+            self.logger.debug(f"Failed to decode UserComment bytes as UTF-8: {e}")
 
         # Strategy 4: Latin-1 (preserves all bytes)
         try:
             return data.decode("latin-1")
-        except:
-            pass
+        except Exception as e:
+            self.logger.debug(f"Failed to decode UserComment bytes as Latin-1: {e}")
 
         # Strategy 5: Ignore errors
         try:

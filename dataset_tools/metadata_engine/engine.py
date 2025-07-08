@@ -23,8 +23,6 @@ from typing import Any, BinaryIO, Union
 # Simplified imports - use standard logging instead of custom logger
 def get_logger(name=None):
     """Fallback logger function"""
-    import logging
-
     return logging.getLogger(name or __name__)
 
 
@@ -424,9 +422,9 @@ class MetadataEngine:
         elif transform_type == "extract_json_from_xmp_user_comment" and isinstance(data, str):
             # Extract JSON from XMP exif:UserComment element (for Draw Things)
             try:
-                from xml.dom import minidom
+                from defusedxml.minidom import parseString  # type: ignore
 
-                xmp_dom = minidom.parseString(data)
+                xmp_dom = parseString(data)
                 description_nodes = xmp_dom.getElementsByTagName("rdf:Description")
                 for desc_node in description_nodes:
                     uc_nodes = desc_node.getElementsByTagName("exif:UserComment")

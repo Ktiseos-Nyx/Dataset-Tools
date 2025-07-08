@@ -8,6 +8,8 @@ from typing import TYPE_CHECKING
 
 from PyQt6 import QtWidgets as Qw
 
+from .display_formatter import format_metadata_for_display
+
 # --- This is the fix for circular import type hints ---
 if TYPE_CHECKING:
     from .ui import MainWindow  # This import only runs for type checkers
@@ -29,9 +31,11 @@ def handle_file_selection(main_window: "MainWindow", current_item: Qw.QListWidge
 
     if not main_window.current_folder or not file_name:
         log.warning("Folder/file context is missing, cannot proceed.")
-        # We can now directly call the formatter, but since MainWindow already does this...
-        # ...it's better to just call the method on MainWindow. Your original code was correct.
-        from .display_formatter import format_metadata_for_display
+        # We can now directly call the formatter, but since
+        # MainWindow already does this...
+        # ...it's better to just call the method on MainWindow. Your original
+        # code was correct.
+
 
         formatted_data = format_metadata_for_display(
             {main_window.EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}}

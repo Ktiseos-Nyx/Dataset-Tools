@@ -90,8 +90,8 @@ class RuleEvaluator:
                         f"Detection: Enhanced EXIF extracted {len(user_comment)} chars with A1111 patterns"
                     )
                     return user_comment
-        except:
-            pass
+        except Exception as e:
+            self.logger.debug(f"Detection: Enhanced EXIF extraction failed: {e}")
 
         # Fallback: Manual Unicode decoding
         try:
@@ -112,8 +112,8 @@ class RuleEvaluator:
                                         f"Detection: Manual Unicode extracted {len(decoded)} chars with A1111 patterns"
                                     )
                                     return decoded
-                            except:
-                                pass
+                            except Exception as e:
+                                self.logger.debug(f"Detection: Manual Unicode extraction failed as UTF-16: {e}")
 
                         # Strategy 2: charset=Unicode prefix
                         if user_comment_raw.startswith(b"charset=Unicode"):
@@ -125,10 +125,10 @@ class RuleEvaluator:
                                         f"Detection: charset=Unicode extracted {len(decoded)} chars with A1111 patterns"
                                     )
                                     return decoded
-                            except:
-                                pass
-        except:
-            pass
+                            except Exception as e:
+                                self.logger.debug(f"Detection: charset=Unicode extraction failed as UTF-16: {e}")
+        except Exception as e:
+            self.logger.debug(f"Detection: Manual Unicode extraction completely failed: {e}")
 
         self.logger.debug("Detection: No A1111 patterns found in UserComment")
         return None
@@ -445,7 +445,7 @@ class RuleEvaluator:
                 # bool(data_to_check) checks if the dictionary is not empty
                 is_not_empty = bool(data_to_check) if is_dict else False
                 self.logger.debug(
-                    f"RuleEvaluator: Op '{operator}': data type {type(data_to_check)}, is_dict={is_dict}, is_not_empty={is_not_empty}"
+                    f"RuleEvaluator: Op 'exists_and_is_dictionary': data type {type(data_to_check)}, is_dict={is_dict}, is_not_empty={is_not_empty}"
                 )
                 return is_dict and is_not_empty
 
@@ -575,6 +575,7 @@ class RuleEvaluator:
             elif operator == "exists_and_is_dictionary":
                 # For source_type "pil_info_object", data_to_check should be context_data.get("pil_info")
                 is_dict = isinstance(data_to_check, dict)
+                # bool(data_to_check) checks if the dictionary is not empty
                 is_not_empty = bool(data_to_check) if is_dict else False
                 self.logger.debug(
                     f"RuleEvaluator: Op 'exists_and_is_dictionary': data type {type(data_to_check)}, is_dict={is_dict}, is_not_empty={is_not_empty}"

@@ -30,6 +30,7 @@ try:
 
     XML_AVAILABLE = True
 except ImportError:
+    # Do NOT fall back to xml.etree.ElementTree to avoid XXE vulnerabilities
     XML_AVAILABLE = False
 
 from ..correct_types import DownField, EmptyField
@@ -176,19 +177,15 @@ class SchemaFileReader:
         except Exception as e:
             self.logger.error(f"Error reading YAML file {file_path}: {e}")
             return None
-
     def _read_xml_file(self, file_path: str) -> dict[str, Any] | None:
         """Read and parse an XML file securely (prevents XXE attacks)."""
         if not XML_AVAILABLE:
-            self.logger.error("XML library not available")
+            self.logger.error("defusedxml library not available for secure XML parsing")
             return None
 
         try:
-            # Create a secure parser that prevents XXE attacks
             # defusedxml handles XXE prevention by default
-
-            # Parse with the secure parser
-            tree = ET.parse(file_path, parser=parser)
+            tree = ET.parse(file_path)
             root = tree.getroot()
             return self._xml_to_dict(root)
         except ET.ParseError as e:
@@ -196,6 +193,7 @@ class SchemaFileReader:
             return None
         except Exception as e:
             self.logger.error(f"Error reading XML file {file_path}: {e}")
+            return None
             return None
 
     def _xml_to_dict(self, element) -> dict[str, Any]:
