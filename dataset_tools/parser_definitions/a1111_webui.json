@@ -1,0 +1,137 @@
+{
+  "parser_name": "a1111_webui",
+  "priority": 170,
+  "description": "Parses Automatic1111 WebUI image metadata",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: The parameter string MUST contain A1111-style keywords (works for both PNG and EXIF sources)",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_all",
+      "regex_patterns": ["Steps:", "Sampler:", "CFG scale:", "Seed:", "Size:"]
+    },
+    {
+      "comment": "Rule 2: Differentiate from simple JSON formats",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "not_strictly_simple_json_object_with_prompt_key"
+    },
+    {
+      "comment": "Rule 3: Must not have PNG workflow chunk",
+      "source_type": "png_chunk",
+      "source_key": "workflow",
+      "operator": "not_exists"
+    },
+    {
+      "comment": "Rule 4: UserComment must not contain ComfyUI workflow patterns",
+      "source_type": "exif_user_comment",
+      "operator": "does_not_contain",
+      "value": "\"class_type\""
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "parameters"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ]
+    },
+    "extraction_strategy": "a1111_text_parsing",
+    "format_description": "A1111 uses text format with prompts and key-value parameters",
+    "fields": [
+  {
+    "target_key": "prompt",
+    "method": "a1111_extract_prompt_positive"
+  },
+  {
+    "target_key": "negative_prompt",
+    "method": "a1111_extract_prompt_negative"
+  },
+  {
+    "target_key": "steps",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Steps",
+    "value_type": "integer"
+  },
+  {
+    "target_key": "cfg_scale",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "CFG scale",
+    "value_type": "float"
+  },
+  {
+    "target_key": "seed",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Seed",
+    "value_type": "integer"
+  },
+  {
+    "target_key": "sampler_name",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Sampler",
+    "value_type": "string"
+  },
+  {
+    "target_key": "model",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Model",
+    "value_type": "string"
+  },
+  {
+    "target_key": "model_hash",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Model hash",
+    "value_type": "string"
+  },
+  {
+    "target_key": "width",
+    "method": "key_value_extract_transform_from_a1111_block",
+    "key_name": "Size",
+    "transform_regex": "^(\\d+)x\\d+$",
+    "transform_group": 1,
+    "value_type": "integer"
+  },
+  {
+    "target_key": "height",
+    "method": "key_value_extract_transform_from_a1111_block",
+    "key_name": "Size",
+    "transform_regex": "^\\d+x(\\d+)$",
+    "transform_group": 1,
+    "value_type": "integer"
+  }
+]
+  },
+  "output_template": {
+  "tool": "Automatic1111 WebUI",
+  "parser_version": "unfudged_v1",
+  "prompt": "$prompt",
+  "negative_prompt": "$negative_prompt",
+  "parameters": {
+    "steps": "$steps",
+    "cfg_scale": "$cfg_scale",
+    "seed": "$seed",
+    "sampler_name": "$sampler_name",
+    "model": "$model",
+    "model_hash": "$model_hash",
+    "width": "$width",
+    "height": "$height"
+  },
+  "raw_metadata": "$INPUT_STRING_ORIGINAL_CHUNK",
+  "_metadata": {
+    "processed_at": "$CURRENT_TIMESTAMP",
+    "processor": "MetadataEngine",
+    "template_processed": true
+  }
+  },
+  "error_handling": {
+    "missing_required_fields": "return_partial_with_error_flag",
+    "malformed_metadata": "attempt_fuzzy_parsing",
+    "unknown_keys": "store_in_extra_fields"
+  }
+}

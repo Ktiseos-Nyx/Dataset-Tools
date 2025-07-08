@@ -1,0 +1,138 @@
+{
+  "parser_name": "Standard Image (PIL Info Details)",
+  "priority": 15,
+  "target_file_types": [
+    "PNG",
+    "JPEG",
+    "WEBP",
+    "TIFF",
+    "GIF",
+    "BMP"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be a recognized image format where PIL provides an 'info' dictionary.",
+      "source_type": "pil_info_object",
+      "operator": "exists_and_is_dictionary"
+    },
+    {
+      "comment": "Rule 2: The pil_info should contain at least some common keys like 'Software' or 'dpi' or 'icc_profile'.",
+      "source_type": "pil_info_object",
+      "operator": "json_contains_any_key",
+      "expected_keys": [
+        "Software",
+        "dpi",
+        "icc_profile",
+        "gamma",
+        "chromaticity"
+      ]
+    },
+    {
+      "comment": "Rule 3: AND ensure no strong AI metadata markers are present in common places.",
+      "condition": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "parameters",
+          "operator": "not_exists_or_not_ai_string"
+        },
+        {
+          "source_type": "exif_user_comment",
+          "operator": "not_exists_or_not_ai_string"
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "comment": "The input for field extraction will be the context_data.pil_info dictionary.",
+      "source_type": "direct_context_key_object",
+      "context_key_path": "pil_info"
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "static_value",
+        "value": null
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "static_value",
+        "value": null
+      },
+      {
+        "target_key": "parameters.tool_specific.pil_software",
+        "method": "direct_json_path",
+        "json_path": "Software",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.pil_gamma",
+        "method": "direct_json_path",
+        "json_path": "gamma",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.pil_dpi_x",
+        "method": "direct_json_path_transform_tuple_element",
+        "json_path": "dpi",
+        "tuple_index": 0,
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.pil_dpi_y",
+        "method": "direct_json_path_transform_tuple_element",
+        "json_path": "dpi",
+        "tuple_index": 1,
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.pil_chromaticity_str",
+        "method": "direct_json_path_to_string",
+        "json_path": "chromaticity",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.pil_icc_profile_present",
+        "method": "json_path_exists_boolean",
+        "json_path": "icc_profile",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.pil_icc_profile_summary",
+        "method": "summarize_bytes_from_json_path",
+        "json_path": "icc_profile",
+        "summary_type": "length_and_type",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "Standard Image (PIL Info Details)",
+      "tool": "$parameters.tool_specific.pil_software",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height",
+        "tool_specific": {
+          "image_editor_software_pil": "$parameters.tool_specific.pil_software",
+          "gamma_pil": "$parameters.tool_specific.pil_gamma",
+          "dpi_x_pil": "$parameters.tool_specific.pil_dpi_x",
+          "dpi_y_pil": "$parameters.tool_specific.pil_dpi_y",
+          "chromaticity_pil": "$parameters.tool_specific.pil_chromaticity_str",
+          "icc_profile_present_pil": "$parameters.tool_specific.pil_icc_profile_present",
+          "icc_profile_summary_pil": "$parameters.tool_specific.pil_icc_profile_summary"
+        }
+      },
+      "workflow": {
+        "pil_info_snapshot": {
+          "method": "context_pil_info_to_safe_string_dict"
+        }
+      }
+    }
+  }
+}

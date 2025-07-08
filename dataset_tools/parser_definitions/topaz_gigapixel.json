@@ -1,0 +1,105 @@
+{
+  "parser_name": "Topaz_Gigapixel_AI",
+  "priority": 120,
+  "description": "Topaz Gigapixel AI - Professional image upscaling software using AI enhancement algorithms 📈✨",
+  "version": "1.0",
+  "maintainer": "Chaos Bean Crew",
+  "target_file_types": ["PNG", "JPEG", "JPG", "TIFF", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have Software field indicating Topaz Gigapixel",
+      "source_type": "pil_info_key",
+      "source_key": "Software",
+      "operator": "contains",
+      "value": "Topaz Gigapixel"
+    },
+    {
+      "comment": "Rule 2: Must have CreatorTool field also indicating Topaz",
+      "source_type": "pil_info_key",
+      "source_key": "CreatorTool", 
+      "operator": "contains",
+      "value": "Topaz Gigapixel"
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "exif_field", "source_key": "Software"},
+        {"source_type": "xmp_field", "source_key": "CreatorTool"},
+        {"source_type": "exif_field", "source_key": "ImageWidth"},
+        {"source_type": "exif_field", "source_key": "ImageHeight"}
+      ]
+    },
+
+    "fields": [
+      {
+        "target_key": "software_version",
+        "method": "regex_extract_group",
+        "source_field": "Software",
+        "pattern": "Topaz Gigapixel AI ([\\d\\.]+)",
+        "value_type": "string",
+        "fallback": "Unknown Version"
+      },
+      {
+        "target_key": "platform",
+        "method": "regex_extract_group", 
+        "source_field": "Software",
+        "pattern": "\\(([^)]+)\\)",
+        "value_type": "string",
+        "fallback": "Unknown Platform"
+      },
+      {
+        "target_key": "original_dimensions",
+        "method": "extract_xmp_original_dimensions",
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "upscale_factor",
+        "method": "calculate_upscale_ratio",
+        "fallback": "Unknown"
+      }
+    ],
+
+    "output_template": {
+      "tool": "Topaz Gigapixel AI",
+      "category": "Image Upscaling/Enhancement",
+      "software_version": "$software_version",
+      "platform": "$platform",
+      
+      "upscaling_info": {
+        "original_dimensions": "$original_dimensions",
+        "final_dimensions": "$CONTEXT.width x $CONTEXT.height",
+        "upscale_factor": "$upscale_factor",
+        "enhancement_type": "AI-based upscaling"
+      },
+
+      "technical_details": {
+        "processor": "Topaz AI Enhancement Engine",
+        "method": "Machine Learning Upscaling",
+        "quality": "Professional Grade"
+      },
+
+      "metadata_source": {
+        "exif_software": "$SOFTWARE_TAG",
+        "xmp_creator": "$CREATOR_TOOL",
+        "detection_confidence": "high"
+      },
+
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true,
+        "note": "This is post-processing software, not generative AI"
+      }
+    }
+  },
+
+  "notes": [
+    "Topaz Gigapixel AI is professional upscaling software, not generative AI",
+    "Detects AI-enhanced images that have been post-processed for quality improvement",
+    "Should have higher priority than generic 'Easy Diffusion' to prevent misclassification",
+    "Focuses on technical enhancement metadata rather than generation parameters"
+  ]
+}

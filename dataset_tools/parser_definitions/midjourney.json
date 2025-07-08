@@ -1,0 +1,163 @@
+{
+  "parser_name": "Midjourney",
+  "priority": 180,
+  "description": "Midjourney AI art platform - Discord bot with command-line style metadata",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "JPG"],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have Midjourney Job ID in Description field",
+      "source_type": "pil_info_key",
+      "source_key": "Description",
+      "operator": "contains",
+      "value": "Job ID:"
+    },
+    {
+      "comment": "Rule 2: Must contain Midjourney version parameters",
+      "source_type": "pil_info_key",
+      "source_key": "Description",
+      "operator": "regex_match_any",
+      "regex_patterns": [
+        "--v \\d+",
+        "--version \\d+",
+        "--chaos \\d+",
+        "--ar \\d+:\\d+",
+        "--stylize \\d+"
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "png_chunk", "source_key": "Description"},
+        {"source_type": "exif_field", "source_key": "Description"},
+        {"source_type": "exif_field", "source_key": "ImageDescription"}
+      ],
+      "transformations": [{"type": "direct_text_content"}]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "regex_extract_before_pattern",
+        "pattern": "(?:\\s--[a-zA-Z]|\\sJob ID:)",
+        "value_type": "string"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "static_value",
+        "value": "",
+        "comment": "Midjourney doesn't support negative prompts"
+      },
+      {
+        "target_key": "parameters.aspect_ratio",
+        "method": "regex_extract_group",
+        "pattern": "--ar\\s+([^\\s]+)",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.version",
+        "method": "regex_extract_group",
+        "pattern": "--v\\s+([^\\s]+)",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.niji_version",
+        "method": "regex_extract_group",
+        "pattern": "--niji\\s+([^\\s]+)",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.stylize",
+        "method": "regex_extract_group",
+        "pattern": "--stylize\\s+(\\d+)",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.chaos",
+        "method": "regex_extract_group",
+        "pattern": "--chaos\\s+(\\d+)",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.weird",
+        "method": "regex_extract_group",
+        "pattern": "--weird\\s+(\\d+)",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.quality",
+        "method": "regex_extract_group",
+        "pattern": "--q\\s+([^\\s]+)",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "regex_extract_group",
+        "pattern": "--seed\\s+(\\d+)",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.job_id",
+        "method": "regex_extract_group",
+        "pattern": "Job ID:\\s*([\\w-]+)",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.author",
+        "method": "direct_context_value",
+        "source_data_from_context": {
+          "type": "exif_field",
+          "key": "Author"
+        },
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "tool": "Midjourney",
+      "parser_version": "unfudged_v1",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "aspect_ratio": "$parameters.aspect_ratio",
+        "version": "$parameters.version",
+        "niji_version": "$parameters.niji_version",
+        "stylize": "$parameters.stylize",
+        "chaos": "$parameters.chaos",
+        "weird": "$parameters.weird",
+        "quality": "$parameters.quality",
+        "seed": "$parameters.seed",
+        "job_id": "$parameters.job_id",
+        "author": "$parameters.author"
+      },
+      "midjourney_specific": {
+        "platform": "Discord Bot",
+        "supports_negative_prompts": false,
+        "command_style": "slash_command_flags"
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+  "notes": [
+    "Converted from old format to current MetadataEngine format",
+    "Supports both PNG and JPEG files",
+    "Handles Discord command-style metadata with flags",
+    "Extracts prompt from text before first flag or Job ID",
+    "Maps version flags to model names where possible"
+  ]
+}

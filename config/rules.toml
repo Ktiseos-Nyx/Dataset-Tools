@@ -1,0 +1,195 @@
+# config/rules.toml
+
+# Global settings for the rules engine
+[global_settings]
+version = "1.0"
+
+# --- Rules for A1111 WebUI (Generic String Parser) ---
+# PRIORITY: 110
+[[parsers.A1111_WebUI.detection_rules]]
+  comment = "Rule 1: EITHER PNG 'parameters' chunk OR EXIF UserComment must exist."
+  condition = "OR"
+  rules = [
+    { source_type = "pil_info_key", source_key = "parameters", operator = "exists" },
+    { source_type = "exif_user_comment", operator = "exists" }
+  ]
+
+[[parsers.A1111_WebUI.detection_rules]]
+  comment = "Rule 2: The parameter string MUST contain A1111-style keywords."
+  source_type = "a1111_parameter_string_content"
+  operator = "regex_match_all"
+  regex_patterns = [
+    "Steps:",
+    "Sampler:",
+    "CFG scale:",
+    "Seed:",
+    "Size:"
+  ]
+
+[[parsers.A1111_WebUI.detection_rules]]
+  comment = "Rule 3: Differentiate from simple JSON formats."
+  source_type = "a1111_parameter_string_content"
+  operator = "not_strictly_simple_json_object_with_prompt_key"
+
+[[parsers.A1111_WebUI.detection_rules]]
+  comment = "Rule 4: Ensure it's not a ComfyUI workflow."
+  source_type = "pil_info_key"
+  source_key = "workflow"
+  operator = "not_exists"
+
+# --- Rules for Civitai (A1111-Style String) ---
+[[parsers.Civitai_A1111_Style.detection_rules]]
+  comment = "Rule 1: Must look like A1111 parameters (general check)."
+  source_type = "a1111_parameter_string_content"
+  operator = "regex_match_all"
+  regex_patterns = [
+    "Steps:",
+    "Sampler:",
+    "CFG scale:",
+    "Seed:",
+    "Size:"
+  ]
+
+[[parsers.Civitai_A1111_Style.detection_rules]]
+  comment = "Rule 2: AND must contain Civitai specific keys in the A1111 string."
+  source_type = "a1111_parameter_string_content"
+  operator = "regex_match_any"
+  regex_patterns = [
+    "Civitai resources:",
+    "Civitai metadata:"
+  ]
+
+# --- Rules for Civitai ComfyUI (via extraMetadata) ---
+[[parsers.Civitai_ComfyUI.detection_rules]]
+  comment = "Rule 1: Must have a ComfyUI workflow or prompt chunk."
+  condition = "OR"
+  rules = [
+    { source_type = "pil_info_key", source_key = "workflow", operator = "is_valid_json" },
+    { source_type = "pil_info_key", source_key = "prompt", operator = "is_valid_json" }
+  ]
+
+[[parsers.Civitai_ComfyUI.detection_rules]]
+  comment = "Rule 2: The main JSON should have 'extra.extraMetadata' which is a string."
+  source_type = "pil_info_key_json_path"
+  source_key_options = ["workflow", "prompt"]
+  json_path = "extra.extraMetadata"
+  operator = "is_string"
+
+[[parsers.Civitai_ComfyUI.detection_rules]]
+  comment = "Rule 3: The 'extra.extraMetadata' string should be valid JSON itself."
+  source_type = "pil_info_key_json_path_string_is_json"
+  source_key_options = ["workflow", "prompt"]
+  json_path = "extra.extraMetadata"
+  operator = "is_valid_json"
+
+# --- Rules for ComfyUI (A1111 Sampler Style) ---
+[[parsers.ComfyUI_A1111_Sampler_Style.detection_rules]]
+  comment = "Rule 1: Must have a ComfyUI workflow or prompt chunk."
+  condition = "OR"
+  rules = [
+    { source_type = "pil_info_key", source_key = "workflow", operator = "is_valid_json" },
+    { source_type = "pil_info_key", source_key = "prompt", operator = "is_valid_json" }
+  ]
+
+[[parsers.ComfyUI_A1111_Sampler_Style.detection_rules]]
+  comment = "Rule 2: Must contain a KSampler or recognized sampler variant."
+  source_type = "pil_info_key_json_path_query"
+  source_key_options = ["workflow", "prompt"]
+  json_query_type = "has_any_node_class_type"
+  class_types_to_check = [
+    "KSampler",
+    "KSamplerAdvanced",
+    "KSampler_A1111",
+    "SamplerCustomAdvanced"
+  ]
+  operator = "is_true"
+
+[[parsers.ComfyUI_A1111_Sampler_Style.detection_rules]]
+  comment = "Rule 3: Ensure it's not a Civitai ComfyUI with extraMetadata (handled by a higher priority parser)."
+  source_type = "pil_info_key_json_path"
+  source_key_options = ["workflow", "prompt"]
+  json_path = "extra.extraMetadata"
+  operator = "not_exists"
+
+# --- Rules for ComfyUI (Flux/GGUF Style) ---
+[[parsers.ComfyUI_Flux_GGUF_Style.detection_rules]]
+  comment = "Rules to detect workflow chunk, presence of KSampler/SamplerCustomAdvanced AND specific nodes like UnetLoaderGGUF, DualCLIPLoaderGGUF with type: 'flux'"
+  source_type = "pil_info_key_json_path_query"
+  source_key_options = ["workflow", "prompt"]
+  json_query_type = "has_node_with_class_and_input_value"
+  class_type = "DualCLIPLoaderGGUF"
+  input_key = "type"
+  expected_input_value = "flux"
+  operator = "is_true"
+
+# --- Rules for Draw Things (XMP JSON) ---
+[[parsers.Draw_Things.detection_rules]]
+  comment = "Rule 1: XMP string must exist in the context data."
+  source_type = "xmp_string_content"
+  operator = "exists"
+
+[[parsers.Draw_Things.detection_rules]]
+  comment = "Rule 2: The XMP string must contain an exif:UserComment that is valid JSON."
+  source_type = "xmp_exif_user_comment_content"
+  operator = "is_valid_json"
+
+[[parsers.Draw_Things.detection_rules]]
+  comment = "Rule 3: The JSON from exif:UserComment must contain characteristic Draw Things keys."
+  source_type = "json_from_xmp_exif_user_comment"
+  operator = "json_contains_all_keys"
+  expected_keys = [
+    "c",
+    "sampler"
+  ]
+
+# --- Rules for Easy Diffusion ---
+[[parsers.Easy_Diffusion.detection_rules]]
+  comment = "RULE A: The primary data source must exist and its content must be valid JSON."
+  condition = "OR"
+  rules = [
+    { source_type = "exif_user_comment", operator = "is_valid_json" },
+    { source_type = "png_chunk", source_key = "parameters", operator = "is_valid_json" },
+    { source_type = "png_chunk", source_key = "Comment", operator = "is_valid_json" }
+  ]
+
+[[parsers.Easy_Diffusion.detection_rules]]
+  comment = "RULE B: The JSON data must contain characteristic Easy Diffusion keys."
+  source_type = "json_from_usercomment_or_png_chunk"
+  chunk_source_key_options_for_png = [ "parameters", "Comment" ]
+  operator = "json_contains_any_key"
+  expected_keys = [ "prompt", "Prompt", "seed", "sampler_name", "num_inference_steps" ]
+
+[[parsers.Easy_Diffusion.detection_rules]]
+  comment = "RULE C (Optional): Stronger signal for Easy Diffusion if present."
+  source_type = "json_from_usercomment_or_png_chunk"
+  chunk_source_key_options_for_png = [ "parameters", "Comment" ]
+  operator = "json_path_exists"
+  json_path = "use_stable_diffusion_model"
+  optional = true
+
+# --- Rules for InvokeAI (invokeai_metadata format) ---
+[[parsers.InvokeAI.detection_rules]]
+  comment = "Rule 1: Must have 'invokeai_metadata' PNG chunk."
+  source_type = "png_chunk"
+  source_key = "invokeai_metadata"
+  operator = "exists"
+
+[[parsers.InvokeAI.detection_rules]]
+  comment = "Rule 2: Ensure 'invokeai_metadata' JSON contains core keys."
+  source_type = "json_from_png_chunk_options"
+  chunk_source_key_options = ["invokeai_metadata"]
+  operator = "json_contains_any_key"
+  expected_keys = [ "positive_prompt", "seed", "steps", "cfg_scale", "model" ]
+
+# --- Global rules ---
+[[global_rules]]
+  comment = "Check if the file has a standard image extension"
+  operator = "is_in_list"
+  source_type = "file_extension"
+  value_list = [".png", ".jpg", ".jpeg", ".webp", ".tif", ".tiff"]
+
+[[global_rules]]
+  comment = "Check if the file is a text file"
+  operator = "is_in_list"
+  source_type = "file_extension"
+  value_list = [".txt"]

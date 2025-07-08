@@ -1,0 +1,931 @@
+# dataset_tools/metadata_engine.py
+
+import contextlib
+import json
+import logging  # Import logging module for getLogger
+import re
+from pathlib import Path
+
+# from typing import (Any, BinaryIO, Callable, Dict,
+# Use Dict, List, Optional explicitly - Replaced by modern hints
+#                     List, Optional, Type) # Replaced by modern hints
+from typing import Any, BinaryIO  # Modern type hints
+
+# is not supported for type hints
+import piexif  # type: ignore
+import piexif.helper  # type: ignore
+from PIL import Image, UnidentifiedImageError  # type: ignore
+from PIL.PngImagePlugin import PngInfo  # type: ignore # CORRECTED IMPORT for PngInfo
+
+# Assuming these are in the same package or accessible
+from .logger import get_logger
+from .metadata_utils import get_a1111_kv_block_utility, json_path_get_utility
+from .parser_registry import get_parser_class_by_name # type: ignore
+from .rule_evaluator import RuleEvaluator
+from .vendored_sdpr.format.base_format import BaseFormat  # For Python class fallback
+
+
+class MetadataEngine:
+    def __init__(
+        self,
+        parser_definitions_path: str | Path,
+        logger_obj: logging.Logger | None = None,
+    ) -> None:  # Modern type hint
+        self.parser_definitions_path = Path(parser_definitions_path)
+        if logger_obj:
+            self.logger = logger_obj
+        else:
+            self.logger = get_logger("MetadataEngine")
+        self.rule_evaluator = RuleEvaluator(self.logger)
+
+        self.parser_definitions: list[dict[str, Any]] = self._load_parser_definitions()  # Modern type hint
+        self.sorted_definitions: list[dict[str, Any]] = sorted(  # Modern type hint
+            self.parser_definitions, key=lambda p: p.get("priority", 0), reverse=True
+        )
+        self.logger.info(
+            f"Loaded {len(self.sorted_definitions)} parser definitions from {self.parser_definitions_path}"
+        )
+
+    def _load_parser_definitions(self) -> list[dict[str, Any]]:  # Modern type hint
+        definitions: list[dict[str, Any]] = []  # Modern type hint
+        if not self.parser_definitions_path.is_dir():
+            self.logger.error(f"Parser definitions path is not a directory: {self.parser_definitions_path}")
+            return definitions
+
+        for filepath in self.parser_definitions_path.glob("*.json"):
+            self.logger.debug(f"Loading parser definition from: {filepath.name}")
+            try:
+                with open(filepath, encoding="utf-8") as json_file:
+                    definition = json.load(json_file)
+                    if "parser_name" in definition:
+                        definitions.append(definition)
+                    else:
+                        self.logger.warning(
+                            f"Skipping invalid parser definition (missing parser_name): {filepath.name}"
+                        )
+            except json.JSONDecodeError as e:
+                self.logger.error(f"Failed to decode JSON from {filepath.name}: {e}")
+            except Exception as e:  # noqa: BLE001
+                self.logger.error(f"Unexpected error loading parser definition {filepath.name}: {e}")
+        return definitions
+
+    def _prepare_context_data(
+        self, file_path_or_obj: str | Path | BinaryIO
+    ) -> dict[str, Any] | None:  # Modern type hint
+        context: dict[str, Any] = {  # Modern type hint
+            "pil_info": {},
+            "exif_dict": {},
+            "xmp_string": None,
+            "parsed_xmp_dict": None,
+            "png_chunks": {},
+            "file_format": "",
+            "width": 0,
+            "height": 0,
+            "raw_user_comment_str": None,
+            "software_tag": None,
+            "file_extension": "",
+            "raw_file_content_text": None,
+            "raw_file_content_bytes": None,
+            "parsed_root_json_object": None,
+            "safetensors_metadata": None,
+            "safetensors_main_header": None,
+            "gguf_metadata": None,
+            "gguf_main_header": None,
+            "file_path_original": str(
+                file_path_or_obj.name
+                if hasattr(file_path_or_obj, "name") and file_path_or_obj.name
+                else str(file_path_or_obj)
+            ),
+        }
+        is_binary_io = hasattr(file_path_or_obj, "read") and hasattr(file_path_or_obj, "seek")
+        original_file_path_str = context["file_path_original"]
+
+        try:
+            img = Image.open(file_path_or_obj)
+            context["pil_info"] = img.info.copy() if img.info else {}
+            context["width"] = img.width
+            context["height"] = img.height
+            context["file_format"] = img.format.upper() if img.format else ""
+            image_filename = getattr(img, "filename", None)
+            if image_filename:
+                context["file_extension"] = Path(image_filename).suffix.lstrip(".").lower()
+            elif isinstance(file_path_or_obj, str | Path):  # Fallback if filename not on BytesIO
+                context["file_extension"] = Path(str(file_path_or_obj)).suffix.lstrip(".").lower()
+
+            if exif_bytes := context["pil_info"].get("exif"):
+                try:
+                    loaded_exif = piexif.load(exif_bytes)
+                    context["exif_dict"] = loaded_exif
+                    uc_bytes = loaded_exif.get("Exif", {}).get(piexif.ExifIFD.UserComment)
+                    if uc_bytes:
+                        context["raw_user_comment_str"] = piexif.helper.UserComment.load(uc_bytes)
+                    sw_bytes = loaded_exif.get("0th", {}).get(piexif.ImageIFD.Software)
+                    if sw_bytes and isinstance(sw_bytes, bytes):
+                        context["software_tag"] = sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
+                except Exception as e_exif:  # noqa: BLE001
+                    self.logger.debug(f"piexif failed to load EXIF or extract specific tags: {e_exif}")
+
+            if xmp_str := context["pil_info"].get("XML:com.adobe.xmp"):
+                context["xmp_string"] = xmp_str
+                # Attempt to extract exif:UserComment from XMP if present
+                try:
+                    match = re.search(r'<exif:UserComment>(.*?)</exif:UserComment>', xmp_str)
+                    if match:
+                        context["xmp_user_comment_json_str"] = match.group(1)
+                        self.logger.debug("Extracted JSON string from XMP UserComment.")
+                except Exception as e_xmp_uc:
+                    self.logger.debug(f"Failed to extract exif:UserComment from XMP: {e_xmp_uc}")
+
+            for key, val in context["pil_info"].items():
+                if isinstance(val, str):
+                    context["png_chunks"][key] = val
+            if "UserComment" in context["pil_info"] and "UserComment" not in context["png_chunks"]:
+                context["png_chunks"]["UserComment"] = context["pil_info"]["UserComment"]
+            img.close()
+
+        except FileNotFoundError:
+            self.logger.error(f"File not found: {original_file_path_str}")
+            return None
+        except UnidentifiedImageError:
+            self.logger.info(f"Cannot identify as image: {original_file_path_str}. Checking for non-image types.")
+            p = Path(original_file_path_str)
+            context["file_extension"] = p.suffix.lstrip(".").lower()
+            context["file_format"] = context["file_extension"].upper()
+
+            def read_file_content(mode="r", encoding="utf-8", errors="replace"):  # noqa: ANN001, ANN202, RUF100
+                if is_binary_io:  # type: ignore  # noqa: PGH003
+                    file_path_or_obj.seek(0)  # type: ignore  # noqa: PGH003
+                    content = file_path_or_obj.read()  # type: ignore  # noqa: PGH003
+                    if "b" in mode:
+                        return content
+                    return content.decode(encoding, errors=errors) if isinstance(content, bytes) else content
+                else:  # noqa: RET505
+                    with open(
+                        p,
+                        mode,
+                        encoding=encoding if "b" not in mode else None,
+                        errors=errors if "b" not in mode else None,
+                    ) as f_obj:
+                        return f_obj.read()
+
+            if context["file_extension"] == "json":
+                try:
+                    content_str = read_file_content(mode="r", encoding="utf-8")
+                    context["parsed_root_json_object"] = json.loads(content_str)
+                    context["raw_file_content_text"] = content_str
+                except (
+                    json.JSONDecodeError,
+                    OSError,
+                    UnicodeDecodeError,
+                    TypeError,
+                ) as e_json_direct:
+                    self.logger.error(f"Failed to read/parse direct JSON file {p.name}: {e_json_direct}")
+                    if not context["raw_file_content_text"]:
+                        with contextlib.suppress(Exception):
+                            context["raw_file_content_text"] = read_file_content(
+                                mode="r", encoding="utf-8", errors="replace"
+                            )
+            elif context["file_extension"] == "txt":
+                try:
+                    context["raw_file_content_text"] = read_file_content(mode="r", encoding="utf-8", errors="replace")
+                except (OSError, UnicodeDecodeError, TypeError) as e_txt:
+                    self.logger.error(f"Failed to read TXT file {p.name}: {e_txt}")
+                    return None
+            elif context["file_extension"] == "safetensors":
+                try:
+                    # Assuming SafetensorsParser is in dataset_tools.model_parsers
+                    from dataset_tools.model_parsers.safetensors_parser import ModelParserStatus, SafetensorsParser # type: ignore
+
+                    temp_parser = SafetensorsParser(original_file_path_str)
+                    status = temp_parser.parse()
+                    # CORRECTED: Compare with Enum members, not instance attributes
+                    if status == ModelParserStatus.SUCCESS:
+                        context["safetensors_metadata"] = temp_parser.metadata_header
+                        context["safetensors_main_header"] = temp_parser.main_header
+                    elif status == ModelParserStatus.FAILURE:
+                        self.logger.warning(f"Safetensors parser failed for {p.name}: {temp_parser._error_message}")
+                except ImportError:
+                    self.logger.error("SafetensorsParser not available or ModelParserStatus not found.")
+                except Exception as e_st:  # noqa: BLE001
+                    self.logger.error(f"Error during safetensors context prep: {e_st}")
+
+            elif context["file_extension"] == "gguf":
+                try:
+                    # Assuming GGUFParser is in dataset_tools.model_parsers
+                    from dataset_tools.model_parsers.gguf_parser import GGUFParser, ModelParserStatus # type: ignore
+
+                    temp_parser = GGUFParser(original_file_path_str)
+                    status = temp_parser.parse()
+                    if status == ModelParserStatus.SUCCESS:
+                        context["gguf_metadata"] = temp_parser.metadata_header
+                        context["gguf_main_header"] = temp_parser.main_header
+                    elif status == ModelParserStatus.FAILURE:
+                        self.logger.warning(f"GGUF parser failed for {p.name}: {temp_parser._error_message}")
+                except ImportError:
+                    self.logger.error("GGUFParser not available or ModelParserStatus not found.")
+                except Exception as e_gguf:  # noqa: BLE001
+                    self.logger.error(f"Error during GGUF context prep: {e_gguf}")
+            else:
+                self.logger.info(
+                    f"File {p.name} extension '{context['file_extension']}' not specifically handled in non-image path."
+                )
+                with contextlib.suppress(Exception):
+                    context["raw_file_content_bytes"] = read_file_content(mode="rb")
+
+        except Exception as e:
+            self.logger.error(
+                f"Error preparing context data for {original_file_path_str}: {e}",
+                exc_info=True,
+            )
+            return None
+
+        self.logger.debug(
+            f"Prepared context for {original_file_path_str}. Keys: {list(k for k, v in context.items() if v is not None)}"
+        )
+        self.logger.debug(f"Context Data Details for {original_file_path_str}:")
+        self.logger.debug(f"  raw_user_comment_str: {context.get("raw_user_comment_str")}")
+        self.logger.debug(f"  xmp_string: {context.get("xmp_string")[:200] if context.get("xmp_string") else None}...")
+        self.logger.debug(f"  xmp_user_comment_json_str: {context.get("xmp_user_comment_json_str")}")
+        self.logger.debug(f"  png_chunks: {context.get("png_chunks")}")
+        self.logger.debug(f"  file_format: {context.get("file_format")}")
+        self.logger.debug(f"  file_extension: {context.get("file_extension")}")
+        return context
+
+# PASTE THIS ENTIRE BLOCK INTO metadata_engine.py, REPLACING THE OLD FUNCTION
+
+    def _execute_field_extraction_method(
+        self,
+        method_def: dict[str, Any],
+        current_input_data: Any,
+        context_data: dict[str, Any],
+        extracted_fields_cache: dict[str, Any],
+    ) -> Any:
+        method_name = method_def.get("method")
+        value: Any = None
+
+        def get_source_data(source_definition, mtd_input_data, ctx_data, fields_cache):
+            if not source_definition:
+                return mtd_input_data
+            src_type = source_definition.get("type")
+            src_key = source_definition.get("key")
+            if src_type == "pil_info_key":
+                return ctx_data.get("pil_info", {}).get(src_key)
+            if src_type == "png_chunk":
+                return ctx_data.get("png_chunks", {}).get(src_key)
+            if src_type == "exif_user_comment":
+                return ctx_data.get("raw_user_comment_str")
+            if src_type == "xmp_string":
+                return ctx_data.get("xmp_string")
+            if src_type == "file_content_raw_text":
+                return ctx_data.get("raw_file_content_text")
+            if src_type == "file_content_json_object":
+                return ctx_data.get("parsed_root_json_object")
+            if src_type == "direct_context_key":
+                return ctx_data.get(src_key)
+            if src_type == "variable":
+                variable_name_in_cache = src_key.replace(".", "_") + "_VAR_"
+                return fields_cache.get(variable_name_in_cache)
+            self.logger.warning(f"Unknown source_data_from_context type: {src_type}")
+            return mtd_input_data
+
+        data_for_method = get_source_data(
+            method_def.get("source_data_from_context"), current_input_data, context_data, extracted_fields_cache
+        )
+
+        try:
+            if method_name == "direct_json_path":
+                value = json_path_get_utility(data_for_method, method_def.get("json_path"))
+
+            elif method_name == "static_value":
+                value = method_def.get("value")
+
+            elif method_name == "direct_context_value":
+                value = data_for_method
+
+            elif method_name == "direct_string_value":
+                value = str(data_for_method) if data_for_method is not None else None
+
+            elif method_name == "a1111_extract_prompt_positive":
+                if isinstance(data_for_method, str):
+                    neg_match = re.search(r"\nNegative prompt:", data_for_method, re.IGNORECASE)
+                    kv_block_str = get_a1111_kv_block_utility(data_for_method)
+                    end_index = len(data_for_method)
+                    if neg_match:
+                        end_index = min(end_index, neg_match.start())  # noqa: E701
+                    if kv_block_str:
+                        try:
+                            first_line_of_kv = kv_block_str.split("\n", 1)[0].strip()
+                            if first_line_of_kv:
+                                kv_start_index_in_original = data_for_method.rfind(first_line_of_kv)
+                                if kv_start_index_in_original != -1:
+                                    end_index = min(end_index, kv_start_index_in_original)
+                        except (ValueError, AttributeError):
+                            pass
+                    value = data_for_method[:end_index].strip()
+
+            elif method_name == "a1111_extract_prompt_negative":
+                if isinstance(data_for_method, str):
+                    neg_match = re.search(
+                        (
+                            r"\nNegative prompt:(.*?)(?=("
+                            r"\n(?:Steps:|Sampler:|CFG scale:|Seed:|Size:|"
+                            r"Model hash:|Model:|Version:|$)"
+                            r"))"
+                        ),
+                        data_for_method,
+                        re.IGNORECASE | re.DOTALL,
+                    )
+                    value = neg_match.group(1).strip() if neg_match else ""
+
+            elif method_name in ["key_value_extract_from_a1111_block", "key_value_extract_transform_from_a1111_block"]:
+                if isinstance(data_for_method, str):
+                    kv_block = get_a1111_kv_block_utility(data_for_method)
+                    key_to_find = method_def.get("key_name")
+                    if kv_block and key_to_find:
+                        lookahead_pattern = r"(?:,\s*(?:Steps:|Sampler:|CFG scale:|Seed:|Size:|Model hash:|Model:|Version:|Clip skip:|Denoising strength:|Hires upscale:|Hires steps:|Hires upscaler:|Lora hashes:|TI hashes:|Emphasis:|NGMS:|ADetailer model:|Schedule type:))|$"
+                        actual_key_pattern = re.escape(key_to_find)
+                        match = re.search(rf"{actual_key_pattern}:\s*(.*?)(?={lookahead_pattern})", kv_block, re.IGNORECASE)
+                        temp_val = match.group(1).strip() if match else None
+                        if temp_val is not None and method_name == "key_value_extract_transform_from_a1111_block" and "transform_regex" in method_def:
+                            transform_match = re.search(method_def["transform_regex"], temp_val)
+                            value = transform_match.group(method_def.get("transform_group", 1)) if transform_match else None
+                        else:
+                            value = temp_val
+
+            # <<< THIS IS THE NEW TOOL WE'RE ADDING >>>
+            elif method_name == "json_from_string_variable":
+                source_var_key = method_def.get("source_variable_key")
+                variable_name_in_cache = source_var_key.replace(".", "_") + "_VAR_"
+                string_to_parse = extracted_fields_cache.get(variable_name_in_cache)
+
+                value = None
+                if isinstance(string_to_parse, str):
+                    try:
+                        value = json.loads(string_to_parse)
+                        self.logger.debug(f"Method '{method_name}': successfully parsed JSON from var '{variable_name_in_cache}'.")
+                    except json.JSONDecodeError as e:
+                        self.logger.warning(f"Method '{method_name}': Failed to parse string from var '{variable_name_in_cache}' as JSON. Error: {e}")
+                elif string_to_parse is not None:
+                    self.logger.warning(f"Method '{method_name}': source var '{variable_name_in_cache}' is not a string (type: {type(string_to_parse)}), cannot parse.")
+            # <<< END OF THE NEW TOOL >>>
+
+            # --- Placeholder for future ComfyUI tools ---
+            elif "comfy_" in (method_name or ""):
+                self.logger.warning(f"Method '{method_name}' is a ComfyUI tool and is not fully implemented yet.")
+                value = f"PLACEHOLDER FOR {method_name}"  # Return a placeholder instead of None
+
+            else:
+                self.logger.warning(f"Unknown field extraction method: '{method_name}'")
+
+        except Exception as e_method:
+            self.logger.error(f"An unexpected error occurred inside method '{method_name}': {e_method}", exc_info=True)
+            value = None
+
+        value_type = method_def.get("value_type")
+        if value is not None and value_type:
+            try:
+                if value_type == "integer":
+                    value = int(float(str(value)))
+                elif value_type == "float":
+                    value = float(str(value))
+                # Add other type conversions if necessary
+            except (ValueError, TypeError):
+                self.logger.debug(f"Could not convert value to '{value_type}'.")
+                value = None
+
+        return value
+
+
+    def _comfy_traverse_for_field(
+        self,
+        workflow_graph: Any,
+        node_criteria_list: list[dict[str, Any]] | None,
+        target_input_key: str | None,
+    ) -> Any:  # Modern  # noqa: ANN401
+        if not isinstance(workflow_graph, dict) or not node_criteria_list:
+            self.logger.debug(
+                f"ComfyUI traversal: Invalid workflow_graph or no node_criteria. Graph type:{type(workflow_graph)}"
+            )
+            return None
+        graph_nodes = workflow_graph.get("nodes", {})
+        if (
+            not isinstance(graph_nodes, dict)
+            and isinstance(workflow_graph, dict)
+            and all(k.isdigit() for k in workflow_graph)
+        ):
+            graph_nodes = workflow_graph
+        for node_id, node_data in graph_nodes.items():
+            if not isinstance(node_data, dict):
+                continue
+            for criterion in node_criteria_list:
+                match = True
+                if "class_type" in criterion and node_data.get("type") != criterion["class_type"]:
+                    match = False
+                if "node_id" in criterion and node_id != criterion["node_id"]:
+                    match = False
+                if match and target_input_key:
+                    if node_data.get("type") == "KSampler" and target_input_key == "seed":
+                        return node_data.get("widgets_values", [None])[0]
+                    if node_data.get("type") == "CLIPTextEncode" and target_input_key == "text":
+                        input_text_def = node_data.get("inputs", {}).get("text")
+                        if not isinstance(input_text_def, list):
+                            return node_data.get("widgets_values", [None])[0]
+                    self.logger.debug(
+                        f"ComfyUI placeholder: Matched node {node_id} ({node_data.get('type')}), complex logic for '{target_input_key}' not fully implemented."
+                    )
+                    return f"Placeholder for {target_input_key} from {node_data.get('type')}"
+        return None
+
+    # --- THIS IS THE FUNCTION TO REPLACE ---
+    def _substitute_template_vars(
+        self,
+        template: Any,
+        extracted_data: dict[str, Any],
+        context_data: dict[str, Any],
+        original_input_data_str: str | None = None,
+        input_json_object_for_template: Any | None = None,
+    ) -> Any:
+        if isinstance(template, dict):
+            return {k: self._substitute_template_vars(v, extracted_data, context_data, original_input_data_str, input_json_object_for_template) for k, v in template.items()}
+        if isinstance(template, list):
+            return [self._substitute_template_vars(item, extracted_data, context_data, original_input_data_str, input_json_object_for_template) for item in template]
+
+        if isinstance(template, str):
+            def replacer(match):
+                var_path = match.group(1)
+                value = json_path_get_utility(extracted_data, var_path)
+                if value is not None:
+                    return str(value)
+                if var_path.startswith("CONTEXT."):
+                    context_path = var_path.replace("CONTEXT.", "", 1)
+                    context_value = json_path_get_utility(context_data, context_path)
+                    if context_value is not None:
+                        return str(context_value)
+                if var_path == "INPUT_STRING_ORIGINAL_CHUNK" and original_input_data_str is not None:
+                    return original_input_data_str
+                if var_path == "INPUT_JSON_OBJECT_AS_STRING" and input_json_object_for_template is not None:
+                    return json.dumps(input_json_object_for_template, indent=2)
+                self.logger.debug(f"Template variable '${var_path}' not found, replacing with empty string.")
+                return ""
+
+            return re.sub(r'\$([\w.]+)', replacer, template)
+
+        return template
+    # --- END OF THE FUNCTION TO REPLACE ---
+
+    def get_parser_for_file(self, file_path_or_obj: str | Path | BinaryIO) -> Any | None:  # Modern  # noqa: ANN401
+        # ... (no changes needed here other than type hints if desired) ...
+        # (assuming the logic from the previous full file version is correct for this part)
+        display_name = getattr(file_path_or_obj, "name", str(file_path_or_obj))
+        self.logger.info("MetadataEngine: Starting metadata parsing for: {display_name}")
+
+        context_data = self._prepare_context_data(file_path_or_obj)
+        if not context_data:
+            self.logger.warning(f"MetadataEngine: Could not prepare context data for {display_name}.")
+            return None
+
+        chosen_parser_def: dict[str, Any] | None = None
+        for parser_def in self.sorted_definitions:
+            target_types_cfg = parser_def.get("target_file_types", ["*"])
+            if not isinstance(target_types_cfg, list):
+                target_types_cfg = [str(target_types_cfg)]
+            target_types = [ft.upper() for ft in target_types_cfg]
+            current_file_format_upper = context_data.get("file_format", "").upper()
+            current_file_ext_upper = context_data.get("file_extension", "").upper()
+            type_match = (
+                "*" in target_types
+                or (current_file_format_upper and current_file_format_upper in target_types)
+                or (current_file_ext_upper and current_file_ext_upper in target_types)
+            )
+            if not type_match:
+                continue
+
+            # Check detection rules for this parser definition
+            all_rules_pass = True
+            detection_rules = parser_def.get("detection_rules", [])
+            if (not detection_rules and target_types != ["*"]) or \
+               (not detection_rules and target_types == ["*"]):
+                # This means either:
+                # 1. No detection rules, and target_types is specific (e.g., ["PNG"]) -> type match is enough.
+                # 2. No detection rules, and target_types is "*" -> matches everything (lowest priority usually).
+                pass  # all_rules_pass remains True by default
+            else:
+                for rule_idx, rule in enumerate(detection_rules):  # Outer loop for rules in parser_def
+                    # Check for complex rule (AND/OR block)
+                    if isinstance(rule, dict) and "condition" in rule and isinstance(rule.get("rules"), list):  # Added check for list
+                        condition_type = rule["condition"].upper()
+                        sub_rules = rule.get("rules", [])  # Ensure sub_rules is a list
+                        passed_block = False  # Initialize for safety
+
+                        if not sub_rules:  # If "rules" key is empty or missing
+                            self.logger.warning(
+                                f"Complex rule for {parser_def['parser_name']} has no sub-rules. Condition: {condition_type}"
+                            )
+                            # Decide behavior: treat as pass or fail? Usually fail if condition block is empty.
+                            all_rules_pass = False  # Or True depending on strictness
+                            break  # Break from outer rule loop for this parser_def
+
+                        if condition_type == "OR":
+                            passed_block = any(
+                                # vvv CHANGE THIS LINE vvv
+                                self.rule_evaluator.evaluate_rule(sub_rule, context_data)
+                                for sub_rule in sub_rules
+                            )
+                        elif condition_type == "AND":
+                            passed_block = all(
+                                # vvv CHANGE THIS LINE vvv
+                                self.rule_evaluator.evaluate_rule(sub_rule, context_data)
+                                for sub_rule in sub_rules
+                            )
+                        else:
+                            self.logger.warning(
+                                f"Unknown complex cond '{condition_type}' in rule {rule_idx} for {parser_def['parser_name']}"
+                            )
+                            passed_block = False  # Explicitly set
+
+                        if not passed_block:
+                            all_rules_pass = False
+                        # For a complex rule (AND/OR block), after evaluating
+                        # it, we should break
+                        # from the loop processing THIS rule, as the block
+                        # itself is one "rule entry".
+                        # The 'all_rules_pass' will determine if we
+                        # continue to the next parser_def.
+                        # However, if all_rules_pass became False,
+                        # we need to break the outer loop.
+                        # The break here should be from the for rule_idx,
+                        # rule loop if all_rules_pass is False
+                        # Or if the complex rule itself determined the
+                        # outcome for this parser_def.
+                        # Your original 'break' was correct here: if complex
+                        # rule fails, this parser_def fails.
+                        # If complex rule passes, and there are MORE rules
+                        # after it for this parser_def, we continue.
+                        # But usually, a complex rule IS the entire set of
+                        # rules, or one of a few.
+                        # Let's assume the complex rule is one rule among
+                        # potentially others.
+                        # The crucial part is setting all_rules_pass correctly.
+                        if not all_rules_pass:  # If this complex rule
+                            # made it fail
+                            break
+                            # Break from the 'for rule_idx,
+                            # rule in enumerate(detection_rules):' loop
+
+                        # If the complex rule passed (passed_block is True,
+                        # all_rules_pass still True),
+                        # we should continue to the next rule in
+                        # detection_rules (if any).
+                        # So, no 'break' here if passed_block is True.
+                        # The existing 'if not passed_block: all_rules_pass =
+                        # False; break' logic
+                        # was slightly off. It should be:
+                        # if not passed_block:
+                        #     all_rules_pass = False
+                        # // and then the outer loop's break condition wil
+                        # handle it.
+                        # The 'break' here means this complex rule is the
+                        # only one for this parser_def or the
+                        # last one considered.
+                        # Let's stick to your original structure's break
+                        # meaning: if complex rule makes it fail, stop
+                        # checking this parser_def.
+
+                        # More correct logic for this block:
+                        # This complex rule is ONE of the items in detection_rules.
+                        # Its result (passed_block) contributes to all_rules_pass.
+                        if not passed_block:
+                            all_rules_pass = False
+                            break # This rule (the complex one) failed, so the parser_def fails.
+                        # If passed_block is true, all_rules_pass remains as it was, and we process the NEXT rule in detection_rules.
+                        # The 'break' inside the if/elif for AND/OR seems to imply the complex rule itself is the only one evaluated if present.
+                        # This is likely what your 'break' right after 'if not passed_block: all_rules_pass = False' meant.
+                        # if not passed_block:
+                        #    all_rules_pass = False
+                        # break # <--- This break applies to the for rule_idx, rule loop.
+                        # This means if a complex rule is encountered, it's the *only* thing evaluated for this parser_def.
+                        # This might be your intention. If so, your original break was fine.
+                        # My refined logic below makes the complex rule just one of potentially many.
+
+                        # Let's assume a complex rule is just one rule in the list.
+                        # if not passed_block:
+                        #    all_rules_pass = False # This specific rule (the complex one) failed
+                        #    break # Stop checking further rules for this parser_def, as one failed.
+                        # else:
+                        #    continue # This complex rule passed, check next rule in detection_rules for this parser_def.
+                        # Your original code had a 'break' after the complex rule evaluation regardless of pass/fail.
+                        # This implies a complex rule, if present, is the *only* rule for that parser.
+                        # If that's the case, the original break is fine.
+                        # For now, I'll keep your original structure which implies the complex rule is decisive:
+                        if not passed_block:
+                            all_rules_pass = False
+                        break # Break from 'for rule_idx, rule...' loop after processing the complex rule.
+
+                    # This is for simple rules (not complex AND/OR)
+                    elif not self.rule_evaluator.evaluate_rule(rule, context_data):  # noqa: RET508
+                        all_rules_pass = False
+                        self.logger.debug(f"Rule failed for {parser_def['parser_name']}: {rule.get('comment', rule)}")
+                        break # Break from 'for rule_idx, rule...' loop because a simple rule failed.
+
+            if all_rules_pass:
+                chosen_parser_def = parser_def
+                self.logger.info(f"MetadataEngine: Matched parser definition: {chosen_parser_def['parser_name']}")
+                break # Break from 'for parser_def in self.sorted_definitions:' loop
+        # ...
+            if all_rules_pass:
+                chosen_parser_def = parser_def
+                self.logger.info(f"MetadataEngine: Matched parser definition: {chosen_parser_def['parser_name']}")
+                break
+        if not chosen_parser_def:
+            self.logger.info(f"MetadataEngine: No suitable parser definition matched for {display_name}.")
+            return None
+
+        if "parsing_instructions" in chosen_parser_def:
+            self.logger.info("Using JSON-defined parsing instructions for {chosen_parser_def['parser_name']}.")
+            instructions = chosen_parser_def["parsing_instructions"]
+            extracted_fields: dict[str, Any] = {"parameters": {}}
+            current_input_data_for_fields: Any = None
+            original_input_for_template: Any | None = None
+            input_data_def = instructions.get("input_data", {})
+            source_options = input_data_def.get("source_options", [])
+            if not source_options and input_data_def.get("source_type"):
+                source_options = [input_data_def]
+            for src_opt in source_options:
+                src_type = src_opt.get("source_type")
+                src_key = src_opt.get("source_key")
+                if src_type == "pil_info_key":
+                    current_input_data_for_fields = context_data["pil_info"].get(src_key)
+                elif src_type == "exif_user_comment":
+                    current_input_data_for_fields = context_data.get("raw_user_comment_str")
+                elif src_type == "xmp_string_content":
+                    current_input_data_for_fields = context_data.get("xmp_string")
+                elif src_type == "file_content_raw_text":
+                    current_input_data_for_fields = context_data.get("raw_file_content_text")
+                elif src_type == "file_content_json_object":
+                    current_input_data_for_fields = context_data.get("parsed_root_json_object")
+                if current_input_data_for_fields is not None:
+                    original_input_for_template = current_input_data_for_fields
+                    break
+            transformations = input_data_def.get("transformations", [])
+            for transform in transformations:
+                transform_type = transform.get("type")
+                if current_input_data_for_fields is None and transform_type not in ["create_if_not_exists"]:
+                    break
+                if transform_type == "json_decode_string_value" and isinstance(current_input_data_for_fields, str):
+                    try:
+                        json_obj = json.loads(current_input_data_for_fields)
+                        current_input_data_for_fields = json_path_get_utility(json_obj, transform.get("path"))  # Call the utility
+                    except json.JSONDecodeError:
+                        current_input_data_for_fields = None
+                        break
+
+                elif transform_type == "extract_json_from_xmp_user_comment":
+                    if isinstance(current_input_data_for_fields, str):
+                        try:
+                            # This is a simplified search. A robust solution would parse the XML.
+                            match = re.search(r'<exif:UserComment>(.*?)</exif:UserComment>', current_input_data_for_fields)
+                            if match:
+                                current_input_data_for_fields = match.group(1)
+                                self.logger.debug("Applied 'extract_json_from_xmp_user_comment': extracted JSON string.")
+                            else:
+                                current_input_data_for_fields = None
+                                self.logger.debug("Applied 'extract_json_from_xmp_user_comment': no match found.")
+                        except Exception as e:
+                            self.logger.warning(f"Error during 'extract_json_from_xmp_user_comment' transformation: {e}")
+                            current_input_data_for_fields = None
+                    else:
+                        self.logger.debug("Applied 'extract_json_from_xmp_user_comment': input not a string.")
+                        current_input_data_for_fields = None
+            input_json_object_for_template = (
+                current_input_data_for_fields if isinstance(current_input_data_for_fields, dict | list) else None
+            )
+            for field_def in instructions.get("fields", []):
+                target_key_path = field_def.get("target_key")
+                if not target_key_path:
+                    continue
+                value = self._execute_field_extraction_method(
+                    field_def,
+                    current_input_data_for_fields,
+                    context_data,
+                    extracted_fields,
+                )
+                extracted_fields[target_key_path.replace(".", "_VAR_")] = value
+                keys = target_key_path.split(".")
+                current_dict_ptr = extracted_fields
+                for _i, key_segment in enumerate(keys[:-1]):
+                    current_dict_ptr = current_dict_ptr.setdefault(key_segment, {})
+                if value is not None or not field_def.get("optional", False):
+                    current_dict_ptr[keys[-1]] = value
+            output_template = chosen_parser_def.get("output_template")
+            # --- ADD THESE TWO LINES RIGHT HERE ---
+            output_template = instructions.get("output_template")
+            print(f"--- DEBUG: FOUND TEMPLATE? --- {output_template is not None}")
+            # ------------------------------------
+            if output_template:
+                final_output = self._substitute_template_vars(
+                    output_template,
+                    extracted_fields,
+                    context_data,
+                    (
+                        str(original_input_for_template)
+                        if isinstance(original_input_for_template, str | int | float | bool)
+                        else None
+                    ),
+                    input_json_object_for_template,
+                )
+                if isinstance(final_output.get("parameters"), dict):
+                    if final_output["parameters"].get("width") is None and context_data.get("width", 0) > 0:
+                        final_output["parameters"]["width"] = context_data["width"]
+                    if final_output["parameters"].get("height") is None and context_data.get("height", 0) > 0:
+                        final_output["parameters"]["height"] = context_data["height"]
+                return final_output
+            return {
+                k: v
+                for k, v in extracted_fields.items()
+                if " _VAR_ " not in k and k != "_input_data_object_for_template"
+            }
+        if "base_format_class" in chosen_parser_def:
+            self.logger.info(
+                f"Using Python class-based parser {chosen_parser_def['base_format_class']} for {chosen_parser_def['parser_name']}."
+            )
+            parser_class_name = chosen_parser_def["base_format_class"]
+            ParserClass = get_parser_class_by_name(parser_class_name)  # noqa: N806
+            if not ParserClass:
+                self.logger.error(
+                    f"Python class '{parser_class_name}' not found for {chosen_parser_def['parser_name']}."
+                )
+                return None
+            raw_input_for_parser = ""
+            primary_data_def = chosen_parser_def.get("primary_data_source_for_raw", {})
+            pds_type = primary_data_def.get("source_type")
+            pds_key = primary_data_def.get("source_key")
+            if pds_type == "png_chunk" and pds_key:
+                raw_input_for_parser = context_data["png_chunks"].get(pds_key, "")
+            elif pds_type == "exif_user_comment":
+                raw_input_for_parser = context_data.get("raw_user_comment_str", "")
+            elif pds_type == "xmp_string_content":
+                raw_input_for_parser = context_data.get("xmp_string", "")
+            parser_instance = ParserClass(
+                info=context_data,
+                raw=raw_input_for_parser,
+                width=str(context_data["width"]),
+                height=str(context_data["height"]),
+                logger_obj=self.logger,
+            )
+            parser_status = parser_instance.parse()
+            if parser_status == BaseFormat.Status.READ_SUCCESS:
+                self.logger.info(f"Python Parser {parser_instance.tool} succeeded.")
+                return parser_instance
+            status_name = parser_status.name if hasattr(parser_status, "name") else str(parser_status)
+            self.logger.warning(
+                f"Python Parser {parser_instance.tool} failed. Status: {status_name}. Error: {parser_instance.error}"
+            )
+            return None
+        self.logger.error(f"Parser def {chosen_parser_def['parser_name']} has neither instructions nor class.")
+        return None
+
+
+if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+    test_logger = logging.getLogger("TestMetadataEngine")
+    test_logger.setLevel(logging.DEBUG)
+    temp_defs_path = Path("./temp_parser_definitions_test")
+    temp_defs_path.mkdir(exist_ok=True)
+    a1111_def_content = {
+        "parser_name": "A1111 Test (JSON Driven)",
+        "priority": 100,
+        "target_file_types": ["PNG", "JPEG"],
+        "detection_rules": [
+            {
+                "source_type": "auto_detect_parameters_or_usercomment",
+                "operator": "regex_match",
+                "regex_pattern": "Steps:",
+            },
+            {
+                "source_type": "auto_detect_parameters_or_usercomment",
+                "operator": "regex_match",
+                "regex_pattern": "CFG scale:",
+            },
+        ],
+        "parsing_instructions": {
+            "input_data": {
+                "source_options": [
+                    {"source_type": "pil_info_key", "source_key": "parameters"},
+                    {"source_type": "exif_user_comment"},
+                ]
+            },
+            "fields": [
+                {"target_key": "prompt", "method": "a1111_extract_prompt_positive"},
+                {
+                    "target_key": "negative_prompt",
+                    "method": "a1111_extract_prompt_negative",
+                },
+                {
+                    "target_key": "parameters.steps",
+                    "method": "key_value_extract_from_a1111_block",
+                    "key_name": "Steps",
+                    "value_type": "integer",
+                },
+                {
+                    "target_key": "parameters.sampler",
+                    "method": "key_value_extract_from_a1111_block",
+                    "key_name": "Sampler",
+                    "value_type": "string",
+                },
+                {
+                    "target_key": "parameters.cfg_scale",
+                    "method": "key_value_extract_from_a1111_block",
+                    "key_name": "CFG scale",
+                    "value_type": "float",
+                },
+                {
+                    "target_key": "parameters.seed",
+                    "method": "key_value_extract_from_a1111_block",
+                    "key_name": "Seed",
+                    "value_type": "integer",
+                },
+            ],
+            "output_template": {
+                "tool": "A1111 (from JSON Test)",
+                "prompt": "$prompt",
+                "negative_prompt": "$negative_prompt",
+                "parameters": {
+                    "steps": "$parameters.steps",
+                    "sampler": "$parameters.sampler",
+                    "cfg_scale": "$parameters.cfg_scale",
+                    "seed": "$parameters.seed",
+                    "width": "$CONTEXT.width",
+                    "height": "$CONTEXT.height",
+                },
+            },
+        },
+    }
+    with open(temp_defs_path / "a1111_test.json", "w") as f:  # noqa: PTH123
+        json.dump(a1111_def_content, f, indent=2)
+    txt_def_content = {
+        "parser_name": "Plain Text Prompt File Test",
+        "priority": 50,
+        "target_file_types": ["TXT"],
+        "detection_rules": [
+            {
+                "source_type": "file_extension",
+                "operator": "equals_case_insensitive",
+                "value": "txt",
+            }
+        ],
+        "parsing_instructions": {
+            "input_data": {"source_type": "file_content_raw_text"},
+            "fields": [{"target_key": "prompt", "method": "direct_string_value"}],
+            "output_template": {
+                "tool": "Text Prompt Test",
+                "prompt": "$prompt",
+                "parameters": {},
+            },
+        },
+    }
+    with open(temp_defs_path / "txt_test.json", "w") as f:  # noqa: PTH123
+        json.dump(txt_def_content, f, indent=2)
+    engine = MetadataEngine(parser_definitions_path=temp_defs_path, logger_obj=test_logger)
+    try:
+        from io import BytesIO
+
+        dummy_png_a1111_data = "test positive prompt\nNegative prompt: test negative prompt\nSteps: 20, Sampler: Euler a, CFG scale: 7, Seed: 12345"
+        img_a1111 = Image.new("RGB", (100, 150), color="red")
+        pnginfo_a1111 = PngInfo()  # CORRECTED: Use imported PngInfo
+        pnginfo_a1111.add_text("parameters", dummy_png_a1111_data)
+        img_bytes_a1111 = BytesIO()
+        img_a1111.save(img_bytes_a1111, format="PNG", pnginfo=pnginfo_a1111)
+        img_bytes_a1111.seek(0)
+        img_bytes_a1111.name = "dummy_a1111.png"
+        test_logger.info("\n--- Testing A1111-style PNG (dummy_a1111.png) ---")
+        result_a1111 = engine.get_parser_for_file(img_bytes_a1111)
+        if result_a1111 and isinstance(result_a1111, dict):
+            test_logger.info(f"A1111 Test Parsed successfully. Tool: {result_a1111.get('tool')}")
+            test_logger.info(f"  Prompt: {result_a1111.get('prompt')}")
+            test_logger.info(f"  Negative: {result_a1111.get('negative_prompt')}")
+            test_logger.info(f"  Params: {result_a1111.get('parameters')}")
+        else:
+            test_logger.warning("A1111 Test PNG parsing failed or returned unexpected type.")
+    except Exception as e_test_a1111:
+        test_logger.error(f"Error during A1111 test setup or execution:{e_test_a1111}", exc_info=True)
+    dummy_txt_path = Path("./dummy_prompt.txt")
+    with open(dummy_txt_path, "w") as f_txt:
+        f_txt.write("This is a simple text prompt from a file.")
+    test_logger.info(f"\n--- Testing TXT file ({dummy_txt_path.name}) ---")
+    result_txt = engine.get_parser_for_file(dummy_txt_path)
+    if result_txt and isinstance(result_txt, dict):
+        test_logger.info(f"TXT Test Parsed successfully. Tool: {result_txt.get('tool')}")
+        test_logger.info(f"  Prompt: {result_txt.get('prompt')}")
+    else:
+        test_logger.warning("TXT file parsing failed or returned unexpected type.")
+    try:
+        dummy_txt_path.unlink(missing_ok=True)
+        for f_json_loop_var in temp_defs_path.glob("*.json"):
+            f_json_loop_var.unlink()  # Renamed loop variable
+        temp_defs_path.rmdir()
+    except OSError as e_cleanup:
+        test_logger.error(f"Error cleaning up test files: {e_cleanup}")
+    test_logger.info("\n--- Basic Tests Complete ---")

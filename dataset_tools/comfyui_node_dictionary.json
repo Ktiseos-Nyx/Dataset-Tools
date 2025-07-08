@@ -1,0 +1,415 @@
+{
+  "metadata": {
+    "name": "ComfyUI Node Dictionary",
+    "description": "Comprehensive mapping of ComfyUI node types to their functions and parameter extraction patterns",
+    "version": "1.0",
+    "last_updated": "2025-01-07"
+  },
+  "node_types": {
+    "text_encoding": {
+      "CLIPTextEncode": {
+        "description": "Encodes text prompts using CLIP",
+        "category": "conditioning",
+        "inputs": ["clip", "text"],
+        "outputs": ["CONDITIONING"],
+        "parameter_extraction": {
+          "prompt_text": "widgets_values[0]",
+          "connected_text": "inputs.text.link_source"
+        }
+      },
+      "BNK_CLIPTextEncodeAdvanced": {
+        "description": "Advanced CLIP text encoder (TensorArt/custom)",
+        "category": "conditioning",
+        "inputs": ["clip", "text"],
+        "outputs": ["CONDITIONING"],
+        "parameter_extraction": {
+          "prompt_text": "inputs.text",
+          "token_normalization": "inputs.token_normalization",
+          "weight_interpretation": "inputs.weight_interpretation"
+        }
+      },
+      "ImpactWildcardEncode": {
+        "description": "Wildcard text encoder with dynamic prompts",
+        "category": "conditioning",
+        "inputs": ["model", "clip"],
+        "outputs": ["model", "clip", "conditioning", "populated_text"],
+        "parameter_extraction": {
+          "prompt_text": "widgets_values[0]",
+          "populated_text": "widgets_values[1]",
+          "seed": "widgets_values[5]"
+        }
+      },
+      "DualCLIPLoader": {
+        "description": "Loads dual CLIP text encoders",
+        "category": "loaders",
+        "inputs": [],
+        "outputs": ["CLIP"],
+        "parameter_extraction": {
+          "clip_name_1": "widgets_values[0]",
+          "clip_name_2": "widgets_values[1]",
+          "type": "widgets_values[2]"
+        }
+      }
+    },
+    "model_loading": {
+      "UNETLoader": {
+        "description": "Loads UNET/diffusion model",
+        "category": "loaders", 
+        "inputs": [],
+        "outputs": ["MODEL"],
+        "parameter_extraction": {
+          "model_name": "widgets_values[0]",
+          "weight_dtype": "widgets_values[1]"
+        }
+      },
+      "CheckpointLoaderSimple": {
+        "description": "Loads checkpoint model",
+        "category": "loaders",
+        "inputs": [],
+        "outputs": ["MODEL", "CLIP", "VAE"],
+        "parameter_extraction": {
+          "ckpt_name": "widgets_values[0]"
+        }
+      },
+      "LoraLoaderModelOnly": {
+        "description": "Loads LoRA for model only",
+        "category": "loaders",
+        "inputs": ["model"],
+        "outputs": ["MODEL"],
+        "parameter_extraction": {
+          "lora_name": "widgets_values[0]",
+          "strength_model": "widgets_values[1]"
+        }
+      },
+      "LoraLoader": {
+        "description": "Loads LoRA for model and CLIP",
+        "category": "loaders", 
+        "inputs": ["model", "clip"],
+        "outputs": ["MODEL", "CLIP"],
+        "parameter_extraction": {
+          "lora_name": "widgets_values[0]",
+          "strength_model": "widgets_values[1]",
+          "strength_clip": "widgets_values[2]"
+        }
+      },
+      "Power Lora Loader (rgthree)": {
+        "description": "Advanced LoRA loader with multiple LoRAs",
+        "category": "loaders",
+        "inputs": ["model", "clip"],
+        "outputs": ["MODEL", "CLIP"],
+        "parameter_extraction": {
+          "loras": "widgets_values[2:]"
+        }
+      },
+      "LoraTagLoader": {
+        "description": "LoRA loader using tag format",
+        "category": "loaders",
+        "inputs": ["model", "clip", "text"],
+        "outputs": ["MODEL", "CLIP"],
+        "parameter_extraction": {
+          "lora_tags": "inputs.text"
+        }
+      },
+      "ECHOCheckpointLoaderSimple": {
+        "description": "ECHO checkpoint loader (TensorArt)",
+        "category": "loaders",
+        "inputs": [],
+        "outputs": ["MODEL", "CLIP", "VAE"],
+        "parameter_extraction": {
+          "ckpt_name": "inputs.ckpt_name"
+        }
+      }
+    },
+    "vae": {
+      "VAELoader": {
+        "description": "Loads VAE model",
+        "category": "loaders",
+        "inputs": [],
+        "outputs": ["VAE"], 
+        "parameter_extraction": {
+          "vae_name": "widgets_values[0]"
+        }
+      },
+      "VAEDecode": {
+        "description": "Decodes latent to image",
+        "category": "vae",
+        "inputs": ["samples", "vae"],
+        "outputs": ["IMAGE"],
+        "parameter_extraction": {}
+      },
+      "VAEEncode": {
+        "description": "Encodes image to latent",
+        "category": "vae",
+        "inputs": ["pixels", "vae"],
+        "outputs": ["LATENT"],
+        "parameter_extraction": {}
+      }
+    },
+    "sampling": {
+      "SamplerCustomAdvanced": {
+        "description": "Advanced custom sampler",
+        "category": "sampling",
+        "inputs": ["noise", "guider", "sampler", "sigmas", "latent_image"],
+        "outputs": ["output", "denoised_output"],
+        "parameter_extraction": {}
+      },
+      "KSampler": {
+        "description": "Standard K-sampler",
+        "category": "sampling",
+        "inputs": ["model", "positive", "negative", "latent_image"],
+        "outputs": ["LATENT"],
+        "parameter_extraction": {
+          "seed": "widgets_values[0]",
+          "steps": "widgets_values[1]", 
+          "cfg": "widgets_values[2]",
+          "sampler_name": "widgets_values[3]",
+          "scheduler": "widgets_values[4]",
+          "denoise": "widgets_values[5]"
+        }
+      },
+      "KSampler_A1111": {
+        "description": "A1111-style K-sampler (TensorArt)",
+        "category": "sampling",
+        "inputs": ["model", "positive", "negative", "latent_image"],
+        "outputs": ["LATENT"],
+        "parameter_extraction": {
+          "cfg": "inputs.cfg",
+          "denoise": "inputs.denoise",
+          "seed": "inputs.seed",
+          "sampler_name": "inputs.sampler_name",
+          "scheduler": "inputs.scheduler",
+          "steps": "inputs.steps"
+        }
+      },
+      "KSamplerAdvanced": {
+        "description": "Advanced K-sampler with noise control",
+        "category": "sampling",
+        "inputs": ["model", "positive", "negative", "latent_image"],
+        "outputs": ["LATENT"],
+        "parameter_extraction": {
+          "add_noise": "widgets_values[0]",
+          "noise_seed": "widgets_values[1]",
+          "steps": "widgets_values[2]",
+          "cfg": "widgets_values[3]",
+          "sampler_name": "widgets_values[4]",
+          "scheduler": "widgets_values[5]",
+          "start_at_step": "widgets_values[6]",
+          "end_at_step": "widgets_values[7]",
+          "return_with_leftover_noise": "widgets_values[8]"
+        }
+      }
+    },
+    "schedulers": {
+      "BasicScheduler": {
+        "description": "Basic noise scheduler",
+        "category": "scheduling",
+        "inputs": ["model"],
+        "outputs": ["SIGMAS"],
+        "parameter_extraction": {
+          "scheduler": "widgets_values[0]",
+          "steps": "widgets_values[1]",
+          "denoise": "widgets_values[2]"
+        }
+      },
+      "KarrasScheduler": {
+        "description": "Karras noise scheduler",
+        "category": "scheduling", 
+        "inputs": ["model"],
+        "outputs": ["SIGMAS"],
+        "parameter_extraction": {
+          "steps": "widgets_values[0]",
+          "sigma_max": "widgets_values[1]",
+          "sigma_min": "widgets_values[2]",
+          "rho": "widgets_values[3]"
+        }
+      }
+    },
+    "samplers": {
+      "KSamplerSelect": {
+        "description": "Selects K-sampler algorithm",
+        "category": "sampling",
+        "inputs": [],
+        "outputs": ["SAMPLER"],
+        "parameter_extraction": {
+          "sampler_name": "widgets_values[0]"
+        }
+      }
+    },
+    "guidance": {
+      "FluxGuidance": {
+        "description": "FLUX model guidance",
+        "category": "conditioning",
+        "inputs": ["conditioning"],
+        "outputs": ["CONDITIONING"],
+        "parameter_extraction": {
+          "guidance": "widgets_values[0]"
+        }
+      },
+      "BasicGuider": {
+        "description": "Basic conditioning guider",
+        "category": "conditioning",
+        "inputs": ["model", "conditioning"],
+        "outputs": ["GUIDER"],
+        "parameter_extraction": {}
+      },
+      "CFGGuider": {
+        "description": "CFG conditioning guider",
+        "category": "conditioning",
+        "inputs": ["model", "positive", "negative"],
+        "outputs": ["GUIDER"],
+        "parameter_extraction": {
+          "cfg": "widgets_values[0]"
+        }
+      }
+    },
+    "noise": {
+      "RandomNoise": {
+        "description": "Generates random noise",
+        "category": "noise",
+        "inputs": [],
+        "outputs": ["NOISE"],
+        "parameter_extraction": {
+          "noise_seed": "widgets_values[0]",
+          "control_after_generate": "widgets_values[1]"
+        }
+      }
+    },
+    "latent": {
+      "EmptyLatentImage": {
+        "description": "Creates empty latent image",
+        "category": "latent",
+        "inputs": [],
+        "outputs": ["LATENT"],
+        "parameter_extraction": {
+          "width": "widgets_values[0]",
+          "height": "widgets_values[1]",
+          "batch_size": "widgets_values[2]"
+        }
+      },
+      "CR SDXL Aspect Ratio": {
+        "description": "ComfyRoll SDXL aspect ratio generator",
+        "category": "latent",
+        "inputs": [],
+        "outputs": ["width", "height", "upscale_factor", "batch_size", "empty_latent", "show_help"],
+        "parameter_extraction": {
+          "width": "widgets_values[0]",
+          "height": "widgets_values[1]",
+          "aspect_ratio": "widgets_values[2]",
+          "swap_dimensions": "widgets_values[3]",
+          "upscale_factor": "widgets_values[4]",
+          "batch_size": "widgets_values[5]"
+        }
+      }
+    },
+    "model_patches": {
+      "ModelSamplingFlux": {
+        "description": "FLUX model sampling configuration",
+        "category": "model_patches",
+        "inputs": ["model"],
+        "outputs": ["MODEL"],
+        "parameter_extraction": {
+          "max_shift": "widgets_values[0]",
+          "base_shift": "widgets_values[1]",
+          "width": "widgets_values[2]",
+          "height": "widgets_values[3]"
+        }
+      },
+      "ModelSamplingDiscrete": {
+        "description": "Discrete model sampling",
+        "category": "model_patches",
+        "inputs": ["model"],
+        "outputs": ["MODEL"],
+        "parameter_extraction": {
+          "sampling": "widgets_values[0]",
+          "zsnr": "widgets_values[1]"
+        }
+      }
+    },
+    "primitives": {
+      "String Literal": {
+        "description": "String literal value",
+        "category": "primitives",
+        "inputs": [],
+        "outputs": ["STRING"],
+        "parameter_extraction": {
+          "string": "widgets_values[0]"
+        }
+      },
+      "Int Literal": {
+        "description": "Integer literal value",
+        "category": "primitives",
+        "inputs": [],
+        "outputs": ["INT"],
+        "parameter_extraction": {
+          "int": "widgets_values[0]"
+        }
+      },
+      "Float Literal": {
+        "description": "Float literal value",
+        "category": "primitives",
+        "inputs": [],
+        "outputs": ["FLOAT"],
+        "parameter_extraction": {
+          "float": "widgets_values[0]"
+        }
+      }
+    },
+    "output": {
+      "SaveImage": {
+        "description": "Saves image to disk",
+        "category": "output",
+        "inputs": ["images"],
+        "outputs": [],
+        "parameter_extraction": {
+          "filename_prefix": "widgets_values[0]"
+        }
+      },
+      "PreviewImage": {
+        "description": "Shows image preview",
+        "category": "output",
+        "inputs": ["images"],
+        "outputs": [],
+        "parameter_extraction": {}
+      }
+    },
+    "utils": {
+      "Note": {
+        "description": "Text note/comment",
+        "category": "utils",
+        "inputs": [],
+        "outputs": [],
+        "parameter_extraction": {
+          "text": "widgets_values[0]"
+        }
+      },
+      "Reroute": {
+        "description": "Connection reroute",
+        "category": "utils",
+        "inputs": ["*"],
+        "outputs": ["*"],
+        "parameter_extraction": {}
+      }
+    }
+  },
+  "common_connections": {
+    "model_chain": ["UNETLoader", "LoraLoader", "ModelSamplingFlux"],
+    "text_chain": ["DualCLIPLoader", "CLIPTextEncode", "FluxGuidance"],
+    "sampling_chain": ["KSamplerSelect", "BasicScheduler", "RandomNoise", "SamplerCustomAdvanced"],
+    "latent_chain": ["EmptyLatentImage", "SamplerCustomAdvanced", "VAEDecode"],
+    "output_chain": ["VAEDecode", "SaveImage"]
+  },
+  "extraction_priorities": {
+    "model": ["UNETLoader", "CheckpointLoaderSimple", "ECHOCheckpointLoaderSimple"],
+    "lora": ["LoraLoader", "LoraLoaderModelOnly", "Power Lora Loader (rgthree)", "LoraTagLoader"],
+    "vae": ["VAELoader"],
+    "prompt": ["String Literal", "CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "ImpactWildcardEncode"],
+    "negative_prompt": ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"],
+    "sampler": ["KSamplerSelect", "KSampler", "KSampler_A1111"],
+    "scheduler": ["BasicScheduler", "KarrasScheduler", "KSampler_A1111"],
+    "steps": ["BasicScheduler", "KSampler", "KSampler_A1111"],
+    "cfg": ["FluxGuidance", "CFGGuider", "KSampler", "KSampler_A1111"],
+    "seed": ["RandomNoise", "KSampler", "KSampler_A1111", "ImpactWildcardEncode"],
+    "dimensions": ["EmptyLatentImage", "ModelSamplingFlux", "CR SDXL Aspect Ratio"],
+    "guidance": ["FluxGuidance", "CFGGuider"]
+  }
+}

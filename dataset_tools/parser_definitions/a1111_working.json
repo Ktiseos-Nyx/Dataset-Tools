@@ -1,0 +1,73 @@
+{
+  "parser_name": "A1111_WebUI_Working",
+  "priority": 110,
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have parameters PNG chunk with data",
+      "source_type": "pil_info_key",
+      "source_key": "parameters",
+      "operator": "exists"
+    },
+    {
+      "comment": "Rule 2: Must contain A1111 format signatures",
+      "source_type": "pil_info_key",
+      "source_key": "parameters",
+      "operator": "contains",
+      "value": "Steps:"
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_type": "png_chunk",
+      "source_key": "parameters"
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "a1111_extract_prompt_positive"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "a1111_extract_prompt_negative"
+      },
+      {
+        "target_key": "steps",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "cfg_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG scale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "seed",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "sampler_name",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Sampler",
+        "value_type": "string"
+      }
+    ],
+    "output_template": {
+      "tool": "A1111 WebUI (Working)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$steps",
+        "cfg_scale": "$cfg_scale",
+        "seed": "$seed",
+        "sampler_name": "$sampler_name"
+      }
+    }
+  }
+}

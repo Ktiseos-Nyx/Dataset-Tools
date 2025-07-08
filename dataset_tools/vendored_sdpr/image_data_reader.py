@@ -64,6 +64,7 @@ class ImageDataReader:
 
     PARSER_CLASSES_JPEG_WEBP = [
         # RuinedFooocus is handled specially before this loop
+        DrawThings,
         MochiDiffusionFormat,  # <<< MOCHI FIRST FOR JPEG/WEBP due to specific IPTC usage
         CivitaiFormat,
         EasyDiffusion,
@@ -187,7 +188,13 @@ class ImageDataReader:
             elif "info" in kwargs and not parser_info_arg:  # Remove empty info from kwargs
                 del kwargs["info"]
 
-            temp_parser = parser_class(**kwargs)
+            parser_kwargs = kwargs.copy()
+            if parser_class in [SwarmUI, NovelAI]:
+                parser_kwargs.pop("width", None)
+                parser_kwargs.pop("height", None)
+                parser_kwargs.pop("logger_obj", None)
+
+            temp_parser = parser_class(**parser_kwargs)
             parser_own_status = temp_parser.parse()
 
             if parser_own_status == BaseFormat.Status.READ_SUCCESS:
@@ -416,17 +423,38 @@ class ImageDataReader:
 
             kwargs_for_parser = {}
             # MochiDiffusionFormat expects IPTC Caption-Abstract as raw, and other IPTC in info
-            if parser_class is MochiDiffusionFormat:
+            if parser_class is DrawThings:
+                if xmp_chunk := self._info.get("XML:com.adobe.xmp"):
+                    try:
+                        xmp_dom = minidom.parseString(xmp_chunk)
+                        description_nodes = xmp_dom.getElementsByTagName("rdf:Description")
+                        for desc_node in description_nodes:
+                            uc_nodes = desc_node.getElementsByTagName("exif:UserComment")
+                            if uc_nodes and uc_nodes[0].childNodes:
+                                data_str = uc_nodes[0].childNodes[0].data
+                                if data_str:
+                                    kwargs_for_parser["info"] = json.loads(data_str)
+                                    break
+                    except (minidom.ExpatError, json.JSONDecodeError) as e:
+                        self._logger.warning("DrawThings XMP: Parse error: %s", e)
+                        continue
+                else:
+                    continue
+            elif parser_class is MochiDiffusionFormat:
                 iptc_caption = self._parsed_iptc_info.get("iptc_caption_abstract", "")
                 if iptc_caption:  # Only try Mochi if we actually found its main data source
                     kwargs_for_parser["raw"] = iptc_caption
                     # info kwarg with other IPTC fields is added by _try_parser if self._parsed_iptc_info is populated
                 else:  # No caption, Mochi parser won't work with raw=None
                     continue  # Skip trying Mochi if no IPTC caption
-            elif raw_user_comment_str:  # For other parsers that use UserComment
-                kwargs_for_parser["raw"] = raw_user_comment_str
-            else:  # No UserComment for other parsers to use
-                continue  # Skip if no raw_user_comment_str for these parsers
+            elif parser_class is EasyDiffusion:
+                if raw_user_comment_str:
+                    try:
+                        kwargs_for_parser["info"] = json.loads(raw_user_comment_str)
+                    except json.JSONDecodeError:
+                        continue
+                else:
+                    continue
 
             if self._try_parser(parser_class, **kwargs_for_parser):
                 return  # Successfully parsed

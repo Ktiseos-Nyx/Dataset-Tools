@@ -1,0 +1,130 @@
+{
+  "parser_name": "Graphics_Workflow",
+  "priority": 60,
+  "description": "Digital art and graphics software workflows (Adobe, Celsys, Affinity, etc.)",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP", "PSD", "TIFF"],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have creative software signatures.",
+      "condition": "OR",
+      "rules": [
+        { "source_type": "pil_info_key", "source_key": "Software", "operator": "regex_match_any", "regex_patterns": ["Adobe Photoshop.*", "Adobe Illustrator.*", "Adobe.*", "Affinity Photo", "Affinity Designer", "Celsys Studio Tool", "Clip Studio Paint"] },
+        { "source_type": "pil_info_key", "source_key": "CreatorTool", "operator": "regex_match_any", "regex_patterns": ["Adobe Photoshop.*", "Adobe Illustrator.*", "Adobe.*", "Affinity Photo", "Affinity Designer", "Celsys Studio Tool"] }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must NOT have AI generation metadata.",
+      "condition": "AND",
+      "rules": [
+        { "source_type": "pil_info_key", "source_key": "parameters", "operator": "not_exists" },
+        { "source_type": "exif_user_comment", "operator": "not_contains_text", "text": "Steps:" },
+        { "source_type": "png_chunk", "source_key": "workflow", "operator": "not_exists" }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "exif_all_fields"},
+        {"source_type": "xmp_all_fields"}
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "software_primary",
+        "method": "direct_exif_field",
+        "field_name": "Software",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "creator_tool",
+        "method": "direct_xmp_field",
+        "field_name": "CreatorTool",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "creation_date",
+        "method": "direct_xmp_field",
+        "field_name": "CreateDate",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "modify_date",
+        "method": "direct_xmp_field",
+        "field_name": "ModifyDate",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "title",
+        "method": "direct_xmp_field",
+        "field_name": "title",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "document_id",
+        "method": "direct_xmp_field",
+        "field_name": "DocumentID",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "color_mode",
+        "method": "direct_xmp_field",
+        "field_name": "ColorMode",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "icc_profile",
+        "method": "direct_exif_field",
+        "field_name": "ColorSpace",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "workflow_history",
+        "method": "extract_xmp_history_array",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "tool": "Graphics Software",
+      "creation_type": "Manual/Digital Art (Possibly AI-assisted)",
+      "software_info": {
+        "primary_tool": "$creator_tool",
+        "software_signature": "$software_primary",
+        "workflow_type": "Graphics/Design"
+      },
+      "creation_details": {
+        "created": "$creation_date",
+        "last_modified": "$modify_date",
+        "title": "$title",
+        "color_profile": "$icc_profile",
+        "color_mode": "$color_mode"
+      },
+      "workflow": {
+        "document_id": "$document_id",
+        "editing_history": "$workflow_history",
+        "collaborative_editing": "Detected multiple software passes"
+      },
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "detection_confidence": "High - Clear graphics software signatures"
+      }
+    }
+  },
+  "notes": [
+    "Handles Adobe Creative Suite, Affinity, Celsys, and other graphics software",
+    "Detects collaborative workflows and editing history",
+    "Excludes files with AI generation metadata",
+    "Useful for digital art, design work, and manual photo editing"
+  ]
+}

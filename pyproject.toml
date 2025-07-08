@@ -9,7 +9,7 @@ name            = "kn-dataset-tools"
 description     = "A Simple Viewer for EXIF and AI Metadata."
 authors         = [{ name = "Ktiseos Nyx", email = "Dataset-Tools@noreply.github.com" }]
 requires-python = ">= 3.10"
-license         = { file = "LICENSE" }
+license         = "GPL-3.0-or-later"
 readme          = "README.md"
 urls            = { source = "https://github.com/Ktiseos-Nyx/Dataset-Tools" } # Corrected from your previous example to non-orgs
 dynamic         = ["version"]
@@ -30,7 +30,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Operating System :: OS Independent",
     "Environment :: X11 Applications :: Qt", # This implies Linux focus for X11
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
 ]
 dependencies = [
     "rich",
@@ -61,6 +60,10 @@ kn  = ["ruff", "pylint"] # For your personal linting/tooling
 [project.scripts]
 dataset-tools = "dataset_tools.main:main"
 
+[tool.setuptools.packages.find]
+include = ["dataset_tools*"]
+exclude = ["logs*", "config*", "tests*", "debug-analysis*", "dev-screenshots*"]
+
 [tool.setuptools_scm]
 write_to = "_version.py"
 # For releases, you want the version to be exactly the tag if you're on a tag.
@@ -79,6 +82,10 @@ line-length    = 120
 include        = ["*.py", "*.pyi", "**/pyproject.toml"]
 extend-exclude = [
     ".venv",
+    "dataset_tools/debug_tools/",
+    "debug-analysis/",
+    "analyze_missing_nodes.py",
+    "convert_icons_to_theme_compatible.py",
     # "tests/", # I recommend REMOVING this line to lint/format your tests
     # "test_*.py", # And this one too
 ]
@@ -121,6 +128,8 @@ select = [
 ]
 ignore = [
     "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107", # Ignore missing docstrings initially
+    "D203", # Incompatible with D211 (no blank line before class docstring)
+    "D213", # Incompatible with D212 (multi-line summary on first line)
     # ANN101, ANN102 were removed by Ruff as deprecated/handled differently
     "COM812", # Add this to ignore the formatter conflict with trailing commas
 ]
@@ -137,7 +146,12 @@ ignore = [
     "BLE001", # Allow blind excepts if they are guarded by logging exc_info
     "SIM102", # If you don't like its nested if simplification everywhere
     "B007",   # Unused loop variable (if it's being picky about your error handlers)
-    # Add any other Pylint (PLx), Bugbear (B), Simplify (SIM) rules that are SUPER noisy here
+    "PLR0911", # Too many return statements
+    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+    "PLR1714", # Consider merging multiple comparisons
+    "PLW2901", # `for` loop variable overwritten by assignment target
+    "PLR2004", # Magic value used in comparison
+    "E501", # Line too long
 ]
 "dataset_tools/vendored_sdpr/image_data_reader.py" = [
     "C901", "PLR0912", "PLR0913", "PLR0915", "PLW0603",
@@ -145,8 +159,9 @@ ignore = [
     "ANN001", "ANN002", "ANN003", "ANN201", "ANN202", "ANN204", "ANN205", "ANN401",
     "BLE001",
     "SIM102",
+    "RUF012", "UP038", "PLR2004", "E501", "F841", "PTH123"
 ]
-"dataset_tools/vendored_sdpr/logger.py" = ["D103", "D203", "D213", "D214", "D215", "PT009", "T201", "PLR2004", "S101", "ANN001", "ANN201", "ANN401", "ARG002", "N803", "PTH118"]
+"dataset_tools/vendored_sdpr/logger.py" = ["D103", "D203", "D213", "D214", "D215", "PT009", "T201", "PLR2004", "S101", "ANN001", "ANN201", "ANN401", "ARG002", "N803", "PTH118", "D401", "ANN202"]
 "dataset_tools/widgets.py" = [
     "PTH118", # BECAUSE WHY NOT
     "PLR2004", # ugh
@@ -173,6 +188,14 @@ ignore = [
     "D415", # because emet selch said so
     "D205", # because i have a shark! 
     ]
+# For debug/test files that legitimately use print statements
+"debug-analysis/*" = ["T201"] # Ignore print statements in debug analysis files
+"dataset_tools/model_parsers/__init__.py" = ["T201", "BLE001", "PLE0605"]  # Bootstrap debugging
+"dataset_tools/main.py" = ["T201", "D400", "D415", "ANN201", "ANN001"]  # CLI debugging
+"dataset_tools/test_comfyui_analyzer.py" = ["T201", "E501", "ANN201"]  # Test file
+"dataset_tools/ui_widgets.py" = ["T201", "ANN204", "ANN001", "D400", "D401", "D415", "ARG002", "BLE001", "N802", "ANN201", "ANN202"]  # Test UI file
+"dataset_tools/vendored_sdpr/format/novelai.py" = ["T201", "PLR0911", "D401", "PLR2004", "UP038", "E501"]  # Vendored code
+
 # For your tests, you might want to ignore missing docstrings for test methods,
 # print statements, and magic value comparisons.
 "tests/*" = [
@@ -191,7 +214,50 @@ ignore = [
     "ARG002", # Allow unused arguments
     "N803", # Allow case mismatches because i'm a dumbass
     "PTH118", # Allow errors with pathlib because i'm a dumbass dum!
+    "PGH003", # Use specific rule codes when ignoring type issues
 ]
+"dataset_tools/file_readers/__init__.py" = ["PLR0911", "TID252", "UP035", "F401", "BLE001", "PTH123", "SLF001", "PLW0603", "D401", "D205", "ANN201", "ANN204", "SIM118"]
+"dataset_tools/file_readers/schema_file_reader.py" = ["C901", "PLR0911", "BLE001", "PTH123", "RUF015", "ARG002", "ANN401", "UP038", "N817", "TID252", "ANN204", "D401", "D205", "F821"]
+"dataset_tools/metadata_engine/context_preparation.py" = ["C901", "BLE001", "E501", "UP007", "ANN204", "PLR2004", "UP038", "S110", "E722", "ARG002", "ANN401", "TID252", "PGH003"]
+"dataset_tools/metadata_engine/engine.py" = ["C901", "PLR0911", "PLR0912", "PLR0915", "BLE001", "E501", "UP007", "ANN201", "ANN204", "ANN001", "ANN002", "ANN003", "ARG002", "ANN401", "S318", "N806", "PTH123", "TID252", "PYI056", "D400", "D415"]
+"dataset_tools/metadata_engine/extractors/comfyui_extractors.py" = ["C901", "PLR0911", "PLR0912", "PLR0915", "B007", "PLR2004", "SIM102", "ARG002", "ANN401", "D205", "D401", "E722", "S110"]
+"dataset_tools/metadata_engine/extractors/json_extractors.py" = ["PLR0911", "BLE001", "ARG002", "ANN401", "TID252", "ANN204"]
+"dataset_tools/metadata_engine/rule_engine.py" = ["C901", "PLR0911", "PLR0912", "PLR0915", "BLE001", "UP038", "ARG002", "ANN401", "ANN204", "ANN001", "RUF013", "SIM110", "PLR1714"]
+"dataset_tools/metadata_engine/utils.py" = ["C901", "PLR0911"]
+"dataset_tools/model_parsers/gguf_parser.py" = ["C901", "PLR2004", "ANN401", "B904", "E501", "PTH123", "ANN204", "TID252"]
+"dataset_tools/model_parsers/safetensors_parser.py" = ["C901", "PLR2004", "E501", "PTH123", "N806", "SLF001", "ANN204"]
+"dataset_tools/rule_evaluator.py" = ["C901", "PLR0911", "PLR0912", "PLR0915", "S603", "S607", "E722", "S110", "E501", "SIM102"]
+"dataset_tools/ui/widgets_old.py" = ["C901", "PLR2004", "BLE001", "PTH208", "PTH118", "ANN201", "ANN204", "ANN001", "ARG002", "N802", "PGH003", "D205", "D401", "D400", "D415"]
+"dataset_tools/ui_layout.py" = ["PLR0915", "ANN201", "D205", "D401"]
+"dataset_tools/vendored_sdpr/format/drawthings.py" = ["PLR0911", "D401", "D205"]
+"dataset_tools/vendored_sdpr/format/easydiffusion.py" = ["PLR0911", "D401", "E501", "F841"]
+"dataset_tools/vendored_sdpr/format/swarmui.py" = ["PLR0911", "D205", "D401", "E501"]
+"dataset_tools/vendored_sdpr/format/invokeai.py" = ["RUF012"]
+"dataset_tools/vendored_sdpr/format/midjourney.py" = ["D400", "D415", "D205", "PLR2004", "SIM103", "SLF001"]
+"dataset_tools/vendored_sdpr/format/mochi_diffusion.py" = ["RUF012", "E501", "PLW2901", "PLR2004"]
+"dataset_tools/vendored_sdpr/format/tensorart.py" = ["D400", "D415", "D205", "PLR2004", "SIM103", "RUF015"]
+"dataset_tools/vendored_sdpr/format/utility.py" = ["D401", "D205"]
+"dataset_tools/vendored_sdpr/format/yodayo.py" = ["RUF012", "D205", "D401", "E501", "PLW2901"]
+"dataset_tools/access_disk.py" = ["D400", "D415", "ANN204", "BLE001", "E501", "PTH123", "PGH003", "PLR0911"]
+"dataset_tools/analysis/features.py" = ["SIM102", "D205"]
+"dataset_tools/background_operations.py" = ["ANN204", "ANN001", "ANN401", "BLE001", "F821", "ARG002", "D401", "ANN201", "ANN202", "PTH109"]
+"dataset_tools/correct_types.py" = ["PLR2004"]
+"dataset_tools/display_formatter.py" = ["D205", "D401", "ANN202"]
+"dataset_tools/event_handlers.py" = ["ANN201", "PTH118", "ANN202", "D401", "ARG002"]
+"dataset_tools/file_operations.py" = ["ANN204", "BLE001", "PLR2004", "PTH208", "PTH118", "ARG002", "D401", "ANN201"]
+"dataset_tools/file_readers/text_file_reader.py" = ["TID252", "ANN204", "BLE001", "PTH123", "PLR0911", "PLR2004", "PLW2901", "D401", "D205", "ANN201", "E501"]
+"dataset_tools/logger.py" = ["ANN201", "PLW0603", "ANN001", "ANN202", "ANN002", "ANN003", "D205", "D401", "RUF013"]
+"dataset_tools/metadata_engine/__init__.py" = ["RUF022", "PYI056", "ANN202", "ANN001", "D401"]
+"dataset_tools/metadata_engine/extractors/a1111_extractors.py" = ["ANN204", "ANN401", "ARG002", "TID252"]
+"dataset_tools/metadata_engine/extractors/civitai_extractors.py" = ["ANN204", "N802", "ARG002", "ANN401", "TID252"]
+"dataset_tools/metadata_engine/extractors/direct_extractors.py" = ["ANN204", "ANN401", "ARG002", "TID252"]
+"dataset_tools/metadata_engine/extractors/regex_extractors.py" = ["ANN204", "ANN401", "ARG002", "SIM108", "TID252"]
+"dataset_tools/metadata_engine/field_extraction.py" = ["ANN204", "ANN202", "ANN401", "ARG002", "ANN201", "TID252"]
+"dataset_tools/metadata_engine/parser_registry.py" = ["TID252"]
+"dataset_tools/metadata_engine/template_system.py" = ["TID252", "UP007", "ANN204", "ANN401", "ANN003", "D401", "D205", "SIM103"]
+"dataset_tools/metadata_parser.py" = ["D404", "ANN202", "D401", "BLE001", "F841"]
+"dataset_tools/model_parsers/base_model_parser.py" = ["TID252", "ANN204", "E501"]
+
 
 [tool.ruff.format] # Formatter specific settings
 quote-style = "double"

@@ -4,13 +4,13 @@ This project incorporates code from the following open-source software:
 
 ## 1. Stable Diffusion Prompt Reader
 
-*   **Original Author:** receyuki
-*   **Project Repository:** [https://github.com/receyuki/stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
-*   **Version Vendored:** (Specify if known, e.g., v1.3.5, or commit hash a1b2c3d)
-*   **Original License:** MIT License
-*   The NovelAI metadata parsing logic within the vendored stable-diffusion-prompt-reader code aligns with the specifications published by NovelAI regarding their image metadata formats (see https://github.com/NovelAI/novelai-image-metadata).
-*   **Modifications:** The code vendored from Stable Diffusion Prompt Reader has been adapted and modified for integration into Dataset-Tools. These modifications primarily reside within the `dataset_tools/vendored_sdpr/` directory.
-Directory Structure of files 
+* **Original Author:** receyuki
+* **Project Repository:** [https://github.com/receyuki/stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
+* **Version Vendored:** (Specify if known, e.g., v1.3.5, or commit hash a1b2c3d)
+* **Original License:** MIT License
+* The NovelAI metadata parsing logic within the vendored stable-diffusion-prompt-reader code aligns with the specifications published by NovelAI regarding their image metadata formats (see https://github.com/NovelAI/novelai-image-metadata).
+* **Modifications:** The code vendored from Stable Diffusion Prompt Reader has been adapted and modified for integration into Dataset-Tools. These modifications primarily reside within the `dataset_tools/vendored_sdpr/` directory.
+Directory Structure of files
 `dataset_tools/
 ├── __init__.py
 ├── access_disk.py
@@ -47,9 +47,9 @@ Directory Structure of files
 │   │   ├── ruinedfooocus.py    # RuinedFoocus
 │   │   ├── swarmui.py
 │   │   └── utility.py          # Utility functions for the format parsers
-└── widgets.py` 
+└── widgets.py`
 
-### Original Copyright Notice (from Stable Diffusion Prompt Reader):
+### Original Copyright Notice (from Stable Diffusion Prompt Reader)
 
 MIT License
 Copyright (c) 2023 receyuki
@@ -68,4 +68,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-

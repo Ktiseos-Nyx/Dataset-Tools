@@ -1,0 +1,177 @@
+{
+  "parser_name": "ComfyUI_Stable_Cascade",
+  "priority": 140,
+  "description": "Multi-stage Stable Cascade workflows",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG"],
+  "detection_rules": [
+    {
+      "comment": "Detects Stable Cascade workflows by looking for its unique nodes.",
+      "source_type": "pil_info_key_json_path_query",
+      "source_key_options": ["workflow", "prompt"],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "StableCascade_EmptyLatentImage",
+        "StableCascade_StageB_Conditioning",
+        "StableCascade_StageC_Conditioning"
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "pil_info_key", "source_key": "workflow"},
+        {"source_type": "pil_info_key", "source_key": "prompt"}
+      ],
+      "transformations": [{"type": "json_decode_string_itself"}]
+    },
+
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": ["StableCascade_StageC_Conditioning", "KSampler"],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": ["CLIPTextEncode", "CLIPTextEncodeSDXL"]
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": ["StableCascade_StageC_Conditioning", "KSampler"],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": ["CLIPTextEncode", "CLIPTextEncodeSDXL"]
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "cfg",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "scheduler",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.denoise",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "denoise",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.cascade_model",
+        "method": "comfy_get_node_by_class",
+        "class_type": "CheckpointLoaderSimple",
+        "field_name": "ckpt_name",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.stage_b_strength",
+        "method": "comfy_get_node_by_class",
+        "class_type": "StableCascade_StageB_Conditioning",
+        "field_name": "strength",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.stage_c_strength",
+        "method": "comfy_get_node_by_class",
+        "class_type": "StableCascade_StageC_Conditioning",
+        "field_name": "strength",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_get_node_by_class",
+        "class_type": "StableCascade_EmptyLatentImage",
+        "field_name": "width",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_get_node_by_class",
+        "class_type": "StableCascade_EmptyLatentImage",
+        "field_name": "height",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.compression",
+        "method": "comfy_get_node_by_class",
+        "class_type": "StableCascade_EmptyLatentImage",
+        "field_name": "compression",
+        "value_type": "integer",
+        "optional": true
+      }
+    ],
+
+    "output_template": {
+      "tool": "ComfyUI (Stable Cascade)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "denoise": "$parameters.denoise",
+        "cascade_model": "$parameters.cascade_model",
+        "stage_b_strength": "$parameters.stage_b_strength",
+        "stage_c_strength": "$parameters.stage_c_strength",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "compression": "$parameters.compression"
+      },
+      "workflow_info": {
+        "detected_as": "ComfyUI Stable Cascade workflow",
+        "supports": ["Multi-stage generation", "Stage B conditioning", "Stage C conditioning", "Compression control"]
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+
+  "notes": [
+    "Detects ComfyUI workflows using Stable Cascade architecture",
+    "Handles multi-stage generation with Stage B and Stage C conditioning",
+    "Extracts cascade-specific parameters like compression and stage strengths",
+    "Works with Stable Cascade's unique latent image generation"
+  ]
+}

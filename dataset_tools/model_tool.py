@@ -9,7 +9,7 @@ from .model_parsers import GGUFParser, ModelParserStatus, SafetensorsParser
 
 
 class ModelTool:
-    def __init__(self):
+    def __init__(self) -> None:
         self.parser_map = {
             ".safetensors": SafetensorsParser,
             ".sft": SafetensorsParser,
@@ -22,7 +22,7 @@ class ModelTool:
         extension = file_path_obj.suffix.lower()
         file_name_for_log = file_path_obj.name  # Use for logging messages
 
-        ParserClass = self.parser_map.get(extension)
+        ParserClass = self.parser_map.get(extension)  # noqa: N806
 
         if ParserClass:
             nfo(

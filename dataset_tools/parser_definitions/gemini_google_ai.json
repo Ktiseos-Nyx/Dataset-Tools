@@ -1,0 +1,128 @@
+{
+  "parser_name": "Gemini (Google AI)",
+  "priority": 140,
+  "description": "Google Gemini AI image generator - detects images created with Google's Gemini AI models 🤖✨",
+  "version": "1.0",
+  "maintainer": "Chaos Bean Crew",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have 'Made with Google AI' credit",
+      "source_type": "pil_info_key",
+      "source_key": "Credit",
+      "operator": "contains",
+      "value": "Made with Google AI"
+    },
+    {
+      "comment": "Rule 2: OR Must have IPTC trained algorithmic media markers",
+      "source_type": "pil_info_key", 
+      "source_key": "DigitalSourceType",
+      "operator": "contains",
+      "value": "trainedAlgorithmicMedia"
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "exif_field", "source_key": "Credit"},
+        {"source_type": "exif_field", "source_key": "DigitalSourceType"},
+        {"source_type": "exif_field", "source_key": "DigitalSourceFileType"},
+        {"source_type": "exif_field", "source_key": "DateCreated"},
+        {"source_type": "exif_field", "source_key": "DateTimeOriginal"},
+        {"source_type": "exif_field", "source_key": "Software"},
+        {"source_type": "exif_field", "source_key": "ImageUniqueID"},
+        {"source_type": "exif_field", "source_key": "ExifImageWidth"},
+        {"source_type": "exif_field", "source_key": "ExifImageHeight"}
+      ]
+    },
+
+    "fields": [
+      {
+        "target_key": "creation_date",
+        "method": "direct_exif_field",
+        "source_field": "DateCreated",
+        "value_type": "string",
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "original_date",
+        "method": "direct_exif_field", 
+        "source_field": "DateTimeOriginal",
+        "value_type": "string",
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "ai_source_type",
+        "method": "direct_exif_field",
+        "source_field": "DigitalSourceType", 
+        "value_type": "string",
+        "fallback": "trainedAlgorithmicMedia"
+      },
+      {
+        "target_key": "google_credit",
+        "method": "direct_exif_field",
+        "source_field": "Credit",
+        "value_type": "string", 
+        "fallback": "Made with Google AI"
+      },
+      {
+        "target_key": "image_id",
+        "method": "direct_exif_field",
+        "source_field": "ImageUniqueID",
+        "value_type": "string",
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "software_used",
+        "method": "direct_exif_field",
+        "source_field": "Software",
+        "value_type": "string",
+        "fallback": "Unknown"
+      }
+    ],
+
+    "output_template": {
+      "tool": "Google Gemini AI",
+      "category": "Generative AI - Text to Image", 
+      "provider": "Google",
+      "model_family": "Gemini",
+
+      "generation_info": {
+        "created_date": "$creation_date",
+        "original_date": "$original_date", 
+        "ai_source_classification": "$ai_source_type",
+        "google_attribution": "$google_credit"
+      },
+
+      "technical_details": {
+        "image_dimensions": "$CONTEXT.width x $CONTEXT.height",
+        "image_id": "$image_id",
+        "processing_software": "$software_used",
+        "file_format": "$CONTEXT.file_format",
+        "generation_method": "Google AI Model"
+      },
+
+      "metadata_standards": {
+        "iptc_digital_source": "$ai_source_type",
+        "attribution_compliance": "IPTC C2PA Compatible",
+        "ai_disclosure": "Properly marked as AI-generated content"
+      },
+
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true,
+        "note": "Google Gemini AI - Properly attributed AI-generated image"
+      }
+    }
+  },
+
+  "notes": [
+    "Google Gemini AI properly marks images with IPTC standards for AI-generated content",
+    "Detection based on 'Made with Google AI' credit and IPTC digital source type",
+    "Priority 140 ensures detection before generic catch-all parsers",
+    "Supports proper AI content attribution and transparency standards"
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "parser_name": "ComfyUI (A1111 Sampler Style)",
+  "priority": 140,
+  "description": "Specialized parser for ComfyUI workflows using A1111-style samplers - the hybrid approach! ⚔️🤖",
+  "version": "2.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "JPG"],
+  
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have prompt PNG chunk with valid JSON (primary ComfyUI format)",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: Must contain A1111-style sampler signatures",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "contains",
+      "value": "KSampler_A1111"
+    }
+  ],
+  
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler_A1111",
+          "KSamplerSelect",
+          "ClownsharKSampler_Beta"
+        ],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "CLIPTextEncodeSDXL",
+          "BNK_CLIPTextEncodeAdvanced"
+        ],
+        "fallback": "Could not extract prompt"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler_A1111",
+          "KSamplerSelect", 
+          "ClownsharKSampler_Beta"
+        ],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "CLIPTextEncodeSDXL",
+          "BNK_CLIPTextEncodeAdvanced"
+        ],
+        "fallback": ""
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler_A1111",
+          "KSamplerSelect",
+          "ClownsharKSampler_Beta"
+        ],
+        "input_field": "seed",
+        "data_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler_A1111",
+          "KSamplerSelect",
+          "ClownsharKSampler_Beta"
+        ],
+        "input_field": "steps",
+        "data_type": "integer",
+        "fallback": 20
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler_A1111",
+          "KSamplerSelect",
+          "ClownsharKSampler_Beta"
+        ],
+        "input_field": "cfg",
+        "data_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler_A1111",
+          "KSamplerSelect",
+          "ClownsharKSampler_Beta"
+        ],
+        "input_field": "sampler_name",
+        "data_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler_A1111",
+          "KSamplerSelect",
+          "ClownsharKSampler_Beta"
+        ],
+        "input_field": "scheduler",
+        "data_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "CheckpointLoaderSimple",
+          "ECHOCheckpointLoaderSimple",
+          "UNETLoader",
+          "UnetLoaderGGUF"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string",
+        "fallback": "Unknown Model"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptyLatentImageFromPresetsSDXL",
+          "SDXL Empty Latent Image (rgthree)"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptyLatentImageFromPresetsSDXL",
+          "SDXL Empty Latent Image (rgthree)"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "parameters.clip_skip",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "CLIPSetLastLayer"
+        ],
+        "input_field": "stop_at_clip_layer",
+        "data_type": "integer",
+        "fallback": 1
+      },
+      {
+        "target_key": "parameters.loras",
+        "method": "comfy_find_all_lora_nodes",
+        "lora_node_types": [
+          "LoraLoader",
+          "LoraLoaderModelOnly",
+          "Power Lora Loader (rgthree)"
+        ],
+        "extract_fields": ["lora_name", "strength_model", "strength_clip"],
+        "fallback": []
+      },
+      {
+        "target_key": "parameters.vae_model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "VAELoader"
+        ],
+        "input_field": "vae_name",
+        "data_type": "string",
+        "fallback": "Unknown VAE"
+      }
+    ],
+    
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI_A1111_Sampler_Style",
+      "tool": "ComfyUI (A1111 Sampler)",
+      "format": "ComfyUI Workflow (A1111 Sampler Style)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "model": "$parameters.model",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "clip_skip": "$parameters.clip_skip",
+        "loras": "$parameters.loras",
+        "vae_model": "$parameters.vae_model"
+      },
+      "workflow_metadata": {
+        "sampler_style": "A1111 Compatible",
+        "source": "PNG chunk or EXIF UserComment",
+        "parser_priority": 140,
+        "confidence": "high"
+      },
+      "workflow": "$INPUT_JSON_OBJECT_AS_STRING"
+    }
+  },
+
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "moderate"
+  },
+
+  "notes": [
+    "Handles ComfyUI workflows that use A1111-style sampler nodes - best of both worlds!",
+    "Now supports JPEG EXIF UserComment storage in addition to PNG chunks",
+    "Expanded sampler detection to include KSamplerSelect and ClownsharKSampler_Beta",
+    "Updated node types based on forensic analysis of 1066 files",
+    "Priority 140 runs after Civitai (150) but before generic ComfyUI (120)",
+    "Extracts comprehensive parameters including LoRAs, VAE, and CLIP skip",
+    "Perfect for workflows that bridge A1111 and ComfyUI paradigms ⚔️🤖"
+  ]
+}

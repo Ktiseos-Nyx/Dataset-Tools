@@ -26,6 +26,7 @@ venv/
 .uufdadata/
 env/
 ENV/
+*venv*/
 
 # Test coverage reports (if you generate them)
 .coverage
