@@ -58,12 +58,18 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
 
         # File list
         self.files_list_widget = Qw.QListWidget()
-        self.files_list_widget.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
-        self.files_list_widget.setSizePolicy(Qw.QSizePolicy.Policy.Preferred, Qw.QSizePolicy.Policy.Expanding)
+        self.files_list_widget.setSelectionMode(
+            Qw.QAbstractItemView.SelectionMode.SingleSelection
+        )
+        self.files_list_widget.setSizePolicy(
+            Qw.QSizePolicy.Policy.Preferred, Qw.QSizePolicy.Policy.Expanding
+        )
 
         # Enable word wrap for long filenames
         self.files_list_widget.setWordWrap(True)
         self.files_list_widget.setResizeMode(Qw.QListView.ResizeMode.Adjust)
+        # Force text wrapping behavior
+        self.files_list_widget.setTextElideMode(QtCore.Qt.TextElideMode.ElideNone)
 
         # Set uniform item sizes and spacing
         self.files_list_widget.setUniformItemSizes(False)  # Allow variable heights for wrapped text
@@ -89,7 +95,9 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
 
         self.open_folder_button = Qw.QPushButton("Open Folder")
         # Add Font Awesome icon to button
-        icon_manager.add_icon_to_button(self.open_folder_button, "folder-open-solid", "primary", QSize(16, 16))
+        icon_manager.add_icon_to_button(
+            self.open_folder_button, "folder-open-solid", "primary", QSize(16, 16)
+        )
         self.open_folder_button.setToolTip(
             "<b>Open Folder</b><br/>"
             "Select a folder to load image files from.<br/>"
@@ -100,7 +108,9 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
 
         self.sort_button = Qw.QPushButton("Sort Files")
         # Add Font Awesome icon to button
-        icon_manager.add_icon_to_button(self.sort_button, "arrow-up-a-z-solid", "primary", QSize(16, 16))
+        icon_manager.add_icon_to_button(
+            self.sort_button, "arrow-up-a-z-solid", "primary", QSize(16, 16)
+        )
         self.sort_button.setToolTip(
             "<b>Sort Files</b><br/>"
             "Sort the current file list alphabetically.<br/>"

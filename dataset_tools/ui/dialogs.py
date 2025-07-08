@@ -116,7 +116,7 @@ class SettingsDialog(QDialog):
         # Size combo box
         self.size_combo = QComboBox()
         self._populate_size_combo()
-        self.layout.addWidget(size_combo)
+        self.layout.addWidget(self.size_combo)
 
     def _populate_size_combo(self) -> None:
         """Populate the size combo box with available presets."""
@@ -146,7 +146,9 @@ class SettingsDialog(QDialog):
         # Connect button signals
         self.button_box.accepted.connect(self.accept_settings)
         self.button_box.rejected.connect(self.reject_settings)
-        self.button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.apply_all_settings)
+        self.button_box.button(
+            QDialogButtonBox.StandardButton.Apply
+        ).clicked.connect(self.apply_all_settings)
 
         self.layout.addWidget(self.button_box)
 
@@ -189,11 +191,20 @@ class SettingsDialog(QDialog):
     def apply_theme_settings(self) -> None:
         """Apply the selected theme settings."""
         if not QT_MATERIAL_AVAILABLE:
+            nfo("Cannot apply theme: qt-material not available")
             return
 
         selected_theme_xml = self.theme_combo.currentData()
+        nfo(f"Attempting to apply theme: {selected_theme_xml}")
         if selected_theme_xml and self.parent_window and hasattr(self.parent_window, "apply_theme"):
-            self.parent_window.apply_theme(selected_theme_xml, initial_load=False)
+            result = self.parent_window.apply_theme(selected_theme_xml, initial_load=False)
+            nfo(f"Theme application result: {result}")
+        else:
+            nfo(
+                f"Cannot apply theme - conditions not met. Theme: {selected_theme_xml}, "
+                f"Parent: {self.parent_window}, Has apply_theme: "
+                f"{hasattr(self.parent_window, 'apply_theme') if self.parent_window else False}"
+            )
 
     def apply_window_settings(self) -> None:
         """Apply the selected window size settings."""

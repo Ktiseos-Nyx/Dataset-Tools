@@ -474,7 +474,9 @@ class MainWindow(Qw.QMainWindow):
         """Update UI to reflect current file selection."""
         if hasattr(self, "left_panel"):
             count = len(self.current_files_in_list)
-            folder_name = Path(self.current_folder).name if self.current_folder else "Unknown Folder"
+            folder_name = (
+                Path(self.current_folder).name if self.current_folder else "Unknown Folder"
+            )
             self.left_panel.set_message_text(f"{count} file(s) in {folder_name}")
 
         self.show_status_message(f"Selected: {file_name}", 4000)
@@ -560,7 +562,11 @@ class MainWindow(Qw.QMainWindow):
         """
         if not self.current_folder or not file_name:
             nfo("[UI] Cannot load metadata: folder/file name missing.")
-            return {EmptyField.PLACEHOLDER.value: {"Error": "Cannot load metadata, folder/file name missing."}}
+            return {
+                EmptyField.PLACEHOLDER.value: {
+                    "Error": "Cannot load metadata, folder/file name missing."
+                }
+            }
 
         full_file_path = os.path.join(self.current_folder, file_name)
         nfo("[UI] Loading metadata from: %s", full_file_path)
@@ -585,13 +591,22 @@ class MainWindow(Qw.QMainWindow):
         nfo("[UI] Loading image for preview: '%s'", image_file_path)
 
         try:
+            # Clear previous pixmap to free memory
+            if hasattr(self, "image_preview"):
+                self.image_preview.setPixmap(None)
             pixmap = QtGui.QPixmap(image_file_path)
 
             if pixmap.isNull():
                 nfo("[UI] Failed to load image: '%s'", image_file_path)
-                if hasattr(self, "image_preview"):
-                    self.image_preview.setPixmap(None)
             else:
+                # Scale down large images to save memory
+                max_preview_size = 1024
+                if pixmap.width() > max_preview_size or pixmap.height() > max_preview_size:
+                    pixmap = pixmap.scaled(
+                        max_preview_size, max_preview_size,
+                        QtCore.Qt.AspectRatioMode.KeepAspectRatio,
+                        QtCore.Qt.TransformationMode.SmoothTransformation
+                    )
                 nfo(
                     "[UI] Image loaded successfully: %dx%d",
                     pixmap.width(),
@@ -607,8 +622,10 @@ class MainWindow(Qw.QMainWindow):
                 e,
                 exc_info=True,
             )
-            if hasattr(self, "image_preview"):
-                self.image_preview.setPixmap(None)
+        finally:
+            # Force garbage collection after image operations
+            import gc
+            gc.collect()
 
     # ========================================================================
     # USER ACTIONS
@@ -627,6 +644,12 @@ class MainWindow(Qw.QMainWindow):
         else:
             self.show_status_message("No actual metadata displayed to copy.")
             nfo("No metadata content available for copying.")
+
+    def apply_theme(self, theme_name: str, initial_load: bool = False) -> bool:
+        """Apply a theme via the theme manager."""
+        if hasattr(self, "theme_manager"):
+            return self.theme_manager.apply_theme(theme_name, initial_load)
+        return False
 
     def open_settings_dialog(self) -> None:
         """Open the application settings dialog."""

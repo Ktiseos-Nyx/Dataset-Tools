@@ -448,13 +448,20 @@ class LayoutManager:
 
         # Button configurations
         button_configs = [
-            ("copy_metadata_button", "Copy All Metadata", "copy_metadata_to_clipboard"),
-            ("settings_button", "Settings", "open_settings_dialog"),
-            ("exit_button", "Exit Application", "close"),
+            ("copy_metadata_button", "Copy All Metadata", "copy_metadata_to_clipboard",
+             "<b>Copy All Metadata</b><br/>Copy all metadata from the current file to "
+             "clipboard<br/><i>Shortcut: Ctrl+C</i>"),
+            ("settings_button", "Settings", "open_settings_dialog",
+             "<b>Settings</b><br/>Open application settings to configure themes, window size, "
+             "and other preferences<br/><i>Shortcut: Ctrl+S</i>"),
+            ("exit_button", "Exit Application", "close",
+             "<b>Exit Application</b><br/>Close the Dataset Tools application<br/>"
+             "<i>Shortcut: Ctrl+Q</i>"),
         ]
 
-        for attr_name, text, slot_name in button_configs:
+        for attr_name, text, slot_name, tooltip in button_configs:
             button = Qw.QPushButton(text)
+            button.setToolTip(tooltip)
 
             # Connect to method if it exists
             if hasattr(self.main_window, slot_name):
@@ -625,7 +632,9 @@ class MetadataDisplayManager:
         separator = "\n\n" + "═" * 20 + "\n\n"
         return separator.join(text_parts)
 
-    def _get_box_content_with_label(self, box_attr: str, label_attr: str, default_label: str) -> str | None:
+    def _get_box_content_with_label(
+        self, box_attr: str, label_attr: str, default_label: str
+    ) -> str | None:
         """Get formatted content from a text box with its label."""
         if not hasattr(self.main_window, box_attr):
             return None
@@ -678,7 +687,9 @@ class MetadataDisplayManager:
             for key, value in sorted(data.items()):
                 if value is not None:
                     if isinstance(value, dict):
-                        nested_parts = [f"  {k}: {v}" for k, v in sorted(value.items()) if v is not None]
+                        nested_parts = [
+                            f"  {k}: {v}" for k, v in sorted(value.items()) if v is not None
+                        ]
                         if nested_parts:
                             parts.append(f"{key}:")
                             parts.extend(nested_parts)
