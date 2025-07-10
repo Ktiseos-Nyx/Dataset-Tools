@@ -1,7 +1,8 @@
 [MESSAGES CONTROL]
-disable=C0301,C0114,C0115,C0116,R0903,W0511
+disable=C0301,C0114,C0115,C0116,R0903,W0511,E5110
 # R0903: too-few-public-methods
 # W0511: fixme
+# E5110: django-not-configured (false positive on vendored code)
 
 [DESIGN]
 # You can put other Pylint [DESIGN] options here, like:
@@ -15,3 +16,4 @@ disable=C0301,C0114,C0115,C0116,R0903,W0511
 
 [MASTER]
 extension-pkg-allow-list=PyQt6,PyQt6.QtCore,PyQt6.QtGui,PyQt6.QtWidgets
+ignore-paths=dataset_tools/vendored_sdpr

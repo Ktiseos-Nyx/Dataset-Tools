@@ -1,0 +1,212 @@
+{
+  "parser_name": "ComfyUI_Advanced_Sampling",
+  "priority": 136,
+  "description": "Workflows with advanced sampling, custom nodes, and specialized models (Kolors, FLUX, etc.)",
+  "version": "1.0_expanded",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Detects advanced sampling OR specialized model workflows",
+      "condition": "OR",
+      "rules": [
+        {
+          "comment": "Advanced sampling nodes",
+          "source_type": "pil_info_key_json_path_query",
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "SamplerCustomAdvanced",
+            "BasicGuider",
+            "CFGGuider",
+            "DualCFGGuider"
+          ]
+        },
+        {
+          "comment": "Kolors model nodes",
+          "source_type": "pil_info_key_json_path_query",
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "MZ_ChatGLM3_V2",
+            "MZ_KolorsUNETLoaderV2",
+            "MZ_ChatGLM3Loader"
+          ]
+        },
+        {
+          "comment": "Other specialized model loaders",
+          "source_type": "pil_info_key_json_path_query",
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "UNetLoader",
+            "UnetLoaderGGUF",
+            "DualCLIPLoader",
+            "DualCLIPLoaderGGUF"
+          ]
+        }
+      ]
+    },
+    {
+      "comment": "Rule 3: Not a Civitai format",
+      "source_type": "pil_info_key_json_path",
+      "source_key_options": ["workflow", "prompt"],
+      "json_path": "extra.extraMetadata",
+      "operator": "not_exists"
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "pil_info_key", "source_key": "workflow"},
+        {"source_type": "pil_info_key", "source_key": "prompt"}
+      ],
+      "transformations": [{"type": "json_decode_string_itself"}]
+    },
+
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "MZ_ChatGLM3_V2"
+        ]
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "MZ_ChatGLM3_V2"
+        ]
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_key": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_key": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_key": "cfg",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.denoise",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_key": "denoise",
+        "value_type": "float"
+      }
+    ],
+
+    "output_template": {
+      "tool": "ComfyUI (Advanced/Specialized)",
+      "parser_version": "1.0_expanded",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "denoise": "$parameters.denoise"
+      },
+      "workflow_info": {
+        "parser_used": "Advanced/Specialized ComfyUI Parser",
+        "supports": ["Kolors", "FLUX", "Advanced Sampling", "Custom Nodes"]
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  }
+}
