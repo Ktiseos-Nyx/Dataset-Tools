@@ -1,0 +1,113 @@
+/* Classic Firefox Theme for Qt */
+
+/* Main window */
+QMainWindow {
+    background-color: #ECE7D4;
+    color: #000000;
+
+}
+
+/* Toolbar styling */
+QToolBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DFDBD2, stop: 1 #ECE7D4);
+    border: 1px solid #919B9C;
+    border-radius: 0px;
+    spacing: 3px;
+    padding: 2px;
+
+}
+
+/* Classic Firefox buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F8F8F8, stop: 1 #E8E8E8);
+    border: 1px solid #8595A6;
+    border-radius: 3px;
+    padding: 4px 12px;
+    color: #000000;
+    font-size: 11pt;
+
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F0F6FF, stop: 1 #D0E0F8);
+    border: 1px solid #3875D7;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #C7D2EA, stop: 1 #B5C7E3);
+    border: 1px solid #2E6BC7;
+}
+
+/* Menu bar */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DFDBD2, stop: 1 #ECE7D4);
+    border-bottom: 1px solid #919B9C;
+    color: #000000;
+
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background: #E0E8F8;
+    border: 1px solid #8595A6;
+    border-radius: 2px;
+}
+
+/* Menus */
+QMenu {
+    background-color: #F7F7F7;
+    border: 1px solid #8595A6;
+    padding: 2px;
+
+}
+
+QMenu::item {
+    padding: 4px 20px;
+    color: #000000;
+}
+
+QMenu::item:selected {
+    background-color: #E0E8F8;
+    color: #000000;
+}
+
+/* Status bar */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F7F7F7, stop: 1 #ECECEC);
+    border-top: 1px solid #D7D7D7;
+    color: #333333;
+
+}
+
+/* Text areas */
+QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    border: 2px inset #8595A6;
+    color: #000000;
+
+}
+
+/* List widgets */
+QListWidget {
+    background-color: #FFFFFF;
+    border: 2px inset #8595A6;
+    color: #000000;
+    alternate-background-color: #F7F7F7;
+
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4A8BEA, stop: 1 #2E6BC7);
+    color: #FFFFFF;
+}

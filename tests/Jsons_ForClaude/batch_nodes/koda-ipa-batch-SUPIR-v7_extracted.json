@@ -1,0 +1,333 @@
+[
+    {
+        "id": 1,
+        "name": "MZ_ChatGLM3Loader",
+        "prompts": {
+            "text": "checkpoints\\chatglm3-8bit.safetensors"
+        }
+    },
+    {
+        "id": 7,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 9,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fixed.safetensors"
+        }
+    },
+    {
+        "id": 20,
+        "name": "MZ_KolorsUNETLoaderV2",
+        "prompts": {
+            "text": "Kolors\\diffusion_pytorch_model.fp16.safetensors"
+        }
+    },
+    {
+        "id": 21,
+        "name": "MZ_ChatGLM3_V2",
+        "prompts": {
+            "text": "junglecity (15), scenery, cloud, no humans, tree, sky, outdoors, building, city, day, aircraft\n neofutur style (21), scenery, building, outdoors, cloud, sky, day, bird, ruins, city, crane (machine)"
+        }
+    },
+    {
+        "id": 22,
+        "name": "MZ_ChatGLM3_V2"
+    },
+    {
+        "id": 27,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01225_.png"
+        }
+    },
+    {
+        "id": 46,
+        "name": "IPAdapterModelLoader",
+        "prompts": {
+            "text": "kolors\\ip_adapter_plus_general.bin"
+        }
+    },
+    {
+        "id": 48,
+        "name": "Note",
+        "prompts": {
+            "text": "koda-ipa-batch-SUPIR-v7\n\nBatch image example base workflow\n\nVideo: https://www.youtube.com/watch?v=3-7FWMO1J4c\nWorkflow: https://civitai.com/models/589666\n\nKoda Pack v3\nNew Base Model - Kolor\n\nip adapter advanced\nshuffle noise\nSUPIR upscaling \n\nSupir requires any SDXL model, just use whatever checkpoint you prefer.\n\n\n\n\n~\n\nWould not be possible without the efforts of\n@cubiq [IP Adapter nodes] \n@kijai [Kolors Wrapper]\n@MinusZoneAI [Kolors Ipadapter nodes]\n\nCubiq\nhttps://github.com/cubiq/ComfyUI_InstantID\n\nKijai\nhttps://github.com/kijai\n\nMinus Zone AI\nhttps://github.com/MinusZoneAI"
+        }
+    },
+    {
+        "id": 50,
+        "name": "IPAdapterAdvanced",
+        "prompts": {
+            "text": "style transfer"
+        }
+    },
+    {
+        "id": 51,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2m_sde_gpu"
+        }
+    },
+    {
+        "id": 52,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/ipa/koda"
+        }
+    },
+    {
+        "id": 53,
+        "name": "easy setNode"
+    },
+    {
+        "id": 54,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "kolors\\pytorch_model.bin"
+        }
+    },
+    {
+        "id": 55,
+        "name": "easy setNode",
+        "prompts": {
+            "text": "CLIP_VISION"
+        }
+    },
+    {
+        "id": 56,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "CLIP_VISION"
+        }
+    },
+    {
+        "id": 57,
+        "name": "easy getNode"
+    },
+    {
+        "id": 58,
+        "name": "easy setNode"
+    },
+    {
+        "id": 59,
+        "name": "easy getNode"
+    },
+    {
+        "id": 62,
+        "name": "ImpactMakeImageBatch"
+    },
+    {
+        "id": 63,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01215_.png"
+        }
+    },
+    {
+        "id": 64,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01213_.png"
+        }
+    },
+    {
+        "id": 65,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01221_.png"
+        }
+    },
+    {
+        "id": 68,
+        "name": "IPAdapterNoise"
+    },
+    {
+        "id": 69,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 75,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 93,
+        "name": "easy setNode"
+    },
+    {
+        "id": 94,
+        "name": "CR LoRA Stack",
+        "prompts": {
+            "text": "civit\\nkh-horror.safetensors",
+            "text_2": "civit\\xjx_style.safetensors"
+        }
+    },
+    {
+        "id": 95,
+        "name": "SUPIR_first_stage"
+    },
+    {
+        "id": 96,
+        "name": "SUPIR_sample",
+        "prompts": {
+            "text": "RestoreEDMSampler"
+        }
+    },
+    {
+        "id": 97,
+        "name": "SUPIR_conditioner",
+        "prompts": {
+            "text": "nkh style man, unspeakable horrors, red hair, boots, long hair, beard, male focus",
+            "text_2": "bad quality, nsfw"
+        }
+    },
+    {
+        "id": 98,
+        "name": "SUPIR_decode"
+    },
+    {
+        "id": 99,
+        "name": "SUPIR_encode"
+    },
+    {
+        "id": 100,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 101,
+        "name": "ColorMatch"
+    },
+    {
+        "id": 102,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 103,
+        "name": "SUPIR_model_loader_v2",
+        "prompts": {
+            "text": "SUPIR\\SUPIR-v0Q_fp16.safetensors"
+        }
+    },
+    {
+        "id": 104,
+        "name": "Reroute"
+    },
+    {
+        "id": 105,
+        "name": "CR Apply LoRA Stack"
+    },
+    {
+        "id": 106,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "DJZmerger\\realvis_juggernaut_hermite.safetensors"
+        }
+    },
+    {
+        "id": 107,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/SUPIR/kodaHD"
+        }
+    },
+    {
+        "id": 108,
+        "name": "DF_Text_Box"
+    },
+    {
+        "id": 109,
+        "name": "DF_Text_Box"
+    },
+    {
+        "id": 110,
+        "name": "Reroute"
+    },
+    {
+        "id": 111,
+        "name": "CR LoRA Stack",
+        "prompts": {
+            "text": "civit\\Thorra_SDXL_public_r1.safetensors",
+            "text_2": "civit\\yjy-microscopy.safetensors"
+        }
+    },
+    {
+        "id": 113,
+        "name": "easy getNode"
+    },
+    {
+        "id": 114,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 117,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 118,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 119,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 120,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 124,
+        "name": "AspectSize"
+    },
+    {
+        "id": 126,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 127,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "DJI_20240707203900_0004_D.JPG"
+        }
+    },
+    {
+        "id": 128,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "fill / crop"
+        }
+    },
+    {
+        "id": 129,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01226_.png"
+        }
+    },
+    {
+        "id": 132,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    }
+]

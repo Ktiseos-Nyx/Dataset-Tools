@@ -1,0 +1,188 @@
+[
+    {
+        "id": 107,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd_xl_base_1.0.safetensors"
+        }
+    },
+    {
+        "id": 108,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Photo of a (young smiling (diverse woman:1.7) with long hair (wearing business professional work clothes:1.2), with arms crossed on her chest, in a (blue room:1.5)), spotted Dalmatian dog looking at the camera, solid deep blue tiles"
+        }
+    },
+    {
+        "id": 109,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "((beard:1.3, male, naked, nipple, nude), boy, dog genitals, pink tile, drawing, painting, illustration, open mouth), guy, manly, masculine, bokeh, depth of field, blurry, dots, streaks, smear, glow, glowing, flare, wheels, fans, fan blade, ladder, lattice, specks, warping, symmetry, symmetrical, spirals, scrubs"
+        }
+    },
+    {
+        "id": 110,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "Photo of a (young smiling (diverse woman:1.7) with long hair (wearing business professional work clothes:1.2), with arms crossed on her chest, in a (blue room:1.5)), spotted Dalmatian dog looking at the camera, solid deep blue tiles"
+        }
+    },
+    {
+        "id": 111,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "((beard:1.3, male, naked, nipple, nude), boy, dog genitals, pink tile, drawing, painting, illustration, open mouth), guy, manly, masculine, bokeh, depth of field, blurry, dots, streaks, smear, glow, glowing, flare, wheels, fans, fan blade, ladder, lattice, specks, warping, symmetry, symmetrical, spirals, scrubs"
+        }
+    },
+    {
+        "id": 113,
+        "name": "SaveImage"
+    },
+    {
+        "id": 117,
+        "name": "Reroute"
+    },
+    {
+        "id": 118,
+        "name": "Reroute"
+    },
+    {
+        "id": 119,
+        "name": "Reroute"
+    },
+    {
+        "id": 122,
+        "name": "ColorCorrect"
+    },
+    {
+        "id": 141,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "Pink_Dude_and_Dog.png"
+        }
+    },
+    {
+        "id": 143,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 144,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 145,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 154,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 158,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "OpenPoseXL2.safetensors"
+        }
+    },
+    {
+        "id": 159,
+        "name": "OpenposePreprocessor"
+    },
+    {
+        "id": 160,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 161,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 162,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "diffusers_xl_canny_full.safetensors"
+        }
+    },
+    {
+        "id": 163,
+        "name": "CannyEdgePreprocessor"
+    },
+    {
+        "id": 164,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 165,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 166,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 167,
+        "name": "Zoe-DepthMapPreprocessor"
+    },
+    {
+        "id": 168,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "depth-zoe-xl-v1.0-controlnet.safetensors"
+        }
+    },
+    {
+        "id": 172,
+        "name": "ColorCorrect"
+    },
+    {
+        "id": 176,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "RealESRGAN_x2plus.pth"
+        }
+    },
+    {
+        "id": 178,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "THIS2THAT_2x_"
+        }
+    },
+    {
+        "id": 179,
+        "name": "UnsharpMask"
+    },
+    {
+        "id": 185,
+        "name": "UltimateSDUpscale",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 186,
+        "name": "Get image size"
+    },
+    {
+        "id": 187,
+        "name": "Reroute"
+    },
+    {
+        "id": 188,
+        "name": "Reroute"
+    },
+    {
+        "id": 189,
+        "name": "Reroute"
+    },
+    {
+        "id": 190,
+        "name": "Note",
+        "prompts": {
+            "text": "This workflow is a starting point for turning \"this\" into \"that\" using a modular ControlNet stack, then sending the 1st pass generation to a 2x upscale to clarify and resolve the details.\n_____\nIt relies heavily on your Positive and Negative prompts to get to \"that\" so make sure you negatively prompt the things you don't want to keep from the source image, and add extra emphasis on your positive prompts like this: GIANT DUCKS:1.6 - one colon then a number. start with 1.1 and increment one tenth at a time. I rarely use strengths this high in my prompts but this one needed it. Also changing gender/age/weight for the characters in your images is particularly hard for full-body pictures because you need to leave room for the body type to change while also retaining the pose. Generally that's why I put the OpenPose so high in strength so that the pose will hold while the details have room to shift as they resolve toward your prompt.\n\nFor this example, the beard was particularly troublesome so I had to negatively prompt it and put put a lot of emphasis on counteracting that by using lower resolution map on the depth map (512) so it had more room to fiddle in that region. Quite a few times it ended up turning the beard into a ponytail which was interesting.\n\nModel selection plays a big part as well. Try different models with the same seed and prompts to narrow in on one that's more responsive to your prompt. \n\nIf you don't need all 3 ControlNets you can select the stack you don't need, right click and set to \"bypass\"\n\nIf you can't load the Art Venture - Color Correct nodes (I've heard this issue before), you can delete it that node. It saves the steps of going back and forth to Photoshop which saves me a ton of time, but it's not integral to the workflow. \n\nIn the First Pass, I use a high denoise of 0.76-0.82 because it needs to reconstruct a lot of the image. If your results are still too far from your prompts, consider raising the strength of your ControlNets or playing with CFG and Denoise in the first pass Ksampler.\n\nThe default values should work decent for images with People or Animals in it. For \"this's\" that don't have people, you should turn off the OpenPose nodes and turn up the \"end percent\" strength on the Depth and/or Canny. Playing with those values for each ControlNet is how I've gotten the best results with these tools. Taking the \"End Percent\" lower than 100 means that it stops affecting the generation 42%, 50%, or whatever like 69% through. This can be used to bake in a certain effect, but then later steps have the freedom to go outside this influence.\n_____\n *** ((( Models for ControlNet can be downloaded here: ))) ***\nDiffusers (Canny, Depth, Zoe Depth) https://huggingface.co/collections/diffusers/sdxl-controlnets-64f9c35846f3f06f5abe351f\nOpenPose SDXL v2 https://huggingface.co/thibaud/controlnet-openpose-sdxl-1.0/tree/main\nDepth Zoe https://huggingface.co/SargeZT/controlnet-sd-xl-1.0-depth-16bit-zoe/tree/main\n_____\nThis workflow and more available at my Github JeffJag-ETH\nhttps://github.com/JeffJag-ETH/ComfyUI-SD-Workflows\n"
+        }
+    }
+]

@@ -1,0 +1,562 @@
+[
+    {
+        "id": 1,
+        "name": "MZ_ChatGLM3Loader",
+        "prompts": {
+            "text": "checkpoints\\chatglm3-8bit.safetensors"
+        }
+    },
+    {
+        "id": 7,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 9,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fixed.safetensors"
+        }
+    },
+    {
+        "id": 20,
+        "name": "MZ_KolorsUNETLoaderV2",
+        "prompts": {
+            "text": "Kolors\\diffusion_pytorch_model.fp16.safetensors"
+        }
+    },
+    {
+        "id": 21,
+        "name": "MZ_ChatGLM3_V2",
+        "prompts": {
+            "text": "mature samurai lady, weapon, sword, katana, rain, solo, ponytail, sheath, female focus, long hair, japanese clothes"
+        }
+    },
+    {
+        "id": 22,
+        "name": "MZ_ChatGLM3_V2"
+    },
+    {
+        "id": 27,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01346_.png"
+        }
+    },
+    {
+        "id": 46,
+        "name": "IPAdapterModelLoader",
+        "prompts": {
+            "text": "kolors\\ip_adapter_plus_general.bin"
+        }
+    },
+    {
+        "id": 48,
+        "name": "Note",
+        "prompts": {
+            "text": "koda-ipa-embeds-v20\n\nKolors IP Adapter embedding tools build, save, test, load and combine IP Adapter embeddings for easy computation savings and unlocking vast style interpolation of custom characters, locations, styles and more.\n\nVideo: https://www.youtube.com/watch?v=3-7FWMO1J4c\nWorkflow: https://civitai.com/models/589666\n\nKoda Pack v3\nNew Base Model - Kolor\n\n- ip adapter embeds\n- all in one workflow \n- SUPIR upscaling \n\nSupir requires any SDXL model, just use whatever checkpoint you prefer.\n\n\nStep 1.\nmodel switch 1\nused when all groups are bypassed\nThis is Kolors txt2img\n\nGenerate images and place your best ones into the IP Adapter image load nodes\nThe rightmost image loader will also be used as the negative embedding\n\n\nStep 2. a) IP Adapter\nmodel switch 2\nrequires group [2] IP Adapter, to be active\n\nTest the output of the chosen IPadapter image batch, remember this is separate from the prompt entirely. If you are happy with the results;\n\n\nStep 2. b) Save Embeds\nmodel switch 2\nrequires group [2] IP Adapter to be active\n\nsaves the positive and negative as IPA embed files\nthese are saved to \\models\\output\\\nrun once and then copy the files to \\models\\input\\\nthen click refresh in comfyUI\n\n\nStep 3. Load Embeds\nmodel switch 3\nrequires group [3] Load Embeds, to be active\n\nonce you have created your embed, we should test it.\nload the positive and negative, then test the generations.\nrepeat the process with characters, styles and scenes so you have some elements to be mixed, then we can head to the final stage.\n\n\nStep 4. Combine Embeds\nmodel switch 4\nrequires group [4] Combine Embeds, to be active\n\nSelect the embeds and add or remove nodes as needed\ninterpolation and operators are available, with all the usual IP Adapter nodes.\nThis can work like Aesthetic Embeddings worked with SD1.5\n\nFor most purposes, we want to anchor in a style or concept and then use text prompts to generate, LORA is the best for this, however this can get very close within the constraints of the model memory.\n\nthe SUPIR group can be toggled with any stage for easy upscaling\n\n~\n\nWould not be possible without the efforts of\n@cubiq [IP Adapter nodes] \n@kijai [Kolors Wrapper]\n@MinusZoneAI [Kolors Ipadapter nodes]\n\nCubiq\nhttps://github.com/cubiq/ComfyUI_InstantID\n\nKijai\nhttps://github.com/kijai\n\nMinus Zone AI\nhttps://github.com/MinusZoneAI\n"
+        }
+    },
+    {
+        "id": 50,
+        "name": "IPAdapterAdvanced",
+        "prompts": {
+            "text": "style transfer"
+        }
+    },
+    {
+        "id": 51,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2m_sde_gpu"
+        }
+    },
+    {
+        "id": 52,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/ipa/koda"
+        }
+    },
+    {
+        "id": 53,
+        "name": "easy setNode"
+    },
+    {
+        "id": 54,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "kolors\\pytorch_model.bin"
+        }
+    },
+    {
+        "id": 55,
+        "name": "easy setNode",
+        "prompts": {
+            "text": "CLIP_VISION"
+        }
+    },
+    {
+        "id": 56,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "CLIP_VISION"
+        }
+    },
+    {
+        "id": 57,
+        "name": "easy getNode"
+    },
+    {
+        "id": 58,
+        "name": "easy setNode"
+    },
+    {
+        "id": 59,
+        "name": "easy getNode"
+    },
+    {
+        "id": 62,
+        "name": "ImpactMakeImageBatch"
+    },
+    {
+        "id": 63,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01317_.png"
+        }
+    },
+    {
+        "id": 64,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01345_.png"
+        }
+    },
+    {
+        "id": 65,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01347_.png"
+        }
+    },
+    {
+        "id": 68,
+        "name": "IPAdapterNoise"
+    },
+    {
+        "id": 69,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 75,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 93,
+        "name": "easy setNode"
+    },
+    {
+        "id": 94,
+        "name": "CR LoRA Stack",
+        "prompts": {
+            "text": "civit\\nkh-horror.safetensors",
+            "text_2": "civit\\xjx_style.safetensors"
+        }
+    },
+    {
+        "id": 95,
+        "name": "SUPIR_first_stage"
+    },
+    {
+        "id": 96,
+        "name": "SUPIR_sample",
+        "prompts": {
+            "text": "RestoreEDMSampler"
+        }
+    },
+    {
+        "id": 97,
+        "name": "SUPIR_conditioner",
+        "prompts": {
+            "text": "nkh style man, unspeakable horrors, red hair, boots, long hair, beard, male focus",
+            "text_2": "bad quality, nsfw"
+        }
+    },
+    {
+        "id": 98,
+        "name": "SUPIR_decode"
+    },
+    {
+        "id": 99,
+        "name": "SUPIR_encode"
+    },
+    {
+        "id": 100,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 101,
+        "name": "ColorMatch"
+    },
+    {
+        "id": 102,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 103,
+        "name": "SUPIR_model_loader_v2",
+        "prompts": {
+            "text": "SUPIR\\SUPIR-v0Q_fp16.safetensors"
+        }
+    },
+    {
+        "id": 104,
+        "name": "Reroute"
+    },
+    {
+        "id": 105,
+        "name": "CR Apply LoRA Stack"
+    },
+    {
+        "id": 106,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "DJZmerger\\realvis_juggernaut_hermite.safetensors"
+        }
+    },
+    {
+        "id": 107,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/SUPIR/kodaHD"
+        }
+    },
+    {
+        "id": 108,
+        "name": "DF_Text_Box"
+    },
+    {
+        "id": 109,
+        "name": "DF_Text_Box"
+    },
+    {
+        "id": 110,
+        "name": "Reroute"
+    },
+    {
+        "id": 111,
+        "name": "CR LoRA Stack",
+        "prompts": {
+            "text": "civit\\Thorra_SDXL_public_r1.safetensors",
+            "text_2": "civit\\yjy-microscopy.safetensors"
+        }
+    },
+    {
+        "id": 113,
+        "name": "easy getNode"
+    },
+    {
+        "id": 114,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 117,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 118,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 119,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 120,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 124,
+        "name": "AspectSize"
+    },
+    {
+        "id": 129,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01332_.png"
+        }
+    },
+    {
+        "id": 130,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01330_.png"
+        }
+    },
+    {
+        "id": 131,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 132,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 134,
+        "name": "IPAdapterEncoder"
+    },
+    {
+        "id": 135,
+        "name": "IPAdapterSaveEmbeds",
+        "prompts": {
+            "text": "lady-samurai-pos"
+        }
+    },
+    {
+        "id": 136,
+        "name": "IPAdapterLoadEmbeds",
+        "prompts": {
+            "text": "ipa-embeds\\pos\\lady-samurai-pos_00001.ipadpt"
+        }
+    },
+    {
+        "id": 137,
+        "name": "IPAdapterEncoder"
+    },
+    {
+        "id": 138,
+        "name": "IPAdapterSaveEmbeds",
+        "prompts": {
+            "text": "lady-samurai-neg"
+        }
+    },
+    {
+        "id": 139,
+        "name": "IPAdapterLoadEmbeds",
+        "prompts": {
+            "text": "ipa-embeds\\neg\\lady-samurai-neg_00001.ipadpt"
+        }
+    },
+    {
+        "id": 142,
+        "name": "easy setNode",
+        "prompts": {
+            "text": "conditioning"
+        }
+    },
+    {
+        "id": 143,
+        "name": "easy setNode",
+        "prompts": {
+            "text": "conditioning_0"
+        }
+    },
+    {
+        "id": 144,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "conditioning"
+        }
+    },
+    {
+        "id": 145,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "conditioning_0"
+        }
+    },
+    {
+        "id": 146,
+        "name": "easy setNode"
+    },
+    {
+        "id": 147,
+        "name": "easy getNode"
+    },
+    {
+        "id": 148,
+        "name": "easy getNode"
+    },
+    {
+        "id": 149,
+        "name": "easy getNode"
+    },
+    {
+        "id": 150,
+        "name": "easy getNode"
+    },
+    {
+        "id": 151,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "CLIP_VISION"
+        }
+    },
+    {
+        "id": 152,
+        "name": "easy setNode"
+    },
+    {
+        "id": 153,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 154,
+        "name": "easy getNode"
+    },
+    {
+        "id": 155,
+        "name": "easy getNode"
+    },
+    {
+        "id": 156,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "CLIP_VISION"
+        }
+    },
+    {
+        "id": 159,
+        "name": "IPAdapterEmbeds",
+        "prompts": {
+            "text": "style transfer"
+        }
+    },
+    {
+        "id": 160,
+        "name": "IPAdapterLoadEmbeds",
+        "prompts": {
+            "text": "ipa-embeds\\pos\\skyforge-rockhouse-pos_00001.ipadpt"
+        }
+    },
+    {
+        "id": 161,
+        "name": "IPAdapterLoadEmbeds",
+        "prompts": {
+            "text": "ipa-embeds\\neg\\cloudempire-neofuture-neg_00001.ipadpt"
+        }
+    },
+    {
+        "id": 162,
+        "name": "easy getNode"
+    },
+    {
+        "id": 163,
+        "name": "easy getNode"
+    },
+    {
+        "id": 164,
+        "name": "easy setNode",
+        "prompts": {
+            "text": "model_0_0_0"
+        }
+    },
+    {
+        "id": 165,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "CLIP_VISION"
+        }
+    },
+    {
+        "id": 166,
+        "name": "IPAdapterEmbeds",
+        "prompts": {
+            "text": "style transfer"
+        }
+    },
+    {
+        "id": 167,
+        "name": "IPAdapterCombineEmbeds"
+    },
+    {
+        "id": 168,
+        "name": "IPAdapterLoadEmbeds",
+        "prompts": {
+            "text": "ipa-embeds\\pos\\cloudempire-neofuture-pos_00001.ipadpt"
+        }
+    },
+    {
+        "id": 169,
+        "name": "IPAdapterCombineEmbeds"
+    },
+    {
+        "id": 170,
+        "name": "IPAdapterLoadEmbeds",
+        "prompts": {
+            "text": "ipa-embeds\\neg\\skyforge-rockhouse-neg_00001.ipadpt"
+        }
+    },
+    {
+        "id": 171,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "model_0_0_0"
+        }
+    },
+    {
+        "id": 172,
+        "name": "Note",
+        "prompts": {
+            "text": "Switch: \n1 = IPA disabled\n2 = [2] IPAdapter enabled\n*** use [2] with Save Embeds ***\n3 = [3] Load embeds enabled\n4 = [4] Combine embeds enabled\n\nSUPIR can be enabled with any stage, optional upscaler"
+        }
+    },
+    {
+        "id": 173,
+        "name": "ReActorFaceBoost",
+        "prompts": {
+            "text": "codeformer.pth"
+        }
+    },
+    {
+        "id": 174,
+        "name": "ReActorFaceSwap",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "retinaface_resnet50"
+        }
+    },
+    {
+        "id": 175,
+        "name": "ReActorLoadFaceModel",
+        "prompts": {
+            "text": "Lisav1.safetensors"
+        }
+    },
+    {
+        "id": 176,
+        "name": "Reroute"
+    },
+    {
+        "id": 178,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/ipa/kodaSwap"
+        }
+    }
+]

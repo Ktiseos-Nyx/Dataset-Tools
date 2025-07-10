@@ -1,0 +1,139 @@
+[
+    {
+        "id": 88,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 89,
+        "name": "ImageScale"
+    },
+    {
+        "id": 90,
+        "name": "RepeatLatentBatch"
+    },
+    {
+        "id": 106,
+        "name": "SeargeIntegerPair"
+    },
+    {
+        "id": 120,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "commersart_87761_httpss.mj.run60TxQJ3RzdA_top_view_3d_realistic_d798a4c1-5198-4c23-9b83-963a38717103.png"
+        }
+    },
+    {
+        "id": 197,
+        "name": "Note",
+        "prompts": {
+            "text": "Simple LCM img2vid workflow\n\ncredit to Fill https://www.instagram.com/machine.delusions\n\nfor the initial workflow that spawned this\n\nand cerspence https://www.instagram.com/cerspence\n\nfor dialing in the settings\n\n\n\nAnimateLCM_sd15_t2v.ckpt\nhttps://huggingface.co/wangfuyun/AnimateLCM/blob/main/AnimateLCM_sd15_t2v.ckpt\n\nAnimateLCM_sd15_t2v_lora.safetensors\nhttps://huggingface.co/wangfuyun/AnimateLCM/blob/main/AnimateLCM_sd15_t2v_lora.safetensors\n\nIP-Adapter\nhttps://huggingface.co/h94/IP-Adapter/blob/main/models/ip-adapter-plus_sd15.bin\n\nClip Vision\nhttps://huggingface.co/laion/CLIP-ViT-H-14-laion2B-s32B-b79K/tree/main\nhttps://huggingface.co/laion/CLIP-ViT-H-14-laion2B-s32B-b79K/blob/main/model.safetensors\n\nSHATTER Motion LoRA\nhttps://civitai.com/models/312519\n\nPhoton LCM\nhttps://civitai.com/models/306814\n\n\ntag me if you make something\n\nhttps://www.instagram.com/pxl.pshr/"
+        }
+    },
+    {
+        "id": 208,
+        "name": "ADE_AnimateDiffLoaderGen1",
+        "prompts": {
+            "text": "AnimateLCM_sd15_t2v.ckpt",
+            "text_2": "sqrt_linear (AnimateDiff)"
+        }
+    },
+    {
+        "id": 209,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "1.5\\photonLCM_v10.safetensors"
+        }
+    },
+    {
+        "id": 210,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "4K Masterpiece"
+        }
+    },
+    {
+        "id": 211,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 212,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "vae-ft-mse-840000-ema-pruned.pt"
+        }
+    },
+    {
+        "id": 213,
+        "name": "ADE_LoopedUniformContextOptions"
+    },
+    {
+        "id": 214,
+        "name": "IPAdapterAdvanced",
+        "prompts": {
+            "text": "ease in-out"
+        }
+    },
+    {
+        "id": 215,
+        "name": "IPAdapterModelLoader",
+        "prompts": {
+            "text": "ip-adapter-plus_sd15.bin"
+        }
+    },
+    {
+        "id": 216,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors"
+        }
+    },
+    {
+        "id": 217,
+        "name": "ADE_AnimateDiffSamplingSettings"
+    },
+    {
+        "id": 218,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 221,
+        "name": "JWInteger"
+    },
+    {
+        "id": 222,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 223,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 224,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 225,
+        "name": "LatentUpscaleBy"
+    },
+    {
+        "id": 226,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 227,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 228,
+        "name": "ADE_AnimateDiffLoRALoader",
+        "prompts": {
+            "text": "shatterAnimatediff_v10.safetensors"
+        }
+    }
+]

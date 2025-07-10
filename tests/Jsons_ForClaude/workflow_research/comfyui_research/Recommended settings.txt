@@ -1,0 +1,4 @@
+in my tests the following Settings are the best:
+Comfy: ddim/beta 15-20 steps at 2-3.5 cfg also simple had great results sometimes.
+       dpmpp_2s_anestral 15 Steps also between 2-3.5 cfg / simple
+For forge: only Euler it seems is working currently for that the best was 2 cfg and 10-20 steps/ simple

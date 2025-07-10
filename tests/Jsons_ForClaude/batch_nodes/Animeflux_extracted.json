@@ -1,0 +1,99 @@
+[
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a digital illustration in an anime style,\nA cute arrangement with a deformed, short head and body. A rough \nCreate highly detailed, high resolution anime-style illustration of \nAn anime girl with glasses sitting in front of a computer with a speech bubble saying \"What the heck is a GGUF?!\"\nSoft kawaai style and colors\nShe is nehind a laptop with a logo that says \"advokat\""
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 10,
+        "name": "VAELoader"
+    },
+    {
+        "id": 11,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "t5xxl_fp8_e4m3fn.safetensors",
+            "text_2": "clip_l.safetensors"
+        }
+    },
+    {
+        "id": 12,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "animepro_fp8-e4m3fn.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 16,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 17,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 22,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 25,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 26,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 27,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 28,
+        "name": "Note",
+        "prompts": {
+            "text": "If you get an error in any of the nodes above make sure the files are in the correct directories.\n\nSee the top of the examples page for the links : https://comfyanonymous.github.io/ComfyUI_examples/flux/\n\nflux1-dev.sft goes in: ComfyUI/models/unet/\n\nt5xxl_fp16.safetensors and clip_l.safetensors go in: ComfyUI/models/clip/\n\nae.sft goes in: ComfyUI/models/vae/\n\n\nTip: You can set the weight_dtype above to one of the fp8 types if you have memory issues."
+        }
+    },
+    {
+        "id": 52,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "ILLUSTRATION_2_FLUX v2.safetensors"
+        }
+    },
+    {
+        "id": 53,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "midjourney_whisper_flux_lora_v01.safetensors"
+        }
+    },
+    {
+        "id": 54,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "aidmaMJ6.1-FLUX-v0.4.safetensors"
+        }
+    },
+    {
+        "id": 55,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "animepro-Q5_K_M.gguf"
+        }
+    }
+]

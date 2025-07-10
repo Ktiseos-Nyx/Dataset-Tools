@@ -1,0 +1,115 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "cinematic photograph of an astronaut riding a horse in space"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "%date:yyMMdd%/%date:yyMMdd-hhmmss%_T2I-BAS_SDCA_WSN_%ksampler_b.seed%"
+        }
+    },
+    {
+        "id": 33,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 34,
+        "name": "StableCascade_EmptyLatentImage"
+    },
+    {
+        "id": 36,
+        "name": "StableCascade_StageB_Conditioning"
+    },
+    {
+        "id": 41,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sdca-sai-cascade c-p-comfyui.safetensors"
+        }
+    },
+    {
+        "id": 42,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sdca-sai-cascade b-p-comfyui.safetensors"
+        }
+    },
+    {
+        "id": 47,
+        "name": "Reroute"
+    },
+    {
+        "id": 48,
+        "name": "Reroute"
+    },
+    {
+        "id": 49,
+        "name": "Reroute"
+    },
+    {
+        "id": 50,
+        "name": "Reroute"
+    },
+    {
+        "id": 55,
+        "name": "Note",
+        "prompts": {
+            "text": "txt2img-basic-sdca-wsn\n==========================================================\nSDCA : SD Cascade\nWSN  : W\u00fcrstchen\nCSD  : Clip Standard\nID   : T2I-BAS_SDCA_WSN"
+        }
+    },
+    {
+        "id": 60,
+        "name": "Anything Everywhere3"
+    },
+    {
+        "id": 62,
+        "name": "Reroute"
+    },
+    {
+        "id": 63,
+        "name": "Reroute"
+    },
+    {
+        "id": 64,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 65,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 66,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 67,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 68,
+        "name": "Power Lora Loader (rgthree)"
+    }
+]

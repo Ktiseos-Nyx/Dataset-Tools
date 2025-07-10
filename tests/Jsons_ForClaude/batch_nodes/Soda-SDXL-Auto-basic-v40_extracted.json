@@ -1,0 +1,426 @@
+[
+    {
+        "id": 5,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2m_alt",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 7,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 9,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 69,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fixed.safetensors"
+        }
+    },
+    {
+        "id": 80,
+        "name": "AspectSizeV2"
+    },
+    {
+        "id": 202,
+        "name": "easy seed"
+    },
+    {
+        "id": 221,
+        "name": "Note",
+        "prompts": {
+            "text": "Soda-SDXL-Auto-Basic-v40\n\nVideo: https://www.youtube.com/@FiveBelowFiveUK\nWorkflow: https://civitai.com/models/\n\nhttps://www.fivebelowfive.uk\n\nSoda Pack v1\nBase Model - SDXL\n\nTrio modes\nSampler Garden\nControl Net Pose, Canny & Depth\nFace swap with occulusion and boost\n3 step 12K upscaling process with color match/remix\n\n\n"
+        }
+    },
+    {
+        "id": 284,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 384,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./soda/base/sdxl"
+        }
+    },
+    {
+        "id": 387,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "DJZmerger\\cosRealJuggXL-hermit.safetensors"
+        }
+    },
+    {
+        "id": 389,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "controlnet_loras\\control-lora-canny-rank128.safetensors"
+        }
+    },
+    {
+        "id": 390,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "controlnet_loras\\control-lora-depth-rank128.safetensors"
+        }
+    },
+    {
+        "id": 391,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "controlnet_loras\\control-lora-recolor-rank128.safetensors"
+        }
+    },
+    {
+        "id": 393,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "controlnet_loras\\control-lora-sketch-rank128-metadata.safetensors"
+        }
+    },
+    {
+        "id": 394,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "XL\\OpenPoseXL2.safetensors"
+        }
+    },
+    {
+        "id": 434,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 435,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./soda/trio/T2"
+        }
+    },
+    {
+        "id": 439,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_2m_alt",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 456,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 457,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/ipa/kodaAlt1"
+        }
+    },
+    {
+        "id": 461,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_2m_alt",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 467,
+        "name": "SetNode"
+    },
+    {
+        "id": 473,
+        "name": "GetNode"
+    },
+    {
+        "id": 474,
+        "name": "GetNode"
+    },
+    {
+        "id": 475,
+        "name": "GetNode"
+    },
+    {
+        "id": 483,
+        "name": "SetNode"
+    },
+    {
+        "id": 485,
+        "name": "GetNode"
+    },
+    {
+        "id": 486,
+        "name": "SetNode"
+    },
+    {
+        "id": 487,
+        "name": "GetNode"
+    },
+    {
+        "id": 488,
+        "name": "GetNode"
+    },
+    {
+        "id": 489,
+        "name": "GetNode"
+    },
+    {
+        "id": 496,
+        "name": "SetNode"
+    },
+    {
+        "id": 497,
+        "name": "GetNode"
+    },
+    {
+        "id": 498,
+        "name": "GetNode"
+    },
+    {
+        "id": 499,
+        "name": "GetNode"
+    },
+    {
+        "id": 504,
+        "name": "SetNode",
+        "prompts": {
+            "text": "int_AspectWidth"
+        }
+    },
+    {
+        "id": 505,
+        "name": "SetNode",
+        "prompts": {
+            "text": "int_AspectHeight"
+        }
+    },
+    {
+        "id": 512,
+        "name": "SetNode",
+        "prompts": {
+            "text": "condPos_base"
+        }
+    },
+    {
+        "id": 513,
+        "name": "SetNode",
+        "prompts": {
+            "text": "condNeg_base"
+        }
+    },
+    {
+        "id": 514,
+        "name": "SetNode",
+        "prompts": {
+            "text": "latent_base"
+        }
+    },
+    {
+        "id": 529,
+        "name": "GetNode",
+        "prompts": {
+            "text": "latent_base"
+        }
+    },
+    {
+        "id": 534,
+        "name": "GetNode",
+        "prompts": {
+            "text": "latent_Trio1"
+        }
+    },
+    {
+        "id": 535,
+        "name": "GetNode",
+        "prompts": {
+            "text": "condNeg_base"
+        }
+    },
+    {
+        "id": 536,
+        "name": "GetNode",
+        "prompts": {
+            "text": "condPos_base"
+        }
+    },
+    {
+        "id": 537,
+        "name": "GetNode",
+        "prompts": {
+            "text": "latent_Trio2"
+        }
+    },
+    {
+        "id": 538,
+        "name": "GetNode",
+        "prompts": {
+            "text": "condNeg_base"
+        }
+    },
+    {
+        "id": 539,
+        "name": "GetNode",
+        "prompts": {
+            "text": "condPos_base"
+        }
+    },
+    {
+        "id": 557,
+        "name": "SetNode",
+        "prompts": {
+            "text": "controlnet_recolor"
+        }
+    },
+    {
+        "id": 558,
+        "name": "SetNode",
+        "prompts": {
+            "text": "controlnet_sketch"
+        }
+    },
+    {
+        "id": 560,
+        "name": "SetNode",
+        "prompts": {
+            "text": "controlnet_pose"
+        }
+    },
+    {
+        "id": 561,
+        "name": "SetNode",
+        "prompts": {
+            "text": "controlnet_canny"
+        }
+    },
+    {
+        "id": 562,
+        "name": "SetNode",
+        "prompts": {
+            "text": "controlnet_depth"
+        }
+    },
+    {
+        "id": 572,
+        "name": "SetNode",
+        "prompts": {
+            "text": "image_baseOut"
+        }
+    },
+    {
+        "id": 573,
+        "name": "SetNode",
+        "prompts": {
+            "text": "latent_Trio1"
+        }
+    },
+    {
+        "id": 574,
+        "name": "SetNode",
+        "prompts": {
+            "text": "image_Trio2"
+        }
+    },
+    {
+        "id": 575,
+        "name": "SetNode",
+        "prompts": {
+            "text": "latent_Trio2"
+        }
+    },
+    {
+        "id": 576,
+        "name": "SetNode",
+        "prompts": {
+            "text": "image_Trio3"
+        }
+    },
+    {
+        "id": 638,
+        "name": "Note",
+        "prompts": {
+            "text": "Real photo, street corner at dusk, Wong Kar Wai style, sexy Chinese girl in the 1990s drinking Coke with a straw, wearing a red cheongsam, half of her shoulders exposed, next to her is a billboard with \"KFC\" written on it, with a bustling crowd in the background, high Contrast, film texture, nostalgia, light and shadow, sunset\n\njunglecity (15), scenery, cloud, no humans, tree, sky, outdoors, building, city, day, aircraft\n neofutur style (21), scenery, building, outdoors, cloud, sky, day, bird, ruins, city, crane (machine)"
+        }
+    },
+    {
+        "id": 639,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "landscape scenery, small skeleton sitting with yellow skull, vibrant rainbow above in clear skies atmospheric, vignette, masterpiece, raphael, caravaggio, beksinski, giger, rembrandt",
+            "text_2": "RAW photo of an attractive woman, wearing casual clothes staring into the sunset, war photography, diffuse light, 8K concept art, realistic, beautiful, trending on artstation, soft focus, full body focus, backlit, rim light, vivid colors"
+        }
+    },
+    {
+        "id": 640,
+        "name": "AutoNegativePrompt",
+        "prompts": {
+            "text": "terrible, bad, poor, painting, drawing, fake, sketch, mistake, MSPAINT"
+        }
+    },
+    {
+        "id": 641,
+        "name": "OneButtonSuperPrompt",
+        "prompts": {
+            "text": "scenery, building, city, people, architecture, bridge, arch"
+        }
+    },
+    {
+        "id": 642,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "in a surreal landscape, a small wooden figure with glowing red eyes sits on the ground, surrounded by a vibrant rainbow. ",
+            "text_2": "The sky is painted in hues of orange and pink as the sun begins to set. A woman lace dress and heelsed in a lace dress and heels, tie, and sunglasses stares into the evening light, her eyes closed in concentration. In her hand, "
+        }
+    },
+    {
+        "id": 643,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "dark, moody, night, monochromatic, worst quality, low quality, normal quality, lowres, low details, oversaturated, undersaturated, overexposed, underexposed, grayscale, bw, bad photo, bad photography, bad art, watermark, signature, text font, username, error, logo, words, letters, digits, autograph, name, blur, grainy, ugly, asymmetrical, poorly lit, bad shadow, draft, cropped, out of frame, cut off, censored, jpeg artifacts, out of focus, glitch, duplicate, text, watermark",
+            "text_2": ", worst quality, low quality, normal quality, lowres, low details, oversaturated, undersaturated, overexposed, underexposed, bw, bad photo, bad photography, watermark, signature, text font, username, logo, letters, digits, autograph, name, grainy, ugly, asymmetrical, bad shadow, draft, cropped, out of frame, cut off, jpeg artifacts, out of focus, glitch, terrible, bad, poor, painting, drawing, fake, sketch, mistake, MSPAINT"
+        }
+    },
+    {
+        "id": 644,
+        "name": "DF_Text_Box",
+        "prompts": {
+            "text": "RAW photo of an attractive woman, wearing casual clothes staring into the sunset, war photography, diffuse light, 8K"
+        }
+    },
+    {
+        "id": 645,
+        "name": "DPMagicPrompt",
+        "prompts": {
+            "text": "photo of (assassinkahb style) demonic looking skeleton with red hair, holding a sword, with red hair"
+        }
+    },
+    {
+        "id": 646,
+        "name": "CLIPTextEncodeSDXL"
+    },
+    {
+        "id": 647,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 648,
+        "name": "GetNode"
+    },
+    {
+        "id": 649,
+        "name": "GetNode",
+        "prompts": {
+            "text": "condPos_base"
+        }
+    },
+    {
+        "id": 650,
+        "name": "GetNode",
+        "prompts": {
+            "text": "condNeg_base"
+        }
+    }
+]

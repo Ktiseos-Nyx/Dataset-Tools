@@ -1,0 +1,414 @@
+[
+    {
+        "id": 0,
+        "name": "Initial Gen"
+    },
+    {
+        "id": 5,
+        "name": "Film Grain"
+    },
+    {
+        "id": 10,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 12,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 16,
+        "name": "Controlnet Depth"
+    },
+    {
+        "id": 17,
+        "name": "Style Transfer"
+    },
+    {
+        "id": 18,
+        "name": "[PREVIEW] Initial Generation"
+    },
+    {
+        "id": 19,
+        "name": "[PREVIEW] Controlnet Depth"
+    },
+    {
+        "id": 22,
+        "name": "Upscale"
+    },
+    {
+        "id": 128,
+        "name": "Skimmed CFG"
+    },
+    {
+        "id": 134,
+        "name": "Float"
+    },
+    {
+        "id": 135,
+        "name": "Int"
+    },
+    {
+        "id": 140,
+        "name": "Checkpoint Loader with Name (Image Saver)",
+        "prompts": {
+            "text": "cyberrealisticPony_v85.safetensors"
+        }
+    },
+    {
+        "id": 142,
+        "name": "SDXLEmptyLatentSizePicker+",
+        "prompts": {
+            "text": "832x1152 (0.72)"
+        }
+    },
+    {
+        "id": 144,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxlVAE_sdxlVAE.safetensors"
+        }
+    },
+    {
+        "id": 168,
+        "name": "ImpactWildcardEncode",
+        "prompts": {
+            "text": "score_9, score_8_up, score_7_up,\n\nmasterpiece, realistic, raw photo, cinematic, analog, 8k, depth of field, \nbest quality, highres, shot on Canon EOS 5D.\n\ninstagram model, cute, beautiful,\n\n1girl, \nbrown hair, long hair, blue eyes, hair over one eye,\nlarge breasts,\nlooking at viewer,\nwhite bikini, \noutdoors, beach, sand,\ngolden hour, volumetric lighting, bokeh,\n\n# Note, click Select to add Lora below to append loras to this prompt box",
+            "text_2": "score_9, score_8_up, score_7_up,\n\nmasterpiece, realistic, raw photo, cinematic, analog, 8k, depth of field, \nbest quality, highres, shot on Canon EOS 5D.\n\ninstagram model, cute, beautiful,\n\n1girl, \nbrown hair, long hair, blue eyes, hair over one eye,\nlarge breasts,\nlooking at viewer,\nwhite bikini, \noutdoors, beach, sand,\ngolden hour, volumetric lighting, bokeh,\n"
+        }
+    },
+    {
+        "id": 192,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 196,
+        "name": "Image Saver",
+        "prompts": {
+            "text": "%date-%time-%basemodelname-%cfg-%steps-%sampler_name-%scheduler-%seed",
+            "text_2": "align_your_steps"
+        }
+    },
+    {
+        "id": 204,
+        "name": "KSampler (Efficient)"
+    },
+    {
+        "id": 219,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "score_6, score_5, score_4, \n\n\n"
+        }
+    },
+    {
+        "id": 222,
+        "name": "BetterFilmGrain"
+    },
+    {
+        "id": 227,
+        "name": "SetNode",
+        "prompts": {
+            "text": "Clean Negative Prompt"
+        }
+    },
+    {
+        "id": 228,
+        "name": "SetNode"
+    },
+    {
+        "id": 229,
+        "name": "GetNode"
+    },
+    {
+        "id": 231,
+        "name": "SetNode"
+    },
+    {
+        "id": 233,
+        "name": "GetNode"
+    },
+    {
+        "id": 235,
+        "name": "GetNode",
+        "prompts": {
+            "text": "Generated Image"
+        }
+    },
+    {
+        "id": 237,
+        "name": "SetNode",
+        "prompts": {
+            "text": "Positive Prompt"
+        }
+    },
+    {
+        "id": 238,
+        "name": "GetNode",
+        "prompts": {
+            "text": "Positive Prompt"
+        }
+    },
+    {
+        "id": 239,
+        "name": "SetNode"
+    },
+    {
+        "id": 240,
+        "name": "SetNode"
+    },
+    {
+        "id": 241,
+        "name": "GetNode"
+    },
+    {
+        "id": 242,
+        "name": "GetNode"
+    },
+    {
+        "id": 243,
+        "name": "SetNode"
+    },
+    {
+        "id": 245,
+        "name": "GetNode"
+    },
+    {
+        "id": 246,
+        "name": "SetNode"
+    },
+    {
+        "id": 247,
+        "name": "SetNode"
+    },
+    {
+        "id": 248,
+        "name": "GetNode"
+    },
+    {
+        "id": 249,
+        "name": "GetNode"
+    },
+    {
+        "id": 250,
+        "name": "SetNode"
+    },
+    {
+        "id": 251,
+        "name": "GetNode"
+    },
+    {
+        "id": 252,
+        "name": "SetNode",
+        "prompts": {
+            "text": "Generated Image"
+        }
+    },
+    {
+        "id": 258,
+        "name": "GetNode",
+        "prompts": {
+            "text": "Clean Negative Prompt"
+        }
+    },
+    {
+        "id": 267,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 268,
+        "name": "DepthAnythingV2Preprocessor",
+        "prompts": {
+            "text": "depth_anything_v2_vitl.pth"
+        }
+    },
+    {
+        "id": 269,
+        "name": "ImageResizeKJ",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 270,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 271,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "controlnet_union_promax.safetensors"
+        }
+    },
+    {
+        "id": 272,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 273,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 274,
+        "name": "IPAdapterStyleComposition"
+    },
+    {
+        "id": 275,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors"
+        }
+    },
+    {
+        "id": 276,
+        "name": "IPAdapterModelLoader",
+        "prompts": {
+            "text": "ip-adapter-plus_sdxl_vit-h.safetensors"
+        }
+    },
+    {
+        "id": 307,
+        "name": "SetNode"
+    },
+    {
+        "id": 308,
+        "name": "GetNode"
+    },
+    {
+        "id": 309,
+        "name": "GetNode"
+    },
+    {
+        "id": 310,
+        "name": "SetNode"
+    },
+    {
+        "id": 311,
+        "name": "GetNode"
+    },
+    {
+        "id": 313,
+        "name": "GetNode"
+    },
+    {
+        "id": 314,
+        "name": "GetNode"
+    },
+    {
+        "id": 315,
+        "name": "GetNode"
+    },
+    {
+        "id": 318,
+        "name": "GetNode"
+    },
+    {
+        "id": 321,
+        "name": "ImpactWildcardEncode",
+        "prompts": {
+            "text": "score_6, score_5, score_4, \n\n\n",
+            "text_2": "score_6, score_5, score_4, \n\n\n"
+        }
+    },
+    {
+        "id": 328,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 356,
+        "name": "Reroute"
+    },
+    {
+        "id": 357,
+        "name": "Reroute"
+    },
+    {
+        "id": 358,
+        "name": "Reroute"
+    },
+    {
+        "id": 360,
+        "name": "WidgetToString"
+    },
+    {
+        "id": 362,
+        "name": "WidgetToString",
+        "prompts": {
+            "text": "sampler_name"
+        }
+    },
+    {
+        "id": 365,
+        "name": "Note",
+        "prompts": {
+            "text": "======== PROMPTING ========\nIf you're new to prompting pony models, you need to know about danbooru tags:\nhttps://danbooru.donmai.us/wiki_pages/tag_groups\n\nPony was trained on these tags, so knowing the exact words to propmt can be very helpful.\n\nWeighting your propmts also helps a lot. If you want something expressed more, turn up the weight! For example, try changing (__f/color__ theme:1.1), in the prompt to (__f/color__ theme:1.5),\n\n========   STYLE   ========\nYou may notice that my images use higher CFG than normal images. That is thanks to Skimmed CFG:\nhttps://github.com/Extraltodeus/Skimmed_CFG\n\nIt allows you to turn up CFG without making them a pixelated, burned mess. Each model treats CFG differently. Pony models are generally fine around 5/12/24 CFG, but SDXL may require less. Experiment with these values and see what matches your preferred style!\n\n======== WILDCARDS ========\nOpen the included wildcards file to see how you can introduce controlled randomness to your generations. Docs here: https://github.com/ltdrdata/ComfyUI-extension-tutorials/blob/Main/ComfyUI-Impact-Pack/tutorial/ImpactWildcard.md\n\nIn the prompt, you see syntax like: __f/scene/modeling-clothed__. This refers to the wildcard yaml file by key. Look at f (the top level key in the file), then search for scene which will be one indentation deeper, then modeling-clothed which is another indentation under that. List items are chosen at random. This can be useful if you want to try out different hair styles/ clothes/ backgrounds/ etc.\n\nIf you're not familiar with yaml files, I suggest downloading VSCode for syntax highlighting.\n\nIf you're modifying wildcards, you must refresh them before they work. In the top menu, select \"Edit\" > \"Impact: Refresh Wildcards\"\n\n========   LORAS   ========\nIn the \"Positive WildcardEncode\" section you can add loras by clicking the \"Select to add LoRA\" widget at the bottom. That will append the LoRA tag at the bottom of the prompt like:\n<lora:loraname>\n\nYou can change the strength of a LoRA like:\n<lora:loraname:0.8>\n\nIf you don't see your lora, you may need to refresh. Press \"r\" and that will refresh ComfyUI's node values.\n\nAs a note, you can embed this lora syntax in wildcard files as well, so if you capture a style you like, you can \"save\" it by using a wildcard that you reference later. Search for the commented out \"bodylora:\" section in the included wildcards for an example."
+        }
+    },
+    {
+        "id": 366,
+        "name": "Note",
+        "prompts": {
+            "text": "This node controls which groups are enabled by default. I recommend:\n- Enable Initial Gen\n\nOnce you find a prompt you like, then \n- Enable Upscale\n\n\nIf you want to preview steps between generations (say to test out the impacts of upscaling), you can enable the [PREVIEW] sections.\n\nEnable Style Transfer and Controlnet Depth to use those features.\n\nIf you're testing out new styles and want quick generations, just enable \"Enable Initial Gen\"\nwith nothing else. That will give you a quick way to test then you can enable the more costly upscale nodes."
+        }
+    },
+    {
+        "id": 377,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "score_9, score_8_up, score_7_up,\n\nmasterpiece, realistic, raw photo, cinematic, analog, 8k, depth of field, \nbest quality, highres, shot on Canon EOS 5D.\n\ninstagram model, cute, beautiful,\n\n1girl, \nbrown hair, long hair, blue eyes, hair over one eye,\nlarge breasts,\nlooking at viewer,\nwhite bikini, \noutdoors, beach, sand,\ngolden hour, volumetric lighting, bokeh,\n"
+        }
+    },
+    {
+        "id": 380,
+        "name": "Note",
+        "prompts": {
+            "text": "# Example wildcard usage:\n# Paste this into the Positive WildcardEncode block\n\n# NOTE: Include a \"# \" at the beginning of a line to comment it out. Notice that this line doesn't appear in the output on the left! This can be useful when testing new prompt ideas.\n\nscore_9, score_8_up, score_7_up,\n\n({cute|beautiful} face,:1.2)\n__f/person/rando__,\n__f/body/*__,\n\n__f/scene/modeling-clothed__,\n\n(__f/color__ theme:1.1), vivid colors,\n\nmasterpiece, realistic, raw photo, cinematic, analog, 8k, depth of field, \nbest quality, highres, shot on Canon EOS 5D.\n\n"
+        }
+    },
+    {
+        "id": 390,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 391,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "remacri_original.pt"
+        }
+    },
+    {
+        "id": 392,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 393,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 394,
+        "name": "GetNode"
+    },
+    {
+        "id": 395,
+        "name": "KSampler"
+    },
+    {
+        "id": 396,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 399,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 414,
+        "name": "Note",
+        "prompts": {
+            "text": "PLEASE READ THE INCLUDED INSTALL INSTRUCTIONS!\n\n"
+        }
+    }
+]

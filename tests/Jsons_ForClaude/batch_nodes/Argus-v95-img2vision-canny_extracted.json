@@ -1,0 +1,244 @@
+[
+    {
+        "id": 187,
+        "name": "Note",
+        "prompts": {
+            "text": "This is stage c, the model generates a low resolution latent, the default compression of 42 means that the width and height of the stage c latent are 1024 divided by 42."
+        }
+    },
+    {
+        "id": 188,
+        "name": "Note",
+        "prompts": {
+            "text": "This is stage b where the low resolution stage c latent is passed to the stage b model as conditioning. Stage b takes the low resolution latent and upscales it to a higher resolution one. \n\n"
+        }
+    },
+    {
+        "id": 189,
+        "name": "Note",
+        "prompts": {
+            "text": "Stage a is what the VAE is called. It decodes the stage b latent into pixel space."
+        }
+    },
+    {
+        "id": 190,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 191,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "raw photo of (assassinkahb style) demonic looking skeleton woman with red hair, wearing armor, holding a sword "
+        }
+    },
+    {
+        "id": 192,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 193,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 194,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "cascade-vision/cascade"
+        }
+    },
+    {
+        "id": 195,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 196,
+        "name": "StableCascade_StageB_Conditioning"
+    },
+    {
+        "id": 197,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 198,
+        "name": "Note",
+        "prompts": {
+            "text": "Increasing the compression to 64 allows for higher resolution.\nthanks to https://openart.ai/workflows/@data_lt"
+        }
+    },
+    {
+        "id": 199,
+        "name": "Note",
+        "prompts": {
+            "text": "Argus-v30-img2img (Checkpoint Version)\n- img2img mode (B & C)\n- Stable Cascade\n- models guide\n- hires fix\n- shift support\n\narticle: https://civitai.com/articles/4109/\nwww.fivebelowfive.uk"
+        }
+    },
+    {
+        "id": 200,
+        "name": "Note",
+        "prompts": {
+            "text": "shift:\n\ndefault 2.00\n\n"
+        }
+    },
+    {
+        "id": 201,
+        "name": "Note",
+        "prompts": {
+            "text": "default: \n1840x3072"
+        }
+    },
+    {
+        "id": 202,
+        "name": "Note",
+        "prompts": {
+            "text": "1:2 Aspect Ratio (and its inverse 2:1)\n1:2: 1024x512 (close to the center point, portrait)\n2:1: 2048x1024 (maximized width, landscape)\n\n\n2:3 Aspect Ratio (and its inverse 3:2)\n2:3: 1360x2048 (maximized height, portrait)\n3:2: 2048x1360 (maximized width, landscape)\n\n\n3:4 Aspect Ratio (and its inverse 4:3)\n3:4: 1536x2048 (maximized height, portrait)\n4:3: 2048x1536 (maximized width, landscape)\n\n\n16:9 Aspect Ratio\n16:9: 2048x1152 (maximized width, landscape)\n9:16: 1152x2048 (maximized height, portrait)"
+        }
+    },
+    {
+        "id": 203,
+        "name": "Note",
+        "prompts": {
+            "text": "1:2 Aspect Ratio (and its inverse 2:1)\n1:2: 3072x1536 (landscape)\n2:1: 1536x3072 (portrait)\n\n\n2:3 Aspect Ratio (and its inverse 3:2)\n2:3: 2048x3072 (portrait)\n3:2: 3072x2048 (landscape)\n\n\n3:4 Aspect Ratio (and its inverse 4:3)\n3:4: 2304x3072 (portrait)\n4:3: 3072x2304 (landscape)\n\n\n16:9 Aspect Ratio (and its inverse 9:16)\n16:9: 3072x1728 (landscape)\n9:16: 1728x3072 (portrait)"
+        }
+    },
+    {
+        "id": 204,
+        "name": "ModelSamplingStableCascade"
+    },
+    {
+        "id": 205,
+        "name": "Note",
+        "prompts": {
+            "text": "Raw photo of a man, futuristic post dystopian technocratic sprawl, a {highway|street|traintrack|runway|police car}, surrounded by junk and sewage, {rain|snow|sludge|soot|acid} falling down on the dystopian cyberpunk {woman|man|person|robot|residents}, the {house|slum|ghetto|apartments|motel} that {expands|fills|explodes|enriched} the negative space between {reality|skyscrapers|security|fast food|temples|server cave} and {shanty towns|casinos|nightclubs|bars}, bright lights, bokeh, laser holograms, {night time|mid day|sunrise|sunset} lighting"
+        }
+    },
+    {
+        "id": 206,
+        "name": "Note",
+        "prompts": {
+            "text": "Raw photo of police car, surrounded by junk and sewage, rain falling down on the dystopian cyberpunk residents, the motel that fills the negative space between reality and nightclubs, bright lights, bokeh, laser holograms, sunrise lighting"
+        }
+    },
+    {
+        "id": 208,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "stable_cascade_stage_b.safetensors"
+        }
+    },
+    {
+        "id": 212,
+        "name": "unCLIPConditioning"
+    },
+    {
+        "id": 213,
+        "name": "CLIPVisionEncode"
+    },
+    {
+        "id": 214,
+        "name": "unCLIPCheckpointLoader",
+        "prompts": {
+            "text": "stable_cascade_stage_c.safetensors"
+        }
+    },
+    {
+        "id": 215,
+        "name": "Note",
+        "prompts": {
+            "text": "Argus-v95-img2vision-canny (Checkpoint Version)\n- CLIP vision\n- Stable Cascade\n- canny cnet\n- img2img\n- shift support\n\narticle: https://civitai.com/articles/4109/\nwww.fivebelowfive.uk"
+        }
+    },
+    {
+        "id": 279,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "cascade\\assassinKahb-V8-early.safetensors"
+        }
+    },
+    {
+        "id": 280,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "Stable-Cascade\\canny.safetensors"
+        }
+    },
+    {
+        "id": 281,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 282,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "02078-102.png"
+        }
+    },
+    {
+        "id": 283,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 284,
+        "name": "Canny"
+    },
+    {
+        "id": 285,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 288,
+        "name": "CLIPVisionEncode"
+    },
+    {
+        "id": 290,
+        "name": "unCLIPConditioning"
+    },
+    {
+        "id": 294,
+        "name": "unCLIPConditioning"
+    },
+    {
+        "id": 296,
+        "name": "CLIPVisionEncode"
+    },
+    {
+        "id": 300,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "facePass_00004_.png"
+        }
+    },
+    {
+        "id": 301,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "dxw-_00405_.png"
+        }
+    },
+    {
+        "id": 302,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "eldercraftian style depiction of an elder god demonic looking creature in the middle of a large ancient roman city.png"
+        }
+    },
+    {
+        "id": 303,
+        "name": "StableCascade_StageC_VAEEncode"
+    },
+    {
+        "id": 304,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    }
+]

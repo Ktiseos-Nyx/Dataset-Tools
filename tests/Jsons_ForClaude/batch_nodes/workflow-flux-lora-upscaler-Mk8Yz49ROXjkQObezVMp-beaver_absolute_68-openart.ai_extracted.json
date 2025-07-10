@@ -1,0 +1,225 @@
+[
+    {
+        "id": 47,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 53,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 54,
+        "name": "ControlNetLoader"
+    },
+    {
+        "id": 66,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 70,
+        "name": "BNK_TiledKSampler",
+        "prompts": {
+            "text": "random strict"
+        }
+    },
+    {
+        "id": 85,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 88,
+        "name": "LineArtPreprocessor"
+    },
+    {
+        "id": 91,
+        "name": "ControlNetLoader"
+    },
+    {
+        "id": 93,
+        "name": "Reroute"
+    },
+    {
+        "id": 98,
+        "name": "GetNode"
+    },
+    {
+        "id": 101,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 106,
+        "name": "ColorMatch"
+    },
+    {
+        "id": 114,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 116,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 119,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 123,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 131,
+        "name": "DepthAnythingV2Preprocessor",
+        "prompts": {
+            "text": "depth_anything_v2_vitl.pth"
+        }
+    },
+    {
+        "id": 136,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 137,
+        "name": "ImageSharpen"
+    },
+    {
+        "id": 138,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 144,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 145,
+        "name": "ControlNetLoader"
+    },
+    {
+        "id": 146,
+        "name": "Reroute"
+    },
+    {
+        "id": 147,
+        "name": "Reroute"
+    },
+    {
+        "id": 148,
+        "name": "Reroute"
+    },
+    {
+        "id": 149,
+        "name": "Reroute"
+    },
+    {
+        "id": 150,
+        "name": "Reroute"
+    },
+    {
+        "id": 151,
+        "name": "Note",
+        "prompts": {
+            "text": "I use a lower denoise (around 0.2 - 0.4) for portraits to retain the skin textures.\n\nFor landscapes, a denoise of 1.0 works better.  \n\nYou can change the seed here to get a different output. \n\nThe random strict tiling strategy seems to work best for me to avoid seams in the output image. "
+        }
+    },
+    {
+        "id": 152,
+        "name": "Note",
+        "prompts": {
+            "text": "Apply some sharpening here, I feel that a value of 0.1 - 0.2 is sufficient for most images"
+        }
+    },
+    {
+        "id": 153,
+        "name": "Note",
+        "prompts": {
+            "text": "Here we do colour matching to retain the colour tones of the original image as much as possible."
+        }
+    },
+    {
+        "id": 154,
+        "name": "Note",
+        "prompts": {
+            "text": "This output window shows the original image, you can slide your mouse across the window to compare the differences that the upscaling has done. "
+        }
+    },
+    {
+        "id": 156,
+        "name": "Note",
+        "prompts": {
+            "text": "I normally use the line-art controlnet to bring the stucture of the original image into the upscaled image. \n\nI found that for some images (e.g. landscape photos), the line-art controlnet results in a painting like image, instead of a photo. If you find the generation output is not what you are looking for, you can try to disable the lineart controlnet and enable the depth controlnet."
+        }
+    },
+    {
+        "id": 157,
+        "name": "Note",
+        "prompts": {
+            "text": "Here, we can set how much we want to upscale the image, by default, I am using a factor of 2. However, if you need a higher resolution image, you can increase this factor. Do note that increasing this factor will result in a longer generation time. "
+        }
+    },
+    {
+        "id": 161,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "flux1-dev-Q4_0.gguf"
+        }
+    },
+    {
+        "id": 162,
+        "name": "DualCLIPLoaderGGUF",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp8_e4m3fn.safetensors"
+        }
+    },
+    {
+        "id": 163,
+        "name": "KSampler"
+    },
+    {
+        "id": 164,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "A photo of Diddy behind prison bars, wearing a pink prison jumpsuit, holding a large clear bottle of Johnson & Johnson brand baby oil, prison setting, serious expression, dim lighting, reflective metal bars, soft glow on the baby oil bottle, gray concrete background, slight smirk, tension in the air. A photo of Diddy standing behind prison bars, wearing a bright pink prison jumpsuit that contrasts against the gray, gritty background of the prison. He is gripping a large, clear bottle of Johnson & Johnson baby oil, the bottle glistening softly in the dim, overhead lighting. His facial expression is serious but with a subtle hint of a smirk, capturing a mixture of defiance and calm. The cold, metallic prison bars cast long shadows across his face, while the concrete walls behind him add to the oppressive atmosphere. There's an eerie stillness to the scene, amplified by the soft glow reflecting off the baby oil bottle, emphasizing its absurdity in the stark, desolate environment."
+        }
+    },
+    {
+        "id": 165,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 166,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae.safetensors"
+        }
+    },
+    {
+        "id": 167,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 168,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 169,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 170,
+        "name": "SetNode"
+    },
+    {
+        "id": 172,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev.safetensors"
+        }
+    },
+    {
+        "id": 173,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "huwhitememes-diddy-lora.safetensors"
+        }
+    }
+]

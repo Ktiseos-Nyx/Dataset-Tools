@@ -1,0 +1,217 @@
+[
+    {
+        "id": 1,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "XL\\ntrMIXIllustriousXL_xiii.safetensors"
+        }
+    },
+    {
+        "id": 2,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 3,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "A girl on a dirty street.\n\nmasterpiece, absurdres, aesthetic, best quality,newest, very awa, highres, absurdres, detailed, hyper-detailed,outdoors,[:dark theme:15], black theme,"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "lowres, (worst quality, bad quality:1.2), bad anatomy, sketch, jpeg artifacts, signature, watermark, old, oldest, censored, bar_censor,bad anatomy,bad proportions,extra fingers,extra legs,fused fingers,missing fingers,simple background,dildo,"
+        }
+    },
+    {
+        "id": 6,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "Ollama"
+    },
+    {
+        "id": 8,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fp16fix.safetensors"
+        }
+    },
+    {
+        "id": 42,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 46,
+        "name": "FreeU_V2"
+    },
+    {
+        "id": 51,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 118,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 577,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "Noob\\nb-\u57fa\u7840\\illustrious_very_aesthetic_v1.safetensors"
+        }
+    },
+    {
+        "id": 586,
+        "name": "CR Text Concatenate"
+    },
+    {
+        "id": 587,
+        "name": "CR Text Concatenate"
+    },
+    {
+        "id": 588,
+        "name": "OllamaGenerate",
+        "prompts": {
+            "text": "What is Art?",
+            "text_2": "http://127.0.0.1:11434"
+        }
+    },
+    {
+        "id": 589,
+        "name": "DisplayText_Zho",
+        "prompts": {
+            "text": "A girl on a dirty street."
+        }
+    },
+    {
+        "id": 590,
+        "name": "OllamaGenerate",
+        "prompts": {
+            "text": "What is Art?",
+            "text_2": "http://127.0.0.1:11434"
+        }
+    },
+    {
+        "id": 591,
+        "name": "DisplayText_Zho",
+        "prompts": {
+            "text": "I'll follow the steps to refine the prompt.\n\n**Step 1: List the names, gender and verbs of all characters in the prompt.**\n\n* Names: none\n* Gender: girl\n* Verbs: none\n\nSince there are no verbs, I can skip this step.\n\n**Step 2: Use a short phrase to describe all the characters in the prompt.**\n\n- This girl has dirty clothes, unkempt hair, and a sad expression.\n\n**Step 3: Please use the verbs listed above to provide a detailed description.**\n\nSince there are no verbs, I can skip this step.\n\n**Step 4: Merge the information from the previous two steps, listing them with commas.**\n\ngirl, dirty clothes, unkempt hair, sad expression\n\nSince there is a prominent subject in the prompt, I will proceed to the next step.\n\n**Step 5: Refine the prompt as a whole**\n\n# A young girl standing alone on a dirty street, from a low-angle shot with a wide lens. The camera captures her worn-out shoes, tattered clothes, and messy hair blown by the wind. The girl looks down at the ground, her eyes filled with sadness and despair. In the background, there are dilapidated buildings, trash-filled alleys, and a faint smell of garbage hangs in the air. The street is empty except for a few stray cats wandering around, adding to the sense of desolation. #"
+        }
+    },
+    {
+        "id": 592,
+        "name": "DisplayText_Zho",
+        "prompts": {
+            "text": "# A young girl standing alone on a dirty street, from a low-angle shot with a wide lens. The camera captures her worn-out shoes, tattered clothes, and messy hair blown by the wind. The girl looks down at the ground, her eyes filled with sadness and despair. In the background, there are dilapidated buildings, trash-filled alleys, and a faint smell of garbage hangs in the air. The street is empty except for a few stray cats wandering around, adding to the sense of desolation. #"
+        }
+    },
+    {
+        "id": 593,
+        "name": "DisplayText_Zho",
+        "prompts": {
+            "text": "I'll follow the steps to refine the prompt.\n\n**Step 1: List the names, gender and verbs of all characters in the prompt.**\n\n* Names: none\n* Gender: girl\n* Verbs: none\n\nSince there are no verbs, I can skip this step.\n\n**Step 2: Use a short phrase to describe all the characters in the prompt.**\n\n- This girl has dirty clothes, unkempt hair, and a sad expression.\n\n**Step 3: Please use the verbs listed above to provide a detailed description.**\n\nSince there are no verbs, I can skip this step.\n\n**Step 4: Merge the information from the previous two steps, listing them with commas.**\n\ngirl, dirty clothes, unkempt hair, sad expression\n\nSince there is a prominent subject in the prompt, I will proceed to the next step.\n\n**Step 5: Refine the prompt as a whole**\n\n# A young girl standing alone on a dirty street, from a low-angle shot with a wide lens. The camera captures her worn-out shoes, tattered clothes, and messy hair blown by the wind. The girl looks down at the ground, her eyes filled with sadness and despair. In the background, there are dilapidated buildings, trash-filled alleys, and a faint smell of garbage hangs in the air. The street is empty except for a few stray cats wandering around, adding to the sense of desolation. #\n\n----\n\nExtract content within # #, excluding  # #. \nJust output the content within # #, nothing less, nothing more."
+        }
+    },
+    {
+        "id": 594,
+        "name": "OllamaGenerate",
+        "prompts": {
+            "text": "What is Art?",
+            "text_2": "http://127.0.0.1:11434"
+        }
+    },
+    {
+        "id": 595,
+        "name": "CR Text",
+        "prompts": {
+            "text": "Translate the following into English, do not add any text other than the prompt:"
+        }
+    },
+    {
+        "id": 596,
+        "name": "CR Text",
+        "prompts": {
+            "text": "\u4e00\u4e2a\u5973\u5b69\u5728\u69bb\u69bb\u7c73\u4e0a\u5403\u996d"
+        }
+    },
+    {
+        "id": 597,
+        "name": "CR Text",
+        "prompts": {
+            "text": "You are a prompt engineer proficient in SDXL painting, especially skilled in refining prompts.    Please strictly follow the steps below to refine the prompts that need to be refined, operate step by step and output the results of each step:\n\nStep 1: List the names, gender and verbs of all characters in the prompt.       If there are no characters in the prompt, skip this step.\n\nStep 2: Use a short phrase to describe all the characters in the prompt.     If this sentence describes a girl, please provide a detailed description of her appearance.\nThe format is as follows:\n- This girl has thick thighs, wide hips, fair skin, long white hair, red eyes, and an awkward smile.\n\nStep 3: Please use the verbs listed above to provide a detailed description.     For example: eating, what food is eaten;     taking a bath, is it taken in a bathtub or shower.      Please see below for the format.\n- Enjoying a warm bowl of curry accompanied by cold ice cream and fresh apple.\n\nIf there are no verbs in the prompt, skip this step.\n\nStep 4: Merge the information from the previous two steps, listing them with commas. If there is no prominent subject in the prompt, such as if the prompt is pure scenery, skip this step and do not output any characters.  \n\nStep 5:\nIf the prompt contains characters, use the result of the previous step as a starting point, add the camera angle and focal length of the camera, and creatively improve the rest of the prompt as a whole in English,1000 words,following the format: Number of characters and gender of characters, [character 1], [character 2], [character ...                    ], everything else in any order.                     Examples of refined prompt:\n- A young woman lying on her back on a bed.       looking directly at the viewer with a blushing, smiling face and an open mouth.            Her brown eyes are visible, and she's dressed in a school uniform consisting of a white shirt, panties, a jacket, and a plaid skirt.            She has a red bow in her hair and is wearing a collared shirt with long sleeves that extend past her wrists, a bowtie, and black pantyhose.            The girl has nail polish on her nails.            Her panties are white, and her skirt is blue, complemented by a blue blazer.            scene is set indoors with curtains, a couch, and an air conditioner.            There's also an electrical outlet in the background.         The girl is sitting on the couch,from above and dutch_angle,           Her layered sleeves are noticeable as she relaxes in the room with a door nearby.\nIf the prompt does not contain a character but does contain a clear subject, use the result of the previous step as the beginning and use your imagination to refine the prompt as a whole.               The language should be English and the format should be \"subject name, everything else in any order.\"\n\nIf the prompt does not contain a character or a clear subject, use your imagination to refine the prompt as a whole, in English.\n\nStep 6: Enclose the result of the previous step within # #\n\nPrompt that need refining:"
+        }
+    },
+    {
+        "id": 598,
+        "name": "CR Text",
+        "prompts": {
+            "text": "\n\n----\n\nExtract content within # #, excluding  # #. \nJust output the content within # #, nothing less, nothing more."
+        }
+    },
+    {
+        "id": 599,
+        "name": "CR Text Concatenate"
+    },
+    {
+        "id": 600,
+        "name": "SetNode"
+    },
+    {
+        "id": 601,
+        "name": "GetNode"
+    },
+    {
+        "id": 602,
+        "name": "SetNode"
+    },
+    {
+        "id": 603,
+        "name": "GetNode"
+    },
+    {
+        "id": 604,
+        "name": "SetNode"
+    },
+    {
+        "id": 605,
+        "name": "GetNode"
+    },
+    {
+        "id": 624,
+        "name": "OllamaGenerate",
+        "prompts": {
+            "text": "Please translate this sentence into English\uff1a\u5982\u679c\u63d0\u793a\u7b26\u5305\u542b\u5b57\u7b26\uff0c\u5219\u4f7f\u7528\u524d\u4e00\u6b65\u7684\u7ed3\u679c\u4f5c\u4e3a\u5f00\u59cb\uff0c\u6dfb\u52a0\u76f8\u673a\u7684\u89d2\u5ea6\u548c\u76f8\u673a\u7684\u7126\u8ddd\u5e76\u521b\u9020\u6027\u5730\u6539\u8fdb\u63d0\u793a\u7b26\u7684\u5176\u4f59\u90e8\u5206\n",
+            "text_2": "http://127.0.0.1:11434"
+        }
+    },
+    {
+        "id": 625,
+        "name": "JjkShowText",
+        "prompts": {
+            "text": "Here is the translation:\n\n\"If the prompt contains characters, use the result from the previous step as a starting point, add the camera's angle and focal length, and creatively improve the rest of the prompt.\""
+        }
+    },
+    {
+        "id": 626,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 627,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "A young girl standing alone on a dirty street, from a low-angle shot with a wide lens. The camera captures her worn-out shoes, tattered clothes, and messy hair blown by the wind. The girl looks down at the ground, her eyes filled with sadness and despair. In the background, there are dilapidated buildings, trash-filled alleys, and a faint smell of garbage hangs in the air. The street is empty except for a few stray cats wandering around, adding to the sense of desolation.\n\n\nmasterpiece, absurdres, aesthetic, best quality,newest, very awa, highres, absurdres, detailed, hyper-detailed,outdoors,[:dark theme:15], black theme,"
+        }
+    },
+    {
+        "id": 628,
+        "name": "Fast Groups Bypasser (rgthree)"
+    }
+]

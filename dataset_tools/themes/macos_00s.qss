@@ -1,0 +1,100 @@
+/* Classic 00's MacOS Theme (Aqua-inspired) */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E0E0E0, stop: 1 #C0C0C0); /* Brushed metal / light gray */
+    color: #000000;
+}
+
+QWidget {
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    color: #000000;
+}
+
+/* Window Title Bar / Menu Bar */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E0E0E0, stop: 1 #C0C0C0); /* Brushed metal / light gray */
+    color: #000000;
+    border-bottom: 1px solid #A0A0A0;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background-color: rgba(0, 128, 255, 0.5); /* Aqua blue highlight */
+    color: #FFFFFF;
+}
+
+/* Buttons (Aqua style) */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F0F0F0, stop: 0.5 #E0E0E0, stop: 1 #D0D0D0); /* Glossy effect */
+    border: 1px solid #A0A0A0;
+    border-radius: 5px;
+    padding: 6px 12px;
+    color: #000000;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E8F0FF, stop: 0.5 #D8E0F0, stop: 1 #C8D0E0); /* Lighter glossy */
+    border: 1px solid #6090C0;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #C0C0C0, stop: 0.5 #B0B0B0, stop: 1 #A0A0A0); /* Darker pressed */
+    border: 1px solid #4070A0;
+}
+
+/* Text Inputs */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #A0A0A0;
+    padding: 2px;
+    color: #000000;
+}
+
+/* List Widgets */
+QListWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #A0A0A0;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background-color: #007FFF; /* Aqua blue */
+    color: #FFFFFF;
+}
+
+/* Status Bar */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E0E0E0, stop: 1 #C0C0C0); /* Brushed metal / light gray */
+    color: #000000;
+    border-top: 1px solid #A0A0A0;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    background-color: #F0F0F0;
+    width: 16px;
+    border: 1px solid #C0C0C0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E0E0E0, stop: 1 #C0C0C0); /* Glossy handle */
+    border: 1px solid #A0A0A0;
+    border-radius: 8px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #C0C0C0, stop: 1 #A0A0A0);
+}

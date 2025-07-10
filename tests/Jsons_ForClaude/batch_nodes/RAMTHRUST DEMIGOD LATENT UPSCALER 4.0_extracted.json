@@ -1,0 +1,654 @@
+[
+    {
+        "id": 0,
+        "name": "Skin detailer"
+    },
+    {
+        "id": 1,
+        "name": "Hand detailer"
+    },
+    {
+        "id": 2,
+        "name": "Fashion detailer"
+    },
+    {
+        "id": 3,
+        "name": "Hair detailer"
+    },
+    {
+        "id": 4,
+        "name": "face detailer"
+    },
+    {
+        "id": 5,
+        "name": "Breast detailer"
+    },
+    {
+        "id": 6,
+        "name": "Eye detailer"
+    },
+    {
+        "id": 7,
+        "name": "Detailers"
+    },
+    {
+        "id": 8,
+        "name": "Save upscaled"
+    },
+    {
+        "id": 9,
+        "name": "Save upscaled watermark"
+    },
+    {
+        "id": 10,
+        "name": "Save upscaled detailed"
+    },
+    {
+        "id": 11,
+        "name": "save upscaled detailed watermarked"
+    },
+    {
+        "id": 12,
+        "name": "Controlnets"
+    },
+    {
+        "id": 13,
+        "name": "Canny"
+    },
+    {
+        "id": 14,
+        "name": "Depth"
+    },
+    {
+        "id": 15,
+        "name": "Openpose"
+    },
+    {
+        "id": 16,
+        "name": "Upscale #1"
+    },
+    {
+        "id": 17,
+        "name": "Upscale#2"
+    },
+    {
+        "id": 18,
+        "name": "Downscale"
+    },
+    {
+        "id": 19,
+        "name": "Save Preupscaled"
+    },
+    {
+        "id": 42,
+        "name": "IterativeLatentUpscale"
+    },
+    {
+        "id": 46,
+        "name": "Upscale Model Loader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 48,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 63,
+        "name": "CR Upscale Image",
+        "prompts": {
+            "text": "1x-ITF-SkinDiffDetail-Lite-v1.pth"
+        }
+    },
+    {
+        "id": 82,
+        "name": "IterativeLatentUpscale"
+    },
+    {
+        "id": 85,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 87,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 97,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 106,
+        "name": "Preview Chooser",
+        "prompts": {
+            "text": "Always pause"
+        }
+    },
+    {
+        "id": 135,
+        "name": "ControlNetLoaderAdvanced",
+        "prompts": {
+            "text": "diffusers_xl_canny_full.safetensors"
+        }
+    },
+    {
+        "id": 136,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "mr-burns-excellent-mr-burns.gif"
+        }
+    },
+    {
+        "id": 139,
+        "name": "ControlNetLoaderAdvanced",
+        "prompts": {
+            "text": "diffusers_xl_depth_full.safetensors"
+        }
+    },
+    {
+        "id": 141,
+        "name": "ControlNetLoaderAdvanced",
+        "prompts": {
+            "text": "kohya_controllllite_xl_openpose_anime.safetensors"
+        }
+    },
+    {
+        "id": 159,
+        "name": "PlaySound|pysssss"
+    },
+    {
+        "id": 167,
+        "name": "PlaySound|pysssss"
+    },
+    {
+        "id": 176,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 182,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/skin_yolov8m-seg_400.pt"
+        }
+    },
+    {
+        "id": 256,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 257,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8s.pt"
+        }
+    },
+    {
+        "id": 258,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 259,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/deepfashion2_yolov8s-seg.pt"
+        }
+    },
+    {
+        "id": 260,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 261,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/hair_yolov8n-seg_60.pt"
+        }
+    },
+    {
+        "id": 262,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 263,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 264,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 352,
+        "name": "PerturbedAttentionGuidance"
+    },
+    {
+        "id": 402,
+        "name": "Primitive float [Crystools]"
+    },
+    {
+        "id": 464,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 531,
+        "name": "PixelKSampleUpscalerProvider"
+    },
+    {
+        "id": 532,
+        "name": "PixelKSampleUpscalerProvider"
+    },
+    {
+        "id": 533,
+        "name": "Color Correct (mtb)"
+    },
+    {
+        "id": 541,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 551,
+        "name": "LoadImage"
+    },
+    {
+        "id": 557,
+        "name": "Image Overlay",
+        "prompts": {
+            "text": "Resize by rescale_factor",
+            "text_2": "nearest-exact"
+        }
+    },
+    {
+        "id": 559,
+        "name": "Image To Mask"
+    },
+    {
+        "id": 560,
+        "name": "LoadImage"
+    },
+    {
+        "id": 563,
+        "name": "Image Overlay",
+        "prompts": {
+            "text": "Resize by rescale_factor",
+            "text_2": "nearest-exact"
+        }
+    },
+    {
+        "id": 564,
+        "name": "Image To Mask"
+    },
+    {
+        "id": 569,
+        "name": "SaveImage"
+    },
+    {
+        "id": 589,
+        "name": "FileNamePrefix",
+        "prompts": {
+            "text": "UPSCALED_Watermarked",
+            "text_2": "Upscaled_Watermarked"
+        }
+    },
+    {
+        "id": 591,
+        "name": "FileNamePrefix",
+        "prompts": {
+            "text": "UPSCALED_Detailed_Watermarked",
+            "text_2": "Upscaled_Detailed_Watermarked"
+        }
+    },
+    {
+        "id": 592,
+        "name": "FileNamePrefix"
+    },
+    {
+        "id": 597,
+        "name": "FileNamePrefix",
+        "prompts": {
+            "text": "UPSCALED_Detailed",
+            "text_2": "Upscaled_Detailed"
+        }
+    },
+    {
+        "id": 625,
+        "name": "CR Aspect Ratio",
+        "prompts": {
+            "text": "SDXL - 5:8 portrait 832x1216"
+        }
+    },
+    {
+        "id": 634,
+        "name": "KSampler"
+    },
+    {
+        "id": 637,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "ILLUSTRIOUS\\Illustrious-Black-Magic-Clean27.safetensors"
+        }
+    },
+    {
+        "id": 638,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 643,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 650,
+        "name": "Reroute"
+    },
+    {
+        "id": 651,
+        "name": "Reroute"
+    },
+    {
+        "id": 652,
+        "name": "Reroute"
+    },
+    {
+        "id": 658,
+        "name": "Reroute"
+    },
+    {
+        "id": 661,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 662,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 665,
+        "name": "Primitive integer [Crystools]"
+    },
+    {
+        "id": 671,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 672,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 689,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 690,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 691,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 697,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 698,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 699,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 700,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 701,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 702,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 703,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 704,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 705,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 706,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 707,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 708,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 709,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 710,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 711,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 712,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 713,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 714,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 715,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 716,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 717,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 718,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 719,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 720,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 721,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 723,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 724,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 725,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 726,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 727,
+        "name": "ImpactWildcardProcessor",
+        "prompts": {
+            "text": "galaxy eyes",
+            "text_2": "galaxy eyes"
+        }
+    },
+    {
+        "id": 728,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 730,
+        "name": "SaveImage"
+    },
+    {
+        "id": 733,
+        "name": "Reroute"
+    },
+    {
+        "id": 735,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 736,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 737,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 738,
+        "name": "Upscale Model Loader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 742,
+        "name": "ControlNetApply"
+    },
+    {
+        "id": 743,
+        "name": "ControlNetApply"
+    },
+    {
+        "id": 744,
+        "name": "ControlNetApply"
+    },
+    {
+        "id": 746,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "child, kid, loli, blurry, watermark, smudgy, (bad quality:1.15), (worst quality:1.3), censored, (multiple views:1.2), jpeg artifacts, (patreon username, patreon logo:1.1), Halo,"
+        }
+    },
+    {
+        "id": 749,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 750,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 752,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 753,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 754,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 755,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 756,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 759,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/breasts_seg.pt"
+        }
+    },
+    {
+        "id": 760,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Eyeful_v2-Individual.pt"
+        }
+    },
+    {
+        "id": 769,
+        "name": "FileNamePrefix",
+        "prompts": {
+            "text": "preupscaled",
+            "text_2": "preupscaled"
+        }
+    },
+    {
+        "id": 776,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "masterpiece, best quality, newest, absurdres, highres,\n\n\n"
+        }
+    },
+    {
+        "id": 778,
+        "name": "Note",
+        "prompts": {
+            "text": "NOTEPAD FOR NOTES!\n\nWHO DOESN'T LOVE A GOOD NOTEPAD!\n\nENJOY THE RAMTHRUST DEEMIGOD LATENT UPSCALER! I HOPE THIS NEW VERSION WAS WORTH THE WAIT!\n\n~RAMTHRUST"
+        }
+    },
+    {
+        "id": 779,
+        "name": "SaveImageWithMetaData"
+    },
+    {
+        "id": 780,
+        "name": "SaveImageWithMetaData"
+    },
+    {
+        "id": 781,
+        "name": "SaveImageWithMetaData"
+    },
+    {
+        "id": 784,
+        "name": "ApplyFBCacheOnModel",
+        "prompts": {
+            "text": "diffusion_model"
+        }
+    }
+]

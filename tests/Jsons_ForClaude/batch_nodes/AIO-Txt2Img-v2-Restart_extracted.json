@@ -1,0 +1,1057 @@
+[
+    {
+        "id": -1,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": -1,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 1,
+        "name": "(Optional) Detailer"
+    },
+    {
+        "id": 3,
+        "name": "Checkpoints"
+    },
+    {
+        "id": 4,
+        "name": "KSamplers"
+    },
+    {
+        "id": 5,
+        "name": "Final Image"
+    },
+    {
+        "id": 6,
+        "name": "(Optional) Hand Detailer"
+    },
+    {
+        "id": 8,
+        "name": "(Optional) Person Detailer"
+    },
+    {
+        "id": 9,
+        "name": "(Optional) Image References (ControlNet, IP-Adapter, Img2Img Settings)"
+    },
+    {
+        "id": 12,
+        "name": "Prompting"
+    },
+    {
+        "id": 13,
+        "name": "(Optional - SD1.5 Exclusive - Additional Confirmation) ELLA"
+    },
+    {
+        "id": 14,
+        "name": "(Optional) Face Detailer"
+    },
+    {
+        "id": 15,
+        "name": "(Optional) DeepFashion Detailer"
+    },
+    {
+        "id": 16,
+        "name": "KSampler Settings + Documentations and Navigations"
+    },
+    {
+        "id": 18,
+        "name": "(Optional) CLIPSeg Watermark Removal"
+    },
+    {
+        "id": 19,
+        "name": "(IMPORTANT) Additional Confirmations"
+    },
+    {
+        "id": 21,
+        "name": "(Optional) Advanced Model Options"
+    },
+    {
+        "id": 22,
+        "name": "(Optional - Additional Confirmation) 2nd Checkpoint"
+    },
+    {
+        "id": 23,
+        "name": "(Optional - Required for ELLA) - Ollama Prompt Upsampling"
+    },
+    {
+        "id": 24,
+        "name": "(Optional) ControlNet"
+    },
+    {
+        "id": 25,
+        "name": "Image Loader"
+    },
+    {
+        "id": 26,
+        "name": "(Optional) IP-Adapter"
+    },
+    {
+        "id": 27,
+        "name": "(Optional) WD1.4 Tagger"
+    },
+    {
+        "id": 144,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 147,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 240,
+        "name": "workflow>Upscale Image (using Model)",
+        "prompts": {
+            "text": "2x_AniScale2_Omni_i16_40K.pth"
+        }
+    },
+    {
+        "id": 241,
+        "name": "workflow>Upscale Image (using Model)",
+        "prompts": {
+            "text": "1x_AniScale2_Refiner_10K.pth"
+        }
+    },
+    {
+        "id": 290,
+        "name": "ModelSamplingDiscrete",
+        "prompts": {
+            "text": "v_prediction"
+        }
+    },
+    {
+        "id": 291,
+        "name": "RescaleCFG"
+    },
+    {
+        "id": 292,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_2m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 296,
+        "name": "PatchModelAddDownscale"
+    },
+    {
+        "id": 331,
+        "name": "PCLazyTextEncode"
+    },
+    {
+        "id": 333,
+        "name": "ImpactWildcardProcessor",
+        "prompts": {
+            "text": "Select the Wildcard to add to the text"
+        }
+    },
+    {
+        "id": 347,
+        "name": "KSampler"
+    },
+    {
+        "id": 353,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "sekiro_2788033b-2547832350.jpg"
+        }
+    },
+    {
+        "id": 354,
+        "name": "DepthAnythingPreprocessor",
+        "prompts": {
+            "text": "depth_anything_vits14.pth"
+        }
+    },
+    {
+        "id": 355,
+        "name": "AnyLineArtPreprocessor_aux",
+        "prompts": {
+            "text": "lineart_realisitic"
+        }
+    },
+    {
+        "id": 357,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 358,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 359,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 363,
+        "name": "GPUTemperatureProtection"
+    },
+    {
+        "id": 364,
+        "name": "PlaySound|pysssss"
+    },
+    {
+        "id": 367,
+        "name": "PrepImageForClipVision"
+    },
+    {
+        "id": 375,
+        "name": "DWPreprocessor",
+        "prompts": {
+            "text": "yolo_nas_s_fp16.onnx",
+            "text_2": "dw-ll_ucoco.onnx"
+        }
+    },
+    {
+        "id": 376,
+        "name": "SystemNotification|pysssss",
+        "prompts": {
+            "text": "Your current image generation has finished"
+        }
+    },
+    {
+        "id": 380,
+        "name": "TomePatchModel"
+    },
+    {
+        "id": 381,
+        "name": "HyperTile"
+    },
+    {
+        "id": 382,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 383,
+        "name": "PerturbedAttentionGuidance"
+    },
+    {
+        "id": 384,
+        "name": "FreeU"
+    },
+    {
+        "id": 387,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 392,
+        "name": "PCLazyLoraLoader"
+    },
+    {
+        "id": 400,
+        "name": "ELLALoader",
+        "prompts": {
+            "text": "ella-sd1.5-tsc-t5xl.safetensors"
+        }
+    },
+    {
+        "id": 402,
+        "name": "T5TextEncoderLoader #ELLA",
+        "prompts": {
+            "text": "models--google--flan-t5-xl--text_encoder"
+        }
+    },
+    {
+        "id": 404,
+        "name": "SetEllaTimesteps"
+    },
+    {
+        "id": 406,
+        "name": "EllaTextEncode"
+    },
+    {
+        "id": 408,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 410,
+        "name": "CR Text Input Switch"
+    },
+    {
+        "id": 424,
+        "name": "StringFunction|pysssss",
+        "prompts": {
+            "text": "Instruction: Convert the following set of booru tags into one descriptive paragraph in natural language for image generation. Only return the paragraph and nothing else. Keep the paragraph short and detailed. Ignore any syntax similar to and including MASK() or BREAK() when generating paragraphs, they are to activate certain features, not actual tags. Ignore any character names and copyright when generating paragraphs. Include all details related to character, scenery, and composition.\nTags:"
+        }
+    },
+    {
+        "id": 425,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "best quality, absurdres, anime_screenshot, pastel colors, flat colors, \nbeach, sand dune, night, black sky, grey clouds, waves, rocks, wind chime, railing, cave, river,"
+        }
+    },
+    {
+        "id": 446,
+        "name": "StringFunction|pysssss"
+    },
+    {
+        "id": 455,
+        "name": "EllaTextEncode"
+    },
+    {
+        "id": 456,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 457,
+        "name": "CR Text Input Switch"
+    },
+    {
+        "id": 470,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/person_yolov8m-seg.pt"
+        }
+    },
+    {
+        "id": 471,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8n.pt"
+        }
+    },
+    {
+        "id": 475,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 476,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 477,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 518,
+        "name": "SelfAttentionGuidance"
+    },
+    {
+        "id": 519,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_2m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 520,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/Anzhc Face seg 1024 v2 y8n.pt"
+        }
+    },
+    {
+        "id": 521,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 522,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 523,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_2m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 524,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/deepfashion2_yolov8s-seg.pt"
+        }
+    },
+    {
+        "id": 525,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 526,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 527,
+        "name": "PCTextEncode",
+        "prompts": {
+            "text": "masterpiece, high quality, anime screenshot,\nhand, finger, fingernail, palms,"
+        }
+    },
+    {
+        "id": 533,
+        "name": "LoadCLIPSegModels+"
+    },
+    {
+        "id": 534,
+        "name": "ApplyCLIPSeg+"
+    },
+    {
+        "id": 535,
+        "name": "LamaRemover"
+    },
+    {
+        "id": 545,
+        "name": "LatentGC"
+    },
+    {
+        "id": 577,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 591,
+        "name": "PlaySound|pysssss"
+    },
+    {
+        "id": 592,
+        "name": "SystemNotification|pysssss",
+        "prompts": {
+            "text": "Your current image generation is paused for previewing. Please choose your image to continue, or wait a minute to cancel the generation process"
+        }
+    },
+    {
+        "id": 604,
+        "name": "ModelSamplingDiscrete"
+    },
+    {
+        "id": 605,
+        "name": "RescaleCFG"
+    },
+    {
+        "id": 617,
+        "name": "GPUTemperatureProtection"
+    },
+    {
+        "id": 637,
+        "name": "KRestartSampler",
+        "prompts": {
+            "text": "ddim_uniform",
+            "text_2": "[3,2,0.06,0.30],[3,1,0.30,0.59]"
+        }
+    },
+    {
+        "id": 656,
+        "name": "Latent Noise Injection"
+    },
+    {
+        "id": 657,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "ddim_uniform"
+        }
+    },
+    {
+        "id": 659,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 660,
+        "name": "easy clearCacheAll"
+    },
+    {
+        "id": 674,
+        "name": "Image Saver",
+        "prompts": {
+            "text": "%time_%basemodelname_%seed-%counter",
+            "text_2": "txt2img-output"
+        }
+    },
+    {
+        "id": 675,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 676,
+        "name": "Width/Height Literal (Image Saver)"
+    },
+    {
+        "id": 677,
+        "name": "Width/Height Literal (Image Saver)"
+    },
+    {
+        "id": 678,
+        "name": "Int Literal (Image Saver)"
+    },
+    {
+        "id": 680,
+        "name": "Int Literal (Image Saver)"
+    },
+    {
+        "id": 681,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 682,
+        "name": "Cfg Literal (Image Saver)"
+    },
+    {
+        "id": 683,
+        "name": "Sampler Selector (Image Saver)"
+    },
+    {
+        "id": 685,
+        "name": "Scheduler Selector (Comfy) (Image Saver)"
+    },
+    {
+        "id": 690,
+        "name": "Cfg Literal (Image Saver)"
+    },
+    {
+        "id": 691,
+        "name": "Int Literal (Image Saver)"
+    },
+    {
+        "id": 694,
+        "name": "Float Literal (Image Saver)"
+    },
+    {
+        "id": 695,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "ddim_uniform"
+        }
+    },
+    {
+        "id": 697,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 700,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 702,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "ddim_uniform"
+        }
+    },
+    {
+        "id": 703,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 704,
+        "name": "VectorscopeCC"
+    },
+    {
+        "id": 705,
+        "name": "DiffusionCG"
+    },
+    {
+        "id": 706,
+        "name": "DynamicThresholdingFull",
+        "prompts": {
+            "text": "Half Cosine Up"
+        }
+    },
+    {
+        "id": 718,
+        "name": "String Literal (Image Saver)"
+    },
+    {
+        "id": 720,
+        "name": "PCLazyTextEncode"
+    },
+    {
+        "id": 721,
+        "name": "PCLazyLoraLoader"
+    },
+    {
+        "id": 722,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# Welcome to Azelus' All-in-one Dual Checkpoint Text-to Image workflow\n\n--------\n\nThis workflow is an advanced text-to-image workflow for ComfyUI that is built for 2 main reasons:\n\n1. To make older models (SD1.5, specifically) more competitive with newer models\n\n2. To showcase what's possible with this tech\n\nIt can also be used with any SDXL models (including Pony and Illustrious) without many changes. This workflow also assumes you have knowledge of how ComfyUI works and can make your own changes of this workflow to fit your use case, including making it more compatible with additional model types.\n\nThis workflows also assumes you can and will bypass nodes if you don'' want it\n\nWorkflow creator: Azelus\u5149\u5c71 (AzelusLightvale)\n\n## Prerequisite models\n\n### Basic requirements - Minimal operations\n\n1. 1-2 checkpoint model (SD1.5, SD2/2.1, SDXL,...)\n2. (Semi-Optional) A separate VAE model for your base model\n3. (Optional) LoRAs\n\n### Upscaler model requirements - 2nd Pass + Upscale at end\n\n- Closest to the original workflow: 1 2x upscaler, 1 1x refiner (sharpen, deblur,...)\n- Used by the workflow author:\n  + 2x AniScale2-Omni (Manual Download): [https://github.com/Sirosky/Upscale-Hub/releases/tag/AniScale2](https://github.com/Sirosky/Upscale-Hub/releases/tag/AniScale2)\n  + 1x AniScale2-Refiner (Manual Download): [https://github.com/Sirosky/Upscale-Hub/releases/tag/AniScale2](https://github.com/Sirosky/Upscale-Hub/releases/tag/AniScale2)\n\n### ControlNet requirements (Optional)\nLineArt, Depth, OpenPose, and Normal are the main ones. Pick and choose your ControlNet model based on base model type (SD1.5, SD2.1, SDXL, Pony, Illustrious,...). If ControlNet Union is enabled, make sure to grab the xinsir/ControlNet++ model in Model Manager or [https://huggingface.co/xinsir/controlnet-union-sdxl-1.0/tree/main](https://huggingface.co/xinsir/controlnet-union-sdxl-1.0/tree/main) (both base and ProMax variant are supported)\n\n### IP-Adapter requirements (Optional)\n\nIP-Adapter model fitting base model + CLIP Vision model required by model. Most models should be available in Model Manager\n\n### ELLA requirements (Optional, only download if using SD1.5 models)\n\n- ELLA model: [https://huggingface.co/QQGYLab/ELLA/blob/main/ella-sd1.5-tsc-t5xl.safetensors](https://huggingface.co/QQGYLab/ELLA/blob/main/ella-sd1.5-tsc-t5xl.safetensors)\n- T5 folder: [https://huggingface.co/QQGYLab/ELLA/tree/main/models--google--flan-t5-xl--text_encoder](https://huggingface.co/QQGYLab/ELLA/tree/main/models--google--flan-t5-xl--text_encoder) (Grab everything in here and get the folder name correct)\n* Instructions: [https://github.com/TencentQQGYLab/ComfyUI-ELLA?tab=readme-ov-file#orange_book-models](https://github.com/TencentQQGYLab/ComfyUI-ELLA?tab=readme-ov-file#orange_book-models)\n* Additional reading: [https://civitai.com/articles/8057/personal-experiments-ella-and-how-sd15-could-be-better-at-complex-compositions-sometimes](https://civitai.com/articles/8057/personal-experiments-ella-and-how-sd15-could-be-better-at-complex-compositions-sometimes)\n\n### Detailer requirements (Optional)\n\n- Person YOLOv8m (Available in Model Manager): [https://huggingface.co/Bingsu/adetailer/blob/main/person_yolov8m-seg.pt](https://huggingface.co/Bingsu/adetailer/blob/main/person_yolov8m-seg.pt)\n- Hand YOLOv8n (Available in Model Manager): [https://huggingface.co/Bingsu/adetailer/blob/main/hand_yolov8n.pt](https://huggingface.co/Bingsu/adetailer/blob/main/hand_yolov8n.pt)\n- Anzhc's Face YOLOv8 (Manual Download): [https://huggingface.co/Anzhc/Anzhcs_YOLOs/blob/main/Anzhc%20Face%20seg%201024%20v2%20y8n.pt](https://huggingface.co/Anzhc/Anzhcs_YOLOs/blob/main/Anzhc%20Face%20seg%201024%20v2%20y8n.pt)\n- DeepFashion YOLOv8 (Available in Model Manager): [https://huggingface.co/Bingsu/adetailer/blob/main/deepfashion2_yolov8s-seg.pt](https://huggingface.co/Bingsu/adetailer/blob/main/deepfashion2_yolov8s-seg.pt)\n\n### Miscellaneous ComfyUI nodes (other than the necessary ones)\n\n- ComfyUI-ppm ([https://githuyb.com/pamparamm/ComfyUI-ppm](https://github.com/pamparamm/ComfyUI-ppm)): NegPip, additional scheduler choice\n- ComfyUI-Crystools ([https://github.com/crystian/ComfyUI-Crystools](https://github.com/crystian/ComfyUI-Crystools)): System monitoring\n- quick-connections ([https://github.com/niknah/quick-connections](https://github.com/niknah/quick-connections)): Quality-of-life for connecting nodes\n- ComfyUI-MultiGPU ([https://github.com/pollockjj/ComfyUI-MultiGPU](https://github.com/pollockjj/ComfyUI-MultiGPU)): Off-loading models for performance\n- Everything else listed in ComfyUI Easy Use ([https://github.com/yolain/ComfyUI-Easy-Use?tab=readme-ov-file#-introduce](https://github.com/yolain/ComfyUI-Easy-Use?tab=readme-ov-file#-introduce)): [smZNodes](https://github.com/shiimizu/ComfyUI_smZNodes) for A1111 reproduction, [Inspire-Pack](https://github.com/ltdrdata/ComfyUI-Inspire-Pack) for LoRA Block Weight + shenanigans, [tinyterraNodes](https://github.com/TinyTerra/ComfyUI_tinyterraNodes) for shortcuts and additional control, [InstantID](https://github.com/cubiq/ComfyUI_InstantID) for more IP-Adapter control\n\n### Ollama requirements (for ELLA)\n\n- Download and install [Ollama](https://ollama.com/) by following their instructions\n- Grab your Ollama model of choice by browsing their site\n  + Recommended model: huihui_ai/llama3.2-abliterate:3b-instruct-q4_K_M or huihui_ai/deepseek-r1-abliterated:8b\n\n## Usage notes\n\n0. Read :)\n1. Prepare to navigate the entire workflow manually. Each section is properly grouped and marked out as seen above and can be enabled or disabled at will*\n(Except for certain mandatory groups, as well as some things requiring additional confirmation before being applied due to how intrusive it is on the whole workflow)\n2. This workflow is a spaghetti jungle due to how many nodes is used and how interconnected every section is. For performance reasons, hide the connections, or leave Link Render Mode (in Settings -> Lite Graph) as Straight for aesthetic purposes\n3. KSampler settings are here for the first 2 passes. Additional detailer runs have to be manually adjusted by going to the Detailers group\n4. To best use this workflow, use 2 different checkpoints. One for composition, and one for style. This might be unnecessary for certain cases (i.e jack-of-all-trade models that can use different styles), in which case, set Enable 2nd Checkpoint for 2nd Pass to \"1\" to use the original model\n5. IMPORTANT - When using SDXL, Flux, or SD2.1 with this, DO NOT ENABLE ELLA. ELLA is built for SD1.5 first, and weights for the others are not available [(SDXL is confirmed to never be released)](https://huggingface.co/QQGYLab/ELLA/discussions/6)\n6. This workflow works best with a batch size of 1, but it *could* work with larger batch sizes\n7. This workflow saves the output in a different location (user-defined), so navigate to Final Image to check and change at will\n8. GPU Temperature Protection, Play Sound, and Send Notification is always seen as a batch that goes together, but they're all optional nodes that serves either as a protection against killing your own system, or some quality-of-life.\n9. For GPU Temperature Proctection: \"sleep_temp\" and \"wake_temp\" are sliders. They reset on loading workflow.\n10. The aggressive cleanup of VRAM and cache is for memory reasons. This workflow is meant to run on 4GB VRAM + 16GB RAM with little to no regards for speed\n11. Do NOT enable any light theme on this workflow if the text isn't black on white\n12. (Optional) If you decide to change the models on this workflow and redistribute it, make sure to change this Markdown Note to indicate which model you like to use with this so future users could grab them as they wish (or makes re-downloading your stuff after a cleanup or reinstall easier)\n\n## Changelog\n\n- V2.0 - Restart\n  + Switched PowerNoiseSuite's Perlin noise sampler to Restart sampler + Latent Noise Injection\n    - WARNING: Restart sampling will stress your system out, so be careful\n  + Switched from comfyui-prompt-control-nodes back to ComfyUI Image Saver for better LoRA support and better caching\n    - As part of the transition to Image Saver, the 2nd checkpoint will also be included within the metadata, and LoRA loading will be handled by loading through prompts. To best use this system, enable LoRA autocomplete in ComfyUI-Custom-Scripts by going into Settings -> pysssss -> Autocomplete -> Loras enabled\n  + Merged IP-Adapter and ControlNet to one Image References section and condensed certain features (mostly IP-Adapter)\n  + Added WD1.4 Tagger to make use of images more effectively\n  + Split certain sections to allow for more refined control in each section\n  + Added more advanced model-changing settings (CFGZeroStar, RenormCFG, and MaHiRo Guidance) [probably mutually exclusive, but could work together]\n  + Added documentations for usability\n- V1.0 - Streamlined\n  + Initial release"
+        }
+    },
+    {
+        "id": 724,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "WD1-4-kl-f8-anime2-bless09.safetensors"
+        }
+    },
+    {
+        "id": 725,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "WD1-4-kl-f8-anime2-bless09.safetensors"
+        }
+    },
+    {
+        "id": 726,
+        "name": "CR VAE Input Switch"
+    },
+    {
+        "id": 727,
+        "name": "CR VAE Input Switch"
+    },
+    {
+        "id": 729,
+        "name": "CR Model Input Switch"
+    },
+    {
+        "id": 730,
+        "name": "CR VAE Input Switch"
+    },
+    {
+        "id": 764,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 765,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 766,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# Documentations for prompting and other random stuff\n\n--------\n\n## Documentation\n\nAlways click the links to understand everything better\n- Basic syntax (Prompting):\n  + Embedding loading (from ComfyUI Core): `embedding:embedding_name`\n  + Wildcard syntax (from ComfyUI Core): `{a|b|c}` (a, b, and c are placeholders)\n  + Comments (from ComfyUI Core): Uses C-style comment syntax, like `// comment` and `/* comment */`\n- Prompt Control syntax (Prompting): [https://github.com/asagi4/comfyui-prompt-control/blob/master/doc/syntax.md](https://github.com/asagi4/comfyui-prompt-control/blob/master/doc/syntax.md) The following is a few basic one to keep in mind\n  + For LoRA loading: `<lora:lora_name:1>`, similar to A1111 and other Gradio UIs\n  + For masking: `MASK(left-horizontal right-horizontal, top-vertical bottom-vertical)`. Example: `MASK(0 0.5, 0.25 1) 1girl,...`. Useful for masked area compositioning\n  + `BREAK` functions the same way as A1111's version - manual chunk splitting - and then concatenates them together\n  + `AND` combine prompts\n  + `NOISE(weight, seed)` adds noise into the prompt. Changes image. Weights is in (0,1) range and seed uses global seed if unspecified\n- Restart sampler segments (Sampling): [https://github.com/ssitu/ComfyUI_restart_sampling?tab=readme-ov-file#segments](https://github.com/ssitu/ComfyUI_restart_sampling?tab=readme-ov-file#segments)\n  + Format:  [ N Restart , K , t min , t max ]\n\n## Random stuff\n\n- Fun move: Since this is a two-pass workflow, setting CFG Scale on 1st pass really low **(0-1 is the range, 0.5 is recommended for best results from this method)** and 2nd pass normally can generate some *very* unique scenes. \n- Zeroing out conditioning applies noahshinji's idea from his article [Starting From Nothing (AKA: No Prompt Generation)](https://civitai.com/articles/5475/starting-from-nothing-aka-no-prompt-generation), but instead of prompting from the actual imagination, it's overlaying the original intent over the image to make weirder images come to life. You could cancel, recycle the seed, and run it again with a proper prompt if you want to replicate something similar. Also, **use a higher denoise for this method (0.5-0.6)** to make the whole idea more cohesive\n- `--cache-none` currently breaks the implementation of comfyui-prompt-control. However `--async-offload` and `--fast` does work\n- fp8 is not supported by ELLA. It will throw errors when you try\n- MaHiRo Guidance Function needs CFG Scale to be set ~2 numbers lower than normal. Does not affect CFG++ samplers, which still want ~0.5-1\n- For best use with this workflow, use the Nodes Map feature from Easy-Use to navigate this workflow"
+        }
+    },
+    {
+        "id": 768,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 769,
+        "name": "easy clearCacheAll"
+    },
+    {
+        "id": 779,
+        "name": "HyperTile"
+    },
+    {
+        "id": 780,
+        "name": "PerturbedAttentionGuidance"
+    },
+    {
+        "id": 781,
+        "name": "SelfAttentionGuidance"
+    },
+    {
+        "id": 782,
+        "name": "DiffusionCG"
+    },
+    {
+        "id": 783,
+        "name": "TomePatchModel"
+    },
+    {
+        "id": 784,
+        "name": "DynamicThresholdingFull",
+        "prompts": {
+            "text": "Half Cosine Up"
+        }
+    },
+    {
+        "id": 785,
+        "name": "VectorscopeCC"
+    },
+    {
+        "id": 786,
+        "name": "FreeU"
+    },
+    {
+        "id": 787,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "[3,2,0.06,0.30],[3,1,0.30,0.59]"
+        }
+    },
+    {
+        "id": 796,
+        "name": "Image Filter"
+    },
+    {
+        "id": 798,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "(worst quality, low quality:1.1), realistic, zombie, interlocked fingers, extra legs, chibi, text,"
+        }
+    },
+    {
+        "id": 799,
+        "name": "OllamaGenerateV2"
+    },
+    {
+        "id": 800,
+        "name": "OllamaOptionsV2"
+    },
+    {
+        "id": 805,
+        "name": "OllamaGenerateV2"
+    },
+    {
+        "id": 806,
+        "name": "StringFunction|pysssss",
+        "prompts": {
+            "text": "Instruction: Convert the following set of booru tags into one descriptive paragraph in natural language for image generation. Only return the paragraph and nothing else. Keep the paragraph short and detailed. Ignore any syntax similar to and including MASK() or BREAK() when generating paragraphs, they are to activate certain features, not actual tags. Ignore any character names and copyright when generating paragraphs. Include all details related to character, scenery, and composition.\nTags:"
+        }
+    },
+    {
+        "id": 807,
+        "name": "StringFunction|pysssss"
+    },
+    {
+        "id": 809,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "SD1.5/t2iadapter_depth_sd14v1.pth"
+        }
+    },
+    {
+        "id": 810,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 811,
+        "name": "CR ControlNet Input Switch"
+    },
+    {
+        "id": 812,
+        "name": "SetUnionControlNetType"
+    },
+    {
+        "id": 813,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "SDXL/controlnet-union-sdxl-1.0/diffusion_pytorch_model.safetensors"
+        }
+    },
+    {
+        "id": 814,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 815,
+        "name": "SetUnionControlNetType",
+        "prompts": {
+            "text": "canny/lineart/anime_lineart/mlsd"
+        }
+    },
+    {
+        "id": 816,
+        "name": "CR ControlNet Input Switch"
+    },
+    {
+        "id": 817,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "1.5/control_v11p_sd15_lineart_fp16.safetensors"
+        }
+    },
+    {
+        "id": 818,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 819,
+        "name": "SetUnionControlNetType"
+    },
+    {
+        "id": 820,
+        "name": "CR ControlNet Input Switch"
+    },
+    {
+        "id": 821,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "SD1.5/t2iadapter_openpose_sd14v1.pth"
+        }
+    },
+    {
+        "id": 822,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 823,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 824,
+        "name": "CR ControlNet Input Switch"
+    },
+    {
+        "id": 825,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 827,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "SD1.5/t2iadapter_openpose_sd14v1.pth"
+        }
+    },
+    {
+        "id": 828,
+        "name": "SetUnionControlNetType"
+    },
+    {
+        "id": 829,
+        "name": "BAE-NormalMapPreprocessor"
+    },
+    {
+        "id": 835,
+        "name": "Checkpoint Loader Simple Mikey",
+        "prompts": {
+            "text": "ColorSplash-v0.1.3-rc2_00001_.safetensors"
+        }
+    },
+    {
+        "id": 836,
+        "name": "Checkpoint Loader Simple Mikey",
+        "prompts": {
+            "text": "BlackDaisyMix/BlackDaisyMix-v1-Variation_1.safetensors"
+        }
+    },
+    {
+        "id": 837,
+        "name": "ImpactImageBatchToImageList"
+    },
+    {
+        "id": 843,
+        "name": "CLIPLoader",
+        "prompts": {
+            "text": "PandoraBox-a4-LastWord-LongCLIP-L-TE-only.safetensors",
+            "text_2": "stable_diffusion"
+        }
+    },
+    {
+        "id": 844,
+        "name": "CR Clip Input Switch"
+    },
+    {
+        "id": 849,
+        "name": "OllamaConnectivityV2",
+        "prompts": {
+            "text": "http://127.0.0.1:11434",
+            "text_2": "huihui_ai/llama3.2-abliterate:3b"
+        }
+    },
+    {
+        "id": 852,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 853,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 854,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 855,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 856,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 860,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 861,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 862,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 863,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 864,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 865,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 866,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 867,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 869,
+        "name": "ImageResizeKJ"
+    },
+    {
+        "id": 871,
+        "name": "CR Latent Input Switch"
+    },
+    {
+        "id": 872,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 874,
+        "name": "Float Literal (Image Saver)"
+    },
+    {
+        "id": 875,
+        "name": "IPAdapterAdvanced",
+        "prompts": {
+            "text": "ease in-out"
+        }
+    },
+    {
+        "id": 876,
+        "name": "IPAdapterModelLoader",
+        "prompts": {
+            "text": "ip-adapter_sd15.safetensors"
+        }
+    },
+    {
+        "id": 877,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors"
+        }
+    },
+    {
+        "id": 878,
+        "name": "SegsToCombinedMask"
+    },
+    {
+        "id": 879,
+        "name": "ImpactSimpleDetectorSEGS"
+    },
+    {
+        "id": 881,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/person_yolov8n-seg.pt"
+        }
+    },
+    {
+        "id": 882,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 884,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 885,
+        "name": "PCLazyTextEncode"
+    },
+    {
+        "id": 886,
+        "name": "PCLazyTextEncode"
+    },
+    {
+        "id": 887,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 889,
+        "name": "VAEEncodeTiled"
+    },
+    {
+        "id": 890,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 892,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 893,
+        "name": "VAEEncodeTiled"
+    },
+    {
+        "id": 894,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 895,
+        "name": "easy clearCacheAll"
+    },
+    {
+        "id": 896,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 897,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 898,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 899,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 900,
+        "name": "RenormCFG"
+    },
+    {
+        "id": 902,
+        "name": "CFGZeroStar"
+    },
+    {
+        "id": 903,
+        "name": "Mahiro"
+    },
+    {
+        "id": 904,
+        "name": "RenormCFG"
+    },
+    {
+        "id": 905,
+        "name": "CFGZeroStar"
+    },
+    {
+        "id": 906,
+        "name": "Mahiro"
+    },
+    {
+        "id": 907,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# What each additional confirmation switch does and how to properly activate them\n--------\nThis section is mostly meant to showcase how to enable certain features for a workflow and have them usable. These \"Additional Confirmation\" switches are mostly meant to either accommodate the ability to use certain features that would otherwise break when bypassed, or wouldn't work without switching inputs of every node downstream.\n\nEvery switch uses \"1\" = Disable and \"2\" = Enable, which means every feature listed in Additional Confirmations is disabled by default.\n\nFor information on how to install certain features to use with this workflow, see Prerequisite Models in Markdown Note - Main Notes.\n\nTo quickly enable the groups required to make these Additional Confirmation switches work, use Fast Group Bypasser (rgthree) next to the group.\n\n--------\n# 1. SD1.5 Exclusive - Enable ELLA\n(Requires ELLA and Ollama to be downloaded and installed)\n\nRequires `(Optional - SD1.5 Exclusive - Additional Confirmation) ELLA` and `(Optional - Required for ELLA) Ollama Prompt Upsampling` not bypassed and its related switch set to \"2\"\n\nEnables ELLA to use with SD1.5 models. Compatible with Long-CLIP and other custom CLIPs. Uses CLIP and checkpoint from 1st model.\n\nTo best use this feature, Ollama + a small LLM model will be used to rewrite the prompt for use with T5 conditioning with ELLA.\n\n# 2. ELLA Exclusive - 2nd Pass, Detailers\n(Requires Enable ELLA to be \"2\" and ELLA and Ollama to be downloaded and installed)\n\nRequires `(Optional - SD1.5 Exclusive - Additional Confirmation) ELLA` and `(Optional - Required for ELLA) Ollama Prompt Upsampling` not bypassed and its related switches set to \"2\"\n\nBy default, ELLA is only enabled for 1st pass conditioning and does not affect subsequent sampling used in 2nd pass and detailer nodes. Setting these settings to \"2\" allows ELLA to apply to these samplers. Results may vary.\n\n# 3. Use Ollama upsampled prompt\n(Requires Ollama to be installed and downloaded) \n\nRequires `(Optional - Required for ELLA) Ollama Prompt Upsampling` not bypassed and its related switch set to \"2\"\n\nBy default, the model uses text prompt from ImpactWildcardProcessor and String Literal (Image Saver) as the main prompt. Enabling this switch lets the model use the Ollama upsampled prompt for its actual prompt instead of what is listed in the user-inputted text prompt. This is mostly for use with T5 text encoder models and other LLMs, not CLIP models.\n\nThis switch should not be used in tandem with ELLA either, mostly due to bad results.\n\n# 4. Enable 2nd Checkpoint\n(Requires an additional model of same architecture as 1st model)\n\nRequires `(Optional - Additional Confirmation) 2nd Checkpoint)` to not be bypassed and its related switch set to \"2\"\n\nAllows the user to use a second checkpoint for the 2nd pass (Restart sampler) and Detailer phase. Uses same CLIP and conditioning as 1st model to reduce re-processing load and complexity, but might be added in later\n\n# 5. SDXL Exclusive - Use ControlNet Union\n(Requires a xinsir/controlnet-union-sdxl-1.0 model, both promax and regular are supported)\n\nRequires `(Optional) ControlNet` and `Image Loader` not bypassed and its related switch set to \"2\"\n\nIf 1st checkpoint loaded is SDXL, enabling this switch allows the user to use a ControlNet Union model in place of separate ControlNet models.\n\nIf you want, you can bypass all of the SetControlNetUnionType node and use the Load ControlNet Model (Union) node while this switch is enabled to use one ControlNet model for every part. This is not usually recommended, but could be useful for CN-AnyTest models.\n\n# 6. Zero Out 1st Pass Conditioning\n\nRequires its related switch set to \"2\"\n\nSends the 1st pass conditioning in its entirety to ConditioningZeroOut nodes (LoRAs are still loaded if in prompt). Mostly meant for fun and experimentation, not for serious use cases\n\n# 7. Switch to img2img Variations\n\nRequires `Image Loader` not bypassed and its related switch set to \"2\"\n\nUses a downscaled image (based on Width Size and Height Size) loaded in Image Loader group as the latent instead, turning the workflow into an img2img workflow.\n\nFor best use, set denoise on 1st and 2nd pass to less than 0.5\n\n# 8. Use WD1.4 Tagger Prompts\n\nRequires `Image Loader` and `(Optional) WD1.4 Tagger` not bypassed and its related switch set to \"2\"\n\nUses WD1.4 Tagger to \"extract\" a possible prompt from an image. Best use with anime models or anything trained with booru tags.\n\nDoes not include quality tags."
+        }
+    },
+    {
+        "id": 911,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 912,
+        "name": "WD14Tagger|pysssss",
+        "prompts": {
+            "text": "wd-eva02-large-tagger-v3"
+        }
+    },
+    {
+        "id": 913,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 914,
+        "name": "MaskPreview"
+    },
+    {
+        "id": 916,
+        "name": "CR Text Input Switch"
+    }
+]

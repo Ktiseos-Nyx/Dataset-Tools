@@ -1,0 +1,81 @@
+[
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd3.5_large.safetensors"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 16,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a rainbow galaxy inside it on top of a wooden table on a snowy mountain top with the ocean and clouds in the background with a shot glass beside containing darkness beside a snow sculpture in the shape of a fox"
+        }
+    },
+    {
+        "id": 43,
+        "name": "TripleCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "clip_g.safetensors"
+        }
+    },
+    {
+        "id": 50,
+        "name": "Note",
+        "prompts": {
+            "text": "Thoda-CLIP-BlockPatcher-v1\n\n- SD3.5 Large (FP16)\n- Clip T5XXL (FP8)\n- aspect size\n- project file path\n\nSpecial thanks to Matteo, Latentvision\n\nhttps://github.com/cubiq/Block_Patcher_ComfyUI/tree/main"
+        }
+    },
+    {
+        "id": 53,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 54,
+        "name": "ProjectFilePathNode"
+    },
+    {
+        "id": 55,
+        "name": "AspectSizeV2"
+    },
+    {
+        "id": 57,
+        "name": "PlotBlockParams"
+    },
+    {
+        "id": 58,
+        "name": "FluxBlockPatcherSampler",
+        "prompts": {
+            "text": "sgm_uniform",
+            "text_2": "double_blocks\\.([0-9]+)\\.img_=1.1"
+        }
+    },
+    {
+        "id": 59,
+        "name": "CLIPAttentionMultiply"
+    },
+    {
+        "id": 60,
+        "name": "Note",
+        "prompts": {
+            "text": "QKV? Query - Key - Value\n\nq (query): Weight of tokens as they influence each other in a sentence\n\nk (key): Weight of tokens of input text. A token is usually a word\n\nv (value): Strength of attention to input tokens\n\nout: Strength of output\n\nImagine you are drawing a picture with a friend, and your friend is helping you by telling you what to draw based on a description (the prompt).\n\nQuery: This is like you asking, \u201cWhat should I draw next?\u201d You focus on one part of the description, like \"a cat sitting under a tree.\"\n\nKey: These are all the different parts of the description your friend has in mind, like \u201ccat,\u201d \u201csitting,\u201d \u201cunder,\u201d and \u201ctree.\u201d Each key is like a clue about what\u2019s important in the picture.\n\nValue: These are the actual details your friend gives you when a key matches. For example, if the key is \u201ccat,\u201d the value might be \u201ca small, fluffy cat with green eyes.\u201d The values are the specific things you need to draw.\n\n\nspecial thanks to Anekii for the explanation here ^\nsource: https://www.reddit.com/r/comfyui/comments/1f9n4te/why_clip_attention_can_improve_your_images_or/"
+        }
+    },
+    {
+        "id": 61,
+        "name": "Note",
+        "prompts": {
+            "text": "https://github.com/cubiq/Block_Patcher_ComfyUI/tree/main\n\nAuthor notes on the format for manipulating blocks with this node"
+        }
+    }
+]

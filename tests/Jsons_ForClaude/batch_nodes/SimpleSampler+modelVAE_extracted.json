@@ -1,0 +1,82 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "yurisa, best quality, ultra high res, (photorealistic:1.4), 1girl,solo, full lips, a sultry gaze, school uniform, A sexy student might possess a confident and alluring demeanor, showing a sense of self-assurance and charisma that draws people towards them.She has a toned and fit physique, and carry themselves with poise and grace. Her clothing and style might be fashionable and tasteful, accentuating their best features while maintaining a sense of class and elegance."
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "embedding:EasyNegative.safetensors, paintings, sketches, (worst quality:2), (low quality:2), (normal quality:2), lowres, normal quality, ((monochrome)), ((grayscale)), skin spots, acnes, skin blemishes, age spot, glans,extra fingers,fewer fingers,{Multiple people},lowres,bad anatomy,bad hands, text, error, missing fingers,extra digit, fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, watermark, username,blurry,bad feet,cropped,poorly drawn hands,poorly drawn face,mutation,deformed,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,extra fingers,fewer digits,extra limbs,extra arms,extra legs,malformed limbs,fused fingers,too many fingers,long neck,cross-eyed,mutated hands,polar lowres,bad body,bad proportions,gross proportions,text,error,missing fingers,missing arms,missing legs,extra digit,too many fingers,((mutated hands)),((malformed limbs,))extra hands,deformed legs,extra fingers, fused fingers, bad proportions, missing arms, missing legs, extra arms, extra legs ,missing hands, malformed limbs, extra fingers, extra fingers, fused fingers, bad proportions, missing arms, missing legs, ((extra arms)), extra legs ,missing hands, malformed limbs, extra fingers,bad anatomy,extra arms,mutated hands,extra fingers,mutated hands,nsfw"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 12,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "BerrysMix.vae.safetensors"
+        }
+    },
+    {
+        "id": 14,
+        "name": "Reroute"
+    },
+    {
+        "id": 15,
+        "name": "Reroute"
+    },
+    {
+        "id": 17,
+        "name": "LoraLoaderText",
+        "prompts": {
+            "text": "tomoyo_V1Epoch6"
+        }
+    },
+    {
+        "id": 18,
+        "name": "CheckpointLoaderSimpleText",
+        "prompts": {
+            "text": "mixedmixedmixed_-fp16"
+        }
+    },
+    {
+        "id": 20,
+        "name": "CLIPTextEncodeWildcards3",
+        "prompts": {
+            "text": "__quality1__,\n(daidouji_tomoyo:1.1), (tomoyo:1.1), black long hair, blunt bangs, cardcaptor sakura \\(style\\),\n__breasts__,\n{long |}dress, __shoulder__,\nnsfw, (nipples), (breasts exposure), (nipple exposure), (breastsout),\n(monster sex, huge penis, pussy, spread legs,  large insertion, uncensored, monster, stomach bulge:1.3),"
+        }
+    },
+    {
+        "id": 23,
+        "name": "LoraLoaderText",
+        "prompts": {
+            "text": "monstersexactlora79_v10"
+        }
+    },
+    {
+        "id": 27,
+        "name": "SimpleSampler",
+        "prompts": {
+            "text": "__quality1__,\n(daidouji_tomoyo:1.1), (tomoyo:1.1), black long hair, blunt bangs, cardcaptor sakura \\(style\\),\n__breasts__,\n{long |}dress, __shoulder__,\nnsfw, (nipples), (breasts exposure), (nipple exposure), (breastsout),\n(monster sex, huge penis, pussy, spread legs,  large insertion, uncensored, monster, stomach bulge:1.3),"
+        }
+    }
+]

@@ -1,0 +1,675 @@
+[
+    {
+        "id": 1,
+        "name": "easy fullLoader",
+        "prompts": {
+            "text": "noobaiXLNAIXL_vPred10Version.safetensors",
+            "text_2": "sdxl-vae-anime-alpha-67500.safetensors"
+        }
+    },
+    {
+        "id": 1,
+        "name": "Loader"
+    },
+    {
+        "id": 2,
+        "name": "LoRA"
+    },
+    {
+        "id": 3,
+        "name": "Sampler"
+    },
+    {
+        "id": 4,
+        "name": "Detailer"
+    },
+    {
+        "id": 5,
+        "name": "Upscaler"
+    },
+    {
+        "id": 6,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "kgt \\(pixiv12957613\\), anmi, suiryuu \\(18559651\\), sandragh, (gradient background, neon lights, vignetting), dutch angle, 1girl, wolf ears, wolf tail, medium hair, black hair, white colored tips, parted bangs, sunglasses, long sidelocks, necklace, leather jacket, large breasts, black nails, cigarette, smoke, upper body, very awa, highres, absurdres, newest"
+        }
+    },
+    {
+        "id": 6,
+        "name": "Output"
+    },
+    {
+        "id": 7,
+        "name": "Prompt Saver"
+    },
+    {
+        "id": 8,
+        "name": "ModelParameters",
+        "prompts": {
+            "text": "noobaiXLNAIXL_vPred10Version.safetensors",
+            "text_2": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 8,
+        "name": "Artist Mixer"
+    },
+    {
+        "id": 9,
+        "name": "SDXLEmptyLatentSizePicker_v2",
+        "prompts": {
+            "text": "768x1280 (0.6)"
+        }
+    },
+    {
+        "id": 9,
+        "name": "Prompt"
+    },
+    {
+        "id": 10,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 10,
+        "name": "ControlNet"
+    },
+    {
+        "id": 11,
+        "name": "Text Concatenate"
+    },
+    {
+        "id": 11,
+        "name": "Model Setup"
+    },
+    {
+        "id": 12,
+        "name": "HiresFix"
+    },
+    {
+        "id": 15,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 17,
+        "name": "Mahiro"
+    },
+    {
+        "id": 18,
+        "name": "RescaleCFG"
+    },
+    {
+        "id": 19,
+        "name": "Note",
+        "prompts": {
+            "text": "This workflow contains many custom nodes. I will attempt to explain each one used such that if you have any issues with installing one or more node suites, you may read this to know what they do and what substitute(s) can be made. I am NOT tech support, so I implore you to please look at your console if one or more node suite(s) fail to import, and to either figure out the issue yourself or to open an issue on GitHub on the page for the node suite(s) in question. I also use some newer nodes added to ComfyUI in this workflow, so please ensure that you are on the latest version for them to load.\n\n1. WAS Node Suite: used for the text concatenate node, mainly because it has four inputs so it simplifies things. Can be replaced by the default one in Comfy, however, it requires two concatenate nodes.\n\n2. Comfyroll CustomNodes: Used for the LoRA stack nodes. If it fails to import, it can be replaced by any other stack node. Used for the String to Combo node which is crucial to the initial KSampler if your global scheduler list does not match the scheduler list of the EasyUse KSamplers, I do not know of any other node that accomplishes that task. It is also used for the CR Upscale Image node in the upscaler section, irrelevant if you don't care about upscaling, but could be replaced by the upscale image using model node if it fails to import. Also used for a string to int conversion to display the CFG in use currently by the KSampler, which can just be replaced with the Preview Any node.\n\n3. Easy-Use: Used pretty much a lot in this workflow, from the loader, to the samplers, to the global seed, and all the boolean switch nodes. If a substituion has to be made, it would be to restructure the workflow with different ksampler and loader nodes, and some replacement for the global seed node. Crystools could possibly also be used to substitute for the boolean switch nodes used here.\n\n4. rgthree-comfy: Used for the context nodes which store a lot of parameters to be sent to the image saver. Not strictly needed if it can't import, but it'll make organization a mess, so expect noodle spaghetti as a substitute if it fails to import.\n\n5. UltimateSDUpscale: used for the no upscale USDU node in the upscale section. Not really easy to substitute if it fails to import, but may not be too important if upscaling is not needed.\n\n6. Custom-Scripts: Used for the show text nodes and the notification nodes. Both are negligible if it fails to import; there is the built-in Preview Any node to replace the show text nodes, and notifications are not strictly necessary for the functionality of the workflow.\n\n7. comfyui-lopi999-nodes: Used for model parameters, advanced text switch in the artists group, and the empty latent size picker node. Shouldn't fail to import because it is very barebones and simple.\n\n8. comfyui-prompt-reader-node: Used for the final saving process in which we gather the metadata used for the production of an image and save it to the image's file. If you don't care about metadata it isn't important if it doesn't import. If you do, unfortunately there is literally ZERO good implementations of anything like it that I have tried, there are no good alternatives.\n\n9. comfyui-image-saver: Used for setting parameters of the initial KSampler. It isn't the end of the world if it doesn't import; but it will make gathering metadata less convenient.\n\n10. Impact-Pack & Subpack: Used primarily for the usage of switches, as well as the detailer and the ultralytics providers. If this fails to import, there are probably some other implementations of FaceDetailer + BBOX to look into, but a replacment for the switches are hard because they all contain optional inputs, which are resistant to breaking if one node in one of the inputs is bypassed.\n\n11. ComfyMath: Used for the NearestSDXLResolution node in the ControlNet group. Cannot be easily replaced; if it fails to import, one must manually calculate the resolution to used based on the image.\n\n12. cg-use-everywhere: Used to simplify connections by allowing certain outputs to be accessed globally in the workflow. If it fails to import, it can be substituted by just manually setting up the connections."
+        }
+    },
+    {
+        "id": 23,
+        "name": "CR LoRA Stack"
+    },
+    {
+        "id": 24,
+        "name": "CR Random LoRA Stack"
+    },
+    {
+        "id": 40,
+        "name": "FaceDetailerPipe"
+    },
+    {
+        "id": 41,
+        "name": "ToDetailerPipe",
+        "prompts": {
+            "text": "Select the LoRA to add to the text",
+            "text_2": "Select the Wildcard to add to the text"
+        }
+    },
+    {
+        "id": 42,
+        "name": "easy pipeOut"
+    },
+    {
+        "id": 43,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 44,
+        "name": "FaceDetailerPipe"
+    },
+    {
+        "id": 45,
+        "name": "EditDetailerPipe",
+        "prompts": {
+            "text": "Select the LoRA to add to the text",
+            "text_2": "Select the Wildcard to add to the text"
+        }
+    },
+    {
+        "id": 46,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8s.pt"
+        }
+    },
+    {
+        "id": 47,
+        "name": "CR Upscale Image",
+        "prompts": {
+            "text": "4x-AnimeSharp.pth"
+        }
+    },
+    {
+        "id": 49,
+        "name": "easy pipeOut"
+    },
+    {
+        "id": 50,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 52,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 53,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "noobaiXLControlnet_epsTile.safetensors"
+        }
+    },
+    {
+        "id": 54,
+        "name": "Note",
+        "prompts": {
+            "text": "By default, the image that is sent to the CR Upscale Image node comes out of the HandDetailer node, so please relink it if that is not where your intended image  to upscale is.\n\nBypass the Apply ControlNet and Load EPS Tile Model nodes if you do not intend to use CN tile for upscaling. Upscaling can work fine without them, but the tile CN models can help with clarity and seams.\n\nDownload the NoobAI EPS Tile model here:\nhttps://civitai.com/models/929685/noobai-xl-controlnet\n\nDespite the name, all NoobAI EPS ControlNet models work flawlessly with vPred models."
+        }
+    },
+    {
+        "id": 55,
+        "name": "UltimateSDUpscaleNoUpscale",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 57,
+        "name": "SystemNotification|pysssss",
+        "prompts": {
+            "text": "Detailer Group has finished."
+        }
+    },
+    {
+        "id": 58,
+        "name": "SystemNotification|pysssss",
+        "prompts": {
+            "text": "Upscaler Group has finished."
+        }
+    },
+    {
+        "id": 59,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 60,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 68,
+        "name": "Note",
+        "prompts": {
+            "text": "All parts of the prompt go into the concatenate node for the final full positive prompt. The artist mixer section has the Advanced Text Switch node, which by default is set to index. Note that index goes from 0-9, not 1-10.\n\nIt can be set to random for a random artist mix to be chosen, where the probability for each artist mix to be chosen is also selectable. The LoRA section contains a single textbox, intended for LoRA that have special activation tags."
+        }
+    },
+    {
+        "id": 69,
+        "name": "AdvancedTextSwitch",
+        "prompts": {
+            "text": "traditional media, graphite \\(medium\\), hatching \\(texture\\), partially colored, photo \\(medium\\)",
+            "text_2": "ru zhai, trimbil, machi \\(machi0910\\)"
+        }
+    },
+    {
+        "id": 70,
+        "name": "Note",
+        "prompts": {
+            "text": "karyln, kohaku \\(csacu\\), doremi \\(doremi4704\\), hwansang, j.c.14\n\nbtmr game, csyday, jessica wijaya\n\nursica, kacyu, j.c.14, artist:casino \\(casinoep\\)\n\nmitsu \\(mitsu art\\), kacyu, anmi\n\nciloranko, yan kodiac, fkey, artist:hood \\(james x)\\, arepko\n\nvalefal coneri, karyln, arepko, anko1127\n\nnyahu \\(nyahu 77\\), deogho \\(liujinzy9854\\)\n\nwlop, ciloranko, ask \\(askzy\\)\n\nningen mame, ciloranko, sho \\(sho lwlw\\),  tianliang duohe fangdongye, rhasta\n\nbeifeng han, j.c.14\n\nkgt \\(pixiv12957613\\), anmi, suiryuu \\(18559651\\), sandragh\n\nriku \\(melty drop\\), eushufeal, seika okawari\n\ninami hatoko, ilya kuvshinov\n\nureshiitime ki, applepie \\(12711019)\n\nshion \\(mirudakemann\\), loundraw, sweetonedollar, ask \\(askzy\\), rella, konya karasue\n\njessica wijaya, nixeu, ask \\(askzy\\)\n\ninami hatoko, ilya kuvshinov, vilde loh hocen\n\nartist:kirby d a, hakuhatsu, j.c.14\n\n(artist:xiayehongming:1.1), (artist:iris_yi:0.4)\n\nmohoshadream, dr-alu, hinosaki\n\ntsunako, artist:kirby d a, (deaver:0.5)\n\ntsunako, (artist:kirby d a:1.2), (sandragh:0.7)\n\nasteroid ill, rella, konya karasue\n\ntoosaka asagi, ai dongdong, machi \\(machi0910\\), austsue\n\nru zhai, trimbil, machi \\(machi0910\\)"
+        }
+    },
+    {
+        "id": 72,
+        "name": "SDPromptSaver",
+        "prompts": {
+            "text": "ComfyUI_%time_%seed_%counter",
+            "text_2": "mdntNAIXLVpred_mdntNAIXLVpredv1VAE.safetensors"
+        }
+    },
+    {
+        "id": 73,
+        "name": "SDPromptSaver",
+        "prompts": {
+            "text": "ComfyUI_%time_%seed_%counter",
+            "text_2": "mdntNAIXLVpred_mdntNAIXLVpredv1VAE.safetensors"
+        }
+    },
+    {
+        "id": 74,
+        "name": "SDPromptSaver",
+        "prompts": {
+            "text": "ComfyUI_%time_%seed_%counter",
+            "text_2": "mdntNAIXLVpred_mdntNAIXLVpredv1VAE.safetensors"
+        }
+    },
+    {
+        "id": 82,
+        "name": "Note",
+        "prompts": {
+            "text": "Controls which group to pull the image from for upscaling.\n1: Sampler output\n2: Detailer output"
+        }
+    },
+    {
+        "id": 83,
+        "name": "Reroute"
+    },
+    {
+        "id": 85,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 86,
+        "name": "Note",
+        "prompts": {
+            "text": "1: FaceDetailer\n2: HandDetailer\nRemember to bypass HandDetailer if you are not using it.\n\nAn alternate prompt can be supplied to the FaceDetailer or the HandDetailer nodes, just switch off the use same prompt booleans and enter a different prompt in the textboxes."
+        }
+    },
+    {
+        "id": 100,
+        "name": "PrimitiveStringMultiline"
+    },
+    {
+        "id": 101,
+        "name": "PrimitiveStringMultiline",
+        "prompts": {
+            "text": "ai-generated, deleted, lowres, oldest, jpeg artifacts, adversarial noise, bad anatomy, bad hands, bad proportions, bad feet, bad perspective, extra digits, wrong hand, wrong foot, off-topic, artistic error, text, signature, watermark"
+        }
+    },
+    {
+        "id": 104,
+        "name": "PrimitiveStringMultiline",
+        "prompts": {
+            "text": "(gradient background, neon lights, vignetting), dutch angle, 1girl, wolf ears, wolf tail, medium hair, black hair, white colored tips, parted bangs, sunglasses, long sidelocks, necklace, leather jacket, large breasts, black nails, cigarette, smoke, upper body"
+        }
+    },
+    {
+        "id": 105,
+        "name": "PrimitiveStringMultiline",
+        "prompts": {
+            "text": "very awa, highres, absurdres, newest"
+        }
+    },
+    {
+        "id": 106,
+        "name": "Note",
+        "prompts": {
+            "text": "This is setup to accomplish the following prompt structure:\n[artist tags], [lora tags], [gentags], [quality tags]\n\nAs suggested by VOIDER from aesthetic tests. Please refrain from using too many quality tags as it guides too much to a generic style and bad artist adherance."
+        }
+    },
+    {
+        "id": 107,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 108,
+        "name": "CM_NearestSDXLResolution"
+    },
+    {
+        "id": 111,
+        "name": "easy controlnetStack"
+    },
+    {
+        "id": 114,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 115,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 118,
+        "name": "PrimitiveInt"
+    },
+    {
+        "id": 119,
+        "name": "Note",
+        "prompts": {
+            "text": "This is intended to be a very barebones setup for ControlNet. It cannot really function on it's own; this part of the workflow needs some amount of modification like adding a few nodes to actually work, but it gets decent logic done for changing the resolution to the nearest SDXL resolution used by the base image.\n\nInstall the ControlNet-Aux node suite, then use one of the preprocessor nodes from the image, setting the width to the width output of the NearestSDXLResolution node. Consider swapping out the node for NearestSDXLExtendedResolution if the image is at a very wide or a very tall resolution."
+        }
+    },
+    {
+        "id": 149,
+        "name": "StringConcatenate"
+    },
+    {
+        "id": 152,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 155,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 156,
+        "name": "Note",
+        "prompts": {
+            "text": "Set to true to use the negative prompt. Set to false to instead zero out the negative, meaning that we are only left with the positive.\n\nNegative prompts are actually not truly 100% necessary, and can possibly conflict with some styles. Most Noob/Illu models can give good outputs without a negative. They can still be useful sometimes."
+        }
+    },
+    {
+        "id": 159,
+        "name": "PrimitiveString"
+    },
+    {
+        "id": 168,
+        "name": "StringConcatenate"
+    },
+    {
+        "id": 169,
+        "name": "PrimitiveStringMultiline",
+        "prompts": {
+            "text": "Clip Skip: 2, Mahiro CFG Enabled: True, RescaleCFG Multiplier: 0.30"
+        }
+    },
+    {
+        "id": 172,
+        "name": "Note",
+        "prompts": {
+            "text": "Here, this has been setup such that we extract the parameters of the Hiresfix Sampler (if turned on) and feed it into the extra info of all of these SD Prompt Saver nodes. We concatenate it with the Extra Info textbox here, so feel free to fill out any extra necessary generation info into it."
+        }
+    },
+    {
+        "id": 175,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 176,
+        "name": "PrimitiveString"
+    },
+    {
+        "id": 191,
+        "name": "easy pipeEdit"
+    },
+    {
+        "id": 192,
+        "name": "CR String To Combo"
+    },
+    {
+        "id": 194,
+        "name": "easy ifElse"
+    },
+    {
+        "id": 195,
+        "name": "easy controlnetStackApply"
+    },
+    {
+        "id": 196,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 197,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 198,
+        "name": "PrimitiveFloat"
+    },
+    {
+        "id": 199,
+        "name": "PrimitiveFloat"
+    },
+    {
+        "id": 200,
+        "name": "easy globalSeed"
+    },
+    {
+        "id": 201,
+        "name": "CR String To Combo"
+    },
+    {
+        "id": 202,
+        "name": "easy ifElse"
+    },
+    {
+        "id": 203,
+        "name": "PrimitiveFloat"
+    },
+    {
+        "id": 204,
+        "name": "PrimitiveFloat"
+    },
+    {
+        "id": 207,
+        "name": "easy fullkSampler"
+    },
+    {
+        "id": 209,
+        "name": "LatentUpscaleBy",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 210,
+        "name": "SystemNotification|pysssss",
+        "prompts": {
+            "text": "Sampler Group has finished."
+        }
+    },
+    {
+        "id": 212,
+        "name": "easy fullkSampler"
+    },
+    {
+        "id": 213,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 216,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 217,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 218,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 219,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 225,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 227,
+        "name": "TorchCompileModel"
+    },
+    {
+        "id": 228,
+        "name": "FreSca"
+    },
+    {
+        "id": 229,
+        "name": "Note",
+        "prompts": {
+            "text": "Feel free to adjust all of these nodes or turn them off as needed. Each node does something different:\nMahiro: Changes equation for guidance, stylizing outputs differently.\nRescaleCFG: Recommended by Noob devs, set it around 0.30 to 0.70.\nFreSca: May make lines more sharp, but may also cause artifacting issues.\nTorchCompile: May improve it/s, need to recompile if changing resolutions."
+        }
+    },
+    {
+        "id": 231,
+        "name": "easy ifElse"
+    },
+    {
+        "id": 232,
+        "name": "easy ifElse"
+    },
+    {
+        "id": 233,
+        "name": "easy ifElse"
+    },
+    {
+        "id": 234,
+        "name": "easy ifElse"
+    },
+    {
+        "id": 235,
+        "name": "easy ifElse"
+    },
+    {
+        "id": 236,
+        "name": "easy ifElse"
+    },
+    {
+        "id": 237,
+        "name": "Note",
+        "prompts": {
+            "text": "Refer to the CFG nodes to set the CFG used, as it will change if using a CFG++ sampler or not.\n\nThese parameter nodes are used to gather metadata to input into the final image. All seeds are tied to the EasyGlobalSeed node.\n\nFor schedulers, I recommend sticking with SGM Uniform, Beta, Zeta, and KL Optimal."
+        }
+    },
+    {
+        "id": 238,
+        "name": "Note",
+        "prompts": {
+            "text": "Set to 1 and bypass the HiresFix KSampler node to just do the initial sampler. Run the HiresFix node and set to 2 to get HiresFix."
+        }
+    },
+    {
+        "id": 241,
+        "name": "easy pipeOut"
+    },
+    {
+        "id": 243,
+        "name": "Input Parameters (Image Saver)",
+        "prompts": {
+            "text": "euler_ancestral_cfg_pp"
+        }
+    },
+    {
+        "id": 244,
+        "name": "Input Parameters (Image Saver)",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 245,
+        "name": "ParametersToString"
+    },
+    {
+        "id": 249,
+        "name": "CR Integer To String"
+    },
+    {
+        "id": 250,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 251,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 252,
+        "name": "CR Integer To String"
+    },
+    {
+        "id": 253,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 254,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 257,
+        "name": "easy int"
+    },
+    {
+        "id": 261,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 262,
+        "name": "StringContains"
+    },
+    {
+        "id": 263,
+        "name": "StringContains"
+    },
+    {
+        "id": 264,
+        "name": "TokenCounter"
+    },
+    {
+        "id": 265,
+        "name": "TokenCounter"
+    },
+    {
+        "id": 266,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 267,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 268,
+        "name": "PrimitiveStringMultiline"
+    },
+    {
+        "id": 269,
+        "name": "PrimitiveStringMultiline"
+    },
+    {
+        "id": 270,
+        "name": "easy ifElse"
+    },
+    {
+        "id": 271,
+        "name": "Text Concatenate"
+    },
+    {
+        "id": 272,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 273,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 274,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 275,
+        "name": "Text Concatenate"
+    },
+    {
+        "id": 276,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 277,
+        "name": "easy ifElse"
+    },
+    {
+        "id": 278,
+        "name": "CLIPTextEncode"
+    }
+]

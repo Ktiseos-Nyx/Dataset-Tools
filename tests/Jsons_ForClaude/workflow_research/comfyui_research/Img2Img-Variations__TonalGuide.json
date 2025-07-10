@@ -1,0 +1,1246 @@
+{
+  "last_node_id": 45,
+  "last_link_id": 130,
+  "nodes": [
+    {
+      "id": 11,
+      "type": "VAEDecode",
+      "pos": [
+        1210,
+        705
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 79
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            10
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        1209,
+        188
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            27
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -20,
+        400
+      ],
+      "size": {
+        "0": 425.27801513671875,
+        "1": 180.6060791015625
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            6,
+            74
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "text, watermark\n\n(dof, depth of field, blur, blurry:1.3)\n\n(cartoon, sketch, painting, anime, drawing:1.2)"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -410,
+        480
+      ],
+      "size": {
+        "0": 315,
+        "1": 98
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            75,
+            80
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            3,
+            5
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            8,
+            12,
+            13
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "Differentia_V1-00001.safetensors"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [
+        863,
+        186
+      ],
+      "size": {
+        "0": 315,
+        "1": 474
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 80
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 61
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 6
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 81
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 22,
+          "widget": {
+            "name": "seed",
+            "config": [
+              "INT",
+              {
+                "default": 0,
+                "min": 0,
+                "max": 18446744073709552000
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        389550098396725,
+        "randomize",
+        20,
+        8,
+        "dpmpp_2m_sde",
+        "karras",
+        1
+      ]
+    },
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -20,
+        200
+      ],
+      "size": [
+        422.84503173828125,
+        164.31304931640625
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 124,
+          "widget": {
+            "name": "text",
+            "config": [
+              "STRING",
+              {
+                "multiline": true
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            61,
+            73
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "Portrait of tanned skin Latina goth girl surrounded by ravens\n\nPhotograph, realistic, life-like textures, cinematic atmosphere"
+      ]
+    },
+    {
+      "id": 18,
+      "type": "SaveImage",
+      "pos": [
+        1460,
+        180
+      ],
+      "size": {
+        "0": 740,
+        "1": 780
+      },
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 27
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 22,
+      "type": "PreviewImage",
+      "pos": [
+        2256,
+        509
+      ],
+      "size": {
+        "0": 770,
+        "1": 930
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 44
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 35,
+      "type": "Image Resize",
+      "pos": [
+        -410,
+        1150
+      ],
+      "size": {
+        "0": 315,
+        "1": 178
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 102
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            96
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Image Resize"
+      },
+      "widgets_values": [
+        "resize",
+        "true",
+        "lanczos",
+        2,
+        720,
+        1152
+      ]
+    },
+    {
+      "id": 44,
+      "type": "BLIP Model Loader",
+      "pos": [
+        -405,
+        1008
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "BLIP_MODEL",
+          "type": "BLIP_MODEL",
+          "links": [
+            122
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BLIP Model Loader"
+      },
+      "widgets_values": [
+        "caption"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "EmptyLatentImage",
+      "pos": [
+        28,
+        631
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            81
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        720,
+        1152,
+        1
+      ]
+    },
+    {
+      "id": 43,
+      "type": "BLIP Analyze Image",
+      "pos": [
+        -2,
+        906
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 123
+        },
+        {
+          "name": "blip_model",
+          "type": "BLIP_MODEL",
+          "link": 122
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            124
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BLIP Analyze Image"
+      },
+      "widgets_values": [
+        "caption",
+        "What does the background consist of?"
+      ]
+    },
+    {
+      "id": 39,
+      "type": "Blend Latents (PPF Noise)",
+      "pos": [
+        -39,
+        1380
+      ],
+      "size": {
+        "0": 315,
+        "1": 266
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "latent_a",
+          "type": "LATENT",
+          "link": 126
+        },
+        {
+          "name": "latent_b",
+          "type": "LATENT",
+          "link": 117
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "latents",
+          "type": "LATENT",
+          "links": [
+            120
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "previews",
+          "type": "IMAGE",
+          "links": [],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Blend Latents (PPF Noise)"
+      },
+      "widgets_values": [
+        "inject",
+        1,
+        12.26,
+        "false",
+        "false",
+        0,
+        1,
+        "true"
+      ]
+    },
+    {
+      "id": 38,
+      "type": "Power-Law Noise (PPF Noise)",
+      "pos": [
+        -411,
+        1380
+      ],
+      "size": {
+        "0": 315,
+        "1": 318
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "latents",
+          "type": "LATENT",
+          "links": [
+            117
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "previews",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Power-Law Noise (PPF Noise)"
+      },
+      "widgets_values": [
+        4,
+        720,
+        1152,
+        "nearest-exact",
+        "grey",
+        1,
+        1,
+        1,
+        1033012631657193,
+        "randomize",
+        "cpu"
+      ]
+    },
+    {
+      "id": 14,
+      "type": "VAEEncode",
+      "pos": [
+        134,
+        792
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 96
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            125
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncode"
+      }
+    },
+    {
+      "id": 12,
+      "type": "SaveImage",
+      "pos": [
+        1463,
+        1006
+      ],
+      "size": [
+        730,
+        1220
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 10
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 13,
+      "type": "LoadImage",
+      "pos": [
+        -409,
+        632
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            44,
+            102,
+            123
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "RefinerFF_00337.png",
+        "image"
+      ]
+    },
+    {
+      "id": 16,
+      "type": "PrimitiveNode",
+      "pos": [
+        -390,
+        330
+      ],
+      "size": {
+        "0": 210,
+        "1": 82
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            22,
+            78
+          ],
+          "slot_index": 0,
+          "widget": {
+            "name": "seed",
+            "config": [
+              "INT",
+              {
+                "default": 0,
+                "min": 0,
+                "max": 18446744073709552000
+              }
+            ]
+          }
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        872813222483625,
+        "fixed"
+      ]
+    },
+    {
+      "id": 32,
+      "type": "Power KSampler Advanced (PPF Noise)",
+      "pos": [
+        861,
+        709
+      ],
+      "size": [
+        317.4000244140625,
+        842
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 75
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 73
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 74
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 130
+        },
+        {
+          "name": "tonal_guide_latent",
+          "type": "LATENT",
+          "link": 129
+        },
+        {
+          "name": "ppf_settings",
+          "type": "PPF_SETTINGS",
+          "link": null
+        },
+        {
+          "name": "ch_settings",
+          "type": "CH_SETTINGS",
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 78,
+          "widget": {
+            "name": "seed",
+            "config": [
+              "INT",
+              {
+                "default": 0,
+                "min": 0,
+                "max": 18446744073709552000
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            79
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Power KSampler Advanced (PPF Noise)"
+      },
+      "widgets_values": [
+        254219391100693,
+        "randomize",
+        20,
+        8,
+        "dpmpp_2m_sde",
+        "karras",
+        0,
+        10000,
+        "true",
+        0.7000000000000001,
+        "enable",
+        "disable",
+        "white",
+        "inject",
+        "subtractive",
+        1.1400000000000001,
+        11.867,
+        1,
+        0.25,
+        "false",
+        "true"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 45,
+      "type": "RepeatLatentBatch",
+      "pos": [
+        372,
+        789
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 125
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            126,
+            127,
+            129
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RepeatLatentBatch"
+      },
+      "widgets_values": [
+        4
+      ]
+    },
+    {
+      "id": 42,
+      "type": "Blend Latents (PPF Noise)",
+      "pos": [
+        297,
+        1381
+      ],
+      "size": {
+        "0": 315,
+        "1": 266
+      },
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "latent_a",
+          "type": "LATENT",
+          "link": 120
+        },
+        {
+          "name": "latent_b",
+          "type": "LATENT",
+          "link": 127
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "latents",
+          "type": "LATENT",
+          "links": [
+            130
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "previews",
+          "type": "IMAGE",
+          "links": [],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Blend Latents (PPF Noise)"
+      },
+      "widgets_values": [
+        "colorize",
+        0.5,
+        1,
+        "false",
+        "false",
+        0,
+        1,
+        "true"
+      ]
+    }
+  ],
+  "links": [
+    [
+      3,
+      4,
+      1,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      5,
+      4,
+      1,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      6,
+      7,
+      0,
+      3,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      7,
+      3,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      8,
+      4,
+      2,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      10,
+      11,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      12,
+      4,
+      2,
+      11,
+      1,
+      "VAE"
+    ],
+    [
+      13,
+      4,
+      2,
+      14,
+      1,
+      "VAE"
+    ],
+    [
+      22,
+      16,
+      0,
+      3,
+      4,
+      "INT"
+    ],
+    [
+      27,
+      8,
+      0,
+      18,
+      0,
+      "IMAGE"
+    ],
+    [
+      44,
+      13,
+      0,
+      22,
+      0,
+      "IMAGE"
+    ],
+    [
+      61,
+      6,
+      0,
+      3,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      73,
+      6,
+      0,
+      32,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      74,
+      7,
+      0,
+      32,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      75,
+      4,
+      0,
+      32,
+      0,
+      "MODEL"
+    ],
+    [
+      78,
+      16,
+      0,
+      32,
+      7,
+      "INT"
+    ],
+    [
+      79,
+      32,
+      0,
+      11,
+      0,
+      "LATENT"
+    ],
+    [
+      80,
+      4,
+      0,
+      3,
+      0,
+      "MODEL"
+    ],
+    [
+      81,
+      5,
+      0,
+      3,
+      3,
+      "LATENT"
+    ],
+    [
+      96,
+      35,
+      0,
+      14,
+      0,
+      "IMAGE"
+    ],
+    [
+      102,
+      13,
+      0,
+      35,
+      0,
+      "IMAGE"
+    ],
+    [
+      117,
+      38,
+      0,
+      39,
+      1,
+      "LATENT"
+    ],
+    [
+      120,
+      39,
+      0,
+      42,
+      0,
+      "LATENT"
+    ],
+    [
+      122,
+      44,
+      0,
+      43,
+      1,
+      "BLIP_MODEL"
+    ],
+    [
+      123,
+      13,
+      0,
+      43,
+      0,
+      "IMAGE"
+    ],
+    [
+      124,
+      43,
+      0,
+      6,
+      1,
+      "STRING"
+    ],
+    [
+      125,
+      14,
+      0,
+      45,
+      0,
+      "LATENT"
+    ],
+    [
+      126,
+      45,
+      0,
+      39,
+      0,
+      "LATENT"
+    ],
+    [
+      127,
+      45,
+      0,
+      42,
+      1,
+      "LATENT"
+    ],
+    [
+      129,
+      45,
+      0,
+      32,
+      4,
+      "LATENT"
+    ],
+    [
+      130,
+      42,
+      0,
+      32,
+      3,
+      "LATENT"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

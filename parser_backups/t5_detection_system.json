@@ -1,0 +1,317 @@
+{
+  "parser_name": "ComfyUI_T5_Architecture",
+  "priority": 190,
+  "description": "Advanced T5-based model architecture detection for SD3, Flux, PixArt, AuraFlow, and HunyuanDiT",
+  "version": "3.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: PNG format - Must have prompt chunk with valid JSON and T5 signatures",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        },
+        {
+          "comment": "Must contain T5 architecture signatures",
+          "operator": "OR",
+          "rules": [
+            {
+              "comment": "FLUX/SD3: Uses DualCLIPLoader for T5+CLIP",
+              "source_type": "pil_info_key",
+              "source_key": "prompt",
+              "operator": "contains",
+              "value": "DualCLIPLoader"
+            },
+            {
+              "comment": "PixArt: Uses PixArt-specific T5 components",
+              "source_type": "pil_info_key",
+              "source_key": "prompt",
+              "operator": "contains",
+              "value": "PixArtT5TextEncode"
+            },
+            {
+              "comment": "General T5: Uses dedicated T5 loaders",
+              "source_type": "pil_info_key",
+              "source_key": "prompt",
+              "operator": "contains",
+              "value": "T5v11Loader"
+            },
+            {
+              "comment": "T5 Text Encoding: Direct T5 text encoding",
+              "source_type": "pil_info_key",
+              "source_key": "prompt",
+              "operator": "contains",
+              "value": "T5TextEncode"
+            },
+            {
+              "comment": "PixArt Checkpoint: PixArt models with embedded T5",
+              "source_type": "pil_info_key",
+              "source_key": "prompt",
+              "operator": "contains",
+              "value": "PixArtCheckpointLoader"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: JPEG format - Must have EXIF UserComment with T5 signatures (for A1111-style T5/FLUX)",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "exif_user_comment",
+          "operator": "exists"
+        },
+        {
+          "comment": "Must contain T5/FLUX model signatures in EXIF",
+          "operator": "OR",
+          "rules": [
+            {
+              "comment": "FLUX model signatures",
+              "source_type": "exif_user_comment",
+              "operator": "contains",
+              "value": "flux"
+            },
+            {
+              "comment": "T5 model signatures",
+              "source_type": "exif_user_comment",
+              "operator": "contains",
+              "value": "t5"
+            },
+            {
+              "comment": "DualCLIP signatures",
+              "source_type": "exif_user_comment",
+              "operator": "contains",
+              "value": "clip_l"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "pil_info_key", "source_key": "workflow"},
+        {"source_type": "pil_info_key", "source_key": "prompt"},
+        {"source_type": "exif_user_comment"}
+      ],
+      "transformations": [{"type": "json_decode_string_itself"}]
+    },
+
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced",
+          "CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PixArtT5TextEncode",
+          "PixArtTextEncode",
+          "PixArtAlphaTextEncode",
+          "PixArtSigmaTextEncode"
+        ],
+        "comment": "Extract prompt using traditional ComfyUI traversal (most T5 workflows use this)"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced",
+          "CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PixArtT5TextEncode",
+          "PixArtTextEncode",
+          "PixArtAlphaTextEncode",
+          "PixArtSigmaTextEncode"
+        ],
+        "comment": "Extract negative prompt using traditional ComfyUI traversal"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_key": "seed",
+        "value_type": "integer",
+        "comment": "Extract seed from sampler node (handles both seed and noise_seed)"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_key": "steps",
+        "value_type": "integer",
+        "comment": "Extract steps from sampler node"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_key": "cfg",
+        "value_type": "float",
+        "comment": "Extract CFG scale from sampler node"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "comment": "Extract sampler name from sampler node"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "comment": "Extract scheduler from sampler node"
+      },
+      {
+        "target_key": "parameters.t5_model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "DualCLIPLoader",
+          "DualCLIPLoaderGGUF",
+          "CheckpointLoaderSimple",
+          "PixArtCheckpointLoader",
+          "T5v11Loader"
+        ],
+        "input_field": "clip_name1",
+        "fallback_fields": ["ckpt_name", "pytorch_model-00001-of-00002.bin"],
+        "data_type": "string",
+        "fallback": "Unknown T5 Model",
+        "comment": "Extract T5 model name from various T5-capable loaders"
+      },
+      {
+        "target_key": "parameters.clip_model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "DualCLIPLoader",
+          "DualCLIPLoaderGGUF",
+          "CheckpointLoaderSimple"
+        ],
+        "input_field": "clip_name2",
+        "data_type": "string",
+        "fallback": "Unknown CLIP Model",
+        "comment": "Extract CLIP model name from DualCLIPLoader or checkpoint"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptyLatentImageFromPresetsSDXL",
+          "EmptySD3LatentImage"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 1024,
+        "comment": "Extract width from latent image node"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptyLatentImageFromPresetsSDXL",
+          "EmptySD3LatentImage"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 1024,
+        "comment": "Extract height from latent image node"
+      },
+      {
+        "target_key": "parameters.architecture_type",
+        "method": "direct_value",
+        "value": "T5 Architecture",
+        "comment": "Mark this as T5 architecture (could be SD3, FLUX, PixArt, etc.)"
+      }
+    ],
+
+    "output_template": {
+      "tool": "ComfyUI (T5 Architecture)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "t5_model": "$parameters.t5_model",
+        "clip_model": "$parameters.clip_model",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "architecture_info": {
+        "detected_as": "T5-based architecture",
+        "supports": ["SD3", "Flux", "PixArt", "Dual CLIP", "T5 text encoding"]
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+
+  "notes": [
+    "Updated to current MetadataEngine format",
+    "Detects T5-based architectures like SD3, Flux, PixArt",
+    "Handles dual CLIP loaders and T5 text encoding",
+    "Modern multi-encoder architecture support"
+  ]
+}

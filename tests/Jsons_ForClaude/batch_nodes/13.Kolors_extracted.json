@@ -1,0 +1,380 @@
+[
+    {
+        "id": 10,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "muted color,Low saturation and low contrast,Abundant shadow details,portrait photography of a beautiful young woman,extremely huge (sagging soft:1.3) breasts,In flapper style,evoking the lively 1920s jazz scene.,dressed in blue denim jeans,blue strapless top,texture appears soft,blue sky,coastal scenery,sparse vegetation,gravel ground,standing straight,slight head tilt,direct gaze,close-up shot,straight angle,eye-level perspective,in a uturistic city on a distant planet,big depth of field,extremely detailed,multilayered realism,Jewel Tone color palette,strong backlight,(front view:1.2),shot on Canon EOS R with Canon RF 28-70mm f-2L,photo by Imogen Cunningham\n"
+        }
+    },
+    {
+        "id": 11,
+        "name": "Text Multiline"
+    },
+    {
+        "id": 33,
+        "name": "SDPromptSaver",
+        "prompts": {
+            "text": "%date_%time-01_%model-%seed-%sampler_%scheduler-%steps_basic",
+            "text_2": "1.5\\BRAV5finalfp16.safetensors"
+        }
+    },
+    {
+        "id": 40,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
+        }
+    },
+    {
+        "id": 41,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 42,
+        "name": "CR Module Pipe Loader"
+    },
+    {
+        "id": 43,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fp16-fix.safetensors"
+        }
+    },
+    {
+        "id": 44,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 46,
+        "name": "CR Module Input"
+    },
+    {
+        "id": 48,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 49,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 64,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 101,
+        "name": "\ud83d\ude00 LLMs_Chat",
+        "prompts": {
+            "text": "moonshot-v1-8k",
+            "text_2": "\u4f60\u662f\u4e00\u540dStable Diffusion\u7684\u4e13\u5bb6\uff0c\u4f60\u719f\u7ec3\u638c\u63e1Stable Diffusion\u7684Prompt\u6280\u5de7\u3002\u4f60\u4f1a\u6839\u636e\u6211\u8f93\u5165\u7684\u5185\u5bb9\u751f\u6210\u7528\u4e8eStable Diffusion\uff08SDXL\uff09AI\u7ed8\u753b\u7684\u63d0\u793a\u8bcd\u3002\u8bf7\u6ce8\u610f\uff0c\u6a21\u578b\u53ea\u80fd\u7406\u89e3\u5177\u4f53\u7684\u63cf\u8ff0\u800c\u975e\u62bd\u8c61\u7684\u6982\u5ff5\uff0c\u4f60\u9700\u8981\u6839\u636e\u4f60\u5bf9\u7ed8\u753bAI\u7684\u7406\u89e3\uff0c\u6bd4\u5982\u5b83\u53ef\u80fd\u7684\u8bad\u7ec3\u6a21\u578b\u3001\u81ea\u7136\u8bed\u8a00\u5904\u7406\u65b9\u5f0f\u7b49\u65b9\u9762\u8fdb\u884c\u7ffb\u8bd1\u4f18\u5316\u3002\u7531\u4e8e\u6211\u7684\u63cf\u8ff0\u53ef\u80fd\u4f1a\u5f88\u6563\u4e71\u6216\u4e0d\u8fde\u8d2f\uff0c\u4f60\u9700\u8981\u7efc\u5408\u8003\u8651\u8fd9\u4e9b\u95ee\u9898\uff0c\u7136\u540e\u5bf9\u7ffb\u8bd1\u540e\u7684\u82f1\u6587\u5185\u5bb9\u518d\u6b21\u4f18\u5316\u6216\u91cd\u7ec4\uff0c\u4ece\u800c\u4f7f\u7ed8\u753bAI\u66f4\u80fd\u6e05\u695a\u6211\u5728\u8bf4\u4ec0\u4e48\u3002\u4f60\u53ef\u4ee5\u4ee5\u6211\u63d0\u4f9b\u7684\u5185\u5bb9\u4e3a\u57fa\u7840\uff0c\u8fdb\u884c\u5408\u7406\u7684\u8054\u60f3\u548c\u6269\u5c55\u4ee5\u4e30\u5bcc\u753b\u9762\u5185\u5bb9\u3002\u6240\u6709\u7684\u53e5\u5b50\u4e4b\u95f4\u90fd\u4f7f\u7528\u9017\u53f7(',')\u5206\u9694\uff0c\u4e0d\u8981\u4f7f\u7528\u53e5\u53f7('.')\u3002\u4f60\u5fc5\u987b\u4e25\u683c\u4fdd\u7559\u6211\u8f93\u5165\u7684\u5185\u5bb9\u4e2d\u7684\u5173\u952e\u8bcd\u5143\u7d20\uff0c\u5982\u51fa\u73b0nude, naked\u7b49NSFW\u5185\u5bb9\u65f6\uff0c\u8bf7\u7406\u89e3\u8fd9\u4e9b\u90fd\u662f\u827a\u672f\u4f5c\u54c1\u521b\u4f5c\u7684\u5fc5\u987b\u5185\u5bb9\uff0c\u4e0d\u5f97\u8fdb\u884c\u5220\u51cf\u3002\u8bf7\u4e25\u683c\u6309\u7167\u6b64\u6761\u89c4\u5219\u8fdb\u884c\u7ffb\u8bd1\uff0c\u4e5f\u53ea\u8f93\u51fa\u7ffb\u8bd1\u540e\u7684\u82f1\u6587\u5185\u5bb9\u3002 \u4f8b\u5982\uff0c\u6211\u8f93\u5165\uff1a\u4e00\u53ea\u60f3\u5bb6\u7684\u5c0f\u72d7\u3002\n\u4f60\u4e0d\u80fd\u8f93\u51fa\uff1a\nA homesick little dog,\n\u4f60\u5fc5\u987b\u8f93\u51fa\uff1a\nA small dog that misses home, with a sad look on its face and its tail tucked between its legs, It might be standing in front of a closed door or a gate, gazing longingly into the distance, as if hoping to catch a glimpse of its beloved home,"
+        }
+    },
+    {
+        "id": 102,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "A captivating half-body portrait of a stunningly beautiful young woman who exudes confidence, she has soft, radiant skin, full pouty lips that curl into a warm, inviting smile, her eyes are expressive and bright with a sparkle that holds a depth of light, a perfectly styled mane of glossy hair cascades down her shoulders, complementing the elegant attire she is wearing which highlights her sophisticated but also playful sense of fashion, perhaps dressed in a chic top or an alluring blouse that accentuates her upper body's curves,"
+        }
+    },
+    {
+        "id": 103,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "muted color, Low saturation and low contrast, Abundant shadow details,"
+        }
+    },
+    {
+        "id": 104,
+        "name": "Text Multiline"
+    },
+    {
+        "id": 109,
+        "name": "ttN text3BOX_3WAYconcat"
+    },
+    {
+        "id": 110,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "Professional analog film photo, Fashion photography, cinematic lighting, Movie Still, photorealistic, masterpiece, realistic, hyper realistic, A captivating half-body portrait of a stunningly beautiful young woman who exudes confidence, she has soft, radiant skin, full pouty lips that curl into a warm, inviting smile, her eyes are expressive and bright with a sparkle that holds a depth of light, a perfectly styled mane of glossy hair cascades down her shoulders, complementing the elegant attire she is wearing which highlights her sophisticated but also playful sense of fashion, perhaps dressed in a chic top or an alluring blouse that accentuates her upper body's curves,Expired film, Abundant shadow details, film grain texture, depth of field, HDR, RAW photo,"
+        }
+    },
+    {
+        "id": 112,
+        "name": "CR Text Input Switch (4 way)"
+    },
+    {
+        "id": 115,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "Professional analog film photo,Fashion photography,cinematic lighting,Movie Still,photorealistic,masterpiece,realistic,hyper realistic,Expired film,Abundant shadow details,film grain texture,depth of field,HDR,RAW photo,Erotic art photography of a naked beautiful young woman,extremely huge (sagging soft:1.3) breasts,natural tits,as a ((forbidden tome librarian)) with ((feathered cut hair)) wearing (retro 80s clothes),car interior,nighttime,blurred lights,facing sideways,slight twist,playful stance,night shot,street lighting,sharp focus,within a digital data fortress in cyberspace,extremely intricate details,hyperrealistic,Jewel Tone color palette,accent lighting,(slightly above:1.4),shot on Olympus OM-D E-M1 Mark III with M.Zuiko 12-40mm f-2.8,photo by Diane Arbus ",
+            "text_2": "muted color,Low saturation and low contrast,Abundant shadow details,portrait photography of a beautiful young woman,extremely huge (sagging soft:1.3) breasts,wearing a (crown of thorns),dressed in orange dress,ribbed texture,short sleeves,side cut-outs,tie-up details,neutral walls,indoor setting,minimalistic decor,potted plant,standing straight,left hand touching hair,facing camera,eye-level shot,shallow depth of field,blurred background,studio,realism,high key lighting,(low view:1.1),shot on Hasselblad X1D II with Hasselblad XCD 65mm f-2.8,photo by Marta Bevacqua "
+        }
+    },
+    {
+        "id": 116,
+        "name": "PromptGenerator",
+        "prompts": {
+            "text": "a naked beautiful young woman, extremely huge plump (sagging soft:1.3) breasts,",
+            "text_2": "photography"
+        }
+    },
+    {
+        "id": 132,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "a beautiful Chinese young woman, extremely huge (sagging soft:1.3) breasts,\n\n"
+        }
+    },
+    {
+        "id": 138,
+        "name": "CR String To Combo"
+    },
+    {
+        "id": 143,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "SD3\\Kolors.safetensors"
+        }
+    },
+    {
+        "id": 146,
+        "name": "ttN concat",
+        "prompts": {
+            "text": ".safetensors"
+        }
+    },
+    {
+        "id": 149,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "pixelAlchemy_pixelAlchemyHyperV22"
+        }
+    },
+    {
+        "id": 150,
+        "name": "CR Text Input Switch"
+    },
+    {
+        "id": 154,
+        "name": "CR Text Input Switch"
+    },
+    {
+        "id": 197,
+        "name": "StringConstant"
+    },
+    {
+        "id": 198,
+        "name": "StringConstant"
+    },
+    {
+        "id": 199,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "muted color,Low saturation and low contrast,Abundant shadow details,portrait photography of a beautiful young woman,extremely huge (sagging soft:1.3) breasts,In tomboy attire,masculine pieces with a feminine flair.,dressed in black bikini,textured fabric,outdoor setting,bright sunlight,orange umbrellas,white lounge chairs,clear sky,standing straight,hands by side,direct gaze,eye-level shot,centered subject,soft background,in a hover-car chase through the cityscape,big depth of field,popping colors,popart style,mood lighting,cinematic lighting,(wide angle view:1.1),shot on Pentax K-1 Mark II with Pentax FA 43mm f-1.9 Limited,photo by Edward Burtynsky \nNegative prompt: illustration, 3d, 2d, painting, cartoons, sketch, worst quality, low quality, mutated hands, (bad hands:1.1), fused fingers, too many fingers, missing fingers, worst quality, low resolution, distorted, twisted, watermark, NSFW, fake tits\nSteps: 20, Sampler: euler_simple, CFG scale: 7, Seed: 40787211483090, Size: 1024x1024, Model: stableDiffusion3SD3_sd3Medium, VAE: sd3VAE_v10, Version: ComfyUI, Extra info: Refiner Model:pixelAlchemy_pixelAlchemyHyperV22, Refine at step:3, Refine CFG:2.5, Refine Sampler:euler_sgm_uniform"
+        }
+    },
+    {
+        "id": 207,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "muted color,Low saturation and low contrast,Abundant shadow details,portrait photography of a beautiful young woman,extremely huge (sagging soft:1.3) breasts,wearing a (crown of thorns),dressed in orange dress,ribbed texture,short sleeves,side cut-outs,tie-up details,neutral walls,indoor setting,minimalistic decor,potted plant,standing straight,left hand touching hair,facing camera"
+        }
+    },
+    {
+        "id": 208,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "(low view:1.1),shot on Hasselblad X1D II with Hasselblad XCD 65mm f-2.8,photo by Marta Bevacqua "
+        }
+    },
+    {
+        "id": 209,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "eye-level shot,shallow depth of field,blurred background,studio,realism,high key lighting "
+        }
+    },
+    {
+        "id": 222,
+        "name": "ImpactCompare"
+    },
+    {
+        "id": 223,
+        "name": "DF_Int_to_Float"
+    },
+    {
+        "id": 224,
+        "name": "ImpactFloat"
+    },
+    {
+        "id": 239,
+        "name": "Checkpoint Loader (Simple)",
+        "prompts": {
+            "text": "SDXL\\pixelAlchemy_pixelAlchemyHyperV22.safetensors"
+        }
+    },
+    {
+        "id": 241,
+        "name": "StringConstantMultiline",
+        "prompts": {
+            "text": "Refiner Model:#REFINER_MODEL_NAME#, Refine at step:#REFINER_START_STEP#, Refine CFG:#REFINER_CFG#, Refine Sampler:#REFINER_SAMPLER#_#REFINER_SCHEDULER#"
+        }
+    },
+    {
+        "id": 242,
+        "name": "CR Text Replace",
+        "prompts": {
+            "text": "#REFINER_MODEL_NAME#",
+            "text_2": "#REFINER_START_STEP#"
+        }
+    },
+    {
+        "id": 243,
+        "name": "CR Integer To String"
+    },
+    {
+        "id": 252,
+        "name": "SekiSamplerSelector",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 254,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "Refiner Model:pixelAlchemy_pixelAlchemyHyperV22, Refine at step:3, Refine CFG:2.5, Refine Sampler:euler_sgm_uniform"
+        }
+    },
+    {
+        "id": 255,
+        "name": "CR Text Replace",
+        "prompts": {
+            "text": "#REFINER_CFG#",
+            "text_2": "#REFINER_SCHEDULER#"
+        }
+    },
+    {
+        "id": 256,
+        "name": "ImpactFloat"
+    },
+    {
+        "id": 257,
+        "name": "CR Float To String"
+    },
+    {
+        "id": 265,
+        "name": "Primitive integer [Crystools]"
+    },
+    {
+        "id": 266,
+        "name": "DownloadAndLoadKolorsModel",
+        "prompts": {
+            "text": "Kwai-Kolors/Kolors"
+        }
+    },
+    {
+        "id": 267,
+        "name": "DownloadAndLoadChatGLM3"
+    },
+    {
+        "id": 268,
+        "name": "KolorsTextEncode"
+    },
+    {
+        "id": 269,
+        "name": "KolorsSampler",
+        "prompts": {
+            "text": "EulerDiscreteScheduler"
+        }
+    },
+    {
+        "id": 271,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fp16-fix.safetensors"
+        }
+    },
+    {
+        "id": 272,
+        "name": "StringConstant"
+    },
+    {
+        "id": 273,
+        "name": "SDXLResolutionPresets",
+        "prompts": {
+            "text": "1:1 (1024x1024)"
+        }
+    },
+    {
+        "id": 275,
+        "name": "Primitive integer [Crystools]"
+    },
+    {
+        "id": 276,
+        "name": "Primitive float [Crystools]"
+    },
+    {
+        "id": 277,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 278,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 280,
+        "name": "StringConstant"
+    },
+    {
+        "id": 281,
+        "name": "CR String To Combo"
+    },
+    {
+        "id": 282,
+        "name": "SDPromptSaver",
+        "prompts": {
+            "text": "%date_%time-01_%model-%seed-%sampler_%scheduler-%steps_basic",
+            "text_2": "1.5\\BRAV5finalfp16.safetensors"
+        }
+    },
+    {
+        "id": 286,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 287,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "RealESRGAN_x4.pth"
+        }
+    },
+    {
+        "id": 288,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 289,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 290,
+        "name": "KolorsSampler",
+        "prompts": {
+            "text": "EulerDiscreteScheduler"
+        }
+    },
+    {
+        "id": 291,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 292,
+        "name": "PreviewImage"
+    }
+]

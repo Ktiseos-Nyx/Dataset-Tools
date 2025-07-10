@@ -1,0 +1,653 @@
+[
+    {
+        "id": 2,
+        "name": "IMG_To_IMG"
+    },
+    {
+        "id": 3,
+        "name": "FACE Detailer (First box then segm)"
+    },
+    {
+        "id": 4,
+        "name": "EYES Detailer (SEGM Only)"
+    },
+    {
+        "id": 5,
+        "name": "MOUTH Detailer (SEGM Only)"
+    },
+    {
+        "id": 6,
+        "name": "HANDs Detailer (SEGM Only)"
+    },
+    {
+        "id": 7,
+        "name": "NSFW Detailer (BBOX and SEGM) Choose what you want."
+    },
+    {
+        "id": 8,
+        "name": "UPSCALER"
+    },
+    {
+        "id": 9,
+        "name": "Adetailer for the upscaled image (Frist one is BBOX and Second one is SEGM by default swtich to whatever like to by just swtiching BBOX Detector (SEGS)/ SEGM Detector    to     segs on DetailerDebug segs/pipe)"
+    },
+    {
+        "id": 10,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 12,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 15,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "worst quality, old, early, low quality, lowres, bad hands, mutated hands, mammal, anthro, furry, ambiguous form, feral, semi-anthro, lowres, jpeg artifacts, bad art, blurred eyes, undetailed eyes, ugly face, blurred, grainy"
+        }
+    },
+    {
+        "id": 16,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 17,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 18,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 19,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/AnimeGirlFace_segment/anime_girl_face_m_seg.pt"
+        }
+    },
+    {
+        "id": 20,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 21,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 22,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 23,
+        "name": "SaveImage"
+    },
+    {
+        "id": 24,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 25,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 26,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 27,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 28,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 29,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 30,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 31,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 32,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 33,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 34,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/Eyes/PitEyeDetailer-v2-seg.pt"
+        }
+    },
+    {
+        "id": 35,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "clear face, masterpiece, best quality"
+        }
+    },
+    {
+        "id": 36,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 37,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurred eyes, undetailed eyes, ugly face, blurred face, bad nose, weird mouth"
+        }
+    },
+    {
+        "id": 38,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "worst quality, old, early, low quality, lowres, bad eyes, blurred eyes, undetailed eyes,"
+        }
+    },
+    {
+        "id": 39,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 40,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 41,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 42,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 43,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 44,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 45,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 46,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 47,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 48,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 49,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 50,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 51,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 52,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "dark_eye_focus, vibrant eyes,cosmic anime eyes, galaxy irises, twinkling star pupils, deep purples and blues,"
+        }
+    },
+    {
+        "id": 53,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 54,
+        "name": "SaveImage"
+    },
+    {
+        "id": 55,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Ultralytics/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 56,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 57,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 58,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 59,
+        "name": "SaveImage"
+    },
+    {
+        "id": 60,
+        "name": "SaveImage"
+    },
+    {
+        "id": 61,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 62,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 63,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 64,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 65,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 66,
+        "name": "SaveImage"
+    },
+    {
+        "id": 67,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "waiNSFWIllustrious_v130.safetensors"
+        }
+    },
+    {
+        "id": 68,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 69,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 70,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "smiling, happy"
+        }
+    },
+    {
+        "id": 71,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "sad, frowning"
+        }
+    },
+    {
+        "id": 72,
+        "name": "DetailerForEachDebugPipe"
+    },
+    {
+        "id": 73,
+        "name": "DetailerForEachDebugPipe"
+    },
+    {
+        "id": 74,
+        "name": "DetailerForEachDebugPipe"
+    },
+    {
+        "id": 75,
+        "name": "DetailerForEachDebugPipe"
+    },
+    {
+        "id": 76,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/mouth/Mouth_v10.pt"
+        }
+    },
+    {
+        "id": 77,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/handDetailer_v1b/PitHandDetailer-v1b-seg.pt"
+        }
+    },
+    {
+        "id": 78,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 79,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 80,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 81,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 82,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 83,
+        "name": "SaveImage"
+    },
+    {
+        "id": 84,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "smiling, happy"
+        }
+    },
+    {
+        "id": 85,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "sad, frowning"
+        }
+    },
+    {
+        "id": 86,
+        "name": "DetailerForEachDebugPipe"
+    },
+    {
+        "id": 87,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 88,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Ultralytics/Breast Detector.pt"
+        }
+    },
+    {
+        "id": 89,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 90,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 91,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 92,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 93,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 94,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 95,
+        "name": "SaveImage"
+    },
+    {
+        "id": 96,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "sad, frowning"
+        }
+    },
+    {
+        "id": 97,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 98,
+        "name": "DetailerForEachDebugPipe"
+    },
+    {
+        "id": 99,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 100,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 101,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 102,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 103,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 104,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 105,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 106,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 107,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "sad, frowning"
+        }
+    },
+    {
+        "id": 108,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "waiNSFWIllustrious_v130.safetensors"
+        }
+    },
+    {
+        "id": 109,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/NSFWDetection/breasts_seg.pt"
+        }
+    },
+    {
+        "id": 110,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 111,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 112,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 113,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 114,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 115,
+        "name": "SaveImage"
+    },
+    {
+        "id": 116,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "sad, frowning"
+        }
+    },
+    {
+        "id": 117,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Ultralytics/Breast Detector.pt"
+        }
+    },
+    {
+        "id": 118,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 119,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 120,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "smiling, happy"
+        }
+    },
+    {
+        "id": 121,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "smiling, happy"
+        }
+    },
+    {
+        "id": 122,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "score_9, score_8_up, score_7_up, score_6_up,anime style, (girl, green short hair:1),(red eyes),(kemomimi,green racoon ear,green Fluffy racoon tail) (large breasts,medium ass, narrow waist,curvy:1.3),(thick lips,thick thigh:1.1),(dark skin:1.3)(rimless glasses:1.2)girl room finger to mouth,(winder clothes ,jacket,winter long bottom skirt:1.5), thick lips,jitome,droopy eyes, score_9, score_8_up, score_7_up, score_6_up,anime style, (boy, green short hair:1), (red eyes),(kemomimi,green racoon ear,green Fluffy racoon tail) (large breasts,medium ass, narrow waist,curvy:1.3), (dark skin:1.3)(rimless glasses:1.2)girl room finger to mouth,(winder clothes ,jacket,winter bottom skirt:1.5), thick lips,jitome,droopy eyes"
+        }
+    },
+    {
+        "id": 123,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "masterpiece, best quality, highres, ultra-detailed, sharp focus, crisp details, detailed lineart, (intricate details:1.1), finely detailed, beautiful detailed lighting, vibrant colors, smooth gradients, (anime style), beautiful detailed eyes, detailed hair, smooth skin"
+        }
+    },
+    {
+        "id": 124,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "lowres, worst quality, low quality, blurry, unfocused, text, signature, watermark, username, artist name, logo, jpeg artifacts, compression artifacts, noise, grainy, (photorealistic:1.3), 3D render, CGI, (oversmooth:1.1), plastic, deformed, bad anatomy, mutated hands, extra fingers, disfigured, tiling artifacts, seams"
+        }
+    },
+    {
+        "id": 125,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "waiNSFWIllustrious_v130.safetensors"
+        }
+    },
+    {
+        "id": 126,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "RealESRGAN_x4plus_anime_6B.pth"
+        }
+    },
+    {
+        "id": 127,
+        "name": "DetailerForEachDebugPipe"
+    },
+    {
+        "id": 128,
+        "name": "DetailerForEachDebugPipe"
+    },
+    {
+        "id": 129,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 130,
+        "name": "SaveImage"
+    },
+    {
+        "id": 131,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 132,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "smiling, happy"
+        }
+    },
+    {
+        "id": 133,
+        "name": "SaveImage"
+    },
+    {
+        "id": 134,
+        "name": "UltimateSDUpscaleCustomSample"
+    },
+    {
+        "id": 135,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 136,
+        "name": "DetailerForEachDebugPipe"
+    },
+    {
+        "id": 137,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 138,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Ultralytics/Breast Detector.pt"
+        }
+    },
+    {
+        "id": 139,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 140,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 141,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 142,
+        "name": "SaveImage"
+    }
+]

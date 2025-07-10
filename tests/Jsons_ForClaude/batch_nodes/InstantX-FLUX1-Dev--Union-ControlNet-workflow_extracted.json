@@ -1,0 +1,80 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 14,
+        "name": "ControlNetApplySD3"
+    },
+    {
+        "id": 15,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "FLUX.1\\InstantX-FLUX1-Dev-Union\\FLUX.1-dev-ControlNet-Union-Pro.safetensors"
+        }
+    },
+    {
+        "id": 17,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "3ee1d483-ce02-44d3-8848-d1906c7f7ecd.png"
+        }
+    },
+    {
+        "id": 18,
+        "name": "Canny"
+    },
+    {
+        "id": 19,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 20,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "Flux\\flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 23,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "anime girl smiling with long hair standing in a football arena with a single massive sword hanging from her back"
+        }
+    },
+    {
+        "id": 26,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 28,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 30,
+        "name": "Note",
+        "prompts": {
+            "text": "Download the fp8 flux1-dev checkpoint here and place it under models/checkpoints. It includes the two required text encoders already so they do not need to be loaded separately. \n\nhttps://huggingface.co/Comfy-Org/flux1-dev/tree/main\n\nTips\n\n- Flux does not need a negative prompt when using cfg 1.0\n- When you make the strength of the controlnet over 0.4, the prompt has less of an effect.\n"
+        }
+    },
+    {
+        "id": 31,
+        "name": "easy imageInterrogator",
+        "prompts": {
+            "text": "a man in an orange prison uniform is making a peace sign, photo of putin, portrait of putin, dressed in orange inmate attire, portrait of vladimir putin, putin portrait, wearing orange prison jumpsuit, putin, prison jumpsuit, vladimir putin, putin as james bond 0 0 7, orange jumpsuit, russian criminal tattoos, with prison clothing, white russian clothes, 8 \u043a"
+        }
+    }
+]

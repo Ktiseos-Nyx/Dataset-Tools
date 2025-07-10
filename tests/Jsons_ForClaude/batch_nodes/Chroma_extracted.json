@@ -1,0 +1,75 @@
+[
+    {
+        "id": 4,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Living room filled with bright lighting.\n\nCirno has Six Ice wings shaped diamond or crystal shape, And blue or any colors bow on her head in the back, Has pastel azure or cyan short hair and have bangs or it can be anime bangs or no bangs, Wears a blue jumper dress and in the down of her dress, it shaped white triangles or mountains, Blue eyes, White collar and blouse, white short sleeves, red ascot/tie, And white socks or without, With blue shoes, And everything if you want to made ur own design of cirno"
+        }
+    },
+    {
+        "id": 5,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 6,
+        "name": "CLIPLoader",
+        "prompts": {
+            "text": "stableDiffusion3SD3_textEncoderT5E4m3fn.safetensors",
+            "text_2": "stable_diffusion"
+        }
+    },
+    {
+        "id": 9,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 10,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 11,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae_flux.sft"
+        }
+    },
+    {
+        "id": 14,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 19,
+        "name": "SaveImage"
+    },
+    {
+        "id": 27,
+        "name": "ChromaPaddingRemoval"
+    },
+    {
+        "id": 31,
+        "name": "ChromaDiffusionLoader",
+        "prompts": {
+            "text": "chroma-unlocked-v16-Q4_0.gguf",
+            "text_2": "float8_e4m3fn (8 bit)"
+        }
+    },
+    {
+        "id": 37,
+        "name": "ChromaPaddingRemoval"
+    },
+    {
+        "id": 39,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 40,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 41,
+        "name": "PrimitiveNode"
+    }
+]

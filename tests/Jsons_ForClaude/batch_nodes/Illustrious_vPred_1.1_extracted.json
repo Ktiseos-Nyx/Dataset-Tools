@@ -1,0 +1,391 @@
+[
+    {
+        "id": 1,
+        "name": "\u4f7f\u7528vPred\u6a21\u578b\u65f6\u542f\u7528"
+    },
+    {
+        "id": 2,
+        "name": "\u4e00\u6b21\u653e\u5927"
+    },
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 5,
+        "name": "\u6587\u751f\u56fe"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 6,
+        "name": "\u9762\u90e8\u7ec6\u5316"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 7,
+        "name": "\u624b\u90e8\u4fee\u590d"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 8,
+        "name": "\u4e8c\u6b21\u653e\u5927"
+    },
+    {
+        "id": 14,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 32,
+        "name": "KSampler"
+    },
+    {
+        "id": 33,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 35,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 46,
+        "name": "ModelSamplingDiscrete",
+        "prompts": {
+            "text": "v_prediction"
+        }
+    },
+    {
+        "id": 56,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "waiNSFWIllustrious_v130.safetensors"
+        }
+    },
+    {
+        "id": 58,
+        "name": "LoraLoaderBlockWeight //Inspire",
+        "prompts": {
+            "text": "\u8c03\u6574\\illustriousXLv01_stabilizer_v1.121.safetensors",
+            "text_2": "SDXL-ALL:1,1,1,1,1,1,1,1,1,1,1,1"
+        }
+    },
+    {
+        "id": 59,
+        "name": "LoraLoaderBlockWeight //Inspire",
+        "prompts": {
+            "text": "\u753b\u98ce\u98ce\u683c\\ME\\taohuaff.safetensors",
+            "text_2": "SDXL-ALL:1,1,1,1,1,1,1,1,1,1,1,1"
+        }
+    },
+    {
+        "id": 60,
+        "name": "SetNode"
+    },
+    {
+        "id": 61,
+        "name": "GetNode"
+    },
+    {
+        "id": 62,
+        "name": "SetNode"
+    },
+    {
+        "id": 63,
+        "name": "SetNode"
+    },
+    {
+        "id": 64,
+        "name": "GetNode"
+    },
+    {
+        "id": 65,
+        "name": "GetNode"
+    },
+    {
+        "id": 66,
+        "name": "SetNode"
+    },
+    {
+        "id": 67,
+        "name": "GetNode"
+    },
+    {
+        "id": 68,
+        "name": "SetNode",
+        "prompts": {
+            "text": "CheckpointVAE"
+        }
+    },
+    {
+        "id": 70,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CheckpointVAE"
+        }
+    },
+    {
+        "id": 71,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CheckpointVAE"
+        }
+    },
+    {
+        "id": 72,
+        "name": "LoraLoader|pysssss",
+        "prompts": {
+            "text": "0.7-1.0\nTHFF,"
+        }
+    },
+    {
+        "id": 73,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 74,
+        "name": "SetNode"
+    },
+    {
+        "id": 75,
+        "name": "GetNode"
+    },
+    {
+        "id": 76,
+        "name": "easy globalSeed"
+    },
+    {
+        "id": 77,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 78,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 81,
+        "name": "GetNode"
+    },
+    {
+        "id": 82,
+        "name": "GetNode"
+    },
+    {
+        "id": 83,
+        "name": "GetNode"
+    },
+    {
+        "id": 84,
+        "name": "GetNode"
+    },
+    {
+        "id": 85,
+        "name": "GetNode"
+    },
+    {
+        "id": 86,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8n_v2(2D\u903c\u771f\u8138).pt"
+        }
+    },
+    {
+        "id": 87,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_l_0b3195.pth"
+        }
+    },
+    {
+        "id": 88,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 89,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 90,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 91,
+        "name": "SetNode"
+    },
+    {
+        "id": 92,
+        "name": "SetNode"
+    },
+    {
+        "id": 93,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CheckpointVAE"
+        }
+    },
+    {
+        "id": 94,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CheckpointVAE"
+        }
+    },
+    {
+        "id": 95,
+        "name": "GetNode"
+    },
+    {
+        "id": 96,
+        "name": "GetNode"
+    },
+    {
+        "id": 97,
+        "name": "GetNode"
+    },
+    {
+        "id": 98,
+        "name": "GetNode"
+    },
+    {
+        "id": 99,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 100,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8n\uff082D\u903c\u771f\u624b\uff09.pt"
+        }
+    },
+    {
+        "id": 102,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "\u624b\\Xian-T\u624b\u90e8\u4fee\u590dlora\uff08\u4e0d\u7528controlnet\u4e5f\u4e0d\u574f\u624b\u4e86\uff09_V1.0\uff08SDXL\uff09.safetensors"
+        }
+    },
+    {
+        "id": 103,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 104,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 105,
+        "name": "DetailerForEachDebug"
+    },
+    {
+        "id": 106,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CheckpointVAE"
+        }
+    },
+    {
+        "id": 107,
+        "name": "GetNode"
+    },
+    {
+        "id": 108,
+        "name": "GetNode"
+    },
+    {
+        "id": 109,
+        "name": "GetNode"
+    },
+    {
+        "id": 110,
+        "name": "GetNode"
+    },
+    {
+        "id": 111,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "RealESRGAN_x4plus.pth"
+        }
+    },
+    {
+        "id": 112,
+        "name": "UltimateSDUpscale"
+    },
+    {
+        "id": 113,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 114,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 115,
+        "name": "SetNode"
+    },
+    {
+        "id": 116,
+        "name": "easy bookmark"
+    },
+    {
+        "id": 117,
+        "name": "LatentPixelScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 118,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 119,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 122,
+        "name": "Note",
+        "prompts": {
+            "text": "\u5168\u5c40\u968f\u673a\u79cd\u53ef\u4ee5\u4e00\u952e\u56fa\u5b9a\u79cd\u5b50\n\n\n\n\n1. \u6a21\u578b\u6ca1\u6709\u5185\u7f6eVAE\u5c31\u81ea\u884c\u6dfb\u52a0VAE\u8282\u70b9\n\n2. clip\u6587\u672c\u7f16\u7801\u5668\uff1a\u5355\u72ec\u5206\u51fa\u4e86\u4e00\u4e2a\u8f93\u5165\u6846\u7528\u6765\u8f93\u5165\u8d28\u91cf\u8bcd\uff0c\u6a21\u578b\u504f\u597d\u8d28\u91cf\u8bcd\u5728\u524d\u5c31\u7528\u7b2c\u4e00\u4e2a\u7eff\u6846\uff0c\u5728\u540e\u5c31\u7b2c\u4e8c\u4e2a\u7eff\u6846\uff0c\u4e5f\u53ef\u4ee5\u5728\u6761\u4ef6\u8054\u7ed3\u8282\u70b9\u66f4\u6362\u8fde\u7ebf\uff08\u6839\u636e\u81ea\u8eab\u4f7f\u7528\u4e60\u60ef\u66f4\u6539\uff09\n\n3. \u901a\u914d\u7b26\u7f16\u7801\uff1a\u4e0d\u4f7f\u7528\u7684\u8bdd\u7559\u7a7a\u5c31\u884c\u3002\n\n3. LORA\u52a0\u8f7d\u5668(\u5206\u5c42)\uff1a\u4e0d\u4f7f\u7528\u5c31\u9009\u4e2dCtrl+B\u5ffd\u7565\u8282\u70b9\u3002\n"
+        }
+    },
+    {
+        "id": 124,
+        "name": "WildcardEncode //Inspire",
+        "prompts": {
+            "text": "Select the LoRA to add to the text",
+            "text_2": "Select the Wildcard to add to the text"
+        }
+    },
+    {
+        "id": 125,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 126,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 127,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 128,
+        "name": "SaveImage"
+    }
+]

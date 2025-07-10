@@ -1,0 +1,677 @@
+[
+    {
+        "id": 1,
+        "name": "Phase 1A: Load Models"
+    },
+    {
+        "id": 6,
+        "name": "Phase 2A: Prompt & Sampling"
+    },
+    {
+        "id": 7,
+        "name": "Phase 1B: Load Image 1"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 8,
+        "name": "Phase 1C: Load Image 2"
+    },
+    {
+        "id": 9,
+        "name": "Phase 1D: Load Image 3"
+    },
+    {
+        "id": 10,
+        "name": "Phase 1E: Load Image 4"
+    },
+    {
+        "id": 11,
+        "name": "Phase 3A: Ultimate SD Upscaler (UU)"
+    },
+    {
+        "id": 12,
+        "name": "Phase 2B: Output: Stitched Images"
+    },
+    {
+        "id": 13,
+        "name": "Phase 2C: Output: Image - Low Res"
+    },
+    {
+        "id": 14,
+        "name": "Phase 3B: Output: Image - Ultimate Upscaler"
+    },
+    {
+        "id": 15,
+        "name": "Phase 4A: Adetailer #1"
+    },
+    {
+        "id": 16,
+        "name": "Phase 4B: Adetailer #2"
+    },
+    {
+        "id": 17,
+        "name": "Phase 4C: Adetailer #3"
+    },
+    {
+        "id": 37,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-kontext-dev.safetensors"
+        }
+    },
+    {
+        "id": 38,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "Clip-L FP32 (zer0int Vision).safetensors",
+            "text_2": "t5xxl_fp32_flan.safetensors"
+        }
+    },
+    {
+        "id": 39,
+        "name": "VAELoader"
+    },
+    {
+        "id": 42,
+        "name": "FluxKontextImageScale"
+    },
+    {
+        "id": 124,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 136,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Kontext01-LR"
+        }
+    },
+    {
+        "id": 173,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 177,
+        "name": "ReferenceLatent"
+    },
+    {
+        "id": 184,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "[tutorial](http://docs.comfy.org/tutorials/flux/flux-1-kontext-dev) | (http://docs.comfy.org/zh-CN/tutorials/flux/flux-1-kontext-dev)\n\n\nInstallation folders:\n\n```\n\ud83d\udcc2 ComfyUI/\n\u251c\u2500\u2500 \ud83d\udcc2 models/\n\u2502   \u251c\u2500\u2500 \ud83d\udcc2 diffusion_models/\n\u2502   \u2502   \u2514\u2500\u2500 flux1-dev-kontext_fp8_scaled.safetensors\n\u2502   \u251c\u2500\u2500 \ud83d\udcc2 vae/\n\u2502   \u2502   \u2514\u2500\u2500 ae.safetensor\n\u2502   \u2514\u2500\u2500 \ud83d\udcc2 text_encoders/\n\u2502       \u251c\u2500\u2500 clip_l.safetensors\n\u2502       \u2514\u2500\u2500 t5xxl_fp16.safetensors \n"
+        }
+    },
+    {
+        "id": 186,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "\n## Flux Kontext Prompt Techniques\n\n### 1. Basic Modifications\n- Simple and direct: `\"Change the car color to red\"`\n- Maintain style: `\"Change to daytime while maintaining the same style of the painting\"`\n\n### 2. Style Transfer\n**Principles:**\n- Clearly name style: `\"Transform to Bauhaus art style\"`\n- Describe characteristics: `\"Transform to oil painting with visible brushstrokes, thick paint texture\"`\n- Preserve composition: `\"Change to Bauhaus style while maintaining the original composition\"`\n\n### 3. Character Consistency\n**Framework:**\n- Specific description: `\"The woman with short black hair\"` instead of \"she\"\n- Preserve features: `\"while maintaining the same facial features, hairstyle, and expression\"`\n- Step-by-step modifications: Change background first, then actions\n\n### 4. Text Editing\n- Use quotes: `\"Replace 'joy' with 'BFL'\"`\n- Maintain format: `\"Replace text while maintaining the same font style\"`\n\n## Common Problem Solutions\n\n### Character Changes Too Much\n\u274c Wrong: `\"Transform the person into a Viking\"`\n\u2705 Correct: `\"Change the clothes to be a viking warrior while preserving facial features\"`\n\n### Composition Position Changes\n\u274c Wrong: `\"Put him on a beach\"`\n\u2705 Correct: `\"Change the background to a beach while keeping the person in the exact same position, scale, and pose\"`\n\n### Style Application Inaccuracy\n\u274c Wrong: `\"Make it a sketch\"`\n\u2705 Correct: `\"Convert to pencil sketch with natural graphite lines, cross-hatching, and visible paper texture\"`\n\n## Core Principles\n\n1. **Be Specific and Clear** - Use precise descriptions, avoid vague terms\n2. **Step-by-step Editing** - Break complex modifications into multiple simple steps\n3. **Explicit Preservation** - State what should remain unchanged\n4. **Verb Selection** - Use \"change\", \"replace\" rather than \"transform\"\n\n## Best Practice Templates\n\n**Object Modification:**\n`\"Change [object] to [new state], keep [content to preserve] unchanged\"`\n\n**Style Transfer:**\n`\"Transform to [specific style], while maintaining [composition/character/other] unchanged\"`\n\n**Background Replacement:**\n`\"Change the background to [new background], keep the subject in the exact same position and pose\"`\n\n**Text Editing:**\n`\"Replace '[original text]' with '[new text]', maintain the same font style\"`\n\n> **Remember:** The more specific, the better. Kontext excels at understanding detailed instructions and maintaining consistency. "
+        }
+    },
+    {
+        "id": 193,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "vforeverbestfriendsposesandpropsforgenesis8and81female00maindaz3d.jpg"
+        }
+    },
+    {
+        "id": 212,
+        "name": "CLIPTextEncodeFlux"
+    },
+    {
+        "id": 216,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 217,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 218,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 219,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "luxurycasinopool01daz3d.jpg"
+        }
+    },
+    {
+        "id": 223,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "Warhammer.png"
+        }
+    },
+    {
+        "id": 225,
+        "name": "LoadImage"
+    },
+    {
+        "id": 229,
+        "name": "SDXL Empty Latent Image (rgthree)",
+        "prompts": {
+            "text": " 896 x 1152  (portrait)"
+        }
+    },
+    {
+        "id": 232,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 233,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 237,
+        "name": "VRAM_Debug"
+    },
+    {
+        "id": 238,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "001_classicalSR_DF2K_s64w8_SwinIR-M_x8.pth"
+        }
+    },
+    {
+        "id": 240,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Kontext02-UU"
+        }
+    },
+    {
+        "id": 242,
+        "name": "ImageRemoveBackground+"
+    },
+    {
+        "id": 243,
+        "name": "RemBGSession+",
+        "prompts": {
+            "text": "u2net: general purpose"
+        }
+    },
+    {
+        "id": 244,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 245,
+        "name": "RemBGSession+",
+        "prompts": {
+            "text": "u2net: general purpose"
+        }
+    },
+    {
+        "id": 246,
+        "name": "ImageRemoveBackground+"
+    },
+    {
+        "id": 247,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 248,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 249,
+        "name": "RemBGSession+",
+        "prompts": {
+            "text": "u2net: general purpose"
+        }
+    },
+    {
+        "id": 250,
+        "name": "ImageRemoveBackground+"
+    },
+    {
+        "id": 251,
+        "name": "RemBGSession+",
+        "prompts": {
+            "text": "u2net: general purpose"
+        }
+    },
+    {
+        "id": 252,
+        "name": "ImageRemoveBackground+"
+    },
+    {
+        "id": 253,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 254,
+        "name": "SetNode"
+    },
+    {
+        "id": 255,
+        "name": "SetNode"
+    },
+    {
+        "id": 256,
+        "name": "SetNode"
+    },
+    {
+        "id": 257,
+        "name": "SetNode",
+        "prompts": {
+            "text": "IMAGE_INPUT"
+        }
+    },
+    {
+        "id": 258,
+        "name": "GetNode",
+        "prompts": {
+            "text": "IMAGE_INPUT"
+        }
+    },
+    {
+        "id": 259,
+        "name": "GetNode"
+    },
+    {
+        "id": 260,
+        "name": "GetNode"
+    },
+    {
+        "id": 262,
+        "name": "GetNode"
+    },
+    {
+        "id": 263,
+        "name": "GetNode"
+    },
+    {
+        "id": 265,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 266,
+        "name": "SetNode"
+    },
+    {
+        "id": 267,
+        "name": "GetNode"
+    },
+    {
+        "id": 268,
+        "name": "GetNode"
+    },
+    {
+        "id": 269,
+        "name": "GetNode"
+    },
+    {
+        "id": 270,
+        "name": "SetNode"
+    },
+    {
+        "id": 272,
+        "name": "GetNode"
+    },
+    {
+        "id": 274,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 275,
+        "name": "ImageStitch"
+    },
+    {
+        "id": 276,
+        "name": "ImageStitch"
+    },
+    {
+        "id": 277,
+        "name": "ImageStitch"
+    },
+    {
+        "id": 278,
+        "name": "SetNode"
+    },
+    {
+        "id": 279,
+        "name": "GetNode"
+    },
+    {
+        "id": 280,
+        "name": "SetNode",
+        "prompts": {
+            "text": "IMG_STITCHED"
+        }
+    },
+    {
+        "id": 281,
+        "name": "GetNode",
+        "prompts": {
+            "text": "IMG_STITCHED"
+        }
+    },
+    {
+        "id": 282,
+        "name": "GetNode"
+    },
+    {
+        "id": 283,
+        "name": "SetNode"
+    },
+    {
+        "id": 284,
+        "name": "GetNode"
+    },
+    {
+        "id": 285,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 286,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 287,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 288,
+        "name": "Note",
+        "prompts": {
+            "text": "\nIf you are using this for a background image, remember to bypass the two nodes:\n\nImage Remove Background\nRemBG Session\n\nJust select them and Ctrl+B to bypass.\n\nYou don't want to remove the background from the background, right?"
+        }
+    },
+    {
+        "id": 289,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 290,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 291,
+        "name": "DetailDaemonSamplerNode"
+    },
+    {
+        "id": 292,
+        "name": "UltimateSDUpscaleCustomSample"
+    },
+    {
+        "id": 293,
+        "name": "Note",
+        "prompts": {
+            "text": "Upscaler model:\n\n001_classicalSR_DF2K_s64w8_SwinIR-M_x2.pth\n\nhttps://huggingface.co/licyk/sd-upscaler-models/tree/main/SwinIR\n\nInstallation:\nComfyUI\\models\\upscale_models"
+        }
+    },
+    {
+        "id": 294,
+        "name": "Note",
+        "prompts": {
+            "text": "\nClip-L FP32 (Zer0Int-Vision):\n\nhttps://civitai.com/models/1044804?modelVersionId=1377767\n\nFlan T5-XXL FP32:  \n\nhttps://civitai.com/models/1356520/flan-t5-xxl-text-encorder-only"
+        }
+    },
+    {
+        "id": 298,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 299,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 300,
+        "name": "Note",
+        "prompts": {
+            "text": "If you are using a segmentation model, use the sam options.\n\nIf you are using a bbox model, use the bbox options.\n\nAlso, use the denoise value to get the effect that you want, taking into consideration wether or not you are using a LORA with ADetailer."
+        }
+    },
+    {
+        "id": 301,
+        "name": "Note",
+        "prompts": {
+            "text": "Select a node, then press ctrl+B to toggle \"node bypass\".\n\nUse the LORA loader to add a face. However, if you are using a style different than the LORA, you need to increase the denoise to 0.5\n\nWith no LORA, 0.25 denoise is fine."
+        }
+    },
+    {
+        "id": 302,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 303,
+        "name": "GetNode"
+    },
+    {
+        "id": 304,
+        "name": "GetNode"
+    },
+    {
+        "id": 305,
+        "name": "GetNode"
+    },
+    {
+        "id": 306,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/Hand Detailer-v2-Test-v9c.pt"
+        }
+    },
+    {
+        "id": 307,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "feminine hand with pink nails"
+        }
+    },
+    {
+        "id": 308,
+        "name": "GetNode"
+    },
+    {
+        "id": 309,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Kontext03-AD1"
+        }
+    },
+    {
+        "id": 310,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 311,
+        "name": "GetNode"
+    },
+    {
+        "id": 312,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 313,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 314,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 315,
+        "name": "Note",
+        "prompts": {
+            "text": "If you are using a segmentation model, use the sam options.\n\nIf you are using a bbox model, use the bbox options.\n\nAlso, use the denoise value to get the effect that you want, taking into consideration wether or not you are using a LORA with ADetailer."
+        }
+    },
+    {
+        "id": 316,
+        "name": "Note",
+        "prompts": {
+            "text": "Select a node, then press ctrl+B to toggle \"node bypass\".\n\nUse the LORA loader to add a face. However, if you are using a style different than the LORA, you need to increase the denoise to 0.5\n\nWith no LORA, 0.25 denoise is fine."
+        }
+    },
+    {
+        "id": 317,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 318,
+        "name": "GetNode"
+    },
+    {
+        "id": 319,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Foot_Yolov8x_v20.pt"
+        }
+    },
+    {
+        "id": 320,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "feminine feet with pink nails"
+        }
+    },
+    {
+        "id": 321,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Kontext04-AD2"
+        }
+    },
+    {
+        "id": 322,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 323,
+        "name": "GetNode"
+    },
+    {
+        "id": 325,
+        "name": "GetNode"
+    },
+    {
+        "id": 326,
+        "name": "GetNode"
+    },
+    {
+        "id": 327,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 328,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 329,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 330,
+        "name": "Note",
+        "prompts": {
+            "text": "If you are using a segmentation model, use the sam options.\n\nIf you are using a bbox model, use the bbox options.\n\nAlso, use the denoise value to get the effect that you want, taking into consideration wether or not you are using a LORA with ADetailer."
+        }
+    },
+    {
+        "id": 331,
+        "name": "Note",
+        "prompts": {
+            "text": "Select a node, then press ctrl+B to toggle \"node bypass\".\n\nUse the LORA loader to add a face. However, if you are using a style different than the LORA, you need to increase the denoise to 0.5\n\nWith no LORA, 0.25 denoise is fine."
+        }
+    },
+    {
+        "id": 332,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 333,
+        "name": "GetNode"
+    },
+    {
+        "id": 334,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 335,
+        "name": "GetNode"
+    },
+    {
+        "id": 336,
+        "name": "GetNode"
+    },
+    {
+        "id": 337,
+        "name": "GetNode"
+    },
+    {
+        "id": 338,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 339,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/Anzhc WomanFace v05 1024 y8n (no dill).pt"
+        }
+    },
+    {
+        "id": 340,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Kontext04-AD2"
+        }
+    },
+    {
+        "id": 341,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 342,
+        "name": "Note",
+        "prompts": {
+            "text": "\nIf you don't need certain elements of the workflow, you can disable them, but you need to do it in the reverse order (4, 3, 2, 1)\n\nFor example:\n- If you only want to use 1 adetailer, disable Adetailer #3 and #2.\n\n- If you just want to load one image, disable Load Image #4, #3, #2."
+        }
+    },
+    {
+        "id": 353,
+        "name": "Note",
+        "prompts": {
+            "text": "\nArt Styles:\n\nhttps://www.flux-context.com/styles\n----------\n\nLEGO brick art\n\nPixar-style 3D characters\n\nSanrio-style 3D characters\n\n3D Chibi figures\n\n\nStudio Ghibli anime art\n\nBarbie doll perfection\n\nIrasutoya-style vector art\n\nSnoopy-style comic art\n\n16-bit mosaic pixel art\n\nAnime Style\n\nsftsrv style\n\n\nwatercolor paintings\n\nhand drawn sketches\n\nclay art sculptures\n\n=============================\n\nOther Uses:\n----------\n\nold photo restoration\n\nwatermark remover\n\nremove/change text from image\n\n"
+        }
+    },
+    {
+        "id": 355,
+        "name": "ImpactWildcardProcessor",
+        "prompts": {
+            "text": "dtpr, transform into dtpr_photorealistic style. Add a beach background",
+            "text_2": "Select the Wildcard to add to the text"
+        }
+    },
+    {
+        "id": 360,
+        "name": "PathchSageAttentionKJ"
+    },
+    {
+        "id": 361,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "\n## ONLY PROMPT FROM THE WILDCARD NODE!\n\n\n### **WILDCARD NODE:**\n\n### *Populate* mode allows you to prompt into the upper box, and automatically gets info from Wildcards (you cannot edit the lower box in this mode).\n\n### *Fixed* mode allows you to prompt normally in the lower box."
+        }
+    },
+    {
+        "id": 362,
+        "name": "Power Lora Loader (rgthree)"
+    }
+]

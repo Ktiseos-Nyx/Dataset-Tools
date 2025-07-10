@@ -1,0 +1,232 @@
+[
+    {
+        "id": 1,
+        "name": "Hires"
+    },
+    {
+        "id": 2,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "low quality,worst quality,normal quality,text,signature,jpeg artifacts,bad anatomy,old,early,copyright name,watermark,artist name,signature,censored,signature,bad hands,lowres,"
+        }
+    },
+    {
+        "id": 2,
+        "name": "Sampler"
+    },
+    {
+        "id": 3,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "waiSHUFFLENOOB_vPred20.safetensors"
+        }
+    },
+    {
+        "id": 3,
+        "name": "Prompt"
+    },
+    {
+        "id": 4,
+        "name": "Control Center"
+    },
+    {
+        "id": 5,
+        "name": "KSampler"
+    },
+    {
+        "id": 5,
+        "name": "EyesDetailer"
+    },
+    {
+        "id": 6,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 6,
+        "name": "HandsDetailer"
+    },
+    {
+        "id": 7,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 7,
+        "name": "Save Before Detailer"
+    },
+    {
+        "id": 8,
+        "name": "ModelSamplingDiscrete",
+        "prompts": {
+            "text": "v_prediction"
+        }
+    },
+    {
+        "id": 9,
+        "name": "Mahiro"
+    },
+    {
+        "id": 10,
+        "name": "RescaleCFG"
+    },
+    {
+        "id": 11,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 14,
+        "name": "LatentUpscaleBy",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 15,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 18,
+        "name": "Note",
+        "prompts": {
+            "text": "masterpiece, best quality, newest, absurdres, highres, safe,\n"
+        }
+    },
+    {
+        "id": 21,
+        "name": "Note",
+        "prompts": {
+            "text": "Percentile Range \tQuality Tags\n> 95th \tmasterpiece\n> 85th, <= 95th \tbest quality\n> 60th, <= 85th \tgood quality\n> 30th, <= 60th \tnormal quality\n<= 30th \t        worst quality"
+        }
+    },
+    {
+        "id": 22,
+        "name": "Note",
+        "prompts": {
+            "text": "Year Range \tPeriod\n2005-2010 \told\n2011-2014 \tearly\n2014-2017 \tmid\n2018-2020 \trecent\n2021-2024 \tnewest"
+        }
+    },
+    {
+        "id": 23,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 24,
+        "name": "easy int"
+    },
+    {
+        "id": 25,
+        "name": "easy int"
+    },
+    {
+        "id": 26,
+        "name": "easy ckptNames",
+        "prompts": {
+            "text": "waiSHUFFLENOOB_vPred20.safetensors"
+        }
+    },
+    {
+        "id": 27,
+        "name": "Lora Loader Stack (rgthree)"
+    },
+    {
+        "id": 28,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 31,
+        "name": "Save Image w/Metadata",
+        "prompts": {
+            "text": "Img_%time_%seed",
+            "text_2": "waiSHUFFLENOOB_vPred20.safetensors"
+        }
+    },
+    {
+        "id": 32,
+        "name": "PrimitiveFloat"
+    },
+    {
+        "id": 33,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "1girl, solo, looking at viewer,\n\nmasterpiece, best quality, newest, absurdres, highres, very awa, "
+        }
+    },
+    {
+        "id": 34,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "low quality, worst quality, normal quality, text, signature, jpeg artifacts, bad anatomy, old, early, copyright name, watermark,artist name, signature, censored, signature, bad hands, lowres,"
+        }
+    },
+    {
+        "id": 35,
+        "name": "easy int"
+    },
+    {
+        "id": 36,
+        "name": "easy int"
+    },
+    {
+        "id": 37,
+        "name": "Note",
+        "prompts": {
+            "text": "https://civitai.com/user/Legendaer"
+        }
+    },
+    {
+        "id": 39,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 40,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Eyeful_v2-Paired.pt"
+        }
+    },
+    {
+        "id": 44,
+        "name": "Save Image w/Metadata",
+        "prompts": {
+            "text": "Img_%time_%seed",
+            "text_2": "waiSHUFFLENOOB_vPred20.safetensors"
+        }
+    },
+    {
+        "id": 45,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "eyes, detailed eyes,\n\nmasterpiece, best quality, newest, absurdres, highres, very awa, "
+        }
+    },
+    {
+        "id": 46,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 47,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 48,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8s.pt"
+        }
+    },
+    {
+        "id": 49,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "hand,\n\nmasterpiece, best quality, newest, absurdres, highres, very awa, "
+        }
+    }
+]

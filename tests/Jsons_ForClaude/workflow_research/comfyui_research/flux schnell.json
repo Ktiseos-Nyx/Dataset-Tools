@@ -1,0 +1,268 @@
+{
+  "5": {
+    "inputs": {
+      "width": 720,
+      "height": 1280,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "7": {
+    "inputs": {
+      "text": "\"Blurry details, unnatural proportions, stiff or awkward poses, overly exaggerated expressions, unrealistic physics, cluttered background, dull lighting, flat colors, lack of depth, robotic or lifeless appearance, repetitive elements, distracting artifacts, inconsistent style, overly rigid clothing, unnatural hair flow, awkward limb positioning, forced perspective, low-quality textures, lack of environmental interaction.\"",
+      "clip": [
+        "14",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "8": {
+    "inputs": {
+      "text": "High-resolution semi-realistic illustration with bold composition and deep blue-gray tones, accented by warm artificial lighting. A young woman sits alone on a rusted metal crate in an abandoned underground bunker, her silhouette outlined by the flickering glow of haphazardly stacked CRT monitors. Her messy high ponytail of silver-blonde hair frames a sharp, thoughtful gaze. Dressed in a sleeveless turtleneck, tactical cargo pants, and heavy boots, she rests one hand on her knee. The air is thick with the scent of aged electronics and damp metal, cables sprawling across the dusty floor, peeling warning signs clinging to cracked concrete walls. Painterly textures and cinematic lighting evoke an intense, mysterious dystopian mood",
+      "clip": [
+        "14",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "11": {
+    "inputs": {
+      "seed": 29292006681112,
+      "tiling": 1,
+      "steps": 25,
+      "cfg": 6,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "beta",
+      "denoise": 0.85,
+      "model": [
+        "14",
+        0
+      ],
+      "positive": [
+        "16",
+        0
+      ],
+      "negative": [
+        "15",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
+    },
+    "class_type": "Tiled KSampler",
+    "_meta": {
+      "title": "Tiled KSampler"
+    }
+  },
+  "12": {
+    "inputs": {
+      "unet_name": "flux1-schnell-Q8_0.gguf"
+    },
+    "class_type": "UnetLoaderGGUF",
+    "_meta": {
+      "title": "Unet Loader (GGUF)"
+    }
+  },
+  "13": {
+    "inputs": {
+      "tile_size": 192,
+      "overlap": 64,
+      "temporal_size": 64,
+      "temporal_overlap": 8,
+      "samples": [
+        "11",
+        0
+      ],
+      "vae": [
+        "28",
+        0
+      ]
+    },
+    "class_type": "VAEDecodeTiled",
+    "_meta": {
+      "title": "VAE Decode (Tiled)"
+    }
+  },
+  "14": {
+    "inputs": {
+      "lora_01": "CPA.safetensors",
+      "strength_01": 0.5,
+      "lora_02": "FluxDFaeTasticDetails.safetensors",
+      "strength_02": 0.5,
+      "lora_03": "flux_illustriousXL_schnell_v1-rev2.safetensors",
+      "strength_03": 0.5,
+      "lora_04": "None",
+      "strength_04": 1,
+      "model": [
+        "17",
+        0
+      ],
+      "clip": [
+        "27",
+        0
+      ]
+    },
+    "class_type": "Lora Loader Stack (rgthree)",
+    "_meta": {
+      "title": "Lora Loader Stack (rgthree)"
+    }
+  },
+  "15": {
+    "inputs": {
+      "guidance": 1,
+      "conditioning": [
+        "7",
+        0
+      ]
+    },
+    "class_type": "FluxGuidance",
+    "_meta": {
+      "title": "FluxGuidance"
+    }
+  },
+  "16": {
+    "inputs": {
+      "guidance": 6,
+      "conditioning": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "FluxGuidance",
+    "_meta": {
+      "title": "FluxGuidance"
+    }
+  },
+  "17": {
+    "inputs": {
+      "max_shift": 1.15,
+      "base_shift": 0.5,
+      "width": 416,
+      "height": 784,
+      "model": [
+        "12",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingFlux",
+    "_meta": {
+      "title": "ModelSamplingFlux"
+    }
+  },
+  "18": {
+    "inputs": {
+      "model_name": "4x-AnimeSharp.pth"
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "19": {
+    "inputs": {
+      "empty_cache": true,
+      "gc_collect": true,
+      "unload_all_models": false,
+      "image_pass": [
+        "13",
+        0
+      ]
+    },
+    "class_type": "VRAM_Debug",
+    "_meta": {
+      "title": "VRAM Debug"
+    }
+  },
+  "20": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "width": 1080,
+      "height": 1920,
+      "crop": "center",
+      "image": [
+        "21",
+        0
+      ]
+    },
+    "class_type": "ImageScale",
+    "_meta": {
+      "title": "Upscale Image"
+    }
+  },
+  "21": {
+    "inputs": {
+      "upscale_model": [
+        "18",
+        0
+      ],
+      "image": [
+        "19",
+        1
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image (using Model)"
+    }
+  },
+  "23": {
+    "inputs": {
+      "images": [
+        "13",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "24": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "20",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "27": {
+    "inputs": {
+      "clip_name1": "clip_l.safetensors",
+      "clip_name2": "t5-v1_1-xxl-encoder-Q8_0.gguf",
+      "type": "flux"
+    },
+    "class_type": "DualCLIPLoaderGGUF",
+    "_meta": {
+      "title": "DualCLIPLoader (GGUF)"
+    }
+  },
+  "28": {
+    "inputs": {
+      "vae_name": "ae.safetensors",
+      "device": "main_device",
+      "weight_dtype": "bf16"
+    },
+    "class_type": "VAELoaderKJ",
+    "_meta": {
+      "title": "VAELoader KJ"
+    }
+  }
+}

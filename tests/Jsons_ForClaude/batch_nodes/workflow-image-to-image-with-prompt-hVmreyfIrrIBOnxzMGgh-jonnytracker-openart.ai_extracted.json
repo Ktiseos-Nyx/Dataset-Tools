@@ -1,0 +1,71 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "majicmixRealistic_v6.safetensors"
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "color image, busty, The image is a screenshot of a mobile phone screen. It shows a young woman with shoulder-length brown hair and bangs, wearing a red and white floral dress. She is standing in front of a counter with a fish tank in the background. The woman is holding a small container of food in her hands and appears to be looking down at it with a sad expression on her face."
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text, watermark, phone screen, UI, graphics"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 11,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "girl black and white.jpg"
+        }
+    },
+    {
+        "id": 13,
+        "name": "Florence2Run",
+        "prompts": {
+            "text": "more_detailed_caption"
+        }
+    },
+    {
+        "id": 14,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "The image is a black and white portrait of a young woman with long, wavy hair. She is standing in front of a car, which appears to be a luxury sports car. The woman is wearing a strapless dress and her hair is styled in loose waves. She has a serious expression on her face and is looking directly at the camera. The background is blurred, but it seems to be an indoor setting with a modern design. The overall mood of the image is confident and sultry."
+        }
+    },
+    {
+        "id": 15,
+        "name": "Florence2ModelLoader",
+        "prompts": {
+            "text": "Florence-2-large"
+        }
+    },
+    {
+        "id": 18,
+        "name": "ImageConcanate"
+    },
+    {
+        "id": 19,
+        "name": "PreviewImage"
+    }
+]

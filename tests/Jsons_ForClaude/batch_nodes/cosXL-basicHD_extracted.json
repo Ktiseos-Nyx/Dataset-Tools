@@ -1,0 +1,121 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "cosxl.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "cosXLbase/cosXL"
+        }
+    },
+    {
+        "id": 10,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "hll style, helldiver standing with big gun, in front of helldivers raising flag, weapon, multiple men, armor, gun, cape, rifle, helmet, holding weapon, holding, sky, (industrial complex, dusty)",
+            "text_2": "hll style, helldiver standing with big gun, in front of helldivers raising flag, weapon, multiple men, armor, gun, cape, rifle, helmet, holding weapon, holding, sky, (industrial complex, dusty)"
+        }
+    },
+    {
+        "id": 11,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "text, watermark",
+            "text_2": "text, watermark"
+        }
+    },
+    {
+        "id": 12,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "hll style, helldiver standing with big gun, in front of helldivers raising flag, weapon, multiple men, armor, gun, cape, rifle, helmet, holding weapon, holding, sky, (industrial complex, dusty)"
+        }
+    },
+    {
+        "id": 13,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "text, watermark"
+        }
+    },
+    {
+        "id": 14,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "civit\\HD2_style.safetensors"
+        }
+    },
+    {
+        "id": 18,
+        "name": "Reroute"
+    },
+    {
+        "id": 19,
+        "name": "Reroute"
+    },
+    {
+        "id": 20,
+        "name": "Reroute"
+    },
+    {
+        "id": 21,
+        "name": "Reroute"
+    },
+    {
+        "id": 22,
+        "name": "Reroute"
+    },
+    {
+        "id": 23,
+        "name": "Reroute"
+    },
+    {
+        "id": 25,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "cosXLbase/cosXL-HD"
+        }
+    },
+    {
+        "id": 26,
+        "name": "IterativeImageUpscale"
+    },
+    {
+        "id": 27,
+        "name": "PixelKSampleUpscalerProvider",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 28,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_foolhardy_Remacri.pth"
+        }
+    },
+    {
+        "id": 29,
+        "name": "Note",
+        "prompts": {
+            "text": "cosXL-basicHD"
+        }
+    }
+]

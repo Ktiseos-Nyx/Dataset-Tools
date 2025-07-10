@@ -160,6 +160,7 @@ class FieldExtractor:
                 "float": lambda v: float(str(v)),
                 "string": lambda v: str(v),
                 "boolean": lambda v: (v if isinstance(v, bool) else str(v).lower() in ("true", "1", "yes", "on")),
+                "array": lambda v: v if isinstance(v, list) else [v],
             }
 
             converter = converters.get(value_type)

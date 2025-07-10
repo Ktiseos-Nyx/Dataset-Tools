@@ -1,0 +1,1760 @@
+{
+  "last_node_id": 65,
+  "last_link_id": 134,
+  "nodes": [
+    {
+      "id": 54,
+      "type": "Mute / Bypass Repeater (rgthree)",
+      "pos": {
+        "0": 1590,
+        "1": 621,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0
+      },
+      "size": [
+        140,
+        26
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 0,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": null,
+          "dir": 3,
+          "label": ""
+        }
+      ],
+      "outputs": [
+        {
+          "name": "OPT_CONNECTION",
+          "type": "*",
+          "links": [
+            65
+          ],
+          "color_on": "#Fc0",
+          "color_off": "#a80",
+          "dir": 4,
+          "slot_index": 0
+        }
+      ],
+      "title": "Lora 2",
+      "properties": {}
+    },
+    {
+      "id": 52,
+      "type": "Mute / Bypass Repeater (rgthree)",
+      "pos": {
+        "0": 1239,
+        "1": 614,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0
+      },
+      "size": {
+        "0": 268.79998779296875,
+        "1": 26
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": null,
+          "dir": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "OPT_CONNECTION",
+          "type": "*",
+          "links": [
+            59
+          ],
+          "color_on": "#Fc0",
+          "color_off": "#a80",
+          "dir": 4,
+          "slot_index": 0
+        }
+      ],
+      "title": "Lora 1",
+      "properties": {}
+    },
+    {
+      "id": 13,
+      "type": "SDLoraLoader",
+      "pos": [
+        1237,
+        399
+      ],
+      "size": [
+        315,
+        146
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 40
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 16
+        },
+        {
+          "name": "last_lora",
+          "type": "*",
+          "link": null,
+          "slot_index": 2
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": 69,
+          "widget": {
+            "name": "lora_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            60
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            62
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "NEXT_LORA",
+          "type": "*",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SDLoraLoader"
+      },
+      "widgets_values": [
+        "Pony\\Elimination\\ssugar008_mm-000010.safetensors",
+        0.8,
+        1
+      ]
+    },
+    {
+      "id": 56,
+      "type": "SDLoraSelector",
+      "pos": [
+        1239,
+        275
+      ],
+      "size": {
+        "0": 315,
+        "1": 78
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "last_lora",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LORA_NAME",
+          "type": "COMBO",
+          "links": [
+            69
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "NEXT_LORA",
+          "type": "*",
+          "links": [
+            70
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SDLoraSelector"
+      },
+      "widgets_values": [
+        "Pony\\Elimination\\ssugar008_mm-000010.safetensors"
+      ]
+    },
+    {
+      "id": 57,
+      "type": "SDLoraSelector",
+      "pos": [
+        1587,
+        279
+      ],
+      "size": {
+        "0": 315,
+        "1": 78
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "last_lora",
+          "type": "*",
+          "link": 70
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LORA_NAME",
+          "type": "COMBO",
+          "links": [
+            68,
+            71
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "NEXT_LORA",
+          "type": "*",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SDLoraSelector"
+      },
+      "widgets_values": [
+        "Pony\\Elimination\\ssugar008_mm-000010.safetensors"
+      ]
+    },
+    {
+      "id": 53,
+      "type": "SDLoraLoader",
+      "pos": [
+        1589,
+        399
+      ],
+      "size": [
+        315,
+        146
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 60
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 62
+        },
+        {
+          "name": "last_lora",
+          "type": "*",
+          "link": null,
+          "slot_index": 2
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": 68,
+          "widget": {
+            "name": "lora_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            130
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            63,
+            64
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "NEXT_LORA",
+          "type": "*",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SDLoraLoader"
+      },
+      "widgets_values": [
+        "Pony\\Elimination\\ssugar008_mm-000010.safetensors",
+        0.8,
+        1
+      ]
+    },
+    {
+      "id": 51,
+      "type": "Fast Bypasser (rgthree)",
+      "pos": {
+        "0": 1234,
+        "1": 61,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0
+      },
+      "size": {
+        "0": 193.1999969482422,
+        "1": 122
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "Lora 1",
+          "type": "*",
+          "link": 59,
+          "dir": 3
+        },
+        {
+          "name": "Lora 2",
+          "type": "*",
+          "link": 65,
+          "dir": 3
+        },
+        {
+          "name": "",
+          "type": "*",
+          "link": null,
+          "dir": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "OPT_CONNECTION",
+          "type": "*",
+          "links": null,
+          "dir": 4
+        }
+      ],
+      "title": "Lora Switch",
+      "properties": {
+        "toggleRestriction": "default"
+      },
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 63,
+      "type": "workflow/SD Upscale",
+      "pos": [
+        1927,
+        231
+      ],
+      "size": [
+        405.5999755859375,
+        614
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 129
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 130
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 131
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 132
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 133
+        },
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 134
+        }
+      ],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            119
+          ],
+          "shape": 3
+        },
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            121
+          ],
+          "shape": 3
+        },
+        {
+          "name": "sampler_name",
+          "type": "COMBO",
+          "links": [
+            123
+          ],
+          "shape": 3
+        },
+        {
+          "name": "scheduler",
+          "type": "COMBO",
+          "links": [
+            125
+          ],
+          "shape": 3
+        },
+        {
+          "name": "Seed Generator INT",
+          "type": "INT",
+          "links": [
+            127
+          ],
+          "shape": 3
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            128
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow/SD Upscale"
+      },
+      "widgets_values": [
+        25,
+        4.5,
+        "euler",
+        "normal",
+        974064651665578,
+        "randomize",
+        2,
+        0.15,
+        "Linear",
+        1024,
+        1024,
+        8,
+        32,
+        "None",
+        1,
+        64,
+        8,
+        16,
+        true,
+        false
+      ]
+    },
+    {
+      "id": 11,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        1933,
+        134
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            134
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UpscaleModelLoader"
+      },
+      "widgets_values": [
+        "4x_NMKD-Siax_200k.pth"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 15,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1694,
+        674
+      ],
+      "size": [
+        333.55889892578125,
+        54
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 63
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 20,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            131
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 16,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1694,
+        711
+      ],
+      "size": {
+        "0": 333.55889892578125,
+        "1": 54
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 64
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 23,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            132
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 35,
+      "type": "SDPromptSaver",
+      "pos": [
+        2355,
+        236
+      ],
+      "size": [
+        400,
+        916
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 128
+        },
+        {
+          "name": "lora_name",
+          "type": "*",
+          "link": 71
+        },
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "link": 67,
+          "widget": {
+            "name": "model_name"
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 127,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": 119,
+          "widget": {
+            "name": "steps"
+          }
+        },
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "link": 121,
+          "widget": {
+            "name": "cfg"
+          }
+        },
+        {
+          "name": "sampler_name",
+          "type": "COMBO",
+          "link": 123,
+          "widget": {
+            "name": "sampler_name"
+          }
+        },
+        {
+          "name": "scheduler",
+          "type": "COMBO",
+          "link": 125,
+          "widget": {
+            "name": "scheduler"
+          }
+        },
+        {
+          "name": "positive",
+          "type": "STRING",
+          "link": 82,
+          "widget": {
+            "name": "positive"
+          }
+        },
+        {
+          "name": "negative",
+          "type": "STRING",
+          "link": 83,
+          "widget": {
+            "name": "negative"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "FILENAME",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "FILE_PATH",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "METADATA",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SDPromptSaver"
+      },
+      "widgets_values": [
+        "ComfyUI_%time_%seed_%counter",
+        "Upscale",
+        "waiREALCN_v110.safetensors",
+        "sdxl_vae.safetensors",
+        801566347494386,
+        "randomize",
+        20,
+        8,
+        "euler",
+        "normal",
+        1024,
+        1024,
+        "",
+        "",
+        "png",
+        true,
+        true,
+        true,
+        100,
+        "%Y-%m-%d",
+        "%H%M%S",
+        false,
+        ""
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        1051,
+        169
+      ],
+      "size": [
+        315,
+        98
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "ckpt_name",
+          "type": "COMBO",
+          "link": 7,
+          "widget": {
+            "name": "ckpt_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            40
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            16
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            133
+          ],
+          "shape": 3,
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "chilloutmix_NiPrunedFp32Fix.safetensors"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "SDPromptReader",
+      "pos": [
+        1047,
+        203
+      ],
+      "size": [
+        314.2028747558595,
+        1004.2357360839844
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": 56,
+          "widget": {
+            "name": "image"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            129
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "POSITIVE",
+          "type": "STRING",
+          "links": [
+            20,
+            82
+          ],
+          "shape": 3,
+          "slot_index": 2
+        },
+        {
+          "name": "NEGATIVE",
+          "type": "STRING",
+          "links": [
+            23,
+            83
+          ],
+          "shape": 3,
+          "slot_index": 3
+        },
+        {
+          "name": "SEED",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "STEPS",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "CFG",
+          "type": "FLOAT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "WIDTH",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "HEIGHT",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "MODEL_NAME",
+          "type": "*",
+          "links": [
+            7,
+            67
+          ],
+          "shape": 3,
+          "slot_index": 9
+        },
+        {
+          "name": "FILENAME",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "SETTINGS",
+          "type": "STRING",
+          "links": [],
+          "shape": 3,
+          "slot_index": 11
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SDPromptReader"
+      },
+      "widgets_values": [
+        "(37).jpg",
+        "image",
+        0,
+        "score_9, score_8_up, score_7_up, score_6_up,  score_5_up, score_4_up, photo realistic, (realistic:1.2), hyperrealistic, ultra detailed, highly detailed, detailed skin, photorealistic,\n\n(ssugar008 mm girl:1.35), 1girl,  (brown hair:1.35), black eyes, medium breasts, long hair, jewelry, ring, necklace, ponytail,\n\nblurry background, window, city, t-shirt,\nlooking at viewer, standing, upper body, close up",
+        "source_anime, blurry, score_4,score_3,score_2,score_1,ugly,bad hands,bad foot,bad_hands,bad hand,bad anatomy,worst quality,ai generated images,low quality,average quality, watermark",
+        "Steps: 25, Sampler: euler, CFG scale: 6.5, Seed: 22706279666968, Size: 768x1344, Model hash: 02e08cd8ef, Model: waiREALCN_v110, VAE hash: 235745af8d, VAE: sdxl_vae, Lora hashes: \"ssugar008_mm-000010: 2b48304415\", TI hashes: \"\", Version: ComfyUI, Hashes: {\"model\": \"02e08cd8ef\", \"vae\": \"235745af8d\", \"lora:ssugar008_mm-000010\": \"2b48304415\"}"
+      ]
+    },
+    {
+      "id": 1,
+      "type": "SDBatchLoader",
+      "pos": [
+        874,
+        242
+      ],
+      "size": [
+        341.2898569974029,
+        340.2803462635385
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "*",
+          "links": [
+            56
+          ],
+          "shape": 6,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SDBatchLoader"
+      },
+      "widgets_values": [
+        "C:\\AI\\new_ComfyUI_windows_portable_nvidia_cu121_or_cpu\\ComfyUI_windows_portable\\ComfyUI\\to_upscale",
+        0,
+        0,
+        "C:\\AI\\new_ComfyUI_windows_portable_nvidia_cu121_or_cpu\\ComfyUI_windows_portable\\ComfyUI\\to_upscale\\ComfyUI_233759_22706279666968_00129.png"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 65,
+      "type": "String Literal",
+      "pos": [
+        443,
+        243
+      ],
+      "size": [
+        419.73638916015625,
+        333.9467254638672
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "title": "Instruction",
+      "properties": {
+        "Node name for S&R": "String Literal"
+      },
+      "widgets_values": [
+        "This workflow enable batch upscale.\n\nInstruction:\n1) Modify the file path that contains the images that need to be upscale\n2) Enable/Disable the Lora (you may clone to have more lora available in upscaling)\n3) Specify the upscaling model, CFG, steps etc\n\nFor Best Performance:\ni) Recommend to batch process 5-10 images at a time. You may constrain the number of images to be processes through <Image_Load_Limit> under \"SD Batch Loader\"\nii) Recommend to batch process the image with the same lora information. \ne.g. As the lora is only loaded in this workflow, it will have no prior knowledge on the weight/lora name on the generated image. If you have an image using Lora \"B\" and an image using Lora \"C\". It is best to separately process them in different batches. "
+      ],
+      "color": "#332922",
+      "bgcolor": "#593930"
+    }
+  ],
+  "links": [
+    [
+      7,
+      2,
+      9,
+      7,
+      0,
+      "COMBO"
+    ],
+    [
+      16,
+      7,
+      1,
+      13,
+      1,
+      "CLIP"
+    ],
+    [
+      20,
+      2,
+      2,
+      15,
+      1,
+      "STRING"
+    ],
+    [
+      23,
+      2,
+      3,
+      16,
+      1,
+      "STRING"
+    ],
+    [
+      40,
+      7,
+      0,
+      13,
+      0,
+      "MODEL"
+    ],
+    [
+      56,
+      1,
+      0,
+      2,
+      0,
+      "COMBO"
+    ],
+    [
+      59,
+      52,
+      0,
+      51,
+      0,
+      "*"
+    ],
+    [
+      60,
+      13,
+      0,
+      53,
+      0,
+      "MODEL"
+    ],
+    [
+      62,
+      13,
+      1,
+      53,
+      1,
+      "CLIP"
+    ],
+    [
+      63,
+      53,
+      1,
+      15,
+      0,
+      "CLIP"
+    ],
+    [
+      64,
+      53,
+      1,
+      16,
+      0,
+      "CLIP"
+    ],
+    [
+      65,
+      54,
+      0,
+      51,
+      1,
+      "*"
+    ],
+    [
+      67,
+      2,
+      9,
+      35,
+      2,
+      "COMBO"
+    ],
+    [
+      68,
+      57,
+      0,
+      53,
+      3,
+      "COMBO"
+    ],
+    [
+      69,
+      56,
+      0,
+      13,
+      3,
+      "COMBO"
+    ],
+    [
+      70,
+      56,
+      1,
+      57,
+      0,
+      "*"
+    ],
+    [
+      71,
+      57,
+      0,
+      35,
+      1,
+      "*"
+    ],
+    [
+      82,
+      2,
+      2,
+      35,
+      8,
+      "STRING"
+    ],
+    [
+      83,
+      2,
+      3,
+      35,
+      9,
+      "STRING"
+    ],
+    [
+      119,
+      63,
+      0,
+      35,
+      4,
+      "INT"
+    ],
+    [
+      121,
+      63,
+      1,
+      35,
+      5,
+      "FLOAT"
+    ],
+    [
+      123,
+      63,
+      2,
+      35,
+      6,
+      "COMBO"
+    ],
+    [
+      125,
+      63,
+      3,
+      35,
+      7,
+      "COMBO"
+    ],
+    [
+      127,
+      63,
+      4,
+      35,
+      3,
+      "INT"
+    ],
+    [
+      128,
+      63,
+      5,
+      35,
+      0,
+      "IMAGE"
+    ],
+    [
+      129,
+      2,
+      0,
+      63,
+      0,
+      "IMAGE"
+    ],
+    [
+      130,
+      53,
+      0,
+      63,
+      1,
+      "MODEL"
+    ],
+    [
+      131,
+      15,
+      0,
+      63,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      132,
+      16,
+      0,
+      63,
+      3,
+      "CONDITIONING"
+    ],
+    [
+      133,
+      7,
+      2,
+      63,
+      4,
+      "VAE"
+    ],
+    [
+      134,
+      11,
+      0,
+      63,
+      5,
+      "UPSCALE_MODEL"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "Lora 1",
+      "bounding": [
+        1226,
+        196,
+        342,
+        434
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "locked": false
+    },
+    {
+      "title": "Lora 2",
+      "bounding": [
+        1573,
+        196,
+        334,
+        436
+      ],
+      "color": "#b58b2a",
+      "font_size": 24,
+      "locked": false
+    }
+  ],
+  "config": {},
+  "extra": {
+    "groupNodes": {
+      "SD Upscale": {
+        "nodes": [
+          {
+            "type": "Int Literal",
+            "pos": [
+              2252,
+              19
+            ],
+            "size": {
+              "0": 210,
+              "1": 58
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "INT",
+                "type": "INT",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              }
+            ],
+            "title": "Steps",
+            "properties": {
+              "Node name for S&R": "Int Literal"
+            },
+            "widgets_values": [
+              25
+            ],
+            "index": 0
+          },
+          {
+            "type": "Cfg Literal",
+            "pos": [
+              2252,
+              121
+            ],
+            "size": {
+              "0": 210,
+              "1": 58
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "FLOAT",
+                "type": "FLOAT",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              }
+            ],
+            "title": "CFG",
+            "properties": {
+              "Node name for S&R": "Cfg Literal"
+            },
+            "widgets_values": [
+              4.5
+            ],
+            "index": 1
+          },
+          {
+            "type": "Sampler Selector",
+            "pos": [
+              2477,
+              26
+            ],
+            "size": {
+              "0": 315,
+              "1": 58
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "sampler_name",
+                "type": "COMBO",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "Sampler Selector"
+            },
+            "widgets_values": [
+              "euler"
+            ],
+            "index": 2
+          },
+          {
+            "type": "Scheduler Selector",
+            "pos": [
+              2472,
+              121
+            ],
+            "size": {
+              "0": 315,
+              "1": 58
+            },
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "scheduler",
+                "type": "COMBO",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "Scheduler Selector"
+            },
+            "widgets_values": [
+              "normal"
+            ],
+            "index": 3
+          },
+          {
+            "type": "Seed Generator",
+            "pos": [
+              1919,
+              11
+            ],
+            "size": {
+              "0": 315,
+              "1": 82
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "INT",
+                "type": "INT",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "Seed Generator"
+            },
+            "widgets_values": [
+              0,
+              "randomize"
+            ],
+            "index": 4
+          },
+          {
+            "type": "UltimateSDUpscale",
+            "pos": [
+              1919,
+              221
+            ],
+            "size": {
+              "0": 315,
+              "1": 614
+            },
+            "flags": {
+              "collapsed": false
+            },
+            "order": 18,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "image",
+                "type": "IMAGE",
+                "link": null
+              },
+              {
+                "name": "model",
+                "type": "MODEL",
+                "link": null
+              },
+              {
+                "name": "positive",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "negative",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              },
+              {
+                "name": "upscale_model",
+                "type": "UPSCALE_MODEL",
+                "link": null,
+                "slot_index": 5
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                },
+                "slot_index": 6
+              },
+              {
+                "name": "steps",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "steps"
+                },
+                "slot_index": 7
+              },
+              {
+                "name": "cfg",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "cfg"
+                },
+                "slot_index": 8
+              },
+              {
+                "name": "sampler_name",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "sampler_name"
+                }
+              },
+              {
+                "name": "scheduler",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "scheduler"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "UltimateSDUpscale"
+            },
+            "widgets_values": [
+              2,
+              982131123999139,
+              "randomize",
+              25,
+              4.5,
+              "euler",
+              "normal",
+              0.15,
+              "Linear",
+              1024,
+              1024,
+              8,
+              32,
+              "None",
+              1,
+              64,
+              8,
+              16,
+              true,
+              false
+            ],
+            "index": 5
+          }
+        ],
+        "links": [
+          [
+            null,
+            0,
+            5,
+            0,
+            2,
+            "IMAGE"
+          ],
+          [
+            null,
+            0,
+            5,
+            1,
+            53,
+            "MODEL"
+          ],
+          [
+            null,
+            0,
+            5,
+            2,
+            15,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            0,
+            5,
+            3,
+            16,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            2,
+            5,
+            4,
+            7,
+            "VAE"
+          ],
+          [
+            null,
+            0,
+            5,
+            5,
+            11,
+            "UPSCALE_MODEL"
+          ],
+          [
+            4,
+            0,
+            5,
+            6,
+            58,
+            "INT"
+          ],
+          [
+            0,
+            0,
+            5,
+            7,
+            59,
+            "INT"
+          ],
+          [
+            1,
+            0,
+            5,
+            8,
+            60,
+            "FLOAT"
+          ],
+          [
+            2,
+            0,
+            5,
+            9,
+            61,
+            "COMBO"
+          ],
+          [
+            3,
+            0,
+            5,
+            10,
+            62,
+            "COMBO"
+          ]
+        ],
+        "external": [
+          [
+            0,
+            0,
+            "INT"
+          ],
+          [
+            1,
+            0,
+            "FLOAT"
+          ],
+          [
+            2,
+            0,
+            "COMBO"
+          ],
+          [
+            3,
+            0,
+            "COMBO"
+          ],
+          [
+            4,
+            0,
+            "INT"
+          ],
+          [
+            5,
+            0,
+            "IMAGE"
+          ]
+        ],
+        "config": {
+          "0": {
+            "input": {
+              "int": {
+                "name": "Steps"
+              }
+            }
+          },
+          "1": {
+            "input": {
+              "float": {
+                "name": "CFG"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "version": 0.4
+}

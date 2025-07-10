@@ -1,0 +1,133 @@
+[
+    {
+        "id": 1,
+        "name": "Loaders"
+    },
+    {
+        "id": 2,
+        "name": "Prompt & 1st Pass Size"
+    },
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 3,
+        "name": "1st Pass Output"
+    },
+    {
+        "id": 4,
+        "name": "2nd Pass"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Chroma_1pass"
+        }
+    },
+    {
+        "id": 10,
+        "name": "CLIPLoader",
+        "prompts": {
+            "text": "flan_t5_xxl_TE-only_FP8.safetensors"
+        }
+    },
+    {
+        "id": 11,
+        "name": "T5TokenizerOptions"
+    },
+    {
+        "id": 12,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 14,
+        "name": "Note",
+        "prompts": {
+            "text": "min_padding 1 is supposed to be the official way to inference chroma but I think the results are better with min_padding 0"
+        }
+    },
+    {
+        "id": 15,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_vae.safetensors"
+        }
+    },
+    {
+        "id": 21,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "chroma/Hyper-Chroma-low-step-LoRA.safetensors"
+        }
+    },
+    {
+        "id": 22,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "chroma/Chroma-Turbo_lora_rank_64-bf16.safetensors"
+        }
+    },
+    {
+        "id": 24,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "chroma/chroma-unlocked-v29.5_float8_e4m3fn_scaled_stochastic.safetensors"
+        }
+    },
+    {
+        "id": 25,
+        "name": "KSampler"
+    },
+    {
+        "id": 26,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 27,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Chroma_2pass"
+        }
+    },
+    {
+        "id": 30,
+        "name": "RescaleCFG"
+    },
+    {
+        "id": 31,
+        "name": "RescaleCFG"
+    },
+    {
+        "id": 33,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 34,
+        "name": "CR Upscale Image",
+        "prompts": {
+            "text": "4x_foolhardy_Remacri.pth"
+        }
+    },
+    {
+        "id": 35,
+        "name": "Reroute"
+    },
+    {
+        "id": 36,
+        "name": "VAEEncode"
+    }
+]

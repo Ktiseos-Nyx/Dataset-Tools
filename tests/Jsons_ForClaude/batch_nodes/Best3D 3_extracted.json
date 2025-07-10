@@ -1,0 +1,669 @@
+[
+    {
+        "id": 1,
+        "name": "Loaders and Constants"
+    },
+    {
+        "id": 2,
+        "name": "3D Mesh"
+    },
+    {
+        "id": 3,
+        "name": "Start Mesh"
+    },
+    {
+        "id": 4,
+        "name": "Work in Texture"
+    },
+    {
+        "id": 5,
+        "name": "Images Preview"
+    },
+    {
+        "id": 6,
+        "name": "MultiView Configuration"
+    },
+    {
+        "id": 7,
+        "name": "Upscale and Bake"
+    },
+    {
+        "id": 213,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "Figure_00009_.png"
+        }
+    },
+    {
+        "id": 214,
+        "name": "SetNode",
+        "prompts": {
+            "text": "LoadedImage"
+        }
+    },
+    {
+        "id": 215,
+        "name": "TransparentBGSession+"
+    },
+    {
+        "id": 216,
+        "name": "SetNode",
+        "prompts": {
+            "text": "REMBG_SESSION"
+        }
+    },
+    {
+        "id": 217,
+        "name": "Hy3DModelLoader",
+        "prompts": {
+            "text": "hunyuan3d-dit-v2-0-turbo.safetensors"
+        }
+    },
+    {
+        "id": 218,
+        "name": "SetNode"
+    },
+    {
+        "id": 219,
+        "name": "SetNode"
+    },
+    {
+        "id": 220,
+        "name": "Int"
+    },
+    {
+        "id": 221,
+        "name": "SetNode"
+    },
+    {
+        "id": 222,
+        "name": "Int"
+    },
+    {
+        "id": 223,
+        "name": "SetNode",
+        "prompts": {
+            "text": "TextureSize"
+        }
+    },
+    {
+        "id": 224,
+        "name": "DownloadAndLoadHy3DDelightModel",
+        "prompts": {
+            "text": "hunyuan3d-delight-v2-0"
+        }
+    },
+    {
+        "id": 225,
+        "name": "SetNode"
+    },
+    {
+        "id": 226,
+        "name": "DownloadAndLoadHy3DPaintModel",
+        "prompts": {
+            "text": "hunyuan3d-paint-v2-0"
+        }
+    },
+    {
+        "id": 227,
+        "name": "SetNode"
+    },
+    {
+        "id": 228,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "RealESRGAN_x4plus.pth"
+        }
+    },
+    {
+        "id": 229,
+        "name": "SetNode",
+        "prompts": {
+            "text": "UpscaleModel"
+        }
+    },
+    {
+        "id": 232,
+        "name": "String",
+        "prompts": {
+            "text": "0,0,180,215"
+        }
+    },
+    {
+        "id": 233,
+        "name": "String",
+        "prompts": {
+            "text": "90,270,135,0"
+        }
+    },
+    {
+        "id": 235,
+        "name": "SetNode",
+        "prompts": {
+            "text": "CameraAzimuth1"
+        }
+    },
+    {
+        "id": 236,
+        "name": "SetNode",
+        "prompts": {
+            "text": "CameraAzimuth2"
+        }
+    },
+    {
+        "id": 237,
+        "name": "SetNode",
+        "prompts": {
+            "text": "CameraAzimuthAll"
+        }
+    },
+    {
+        "id": 254,
+        "name": "CR Text Concatenate"
+    },
+    {
+        "id": 255,
+        "name": "SetNode",
+        "prompts": {
+            "text": "CameraElevation2"
+        }
+    },
+    {
+        "id": 256,
+        "name": "SetNode",
+        "prompts": {
+            "text": "CameraElevation1"
+        }
+    },
+    {
+        "id": 257,
+        "name": "String"
+    },
+    {
+        "id": 258,
+        "name": "String"
+    },
+    {
+        "id": 259,
+        "name": "CR Text Concatenate"
+    },
+    {
+        "id": 260,
+        "name": "SetNode",
+        "prompts": {
+            "text": "CameraElevationAll"
+        }
+    },
+    {
+        "id": 261,
+        "name": "SetNode",
+        "prompts": {
+            "text": "ViewWeights2"
+        }
+    },
+    {
+        "id": 262,
+        "name": "SetNode",
+        "prompts": {
+            "text": "ViewWeights1"
+        }
+    },
+    {
+        "id": 263,
+        "name": "String",
+        "prompts": {
+            "text": "0.2,0.2,0.2,0.2"
+        }
+    },
+    {
+        "id": 264,
+        "name": "String",
+        "prompts": {
+            "text": "0.2,0.2,1.5,0.2"
+        }
+    },
+    {
+        "id": 265,
+        "name": "CR Text Concatenate"
+    },
+    {
+        "id": 266,
+        "name": "SetNode",
+        "prompts": {
+            "text": "ViewWeightsAll"
+        }
+    },
+    {
+        "id": 267,
+        "name": "Float"
+    },
+    {
+        "id": 268,
+        "name": "Float"
+    },
+    {
+        "id": 269,
+        "name": "SetNode",
+        "prompts": {
+            "text": "CameraDistance"
+        }
+    },
+    {
+        "id": 270,
+        "name": "SetNode"
+    },
+    {
+        "id": 271,
+        "name": "Preview3D",
+        "prompts": {
+            "text": "3D/Hy3D_textured_00003_.glb"
+        }
+    },
+    {
+        "id": 273,
+        "name": "ImageResize+"
+    },
+    {
+        "id": 274,
+        "name": "GetNode",
+        "prompts": {
+            "text": "LoadedImage"
+        }
+    },
+    {
+        "id": 275,
+        "name": "ImageRemoveBackground+"
+    },
+    {
+        "id": 276,
+        "name": "GetNode",
+        "prompts": {
+            "text": "REMBG_SESSION"
+        }
+    },
+    {
+        "id": 277,
+        "name": "SetNode",
+        "prompts": {
+            "text": "LoadedImageMask"
+        }
+    },
+    {
+        "id": 278,
+        "name": "Hy3DGenerateMesh",
+        "prompts": {
+            "text": "FlowMatchEulerDiscreteScheduler"
+        }
+    },
+    {
+        "id": 279,
+        "name": "GetNode"
+    },
+    {
+        "id": 280,
+        "name": "Hy3DVAEDecode"
+    },
+    {
+        "id": 281,
+        "name": "GetNode"
+    },
+    {
+        "id": 284,
+        "name": "Hy3DPostprocessMesh"
+    },
+    {
+        "id": 286,
+        "name": "Hy3DExportMesh"
+    },
+    {
+        "id": 288,
+        "name": "Reroute"
+    },
+    {
+        "id": 289,
+        "name": "Reroute"
+    },
+    {
+        "id": 290,
+        "name": "Reroute"
+    },
+    {
+        "id": 291,
+        "name": "SetNode"
+    },
+    {
+        "id": 292,
+        "name": "GetNode"
+    },
+    {
+        "id": 293,
+        "name": "SetNode"
+    },
+    {
+        "id": 294,
+        "name": "GetNode",
+        "prompts": {
+            "text": "LoadedImage"
+        }
+    },
+    {
+        "id": 295,
+        "name": "ImageResize+"
+    },
+    {
+        "id": 296,
+        "name": "GetNode"
+    },
+    {
+        "id": 297,
+        "name": "SolidMask"
+    },
+    {
+        "id": 298,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 299,
+        "name": "ImageCompositeMasked"
+    },
+    {
+        "id": 300,
+        "name": "GetNode",
+        "prompts": {
+            "text": "LoadedImageMask"
+        }
+    },
+    {
+        "id": 301,
+        "name": "Hy3DDelightImage"
+    },
+    {
+        "id": 303,
+        "name": "GetNode"
+    },
+    {
+        "id": 304,
+        "name": "Hy3DDiffusersSchedulerConfig"
+    },
+    {
+        "id": 308,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 309,
+        "name": "SetNode",
+        "prompts": {
+            "text": "DelightImage"
+        }
+    },
+    {
+        "id": 310,
+        "name": "Hy3DMeshUVWrap"
+    },
+    {
+        "id": 311,
+        "name": "GetNode"
+    },
+    {
+        "id": 312,
+        "name": "SetNode"
+    },
+    {
+        "id": 313,
+        "name": "GetNode",
+        "prompts": {
+            "text": "TextureSize"
+        }
+    },
+    {
+        "id": 314,
+        "name": "GetNode"
+    },
+    {
+        "id": 315,
+        "name": "Hy3DRenderMultiView"
+    },
+    {
+        "id": 316,
+        "name": "Hy3DRenderMultiView"
+    },
+    {
+        "id": 317,
+        "name": "Hy3DCameraConfig"
+    },
+    {
+        "id": 318,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CameraAzimuth1"
+        }
+    },
+    {
+        "id": 319,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CameraElevation1"
+        }
+    },
+    {
+        "id": 320,
+        "name": "GetNode",
+        "prompts": {
+            "text": "ViewWeights1"
+        }
+    },
+    {
+        "id": 321,
+        "name": "Hy3DCameraConfig"
+    },
+    {
+        "id": 322,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CameraAzimuth2"
+        }
+    },
+    {
+        "id": 323,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CameraElevation2"
+        }
+    },
+    {
+        "id": 324,
+        "name": "GetNode",
+        "prompts": {
+            "text": "ViewWeights2"
+        }
+    },
+    {
+        "id": 325,
+        "name": "GetNode"
+    },
+    {
+        "id": 326,
+        "name": "Hy3DDiffusersSchedulerConfig"
+    },
+    {
+        "id": 327,
+        "name": "Hy3DSampleMultiView"
+    },
+    {
+        "id": 328,
+        "name": "Hy3DSampleMultiView"
+    },
+    {
+        "id": 329,
+        "name": "GetNode",
+        "prompts": {
+            "text": "DelightImage"
+        }
+    },
+    {
+        "id": 330,
+        "name": "ImageBatch"
+    },
+    {
+        "id": 331,
+        "name": "SetNode",
+        "prompts": {
+            "text": "BatchedImages"
+        }
+    },
+    {
+        "id": 332,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 333,
+        "name": "GetNode",
+        "prompts": {
+            "text": "BatchedImages"
+        }
+    },
+    {
+        "id": 334,
+        "name": "GetNode",
+        "prompts": {
+            "text": "DelightImage"
+        }
+    },
+    {
+        "id": 335,
+        "name": "GetNode",
+        "prompts": {
+            "text": "BatchedImages"
+        }
+    },
+    {
+        "id": 336,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 337,
+        "name": "GetNode",
+        "prompts": {
+            "text": "UpscaleModel"
+        }
+    },
+    {
+        "id": 338,
+        "name": "Hy3DCameraConfig"
+    },
+    {
+        "id": 339,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CameraAzimuthAll"
+        }
+    },
+    {
+        "id": 340,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CameraElevationAll"
+        }
+    },
+    {
+        "id": 341,
+        "name": "GetNode",
+        "prompts": {
+            "text": "ViewWeightsAll"
+        }
+    },
+    {
+        "id": 342,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CameraDistance"
+        }
+    },
+    {
+        "id": 343,
+        "name": "GetNode"
+    },
+    {
+        "id": 344,
+        "name": "Hy3DRenderMultiView"
+    },
+    {
+        "id": 345,
+        "name": "GetNode"
+    },
+    {
+        "id": 346,
+        "name": "GetNode"
+    },
+    {
+        "id": 347,
+        "name": "Hy3DBakeFromMultiview"
+    },
+    {
+        "id": 348,
+        "name": "Hy3DMeshVerticeInpaintTexture"
+    },
+    {
+        "id": 349,
+        "name": "CV2InpaintTexture"
+    },
+    {
+        "id": 350,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 351,
+        "name": "GetNode",
+        "prompts": {
+            "text": "UpscaleModel"
+        }
+    },
+    {
+        "id": 352,
+        "name": "Hy3DApplyTexture"
+    },
+    {
+        "id": 353,
+        "name": "Hy3DExportMesh",
+        "prompts": {
+            "text": "3D/Hy3D_textured"
+        }
+    },
+    {
+        "id": 354,
+        "name": "SetNode"
+    },
+    {
+        "id": 355,
+        "name": "GetNode"
+    },
+    {
+        "id": 356,
+        "name": "GetNode"
+    },
+    {
+        "id": 357,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CameraDistance"
+        }
+    },
+    {
+        "id": 358,
+        "name": "GetNode",
+        "prompts": {
+            "text": "TextureSize"
+        }
+    },
+    {
+        "id": 359,
+        "name": "GetNode"
+    },
+    {
+        "id": 360,
+        "name": "Preview3D",
+        "prompts": {
+            "text": "3D/Hy3D_00023_.glb"
+        }
+    }
+]

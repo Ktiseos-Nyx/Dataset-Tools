@@ -1,0 +1,197 @@
+[
+    {
+        "id": 1,
+        "name": "Step 1- Load models"
+    },
+    {
+        "id": 3,
+        "name": "Step 2 - Upload images"
+    },
+    {
+        "id": 5,
+        "name": "Step 3 - Prompt"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "change the pig to dog"
+        }
+    },
+    {
+        "id": 6,
+        "name": "Conditioning"
+    },
+    {
+        "id": 7,
+        "name": "B\u7ad9\u3001Youtube:T8star-Aix"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 31,
+        "name": "KSampler"
+    },
+    {
+        "id": 35,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 38,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp8_e4m3fn.safetensors"
+        }
+    },
+    {
+        "id": 39,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae.safetensors"
+        }
+    },
+    {
+        "id": 42,
+        "name": "FluxKontextImageScale"
+    },
+    {
+        "id": 124,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 135,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 136,
+        "name": "SaveImage"
+    },
+    {
+        "id": 146,
+        "name": "ImageStitch"
+    },
+    {
+        "id": 147,
+        "name": "LoadImageOutput",
+        "prompts": {
+            "text": "ComfyUI_00612_.png [output]"
+        }
+    },
+    {
+        "id": 173,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 175,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "[English] Use Ctrl + B to enable multipule image input.\n\n[\u4e2d\u6587] \u4f7f\u7528 **Ctrl + B** \u6765\u542f\u7528\u591a\u5f20\u56fe\u7247\u8f93\u5165"
+        }
+    },
+    {
+        "id": 177,
+        "name": "ReferenceLatent"
+    },
+    {
+        "id": 190,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "4cd8d430-be2b-4548-9122-792d21d97d8c.png"
+        }
+    },
+    {
+        "id": 191,
+        "name": "Note"
+    },
+    {
+        "id": 192,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Q4 \u663e\u5b58\u5360\u7528 9.8G"
+        }
+    },
+    {
+        "id": 193,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00607_.png"
+        }
+    },
+    {
+        "id": 194,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00607_.png"
+        }
+    },
+    {
+        "id": 195,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Q6 12.5G 100\u79d2"
+        }
+    },
+    {
+        "id": 196,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00609_.png"
+        }
+    },
+    {
+        "id": 197,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Q8 14.8G 82.835\u79d2"
+        }
+    },
+    {
+        "id": 202,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Q8 14.8G + 8\u6b65LORA 36.25\u79d2"
+        }
+    },
+    {
+        "id": 203,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00609_.png"
+        }
+    },
+    {
+        "id": 235,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-dev-kontext_fp8_scaled.safetensors"
+        }
+    },
+    {
+        "id": 239,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00614_.png"
+        }
+    },
+    {
+        "id": 240,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "FP8  144\u79d220\u6b65 5G \u663e\u5b58"
+        }
+    },
+    {
+        "id": 241,
+        "name": "MZ_Flux1PartialLoad_Patch"
+    },
+    {
+        "id": 242,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "HyperSD-Accelerator-FLUX-PAseerV2.safetensors"
+        }
+    }
+]

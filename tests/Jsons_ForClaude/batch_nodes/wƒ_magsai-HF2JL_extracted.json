@@ -1,0 +1,130 @@
+[
+    {
+        "id": 4,
+        "name": "IF_HFDownloadNode",
+        "prompts": {
+            "text": "black-forest-labs/FLUX.1-Depth-dev-lora",
+            "text_2": "FLUX.1-Depth-dev-lora.safetensors"
+        }
+    },
+    {
+        "id": 7,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "Downloaded files:  from black-forest-labs/FLUX.1-Depth-dev-lora to /workspace/ComfyUI/models/loras/FLUX.1-Depth-dev-lora"
+        }
+    },
+    {
+        "id": 10,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "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"
+        }
+    },
+    {
+        "id": 18,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 22,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 25,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 26,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 27,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 28,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 31,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 33,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 242,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 243,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 244,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 247,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 248,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 249,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 250,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 251,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 252,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 254,
+        "name": "Note",
+        "prompts": {
+            "text": "\n Apr\u00e8s avoir rempli ce node,\n vous pouvez lancer le workflow."
+        }
+    },
+    {
+        "id": 260,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 261,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 262,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 263,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 264,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 265,
+        "name": "Note",
+        "prompts": {
+            "text": "\n   Quel plaisir de s'amuser avec vous !\n\n           Seb & Denis Mag's"
+        }
+    },
+    {
+        "id": 266,
+        "name": "Label (rgthree)"
+    }
+]

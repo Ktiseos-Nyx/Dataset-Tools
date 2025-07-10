@@ -1,0 +1,328 @@
+[
+    {
+        "id": 1,
+        "name": "Redraw"
+    },
+    {
+        "id": 2,
+        "name": "Upscale"
+    },
+    {
+        "id": 3,
+        "name": "Generate"
+    },
+    {
+        "id": 4,
+        "name": "Face Swap"
+    },
+    {
+        "id": 5,
+        "name": "ControlNet"
+    },
+    {
+        "id": 19,
+        "name": "Note",
+        "prompts": {
+            "text": "Dimensions:\nSD1.5:512x768 (0x960)     SDXL:768x1152 (0x1152)\n512, 640, 768, 896, 960, 1024, 1152, 1216, 1344, 1440, 1536, 1632, 1728, 1824, 1920, 2016\n\nBookmarks: [1] ControlNet > Generate [2] Generate > Redraw [3] Redraw [4] Face Swap > Upscale"
+        }
+    },
+    {
+        "id": 26,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 35,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 54,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "exponential"
+        }
+    },
+    {
+        "id": 55,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 58,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "exponential"
+        }
+    },
+    {
+        "id": 59,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "Cyber Realistic V7 - SD1.safetensors"
+        }
+    },
+    {
+        "id": 60,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 66,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 67,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_Valar_v1.pth"
+        }
+    },
+    {
+        "id": 68,
+        "name": "SaveImage"
+    },
+    {
+        "id": 69,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 73,
+        "name": "ImageScale"
+    },
+    {
+        "id": 75,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 78,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 86,
+        "name": "ReActorFaceSwap",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "codeformer-v0.1.0.pth"
+        }
+    },
+    {
+        "id": 87,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 88,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "27027075.png"
+        }
+    },
+    {
+        "id": 89,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "image - 2024-02-15T095431.339.png"
+        }
+    },
+    {
+        "id": 91,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 92,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 98,
+        "name": "ImageScale"
+    },
+    {
+        "id": 100,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 104,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "27027075.png"
+        }
+    },
+    {
+        "id": 105,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 109,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "27027075.png"
+        }
+    },
+    {
+        "id": 111,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 115,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 117,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "Cyber Realistic V7 - SD1.safetensors"
+        }
+    },
+    {
+        "id": 120,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 121,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 122,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 124,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 127,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 130,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 131,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 132,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 133,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 134,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 135,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 136,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 141,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 144,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 154,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 155,
+        "name": "ImageScale"
+    },
+    {
+        "id": 161,
+        "name": "ControlNetApply"
+    },
+    {
+        "id": 162,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control_v11p_sd15_openpose.pth"
+        }
+    },
+    {
+        "id": 163,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "PoseMy.Art1.png"
+        }
+    },
+    {
+        "id": 164,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 165,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 169,
+        "name": "Noise Control Script"
+    },
+    {
+        "id": 171,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 172,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 173,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 174,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 176,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 179,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 180,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 181,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 187,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 188,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 189,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 199,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 200,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 201,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 202,
+        "name": "Node Collector (rgthree)"
+    }
+]

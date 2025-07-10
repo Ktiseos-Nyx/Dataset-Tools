@@ -1,0 +1,355 @@
+[
+    {
+        "id": 1,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "epicphotogasm_z-inpainting.safetensors"
+        }
+    },
+    {
+        "id": 2,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 3,
+        "name": "Reroute"
+    },
+    {
+        "id": 4,
+        "name": "Reroute"
+    },
+    {
+        "id": 5,
+        "name": "Reroute"
+    },
+    {
+        "id": 6,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "1707363169615378.jpg"
+        }
+    },
+    {
+        "id": 8,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 9,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "RealESRGAN_x2.pth"
+        }
+    },
+    {
+        "id": 10,
+        "name": "ImageScaleToTotalPixels"
+    },
+    {
+        "id": 11,
+        "name": "Reroute"
+    },
+    {
+        "id": 15,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "woman wearing an purple sweater, long pants"
+        }
+    },
+    {
+        "id": 16,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "nude, nsfw, (tattoo, cleavage: 1.3), breasts, boobs, midriff, thighs, bikini, panties, bra, shorts, miniskirt"
+        }
+    },
+    {
+        "id": 18,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 19,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 20,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control_v11p_sd15_openpose_fp16.safetensors"
+        }
+    },
+    {
+        "id": 21,
+        "name": "DWPreprocessor",
+        "prompts": {
+            "text": "yolox_l.onnx",
+            "text_2": "dw-ll_ucoco_384_bs5.torchscript.pt"
+        }
+    },
+    {
+        "id": 22,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control_v11f1p_sd15_depth_fp16.safetensors"
+        }
+    },
+    {
+        "id": 27,
+        "name": "MiDaS-DepthMapPreprocessor"
+    },
+    {
+        "id": 29,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/person_yolov8m-seg.pt"
+        }
+    },
+    {
+        "id": 30,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 33,
+        "name": "SegsToCombinedMask"
+    },
+    {
+        "id": 40,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 41,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 42,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 44,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 49,
+        "name": "SAMDetectorSegmented"
+    },
+    {
+        "id": 50,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 55,
+        "name": "ImageScaleToTotalPixels"
+    },
+    {
+        "id": 69,
+        "name": "Reroute"
+    },
+    {
+        "id": 70,
+        "name": "Reroute"
+    },
+    {
+        "id": 85,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8s.pt"
+        }
+    },
+    {
+        "id": 86,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 87,
+        "name": "SAMDetectorSegmented"
+    },
+    {
+        "id": 88,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 91,
+        "name": "DetailerForEach"
+    },
+    {
+        "id": 97,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 98,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 118,
+        "name": "MaskToSEGS"
+    },
+    {
+        "id": 119,
+        "name": "BAE-NormalMapPreprocessor"
+    },
+    {
+        "id": 120,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 121,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 122,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control_v11p_sd15_normalbae_fp16.safetensors"
+        }
+    },
+    {
+        "id": 123,
+        "name": "Reroute"
+    },
+    {
+        "id": 124,
+        "name": "Reroute"
+    },
+    {
+        "id": 130,
+        "name": "Note",
+        "prompts": {
+            "text": "Bypass ControlNet node groups to conserve VRAM."
+        }
+    },
+    {
+        "id": 131,
+        "name": "Note",
+        "prompts": {
+            "text": "Lower resolutions to conserve VRAM."
+        }
+    },
+    {
+        "id": 133,
+        "name": "Reroute"
+    },
+    {
+        "id": 134,
+        "name": "Reroute"
+    },
+    {
+        "id": 135,
+        "name": "ImageBatch"
+    },
+    {
+        "id": 137,
+        "name": "ImagesGridByColumns"
+    },
+    {
+        "id": 139,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 140,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 142,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "RealESRGAN_x2.pth"
+        }
+    },
+    {
+        "id": 143,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 144,
+        "name": "Note",
+        "prompts": {
+            "text": "Not getting good results after trying different prompts? \n\nTry adjusting:\nApply ControlNet -- strength, end_percent\nSEGMDetector/SAMDetector -- dilation, threshold\nDetailer -- denoise, cycles (increases render time)"
+        }
+    },
+    {
+        "id": 147,
+        "name": "Note",
+        "prompts": {
+            "text": "Manually mask with right-click and Open in Mask Editor. Manual masks can be added or subtracted from auto-mask."
+        }
+    },
+    {
+        "id": 148,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 151,
+        "name": "ImageScaleToTotalPixels"
+    },
+    {
+        "id": 152,
+        "name": "ImageToMask"
+    },
+    {
+        "id": 153,
+        "name": "Reroute"
+    },
+    {
+        "id": 156,
+        "name": "ImpactFloat"
+    },
+    {
+        "id": 159,
+        "name": "ImpactInt"
+    },
+    {
+        "id": 160,
+        "name": "Reroute"
+    },
+    {
+        "id": 161,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 162,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/hair_yolov8n-seg_60.pt"
+        }
+    },
+    {
+        "id": 163,
+        "name": "SegsToCombinedMask"
+    },
+    {
+        "id": 164,
+        "name": "Reroute"
+    },
+    {
+        "id": 165,
+        "name": "MaskComposite"
+    },
+    {
+        "id": 166,
+        "name": "MaskComposite"
+    },
+    {
+        "id": 167,
+        "name": "MaskComposite"
+    },
+    {
+        "id": 168,
+        "name": "MaskComposite"
+    },
+    {
+        "id": 169,
+        "name": "Reroute"
+    },
+    {
+        "id": 176,
+        "name": "SaveImageExtended"
+    }
+]

@@ -1,0 +1,99 @@
+/* Windows XP Theme */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4A83D4, stop: 1 #2A65C0); /* Luna Blue */
+    color: #000000;
+}
+
+QWidget {
+    background-color: #ECE9D8; /* Classic XP background */
+    color: #000000;
+}
+
+/* Window Title Bar */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4A83D4, stop: 1 #2A65C0); /* Luna Blue */
+    color: #FFFFFF;
+    border-bottom: 1px solid #1A4A8A;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background-color: #316AC5;
+    color: #FFFFFF;
+}
+
+/* Buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F0F0F0, stop: 1 #E0E0E0);
+    border: 1px solid #808080;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: #000000;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E0E8F8, stop: 1 #D0D8E8);
+    border: 1px solid #316AC5;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #C7D2EA, stop: 1 #B5C7E3);
+    border: 1px solid #2A65C0;
+}
+
+/* Text Inputs */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #808080;
+    padding: 2px;
+    color: #000000;
+}
+
+/* List Widgets */
+QListWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #808080;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background-color: #316AC5;
+    color: #FFFFFF;
+}
+
+/* Status Bar */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4A83D4, stop: 1 #2A65C0); /* Luna Blue */
+    color: #FFFFFF;
+    border-top: 1px solid #1A4A8A;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    background-color: #F0F0F0;
+    width: 16px;
+    border: 1px solid #C0C0C0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E0E0E0, stop: 1 #C0C0C0);
+    border: 1px solid #A0A0A0;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #C0C0C0, stop: 1 #A0A0A0);
+}

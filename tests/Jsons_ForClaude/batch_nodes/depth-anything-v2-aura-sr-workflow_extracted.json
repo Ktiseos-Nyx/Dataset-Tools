@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "Flux_00035_.png"
+        }
+    },
+    {
+        "id": 2,
+        "name": "DepthAnythingV2Preprocessor",
+        "prompts": {
+            "text": "depth_anything_v2_vitl.pth"
+        }
+    },
+    {
+        "id": 3,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "DepthAnythingV2_FluxPortrait/Generator_DepthAnythingV2"
+        }
+    },
+    {
+        "id": 4,
+        "name": "AuraSR.AuraSRUpscaler",
+        "prompts": {
+            "text": "aura-sr.ckpt"
+        }
+    },
+    {
+        "id": 5,
+        "name": "ImageScaleBy",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    }
+]

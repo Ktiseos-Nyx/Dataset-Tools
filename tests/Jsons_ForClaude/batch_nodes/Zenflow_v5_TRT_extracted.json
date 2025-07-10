@@ -1,0 +1,184 @@
+[
+    {
+        "id": 1,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "Zenmix_XL_v1-0.safetensors"
+        }
+    },
+    {
+        "id": 1,
+        "name": "MODELS LOADERS"
+    },
+    {
+        "id": 2,
+        "name": "SAMPLERS"
+    },
+    {
+        "id": 5,
+        "name": "PROMPTING"
+    },
+    {
+        "id": 6,
+        "name": "UPSCALER / DETAILER"
+    },
+    {
+        "id": 7,
+        "name": "SAVE"
+    },
+    {
+        "id": 13,
+        "name": "KSamplerAdvanced"
+    },
+    {
+        "id": 14,
+        "name": "KSamplerAdvanced"
+    },
+    {
+        "id": 21,
+        "name": "SDXL Empty Latent Image (rgthree)",
+        "prompts": {
+            "text": " 832 x 1216  (portrait)"
+        }
+    },
+    {
+        "id": 29,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 32,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 35,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "bad quality, worst quality, worst detail, sketch, censor, watermark, text, monochrome"
+        }
+    },
+    {
+        "id": 38,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 39,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 40,
+        "name": "KSampler"
+    },
+    {
+        "id": 47,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 50,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 51,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 52,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "1girl, woman, elf, pointy ears, blond hair, green eyes, light smile, looking at viewer, black dress, gold, green gems, outdoors, nature, leaves"
+        }
+    },
+    {
+        "id": 53,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 56,
+        "name": "Note",
+        "prompts": {
+            "text": "Feel free to take notes here, if needed"
+        }
+    },
+    {
+        "id": 59,
+        "name": "Fast Actions Button (rgthree)",
+        "prompts": {
+            "text": "Use Last Queued Seed"
+        }
+    },
+    {
+        "id": 61,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "RealESRGAN_x4plus_anime_6B.pth"
+        }
+    },
+    {
+        "id": 67,
+        "name": "Fast Actions Button (rgthree)",
+        "prompts": {
+            "text": "Randomize Each Time"
+        }
+    },
+    {
+        "id": 68,
+        "name": "TensorRTLoader",
+        "prompts": {
+            "text": "Zenmix_XL_v1-0_$dyn-b-1-1-1-h-640-1536-1216-w-640-1536-832_00001_.engine"
+        }
+    },
+    {
+        "id": 69,
+        "name": "KSampler Config (rgthree)"
+    },
+    {
+        "id": 74,
+        "name": "ImpactMakeTileSEGS",
+        "prompts": {
+            "text": "Reuse quality"
+        }
+    },
+    {
+        "id": 87,
+        "name": "DetailerForEach"
+    },
+    {
+        "id": 91,
+        "name": "Image Saver",
+        "prompts": {
+            "text": "%Y-%m-%d-%H%M%S"
+        }
+    },
+    {
+        "id": 92,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 93,
+        "name": "Sampler Selector (Image Saver)"
+    },
+    {
+        "id": 94,
+        "name": "Scheduler Selector (Image Saver)"
+    },
+    {
+        "id": 96,
+        "name": "String Literal (Image Saver)",
+        "prompts": {
+            "text": "bad quality, worst quality, worst detail, sketch, censor, watermark, text, monochrome"
+        }
+    },
+    {
+        "id": 97,
+        "name": "String Literal (Image Saver)",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, 1girl, elf, pointy ears, long hair, blond hair, green eyes, light smile, black dress, gold, head tilt, looking at viewer, close up, outdoors, nature, leaves, behind leaves"
+        }
+    },
+    {
+        "id": 98,
+        "name": "Note",
+        "prompts": {
+            "text": "For I don't know the reason the Detailer (SEGS) don't wanna take the scheduler from the prompting area settings, set it manually\n\nSame for image saver"
+        }
+    }
+]

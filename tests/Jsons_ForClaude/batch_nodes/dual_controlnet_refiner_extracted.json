@@ -1,0 +1,150 @@
+[
+    {
+        "id": 2,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd_xl_base_1.0.safetensors"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "cinematic photo of the mandalorian with a hammerhead shaped helmet, shark fin backpack, in the desert. Movie still, bokeh, shark teeth around visor"
+        }
+    },
+    {
+        "id": 5,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": " anime, manga, illustration, bokeh, blurry, noise, sketch, watermark, signature, 3d, render, painting"
+        }
+    },
+    {
+        "id": 7,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "HammerHood White GID (2).jpg"
+        }
+    },
+    {
+        "id": 9,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control-lora-depth-rank256.safetensors"
+        }
+    },
+    {
+        "id": 10,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 21,
+        "name": "ImageScaleToTotalPixels",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 22,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 24,
+        "name": "MiDaS-DepthMapPreprocessor"
+    },
+    {
+        "id": 25,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "sd_xl_offset_example-lora_1.0.safetensors"
+        }
+    },
+    {
+        "id": 28,
+        "name": "CannyEdgePreprocessor"
+    },
+    {
+        "id": 29,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 30,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 31,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control-lora-canny-rank256.safetensors"
+        }
+    },
+    {
+        "id": 32,
+        "name": "ImageScaleToTotalPixels",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 35,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 39,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 41,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd_xl_refiner_1.0.safetensors"
+        }
+    },
+    {
+        "id": 42,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 43,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 46,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "dual_controlnet_refiner"
+        }
+    },
+    {
+        "id": 47,
+        "name": "CLIPTextEncodeSDXLRefiner",
+        "prompts": {
+            "text": "cinematic photo of the mandalorian with a hammerhead shaped helmet, shark fin backpack, in the desert. Movie still, bokeh, shark teeth around visor"
+        }
+    },
+    {
+        "id": 48,
+        "name": "CLIPTextEncodeSDXLRefiner"
+    },
+    {
+        "id": 50,
+        "name": "SeargePromptText",
+        "prompts": {
+            "text": "anime, manga, illustration, bokeh, blurry, noise, sketch, watermark, signature, 3d, render, painting, weapons"
+        }
+    },
+    {
+        "id": 51,
+        "name": "SeargePromptText",
+        "prompts": {
+            "text": "cinematic photo of neo from the matrix, keanu reeves,  hammerhead shaped hood, black cape, shark fin backpack, on top of a building. Movie still, bokeh, shark teeth around visor, soft green light"
+        }
+    }
+]

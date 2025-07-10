@@ -1,0 +1,426 @@
+[
+    {
+        "id": 1,
+        "name": "Group"
+    },
+    {
+        "id": 2,
+        "name": "Group"
+    },
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "res_multistep"
+        }
+    },
+    {
+        "id": 3,
+        "name": "B\u7ad9\u3001Youtube\uff1aT8star-Aix"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "The video captures a series of frames showing ugly scenes, static with no motion, motion blur, over-saturation, shaky footage, low resolution, grainy texture, pixelated images, poorly lit areas, underexposed and overexposed scenes, poor color balance, washed out colors, choppy sequences, jerky movements, low frame rate, artifacting, color banding, unnatural transitions, outdated special effects, fake elements, unconvincing visuals, poorly edited content, jump cuts, visual noise, and flickering. Overall, the video is of poor quality."
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 37,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "cosmos-i2v-7b.pt"
+        }
+    },
+    {
+        "id": 38,
+        "name": "CLIPLoader",
+        "prompts": {
+            "text": "oldt5_xxl_fp8_e4m3fn_scaled.safetensors"
+        }
+    },
+    {
+        "id": 39,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "cosmos_cv8x8x8_1.0.safetensors"
+        }
+    },
+    {
+        "id": 42,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "very cute anime girl with massive fennec fox ears with long wavy blonde hair and large blue eyes and is wearing a pink coat and a long black skirt and is sitting in the middle of a beautiful scenery amazing view in japanese anime style standing up and walking away"
+        }
+    },
+    {
+        "id": 61,
+        "name": "ModelSamplingContinuousEDM"
+    },
+    {
+        "id": 65,
+        "name": "LoadImage"
+    },
+    {
+        "id": 70,
+        "name": "CosmosImageToVideoLatent"
+    },
+    {
+        "id": 74,
+        "name": "LTXVConditioning"
+    },
+    {
+        "id": 76,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "If there is a person/character in the image you must refer to them as {name}."
+        }
+    },
+    {
+        "id": 77,
+        "name": "easy promptReplace"
+    },
+    {
+        "id": 78,
+        "name": "easy promptConcat"
+    },
+    {
+        "id": 79,
+        "name": "easy prompt",
+        "prompts": {
+            "text": "she is shaking her hand"
+        }
+    },
+    {
+        "id": 80,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "she is shaking her handGo Yoon Jung, a renowned Korean actress, is seen in a stunning black evening gown at a high-profile event. The intricately designed, sleeveless dress is adorned with exquisite black lace and beading, adding an air of sophistication and glamour to her overall appearance. Her dark hair is styled in a sleek, low bun, and her makeup is subtly accentuated, highlighting her natural features. Go Yoon Jung's slender fingers are elegantly posed, with her hand raised in a gentle gesture, as if responding to a question or greeting. The soft, golden lighting of the setting captures the delicate nuances of her facial expression, exuding an aura of poise and refinement."
+        }
+    },
+    {
+        "id": 81,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "Go Yoon Jung, a renowned Korean actress, is seen in a stunning black evening gown at a high-profile event. The intricately designed, sleeveless dress is adorned with exquisite black lace and beading, adding an air of sophistication and glamour to her overall appearance. Her dark hair is styled in a sleek, low bun, and her makeup is subtly accentuated, highlighting her natural features. Go Yoon Jung's slender fingers are elegantly posed, with her hand raised in a gentle gesture, as if responding to a question or greeting. The soft, golden lighting of the setting captures the delicate nuances of her facial expression, exuding an aura of poise and refinement."
+        }
+    },
+    {
+        "id": 82,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 84,
+        "name": "TopazVideoAI",
+        "prompts": {
+            "text": "C:\\Program Files\\Topaz Labs LLC\\Topaz Video AI"
+        }
+    },
+    {
+        "id": 85,
+        "name": "TopazUpscaleParams"
+    },
+    {
+        "id": 86,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 87,
+        "name": "TopazUpscaleParams"
+    },
+    {
+        "id": 88,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "very cute anime girl with massive fennec fox ears with long wavy blonde hair and large blue eyes and is wearing a pink coat and a long black skirt and is sitting in the middle of a beautiful scenery amazing view in japanese anime style standing up and walking away"
+        }
+    },
+    {
+        "id": 89,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "The video captures a series of frames showing ugly scenes, static with no motion, motion blur, over-saturation, shaky footage, low resolution, grainy texture, pixelated images, poorly lit areas, underexposed and overexposed scenes, poor color balance, washed out colors, choppy sequences, jerky movements, low frame rate, artifacting, color banding, unnatural transitions, outdated special effects, fake elements, unconvincing visuals, poorly edited content, jump cuts, visual noise, and flickering. Overall, the video is of poor quality."
+        }
+    },
+    {
+        "id": 90,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "cosmos_cv8x8x8_1.0.safetensors"
+        }
+    },
+    {
+        "id": 91,
+        "name": "LTXVConditioning"
+    },
+    {
+        "id": 92,
+        "name": "ModelSamplingContinuousEDM"
+    },
+    {
+        "id": 93,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "cosmos-i2v-7b.pt"
+        }
+    },
+    {
+        "id": 94,
+        "name": "CosmosImageToVideoLatent"
+    },
+    {
+        "id": 95,
+        "name": "KSampler",
+        "prompts": {
+            "text": "res_multistep"
+        }
+    },
+    {
+        "id": 96,
+        "name": "easy promptConcat"
+    },
+    {
+        "id": 97,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "best quality,\"Advanced Robotics Laboratory: A Futuristic Workspace\n\nIn this cutting-edge laboratory, a trio of humanoid robots, designated as 'NeuroSurgeons,' operate with precision and accuracy, navigating a complex network of surgical instruments and diagnostic equipment. The room is bathed in a cool, blue-green glow, emanating from the numerous high-definition screens and holographic displays that line the walls, providing a wealth of real-time data and diagnostic information.\n\nIn the foreground, a NeuroSurgeon expertly manipulates a delicate surgical tool, its slender fingers moving with a level of dexterity that belies its mechanical nature. The robot's gleaming white and silver body seems to shimmer in the light, its advanced sensors and cameras providing a 360-degree view of the operating area.\n\nTo the far right, a lone figure, identified as Go Yoon Jung, a skilled robotics engineer, observes the NeuroSurgeons at work, a look of intense focus etched on their face. Their eyes are fixed on the data streaming across the screens, as they analyze the robots' performance and make adjustments as needed.\n\nThe laboratory itself is a marvel of modern engineering, with sleek, minimalist design and an emphasis on functionality. The floor is made of polished, dark gray metal, and the"
+        }
+    },
+    {
+        "id": 98,
+        "name": "CLIPLoader",
+        "prompts": {
+            "text": "oldt5_xxl_fp8_e4m3fn_scaled.safetensors"
+        }
+    },
+    {
+        "id": 99,
+        "name": "easy promptReplace"
+    },
+    {
+        "id": 100,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "\"Advanced Robotics Laboratory: A Futuristic Workspace\n\nIn this cutting-edge laboratory, a trio of humanoid robots, designated as 'NeuroSurgeons,' operate with precision and accuracy, navigating a complex network of surgical instruments and diagnostic equipment. The room is bathed in a cool, blue-green glow, emanating from the numerous high-definition screens and holographic displays that line the walls, providing a wealth of real-time data and diagnostic information.\n\nIn the foreground, a NeuroSurgeon expertly manipulates a delicate surgical tool, its slender fingers moving with a level of dexterity that belies its mechanical nature. The robot's gleaming white and silver body seems to shimmer in the light, its advanced sensors and cameras providing a 360-degree view of the operating area.\n\nTo the far right, a lone figure, identified as Go Yoon Jung, a skilled robotics engineer, observes the NeuroSurgeons at work, a look of intense focus etched on their face. Their eyes are fixed on the data streaming across the screens, as they analyze the robots' performance and make adjustments as needed.\n\nThe laboratory itself is a marvel of modern engineering, with sleek, minimalist design and an emphasis on functionality. The floor is made of polished, dark gray metal, and the"
+        }
+    },
+    {
+        "id": 101,
+        "name": "easy prompt",
+        "prompts": {
+            "text": "best quality,"
+        }
+    },
+    {
+        "id": 102,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00054_.png"
+        }
+    },
+    {
+        "id": 103,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "If there is a person/character in the image you must refer to them as {name}."
+        }
+    },
+    {
+        "id": 104,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 105,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 106,
+        "name": "TopazVideoAI",
+        "prompts": {
+            "text": "C:\\Program Files\\Topaz Labs LLC\\Topaz Video AI"
+        }
+    },
+    {
+        "id": 107,
+        "name": "TopazUpscaleParams"
+    },
+    {
+        "id": 108,
+        "name": "TopazUpscaleParams"
+    },
+    {
+        "id": 110,
+        "name": "JWImageResizeByLongerSide"
+    },
+    {
+        "id": 111,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00057_.png"
+        }
+    },
+    {
+        "id": 112,
+        "name": "JWImageResizeByLongerSide"
+    },
+    {
+        "id": 113,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 115,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 116,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "<div class=\"startPage\">\n  <div class=\"hoverContainer\">\n    <a href=\"https://aix.studio\">\n      <span class=\"size-smallButton style-input\">\ud83d\uddc3\ufe0f AIX\u5b98\u7f51</span>\n    </a>\n    <a href=\"https://t.zsxq.com/7F90A\">\n      <span class=\"size-smallButton style-input\">\ud83e\udeb2 \u77e5\u8bc6\u661f\u7403</span>\n    </a>\n    <a href=\"https://space.bilibili.com/385085361\">\n      <span class=\"size-smallButton style-input\">\u2615 B\u7ad9\u9996\u9875</span>\n    </a>\n  </div>\n</div>",
+            "text_2": "\r\n\r\n* {\r\n    font-family: Arial;\r\n  }\r\n\r\n\r\n  .startPage {\r\n    position: absolute;\r\n    width:auto;\r\n    z-index: 0;\r\n    transition: transform 0.3s ease;\r\n  }\r\n\r\n  .startPage:hover {\r\n    transform: translateY(-1%);\r\n  }\r\n\r\n  .hoverContainer {\r\n    background: black;\r\n    border-radius: 27px;\r\n    padding: 50px;\r\n    display: flex;\r\n    flex-direction: row;\r\n    margin: 12px auto;\r\n    position: relative;\r\n  }\r\n\r\n  .header {\r\n    padding-bottom: 24px;\r\n    margin-bottom: 24px;\r\n    border-bottom: 1px solid #3e3e3e;\r\n    width: 200%;\r\n    height: 72px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: space-between;\r\n  }\r\n\r\n  .header_discrip {\r\n    font-size: 21px;\r\n    font-weight: 200;\r\n    color: #6f6f6f;\r\n  }\r\n\r\n  .size-smallButton {\r\n    font-size: 21px;\r\n    border-radius: 12px;\r\n    height: 48px;\r\n    min-width: 48px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    width: 100%;\r\n    cursor: pointer;\r\n  }\r\n\r\n  .style-input {\r\n    background: #2a2a2b;\r\n    padding: 12px;\r\n    transition: background 0.3s;\r\n  }\r\n\r\n  .style-input:hover {\r\n    background: #3b3b3c;\r\n  }\r\na:not(:first-child) {\r\n      margin-left:8px;}\r\n  a {\r\n    color: #b6b6b7;\r\n  }\r\n\r\n  a:hover,\r\n  a:hover .header_discrip {\r\n    color: #dddddd !important;\r\n  }"
+        }
+    },
+    {
+        "id": 117,
+        "name": "MediaPlayer"
+    },
+    {
+        "id": 118,
+        "name": "MediaPlayer"
+    },
+    {
+        "id": 119,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 120,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "very cute anime girl with massive fennec fox ears with long wavy blonde hair and large blue eyes and is wearing a pink coat and a long black skirt and is sitting in the middle of a beautiful scenery amazing view in japanese anime style standing up and walking away"
+        }
+    },
+    {
+        "id": 121,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "The video captures a series of frames showing ugly scenes, static with no motion, motion blur, over-saturation, shaky footage, low resolution, grainy texture, pixelated images, poorly lit areas, underexposed and overexposed scenes, poor color balance, washed out colors, choppy sequences, jerky movements, low frame rate, artifacting, color banding, unnatural transitions, outdated special effects, fake elements, unconvincing visuals, poorly edited content, jump cuts, visual noise, and flickering. Overall, the video is of poor quality."
+        }
+    },
+    {
+        "id": 122,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "cosmos_cv8x8x8_1.0.safetensors"
+        }
+    },
+    {
+        "id": 123,
+        "name": "LTXVConditioning"
+    },
+    {
+        "id": 124,
+        "name": "ModelSamplingContinuousEDM"
+    },
+    {
+        "id": 125,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "cosmos-i2v-7b.pt"
+        }
+    },
+    {
+        "id": 126,
+        "name": "CosmosImageToVideoLatent"
+    },
+    {
+        "id": 127,
+        "name": "KSampler",
+        "prompts": {
+            "text": "res_multistep"
+        }
+    },
+    {
+        "id": 128,
+        "name": "easy promptConcat"
+    },
+    {
+        "id": 129,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "she is shaking her handGo Yoon Jung, a renowned Korean actress, is seen in this elegant portrait, captured at a high-profile event. Dressed in a stunning black evening gown adorned with intricate lace and beading, Go Yoon Jung exudes poise and sophistication. The delicate patterns of the gown's embroidery catch the light, accentuating the actress's refined features.\n\nAs she raises her hand in a subtle gesture, a sparkling diamond ring on her finger catches the eye, adding a touch of understated glamour to her overall appearance. Go Yoon Jung's hair is styled in a sleek, low bun, with a few loose strands framing her heart-shaped face.\n\nThe background of the video is blurred, with the faint outlines of cameras and other videographers visible, hinting at the excitement and energy of the event. However, Go Yoon Jung's serene expression and confident demeanor command attention, making her the true focus of the videograph."
+        }
+    },
+    {
+        "id": 130,
+        "name": "CLIPLoader",
+        "prompts": {
+            "text": "oldt5_xxl_fp8_e4m3fn_scaled.safetensors"
+        }
+    },
+    {
+        "id": 131,
+        "name": "easy promptReplace"
+    },
+    {
+        "id": 132,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "Go Yoon Jung, a renowned Korean actress, is seen in this elegant portrait, captured at a high-profile event. Dressed in a stunning black evening gown adorned with intricate lace and beading, Go Yoon Jung exudes poise and sophistication. The delicate patterns of the gown's embroidery catch the light, accentuating the actress's refined features.\n\nAs she raises her hand in a subtle gesture, a sparkling diamond ring on her finger catches the eye, adding a touch of understated glamour to her overall appearance. Go Yoon Jung's hair is styled in a sleek, low bun, with a few loose strands framing her heart-shaped face.\n\nThe background of the video is blurred, with the faint outlines of cameras and other videographers visible, hinting at the excitement and energy of the event. However, Go Yoon Jung's serene expression and confident demeanor command attention, making her the true focus of the videograph."
+        }
+    },
+    {
+        "id": 133,
+        "name": "easy prompt",
+        "prompts": {
+            "text": "she is shaking her hand"
+        }
+    },
+    {
+        "id": 134,
+        "name": "LoadImage"
+    },
+    {
+        "id": 135,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "If there is a person/character in the image you must refer to them as {name}."
+        }
+    },
+    {
+        "id": 136,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 137,
+        "name": "TopazVideoAI",
+        "prompts": {
+            "text": "C:\\Program Files\\Topaz Labs LLC\\Topaz Video AI"
+        }
+    },
+    {
+        "id": 138,
+        "name": "TopazUpscaleParams"
+    },
+    {
+        "id": 139,
+        "name": "TopazUpscaleParams"
+    },
+    {
+        "id": 140,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 141,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 142,
+        "name": "VHS_VideoCombine"
+    }
+]

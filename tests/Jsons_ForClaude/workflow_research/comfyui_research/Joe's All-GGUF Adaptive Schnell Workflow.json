@@ -1,0 +1,1075 @@
+{
+  "last_node_id": 227,
+  "last_link_id": 533,
+  "nodes": [
+    {
+      "id": 134,
+      "type": "UnetLoaderGGUF",
+      "pos": {
+        "0": -380,
+        "1": 420
+      },
+      "size": {
+        "0": 280,
+        "1": 60
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            517,
+            518
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UnetLoaderGGUF"
+      },
+      "widgets_values": [
+        "PixelWave_FLUX.1-schnell_03\\pixelwave_flux1_schnell_Q6_K_M_03.gguf"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 136,
+      "type": "VAELoader",
+      "pos": {
+        "0": -380,
+        "1": 700
+      },
+      "size": {
+        "0": 280,
+        "1": 60
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            522,
+            523
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "FLUX.1-schnell\\vae\\diffusion_pytorch_model.safetensors"
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 220,
+      "type": "SaveImage",
+      "pos": {
+        "0": 1120,
+        "1": 500
+      },
+      "size": {
+        "0": 540,
+        "1": 700
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 515
+        }
+      ],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 224,
+      "type": "workflow>Aspect Ratio 2 Pixels Encode Group Node",
+      "pos": {
+        "0": 40,
+        "1": 1240
+      },
+      "size": {
+        "0": 460,
+        "1": 180
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 523
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            521
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow>Aspect Ratio 2 Pixels Encode Group Node"
+      },
+      "widgets_values": [
+        3,
+        4,
+        1,
+        0,
+        "lanczos",
+        1
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 225,
+      "type": "workflow>Adaptive Sample Group Node",
+      "pos": {
+        "0": 560,
+        "1": 500
+      },
+      "size": {
+        "0": 520,
+        "1": 700
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 517
+        },
+        {
+          "name": "AdaptiveGuidance model",
+          "type": "MODEL",
+          "link": 518
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 530
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 531
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 521
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 522
+        }
+      ],
+      "outputs": [
+        {
+          "name": "denoised_output",
+          "type": "LATENT",
+          "links": null
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            515
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow>Adaptive Sample Group Node"
+      },
+      "widgets_values": [
+        178529004036009,
+        "randomize",
+        "deis",
+        "beta",
+        10,
+        1,
+        1,
+        1,
+        0,
+        0.5
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 226,
+      "type": "workflow>Single Text Encode Group Node",
+      "pos": {
+        "0": 40,
+        "1": 500
+      },
+      "size": {
+        "0": 460,
+        "1": 660
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 533
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            530
+          ]
+        },
+        {
+          "name": "ConditioningZeroOut CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            531
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow>Single Text Encode Group Node"
+      },
+      "widgets_values": [
+        "Create a vivid portrait in the style of IMAX filmmaking, channeling Alex Ross' hyper-realistic artistry. Capture a bearded man with a joyful expression, his robust features highlighted by dramatic lighting. Adorn his head with a golden crown, intricately detailed, reflecting light with a glossy finish. His skin, smooth and marble-like, contrasts with the dark, closely cropped hair. Focus on his wide, excited eyes and open, smiling mouth, revealing teeth. Use a palette dominated by gold and natural skin tones, ensuring the background remains blurred to emphasize his expressive face.",
+        3.5
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 227,
+      "type": "DualCLIPLoaderGGUF",
+      "pos": {
+        "0": -380,
+        "1": 540
+      },
+      "size": {
+        "0": 280,
+        "1": 106
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            533
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DualCLIPLoaderGGUF"
+      },
+      "widgets_values": [
+        "flux_text_encoders\\clip_l.safetensors",
+        "t5-v1_1-xxl-encoder-gguf\\t5-v1_1-xxl-encoder-Q6_K.gguf",
+        "flux"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      515,
+      225,
+      1,
+      220,
+      0,
+      "IMAGE"
+    ],
+    [
+      517,
+      134,
+      0,
+      225,
+      0,
+      "MODEL"
+    ],
+    [
+      518,
+      134,
+      0,
+      225,
+      1,
+      "MODEL"
+    ],
+    [
+      521,
+      224,
+      0,
+      225,
+      4,
+      "LATENT"
+    ],
+    [
+      522,
+      136,
+      0,
+      225,
+      5,
+      "VAE"
+    ],
+    [
+      523,
+      136,
+      0,
+      224,
+      0,
+      "VAE"
+    ],
+    [
+      530,
+      226,
+      0,
+      225,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      531,
+      226,
+      1,
+      225,
+      3,
+      "CONDITIONING"
+    ],
+    [
+      533,
+      227,
+      0,
+      226,
+      0,
+      "CLIP"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.8390545288824237,
+      "offset": [
+        749.2137180075075,
+        -210.36448263895238
+      ]
+    },
+    "groupNodes": {
+      "Aspect Ratio 2 Pixels Encode Group Node": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "EmptyImage",
+            "pos": {
+              "0": 60,
+              "1": 1160
+            },
+            "size": {
+              "0": 210,
+              "1": 130
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "shape": 3
+              }
+            ],
+            "title": "Aspect Ratio Empty Image",
+            "properties": {
+              "Node name for S&R": "EmptyImage"
+            },
+            "widgets_values": [
+              3,
+              4,
+              1,
+              0
+            ],
+            "color": "#322",
+            "bgcolor": "#533",
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "ImageScaleToTotalPixels",
+            "pos": {
+              "0": 300,
+              "1": 1150
+            },
+            "size": {
+              "0": 226.8000030517578,
+              "1": 95.91006469726562
+            },
+            "flags": {
+              "collapsed": false
+            },
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "image",
+                "type": "IMAGE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ImageScaleToTotalPixels"
+            },
+            "widgets_values": [
+              "lanczos",
+              1
+            ],
+            "color": "#322",
+            "bgcolor": "#533",
+            "index": 1
+          },
+          {
+            "id": -1,
+            "type": "VAEEncode",
+            "pos": {
+              "0": 600,
+              "1": 1150
+            },
+            "size": {
+              "0": 140,
+              "1": 46
+            },
+            "flags": {
+              "collapsed": false
+            },
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "pixels",
+                "type": "IMAGE",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEEncode"
+            },
+            "color": "#322",
+            "bgcolor": "#533",
+            "index": 2
+          }
+        ],
+        "links": [
+          [
+            0,
+            0,
+            1,
+            0,
+            207,
+            "IMAGE"
+          ],
+          [
+            1,
+            0,
+            2,
+            0,
+            208,
+            "IMAGE"
+          ],
+          [
+            null,
+            0,
+            2,
+            1,
+            136,
+            "VAE"
+          ]
+        ],
+        "external": [
+          [
+            2,
+            0,
+            "LATENT"
+          ]
+        ]
+      },
+      "Adaptive Sample Group Node": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "RandomNoise",
+            "pos": {
+              "0": 460,
+              "1": 460
+            },
+            "size": {
+              "0": 250,
+              "1": 100
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "NOISE",
+                "type": "NOISE",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "RandomNoise"
+            },
+            "widgets_values": [
+              1046225038113604,
+              "randomize"
+            ],
+            "color": "#2a363b",
+            "bgcolor": "#3f5159",
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "KSamplerSelect",
+            "pos": {
+              "0": 460,
+              "1": 840
+            },
+            "size": {
+              "0": 250,
+              "1": 58
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "SAMPLER",
+                "type": "SAMPLER",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "KSamplerSelect"
+            },
+            "widgets_values": [
+              "deis"
+            ],
+            "color": "#2a363b",
+            "bgcolor": "#3f5159",
+            "index": 1
+          },
+          {
+            "id": -1,
+            "type": "BasicScheduler",
+            "pos": {
+              "0": 460,
+              "1": 940
+            },
+            "size": {
+              "0": 250,
+              "1": 106
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "MODEL",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "SIGMAS",
+                "type": "SIGMAS",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "BasicScheduler"
+            },
+            "widgets_values": [
+              "beta",
+              10,
+              1
+            ],
+            "color": "#2a363b",
+            "bgcolor": "#3f5159",
+            "index": 2
+          },
+          {
+            "id": -1,
+            "type": "AdaptiveGuidance",
+            "pos": {
+              "0": 460,
+              "1": 600
+            },
+            "size": {
+              "0": 250,
+              "1": 200
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "MODEL",
+                "link": null
+              },
+              {
+                "name": "positive",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "negative",
+                "type": "CONDITIONING",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "GUIDER",
+                "type": "GUIDER",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "AdaptiveGuidance"
+            },
+            "widgets_values": [
+              1,
+              1,
+              0,
+              0.5
+            ],
+            "color": "#2a363b",
+            "bgcolor": "#3f5159",
+            "index": 3
+          },
+          {
+            "id": -1,
+            "type": "SamplerCustomAdvanced",
+            "pos": {
+              "0": 800,
+              "1": 640
+            },
+            "size": {
+              "0": 300,
+              "1": 320
+            },
+            "flags": {
+              "collapsed": false
+            },
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "noise",
+                "type": "NOISE",
+                "link": null
+              },
+              {
+                "name": "guider",
+                "type": "GUIDER",
+                "link": null
+              },
+              {
+                "name": "sampler",
+                "type": "SAMPLER",
+                "link": null
+              },
+              {
+                "name": "sigmas",
+                "type": "SIGMAS",
+                "link": null
+              },
+              {
+                "name": "latent_image",
+                "type": "LATENT",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "output",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0
+              },
+              {
+                "name": "denoised_output",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 1
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SamplerCustomAdvanced"
+            },
+            "color": "#222",
+            "bgcolor": "#000",
+            "index": 4
+          },
+          {
+            "id": -1,
+            "type": "VAEDecode",
+            "pos": {
+              "0": 1140,
+              "1": 1360
+            },
+            "size": {
+              "0": 210,
+              "1": 46
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "samples",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEDecode"
+            },
+            "color": "#322",
+            "bgcolor": "#533",
+            "index": 5
+          }
+        ],
+        "links": [
+          [
+            null,
+            0,
+            2,
+            0,
+            134,
+            "MODEL"
+          ],
+          [
+            null,
+            0,
+            3,
+            0,
+            134,
+            "MODEL"
+          ],
+          [
+            null,
+            0,
+            3,
+            1,
+            223,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            1,
+            3,
+            2,
+            223,
+            "CONDITIONING"
+          ],
+          [
+            0,
+            0,
+            4,
+            0,
+            209,
+            "NOISE"
+          ],
+          [
+            3,
+            0,
+            4,
+            1,
+            215,
+            "GUIDER"
+          ],
+          [
+            1,
+            0,
+            4,
+            2,
+            210,
+            "SAMPLER"
+          ],
+          [
+            2,
+            0,
+            4,
+            3,
+            211,
+            "SIGMAS"
+          ],
+          [
+            null,
+            0,
+            4,
+            4,
+            224,
+            "LATENT"
+          ],
+          [
+            4,
+            0,
+            5,
+            0,
+            214,
+            "LATENT"
+          ],
+          [
+            null,
+            0,
+            5,
+            1,
+            136,
+            "VAE"
+          ]
+        ],
+        "external": [
+          [
+            5,
+            0,
+            "IMAGE"
+          ]
+        ]
+      },
+      "Single Text Encode Group Node": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "CLIPTextEncode",
+            "pos": {
+              "0": 380,
+              "1": 520
+            },
+            "size": {
+              "0": 340,
+              "1": 280
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "clip",
+                "type": "CLIP",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "CLIPTextEncode"
+            },
+            "widgets_values": [
+              "Create a dynamic scene in the style of Satoshi Urushihara, capturing a vibrant anime cinema moment. The focus is a young female character, her cheeks flushed with embarrassment. Her expressive eyes are wide, reflecting a mix of surprise and shyness. Her long, flowing hair cascades around her shoulders, her chest large and covered, catching the light in a myriad of colors. The setting is a lively, bustling city street at dusk, with neon lights casting vivid hues across the scene. Intricate details in the background hint at a cinematic atmosphere, with blurred figures and motion conveying a sense of vibrant life. Use a rich, bold color palette to emphasize the character's emotions and the bustling energy around her, ensuring a balance between the character's explicit features and the artistic composition. "
+            ],
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "FluxGuidance",
+            "pos": {
+              "0": 759.9999389648438,
+              "1": 520
+            },
+            "size": {
+              "0": 211.60000610351562,
+              "1": 58
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "conditioning",
+                "type": "CONDITIONING",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "FluxGuidance"
+            },
+            "widgets_values": [
+              3.5
+            ],
+            "color": "#432",
+            "bgcolor": "#653",
+            "index": 1
+          },
+          {
+            "id": -1,
+            "type": "ConditioningZeroOut",
+            "pos": {
+              "0": 1019.9999389648438,
+              "1": 640
+            },
+            "size": {
+              "0": 220,
+              "1": 60
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "conditioning",
+                "type": "CONDITIONING",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ConditioningZeroOut"
+            },
+            "color": "#432",
+            "bgcolor": "#653",
+            "index": 2
+          }
+        ],
+        "links": [
+          [
+            null,
+            0,
+            0,
+            0,
+            163,
+            "CLIP"
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            222,
+            "CONDITIONING"
+          ],
+          [
+            1,
+            0,
+            2,
+            0,
+            212,
+            "CONDITIONING"
+          ]
+        ],
+        "external": [
+          [
+            1,
+            0,
+            "CONDITIONING"
+          ],
+          [
+            2,
+            0,
+            "CONDITIONING"
+          ]
+        ]
+      }
+    }
+  },
+  "version": 0.4
+}

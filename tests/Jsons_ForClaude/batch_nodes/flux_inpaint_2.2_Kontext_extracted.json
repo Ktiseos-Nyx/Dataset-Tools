@@ -1,0 +1,217 @@
+[
+    {
+        "id": 1,
+        "name": "Phase I: Load models and image to inpaint"
+    },
+    {
+        "id": 3,
+        "name": "Phase II: Generation of inpainted region"
+    },
+    {
+        "id": 4,
+        "name": "Phase I-A: Sampling Image (Optional)"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 17,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "clipspace/clipspace-mask-1510310.299999997.png [input]"
+        }
+    },
+    {
+        "id": 31,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-kontext-dev.safetensors"
+        }
+    },
+    {
+        "id": 32,
+        "name": "VAELoader"
+    },
+    {
+        "id": 34,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "Clip-L FP32 (zer0int Vision).safetensors",
+            "text_2": "t5xxl_fp32_flan.safetensors"
+        }
+    },
+    {
+        "id": 39,
+        "name": "DifferentialDiffusion"
+    },
+    {
+        "id": 47,
+        "name": "CLIPTextEncodeFlux",
+        "prompts": {
+            "text": "make dark coulds"
+        }
+    },
+    {
+        "id": 48,
+        "name": "SetNode"
+    },
+    {
+        "id": 50,
+        "name": "SetNode",
+        "prompts": {
+            "text": "IMAGE_INPUT"
+        }
+    },
+    {
+        "id": 51,
+        "name": "SetNode"
+    },
+    {
+        "id": 53,
+        "name": "SetNode"
+    },
+    {
+        "id": 54,
+        "name": "SetNode"
+    },
+    {
+        "id": 55,
+        "name": "SetNode"
+    },
+    {
+        "id": 62,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "clipspace/clipspace-mask-11300747.199999988.png [input]"
+        }
+    },
+    {
+        "id": 64,
+        "name": "SetNode",
+        "prompts": {
+            "text": "CONTEXT_MASK"
+        }
+    },
+    {
+        "id": 65,
+        "name": "InpaintCropImproved",
+        "prompts": {
+            "text": "ensure maximum resolution"
+        }
+    },
+    {
+        "id": 66,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 67,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 68,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 69,
+        "name": "InpaintModelConditioning"
+    },
+    {
+        "id": 70,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 71,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Flux-inpaint"
+        }
+    },
+    {
+        "id": 72,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 73,
+        "name": "InpaintStitchImproved"
+    },
+    {
+        "id": 74,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 75,
+        "name": "GetNode"
+    },
+    {
+        "id": 76,
+        "name": "GetNode"
+    },
+    {
+        "id": 77,
+        "name": "GetNode"
+    },
+    {
+        "id": 78,
+        "name": "GetNode",
+        "prompts": {
+            "text": "IMAGE_INPUT"
+        }
+    },
+    {
+        "id": 79,
+        "name": "GetNode"
+    },
+    {
+        "id": 81,
+        "name": "GetNode",
+        "prompts": {
+            "text": "CONTEXT_MASK"
+        }
+    },
+    {
+        "id": 88,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "\n### 1. Drag and drop the image you want to inpaint into the \"Load Image - Inpaint Mask\" node.\n\n### 2. Right-Click on the image and select \"Open in MaskEditor\". There, you'll be able to paint the mask.\n\n### 3. When you are done with the inpainting, press \"Save\"."
+        }
+    },
+    {
+        "id": 89,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "\n### This node allows you to get your inpainting from a source image.\n\n### It must have the same resolution of the image you want to inpaint. \n\n### Just load an image in it, and paint a mask."
+        }
+    },
+    {
+        "id": 90,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "### If you are using a context image, you need to enable the Get_Context_mask node."
+        }
+    },
+    {
+        "id": 91,
+        "name": "GetNode"
+    },
+    {
+        "id": 92,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 98,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 100,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 101,
+        "name": "GetNode"
+    },
+    {
+        "id": 102,
+        "name": "ReferenceLatent"
+    }
+]

@@ -1,0 +1,69 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 16,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "one young red head women hold a cute sign saying \"Tech Practice\" with one heart emoj on the sign"
+        }
+    },
+    {
+        "id": 40,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 53,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 54,
+        "name": "QuadrupleCLIPLoader",
+        "prompts": {
+            "text": "clip_l_hidream.safetensors",
+            "text_2": "clip_g_hidream.safetensors"
+        }
+    },
+    {
+        "id": 55,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae.safetensors"
+        }
+    },
+    {
+        "id": 69,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "hidream_i1_fast_fp8.safetensors"
+        }
+    },
+    {
+        "id": 70,
+        "name": "ModelSamplingSD3"
+    },
+    {
+        "id": 72,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## Official sampling settings\n\nProvided for reference, my workflows may have slightly different settings.\n\n### HiDream Full\n\n* hidream_i1_full_fp16.safetensors\n* shift: 3.0\n* steps: 50\n* sampler: uni_pc\n* scheduler: simple\n* cfg: 5.0\n\n### HiDream Dev\n\n* hidream_i1_dev_bf16.safetensors\n* shift: 6.0\n* steps: 28\n* sampler: lcm\n* scheduler: normal\n* cfg: 1.0 (no negative prompt)\n\n### HiDream Fast\n\n* hidream_i1_fast_bf16.safetensors\n* shift: 3.0\n* steps: 16\n* sampler: lcm\n* scheduler: normal\n* cfg: 1.0 (no negative prompt)\n"
+        }
+    },
+    {
+        "id": 73,
+        "name": "Note",
+        "prompts": {
+            "text": "You can try changing the weight_dtype to fp8 if you are running out of memory."
+        }
+    }
+]

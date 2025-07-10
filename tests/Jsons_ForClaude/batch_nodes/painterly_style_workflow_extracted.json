@@ -1,0 +1,195 @@
+[
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd_xl_base_1.0.safetensors"
+        }
+    },
+    {
+        "id": 22,
+        "name": "KSamplerAdvanced"
+    },
+    {
+        "id": 43,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "noise, grit, dull, washed out, low contrast, blurry, deep-fried, hazy, malformed, warped, deformed, grayscale, illustration, photo, hdr, bokeh, waterfall, river"
+        }
+    },
+    {
+        "id": 66,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 75,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "painting, art in smmtg style of a woman in a red dress lost in a dark forest. ",
+            "text_2": "dark and creepy, grim, fantasy, centered composition"
+        }
+    },
+    {
+        "id": 77,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "dark and creepy, grim, fantasy, centered composition"
+        }
+    },
+    {
+        "id": 78,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "painting, art in smmtg style of a woman in a red dress lost in a dark forest. "
+        }
+    },
+    {
+        "id": 82,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "noise, grit, dull, washed out, low contrast, blurry, deep-fried, hazy, malformed, warped, deformed, grayscale, illustration, photo, hdr, bokeh, waterfall, river",
+            "text_2": "noise, grit, dull, washed out, low contrast, blurry, deep-fried, hazy, malformed, warped, deformed, grayscale, illustration, photo, hdr, bokeh, waterfall, river"
+        }
+    },
+    {
+        "id": 101,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 115,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 133,
+        "name": "Reroute"
+    },
+    {
+        "id": 134,
+        "name": "Reroute"
+    },
+    {
+        "id": 139,
+        "name": "Reroute"
+    },
+    {
+        "id": 140,
+        "name": "Reroute"
+    },
+    {
+        "id": 145,
+        "name": "Reroute"
+    },
+    {
+        "id": 184,
+        "name": "SaveImage"
+    },
+    {
+        "id": 187,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_foolhardy_Remacri.pth"
+        }
+    },
+    {
+        "id": 201,
+        "name": "SaveImage"
+    },
+    {
+        "id": 203,
+        "name": "Reroute"
+    },
+    {
+        "id": 209,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 210,
+        "name": "Reroute"
+    },
+    {
+        "id": 213,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 215,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 216,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "ddim_uniform"
+        }
+    },
+    {
+        "id": 217,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 218,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 221,
+        "name": "ImageBlend"
+    },
+    {
+        "id": 222,
+        "name": "Reroute"
+    },
+    {
+        "id": 234,
+        "name": "Note",
+        "prompts": {
+            "text": "Contrast fix is to fix the weird black level issues with SDXL when doing multiple passes. Just mess with the value to achieve the look you want.\n\nThe higher the value you use, the more it will bring down the black tones and re-saturate the colors"
+        }
+    },
+    {
+        "id": 239,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "smmtg-000004.safetensors"
+        }
+    },
+    {
+        "id": 241,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 243,
+        "name": "Reroute"
+    },
+    {
+        "id": 244,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "sd_xl_offset_example-lora_1.0.safetensors"
+        }
+    },
+    {
+        "id": 245,
+        "name": "Note",
+        "prompts": {
+            "text": "Connect to run upscaling. "
+        }
+    },
+    {
+        "id": 267,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 270,
+        "name": "CLIPSetLastLayer"
+    }
+]

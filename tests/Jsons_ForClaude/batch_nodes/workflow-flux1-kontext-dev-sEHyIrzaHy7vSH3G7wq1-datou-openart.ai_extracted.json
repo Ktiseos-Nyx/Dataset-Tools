@@ -1,0 +1,96 @@
+[
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(transform to real person photo:1.4), reversal film photography, hdr, "
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 31,
+        "name": "KSampler"
+    },
+    {
+        "id": 35,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 37,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux\\flux1-dev-kontext_fp8_scaled.safetensors"
+        }
+    },
+    {
+        "id": 38,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "sd3\\clip_l.safetensors",
+            "text_2": "hidream\\t5xxl_fp8_e4m3fn_scaled.safetensors"
+        }
+    },
+    {
+        "id": 39,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux\\ae.safetensors"
+        }
+    },
+    {
+        "id": 124,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 135,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 136,
+        "name": "SaveImage"
+    },
+    {
+        "id": 177,
+        "name": "ReferenceLatent"
+    },
+    {
+        "id": 192,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "pasted/image (25).png"
+        }
+    },
+    {
+        "id": 193,
+        "name": "ImageScaleToTotalPixels"
+    },
+    {
+        "id": 194,
+        "name": "Note",
+        "prompts": {
+            "text": "https://www.shakker.ai/modelinfo/293b44c89503459eb4bb5adbf95a09b7"
+        }
+    },
+    {
+        "id": 195,
+        "name": "MagCache"
+    },
+    {
+        "id": 197,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "flux\\realistic\\F.1\u9ad8\u6e05\u6444\u5f71\u7cfb\u5217_HDR_v1.safetensors"
+        }
+    },
+    {
+        "id": 212,
+        "name": "ImageConcanate"
+    },
+    {
+        "id": 213,
+        "name": "SaveImage"
+    }
+]

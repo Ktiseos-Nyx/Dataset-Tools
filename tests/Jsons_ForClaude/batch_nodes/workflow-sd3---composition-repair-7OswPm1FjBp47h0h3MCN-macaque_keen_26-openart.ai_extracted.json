@@ -1,0 +1,486 @@
+[
+    {
+        "id": 8,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "L:\\obrazy-ai\\%date/%date_ComfyUI_SD3_Prompt_%counter"
+        }
+    },
+    {
+        "id": 46,
+        "name": "ModelSamplingSD3"
+    },
+    {
+        "id": 47,
+        "name": "CLIPTextEncodeSD3",
+        "prompts": {
+            "text": "(Gorgeous Photo:1.3) of (Ultra detailed:1.3),16k, masterpiece, ((ultra detailed:1.1)), natural skin texture, 16k textures, cinematic look,  female (caldari) holding a black rose, wearing an airy fancy outfit, dark fantasy style, dragon in the background, holly detailed land landscape in background,",
+            "text_2": "empty_prompt"
+        }
+    },
+    {
+        "id": 49,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 51,
+        "name": "SDXL Resolutions (JPS)",
+        "prompts": {
+            "text": "portrait - 896x1152 (3:4)"
+        }
+    },
+    {
+        "id": 52,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "AderekSD3.safetensors"
+        }
+    },
+    {
+        "id": 55,
+        "name": "KSampler"
+    },
+    {
+        "id": 57,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 63,
+        "name": "Note",
+        "prompts": {
+            "text": "SD3 LoRA:\nhttps://tensor.art/models/750655568013902941"
+        }
+    },
+    {
+        "id": 64,
+        "name": "Note",
+        "prompts": {
+            "text": "https://huggingface.co/stabilityai/stable-diffusion-3-medium/tree/main\n\nFolder:\nModels/checkpoints"
+        }
+    },
+    {
+        "id": 72,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 75,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "Hello.\n\nUse it for free!\n\nPlease visit my pages:\n\nhttps://stock.adobe.com/pl/contributor/211456689/aderek514?load_type=author&prev_url=detail\n\nhttps://www.deviantart.com/aderek\n\nhttps://openart.ai/workflows/profile/macaque_keen_26?tab=workflows&sort=latest\n\nhttps://civitai.com/user/Aderek514\n\nhttps://www.artpal.com/art4fun/\n\nhttps://opensea.io/Aderek514\n\nhttps://ko-fi.com/aderek514\n\n"
+        }
+    },
+    {
+        "id": 76,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "00340-130870553.png"
+        }
+    },
+    {
+        "id": 77,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 80,
+        "name": "CR Latent Input Switch"
+    },
+    {
+        "id": 85,
+        "name": "Note",
+        "prompts": {
+            "text": "https://huggingface.co/stabilityai/stable-diffusion-3-medium/tree/main/text_encoders\n\nFolder:\nModels/Clip"
+        }
+    },
+    {
+        "id": 86,
+        "name": "Note",
+        "prompts": {
+            "text": "oor quality, doll, disfigured, jpg, toy, bad anatomy, missing limbs, missing fingers, 3d, cgi,nipple, nipples,logo, watermark, lowres, text, error, cropped, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, out of frame, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, username, watermark, signature, (disfigured), (bad art), (deformed), (poorly drawn), strange colours,boring, sketch, repetitive, "
+        }
+    },
+    {
+        "id": 87,
+        "name": "ReActorFaceBoost",
+        "prompts": {
+            "text": "detection_Resnet50_Final.pth"
+        }
+    },
+    {
+        "id": 88,
+        "name": "ReActorRestoreFace",
+        "prompts": {
+            "text": "retinaface_resnet50",
+            "text_2": "GFPGANv1.4.pth"
+        }
+    },
+    {
+        "id": 90,
+        "name": "ReActorFaceSwap",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "retinaface_resnet50"
+        }
+    },
+    {
+        "id": 91,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_temp_jghsf_00003_.png"
+        }
+    },
+    {
+        "id": 93,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 95,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 110,
+        "name": "CLIPTextEncodeSD3",
+        "prompts": {
+            "text": "hand,nude, nsfw,naked,(mutations),bad legs, bad quality,( bad anatomy), (bad hands), anime, drawing, painting, 3D, sketch, 2D, CGI, blurry, out of focus, motion blur, bad arms, bad limbs, extra arms, amputee, bad knees, thick legs, fat, big feet, bad proportions, extra feet, mutant legs, mutant arms, mutant hands, anatomical mistakes, censored, cross legs, no legs, missing legs, legs out of frame, ",
+            "text_2": "(mutations),bad legs, bad quality,( bad anatomy), (bad hands), anime, drawing, painting, 3D, sketch, 2D, CGI, blurry, out of focus, motion blur, bad arms, bad limbs, extra arms, amputee, bad knees, thick legs, fat, big feet, bad proportions, extra feet, mutant legs, mutant arms, mutant hands, anatomical mistakes, censored, cross legs, no legs, missing legs, legs out of frame, "
+        }
+    },
+    {
+        "id": 116,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 117,
+        "name": "ConditioningSetTimestepRange"
+    },
+    {
+        "id": 118,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 119,
+        "name": "ConditioningSetTimestepRange"
+    },
+    {
+        "id": 120,
+        "name": "SD3NegativeConditioning+"
+    },
+    {
+        "id": 121,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(mutations),bad legs, bad quality,( bad anatomy), (bad hands), anime, drawing, painting, 3D, sketch, 2D, CGI, blurry, out of focus, motion blur, bad arms, bad limbs, extra arms, amputee, bad knees, thick legs, fat, big feet, bad proportions, extra feet, mutant legs, mutant arms, mutant hands, anatomical mistakes, censored, cross legs, no legs, missing legs, legs out of frame, "
+        }
+    },
+    {
+        "id": 125,
+        "name": "CLIPSeg Masking"
+    },
+    {
+        "id": 126,
+        "name": "Mask Dominant Region"
+    },
+    {
+        "id": 127,
+        "name": "Mask Crop Region"
+    },
+    {
+        "id": 128,
+        "name": "Image Crop Location"
+    },
+    {
+        "id": 129,
+        "name": "Image Resize"
+    },
+    {
+        "id": 130,
+        "name": "Image Paste Crop"
+    },
+    {
+        "id": 131,
+        "name": "Image Lucy Sharpen"
+    },
+    {
+        "id": 132,
+        "name": "Image Blend"
+    },
+    {
+        "id": 133,
+        "name": "Image Filter Adjustments"
+    },
+    {
+        "id": 134,
+        "name": "Image Blend"
+    },
+    {
+        "id": 137,
+        "name": "Reroute"
+    },
+    {
+        "id": 138,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 141,
+        "name": "VAEEncodeTiled"
+    },
+    {
+        "id": 142,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 145,
+        "name": "Reroute"
+    },
+    {
+        "id": 146,
+        "name": "Reroute"
+    },
+    {
+        "id": 148,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 149,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": ",(high budget Hollywood film:1.2),\nvisible skin hair, , face crop,Closeup, raw, 8k UHD, dslr, 8k textures, hdr, (detailed eyes:1.2), perfect face,\n  (8k post production), high resolution, sharp focus, detailed, matte skin,\n\nF/2.8"
+        }
+    },
+    {
+        "id": 150,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": " \nvisible skin hair,,dslr,hdr, raw, 8k UHD, dslr, 8k textures, hdr, detailed,\n  8k post production, high resolution, sharp focus, matte skin,"
+        }
+    },
+    {
+        "id": 151,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 153,
+        "name": "CR Upscale Image",
+        "prompts": {
+            "text": "4x_NMKD-Siax_200k.pth"
+        }
+    },
+    {
+        "id": 154,
+        "name": "SDPromptSaver",
+        "prompts": {
+            "text": "%date_ComfyUI_SD3_Prompt_%counter",
+            "text_2": "L:/obrazy-ai/upscale/%date/"
+        }
+    },
+    {
+        "id": 155,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 156,
+        "name": "CR Overlay Text",
+        "prompts": {
+            "text": "  Aderek514\n ",
+            "text_2": "text center"
+        }
+    },
+    {
+        "id": 157,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 158,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "logo-art4-fun.png"
+        }
+    },
+    {
+        "id": 159,
+        "name": "Image Paste Crop by Location"
+    },
+    {
+        "id": 160,
+        "name": "SDPromptSaver",
+        "prompts": {
+            "text": "%date_ComfyUI_SD3_Prompt_%counter",
+            "text_2": "L:\\obrazy-ai\\signed\\%date/"
+        }
+    },
+    {
+        "id": 161,
+        "name": "Image Remove Background (Alpha)"
+    },
+    {
+        "id": 163,
+        "name": "SDPromptSaver",
+        "prompts": {
+            "text": "%date_ComfyUI_SD3_Prompt_%counter",
+            "text_2": "L:\\obrazy-ai\\%date/"
+        }
+    },
+    {
+        "id": 164,
+        "name": "Note",
+        "prompts": {
+            "text": "SD Prompt Saver - can save output image on another drive"
+        }
+    },
+    {
+        "id": 165,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 167,
+        "name": "Note",
+        "prompts": {
+            "text": "set denoise to 0.4-0.6 if u switch to img2img"
+        }
+    },
+    {
+        "id": 168,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 169,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 173,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "sd3_easy_illustrator.safetensors"
+        }
+    },
+    {
+        "id": 176,
+        "name": "CLIPTextEncodeSD3",
+        "prompts": {
+            "text": ",(high budget Hollywood film:1.2),\nvisible skin hair, , face crop,Closeup, raw, 8k UHD, dslr, 8k textures, hdr, (detailed eyes:1.2), perfect angel face,\n  (8k post production), high resolution, sharp focus, detailed, matte skin,\n\nF/2.8",
+            "text_2": ",(high budget Hollywood film:1.2),\nvisible skin hair, , face crop,Closeup, raw, 8k UHD, dslr, 8k textures, hdr, (detailed eyes:1.2), perfect angel face,\n  (8k post production), high resolution, sharp focus, detailed, matte skin,\n\nF/2.8"
+        }
+    },
+    {
+        "id": 177,
+        "name": "ReActorFaceSwap",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "retinaface_resnet50"
+        }
+    },
+    {
+        "id": 179,
+        "name": "KSampler"
+    },
+    {
+        "id": 181,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 182,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 183,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_temp_dgkkf_00090_.png"
+        }
+    },
+    {
+        "id": 186,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 199,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "fryzury i materialy.png"
+        }
+    },
+    {
+        "id": 200,
+        "name": "ImageRemoveBackground+"
+    },
+    {
+        "id": 202,
+        "name": "RemBGSession+",
+        "prompts": {
+            "text": "u2net_human_seg: human segmentation"
+        }
+    },
+    {
+        "id": 215,
+        "name": "ControlNetApplySD3"
+    },
+    {
+        "id": 216,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "SD3\\InstantX-Controlnet-Tile\\diffusion_pytorch_model.safetensors"
+        }
+    },
+    {
+        "id": 239,
+        "name": "CR Upscale Image",
+        "prompts": {
+            "text": "4x_NMKD-UltraYandere_300k.pth"
+        }
+    },
+    {
+        "id": 240,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 241,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 242,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 243,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 244,
+        "name": "BLIP Analyze Image",
+        "prompts": {
+            "text": "What does the background consist of?"
+        }
+    },
+    {
+        "id": 252,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "a woman in a black dress holding a rose and a dragon on the back of her back is a black dragon with a red rose in her hand and a white background is in the back is the background is a white sky is a gray"
+        }
+    },
+    {
+        "id": 254,
+        "name": "BLIP Model Loader",
+        "prompts": {
+            "text": "Salesforce/blip-image-captioning-base",
+            "text_2": "Salesforce/blip-vqa-base"
+        }
+    },
+    {
+        "id": 255,
+        "name": "chaosaiart_TextCLIPEncode"
+    },
+    {
+        "id": 256,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 258,
+        "name": "LatentUpscaleBy",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    }
+]

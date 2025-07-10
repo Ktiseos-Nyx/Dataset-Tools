@@ -1,0 +1,73 @@
+[
+    {
+        "id": "194136ba-1f9f-4e73-a4cc-bc872f693ee8",
+        "name": "Demo Contronet"
+    },
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "analogMadnessSDXL_sdxlV10.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "1girl,sitting on a bench,"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text, watermark"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 10,
+        "name": "DWPreprocessor",
+        "prompts": {
+            "text": "yolox_l.onnx",
+            "text_2": "dw-ll_ucoco_384_bs5.torchscript.pt"
+        }
+    },
+    {
+        "id": 11,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "Sitting_example (1).png"
+        }
+    },
+    {
+        "id": 12,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 13,
+        "name": "ControlNetApply"
+    },
+    {
+        "id": 14,
+        "name": "DiffControlNetLoader",
+        "prompts": {
+            "text": "t2i-adapter-openpose-sdxl-1.0.safetensors"
+        }
+    }
+]

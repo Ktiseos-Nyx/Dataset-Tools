@@ -1,0 +1,98 @@
+[
+    {
+        "id": 12,
+        "name": "Reroute"
+    },
+    {
+        "id": 52,
+        "name": "Reroute"
+    },
+    {
+        "id": 57,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 58,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 59,
+        "name": "Reroute"
+    },
+    {
+        "id": 111,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 112,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Eyes.pt"
+        }
+    },
+    {
+        "id": 114,
+        "name": "JjkText"
+    },
+    {
+        "id": 115,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "((masterpiece,best quality)), absurdres, hex maniac (pokemon),   long hair, ahoge, purple hairband, purple eyes, @_@, long black dress,  smile, looking at viewer, cowboy shot,\nhead tilt, full moon, graveyard, open mouth,\nhands behind back,"
+        }
+    },
+    {
+        "id": 116,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "thing, leg, negative_hand-neg, ng_deepnegative_v1_75t, verybadimagenegative_v1.3, EasyNegativeV2"
+        }
+    },
+    {
+        "id": 118,
+        "name": "JjkText",
+        "prompts": {
+            "text": "(shiny glossy lips, thick lips:1.1)"
+        }
+    },
+    {
+        "id": 119,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 120,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "((masterpiece,best quality)), absurdres, hex maniac (pokemon),   long hair, ahoge, purple hairband, purple eyes, @_@, long black dress,  smile, looking at viewer, cowboy shot,\nhead tilt, full moon, graveyard, open mouth,\nhands behind back,"
+        }
+    },
+    {
+        "id": 121,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/lips_v1.pt"
+        }
+    },
+    {
+        "id": 124,
+        "name": "Reroute"
+    },
+    {
+        "id": 126,
+        "name": "Reroute"
+    },
+    {
+        "id": 127,
+        "name": "Reroute"
+    },
+    {
+        "id": 128,
+        "name": "JjkText",
+        "prompts": {
+            "text": "(long eyelashes, mascara:1.1), eyeliner, blue eyes, "
+        }
+    }
+]

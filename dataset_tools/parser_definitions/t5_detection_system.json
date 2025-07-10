@@ -1,11 +1,15 @@
 {
   "parser_name": "ComfyUI_T5_Architecture",
-  "priority": 190,
+  "priority": 200,
   "description": "Advanced T5-based model architecture detection for SD3, Flux, PixArt, AuraFlow, and HunyuanDiT",
   "version": "3.0",
   "maintainer": "Ktiseos Nyx",
-  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
-
+  "target_file_types": [
+    "PNG",
+    "JPEG",
+    "JPG",
+    "WEBP"
+  ],
   "detection_rules": [
     {
       "comment": "Rule 1: PNG format - Must have prompt chunk with valid JSON and T5 signatures",
@@ -94,17 +98,27 @@
       ]
     }
   ],
-
   "parsing_instructions": {
     "input_data": {
       "source_options": [
-        {"source_type": "pil_info_key", "source_key": "workflow"},
-        {"source_type": "pil_info_key", "source_key": "prompt"},
-        {"source_type": "exif_user_comment"}
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
       ],
-      "transformations": [{"type": "json_decode_string_itself"}]
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
     },
-
     "fields": [
       {
         "target_key": "prompt",
@@ -228,7 +242,10 @@
           "T5v11Loader"
         ],
         "input_field": "clip_name1",
-        "fallback_fields": ["ckpt_name", "pytorch_model-00001-of-00002.bin"],
+        "fallback_fields": [
+          "ckpt_name",
+          "pytorch_model-00001-of-00002.bin"
+        ],
         "data_type": "string",
         "fallback": "Unknown T5 Model",
         "comment": "Extract T5 model name from various T5-capable loaders"
@@ -277,9 +294,43 @@
         "method": "direct_value",
         "value": "T5 Architecture",
         "comment": "Mark this as T5 architecture (could be SD3, FLUX, PixArt, etc.)"
+      },
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis",
+        "target_key": "workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "multi_stage_conditioning",
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
       }
     ],
-
     "output_template": {
       "tool": "ComfyUI (T5 Architecture)",
       "prompt": "$prompt",
@@ -297,7 +348,13 @@
       },
       "architecture_info": {
         "detected_as": "T5-based architecture",
-        "supports": ["SD3", "Flux", "PixArt", "Dual CLIP", "T5 text encoding"]
+        "supports": [
+          "SD3",
+          "Flux",
+          "PixArt",
+          "Dual CLIP",
+          "T5 text encoding"
+        ]
       },
       "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
       "_metadata": {
@@ -307,11 +364,12 @@
       }
     }
   },
-
   "notes": [
     "Updated to current MetadataEngine format",
     "Detects T5-based architectures like SD3, Flux, PixArt",
     "Handles dual CLIP loaders and T5 text encoding",
     "Modern multi-encoder architecture support"
-  ]
+  ],
+  "enhanced_with_node_discovery": true,
+  "enhancement_date": "2025-07-08"
 }

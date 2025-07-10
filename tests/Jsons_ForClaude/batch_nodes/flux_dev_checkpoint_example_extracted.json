@@ -1,0 +1,47 @@
+[
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "cute anime girl with massive fluffy fennec ears and a big fluffy tail blonde messy long hair blue eyes wearing a maid outfit with a long black gold leaf pattern dress and a white apron mouth open placing a fancy black forest cake with candles on top of a dinner table of an old dark Victorian mansion lit by candlelight with a bright window to the foggy forest and very expensive stuff everywhere there are paintings on the walls"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 27,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 30,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 31,
+        "name": "KSampler"
+    },
+    {
+        "id": 33,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 34,
+        "name": "Note",
+        "prompts": {
+            "text": "Note that Flux dev and schnell do not have any negative prompt so CFG should be set to 1.0. Setting CFG to 1.0 means the negative prompt is ignored."
+        }
+    },
+    {
+        "id": 35,
+        "name": "FluxGuidance"
+    }
+]

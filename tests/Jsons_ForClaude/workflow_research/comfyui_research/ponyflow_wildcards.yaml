@@ -1,0 +1,497 @@
+f:
+    # Hair, Face, Eyes
+    person:
+        preset:
+            black: |-
+                1girl, black hair, straight hair, medium hair, hair over one eye, blue eyes
+            brown: |-
+                1girl, gorgeous girl, kawaii girl, cute face, 
+                (black hair:1.15), long hair, bangs, (hair over one eye, one_eye_covered,:1.2), 
+                (brown eyes:1.2), freckles, mascara,
+            blonde: |-
+                1girl, blonde hair, straight hair, long hair, hair over one eye, blue eyes
+            blonde2: |- 
+                1girl, (blonde hair:1.2), long hair, 
+                (bangs, hair over one eye:1.2), blue eyes,
+        rando: |-
+            1girl, 
+            __f/hair/rando__,
+            __f/eyecolor/normal__ eyes,
+            {__f/makeup/rando__|},
+        # __f/face/mod__,
+    face:
+        mod:
+            - gorgeous girl, kawaii girl, cute face
+            - '{gorgeous girl,|} {kawaii girl,|} {cute face|}'
+            - goth girl, makeup, pale skin
+    hair:
+        rando: |-
+            (__f/hair/color__:1.2), __f/hair/length__, 
+            ({1-2$$, $$hair over one eye|bangs|straight hair|wavy hair|floating hair, wind}:1.2)
+        mod:
+            - hair over one eye
+            - bangs
+            - straight hair
+            - wavy hair
+        length:
+            - short hair, bob cut
+            - medium hair
+            - long hair, {ponytail|}
+            - long hair, absurdly long hair
+        color:
+            - blonde hair
+            - brown hair
+            - black hair
+            - ginger hair
+    makeup:
+        rando:
+            - __f/makeup/eyes__
+            - __f/makeup/lips__
+        eyes:
+            - eyeliner
+            - mascara
+            - eyelashes
+            - eyeshadow
+        lips:
+            - lipstick
+    skin:
+        rando: |-
+            Natural skin, detailed skin, 
+            ({freckles on face,|} {freckles on chest,|} {freckles on breasts|}:{0|0.3|0.7})
+    eyecolor:
+        normal:
+            - blue
+            - brown
+            - green
+        any:
+            - __f/eyecolor/normal__
+            - pink
+            - purple
+            - red
+    # Body, no nipples or NSFW implied tags
+    body:
+        thicc:
+            (curvy, wide hips, belly,:1.2) thick thighs, (huge breasts, sagging breasts:1)
+        mid: |-
+            (wide hips, curvy:1.3), narrow waist, toned, 
+            large breasts, sagging breasts
+        tiny: |-
+            (wide hips, narrow waist:1.3), skinny, toned, hip bones, (petite:1.1),
+            (small breasts, medium breasts:0.9),
+            (wide hips, narrow waist:1.1), skinny, toned,
+    # Uncomment this section for more advanced body control.
+    # These loras are created by: https://civitai.com/user/klaabu/models
+    # bodylora:
+    #     preset:
+    #         perfect: |-
+    #             <lora:body_weight_slider_v1:-0.5>,
+    #             <lora:Breast Size Slider:0.7> large medium breasts,
+    #             <lora:natural_breasts_v1:1> sagging breasts, perky breasts,
+    #             <lora:ThiccPonyXL_V1:0.8> wide hips,
+    #     rando: |-
+    #         __f/bodylora/body-slider/*__,
+    #         __f/bodylora/breast-slider/*__,
+    #         __f/bodylora/milf-slider/*__,
+    #     # __f/bodylora/natural-slider/*__,
+    #     # __f/bodylora/thicc-slider/*__,
+    #     thicc-slider:
+    #         slim: <lora:ThiccPonyXL_V1:-0.2>
+    #         mid: <lora:ThiccPonyXL_V1:0.5> wide hips
+    #     breast-slider:
+    #         small: <lora:Breast Size Slider:-0.1> medium breasts,
+    #         medium-small: <lora:Breast Size Slider:0.5> small breasts,
+    #         medium: <lora:Breast Size Slider:0.5> medium breasts,
+    #     natural-slider:
+    #         none: ''
+    #         slight-sag: <lora:natural_breasts_v1:1> sagging breasts
+    #         sag: <lora:natural_breasts_v1:2> sagging breasts
+    #     body-slider:
+    #         slim: <lora:body_weight_slider_v1:-0.5>
+    #         mid: <lora:body_weight_slider_v1:1>
+    #     milf-slider:
+    #         younger: <lora:milf_slider_v1:-0.5>
+    #         neutral: <lora:milf_slider_v1>
+    ass:
+        thicklora: |-
+            ass, {thick thighs|}, big ass, wide hips, narrow waist, gluteal fold,
+    pussy:
+        innie: |-
+            pussy, {(female pubic hair:0.6),|} fat_mons,
+    nipples:
+        perfect: |-
+            puffy nipples
+        # perfect: |-
+        #     <lora:pony6/NippleSizeSlider_V1:-5> {puffy nipples,|}
+    places:
+        modeling:
+            - bedroom, bed, {pillow|}
+            - locker room, locker, bench
+    emotion:
+        modeling:
+            - happy, smile, {__f/emotion/blush__,|} {__f/emotion/eyebrows__|}
+            - light smile, closed mouth
+            - expressionless
+            - __f/emotion/seductive__
+            - __f/emotion/none__
+            - (half closed eyes:1.2), (sleepy:1.1), tired, cute smile
+            - happy, nervous, embarrased, __f/emotion/blush__
+            - seductive smile, __f/emotion/blush__
+        surprise: 
+            - surprised, wide-eyed, blush, full-face blush, raised eyebrows
+        sexual:
+            - __f/emotion/surprise__
+            - raised eyebrows, parted lips, eyes closed, female orgasm
+            - embarrassed, (biting own lip:1.4), blushing, 
+            - blush, full-face blush, female orgasm, open mouth, raised eyebrows, rolling eyes
+            - fucked_silly, (biting own lip:1.4), blush, saliva, (rolling eyes:1.2), half-closed eyes, one eye closed, (smiling:0.85),
+        sexual2:
+            - raised eyebrows, {parted lips|open mouth}, eyes closed, female orgasm
+            - blush, full-face blush, female orgasm, open mouth, raised eyebrows, rolling eyes
+        seductive:
+            - bored eyes, lewd smirk, happy, smug expression, lowered eyelids, v-shaped eyebrows
+            - seductive smile, naughty face
+            - smug, __f/emotion/blush__
+        eyebrows:
+            - raised eyebrows
+            - raised eyebrow
+        none:
+            - ''
+        blush:
+            - blush
+            - blush, full-face blush
+            - blush, nose blush
+    nudity:
+        nude-front-full:
+            - __f/nudity/nude-front__, __f/pussy/innie__
+        nude-front:
+            - nude, __f/nipples/perfect__
+        optional-front:
+            - __f/nudity/nude-front__
+            - __f/nudity/dressed-front__
+        dressed-front:
+            - __f/c/full__
+    # What the character is doing
+    scene:
+        modeling-breasts-closeup: |-
+            (breast focus, close up,:1.3)
+            {(head_out_of_frame:1.2)|},
+            (__f/camera/front-any-noweight__:1.4),
+            __f/nudity/nude-front__,
+            (navel, stomach:1.3),
+            {(lying, on back, breasts apart:1.1)|},
+            {__f/sceneparts/modeling-arms__|}
+        # no clothes or nudity reference
+        modeling-plain: |-
+            __f/focus/solo-breast__,
+            (__f/looking/rando__:1.2),
+            __f/emotion/modeling__,
+            __f/sceneparts/modeling-poses__,
+        # __f/camera/front-any-noweight__,
+        modeling-clothed: |-
+            __f/focus/solo-breast__,
+            (__f/looking/rando__:1.2),
+            __f/nudity/dressed-front__,
+            __f/emotion/modeling__,
+            __f/sceneparts/modeling-poses__,
+        # __f/camera/front-any__,
+        modeling-nude: |-
+            __f/focus/solo-breast__,
+            (__f/looking/rando__:1.2),
+            __f/nudity/nude-front__,
+            __f/emotion/modeling__,
+            __f/sceneparts/modeling-poses__,
+        # __f/camera/front-any__,
+        hanging: |-
+            __f/focus/solo-breast__,
+            __f/camera/front-any-high__,
+            (__f/looking/rando__:1.2),
+            {__f/nudity/nude-front__|__f/nudity/dressed-front__, (downblouse, no bra:1.3)}
+            (leaning forward, hanging breasts:1.3), ({kneeling|sitting|standing|all fours}:1.2)
+            {__f/sceneparts/modeling-arms__|}
+        modeling-rear: |-
+            __f/focus/ass__,
+            __f/camera/rear-below__,
+            __f/ass/thicklora__,
+            {{looking back, __f/looking/rando__}, {__f/emotion/modeling__|__f/emotion/sexual__}|},
+            ({bent over|top-down bottom-up, {wide spread legs|}, {hands on ground|}, {all fours|}|lying, on stomach, {the pose|},|standing},:1.2)
+            {grabbing own ass|}, {presenting ass|}, {ass support|}, {upskirt, {ass peek|}|},
+            {anus, __f/pussy/innie__,|cameltoe, __f/c/lower/sexy__}
+        caught-undressing: |-
+            __f/focus/solo-breast__,
+            __f/camera/front-any__,
+            __f/emotion/modeling__,
+            __f/sceneparts/exposure__,
+            looking at viewer,
+        mirror-selfie: |-
+            __f/focus/solo-breast__,
+            __f/nudity/optional-front__,
+            __f/camera/front-any__,
+            __f/sceneparts/modeling-body__,
+            {__f/emotion/modeling__|},
+            (selfie:1.2), {mirror selfie, smartphone, cellphone, mirror, reflection, {smudged mirror|dirty mirror|}|}
+        in-bed: |-
+            __f/focus/front__,
+            __f/camera/front-any-high__,
+            (__f/looking/rando__:1.2),
+            {__f/nudity/nude-front-full__|__f/nudity/dressed-front__},
+            (lying, on back,:1.1)
+            (messy hair:0.7),
+            {__f/emotion/sexual__ {__f/cum/cum__, __f/cum/after/frontal__,|}|sleeping, closed eyes},
+            {__f/sceneparts/modeling-arms__,|}
+            {(__f/sceneparts/lying-legs__:1.2)|}
+            bed, pillow, on bed, bed sheet, head on pillow
+        in-bed-sex-behind: |-
+            __f/looking/rando__,
+            {__f/camera/rear-any__, looking back, {pov, pov penis, pov hands|}, __f/focus/ass__,
+            |__f/camera/front-any__, __f/nipples/perfect__, __f/focus/front__, 1boy, man's face out of frame},
+            {bed, pillow, on bed, bed sheet,|}
+            __f/emotion/sexual__,
+            penis, {grabbing another's ass|hip grab|},
+            {
+            (sex, anal, sex from behind, {__f/cum/cum__, cum in ass, {cum overflow|}|}:1.2),
+            |(penis on ass, {buttjob|}, __f/cum/cum__, cum on back:1.2)
+            },
+            (ass, {huge ass,|}, {wide hips|}, {thick thighs|}:1.2),
+            {(bound, bound arms, arms behind back, bondage, bdsm, {gag, gagged|}, {bound thighs|}, {leash|}:1.2)|||},
+            (arched_back, {all fours|top-down_bottom-up|doggystyle}, sweat, shiny skin:1.2),
+            {thighhighs|},
+            {nude|{black {thong|g-string}|lingerie|white panties}, {lowleg panties|}, {panties aside|panties around one leg|panty pull}|},
+        penis-in-face: |-
+            (profile, from side, looking up, head back, looking at another:1.4)
+            __f/nudity/optional-front__,
+            penis, {large|huge} penis, testicles,
+            ({handjob,|caressing_testicles, testicle grab,} licking penis,:1.3)
+            {(smeared makeup:0.6),|}
+            (blush, full face blush, {saliva,|} {raised eyebrows|}:1.2),
+            {(hand_on_another's_head, head grab:1.2)|}
+            {__f/cum/facial__|}
+        masturbating: |-
+            (__f/emotion/sexual2__:1.2),
+            nude, __f/nipples/perfect__, 
+            __f/pussy/innie__, pussy juice, pussy focus,
+            female masturbation, fingering, 
+            (lying, {on back|on side}, spread legs, {legs up|one leg up},:1.2)
+            ({grabbing_own_breast|arm behind head|}:1.2),
+            {panties, panties aside|},
+            {bed|couch|floor},
+            ({from below,|from above,|} {close up,|}:1.2)
+        flashing: |-
+            __f/camera/front-any__,
+            (__f/looking/rando__:1.2),
+            __f/nipples/perfect__,
+            (flashing, {shirt|bra|clothes} {lift|pull},:1.2)
+            ({breasts exposed|one breast out}:1.2)
+            ({happy, nervous, embarrased, blush|seductive smile, blush|happy, nervous, embarrased, blush, half closed eyes, cute smile}:1.2)
+    sceneparts:
+        modeling-poses: |-
+            __f/sceneparts/modeling-body__,
+            (__f/sceneparts/modeling-arms__:1.2)
+        modeling-body:
+            - standing,
+            - standing, leaning forward,
+            - standing, contrapposto, thigh gap,
+            - standing, (legs apart:1.2),
+            - '{wariza|seiza}, sitting, kneeling, spread legs, feet,'
+            - 'yokozuwari, sitting, arm support, feet,'
+            - 'sitting, legs up, knees to chest, {hugging own legs,|} feet,'
+        modeling-arms:
+            - '{arm up|arms up}, {adjusting hair|stretching}'
+            - arms behind head
+            - arms behind back
+            - v arms, breasts squeezed together
+            - grabbing own breast, {breasts squeezed together|}
+            - hands on own chest
+            - '{covering breasts|covering privates, covering crotch}'
+            - hands on own hips
+            - hair twirl
+        lying-legs:
+            - leg up
+            - spread legs
+            - folded, knees to chest
+        exposure:
+            - covering breasts, __f/sceneparts/exposure-top__
+            - covering privates, covering crotch, __f/sceneparts/exposure-bottom__
+        exposure-top:
+            - no bra
+            - bra pull
+            - open clothes
+            - clothes lift
+        exposure-bottom:
+            - panties, __f/sceneparts/panties_optional__
+            - upskirt, skirt lift, __f/sceneparts/panties_optional__
+        panties_optional:
+            - panty pull, __f/pussy/innie__
+            - panties aside, __f/pussy/innie__
+            - __f/pussy/innie__
+        undressing:
+            - undressing, clothes lift, panties, panty pull, __f/nipples/perfect__
+            - undressing, bra pull, __f/nipples/perfect__
+        upskirt:
+            - upskirt, skirt lift, pussy, fat mons
+    c:
+        full:
+            - __f/c/lingirie-full-opts__ {, choker||}
+            - __f/c/full-opts__ {, choker||}
+        lingirie-full-opts:
+            - black thong, black thighhighs, black lace bra, __f/c/mod/cleavage__
+            - white thong, white thighhighs, white lace bra. __f/c/mod/cleavage__
+            - __f/c/upper/white-tshirt__, {__f/c/lower/white-shorts__|__f/c/lower/white-panties__}
+            - __f/c/individual/swim__
+            - black dress, strapless, strapless dress, taut_dress, {tube_dress|}, __f/c/mod/cleavage__
+        full-opts:
+            - ({victorian {lace|} fashion|goth fashion}, {choker,|}:1.2), __f/c/mod/cleavage__
+            - '{white dress|white shirt, oversized shirt, crop_top_overhang}, (see-through silhouette:1.2), no bra, (no nipples:1.2)'
+            - black dress, strapless, strapless dress, taut_dress, {tube_dress|}, __f/c/mod/cleavage__
+            - __f/c/upper/sexy__, __f/c/lower/sexy__
+            - fishnet bodysuit, __f/nipples/perfect__
+            - sundress, __f/c/mod/cleavage__, {upskirt|}
+            - __f/c/individual/swim__
+            - open wool knitted full bodysuit, __f/c/mod/cleavage__
+            - black thong, black thighhighs, black lace bra, __f/c/mod/cleavage__
+            - white thong, white thighhighs, white lace bra. __f/c/mod/cleavage__
+            - __f/c/upper/white-tshirt__, {__f/c/lower/white-shorts__|__f/c/lower/white-panties__}
+        upper:
+            sexy:
+                - tight shirt, white shirt, __f/c/mod/croptop__, (covered nipples:0.7)
+                - hoodie, {__f/c/mod/cleavage__|downblouse|__f/c/mod/croptop__},
+            white-tshirt:
+                - (white t-shirt,:1.2) __f/c/mod/croptop__, (covered nipples:0.3),
+        lower:
+            sexy:
+                - thong, highleg panties
+                - skirt, miniskirt
+                - panties
+                - g-string
+            white-shorts:
+                - (white cotton shorts, micro shorts, taut shorts:1.3),
+            white-panties:
+                - (white cotton panties, __f/c/mod/panties__:1.3),
+        mod:
+            panties:
+                - lowleg panties
+                - highleg panties
+                - high-waist panties
+            underboob:
+                - (underboob:1.2)
+            croptop:
+                - crop top, crop top overhang, midriff, __f/c/mod/underboob__
+            cleavage: |-
+                cleavage, {bursting breasts|}, skindentation, {breasts_squeezed_together|}, {impossible clothes|taut_clothes|undersized clothes|}
+        individual:
+            swim: 
+                - __f/color__ bikini, {micro bikini|}, __f/c/mod/cleavage__
+                - __f/color__ tube top, bikini bottoms, __f/c/mod/cleavage__
+                - __f/color__ one-piece swimsuit, {casual one-piece swimsuit,|} __f/c/mod/cleavage__
+        scene:
+            water:
+                - __f/c/scene/ocean__
+                - __f/c/scene/pool__
+            pool:
+                - __f/c/individual/swim__, pool, outdoors, {(tanlines:0.5),|} {(wet:0.5),|}
+            ocean:
+                - __f/c/individual/swim__, ocean, beach, {(tanlines:0.5),|} {(wet:0.5),|}
+    colortheme:
+        - blue theme
+        - pink theme
+        - red theme
+        - purple theme
+        - green theme
+        - yellow theme
+        - orange theme
+        - white theme
+        - aqua theme
+    color:
+        - blue
+        - pink
+        - red
+        - purple
+        - green
+        - yellow
+        - orange
+        - white
+        - aqua
+    cum:
+        cum: cum
+        amount: excessive cum
+        somecum: cum, {excessive cum,|}
+        facial: |-
+            __f/cum/cum__, {__f/cum/after/head__}
+        after:
+            frontal:
+                - __f/cum/after/pussy__
+                - __f/cum/after/body-front__
+                - facial
+            behind:
+                - __f/cum/after/back__
+                - __f/cum/after/ass__
+            pussy:
+                - cum in pussy, {cumdrip|},
+            body-front:
+                - cum on body
+                - cum on breasts
+                - cum on stomach
+            ass:
+                - cum in ass
+                - cum on ass
+            back:
+                - cum on back
+            head:
+                - cum on hair
+                - facial
+            mouth:
+                - cum in mouth
+                - cum on tongue
+        during:
+            pussy:
+                - cum in pussy, {cum overflow|}
+    fit:
+        upper:
+            nsfw: 
+                - lingerie, royal lingerie, lace choker
+    looking:
+        rando:
+            - __f/looking/at-viewer__
+            - __f/looking/at-viewer__, __f/looking/sideways__
+            - __f/looking/away__
+        away:
+            - __f/looking/at-viewer__
+            - __f/looking/down__
+            - __f/looking/up__
+            - __f/looking/side__
+            - __f/looking/ahead__
+            - __f/looking/averting__
+        at-viewer: looking at viewer
+        down: looking down
+        up: looking up
+        side: looking to the side
+        ahead: looking ahead, looking afar
+        averting: averting eyes
+        sideways: sideways glance
+    camera:
+        front: from front
+        side: from side
+        rear: from rear
+        above: from above
+        below: from below
+        closeup: close-up
+        front-any-high: |-
+            ({from front|from side|from front, from side}, {from above|}, {close-up|}:1.2)
+        front-any: |-
+            ({from front|from side|from front, from side}, {from above|from below|}, {close-up|}:1.2)
+        front-any-noweight: |-
+            {from front|from side|from front, from side}, {from above|from below|}, {close-up|}
+        rear-any: |-
+            ({from behind|from behind, from side}, {from above|from below|}, {close-up|}:1.2)
+        rear-below: |-
+            ({from behind|from behind, from side}, {from below|}, {close-up|}:1.2)
+    focus:
+        solo: solo focus
+        ass: (ass focus:1.2)
+        foot: foot focus
+        eye: eye focus
+        breast: breast focus
+        pussy: pussy focus
+        solo-breast: 
+            - solo focus
+            - breast focus
+        front: '{solo focus|breast focus|pussy focus}'

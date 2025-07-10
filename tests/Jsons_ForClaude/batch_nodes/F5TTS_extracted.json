@@ -1,0 +1,29 @@
+[
+    {
+        "id": 3,
+        "name": "Audio EN"
+    },
+    {
+        "id": 5,
+        "name": "Audio FR"
+    },
+    {
+        "id": 15,
+        "name": "F5TTSAudio",
+        "prompts": {
+            "text": "elfLady.wav",
+            "text_2": "Now, I\u2019ve always wanted an easier to use frontend experience for my image to image workflows. Let me show you how to use an open web u-i tool to easily send any image U-R-L to comfie."
+        }
+    },
+    {
+        "id": 37,
+        "name": "PreviewAudio"
+    },
+    {
+        "id": 38,
+        "name": "SaveAudio",
+        "prompts": {
+            "text": "audio/techno"
+        }
+    }
+]

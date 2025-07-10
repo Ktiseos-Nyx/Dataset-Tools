@@ -1,0 +1,408 @@
+[
+    {
+        "id": 1,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "\u0425\u0440\u0438\u0441\u0442\\deliberate_v3.safetensors"
+        }
+    },
+    {
+        "id": 2,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 6,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 10,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 13,
+        "name": "ImageScale"
+    },
+    {
+        "id": 37,
+        "name": "LoadImage"
+    },
+    {
+        "id": 126,
+        "name": "CR Integer Multiple"
+    },
+    {
+        "id": 127,
+        "name": "CR Integer Multiple"
+    },
+    {
+        "id": 129,
+        "name": "Reroute"
+    },
+    {
+        "id": 131,
+        "name": "Reroute"
+    },
+    {
+        "id": 132,
+        "name": "Reroute"
+    },
+    {
+        "id": 135,
+        "name": "Reroute"
+    },
+    {
+        "id": 165,
+        "name": "Text Concatenate"
+    },
+    {
+        "id": 166,
+        "name": "DPRandomGenerator",
+        "prompts": {
+            "text": ", (__1\\noun-fantasy__:1.2), "
+        }
+    },
+    {
+        "id": 173,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 174,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/\u0422\u0435\u043b\u043e\\person_yolov8m-seg.pt"
+        }
+    },
+    {
+        "id": 176,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 177,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/\u041e\u0434\u0435\u0436\u0434\u0430\\deepfashion2_yolov8s-seg.pt"
+        }
+    },
+    {
+        "id": 182,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 183,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/\u0420\u0443\u043a\u0438\\hand_yolov8s.pt"
+        }
+    },
+    {
+        "id": 184,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 185,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 186,
+        "name": "Reroute"
+    },
+    {
+        "id": 187,
+        "name": "Reroute"
+    },
+    {
+        "id": 188,
+        "name": "Reroute"
+    },
+    {
+        "id": 189,
+        "name": "Reroute"
+    },
+    {
+        "id": 190,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/\u0413\u0440\u0443\u0434\u044c\\female_breast_v2.pt"
+        }
+    },
+    {
+        "id": 191,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/\u0413\u0435\u043d\u0438\u0442\u0430\u043b\u0438\u0438\\pussyV2.pt"
+        }
+    },
+    {
+        "id": 196,
+        "name": "ImpactWildcardProcessor",
+        "prompts": {
+            "text": ", (extremely detailed 8k wallpaper), ",
+            "text_2": ", (extremely detailed 8k wallpaper), "
+        }
+    },
+    {
+        "id": 204,
+        "name": "CR SD1.5 Aspect Ratio",
+        "prompts": {
+            "text": "3:4 portrait 512x682"
+        }
+    },
+    {
+        "id": 216,
+        "name": "BNK_CLIPTextEncodeAdvanced"
+    },
+    {
+        "id": 217,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_2m_sde_gpu"
+        }
+    },
+    {
+        "id": 225,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 236,
+        "name": "ModelMergeSimple"
+    },
+    {
+        "id": 238,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "\u041e\u0441\u043e\u0431\u044b\u0435\\picx_10.safetensors"
+        }
+    },
+    {
+        "id": 251,
+        "name": "CLIPMergeSimple"
+    },
+    {
+        "id": 255,
+        "name": "CR LoRA Stack",
+        "prompts": {
+            "text": "add_detail.safetensors"
+        }
+    },
+    {
+        "id": 257,
+        "name": "CR Apply LoRA Stack"
+    },
+    {
+        "id": 259,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 260,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/\u0413\u0443\u0431\u044b\\lips_v1.pt"
+        }
+    },
+    {
+        "id": 265,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "t2iadapter_zoedepth_sd15v1.pth"
+        }
+    },
+    {
+        "id": 266,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 283,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 285,
+        "name": "Zoe-DepthMapPreprocessor"
+    },
+    {
+        "id": 286,
+        "name": "VAE Input Switch"
+    },
+    {
+        "id": 297,
+        "name": "Random Number"
+    },
+    {
+        "id": 312,
+        "name": "Text to Conditioning"
+    },
+    {
+        "id": 313,
+        "name": "Text to Conditioning"
+    },
+    {
+        "id": 321,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "(Illustrate the interior of an ancient mummy's tomb)  Masterpiece, the best quality, girl,  (in the style of Boris Vallejo)  \n, (extremely detailed 8k wallpaper), \n, (Undead:1.2), "
+        }
+    },
+    {
+        "id": 338,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "vae-ft-mse-840000-ema-pruned.safetensors"
+        }
+    },
+    {
+        "id": 339,
+        "name": "Reroute"
+    },
+    {
+        "id": 350,
+        "name": "DetailerForEachPipe",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 354,
+        "name": "DetailerForEachPipe",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 361,
+        "name": "DetailerForEachPipe",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 362,
+        "name": "DetailerForEachPipe",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 363,
+        "name": "DetailerForEachPipe",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 364,
+        "name": "DetailerForEachPipe",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 372,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 403,
+        "name": "UltimateSDUpscale",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 404,
+        "name": "FromBasicPipe"
+    },
+    {
+        "id": 405,
+        "name": "Upscale Model Switch"
+    },
+    {
+        "id": 406,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x\\4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 410,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "SwinIR\\4\u0445\\003_realSR_BSRGAN_DFOWMFC_s64w8_SwinIR-L_x4_GAN.pth"
+        }
+    },
+    {
+        "id": 416,
+        "name": "Random Number"
+    },
+    {
+        "id": 417,
+        "name": "UltimateSDUpscaleNoUpscale"
+    },
+    {
+        "id": 424,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 430,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 431,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/\u0413\u043b\u0430\u0437\u0430\\Eyes.pt"
+        }
+    },
+    {
+        "id": 432,
+        "name": "DetailerForEachPipe",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 433,
+        "name": "FreeU"
+    },
+    {
+        "id": 434,
+        "name": "FaceDetailerPipe",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 436,
+        "name": "ToDetailerPipe",
+        "prompts": {
+            "text": "Select the LoRA to add to the text",
+            "text_2": "Select the Wildcard to add to the text"
+        }
+    },
+    {
+        "id": 438,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/\u041b\u0438\u0446\u043e\\face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 439,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 454,
+        "name": "ComfyUIStyler",
+        "prompts": {
+            "text": "Masterpiece, the best quality, girl, ",
+            "text_2": "Deformed, distorted, disfigured:1.3), poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, (mutated hands and fingers:1.4), disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation"
+        }
+    },
+    {
+        "id": 455,
+        "name": "Image Save",
+        "prompts": {
+            "text": "[time(%Y-%m-%d)]"
+        }
+    }
+]

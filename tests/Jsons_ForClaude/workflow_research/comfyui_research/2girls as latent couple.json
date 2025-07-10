@@ -1,0 +1,1536 @@
+{
+  "last_node_id": 135,
+  "last_link_id": 426,
+  "nodes": [
+    {
+      "id": 77,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -843,
+        199
+      ],
+      "size": {
+        "0": 210,
+        "1": 96
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 211,
+          "slot_index": 0
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 212,
+          "widget": {
+            "name": "text"
+          },
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            210
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "2girls taking selfie, looking at viewer , upper body , schoolgirls, schoolgirl uniform, detailed background, class room, masterpiece , best quality , ultra quality, blonde hair , small breasts , twin tails, grin"
+      ]
+    },
+    {
+      "id": 74,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -815,
+        -93
+      ],
+      "size": {
+        "0": 210,
+        "1": 96
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 202
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 201,
+          "widget": {
+            "name": "text"
+          },
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            203
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "2girls taking selfie, looking at viewer , upper body , schoolgirls, schoolgirl uniform, detailed background, class room, masterpiece , best quality , ultra quality\n, black long hair , gigantic sagging breasts, embarrassed face"
+      ]
+    },
+    {
+      "id": 99,
+      "type": "MaskToImage",
+      "pos": [
+        -34,
+        638
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 310
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            313
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskToImage"
+      }
+    },
+    {
+      "id": 100,
+      "type": "MaskToImage",
+      "pos": [
+        -38,
+        249
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 311
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            314
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskToImage"
+      }
+    },
+    {
+      "id": 101,
+      "type": "MaskToImage",
+      "pos": [
+        -15,
+        -78
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 329
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            328
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskToImage"
+      }
+    },
+    {
+      "id": 21,
+      "type": "EmptyLatentImage",
+      "pos": [
+        1395.087179101563,
+        -294.21492105712895
+      ],
+      "size": {
+        "0": 295.7807922363281,
+        "1": 106
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            187
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "title": "Image Size\n",
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        640,
+        768,
+        1
+      ]
+    },
+    {
+      "id": 108,
+      "type": "ConditioningCombine",
+      "pos": [
+        466,
+        -226
+      ],
+      "size": {
+        "0": 262.70489501953125,
+        "1": 52.018310546875
+      },
+      "flags": {},
+      "order": 25,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning_1",
+          "type": "CONDITIONING",
+          "link": 342
+        },
+        {
+          "name": "conditioning_2",
+          "type": "CONDITIONING",
+          "link": 343
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            344
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConditioningCombine"
+      }
+    },
+    {
+      "id": 103,
+      "type": "PreviewImage",
+      "pos": [
+        524,
+        247
+      ],
+      "size": [
+        140,
+        246
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 314
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 102,
+      "type": "PreviewImage",
+      "pos": [
+        518,
+        643
+      ],
+      "size": [
+        140,
+        246
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 313
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 48,
+      "type": "CLIPSetLastLayer",
+      "pos": [
+        -747,
+        -496
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 424
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            125,
+            202,
+            211,
+            232
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPSetLastLayer"
+      },
+      "widgets_values": [
+        -2
+      ]
+    },
+    {
+      "id": 82,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -747,
+        -316
+      ],
+      "size": {
+        "0": 210,
+        "1": 96
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 232
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 233,
+          "widget": {
+            "name": "text"
+          },
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            234
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "2girls taking selfie, looking at viewer , upper body , schoolgirls, schoolgirl uniform, detailed background, class room, masterpiece , best quality , ultra quality"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -790,
+        683
+      ],
+      "size": {
+        "0": 210,
+        "1": 54
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 125
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 22,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            25
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "((embedding:EasyNegative):1.2)\n(monochrome:1)"
+      ]
+    },
+    {
+      "id": 93,
+      "type": "SolidMask",
+      "pos": [
+        -830,
+        -260
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            329,
+            330
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SolidMask"
+      },
+      "widgets_values": [
+        0.1,
+        640,
+        768
+      ]
+    },
+    {
+      "id": 71,
+      "type": "SolidMask",
+      "pos": [
+        -820,
+        20
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            241,
+            242
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SolidMask"
+      },
+      "widgets_values": [
+        0,
+        640,
+        768
+      ]
+    },
+    {
+      "id": 65,
+      "type": "MaskComposite",
+      "pos": [
+        -430,
+        20
+      ],
+      "size": {
+        "0": 315,
+        "1": 126
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "destination",
+          "type": "MASK",
+          "link": 241,
+          "slot_index": 0
+        },
+        {
+          "name": "source",
+          "type": "MASK",
+          "link": 221,
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            198,
+            311
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskComposite"
+      },
+      "widgets_values": [
+        0,
+        0,
+        "add"
+      ]
+    },
+    {
+      "id": 72,
+      "type": "ConditioningSetMask",
+      "pos": [
+        -60,
+        40
+      ],
+      "size": {
+        "0": 317.4000244140625,
+        "1": 102
+      },
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 203
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 198
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            342
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConditioningSetMask"
+      },
+      "widgets_values": [
+        1,
+        "default"
+      ]
+    },
+    {
+      "id": 75,
+      "type": "ConditioningSetMask",
+      "pos": [
+        -30,
+        390
+      ],
+      "size": {
+        "0": 317.4000244140625,
+        "1": 102
+      },
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 210
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 206
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            343
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConditioningSetMask"
+      },
+      "widgets_values": [
+        1,
+        "default"
+      ]
+    },
+    {
+      "id": 76,
+      "type": "MaskComposite",
+      "pos": [
+        -420,
+        360
+      ],
+      "size": {
+        "0": 315,
+        "1": 126
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "destination",
+          "type": "MASK",
+          "link": 242,
+          "slot_index": 0
+        },
+        {
+          "name": "source",
+          "type": "MASK",
+          "link": 220,
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            206,
+            310
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskComposite"
+      },
+      "widgets_values": [
+        320,
+        0,
+        "add"
+      ]
+    },
+    {
+      "id": 131,
+      "type": "VAEDecode",
+      "pos": [
+        1416,
+        -415
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 393,
+          "slot_index": 0
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 426
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            417
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 106,
+      "type": "ConditioningCombine",
+      "pos": [
+        541,
+        -393
+      ],
+      "size": {
+        "0": 262.70489501953125,
+        "1": 52.018310546875
+      },
+      "flags": {},
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning_1",
+          "type": "CONDITIONING",
+          "link": 341,
+          "slot_index": 0
+        },
+        {
+          "name": "conditioning_2",
+          "type": "CONDITIONING",
+          "link": 344
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            346
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConditioningCombine"
+      }
+    },
+    {
+      "id": 105,
+      "type": "PreviewImage",
+      "pos": [
+        522,
+        -78
+      ],
+      "size": [
+        140,
+        246
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 328
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 79,
+      "type": "ConditioningSetMask",
+      "pos": [
+        -27,
+        -293
+      ],
+      "size": {
+        "0": 317.4000244140625,
+        "1": 102
+      },
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 234
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 330
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            341
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConditioningSetMask"
+      },
+      "widgets_values": [
+        0.1,
+        "default"
+      ]
+    },
+    {
+      "id": 17,
+      "type": "KSampler",
+      "pos": [
+        1034.198646269529,
+        -438.2473825939942
+      ],
+      "size": [
+        315,
+        262
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 425,
+          "slot_index": 0
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 346
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 25
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 187
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            393
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        351173373900362,
+        "randomize",
+        30,
+        8,
+        "euler",
+        "normal",
+        1
+      ]
+    },
+    {
+      "id": 135,
+      "type": "SaveImage",
+      "pos": [
+        1808,
+        -505
+      ],
+      "size": [
+        315,
+        270
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 417
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "%date:yyyy-MM-dd%/small/%date:hhmmss%_%KSampler.seed%"
+      ]
+    },
+    {
+      "id": 15,
+      "type": "PrimitiveNode",
+      "pos": [
+        -1283,
+        -345
+      ],
+      "size": {
+        "0": 402,
+        "1": 188
+      },
+      "flags": {
+        "collapsed": false
+      },
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            233
+          ],
+          "slot_index": 0,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "title": "Positive Prompt",
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        "2girls taking selfie, looking at viewer , upper body , schoolgirls, schoolgirl uniform, detailed background, class room, masterpiece , best quality , ultra quality"
+      ],
+      "color": "#232",
+      "bgcolor": "#353",
+      "shape": 4
+    },
+    {
+      "id": 4,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -1244,
+        -666
+      ],
+      "size": {
+        "0": 397,
+        "1": 98
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            425
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            424
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            426
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "pornmasterAnime_v4.safetensors"
+      ]
+    },
+    {
+      "id": 73,
+      "type": "SolidMask",
+      "pos": [
+        -801,
+        349
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            220,
+            221
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SolidMask"
+      },
+      "widgets_values": [
+        0.9,
+        320,
+        768
+      ]
+    },
+    {
+      "id": 16,
+      "type": "PrimitiveNode",
+      "pos": [
+        -1295,
+        514
+      ],
+      "size": {
+        "0": 400.7796630859375,
+        "1": 275.6554870605469
+      },
+      "flags": {
+        "collapsed": false
+      },
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            22
+          ],
+          "widget": {
+            "name": "text"
+          },
+          "slot_index": 0
+        }
+      ],
+      "title": "Negative Prompt",
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        "((embedding:EasyNegative):1.2)\n(monochrome:1)"
+      ],
+      "color": "#332922",
+      "bgcolor": "#593930",
+      "shape": 4
+    },
+    {
+      "id": 69,
+      "type": "PrimitiveNode",
+      "pos": [
+        -1291,
+        169
+      ],
+      "size": [
+        398.30029296875,
+        264.46600341796875
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            212
+          ],
+          "widget": {
+            "name": "text"
+          },
+          "slot_index": 0
+        }
+      ],
+      "title": "Positive Prompt",
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        "2girls taking selfie, looking at viewer , upper body , schoolgirls, schoolgirl uniform, detailed background, class room, masterpiece , best quality , ultra quality, blonde hair , small breasts , twin tails, grin"
+      ],
+      "color": "#232",
+      "bgcolor": "#353",
+      "shape": 4
+    },
+    {
+      "id": 68,
+      "type": "PrimitiveNode",
+      "pos": [
+        -1290,
+        -107
+      ],
+      "size": {
+        "0": 402,
+        "1": 188
+      },
+      "flags": {
+        "collapsed": false
+      },
+      "order": 8,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            201
+          ],
+          "widget": {
+            "name": "text"
+          },
+          "slot_index": 0
+        }
+      ],
+      "title": "Positive Prompt",
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        "2girls taking selfie, looking at viewer , upper body , schoolgirls, schoolgirl uniform, detailed background, class room, masterpiece , best quality , ultra quality\n, black long hair , gigantic sagging breasts, embarrassed face"
+      ],
+      "color": "#232",
+      "bgcolor": "#353",
+      "shape": 4
+    }
+  ],
+  "links": [
+    [
+      22,
+      16,
+      0,
+      7,
+      1,
+      "STRING"
+    ],
+    [
+      25,
+      7,
+      0,
+      17,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      125,
+      48,
+      0,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      187,
+      21,
+      0,
+      17,
+      3,
+      "LATENT"
+    ],
+    [
+      198,
+      65,
+      0,
+      72,
+      1,
+      "MASK"
+    ],
+    [
+      201,
+      68,
+      0,
+      74,
+      1,
+      "STRING"
+    ],
+    [
+      202,
+      48,
+      0,
+      74,
+      0,
+      "CLIP"
+    ],
+    [
+      203,
+      74,
+      0,
+      72,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      206,
+      76,
+      0,
+      75,
+      1,
+      "MASK"
+    ],
+    [
+      210,
+      77,
+      0,
+      75,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      211,
+      48,
+      0,
+      77,
+      0,
+      "CLIP"
+    ],
+    [
+      212,
+      69,
+      0,
+      77,
+      1,
+      "STRING"
+    ],
+    [
+      220,
+      73,
+      0,
+      76,
+      1,
+      "MASK"
+    ],
+    [
+      221,
+      73,
+      0,
+      65,
+      1,
+      "MASK"
+    ],
+    [
+      232,
+      48,
+      0,
+      82,
+      0,
+      "CLIP"
+    ],
+    [
+      233,
+      15,
+      0,
+      82,
+      1,
+      "STRING"
+    ],
+    [
+      234,
+      82,
+      0,
+      79,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      241,
+      71,
+      0,
+      65,
+      0,
+      "MASK"
+    ],
+    [
+      242,
+      71,
+      0,
+      76,
+      0,
+      "MASK"
+    ],
+    [
+      310,
+      76,
+      0,
+      99,
+      0,
+      "MASK"
+    ],
+    [
+      311,
+      65,
+      0,
+      100,
+      0,
+      "MASK"
+    ],
+    [
+      313,
+      99,
+      0,
+      102,
+      0,
+      "IMAGE"
+    ],
+    [
+      314,
+      100,
+      0,
+      103,
+      0,
+      "IMAGE"
+    ],
+    [
+      328,
+      101,
+      0,
+      105,
+      0,
+      "IMAGE"
+    ],
+    [
+      329,
+      93,
+      0,
+      101,
+      0,
+      "MASK"
+    ],
+    [
+      330,
+      93,
+      0,
+      79,
+      1,
+      "MASK"
+    ],
+    [
+      341,
+      79,
+      0,
+      106,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      342,
+      72,
+      0,
+      108,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      343,
+      75,
+      0,
+      108,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      344,
+      108,
+      0,
+      106,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      346,
+      106,
+      0,
+      17,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      393,
+      17,
+      0,
+      131,
+      0,
+      "LATENT"
+    ],
+    [
+      417,
+      131,
+      0,
+      135,
+      0,
+      "IMAGE"
+    ],
+    [
+      424,
+      4,
+      1,
+      48,
+      0,
+      "CLIP"
+    ],
+    [
+      425,
+      4,
+      0,
+      17,
+      0,
+      "MODEL"
+    ],
+    [
+      426,
+      4,
+      2,
+      131,
+      1,
+      "VAE"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "sampler",
+      "bounding": [
+        997,
+        -535,
+        736,
+        391
+      ],
+      "color": "#8A8",
+      "font_size": 24
+    },
+    {
+      "title": "prompts",
+      "bounding": [
+        -1297,
+        -430,
+        429,
+        1256
+      ],
+      "color": "#3f789e",
+      "font_size": 24
+    }
+  ],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

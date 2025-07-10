@@ -1,0 +1,211 @@
+[
+    {
+        "id": 76,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 77,
+        "name": "KSampler"
+    },
+    {
+        "id": 78,
+        "name": "Flex2Conditioner"
+    },
+    {
+        "id": 79,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 80,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 81,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 82,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Nike Shoes "
+        }
+    },
+    {
+        "id": 83,
+        "name": "ImageScaleToTotalPixels"
+    },
+    {
+        "id": 85,
+        "name": "ImageScaleToTotalPixels"
+    },
+    {
+        "id": 86,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 87,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "pasted/image (24).png"
+        }
+    },
+    {
+        "id": 89,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae.safetensors"
+        }
+    },
+    {
+        "id": 90,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flex.safetensors"
+        }
+    },
+    {
+        "id": 91,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "t5xxl_fp8_e4m3fn_scaled.safetensors",
+            "text_2": "clip_l.safetensors"
+        }
+    },
+    {
+        "id": 94,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 104,
+        "name": "AIO_Preprocessor",
+        "prompts": {
+            "text": "CannyEdgePreprocessor"
+        }
+    },
+    {
+        "id": 105,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 107,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# Flex.2-preview Installation Guide for ComfyUI\n\n## Required Files and Installation Locations\n\n### Diffusion Model\n\n- Download and place `flex.2-preview.safetensors` in:\n  ```\n  ComfyUI/models/diffusion_models/\n  ```\n- **Download link:** [flex.2-preview.safetensors](https://huggingface.co/Comfy-Org/stable-diffusion-3.5-fp8/blob/main/diffusion_models/flex.2-preview.safetensors?raw=true)\n\n### Text Encoders\n\nPlace the following files in `ComfyUI/models/text_encoders/`:\n\n- **CLIP-L:** [clip_l.safetensors](https://huggingface.co/Comfy-Org/stable-diffusion-3.5-fp8/resolve/main/text_encoders/clip_l.safetensors?download=true)\n- **T5XXL Options:**\n  - Option 1 (FP8): [t5xxl_fp8_e4m3fn_scaled.safetensors](https://huggingface.co/Comfy-Org/stable-diffusion-3.5-fp8/resolve/main/text_encoders/t5xxl_fp8_e4m3fn.safetensors?download=true)\n  - Option 2 (FP16): [t5xxl_fp16.safetensors](https://huggingface.co/Comfy-Org/stable-diffusion-3.5-fp8/resolve/main/text_encoders/t5xxl_fp16.safetensors?download=true)\n\n### VAE\n\n- Download and place `ae.safetensors` in:\n  ```\n  ComfyUI/models/vae/\n  ```\n- **Download link:** [ae.safetensors](https://huggingface.co/Comfy-Org/HiDream-I1_ComfyUI/resolve/main/split_files/vae/ae.safetensors?download=true)\n\n### Required Custom Node\n\nTo enable additional FlexTools functionality, clone the following repository into your `custom_nodes` directory:\n\n```bash\ncd ComfyUI/custom_nodes\n# Clone the FlexTools node for ComfyUI\ngit clone https://github.com/ostris/ComfyUI-FlexTools\n```\n# \ud83d\udee0\ufe0f FlexTools & OllamaGemini Setup Guide for ComfyUI\n\n## \ud83d\udce5 1. Clone Required Custom Nodes\n\nOpen your terminal and run:\n\n```bash\n# Navigate to ComfyUI custom_nodes directory\ncd /path/to/ComfyUI/custom_nodes\n\n# Clone FlexTools for ComfyUI\ngit clone https://github.com/ostris/ComfyUI-FlexTools\n\n# Clone OllamaGemini Extension for ComfyUI\ngit clone https://github.com/al-swaiti/ComfyUI-OllamaGemini.git\n```\n\n---\n\n## \ud83d\udd11 2. API Key Setup\n\n### \u2728 Obtaining API Keys\n\n- **Gemini API Key** \u2192 [Google MakerSuite](https://makersuite.google.com/app/apikey)  \n- **OpenAI API Key** \u2192 [OpenAI Account](https://platform.openai.com/account/api-keys)  \n- **Anthropic Claude Key** \u2192 [Anthropic Console](https://console.anthropic.com/)  \n- **Qwen API Key** \u2192 [Qwen Official](https://qwen.aliyun.com/)  \n- (Optional) **Local Ollama URL** \u2192 `http://localhost:11434` (default)\n\n---\n\n### \u2699\ufe0f Option 1: Using `config.json`\n\n1. Navigate into the OllamaGemini extension folder:\n   ```bash\n   cd /path/to/ComfyUI/custom_nodes/ComfyUI-OllamaGemini\n   ```\n2. Create or edit `config.json`:\n   ```json\n   {\n     \"GEMINI_API_KEY\":   \"your_gemini_api_key\",\n     \"OPENAI_API_KEY\":   \"your_openai_api_key\",\n     \"ANTHROPIC_API_KEY\":\"your_claude_api_key\",\n     \"OLLAMA_URL\":       \"http://localhost:11434\",\n     \"QWEN_API_KEY\":     \"your_qwen_api_key\"\n   }\n   ```\n3. Save the file.\n\n---\n\n# \ud83d\ude80 You\u2019re Ready!\n\n- Restart ComfyUI.  \n- Verify in the UI that both **FlexTools** and **OllamaGemini** nodes are available.  \n\nEnjoy enhanced functionality! \ud83c\udf89\n\n\n\n## Directory Structure\n\n```\nComfyUI/\n\u251c\u2500\u2500 models/\n\u2502   \u251c\u2500\u2500 diffusion_models/\n\u2502   \u2502   \u2514\u2500\u2500 flex.2-preview.safetensors\n\u2502   \u251c\u2500\u2500 text_encoders/\n\u2502   \u2502   \u251c\u2500\u2500 clip_l.safetensors\n\u2502   \u2502   \u251c\u2500\u2500 t5xxl_fp8_e4m3fn_scaled.safetensors   # Option 1 (FP8)\n\u2502   \u2502   \u2514\u2500\u2500 t5xxl_fp16.safetensors               # Option 2 (FP16)\n\u2502   \u2514\u2500\u2500 vae/\n\u2502       \u2514\u2500\u2500 ae.safetensors\n\u2514\u2500\u2500 custom_nodes/\n    \u2514\u2500\u2500 ComfyUI-FlexTools/  # git clone https://github.com/ostris/ComfyUI-FlexTools\n```\n\n"
+        }
+    },
+    {
+        "id": 108,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 109,
+        "name": "Reroute"
+    },
+    {
+        "id": 110,
+        "name": "Reroute"
+    },
+    {
+        "id": 111,
+        "name": "Reroute"
+    },
+    {
+        "id": 112,
+        "name": "Note",
+        "prompts": {
+            "text": "u have 3 options \nconnect red only > inpainting\nconnect blue only > controlnet \nconnect blue +red > controlnet plus inpainting "
+        }
+    },
+    {
+        "id": 113,
+        "name": "Note",
+        "prompts": {
+            "text": "change width or height , so the  of the other  side  upscale freel "
+        }
+    },
+    {
+        "id": 114,
+        "name": "DWPreprocessor",
+        "prompts": {
+            "text": "yolox_l.onnx",
+            "text_2": "dw-ll_ucoco_384_bs5.torchscript.pt"
+        }
+    },
+    {
+        "id": 118,
+        "name": "CLIPSeg"
+    },
+    {
+        "id": 119,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 120,
+        "name": "GeminiAPI",
+        "prompts": {
+            "text": "What is the meaning of life?",
+            "text_2": "gemini-2.0-flash"
+        }
+    },
+    {
+        "id": 121,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "pasted/image (25).png"
+        }
+    },
+    {
+        "id": 122,
+        "name": "CR Prompt Text",
+        "prompts": {
+            "text": "please replace shoes of this image by this one "
+        }
+    },
+    {
+        "id": 123,
+        "name": "CR Text Replace"
+    },
+    {
+        "id": 124,
+        "name": "CR Prompt Text",
+        "prompts": {
+            "text": "response of what the thing must be changed in this text  \"xyz\" with one word only "
+        }
+    },
+    {
+        "id": 127,
+        "name": "GeminiAPI",
+        "prompts": {
+            "text": "What is the meaning of life?",
+            "text_2": "gemini-2.5-pro-exp-03-25"
+        }
+    },
+    {
+        "id": 129,
+        "name": "CR Prompt Text",
+        "prompts": {
+            "text": "return only with best prompt of \"xyz\" for this image only "
+        }
+    },
+    {
+        "id": 130,
+        "name": "CR Text Replace"
+    },
+    {
+        "id": 131,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "High-angle close-up product photograph of a pair of Nike Dunk High sneakers, featuring beige and mustard yellow leather panels, white midsole, and orange outsole, resting on a vibrant solid orange background. Minimalist composition, captured with a shallow depth of field focusing sharply on the foreground shoe, rendering the second shoe slightly blurred. Soft, even studio lighting illuminates the scene, highlighting the textures of the leather and casting subtle shadows, emphasizing the form of the sneakers."
+        }
+    },
+    {
+        "id": 132,
+        "name": "Note",
+        "prompts": {
+            "text": "u can cancel auto prompt and auto detect item , and use manual mask editor "
+        }
+    }
+]

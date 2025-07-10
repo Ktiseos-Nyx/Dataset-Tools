@@ -1,0 +1,531 @@
+{
+  "parser_name": "Unknown/Custom Nodes Catcher (Unfudged)",
+  "priority": 10,
+  "version": "1.0",
+  "maintainer": "unfudging_team",
+  "description": "Safety net for experimental workflows with custom nodes - catches what other parsers miss",
+  "status": "experimental_recovery_system",
+
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+
+  "platform_info": {
+    "description": "Fallback parser for workflows with custom/experimental nodes",
+    "purpose": "catch_the_weird_stuff",
+    "philosophy": "extract_something_useful_from_anything",
+    "detection_strategy": "look_for_patterns_not_specific_nodes"
+  },
+
+  "detection_rules": [
+    {
+      "comment": "Catch ComfyUI workflows that other parsers rejected",
+      "method": "detect_comfyui_with_custom_nodes",
+      "priority": 1,
+      "confidence": "fallback_recovery",
+
+      "required_indicators": [
+        {
+          "has_workflow_json": true,
+          "has_nodes_array": true,
+          "confidence": "definitely_comfyui"
+        }
+      ],
+
+      "custom_node_patterns": [
+        {
+          "pattern": "\\(JPS\\)",
+          "description": "JPS custom nodes - lots of utility nodes",
+          "examples": ["Text Concatenate (JPS)", "Crop Image TargetSize (JPS)"],
+          "confidence": "jps_custom_nodes"
+        },
+        {
+          "pattern": "\\(rgthree\\)",
+          "description": "rgthree custom nodes - workflow control",
+          "examples": ["Fast Bypasser (rgthree)", "Mute / Bypass Repeater (rgthree)", "Reroute (rgthree)"],
+          "confidence": "rgthree_custom_nodes"
+        },
+        {
+          "pattern": "\\(mtb\\)",
+          "description": "mtb custom nodes - advanced utilities",
+          "examples": ["Note Plus (mtb)"],
+          "confidence": "mtb_custom_nodes"
+        },
+        {
+          "pattern": "\\(WLSH\\)",
+          "description": "WLSH custom nodes - advanced sampling",
+          "examples": ["KSamplerAdvanced (WLSH)", "Image Save with Prompt/Info File (WLSH)"],
+          "confidence": "wlsh_custom_nodes"
+        },
+        {
+          "pattern": "Efficient",
+          "description": "Efficiency nodes - optimized workflow nodes",
+          "examples": ["KSampler (Efficient)", "CheckpointLoaderSimple (Efficient)"],
+          "confidence": "efficiency_nodes"
+        }
+      ]
+    },
+
+    {
+      "comment": "Detect experimental/research nodes",
+      "method": "detect_experimental_nodes",
+      "priority": 2,
+      "confidence": "experimental_workflow",
+
+      "experimental_patterns": [
+        {
+          "pattern": "AnimateDiff",
+          "description": "AnimateDiff for video generation",
+          "confidence": "video_generation"
+        },
+        {
+          "pattern": "IPAdapter",
+          "description": "IP-Adapter for image conditioning",
+          "confidence": "advanced_conditioning"
+        },
+        {
+          "pattern": "ControlNet",
+          "description": "ControlNet integration",
+          "confidence": "controlnet_workflow"
+        },
+        {
+          "pattern": "InstantID",
+          "description": "InstantID face consistency",
+          "confidence": "face_consistency"
+        }
+      ]
+    },
+
+    {
+      "comment": "Detect platform-specific custom nodes",
+      "method": "detect_platform_custom_nodes", 
+      "priority": 3,
+      "confidence": "platform_specific",
+
+      "platform_indicators": [
+        {
+          "pattern": "ECHO",
+          "description": "TensorArt platform nodes",
+          "examples": ["ECHOCheckpointLoaderSimple"],
+          "confidence": "tensorart_platform"
+        },
+        {
+          "pattern": "Image Saver",
+          "description": "Advanced image saving with metadata",
+          "confidence": "custom_save_node"
+        }
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_strategy": {
+      "comment": "Flexible extraction - get what we can from whatever structure exists",
+      "approach": "pattern_based_extraction_with_fallbacks",
+      "philosophy": "something_is_better_than_nothing"
+    },
+
+    "extraction_rules": [
+      {
+        "section": "basic_workflow_analysis",
+        "rules": [
+          {
+            "target_key": "total_nodes",
+            "method": "count_all_nodes",
+            "value_type": "integer",
+            "description": "Total complexity indicator"
+          },
+          {
+            "target_key": "custom_node_types",
+            "method": "extract_unique_node_types",
+            "filter": "exclude_standard_comfyui_nodes",
+            "value_type": "array",
+            "description": "List of non-standard nodes found"
+          },
+          {
+            "target_key": "custom_node_packages",
+            "method": "extract_node_packages",
+            "patterns": ["\\(([^)]+)\\)", "custom_node_signatures"],
+            "value_type": "array",
+            "description": "Detected custom node packages"
+          }
+        ]
+      },
+
+      {
+        "section": "smart_parameter_hunting",
+        "rules": [
+          {
+            "target_key": "prompt",
+            "method": "flexible_prompt_search",
+            "search_patterns": [
+              "CLIPTextEncode.text",
+              "any_node_with_text_input",
+              "widgets_values_containing_long_text"
+            ],
+            "value_type": "string",
+            "fallback": "Could not locate prompt"
+          },
+          {
+            "target_key": "negative_prompt",
+            "method": "flexible_negative_search",
+            "search_patterns": [
+              "negative_conditioning_path",
+              "widgets_values_with_negative_keywords",
+              "second_text_encode_node"
+            ],
+            "value_type": "string",
+            "fallback": ""
+          },
+          {
+            "target_key": "steps",
+            "method": "flexible_parameter_search",
+            "search_patterns": [
+              "KSampler.steps",
+              "KSampler (Efficient).steps",
+              "any_sampler_node.steps",
+              "widgets_values_range_20_to_150"
+            ],
+            "value_type": "integer",
+            "fallback": "unknown"
+          },
+          {
+            "target_key": "cfg_scale",
+            "method": "flexible_parameter_search",
+            "search_patterns": [
+              "KSampler.cfg",
+              "any_sampler_node.cfg",
+              "widgets_values_range_1_to_20"
+            ],
+            "value_type": "float",
+            "fallback": "unknown"
+          },
+          {
+            "target_key": "seed",
+            "method": "flexible_parameter_search", 
+            "search_patterns": [
+              "any_sampler_node.seed",
+              "large_integer_in_widgets_values",
+              "randomize_indicator"
+            ],
+            "value_type": "integer",
+            "fallback": "unknown"
+          }
+        ]
+      },
+
+      {
+        "section": "model_detection",
+        "rules": [
+          {
+            "target_key": "model",
+            "method": "flexible_model_search",
+            "search_patterns": [
+              "CheckpointLoaderSimple.ckpt_name",
+              "ECHOCheckpointLoaderSimple.ckpt_name",
+              "any_loader_node.model_name",
+              "safetensors_in_widgets_values"
+            ],
+            "value_type": "string",
+            "fallback": "Unknown model"
+          }
+        ]
+      },
+
+      {
+        "section": "advanced_features_detection",
+        "rules": [
+          {
+            "target_key": "has_loras",
+            "method": "detect_lora_presence",
+            "search_patterns": [
+              "LoraLoader",
+              "LoraTagLoader", 
+              "lora_in_widgets_values"
+            ],
+            "value_type": "boolean"
+          },
+          {
+            "target_key": "has_controlnet",
+            "method": "detect_controlnet_presence",
+            "search_patterns": [
+              "ControlNet",
+              "Apply ControlNet"
+            ],
+            "value_type": "boolean"
+          },
+          {
+            "target_key": "has_video_generation",
+            "method": "detect_video_features",
+            "search_patterns": [
+              "AnimateDiff",
+              "video_in_node_names"
+            ],
+            "value_type": "boolean"
+          },
+          {
+            "target_key": "has_face_consistency",
+            "method": "detect_face_features",
+            "search_patterns": [
+              "InstantID",
+              "IPAdapter",
+              "face_in_node_names"
+            ],
+            "value_type": "boolean"
+          }
+        ]
+      },
+
+      {
+        "section": "custom_nodes_catalog",
+        "rules": [
+          {
+            "target_key": "jps_nodes",
+            "method": "catalog_jps_nodes",
+            "pattern": "\\(JPS\\)",
+            "value_type": "array",
+            "optional": true,
+            "description": "JPS utility nodes found"
+          },
+          {
+            "target_key": "rgthree_nodes", 
+            "method": "catalog_rgthree_nodes",
+            "pattern": "\\(rgthree\\)",
+            "value_type": "array",
+            "optional": true,
+            "description": "rgthree workflow control nodes"
+          },
+          {
+            "target_key": "efficiency_nodes",
+            "method": "catalog_efficiency_nodes",
+            "pattern": "Efficient",
+            "value_type": "array",
+            "optional": true,
+            "description": "Efficiency-optimized nodes"
+          }
+        ]
+      },
+
+      {
+        "section": "workflow_complexity_analysis",
+        "rules": [
+          {
+            "target_key": "complexity_score",
+            "method": "calculate_complexity",
+            "factors": [
+              "total_nodes",
+              "custom_node_count",
+              "connection_density",
+              "unique_node_types"
+            ],
+            "value_type": "string",
+            "scale": ["simple", "moderate", "complex", "experimental"]
+          },
+          {
+            "target_key": "experimental_level", 
+            "method": "assess_experimental_features",
+            "indicators": [
+              "research_nodes",
+              "custom_samplers",
+              "advanced_conditioning",
+              "video_generation"
+            ],
+            "value_type": "string",
+            "scale": ["standard", "advanced", "cutting_edge", "research_prototype"]
+          }
+        ]
+      }
+    ]
+  },
+
+  "output_format": {
+    "tool": "ComfyUI (Custom/Experimental)",
+    "parser_version": "unfudged_v1",
+    "workflow_type": "custom_nodes_experimental",
+    "parsing_method": "flexible_pattern_extraction",
+    "confidence": "fallback_recovery",
+
+    "prompt": "{prompt}",
+    "negative_prompt": "{negative_prompt}",
+
+    "parameters": {
+      "basic": {
+        "steps": "{steps}",
+        "cfg_scale": "{cfg_scale}",
+        "seed": "{seed}",
+        "model": "{model}"
+      },
+
+      "extraction_confidence": {
+        "prompt_confidence": "{prompt_extraction_confidence}",
+        "parameters_confidence": "{parameter_extraction_confidence}",
+        "model_confidence": "{model_extraction_confidence}"
+      }
+    },
+
+    "workflow_analysis": {
+      "complexity_score": "{complexity_score}",
+      "experimental_level": "{experimental_level}",
+      "total_nodes": "{total_nodes}",
+      "custom_node_packages": "{custom_node_packages}",
+      
+      "advanced_features": {
+        "has_loras": "{has_loras}",
+        "has_controlnet": "{has_controlnet}",
+        "has_video_generation": "{has_video_generation}",
+        "has_face_consistency": "{has_face_consistency}"
+      }
+    },
+
+    "custom_nodes_detected": {
+      "jps_nodes": "{jps_nodes}",
+      "rgthree_nodes": "{rgthree_nodes}",
+      "efficiency_nodes": "{efficiency_nodes}",
+      "unknown_custom_nodes": "{custom_node_types}"
+    },
+
+    "parser_notes": {
+      "extraction_method": "flexible_pattern_matching",
+      "why_this_parser": "other_parsers_failed_due_to_custom_nodes",
+      "reliability": "best_effort_extraction",
+      "recommendation": "consider_creating_specific_parser_for_this_workflow_type"
+    },
+
+    "raw_workflow": "{original_workflow_json}"
+  },
+
+  "known_custom_node_signatures": {
+    "jps_nodes": {
+      "description": "JPS custom nodes for utilities",
+      "common_nodes": [
+        "Text Concatenate (JPS)",
+        "Crop Image TargetSize (JPS)",
+        "Resolution Picker (JPS)",
+        "Image Save Settings (JPS)"
+      ],
+      "purpose": "workflow_utilities_and_text_processing"
+    },
+
+    "rgthree_nodes": {
+      "description": "rgthree workflow control nodes",
+      "common_nodes": [
+        "Fast Bypasser (rgthree)",
+        "Mute / Bypass Repeater (rgthree)", 
+        "Reroute (rgthree)",
+        "Image Comparer (rgthree)"
+      ],
+      "purpose": "workflow_control_and_debugging"
+    },
+
+    "efficiency_nodes": {
+      "description": "Efficiency-optimized ComfyUI nodes",
+      "common_nodes": [
+        "KSampler (Efficient)",
+        "CheckpointLoaderSimple (Efficient)",
+        "VAELoader (Efficient)"
+      ],
+      "purpose": "performance_optimization"
+    },
+
+    "wlsh_nodes": {
+      "description": "WLSH advanced sampling nodes",
+      "common_nodes": [
+        "KSamplerAdvanced (WLSH)",
+        "Image Save with Prompt/Info File (WLSH)"
+      ],
+      "purpose": "advanced_sampling_and_metadata"
+    },
+
+    "research_nodes": {
+      "description": "Experimental/research features",
+      "common_patterns": [
+        "AnimateDiff*",
+        "IPAdapter*", 
+        "InstantID*",
+        "Advanced*",
+        "Custom*"
+      ],
+      "purpose": "cutting_edge_experimentation"
+    }
+  },
+
+  "extraction_strategies": {
+    "flexible_prompt_search": {
+      "description": "Hunt for prompts in any text-containing node",
+      "strategy": "look_for_long_text_strings",
+      "confidence_scoring": "based_on_text_length_and_keywords"
+    },
+
+    "parameter_pattern_matching": {
+      "description": "Find sampling parameters regardless of node type",
+      "strategy": "search_widgets_values_for_typical_ranges",
+      "confidence_scoring": "based_on_value_ranges_and_context"
+    },
+
+    "model_name_hunting": {
+      "description": "Find model names in any loader-type node",
+      "strategy": "search_for_safetensors_and_checkpoint_patterns",
+      "confidence_scoring": "based_on_file_extension_and_context"
+    }
+  },
+
+  "confidence_levels": {
+    "high_confidence": {
+      "score": 0.8,
+      "criteria": "Found clear parameters in recognizable nodes",
+      "reliability": "good"
+    },
+    "medium_confidence": {
+      "score": 0.6,
+      "criteria": "Found some parameters through pattern matching",
+      "reliability": "acceptable"
+    },
+    "low_confidence": {
+      "score": 0.4,
+      "criteria": "Extracted basic info but many unknowns",
+      "reliability": "minimal_but_useful"
+    },
+    "fallback": {
+      "score": 0.2,
+      "criteria": "Could only extract workflow structure",
+      "reliability": "better_than_nothing"
+    }
+  },
+
+  "parser_philosophy": {
+    "primary_goal": "Never leave a workflow completely unparsed",
+    "secondary_goal": "Extract whatever useful information exists",
+    "tertiary_goal": "Flag interesting patterns for future parser development",
+    
+    "approach": [
+      "Try standard extraction first",
+      "Fall back to pattern matching",
+      "Use fuzzy string matching for parameters",
+      "Catalog unknown nodes for future development",
+      "Always return SOMETHING useful"
+    ]
+  },
+
+  "development_recommendations": {
+    "when_this_parser_triggers": [
+      "User has workflows with heavy custom node usage",
+      "Experimental features not covered by standard parsers",
+      "Platform-specific nodes (TensorArt, etc.)",
+      "Research workflows with cutting-edge features"
+    ],
+
+    "parser_improvement_cycle": [
+      "This parser flags unknown node patterns",
+      "Development team analyzes common unknown nodes", 
+      "New specific parsers created for popular custom nodes",
+      "This parser's patterns updated to recognize new standards"
+    ]
+  },
+
+  "error_handling": {
+    "malformed_json": "extract_whatever_is_parseable",
+    "missing_standard_nodes": "use_pattern_matching_fallbacks",
+    "unknown_node_types": "catalog_for_future_development",
+    "extraction_failures": "return_partial_results_with_confidence_scores"
+  },
+
+  "status": "production_ready_fallback_system"
+}

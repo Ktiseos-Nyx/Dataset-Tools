@@ -1,0 +1,469 @@
+[
+    {
+        "id": 1,
+        "name": "KSampler"
+    },
+    {
+        "id": 2,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "0XL\\epicrealismXL_v8Kiss\u8d85\u73b0\u5b9e\u4e3b\u4e49.safetensors"
+        }
+    },
+    {
+        "id": 3,
+        "name": "Qwen2_VQA",
+        "prompts": {
+            "text": "\u4ec5\u9700\u63cf\u8ff0\u4e00\u4e0b\u56fe\u4e2d\u4eba\u7269\u6027\u522b\u3001\u52a8\u4f5c\u3001\u670d\u9970\u3001\u5168\u8eab\u7279\u5f81\u3002\n\u4e0d\u7528\u63cf\u8ff0\u98ce\u683c\u3002",
+            "text_2": "Qwen2-VL-2B-Instruct"
+        }
+    },
+    {
+        "id": 4,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "RAW photo, colorful details, award winning, high detailed, 8k, analog film, detailed skin, intricate details, subsurface scattering, velus hairs, amazing textures, filmic, chiaroscuro, soft light,The person in the picture is a woman with long black hair that is blowing in the wind. She is wearing a light-colored sleeveless top and a necklace around her neck. Her expression is calm, as if she is gazing into the distance. The background is a blue sky, giving a sense of tranquility."
+        }
+    },
+    {
+        "id": 6,
+        "name": "easy stylesSelector",
+        "prompts": {
+            "text": "fooocus_styles",
+            "text_2": "Fooocus Photograph,sai-photographic,sai-cinematic"
+        }
+    },
+    {
+        "id": 7,
+        "name": "LayerUtility: GetImageSize"
+    },
+    {
+        "id": 8,
+        "name": "MultiplePathsInput"
+    },
+    {
+        "id": 9,
+        "name": "ImageLoader"
+    },
+    {
+        "id": 11,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "((Masterpiece))), Best Quality, Illustration, (Beautiful Detailed Asian Girl), Beautiful Detailed Glow, Detailed Ice, Beautiful Detailed Water, (Beautiful Detailed Eyes), Expressionless, Beautiful Detailed White Gloves, (Floating Palace: 1.3), Sky Blue Hair, Unkempt Hair, Long Bangs, Hair Between the Eyes, (Sky Blue Dress), Black Ribbon, White Bow Tie, Belly, {{{Half-Closed Eyes}}},, Large Forehead, Blank Stare, Flowers, Large Top Sleeves, ( (((Ice Crystal Wings)))"
+        }
+    },
+    {
+        "id": 12,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "((Masterpiece))), Best Quality, Illustration, (Beautiful Detailed Asian Girl), Beautiful Detailed Glow, Detailed Ice, Beautiful Detailed Water, (Beautiful Detailed Eyes), Expressionless, Beautiful Detailed White Gloves, (Floating Palace: 1.3), Sky Blue Hair, Unkempt Hair, Long Bangs, Hair Between the Eyes, (Sky Blue Dress), Black Ribbon, White Bow Tie, Belly, {{{Half-Closed Eyes}}},, Large Forehead, Blank Stare, Flowers, Large Top Sleeves, ( (((Ice Crystal Wings)))"
+        }
+    },
+    {
+        "id": 13,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 14,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 15,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "controlnet-union-sdxl-1.0\\diffusion_pytorch_model_promax.safetensors"
+        }
+    },
+    {
+        "id": 16,
+        "name": "ControlNetApplySD3"
+    },
+    {
+        "id": 17,
+        "name": "Reroute"
+    },
+    {
+        "id": 18,
+        "name": "SetUnionControlNetType",
+        "prompts": {
+            "text": "canny/lineart/anime_lineart/mlsd"
+        }
+    },
+    {
+        "id": 20,
+        "name": "LineArtPreprocessor"
+    },
+    {
+        "id": 21,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 22,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 23,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 24,
+        "name": "VAELoader"
+    },
+    {
+        "id": 25,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "SD3\\t5xxl_fp8_e4m3fn.safetensors",
+            "text_2": "SD3\\clip_l.safetensors"
+        }
+    },
+    {
+        "id": 26,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-dev.sft"
+        }
+    },
+    {
+        "id": 28,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 29,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 30,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 31,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 32,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 33,
+        "name": "Reroute"
+    },
+    {
+        "id": 34,
+        "name": "Reroute"
+    },
+    {
+        "id": 35,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 36,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 39,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 40,
+        "name": "Reroute"
+    },
+    {
+        "id": 45,
+        "name": "Prompts Everywhere"
+    },
+    {
+        "id": 46,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 48,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 49,
+        "name": "LayerUtility: GetImageSize"
+    },
+    {
+        "id": 50,
+        "name": "easy controlnetNames",
+        "prompts": {
+            "text": "FLUX.1\\InstantX-FLUX1-Dev-Union\\diffusion_pytorch_model.safetensors"
+        }
+    },
+    {
+        "id": 51,
+        "name": "ControlNetApplySD3"
+    },
+    {
+        "id": 52,
+        "name": "SetUnionControlNetType",
+        "prompts": {
+            "text": "canny/lineart/anime_lineart/mlsd"
+        }
+    },
+    {
+        "id": 53,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "FLUX.1\\InstantX-FLUX1-Dev-Union\\diffusion_pytorch_model.safetensors"
+        }
+    },
+    {
+        "id": 54,
+        "name": "Reroute"
+    },
+    {
+        "id": 55,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "flux\\realism_lora_comfy_converted.safetensors"
+        }
+    },
+    {
+        "id": 60,
+        "name": "CR Text",
+        "prompts": {
+            "text": "nsfw,bad proportions, low resolution,worst quality, low quality, normal quality, lowres,  inaccurate limb, bad, ugly, terrible,  extra fingers, fewer fingers, missing fingers, extra arms, extra legs, inaccurate eyes, bad composition, bad anatomy, error, extra digit, fewer digits, cropped, low res, jpeg artifacts, trademark,artist's name, username, watermarksignature, watermark,text, words,"
+        }
+    },
+    {
+        "id": 61,
+        "name": "CR Text",
+        "prompts": {
+            "text": "RAW photo, colorful details, award winning, high detailed, 8k, analog film, detailed skin, intricate details, subsurface scattering, velus hairs, amazing textures, filmic, chiaroscuro, soft light"
+        }
+    },
+    {
+        "id": 64,
+        "name": "CR Text Concatenate"
+    },
+    {
+        "id": 74,
+        "name": "Reroute"
+    },
+    {
+        "id": 77,
+        "name": "SUPIR_first_stage"
+    },
+    {
+        "id": 78,
+        "name": "SUPIR_sample",
+        "prompts": {
+            "text": "RestoreDPMPP2MSampler"
+        }
+    },
+    {
+        "id": 79,
+        "name": "SUPIR_conditioner",
+        "prompts": {
+            "text": "high quality, detailed, photograph,ultra-fine painting,best quality,HDR,UHD,8K,highres,absurdres,",
+            "text_2": "bad quality, blurry, messy,Muddy, faded, creased, scratched, torn,water stains,water damage,"
+        }
+    },
+    {
+        "id": 80,
+        "name": "SUPIR_decode"
+    },
+    {
+        "id": 81,
+        "name": "SUPIR_encode"
+    },
+    {
+        "id": 82,
+        "name": "Reroute"
+    },
+    {
+        "id": 83,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 84,
+        "name": "ColorMatch"
+    },
+    {
+        "id": 85,
+        "name": "SUPIR_model_loader_v2",
+        "prompts": {
+            "text": "SUPIR\\SUPIR-v0Q.ckpt"
+        }
+    },
+    {
+        "id": 86,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 87,
+        "name": "easy int"
+    },
+    {
+        "id": 88,
+        "name": "easy int"
+    },
+    {
+        "id": 89,
+        "name": "easy int"
+    },
+    {
+        "id": 90,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 91,
+        "name": "Note",
+        "prompts": {
+            "text": "\u663e\u5b58\u4f4e\u5efa\u8bae\u5173\u95ed\u201c\u9ad8\u663e\u5b58\u201d"
+        }
+    },
+    {
+        "id": 92,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 93,
+        "name": "Reroute"
+    },
+    {
+        "id": 95,
+        "name": "Qwen2_VQA",
+        "prompts": {
+            "text": "\u4ec5\u9700\u63cf\u8ff0\u4e00\u4e0b\u56fe\u4e2d\u4eba\u7269\u6027\u522b\u3001\u52a8\u4f5c\u3001\u670d\u9970\u3001\u5168\u8eab\u7279\u5f81\u3002\n\u4e0d\u7528\u63cf\u8ff0\u98ce\u683c\u3002",
+            "text_2": "Qwen2-VL-2B-Instruct"
+        }
+    },
+    {
+        "id": 98,
+        "name": "List of strings [Crystools]",
+        "prompts": {
+            "text": "\u5e2e\u6211\u5c06\u4ee5\u4e0b\u5185\u5bb9\u7ffb\u8bd1\u6210\u82f1\u6587\uff1a"
+        }
+    },
+    {
+        "id": 99,
+        "name": "SomethingToString"
+    },
+    {
+        "id": 100,
+        "name": "SomethingToString"
+    },
+    {
+        "id": 101,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 103,
+        "name": "InstantIDFaceAnalysis"
+    },
+    {
+        "id": 104,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "instantid\\diffusion_pytorch_model.safetensors"
+        }
+    },
+    {
+        "id": 105,
+        "name": "InstantIDModelLoader",
+        "prompts": {
+            "text": "ip-adapter.bin"
+        }
+    },
+    {
+        "id": 107,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Facial details, skin details, eyebrow details, beautiful eyes, bright and expressive eyes, neat teeth, lip details, lighting details,vibran, highly detailed"
+        }
+    },
+    {
+        "id": 108,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "poorly drawn face,disfigured,gape,ugly,"
+        }
+    },
+    {
+        "id": 109,
+        "name": "LoadImage"
+    },
+    {
+        "id": 110,
+        "name": "KSampler"
+    },
+    {
+        "id": 113,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 114,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 115,
+        "name": "InpaintCrop",
+        "prompts": {
+            "text": "ranged size"
+        }
+    },
+    {
+        "id": 118,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 119,
+        "name": "Reroute"
+    },
+    {
+        "id": 121,
+        "name": "InpaintStitch"
+    },
+    {
+        "id": 122,
+        "name": "LayerMask: PersonMaskUltra V2",
+        "prompts": {
+            "text": "VITMatte(local)"
+        }
+    },
+    {
+        "id": 123,
+        "name": "InpaintModelConditioning"
+    },
+    {
+        "id": 125,
+        "name": "LayerUtility: ImageRemoveAlpha"
+    },
+    {
+        "id": 127,
+        "name": "ReActorFaceSwap",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "retinaface_resnet50"
+        }
+    },
+    {
+        "id": 128,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 130,
+        "name": "ApplyInstantID"
+    },
+    {
+        "id": 134,
+        "name": "ImageRandomTransform+"
+    },
+    {
+        "id": 136,
+        "name": "Note",
+        "prompts": {
+            "text": "Custom Node: \nhttps://github.com/rgthree/rgthree-comfy\nhttps://github.com/IuvenisSapiens/ComfyUI_Qwen2-VL-Instruct/tree/main\nhttps://github.com/pythongosssss/ComfyUI-Custom-Scripts\nhttps://github.com/kijai/ComfyUI-KJNodes\nhttps://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes \nhttps://github.com/yolain/ComfyUI-Easy-Use\nhttps://github.com/cubiq/ComfyUI_essentials\nhttps://github.com/kijai/ComfyUI-SUPIR\nhttps://github.com/Gourieff/comfyui-reactor-node\nhttps://github.com/cubiq/ComfyUI_InstantID\nhttps://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch\n\nmodels:\nQwen2\uff1ahttps://huggingface.co/collections/Qwen/qwen2-vl-66cee7455501d7126940800d\n--XL--\nepicrealism-xl\uff1ahttps://civitai.com/models/277058/epicrealism-xl\nxinsir/controlnet-union-sdxl-1.0\uff1ahttps://huggingface.co/xinsir/controlnet-union-sdxl-1.0/tree/main\n--FLUX.1--\nXLabs-AI/flux-RealismLora\uff1ahttps://huggingface.co/XLabs-AI/flux-RealismLora/tree/main\nFLUX.1-dev-Controlnet-Union\uff1ahttps://huggingface.co/InstantX/FLUX.1-dev-Controlnet-Union/tree/main\nFP8\uff1ahttps://huggingface.co/stabilityai/stable-diffusion-3-medium/tree/main\nclip\uff1ahttps://huggingface.co/stabilityai/stable-diffusion-3-medium/tree/main/text_encoders\nFlux.1 VAE\uff1ahttps://huggingface.co/black-forest-labs/FLUX.1-dev/tree/main\nInstantX/FLUX.1-dev-Controlnet-Union\uff1ahttps://huggingface.co/InstantX/FLUX.1-dev-Controlnet-Union/tree/main\n--SUPIR--\nSUPIR\uff1ahttps://huggingface.co/Kijai/SUPIR_pruned/tree/main\n--InstantID--\n-ComfyUI/models/insightface/models/antelopev2-\nhttps://huggingface.co/MonsterMMORPG/tools/tree/main\n-ComfyUI/models/instantid-\nhttps://huggingface.co/InstantX/InstantID/resolve/main/ip-adapter.bin?download=true\n\ncloud:\nWorkflows:https://pan.quark.cn/s/e76d9e972e8c\nmodels:https://pan.quark.cn/s/5a0ab8dfce6e\nCustom Node: https://pan.quark.cn/s/16dca69ca023\n\nVideos:\nbilibili:https://space.bilibili.com/473724003\nYouTube:https://www.youtube.com/@%E6%9E%AB%E9%93%83%E9%A3%8E%E6%9E%97"
+        }
+    },
+    {
+        "id": 138,
+        "name": "ImageRandomTransform+"
+    }
+]

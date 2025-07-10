@@ -1,0 +1,234 @@
+[
+    {
+        "id": 1,
+        "name": "Gemini_Flash_200_Exp",
+        "prompts": {
+            "text": "woman in image_1 wearing earphone image_2",
+            "text_2": "gemini-2.0-flash-exp-image-generation"
+        }
+    },
+    {
+        "id": 1,
+        "name": "Model Loader"
+    },
+    {
+        "id": 2,
+        "name": "Clip Loader"
+    },
+    {
+        "id": 3,
+        "name": "Gemini"
+    },
+    {
+        "id": 4,
+        "name": "Prompt"
+    },
+    {
+        "id": 5,
+        "name": "Load & Perpare Images"
+    },
+    {
+        "id": 6,
+        "name": "Prompt"
+    },
+    {
+        "id": 7,
+        "name": "Upscaling"
+    },
+    {
+        "id": 8,
+        "name": "Save & Compare"
+    },
+    {
+        "id": 9,
+        "name": "UltimateSDUpscaleCustomSample"
+    },
+    {
+        "id": 11,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-dev.sft"
+        }
+    },
+    {
+        "id": 12,
+        "name": "Reroute"
+    },
+    {
+        "id": 13,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "8c51d694d419cb02a549ae0626b7c459.jpg"
+        }
+    },
+    {
+        "id": 14,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "cc747044604b12050fa86ee722fcbebf.jpg"
+        }
+    },
+    {
+        "id": 15,
+        "name": "CM_NearestSDXLResolution"
+    },
+    {
+        "id": 16,
+        "name": "ImageScale"
+    },
+    {
+        "id": 17,
+        "name": "ImageScale"
+    },
+    {
+        "id": 18,
+        "name": "CM_NearestSDXLResolution"
+    },
+    {
+        "id": 19,
+        "name": "FluxBlocksBuster+",
+        "prompts": {
+            "text": "## 0 = 1.0\n## 1 = 1.0\n## 2 = 1.0\n## 3 = 1.0\n## 4 = 1.0\n## 5 = 1.0\n## 6 = 1.0\n## 7 = 1.0\n## 8 = 1.0\n## 9 = 1.0\n## 10 = 1.0\n## 11 = 1.0\n## 12 = 1.0\n## 13 = 1.0\n## 14 = 1.0\n## 15 = 1.0\n## 16 = 1.0\n## 17 = 1.0\n## 18 = 1.0\n# 0 = 1.0\n# 1 = 1.0\n# 2 = 1.0\n# 3 = 1.0\n# 4 = 1.0\n# 5 = 1.0\n# 6 = 1.0\n# 7 = 1.0\n# 8 = 1.0\n# 9 = 1.0\n# 10 = 1.0\n# 11 = 1.0\n# 12 = 1.0\n# 13 = 1.0\n# 14 = 1.0\n# 15 = 1.0\n# 16 = 1.0\n# 17 = 1.0\n# 18 = 1.0\n# 19 = 1.0\n# 20 = 1.0\n# 21 = 1.0\n# 22 = 1.0\n# 23 = 1.0\n# 24 = 1.0\n# 25 = 1.0\n# 26 = 1.0\n# 27 = 1.0\n# 28 = 1.0\n# 29 = 1.0\n# 30 = 1.0\n# 31 = 1.0\n# 32 = 1.0\n# 33 = 1.0\n# 34 = 1.0\n# 35 = 1.0\n# 36 = 1.0\n# 37 = 1.0"
+        }
+    },
+    {
+        "id": 20,
+        "name": "LoraLoaderBlockWeight //Inspire",
+        "prompts": {
+            "text": "flux\\42lux HighResFix.safetensors",
+            "text_2": "FLUX-ALL:1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"
+        }
+    },
+    {
+        "id": 21,
+        "name": "LoraLoaderBlockWeight //Inspire",
+        "prompts": {
+            "text": "flux\\Flux_Skin_Detailer.safetensors",
+            "text_2": "FLUX-ALL:1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"
+        }
+    },
+    {
+        "id": 22,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 23,
+        "name": "FluxAttentionSeeker+"
+    },
+    {
+        "id": 24,
+        "name": "Text _O",
+        "prompts": {
+            "text": "woman in image_1 in image_2 clothes "
+        }
+    },
+    {
+        "id": 25,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 30,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 32,
+        "name": "VAELoader"
+    },
+    {
+        "id": 33,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-ClearRealityV1.pth"
+        }
+    },
+    {
+        "id": 36,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 39,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 40,
+        "name": "CLIPTextEncodeFlux"
+    },
+    {
+        "id": 41,
+        "name": "SaveImage"
+    },
+    {
+        "id": 42,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 43,
+        "name": "NoisePlusBlend"
+    },
+    {
+        "id": 44,
+        "name": "FL_SDUltimate_Slices"
+    },
+    {
+        "id": 46,
+        "name": "ImageConcatMulti"
+    },
+    {
+        "id": 47,
+        "name": "SaveImage"
+    },
+    {
+        "id": 54,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "Successfully generated 1 images using gemini-2.0-flash-exp-image-generation.\nPrompt: woman in image_1 in image_2 clothes  \nDetails: Batch 1: Generated 1 images\n"
+        }
+    },
+    {
+        "id": 55,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 56,
+        "name": "MultiImagesInput"
+    },
+    {
+        "id": 59,
+        "name": "LyingSigmaSampler"
+    },
+    {
+        "id": 62,
+        "name": "TeaCache"
+    },
+    {
+        "id": 63,
+        "name": "PAGAttention"
+    },
+    {
+        "id": 64,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "flux\\alimama-creativeFLUX1-Turbo-Alpha.safetensors"
+        }
+    },
+    {
+        "id": 67,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": " The image captures a moment of a woman in an urban setting. She is positioned on the right side of the frame, her body angled towards the camera. Her attire consists of a vibrant red dress with lace details and a matching red cape draped over one shoulder. Her hair is styled in loose waves that fall around her face, adding to her relaxed demeanor.\n\nThe woman's gaze is directed towards the camera, suggesting she is aware of being photographed. The backdrop features an urban setting with a blurred street and buildings, indicating a public space rather than a private residence or studio. There are no other people visible in the frame, making her the sole focus of this image.",
+            "text_2": " The image features a person, likely a woman given the context provided. She is wearing a distinctive costume that includes a ruffled collar and a black bodysuit with white sleeves. Her makeup is striking, with red lipstick and a bold red streak painted on her forehead. The overall style of the image suggests it could be from a fashion or music-related context, possibly related to a performance or promotional event."
+        }
+    },
+    {
+        "id": 68,
+        "name": "OllamaImageDescriber",
+        "prompts": {
+            "text": "llava:7b-v1.6-vicuna-q2_K (Q2_K, 3.2GB)",
+            "text_2": "http://localhost:11434"
+        }
+    }
+]

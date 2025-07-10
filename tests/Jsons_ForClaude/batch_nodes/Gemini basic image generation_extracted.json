@@ -1,0 +1,21 @@
+[
+    {
+        "id": 2,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00008_.png"
+        }
+    },
+    {
+        "id": 47,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 49,
+        "name": "GeminiFlash",
+        "prompts": {
+            "text": "your job is to change the background to shore ",
+            "text_2": "gemini-2.0-flash-exp-image-generation"
+        }
+    }
+]

@@ -1,0 +1,113 @@
+[
+    {
+        "id": 1,
+        "name": "Models"
+    },
+    {
+        "id": 2,
+        "name": "Prompts"
+    },
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 3,
+        "name": "Image Generation"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "XL\\XL_ultraepicaiRealism_v10.safetensors"
+        }
+    },
+    {
+        "id": 4,
+        "name": "Hi-Res Fix"
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 5,
+        "name": "Stable Diffusion XL"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "anime, extra hand, extra leg, extra arm, extra head, extra fingers, extra body parts, bad anatomy, distorted face, extra limbs, gross proportions, malformed limbs, missing arms, missing legs, mutated hands, fused fingers, too many fingers, long neck, extra head, cloned head, extra body, cloned body, cropped, low resolution , username, blurry, trademark, watermark, title, multiple view, Reference sheet, curvy, plump, fat, strabismus, clothing cutout, side slit, out of focus, overexposed, blurry, logo, watermark, signature, jpeg artifacts, illustration, 3d, sepia, painting, cartoons, sketch, multiple pictures, fused bodies, ugly, duplicate, mutilated, out of frame, (mutation:1.3), (deformed:1.3), (blurry), (bad anatomy:1.1), (bad proportions:1.2), (long neck:1.2), (worst quality:1.4), (low quality:1.4), (monochrome:1.1), (teeth:1.2)"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 12,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "XL\\()Ashlynn Spektre XL.safetensors"
+        }
+    },
+    {
+        "id": 18,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 20,
+        "name": "UltimateSDUpscale",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 22,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "SwinIR_4x.pth"
+        }
+    },
+    {
+        "id": 25,
+        "name": "Load Styles CSV",
+        "prompts": {
+            "text": "Clothes Store Clerk"
+        }
+    },
+    {
+        "id": 26,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 27,
+        "name": "TextConcatenateNikosis"
+    },
+    {
+        "id": 29,
+        "name": "PrimitiveStringMultiline",
+        "prompts": {
+            "text": "Cute Black Girl"
+        }
+    },
+    {
+        "id": 30,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "Cute Black Girl, (Upper body photo:1.1). 1girl, cute model. Long thick Maxi Skirt, elegant knit tube top, swept back hair, alluring smile. Highly detailed beautiful expressive eyes. Working at a clothing store. Photorealistic, Natural atmospheric lighting, intricate details, 35mm photograph, film, professional, 4k visuals, highly detailed, elegant, studio quality."
+        }
+    },
+    {
+        "id": 31,
+        "name": "SaveImageWithMetaData"
+    }
+]

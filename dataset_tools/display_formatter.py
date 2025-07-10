@@ -56,12 +56,19 @@ def format_metadata_for_display(metadata_dict: dict[str, Any] | None) -> dict[st
 
 def _format_prompts(metadata_dict: dict[str, Any]) -> tuple[str, str]:
     """Extracts and formats positive and negative prompts."""
+    # First check the structured prompt section
     prompt_section = metadata_dict.get(UpField.PROMPT.value, {})
-    if not isinstance(prompt_section, dict):
-        return "", ""
-
-    positive = str(prompt_section.get("Positive", "")).strip()
-    negative = str(prompt_section.get("Negative", "")).strip()
+    if isinstance(prompt_section, dict):
+        positive = str(prompt_section.get("Positive", "")).strip()
+        negative = str(prompt_section.get("Negative", "")).strip()
+        
+        # If we found prompts in the structured section, return them
+        if positive or negative:
+            return positive, negative
+    
+    # Fallback: check root level for direct prompt fields (e.g., Drawthings JSON parser)
+    positive = str(metadata_dict.get("prompt", "")).strip()
+    negative = str(metadata_dict.get("negative_prompt", "")).strip()
     return positive, negative
 
 
@@ -101,6 +108,7 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
 
     append_unpacked_section("EXIF Details", DownField.EXIF)
     append_unpacked_section("Tags (XMP/IPTC)", UpField.TAGS)
+    append_unpacked_section("Workflow Analysis", UpField.WORKFLOW_ANALYSIS)
 
     # Raw Data / Workflow
     if raw_content := str(metadata_dict.get(DownField.RAW_DATA.value, "")):

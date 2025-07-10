@@ -1,0 +1,74 @@
+[
+    {
+        "id": "87fd06fd-effd-430c-bcad-ad248ef76c81",
+        "name": "Demo Compare 2 Loras"
+    },
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "analogMadnessSDXL_sdxlV10.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text, watermark"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 10,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "sasink_xl_3.safetensors"
+        }
+    },
+    {
+        "id": 11,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 12,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "annieXL.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "KSampler"
+    },
+    {
+        "id": 14,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 15,
+        "name": "SaveImage"
+    },
+    {
+        "id": 16,
+        "name": "PrimitiveNode"
+    }
+]

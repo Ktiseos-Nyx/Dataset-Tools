@@ -1,0 +1,84 @@
+[
+    {
+        "id": "f82b1456-5b3a-411f-9283-e042002bf5e3",
+        "name": "Demo IP Adapter Instant ID"
+    },
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "analogMadnessSDXL_sdxlV10.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text, watermark"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 10,
+        "name": "ApplyInstantID"
+    },
+    {
+        "id": 11,
+        "name": "InstantIDModelLoader",
+        "prompts": {
+            "text": "ip-adapter.bin"
+        }
+    },
+    {
+        "id": 12,
+        "name": "InstantIDFaceAnalysis"
+    },
+    {
+        "id": 13,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "diffusion_pytorch_model.safetensors"
+        }
+    },
+    {
+        "id": 14,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "waving_hands003_example (1).png"
+        }
+    },
+    {
+        "id": 15,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "waving_hands001_example.png"
+        }
+    },
+    {
+        "id": 16,
+        "name": "FaceKeypointsPreprocessor"
+    },
+    {
+        "id": 17,
+        "name": "PreviewImage"
+    }
+]

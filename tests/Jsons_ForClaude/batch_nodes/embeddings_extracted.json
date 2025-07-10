@@ -1,0 +1,46 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "v1-5-pruned-emaonly.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a closeup photo of a woman eating gelato in Italy\n\nhigh resolution, detailed, 4k, professional photography, diffuse light"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(embedding:UnrealisticDream:1.2), embedding:BadDream"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 11,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "vae-ft-mse-840000-ema-pruned.safetensors"
+        }
+    }
+]

@@ -1,0 +1,160 @@
+[
+    {
+        "id": 1,
+        "name": "B\u7ad9\uff0cYoutube\uff1aT8star-Aix"
+    },
+    {
+        "id": 3,
+        "name": "mistoline\u8f6c\u7ebf\u7a3f\uff0c\u81ea\u52a8\u526a\u88c1\u5339\u914d\u5c3a\u5bf8\u540e\u4e0a\u8272"
+    },
+    {
+        "id": 4,
+        "name": "\u7ebf\u7a3f\u81ea\u52a8\u4e0a\u8272"
+    },
+    {
+        "id": 5,
+        "name": "\u7ebf\u7a3f\u76f4\u63a5\u4e0a\u8272"
+    },
+    {
+        "id": 51,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "<div class=\"startPage\">\n  <div class=\"hoverContainer\">\n    <a href=\"https://aix.studio\">\n      <span class=\"size-smallButton style-input\">\ud83d\uddc3\ufe0f AIX\u5b98\u7f51</span>\n    </a>\n    <a href=\"https://t.zsxq.com/7F90A\">\n      <span class=\"size-smallButton style-input\">\ud83e\udeb2 \u77e5\u8bc6\u661f\u7403</span>\n    </a>\n    <a href=\"https://space.bilibili.com/385085361\">\n      <span class=\"size-smallButton style-input\">\u2615 B\u7ad9\u9996\u9875</span>\n    </a>\n  </div>\n</div>",
+            "text_2": "\r\n\r\n* {\r\n    font-family: Arial;\r\n  }\r\n\r\n\r\n  .startPage {\r\n    position: absolute;\r\n    width:auto;\r\n    z-index: 0;\r\n    transition: transform 0.3s ease;\r\n  }\r\n\r\n  .startPage:hover {\r\n    transform: translateY(-1%);\r\n  }\r\n\r\n  .hoverContainer {\r\n    background: black;\r\n    border-radius: 27px;\r\n    padding: 50px;\r\n    display: flex;\r\n    flex-direction: row;\r\n    margin: 12px auto;\r\n    position: relative;\r\n  }\r\n\r\n  .header {\r\n    padding-bottom: 24px;\r\n    margin-bottom: 24px;\r\n    border-bottom: 1px solid #3e3e3e;\r\n    width: 200%;\r\n    height: 72px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: space-between;\r\n  }\r\n\r\n  .header_discrip {\r\n    font-size: 21px;\r\n    font-weight: 200;\r\n    color: #6f6f6f;\r\n  }\r\n\r\n  .size-smallButton {\r\n    font-size: 21px;\r\n    border-radius: 12px;\r\n    height: 48px;\r\n    min-width: 48px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    width: 100%;\r\n    cursor: pointer;\r\n  }\r\n\r\n  .style-input {\r\n    background: #2a2a2b;\r\n    padding: 12px;\r\n    transition: background 0.3s;\r\n  }\r\n\r\n  .style-input:hover {\r\n    background: #3b3b3c;\r\n  }\r\na:not(:first-child) {\r\n      margin-left:8px;}\r\n  a {\r\n    color: #b6b6b7;\r\n  }\r\n\r\n  a:hover,\r\n  a:hover .header_discrip {\r\n    color: #dddddd !important;\r\n  }"
+        }
+    },
+    {
+        "id": 52,
+        "name": "MediaPlayer"
+    },
+    {
+        "id": 53,
+        "name": "MediaPlayer"
+    },
+    {
+        "id": 144,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 145,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 147,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 184,
+        "name": "LayerUtility: ImageScaleByAspectRatio V2"
+    },
+    {
+        "id": 185,
+        "name": "AnyLineArtPreprocessor_aux"
+    },
+    {
+        "id": 186,
+        "name": "MangaNinjiaSampler"
+    },
+    {
+        "id": 187,
+        "name": "MangaNinjiaLoader",
+        "prompts": {
+            "text": "anything-v5-PrtRE.safetensors",
+            "text_2": "D:/ComfyUI-aki/models/clip/clip-vit-large-patch14"
+        }
+    },
+    {
+        "id": 188,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 189,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 190,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 191,
+        "name": "LoadImage"
+    },
+    {
+        "id": 192,
+        "name": "LayerUtility: ImageScaleByAspectRatio V2"
+    },
+    {
+        "id": 193,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "fe4ddcf0-1f5e-4cbc-9547-e43b6b062b9e.png"
+        }
+    },
+    {
+        "id": 194,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 195,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 196,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 197,
+        "name": "MangaNinjiaSampler"
+    },
+    {
+        "id": 198,
+        "name": "LoadImage"
+    },
+    {
+        "id": 199,
+        "name": "LoadImage"
+    },
+    {
+        "id": 200,
+        "name": "MangaNinjiaLoader",
+        "prompts": {
+            "text": "anything-v5-PrtRE.safetensors",
+            "text_2": "D:/ComfyUI-aki/models/clip/clip-vit-large-patch14"
+        }
+    },
+    {
+        "id": 201,
+        "name": "LoadImage"
+    },
+    {
+        "id": 202,
+        "name": "MangaNinjiaSampler"
+    },
+    {
+        "id": 203,
+        "name": "LoadImage"
+    },
+    {
+        "id": 204,
+        "name": "MangaNinjiaLoader",
+        "prompts": {
+            "text": "anything-v5-PrtRE.safetensors",
+            "text_2": "D:/ComfyUI-aki/models/clip/clip-vit-large-patch14"
+        }
+    },
+    {
+        "id": 205,
+        "name": "Note",
+        "prompts": {
+            "text": "T8\u53cb\u60c5\u63d0\u9192\uff1a\u8fd9\u4e2a\u52a1\u5fc5\u770b\u4e0b\u89c6\u9891\uff0c\u6709\u5f88\u591a\u7ec6\u8282\u8bbe\u7f6e\uff0c\u5426\u5219\u80af\u5b9a\u51fa\u95ee\u9898\u7684\uff01\uff01\nNSFW\u6559\u7a0b\u8bf7\u770bYT\u89c6\u9891\uff0cB\u7ad9\u7684\u662f\u9609\u5272\u7248"
+        }
+    },
+    {
+        "id": 206,
+        "name": "MangaNinjiaLoader",
+        "prompts": {
+            "text": "anything-v5-PrtRE.safetensors",
+            "text_2": "D:/ComfyUI-aki/models/clip/clip-vit-large-patch14"
+        }
+    }
+]

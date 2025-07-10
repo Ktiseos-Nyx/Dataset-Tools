@@ -1,0 +1,79 @@
+[
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 14,
+        "name": "HYDiTTextEncoderLoader",
+        "prompts": {
+            "text": "dit_clip.bin",
+            "text_2": "dit_mt5.bin"
+        }
+    },
+    {
+        "id": 21,
+        "name": "HYDiTTextEncodeSimple",
+        "prompts": {
+            "text": "worst quality, low quality, bad anatomy, bad hands, bad body, missing fingers, extra digit, fewer digits"
+        }
+    },
+    {
+        "id": 23,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 25,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 27,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 28,
+        "name": "HYDiTCheckpointLoader",
+        "prompts": {
+            "text": "vision_realistic_DiT_v1_fp16.ckpt"
+        }
+    },
+    {
+        "id": 29,
+        "name": "HYDiTTextEncodeSimple",
+        "prompts": {
+            "text": "best quality, 4k, 8k, masterpiece, ultra-detailed, photorealistic, woman, long hair, looking at viewer, smile, simple background, brown hair, black hair, closed mouth, jewelry, brown eyes, ponytail, earrings, lips, piercing, portrait, forehead, brown background, realistic"
+        }
+    },
+    {
+        "id": 32,
+        "name": "ttN seed"
+    },
+    {
+        "id": 33,
+        "name": "UltimateSDUpscale",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 34,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 35,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 40,
+        "name": "SaveImage"
+    }
+]

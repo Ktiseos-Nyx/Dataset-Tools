@@ -1,0 +1,254 @@
+[
+    {
+        "id": 1,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 1,
+        "name": "Manual Masking"
+    },
+    {
+        "id": 2,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 2,
+        "name": "Model Select"
+    },
+    {
+        "id": 3,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 3,
+        "name": "Sampler"
+    },
+    {
+        "id": 4,
+        "name": "Masking"
+    },
+    {
+        "id": 6,
+        "name": "DifferentialDiffusion"
+    },
+    {
+        "id": 6,
+        "name": "Things to Change"
+    },
+    {
+        "id": 7,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 8,
+        "name": "BasicScheduler",
+        "prompts": {
+            "text": "bong_tangent"
+        }
+    },
+    {
+        "id": 9,
+        "name": "InpaintModelConditioning"
+    },
+    {
+        "id": 12,
+        "name": "ImpactGaussianBlurMask"
+    },
+    {
+        "id": 15,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 17,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae.safetensors"
+        }
+    },
+    {
+        "id": 19,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "Chroma\\chroma-unlocked-v40-detail-calibrated.safetensors"
+        }
+    },
+    {
+        "id": 27,
+        "name": "JWImageResizeToClosestSDXLResolution"
+    },
+    {
+        "id": 30,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 44,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/person_yolov8m-seg.pt"
+        }
+    },
+    {
+        "id": 45,
+        "name": "SegsToCombinedMask"
+    },
+    {
+        "id": 48,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 49,
+        "name": "SEGSOrderedFilterDetailerHookProvider"
+    },
+    {
+        "id": 87,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Chroma-inpaint"
+        }
+    },
+    {
+        "id": 98,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "undefinedflux1-dev-Q8_0_style_of_Light_painting_FLUX_247_style_of_John_Kenn_Mortensen_FLUX_219_00001_.png"
+        }
+    },
+    {
+        "id": 103,
+        "name": "Florence2Run",
+        "prompts": {
+            "text": "caption_to_phrase_grounding"
+        }
+    },
+    {
+        "id": 105,
+        "name": "DownloadAndLoadSAM2Model",
+        "prompts": {
+            "text": "sam2_hiera_small.safetensors",
+            "text_2": "single_image"
+        }
+    },
+    {
+        "id": 106,
+        "name": "Florence2toCoordinates"
+    },
+    {
+        "id": 108,
+        "name": "Sam2Segmentation"
+    },
+    {
+        "id": 109,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 110,
+        "name": "Note",
+        "prompts": {
+            "text": "I suggest leaving the MaskSelect (to the right) on my default (SAM2). It will usually correctly capture your target area. \nIf you change to SEGM, make sure you have an appropriate SEGM detector selected (to the left, colored purple to help you find). \nManual masking is available as a fallback."
+        }
+    },
+    {
+        "id": 116,
+        "name": "Note",
+        "prompts": {
+            "text": "1. Generically state what you are looking to replace: person, head or just face, animal, maybe dog or cat. If you get too specific, Florence or the LLMs might become befuddled and not produce the output you are hoping for.\n2. State what the replacement should be. \n3. Change source picture as needed. Note special instructions for manual masking (if ever required) below. "
+        }
+    },
+    {
+        "id": 117,
+        "name": "Note",
+        "prompts": {
+            "text": "Chroma Inpainter with Auto-Masking\nby EnragedAntelope\nhttps://civitai.com/user/EnragedAntelope\nhttps://github.com/EnragedAntelope\n\nWhat it does?\nThis takes any input image and will replace the selection of your choice by masking automatically. \nJust tell it what you want to replace, then tell it what you want instead! \nIf manual masking is required, that's an option too. \n\nHow to use: \nEverything you typically need to modify is directly under this note!\n\n1. State what you want to change (example: cat)\n2. State what you want the replacement to be (example: dog) \n3. Load a source pic. \n4. Queue prompt. Really, that's it. Every other setting should be good to go.\n\nTips:\n1. There is a special note in the masking section, in case the default auto-masking is not working for you. The default solution has consistently worked for me in all of my testing, but I wanted to give multiple options. \n2. Increase Grow Mask if your replacement object is getting slightly cut-off. \n3. Change denoise in BasicScheduler if you want the end result to be a closer (lower denoise) or further (higher denoise) match from the source. \n4. Florence (and the Florence/SAM2 option) has known trouble with plurals. For instance \"shoes\" will likely only get 1 shoe. Try manual for those situations. \n\nHave fun!"
+        }
+    },
+    {
+        "id": 118,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 127,
+        "name": "GrowMask"
+    },
+    {
+        "id": 142,
+        "name": "DownloadAndLoadFlorence2Model",
+        "prompts": {
+            "text": "thwri/CogFlorence-2.2-Large"
+        }
+    },
+    {
+        "id": 147,
+        "name": "Note",
+        "prompts": {
+            "text": "If you want to mask manually:\n1. Run this workflow once in a mode that is not manual masking until you get output in the Preview Image below (this is to ensure correct size of mask, as source image is automatically resized to common resolutions). \n2. Copy from the Preview Image into the Load Image. \n3. Right-click the image in Load Image, select Mask Editor, draw your mask, save to node.\n4. Select the appropriate input on the switch (colored pale blue) in the Masking group to use this method. "
+        }
+    },
+    {
+        "id": 155,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "pasted/image.png"
+        }
+    },
+    {
+        "id": 156,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 158,
+        "name": "easy string",
+        "prompts": {
+            "text": "snarling bear"
+        }
+    },
+    {
+        "id": 159,
+        "name": "easy string"
+    },
+    {
+        "id": 160,
+        "name": "CFGZeroStarAndInit"
+    },
+    {
+        "id": 161,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 162,
+        "name": "RescaleCFG"
+    },
+    {
+        "id": 163,
+        "name": "NormalizedAttentionGuidance"
+    },
+    {
+        "id": 164,
+        "name": "AdaptiveGuidance"
+    },
+    {
+        "id": 165,
+        "name": "AdvancedNoise"
+    },
+    {
+        "id": 167,
+        "name": "CLIPLoader",
+        "prompts": {
+            "text": "flan-t5-xxl.safetensors"
+        }
+    },
+    {
+        "id": 168,
+        "name": "T5TokenizerOptions"
+    },
+    {
+        "id": 169,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "out of focus. blurry. blurred."
+        }
+    },
+    {
+        "id": 170,
+        "name": "T5TokenizerOptions"
+    }
+]

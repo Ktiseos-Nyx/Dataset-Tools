@@ -1,0 +1,1560 @@
+{
+  "last_node_id": 155,
+  "last_link_id": 231,
+  "nodes": [
+    {
+      "id": 146,
+      "type": "easy boolean",
+      "pos": {
+        "0": 60,
+        "1": 1560
+      },
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 0,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "boolean",
+          "type": "BOOLEAN",
+          "links": [
+            212
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy boolean"
+      },
+      "widgets_values": [
+        true
+      ]
+    },
+    {
+      "id": 147,
+      "type": "easy boolean",
+      "pos": {
+        "0": 70,
+        "1": 1610
+      },
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 1,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "boolean",
+          "type": "BOOLEAN",
+          "links": [
+            213
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy boolean"
+      },
+      "widgets_values": [
+        false
+      ]
+    },
+    {
+      "id": 149,
+      "type": "DF_Logic_node",
+      "pos": {
+        "0": 620,
+        "1": 1550
+      },
+      "size": {
+        "0": 210,
+        "1": 118
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 19,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "CompareValue_A",
+          "type": "*",
+          "link": 216
+        },
+        {
+          "name": "CompareValue_B",
+          "type": "*",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "OnTrue",
+          "type": "*",
+          "link": 217,
+          "slot_index": 2,
+          "shape": 7
+        },
+        {
+          "name": "OnFalse",
+          "type": "*",
+          "link": 218,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": [
+            220
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DF_Logic_node"
+      },
+      "widgets_values": [
+        "A > B"
+      ]
+    },
+    {
+      "id": 152,
+      "type": "easy boolean",
+      "pos": {
+        "0": 450,
+        "1": 1550
+      },
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 2,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "boolean",
+          "type": "BOOLEAN",
+          "links": [
+            217
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy boolean"
+      },
+      "widgets_values": [
+        true
+      ]
+    },
+    {
+      "id": 153,
+      "type": "easy boolean",
+      "pos": {
+        "0": 460,
+        "1": 1600
+      },
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 3,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "boolean",
+          "type": "BOOLEAN",
+          "links": [
+            218
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy boolean"
+      },
+      "widgets_values": [
+        false
+      ]
+    },
+    {
+      "id": 143,
+      "type": "DF_Logic_node",
+      "pos": {
+        "0": 230,
+        "1": 1560
+      },
+      "size": {
+        "0": 210,
+        "1": 118
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 18,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "CompareValue_A",
+          "type": "*",
+          "link": 211
+        },
+        {
+          "name": "CompareValue_B",
+          "type": "*",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "OnTrue",
+          "type": "*",
+          "link": 212,
+          "slot_index": 2,
+          "shape": 7
+        },
+        {
+          "name": "OnFalse",
+          "type": "*",
+          "link": 213,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": [
+            215
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DF_Logic_node"
+      },
+      "widgets_values": [
+        "A > B"
+      ]
+    },
+    {
+      "id": 49,
+      "type": "LoadImage",
+      "pos": {
+        "0": 47,
+        "1": 1011
+      },
+      "size": {
+        "0": 363.55047607421875,
+        "1": 438.6439514160156
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            221,
+            222
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "882193a3579ff40a0fcacd4f1f10e722-231786877.jpg",
+        "image"
+      ]
+    },
+    {
+      "id": 148,
+      "type": "easy imageSizeByLongerSide",
+      "pos": {
+        "0": 450,
+        "1": 1500
+      },
+      "size": {
+        "0": 210,
+        "1": 76
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 16,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 223
+        }
+      ],
+      "outputs": [
+        {
+          "name": "resolution",
+          "type": "INT",
+          "links": [
+            216
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy imageSizeByLongerSide"
+      },
+      "widgets_values": [
+        "1400"
+      ]
+    },
+    {
+      "id": 56,
+      "type": "LoadImage",
+      "pos": {
+        "0": 437,
+        "1": 1010
+      },
+      "size": {
+        "0": 346.62823486328125,
+        "1": 439.7686462402344
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            223,
+            224
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "882193a3579ff40a0fcacd4f1f10e722-231786877.jpg",
+        "image"
+      ]
+    },
+    {
+      "id": 151,
+      "type": "ImpactControlBridge",
+      "pos": {
+        "0": 455,
+        "1": 1652
+      },
+      "size": {
+        "0": 210,
+        "1": 82
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 22,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "IMAGE",
+          "link": 224
+        },
+        {
+          "name": "mode",
+          "type": "BOOLEAN",
+          "link": 220,
+          "widget": {
+            "name": "mode"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "IMAGE",
+          "links": [
+            219
+          ],
+          "slot_index": 0,
+          "label": "IMAGE"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImpactControlBridge"
+      },
+      "widgets_values": [
+        true,
+        "Bypass"
+      ]
+    },
+    {
+      "id": 138,
+      "type": "easy imageScaleDownToSize",
+      "pos": {
+        "0": -173,
+        "1": 1615
+      },
+      "size": {
+        "0": 210,
+        "1": 82
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 206
+        },
+        {
+          "name": "size",
+          "type": "INT",
+          "link": 210,
+          "widget": {
+            "name": "size"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            207
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy imageScaleDownToSize"
+      },
+      "widgets_values": [
+        1639,
+        true
+      ]
+    },
+    {
+      "id": 142,
+      "type": "easy imageSizeByLongerSide",
+      "pos": {
+        "0": 60,
+        "1": 1510
+      },
+      "size": {
+        "0": 210,
+        "1": 76
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 15,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 221
+        }
+      ],
+      "outputs": [
+        {
+          "name": "resolution",
+          "type": "INT",
+          "links": [
+            211
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy imageSizeByLongerSide"
+      },
+      "widgets_values": [
+        "1400"
+      ]
+    },
+    {
+      "id": 145,
+      "type": "ImpactControlBridge",
+      "pos": {
+        "0": 67,
+        "1": 1673
+      },
+      "size": {
+        "0": 210,
+        "1": 82
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 21,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "IMAGE",
+          "link": 222
+        },
+        {
+          "name": "mode",
+          "type": "BOOLEAN",
+          "link": 215,
+          "widget": {
+            "name": "mode"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "IMAGE",
+          "links": [
+            214
+          ],
+          "slot_index": 0,
+          "label": "IMAGE"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImpactControlBridge"
+      },
+      "widgets_values": [
+        true,
+        "Bypass"
+      ]
+    },
+    {
+      "id": 111,
+      "type": "easy imageSizeByLongerSide",
+      "pos": {
+        "0": -321,
+        "1": 1498
+      },
+      "size": {
+        "0": 210,
+        "1": 76
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 179
+        }
+      ],
+      "outputs": [
+        {
+          "name": "resolution",
+          "type": "INT",
+          "links": [
+            185
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy imageSizeByLongerSide"
+      },
+      "widgets_values": [
+        "643"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "LoadImage",
+      "pos": {
+        "0": -326,
+        "1": 1012
+      },
+      "size": {
+        "0": 344.70635986328125,
+        "1": 439.186279296875
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            179,
+            204
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "DinerBooths.jpg",
+        "image"
+      ]
+    },
+    {
+      "id": 120,
+      "type": "DF_Logic_node",
+      "pos": {
+        "0": -138,
+        "1": 1560
+      },
+      "size": {
+        "0": 210,
+        "1": 118
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "CompareValue_A",
+          "type": "*",
+          "link": 185
+        },
+        {
+          "name": "CompareValue_B",
+          "type": "*",
+          "link": 186,
+          "shape": 7
+        },
+        {
+          "name": "OnTrue",
+          "type": "*",
+          "link": 208,
+          "slot_index": 2,
+          "shape": 7
+        },
+        {
+          "name": "OnFalse",
+          "type": "*",
+          "link": 209,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": [
+            203
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DF_Logic_node"
+      },
+      "widgets_values": [
+        "A > B"
+      ]
+    },
+    {
+      "id": 139,
+      "type": "ImpactControlBridge",
+      "pos": {
+        "0": -312,
+        "1": 1676
+      },
+      "size": {
+        "0": 210,
+        "1": 82
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "IMAGE",
+          "link": 204
+        },
+        {
+          "name": "mode",
+          "type": "BOOLEAN",
+          "link": 203,
+          "widget": {
+            "name": "mode"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "IMAGE",
+          "links": [
+            206
+          ],
+          "slot_index": 0,
+          "label": "IMAGE"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImpactControlBridge"
+      },
+      "widgets_values": [
+        true,
+        "Bypass"
+      ]
+    },
+    {
+      "id": 141,
+      "type": "easy boolean",
+      "pos": {
+        "0": -314,
+        "1": 1609
+      },
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "boolean",
+          "type": "BOOLEAN",
+          "links": [
+            209
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy boolean"
+      },
+      "widgets_values": [
+        false
+      ]
+    },
+    {
+      "id": 140,
+      "type": "easy boolean",
+      "pos": {
+        "0": -330,
+        "1": 1558
+      },
+      "size": {
+        "0": 210,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "boolean",
+          "type": "BOOLEAN",
+          "links": [
+            208
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy boolean"
+      },
+      "widgets_values": [
+        true
+      ]
+    },
+    {
+      "id": 97,
+      "type": "OmniGenLoader",
+      "pos": {
+        "0": 818,
+        "1": 1155
+      },
+      "size": {
+        "0": 297.9934997558594,
+        "1": 154
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "OMNIGEN_MODEL",
+          "type": "OMNIGEN_MODEL",
+          "links": [
+            157
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OmniGenLoader"
+      },
+      "widgets_values": [
+        "OmniGen-v1",
+        "default",
+        true,
+        true,
+        false
+      ]
+    },
+    {
+      "id": 66,
+      "type": "SDXLEmptyLatentSizePicker+",
+      "pos": {
+        "0": 820,
+        "1": 932
+      },
+      "size": {
+        "0": 293.0799255371094,
+        "1": 173.83633422851562
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            164
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SDXLEmptyLatentSizePicker+"
+      },
+      "widgets_values": [
+        "1024x1024 (1.0)",
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "id": 98,
+      "type": "OmniGenNode",
+      "pos": {
+        "0": 817,
+        "1": 1363
+      },
+      "size": {
+        "0": 301.9578857421875,
+        "1": 340
+      },
+      "flags": {},
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "OMNIGEN_MODEL",
+          "link": 157
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": 164
+        },
+        {
+          "name": "image_1",
+          "type": "IMAGE",
+          "link": 207,
+          "shape": 7
+        },
+        {
+          "name": "image_2",
+          "type": "IMAGE",
+          "link": 226,
+          "shape": 7
+        },
+        {
+          "name": "image_3",
+          "type": "IMAGE",
+          "link": 225,
+          "shape": 7
+        },
+        {
+          "name": "max_input_image_size",
+          "type": "INT",
+          "link": 227,
+          "widget": {
+            "name": "max_input_image_size"
+          }
+        },
+        {
+          "name": "prompt_text",
+          "type": "STRING",
+          "link": 229,
+          "widget": {
+            "name": "prompt_text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            228
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OmniGenNode"
+      },
+      "widgets_values": [
+        "image_1 Change the lighting to be neon lights",
+        50,
+        2.5,
+        1.6,
+        1024,
+        true,
+        982,
+        "randomize"
+      ]
+    },
+    {
+      "id": 154,
+      "type": "SaveImage",
+      "pos": {
+        "0": 1139,
+        "1": 1191
+      },
+      "size": {
+        "0": 405.1162414550781,
+        "1": 504.1422424316406
+      },
+      "flags": {},
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 228
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 90,
+      "type": "Note",
+      "pos": {
+        "0": 57,
+        "1": 808
+      },
+      "size": {
+        "0": 744.927490234375,
+        "1": 83.99971771240234
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "text2img Example Prompt: \"A white cat resting on a picnic table.\"\nImage Editing Example Prompt: \"image_1 The umbrella should be red.\"\nSegmentation Example Prompt: \"Find all lamps in the picture image_1 and highlight them.\"\nTry-On Example Prompt:\"image_1 wears image_2.\"\nPose Example Prompt: \"Detect the skeleton of human in image_1.\""
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 86,
+      "type": "Fast Groups Bypasser (rgthree)",
+      "pos": {
+        "0": 1139,
+        "1": 770
+      },
+      "size": {
+        "0": 362.04388427734375,
+        "1": 106
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "OPT_CONNECTION",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "matchColors": "",
+        "matchTitle": "",
+        "showNav": true,
+        "sort": "position",
+        "customSortAlphabet": "",
+        "toggleRestriction": "default"
+      },
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 155,
+      "type": "Text Multiline",
+      "pos": {
+        "0": 1137,
+        "1": 925
+      },
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            229
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Prompt",
+      "properties": {
+        "Node name for S&R": "Text Multiline"
+      },
+      "widgets_values": [
+        "image_1 Change the colors to match a more rustic saloon"
+      ]
+    },
+    {
+      "id": 144,
+      "type": "easy imageScaleDownToSize",
+      "pos": {
+        "0": 210,
+        "1": 1616
+      },
+      "size": {
+        "0": 210,
+        "1": 82
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 24,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 214
+        },
+        {
+          "name": "size",
+          "type": "INT",
+          "link": 230,
+          "widget": {
+            "name": "size"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            226
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy imageScaleDownToSize"
+      },
+      "widgets_values": [
+        1639,
+        true
+      ]
+    },
+    {
+      "id": 113,
+      "type": "Primitive integer [Crystools]",
+      "pos": {
+        "0": 820,
+        "1": 810
+      },
+      "size": {
+        "0": 288.26971435546875,
+        "1": 77.7804183959961
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "int",
+          "type": "INT",
+          "links": [
+            186,
+            210,
+            227,
+            230,
+            231
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Max Input Size to Scale Down",
+      "properties": {
+        "Node name for S&R": "Primitive integer [Crystools]"
+      },
+      "widgets_values": [
+        1024
+      ]
+    },
+    {
+      "id": 150,
+      "type": "easy imageScaleDownToSize",
+      "pos": {
+        "0": 583,
+        "1": 1602
+      },
+      "size": {
+        "0": 210,
+        "1": 82
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 25,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 219
+        },
+        {
+          "name": "size",
+          "type": "INT",
+          "link": 231,
+          "widget": {
+            "name": "size"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            225
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy imageScaleDownToSize"
+      },
+      "widgets_values": [
+        1639,
+        true
+      ]
+    }
+  ],
+  "links": [
+    [
+      157,
+      97,
+      0,
+      98,
+      0,
+      "OMNIGEN_MODEL"
+    ],
+    [
+      164,
+      66,
+      0,
+      98,
+      1,
+      "LATENT"
+    ],
+    [
+      179,
+      8,
+      0,
+      111,
+      0,
+      "IMAGE"
+    ],
+    [
+      185,
+      111,
+      0,
+      120,
+      0,
+      "*"
+    ],
+    [
+      186,
+      113,
+      0,
+      120,
+      1,
+      "*"
+    ],
+    [
+      203,
+      120,
+      0,
+      139,
+      1,
+      "BOOLEAN"
+    ],
+    [
+      204,
+      8,
+      0,
+      139,
+      0,
+      "*"
+    ],
+    [
+      206,
+      139,
+      0,
+      138,
+      0,
+      "IMAGE"
+    ],
+    [
+      207,
+      138,
+      0,
+      98,
+      2,
+      "IMAGE"
+    ],
+    [
+      208,
+      140,
+      0,
+      120,
+      2,
+      "*"
+    ],
+    [
+      209,
+      141,
+      0,
+      120,
+      3,
+      "*"
+    ],
+    [
+      210,
+      113,
+      0,
+      138,
+      1,
+      "INT"
+    ],
+    [
+      211,
+      142,
+      0,
+      143,
+      0,
+      "*"
+    ],
+    [
+      212,
+      146,
+      0,
+      143,
+      2,
+      "*"
+    ],
+    [
+      213,
+      147,
+      0,
+      143,
+      3,
+      "*"
+    ],
+    [
+      214,
+      145,
+      0,
+      144,
+      0,
+      "IMAGE"
+    ],
+    [
+      215,
+      143,
+      0,
+      145,
+      1,
+      "BOOLEAN"
+    ],
+    [
+      216,
+      148,
+      0,
+      149,
+      0,
+      "*"
+    ],
+    [
+      217,
+      152,
+      0,
+      149,
+      2,
+      "*"
+    ],
+    [
+      218,
+      153,
+      0,
+      149,
+      3,
+      "*"
+    ],
+    [
+      219,
+      151,
+      0,
+      150,
+      0,
+      "IMAGE"
+    ],
+    [
+      220,
+      149,
+      0,
+      151,
+      1,
+      "BOOLEAN"
+    ],
+    [
+      221,
+      49,
+      0,
+      142,
+      0,
+      "IMAGE"
+    ],
+    [
+      222,
+      49,
+      0,
+      145,
+      0,
+      "IMAGE"
+    ],
+    [
+      223,
+      56,
+      0,
+      148,
+      0,
+      "IMAGE"
+    ],
+    [
+      224,
+      56,
+      0,
+      151,
+      0,
+      "IMAGE"
+    ],
+    [
+      225,
+      150,
+      0,
+      98,
+      4,
+      "IMAGE"
+    ],
+    [
+      226,
+      144,
+      0,
+      98,
+      3,
+      "IMAGE"
+    ],
+    [
+      227,
+      113,
+      0,
+      98,
+      5,
+      "INT"
+    ],
+    [
+      228,
+      98,
+      0,
+      154,
+      0,
+      "IMAGE"
+    ],
+    [
+      229,
+      155,
+      0,
+      98,
+      6,
+      "STRING"
+    ],
+    [
+      230,
+      113,
+      0,
+      144,
+      1,
+      "INT"
+    ],
+    [
+      231,
+      113,
+      0,
+      150,
+      1,
+      "INT"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "image_1",
+      "bounding": [
+        -339,
+        909,
+        374,
+        791
+      ],
+      "color": "#88A",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "image_2",
+      "bounding": [
+        36,
+        906,
+        390,
+        795
+      ],
+      "color": "#88A",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "image_3",
+      "bounding": [
+        429,
+        900,
+        375,
+        802
+      ],
+      "color": "#88A",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.9646149645000006,
+      "offset": [
+        654.2620853433124,
+        -747.8460128591458
+      ]
+    }
+  },
+  "version": 0.4
+}

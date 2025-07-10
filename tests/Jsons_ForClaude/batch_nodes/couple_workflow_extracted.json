@@ -1,0 +1,98 @@
+[
+    {
+        "id": -1,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": -1,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 109,
+        "name": "XY Plot"
+    },
+    {
+        "id": 112,
+        "name": "Efficient Loader",
+        "prompts": {
+            "text": "illustriousBlackMagic_v27CLEAN.safetensors",
+            "text_2": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 119,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "%date:yyyy-MM-dd%/%date:MMddhhmmss%_%KSampler (Efficient).seed%"
+        }
+    },
+    {
+        "id": 120,
+        "name": "LoRA Stacker"
+    },
+    {
+        "id": 154,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 167,
+        "name": "workflow/XY"
+    },
+    {
+        "id": 198,
+        "name": "PlaySound|pysssss"
+    },
+    {
+        "id": 254,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "0221202113_1049840337309221_00002_ (1).png"
+        }
+    },
+    {
+        "id": 257,
+        "name": "CR Latent Input Switch"
+    },
+    {
+        "id": 262,
+        "name": "CR Latent Input Switch"
+    },
+    {
+        "id": 284,
+        "name": "workflow/VAE E"
+    },
+    {
+        "id": 325,
+        "name": "AttentionCouple|cgem156"
+    },
+    {
+        "id": 356,
+        "name": "LoadImageMask",
+        "prompts": {
+            "text": "clipspace/clipspace-mask-289900296.1.png [input]"
+        }
+    },
+    {
+        "id": 362,
+        "name": "LoadImageMask"
+    },
+    {
+        "id": 363,
+        "name": "AddMask"
+    },
+    {
+        "id": 364,
+        "name": "InvertMask"
+    },
+    {
+        "id": 425,
+        "name": "workflow/clips",
+        "prompts": {
+            "text": "(masterpiece),(best quality),(ultra detailed), \n",
+            "text_2": "(masterpiece),(best quality),(ultra detailed), \n2girls, \nlong hair, blue hair, ribbon, red eyes, blunt bangs, sidelocks,white dress,detached white sleeves,\nlooking at viewer, smirk, "
+        }
+    }
+]

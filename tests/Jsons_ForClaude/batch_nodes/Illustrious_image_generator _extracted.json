@@ -1,0 +1,218 @@
+[
+    {
+        "id": 6,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 8,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu",
+            "text_2": "exponential"
+        }
+    },
+    {
+        "id": 9,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu",
+            "text_2": "exponential"
+        }
+    },
+    {
+        "id": 10,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu",
+            "text_2": "exponential"
+        }
+    },
+    {
+        "id": 14,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 15,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4xRealWebPhoto_v4_dat2.safetensors"
+        }
+    },
+    {
+        "id": 18,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 20,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu",
+            "text_2": "exponential"
+        }
+    },
+    {
+        "id": 22,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 23,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/person_yolov8m-seg.pt"
+        }
+    },
+    {
+        "id": 34,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 36,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "exponential"
+        }
+    },
+    {
+        "id": 40,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 41,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 43,
+        "name": "KSampler Config (rgthree)",
+        "prompts": {
+            "text": "dpmpp_2s_ancestral"
+        }
+    },
+    {
+        "id": 45,
+        "name": "Efficient Loader",
+        "prompts": {
+            "text": "illustrious\\realistas\\rillusmRealistic_v11.safetensors",
+            "text_2": "sdxlVAE_sdxlVAE.safetensors"
+        }
+    },
+    {
+        "id": 46,
+        "name": "Textbox"
+    },
+    {
+        "id": 49,
+        "name": "Textbox",
+        "prompts": {
+            "text": "score_9, score_8_up, score_8_up, 1girl, solo, super detailed, super high resolution,"
+        }
+    },
+    {
+        "id": 50,
+        "name": "Textbox",
+        "prompts": {
+            "text": "photo, realistic, photorealistic,"
+        }
+    },
+    {
+        "id": 51,
+        "name": "StringFunction|pysssss"
+    },
+    {
+        "id": 52,
+        "name": "CR LoRA Stack"
+    },
+    {
+        "id": 55,
+        "name": "Efficient Loader",
+        "prompts": {
+            "text": "illustrious\\realistas\\realismIllustriousBy_v1FP16.safetensors",
+            "text_2": "sdxlVAE_sdxlVAE.safetensors"
+        }
+    },
+    {
+        "id": 56,
+        "name": "StringFunction|pysssss"
+    },
+    {
+        "id": 58,
+        "name": "SDXL Empty Latent Image (rgthree)",
+        "prompts": {
+            "text": " 896 x 1152  (portrait)"
+        }
+    },
+    {
+        "id": 60,
+        "name": "Textbox"
+    },
+    {
+        "id": 61,
+        "name": "SaveImage"
+    },
+    {
+        "id": 62,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 63,
+        "name": "Textbox",
+        "prompts": {
+            "text": "score_4, score_5, score_6, extra fingers, distorted hands, distorted fingers, muscular, low quality, lowres, bad anatomy, worst quality, simple background, censored, text, signature, lineless, watermark,signature, logo, FastNegativeEmbedding, low-quality, moir pattern, downsampling, aliasing, distorted, blurry, glossy, blur, jpeg artifacts, compression artifacts, poorly drawn, low-resolution, bad, distortion, twisted, excessive, exaggerated pose, exaggerated limbs, mixed characters, grainy, symmetrical, duplicate, error, pattern, beginner, pixelated, fake, hyper, glitch, overexposed, high-contrast, bad-contrast, black and white, NegfeetV2, messy, Deformed, Deformed face, Deformed fingers, Deformed hands, Out of frame, Poorly drawn face, Poorly drawn feet, Poorly drawn hands, Draft, Grainy, Kitsch, Low-res, old lady, sketch, black and white, doujinshi, exaggerated anatomy, penis growing from breasts, red hairs, hands joining into one hand, upside down,"
+        }
+    },
+    {
+        "id": 66,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 67,
+        "name": "Text to Conditioning"
+    },
+    {
+        "id": 68,
+        "name": "SaveImage"
+    },
+    {
+        "id": 70,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 71,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 72,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 75,
+        "name": "TagRemover",
+        "prompts": {
+            "text": "cowboy shot, wavy hair, see-through, two-tone hair, outdoors, multicolored hair, tan, asian, loli, black hair, dark-skinned female, dark skin,flat chest, ponytail, nipple piercing, sleeping, sleeping upright, long hair,  brown hair, medium breasts, brown eyes, censored, artist name, mosaic censoring,  nose, realistic, parted bangs, watermark, web address,  blue eyes, blonde hair, small breasts, photorealistic,  english text, long hair, breasts, pink hair, multicolored hair, two-tone hair, pink eyes, medium breasts, hair between eyes, braid,  green eyes, red hair, twin braids, patreon username, single braid, medium hair, short hair, bangs, large breasts, braided ponytail, white hair, long braid, orange eyes, black eyes, twintails,blue hair, purple hair,grey hair,grey eyes,very long hair, aqua eyes, aqua hair, gradient hair, thick eyebrows, orange hair, yellow eyes, hair bun,double bun, red eyes, hairband, white hairband, curly hair,purple eyes, single hair bun, short twintails, short ponytail, petite, two side up, interface headset, headgear,"
+        }
+    },
+    {
+        "id": 92,
+        "name": "LoadImageFromUrl"
+    },
+    {
+        "id": 93,
+        "name": "WD14Tagger|pysssss",
+        "prompts": {
+            "text": "wd-v1-4-convnextv2-tagger-v2"
+        }
+    },
+    {
+        "id": 96,
+        "name": "Textbox"
+    },
+    {
+        "id": 97,
+        "name": "ShowText|pysssss"
+    }
+]

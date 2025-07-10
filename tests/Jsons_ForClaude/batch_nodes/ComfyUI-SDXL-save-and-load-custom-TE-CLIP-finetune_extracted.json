@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "name": "CLIPSave"
+    },
+    {
+        "id": 3,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd_xl_base_1.0.safetensors"
+        }
+    },
+    {
+        "id": 4,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "TE-_clip_g_00001_.safetensors",
+            "text_2": "ViT-L-14-GmP-ft-TE-only-HF-format.safetensors"
+        }
+    },
+    {
+        "id": 6,
+        "name": "Note",
+        "prompts": {
+            "text": "1. Simply hit \"Queue Prompt\", and this will save the two CLIP text encoders wrapped in the \"sd_xl_base_1.0.safetensors\" file to ComfyUI/output/clip/.\n2. Move the .safetensors file to ComfyUI/models/clip.\n\n3. Use the TE that has \"g\" (CLIP ViT-G) in clip_name1 (SDXL text encoder 1 out of 2).\n4. You can replace the \"l\" (CLIP ViT-L) in clip_name2 (SDXL text encoder 2 out of 2) with my custom fine-tuned model.\n\nhttps://huggingface.co/zer0int/CLIP-GmP-ViT-L-14/blob/main/ViT-L-14-GmP-ft-TE-only-HF-format.safetensors"
+        }
+    },
+    {
+        "id": 7,
+        "name": "Note",
+        "prompts": {
+            "text": "You need *both* text encoders for SDXL, alas use this node in your workflow, and you're good to go! \nYou can find this node at: Right click -> Add Node -> Advanced -> Loaders -> DualCLIPLoader "
+        }
+    }
+]

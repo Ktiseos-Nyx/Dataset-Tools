@@ -1,0 +1,272 @@
+{
+  "id": "e19b37d2-ec23-4659-970f-5c08b5a58580",
+  "revision": 0,
+  "last_node_id": 51,
+  "last_link_id": 83,
+  "nodes": [
+    {
+      "id": 2,
+      "type": "LoadImage",
+      "pos": [
+        2440,
+        4030
+      ],
+      "size": [
+        360,
+        460
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            81
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "title": "input",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.26",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "character-avatar-real.jpg",
+        "image",
+        ""
+      ]
+    },
+    {
+      "id": 50,
+      "type": "SaveImage",
+      "pos": [
+        3250,
+        4030
+      ],
+      "size": [
+        350,
+        400
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 83
+        }
+      ],
+      "outputs": [],
+      "title": "output",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.26",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "%date:yyMMdd%/%date:yyMMdd-hhmmss%_T2I-BAS_FX10_TRB_%ksampler.seed%",
+        ""
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 51,
+      "type": "Bookmark (rgthree)",
+      "pos": [
+        2400,
+        3700
+      ],
+      "size": [
+        210,
+        62
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "🔖workflow",
+      "properties": {},
+      "widgets_values": [
+        "0",
+        0.45
+      ],
+      "shape": 1
+    },
+    {
+      "id": 48,
+      "type": "Gemini_Flash_200_Exp",
+      "pos": [
+        2850,
+        4030
+      ],
+      "size": [
+        350,
+        510
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 81
+        },
+        {
+          "name": "video",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "generated_content",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "generated_images",
+          "type": "IMAGE",
+          "slot_index": 1,
+          "links": [
+            83
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Gemini_Flash_200_Exp"
+      },
+      "widgets_values": [
+        "make a portrait of the woman steampunk, photorealistic",
+        "image",
+        "gemini-2.0-flash-exp-image-generation",
+        "generate_images",
+        false,
+        false,
+        "",
+        "",
+        8192,
+        0.4,
+        false,
+        1,
+        1,
+        1766,
+        "increment"
+      ]
+    },
+    {
+      "id": 49,
+      "type": "Note",
+      "pos": [
+        3250,
+        4490
+      ],
+      "size": [
+        350,
+        100
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "img2img-basic-gf20\n==========================================================\nGF20 : Gemini Flash 2.0\nID   : I2I-BAS_GF20"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      81,
+      2,
+      0,
+      48,
+      0,
+      "IMAGE"
+    ],
+    [
+      83,
+      48,
+      1,
+      50,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": " Img2Img",
+      "bounding": [
+        2450,
+        3720,
+        270,
+        80
+      ],
+      "color": "#ffffff",
+      "font_size": 60,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": " GF20",
+      "bounding": [
+        2730,
+        3760,
+        100,
+        40
+      ],
+      "color": "#00ffff",
+      "font_size": 30,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.81402749386841,
+      "offset": [
+        -2140.865291851611,
+        -3889.6537620521003
+      ]
+    },
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true,
+    "ue_links": [],
+    "node_versions": {
+      "comfy-core": "0.3.26",
+      "ComfyUI-Gemini_Flash_2": "258fa829bf22b0f87d133d99b438ae3d99457e85"
+    }
+  },
+  "version": 0.4
+}

@@ -1,0 +1,111 @@
+[
+    {
+        "id": 12,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8s.pt"
+        }
+    },
+    {
+        "id": 19,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "00290-2422217576-2.png"
+        }
+    },
+    {
+        "id": 27,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "xenogasmNSFWSemiReal_v5.safetensors"
+        }
+    },
+    {
+        "id": 82,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 98,
+        "name": "DetailerForEach"
+    },
+    {
+        "id": 99,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "female hand"
+        }
+    },
+    {
+        "id": 100,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(embedding:bad-hands-5:0.8), deformed, blurry, unprofessional-bodies"
+        }
+    },
+    {
+        "id": 101,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Detailer/HandsFixed"
+        }
+    },
+    {
+        "id": 102,
+        "name": "Reroute"
+    },
+    {
+        "id": 104,
+        "name": "Note",
+        "prompts": {
+            "text": "If original hand is really distorted, set \"cycle = 2\"."
+        }
+    },
+    {
+        "id": 105,
+        "name": "Note",
+        "prompts": {
+            "text": "When needed, mention gestures, colored fingernails, claws or background in your prompt."
+        }
+    },
+    {
+        "id": 110,
+        "name": "ImpactControlNetApplyAdvancedSEGS"
+    },
+    {
+        "id": 111,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "controlnet11Models_depth.safetensors"
+        }
+    },
+    {
+        "id": 113,
+        "name": "MeshGraphormer+ImpactDetector-DepthMapPreprocessor",
+        "prompts": {
+            "text": "based_on_depth"
+        }
+    },
+    {
+        "id": 116,
+        "name": "SEGSPreview"
+    },
+    {
+        "id": 117,
+        "name": "SEGSPreviewCNet"
+    },
+    {
+        "id": 121,
+        "name": "Note",
+        "prompts": {
+            "text": "If depth maps look wrong, bypass \"ControlNetApplyAdvanced\" (Ctrl + B)"
+        }
+    },
+    {
+        "id": 124,
+        "name": "Reroute"
+    },
+    {
+        "id": 125,
+        "name": "PrimitiveNode"
+    }
+]

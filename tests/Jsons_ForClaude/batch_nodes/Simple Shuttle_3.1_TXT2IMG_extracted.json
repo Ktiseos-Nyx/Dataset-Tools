@@ -1,0 +1,115 @@
+[
+    {
+        "id": 1,
+        "name": "CLIP"
+    },
+    {
+        "id": 2,
+        "name": "PROMPT"
+    },
+    {
+        "id": 3,
+        "name": "SAMPLER"
+    },
+    {
+        "id": 4,
+        "name": "VAE"
+    },
+    {
+        "id": 5,
+        "name": "Diffusion model"
+    },
+    {
+        "id": 6,
+        "name": "OUTPUT"
+    },
+    {
+        "id": 7,
+        "name": "Group"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 8,
+        "name": "-"
+    },
+    {
+        "id": 37,
+        "name": "CLIPAttentionMultiply"
+    },
+    {
+        "id": 38,
+        "name": "TripleCLIPLoader",
+        "prompts": {
+            "text": "sd3\\clip_g_sdxl_base.safetensors",
+            "text_2": "ViT-L-14-TEXT-detail-improved-hiT-GmP-TE-only-HF.safetensors"
+        }
+    },
+    {
+        "id": 39,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "Shuttle\\shuttle-3.1-aesthetic.safetensors"
+        }
+    },
+    {
+        "id": 40,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "Shuttle\\diffusion_pytorch_model.safetensors"
+        }
+    },
+    {
+        "id": 42,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 43,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 44,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 45,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 47,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 48,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 49,
+        "name": "Int Literal"
+    },
+    {
+        "id": 50,
+        "name": "Int Literal"
+    },
+    {
+        "id": 51,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 52,
+        "name": "CLIPTextEncodeFlux",
+        "prompts": {
+            "text": "Hyperrealism,extremely detailed photo, fantasy, magical forest, mythical creature, ",
+            "text_2": "A hyperrealistic photo of an enchanting forest illuminated by ethereal blue and green tones, with shafts of silver light breaking through the dense canopy of tall, dark trees. A woman with eyes faintly glowing of orange, dressed in tattered black clothes with long, dark hair with flowers, and with antlers growing from her head, is playing the violin halfway up a lush forest path, surrounded by a magical atmosphere dense with fluttering butterflies in vivid oranges and yellows, creating a vivid contrast against the deep shadows of the woods. Behind her is a soft and vibrant orange glow, creating a backlit effect. In the foreground the backs of three young girls is seen, walking towards the violin playing woman. The ground is carpeted with soft grass and glowing fireflies, adding a touch of whimsy and warmth to the cool night scene. The setting is very dark and ethereal mist swirls around, enhancing the feeling of enchantment, reminiscent of a fantasy world. The overall aesthetic is hyperrealistic, with intricate details in the butterfly wings and the soft, shimmering light. \n\nThe setting is very dark and the color palette consists of deep blues and blacks contrasted with the warm yellows of the butterflies, creating a striking visual harmony. The composition captures a sense of wonder and tranquility, emphasizing a magical journey through nature. Hyperrealistic style, with attention to detail in the textures of the trees and the luminosity of the butterflies and moonlight."
+        }
+    },
+    {
+        "id": 53,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Flux/Aesthetic/_IMG_"
+        }
+    }
+]

@@ -1,0 +1,68 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2m_sde_gpu",
+            "text_2": "exponential"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "dreamshaper_8.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry, photography, distorted"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 11,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "vae-ft-mse-840000-ema-pruned.safetensors"
+        }
+    },
+    {
+        "id": 18,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "high quality illustration of red riding hood hugging the wolf in the forest"
+        }
+    },
+    {
+        "id": 33,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 34,
+        "name": "GLIGENLoader",
+        "prompts": {
+            "text": "gligen_sd14_textbox_pruned.safetensors"
+        }
+    },
+    {
+        "id": 35,
+        "name": "GLIGENTextBoxApply",
+        "prompts": {
+            "text": "red riding hood"
+        }
+    },
+    {
+        "id": 36,
+        "name": "GLIGENTextBoxApply"
+    }
+]

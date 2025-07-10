@@ -1,0 +1,248 @@
+[
+    {
+        "id": 1,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 1,
+        "name": "Prompt"
+    },
+    {
+        "id": 2,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 2,
+        "name": "Size"
+    },
+    {
+        "id": 3,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "SDXL [2D] NoobAI - L_A_X.safetensors"
+        }
+    },
+    {
+        "id": 3,
+        "name": "Layer Diffusion compatible checkpoin"
+    },
+    {
+        "id": 4,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 4,
+        "name": "Layer Diffuse comatible generation"
+    },
+    {
+        "id": 5,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 5,
+        "name": "Final Generatio"
+    },
+    {
+        "id": 6,
+        "name": "LayeredDiffusionApply",
+        "prompts": {
+            "text": "SDXL, Attention Injection"
+        }
+    },
+    {
+        "id": 6,
+        "name": "Models"
+    },
+    {
+        "id": 7,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 7,
+        "name": "ControlNet"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 8,
+        "name": "Layer Diffusion Model"
+    },
+    {
+        "id": 9,
+        "name": "LayeredDiffusionDecode"
+    },
+    {
+        "id": 10,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 11,
+        "name": "LayeredDiffusionDecodeRGBA"
+    },
+    {
+        "id": 12,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 14,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 15,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 16,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 17,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 18,
+        "name": "Zoe-DepthMapPreprocessor"
+    },
+    {
+        "id": 19,
+        "name": "HEDPreprocessor"
+    },
+    {
+        "id": 20,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "controlnetxlCNXL_eugeoterScribbleHed.safetensors"
+        }
+    },
+    {
+        "id": 21,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "controlnetxlCNXL_eugeoterDepth.safetensors"
+        }
+    },
+    {
+        "id": 22,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 23,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd_xl_base_1.0_0.9vae.safetensors"
+        }
+    },
+    {
+        "id": 24,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 25,
+        "name": "Text Multiline"
+    },
+    {
+        "id": 26,
+        "name": "Text Multiline"
+    },
+    {
+        "id": 27,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 28,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 29,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 33,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 34,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 35,
+        "name": "JoinImageWithAlpha"
+    },
+    {
+        "id": 36,
+        "name": "InvertMask"
+    },
+    {
+        "id": 37,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 38,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 40,
+        "name": "SaveImage"
+    },
+    {
+        "id": 41,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## Use **only** checkpoints with compatible Layer Diffusion models"
+        }
+    },
+    {
+        "id": 43,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## You ca use ay model here\n"
+        }
+    },
+    {
+        "id": 44,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# Depth ControlNet and soft edge (HED) or lineart ControlNet"
+        }
+    },
+    {
+        "id": 45,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## For upscaling, first upscale, then use `Join Image with Alpha`. You do not need to upscale the mask, it will autoscale"
+        }
+    },
+    {
+        "id": 46,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## Size MUST be multiples of 64 for Layer Diffusion to work at the time of this workflow's release"
+        }
+    },
+    {
+        "id": 47,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 48,
+        "name": "PreviewImage"
+    }
+]

@@ -1,0 +1,350 @@
+[
+    {
+        "id": 4384,
+        "name": "DreamShaper"
+    },
+    {
+        "id": 4950,
+        "name": "2.52 (initial release)"
+    },
+    {
+        "id": 4966,
+        "name": "dreamshaper_252InitialRelease.ckpt"
+    },
+    {
+        "id": 4990,
+        "name": "2.52 (safetensors fixed)"
+    },
+    {
+        "id": 4993,
+        "name": "2.52 (pruned)"
+    },
+    {
+        "id": 4995,
+        "name": "dreamshaper_252SafetensorsFixed.safetensors"
+    },
+    {
+        "id": 4996,
+        "name": "dreamshaper_252SafetensorsFixed.ckpt"
+    },
+    {
+        "id": 5000,
+        "name": "dreamshaper_252Pruned.safetensors"
+    },
+    {
+        "id": 5001,
+        "name": "dreamshaper_252Pruned.ckpt"
+    },
+    {
+        "id": 5010,
+        "name": "dreamshaper_252SafetensorsFixed.safetensors"
+    },
+    {
+        "id": 5011,
+        "name": "dreamshaper_252SafetensorsFixed.ckpt"
+    },
+    {
+        "id": 5213,
+        "name": "3.3"
+    },
+    {
+        "id": 5333,
+        "name": "dreamshaper_33.safetensors"
+    },
+    {
+        "id": 5334,
+        "name": "dreamshaper_33.ckpt"
+    },
+    {
+        "id": 5336,
+        "name": "dreamshaper_33.ckpt"
+    },
+    {
+        "id": 5337,
+        "name": "dreamshaper_33.safetensors"
+    },
+    {
+        "id": 5636,
+        "name": "3.31 baked vae"
+    },
+    {
+        "id": 5842,
+        "name": "dreamshaper_331BakedVae.safetensors"
+    },
+    {
+        "id": 5843,
+        "name": "dreamshaper_331BakedVae.safetensors"
+    },
+    {
+        "id": 5844,
+        "name": "dreamshaper_331BakedVae.ckpt"
+    },
+    {
+        "id": 5847,
+        "name": "dreamshaper_331BakedVae.ckpt"
+    },
+    {
+        "id": 6202,
+        "name": "3.32 baked vae (clip fix)"
+    },
+    {
+        "id": 6456,
+        "name": "dreamshaper_332BakedVaeClipFix.safetensors"
+    },
+    {
+        "id": 6459,
+        "name": "dreamshaper_332BakedVaeClipFix.safetensors"
+    },
+    {
+        "id": 6460,
+        "name": "dreamshaper_332BakedVaeClipFix.ckpt"
+    },
+    {
+        "id": 6461,
+        "name": "dreamshaper_332BakedVaeClipFix.ckpt"
+    },
+    {
+        "id": 11232,
+        "name": "dreamshaper_331-inpainting.safetensors"
+    },
+    {
+        "id": 12332,
+        "name": "3.31-inpainting"
+    },
+    {
+        "id": 20216,
+        "name": "dreamshaper_4BakedVae.safetensors"
+    },
+    {
+        "id": 20359,
+        "name": "dreamshaper_4NoVae.safetensors"
+    },
+    {
+        "id": 20360,
+        "name": "dreamshaper_4NoVae.ckpt"
+    },
+    {
+        "id": 20798,
+        "name": "dreamshaper_4BakedVaeFp16.safetensors"
+    },
+    {
+        "id": 20799,
+        "name": "dreamshaper_4BakedVaeFp16.ckpt"
+    },
+    {
+        "id": 21207,
+        "name": "dreamshaper_4-inpainting.safetensors"
+    },
+    {
+        "id": 24365,
+        "name": "4 baked vae"
+    },
+    {
+        "id": 24552,
+        "name": "4 no vae"
+    },
+    {
+        "id": 25067,
+        "name": "4 baked vae fp16"
+    },
+    {
+        "id": 25555,
+        "name": "4-inpainting"
+    },
+    {
+        "id": 26672,
+        "name": "dreamshaper_4NoVaeFp16.ckpt"
+    },
+    {
+        "id": 26673,
+        "name": "dreamshaper_4NoVaeFp16.safetensors"
+    },
+    {
+        "id": 32371,
+        "name": "4 no vae fp16"
+    },
+    {
+        "id": 33254,
+        "name": "dreamshaper_5BakedVae.ckpt"
+    },
+    {
+        "id": 33259,
+        "name": "dreamshaper_5BakedVae.safetensors"
+    },
+    {
+        "id": 33262,
+        "name": "dreamshaper_5BakedVae.ckpt"
+    },
+    {
+        "id": 37759,
+        "name": "dreamshaper_5-inpainting.safetensors"
+    },
+    {
+        "id": 37990,
+        "name": "dreamshaper_5BakedVae.safetensors"
+    },
+    {
+        "id": 42535,
+        "name": "dreamshaper_5PrunedNoVaeTrain.ckpt"
+    },
+    {
+        "id": 42536,
+        "name": "dreamshaper_5PrunedNoVaeTrain.safetensors"
+    },
+    {
+        "id": 43888,
+        "name": "5 baked vae"
+    },
+    {
+        "id": 51645,
+        "name": "dreamshaper_5BakedVaeDiffusers_trainingData.zip"
+    },
+    {
+        "id": 51767,
+        "name": "5-inpainting"
+    },
+    {
+        "id": 54299,
+        "name": "dreamshaper_6BakedVae.safetensors"
+    },
+    {
+        "id": 55054,
+        "name": "dreamshaper_6BakedVae.safetensors"
+    },
+    {
+        "id": 55898,
+        "name": "dreamshaper_6Inpainting.safetensors"
+    },
+    {
+        "id": 58291,
+        "name": "dreamshaper_6Diffusers_trainingData.zip"
+    },
+    {
+        "id": 58307,
+        "name": "dreamshaper_6NoVae.safetensors"
+    },
+    {
+        "id": 58314,
+        "name": "dreamshaper_6NoVae.safetensors"
+    },
+    {
+        "id": 60001,
+        "name": "5 pruned (no vae) - train"
+    },
+    {
+        "id": 60735,
+        "name": "dreamshaper_62BakedVae.safetensors"
+    },
+    {
+        "id": 65090,
+        "name": "dreamshaper_631BakedVae.safetensors"
+    },
+    {
+        "id": 65091,
+        "name": "dreamshaper_631BakedVae.safetensors"
+    },
+    {
+        "id": 65884,
+        "name": "dreamshaper_631Inpainting.safetensors"
+    },
+    {
+        "id": 66596,
+        "name": "dreamshaper_62BakedVae.safetensors"
+    },
+    {
+        "id": 67332,
+        "name": "dreamshaper_631Diffusers_trainingData.zip"
+    },
+    {
+        "id": 74772,
+        "name": "5 baked vae diffusers"
+    },
+    {
+        "id": 77036,
+        "name": "dreamshaper_7.safetensors"
+    },
+    {
+        "id": 77716,
+        "name": "dreamshaper_7-inpainting.safetensors"
+    },
+    {
+        "id": 78164,
+        "name": "6 baked vae"
+    },
+    {
+        "id": 79212,
+        "name": "dreamshaper_7Diffusers_trainingData.zip"
+    },
+    {
+        "id": 80261,
+        "name": "6 no vae"
+    },
+    {
+        "id": 81594,
+        "name": "6-inpainting"
+    },
+    {
+        "id": 85362,
+        "name": "6 diffusers"
+    },
+    {
+        "id": 88504,
+        "name": "6.2 baked vae"
+    },
+    {
+        "id": 93211,
+        "name": "dreamshaper_8.safetensors"
+    },
+    {
+        "id": 94081,
+        "name": "6.31 baked vae"
+    },
+    {
+        "id": 95072,
+        "name": "dreamshaper_8Inpainting.safetensors"
+    },
+    {
+        "id": 95087,
+        "name": "6.31-inpainting"
+    },
+    {
+        "id": 96894,
+        "name": "6.31 diffusers"
+    },
+    {
+        "id": 109123,
+        "name": "7"
+    },
+    {
+        "id": 110021,
+        "name": "7-inpainting"
+    },
+    {
+        "id": 111861,
+        "name": "7-diffusers"
+    },
+    {
+        "id": 128713,
+        "name": "8"
+    },
+    {
+        "id": 131004,
+        "name": "8-inpainting"
+    },
+    {
+        "id": 196006,
+        "name": "dreamshaper_8LCM.safetensors"
+    },
+    {
+        "id": 239723,
+        "name": "dreamshaper_8Diffusers.zip"
+    },
+    {
+        "id": 252914,
+        "name": "8 LCM"
+    },
+    {
+        "id": 303662,
+        "name": "8-diffusers"
+    }
+]

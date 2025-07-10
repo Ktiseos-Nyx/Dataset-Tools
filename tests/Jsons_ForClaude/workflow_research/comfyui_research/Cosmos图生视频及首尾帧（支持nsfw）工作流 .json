@@ -1,0 +1,4039 @@
+{
+  "last_node_id": 142,
+  "last_link_id": 265,
+  "nodes": [
+    {
+      "id": 42,
+      "type": "CLIPTextEncode",
+      "pos": [
+        624.0004272460938,
+        70.7367935180664
+      ],
+      "size": [
+        422.84503173828125,
+        164.31304931640625
+      ],
+      "flags": {},
+      "order": 43,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 99
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 197,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            185
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "very cute anime girl with massive fennec fox ears with long wavy blonde hair and large blue eyes and is wearing a pink coat and a long black skirt and is sitting in the middle of a beautiful scenery amazing view in japanese anime style standing up and walking away"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [
+        624.0004272460938,
+        280.7368469238281
+      ],
+      "size": [
+        425.27801513671875,
+        180.6060791015625
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 75
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            186
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "The video captures a series of frames showing ugly scenes, static with no motion, motion blur, over-saturation, shaky footage, low resolution, grainy texture, pixelated images, poorly lit areas, underexposed and overexposed scenes, poor color balance, washed out colors, choppy sequences, jerky movements, low frame rate, artifacting, color banding, unnatural transitions, outdated special effects, fake elements, unconvincing visuals, poorly edited content, jump cuts, visual noise, and flickering. Overall, the video is of poor quality."
+      ]
+    },
+    {
+      "id": 39,
+      "type": "VAELoader",
+      "pos": [
+        699.9061889648438,
+        561.1749877929688
+      ],
+      "size": [
+        278.68310546875,
+        58
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            76,
+            173
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "cosmos_cv8x8x8_1.0.safetensors"
+      ]
+    },
+    {
+      "id": 74,
+      "type": "LTXVConditioning",
+      "pos": [
+        1129.626953125,
+        125.12313842773438
+      ],
+      "size": [
+        210,
+        78
+      ],
+      "flags": {},
+      "order": 49,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 185
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 186
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            187
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            188
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVConditioning"
+      },
+      "widgets_values": [
+        24
+      ]
+    },
+    {
+      "id": 61,
+      "type": "ModelSamplingContinuousEDM",
+      "pos": [
+        1097.9886474609375,
+        -169.2566375732422
+      ],
+      "size": [
+        327.5999755859375,
+        106
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 157
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            191
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ModelSamplingContinuousEDM"
+      },
+      "widgets_values": [
+        "edm",
+        120,
+        0.002
+      ]
+    },
+    {
+      "id": 37,
+      "type": "UNETLoader",
+      "pos": [
+        614.7577514648438,
+        -96.52266693115234
+      ],
+      "size": [
+        315,
+        82
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            157
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "cosmos-i2v-7b.pt",
+        "default"
+      ]
+    },
+    {
+      "id": 70,
+      "type": "CosmosImageToVideoLatent",
+      "pos": [
+        1020.1107788085938,
+        567.73681640625
+      ],
+      "size": [
+        319.07012939453125,
+        170
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 173
+        },
+        {
+          "name": "start_image",
+          "type": "IMAGE",
+          "link": 184,
+          "shape": 7
+        },
+        {
+          "name": "end_image",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            180
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CosmosImageToVideoLatent"
+      },
+      "widgets_values": [
+        1024,
+        768,
+        49,
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [
+        1467.4637451171875,
+        73.42862701416016
+      ],
+      "size": [
+        385.8114318847656,
+        262
+      ],
+      "flags": {},
+      "order": 55,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 191
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 187
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 188
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 180
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            87
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        192220229712561,
+        "fixed",
+        30,
+        7,
+        "res_multistep",
+        "karras",
+        1
+      ]
+    },
+    {
+      "id": 78,
+      "type": "easy promptConcat",
+      "pos": [
+        -287.4381103515625,
+        248.56454467773438
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 41,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "prompt1",
+          "type": "STRING",
+          "link": 193,
+          "widget": {
+            "name": "prompt1"
+          },
+          "shape": 7
+        },
+        {
+          "name": "prompt2",
+          "type": "STRING",
+          "link": 194,
+          "widget": {
+            "name": "prompt2"
+          },
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            195
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy promptConcat"
+      },
+      "widgets_values": [
+        "",
+        "",
+        ""
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 80,
+      "type": "easy showAnything",
+      "pos": [
+        -889.3948364257812,
+        471.868896484375
+      ],
+      "size": [
+        449.95721435546875,
+        225.41261291503906
+      ],
+      "flags": {},
+      "order": 48,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 195,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "she is shaking her handGo Yoon Jung, a renowned Korean actress, is seen in a stunning black evening gown at a high-profile event. The intricately designed, sleeveless dress is adorned with exquisite black lace and beading, adding an air of sophistication and glamour to her overall appearance. Her dark hair is styled in a sleek, low bun, and her makeup is subtly accentuated, highlighting her natural features. Go Yoon Jung's slender fingers are elegantly posed, with her hand raised in a gentle gesture, as if responding to a question or greeting. The soft, golden lighting of the setting captures the delicate nuances of her facial expression, exuding an aura of poise and refinement."
+      ]
+    },
+    {
+      "id": 38,
+      "type": "CLIPLoader",
+      "pos": [
+        154.22909545898438,
+        90.8686294555664
+      ],
+      "size": [
+        315,
+        82
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            75,
+            99
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "oldt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "cosmos",
+        "default"
+      ]
+    },
+    {
+      "id": 77,
+      "type": "easy promptReplace",
+      "pos": [
+        -359.8845520019531,
+        -115.87620544433594
+      ],
+      "size": [
+        400,
+        202
+      ],
+      "flags": {},
+      "order": 37,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 192,
+          "widget": {
+            "name": "prompt"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            194,
+            196,
+            197
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy promptReplace"
+      },
+      "widgets_values": [
+        "",
+        "image",
+        "video",
+        "photo",
+        "video",
+        "picture",
+        "video"
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 81,
+      "type": "easy showAnything",
+      "pos": [
+        -172.13519287109375,
+        476.0377197265625
+      ],
+      "size": [
+        449.95721435546875,
+        225.41261291503906
+      ],
+      "flags": {},
+      "order": 42,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 196,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "Go Yoon Jung, a renowned Korean actress, is seen in a stunning black evening gown at a high-profile event. The intricately designed, sleeveless dress is adorned with exquisite black lace and beading, adding an air of sophistication and glamour to her overall appearance. Her dark hair is styled in a sleek, low bun, and her makeup is subtly accentuated, highlighting her natural features. Go Yoon Jung's slender fingers are elegantly posed, with her hand raised in a gentle gesture, as if responding to a question or greeting. The soft, golden lighting of the setting captures the delicate nuances of her facial expression, exuding an aura of poise and refinement."
+      ]
+    },
+    {
+      "id": 79,
+      "type": "easy prompt",
+      "pos": [
+        -792.3511352539062,
+        169.1017303466797
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            193
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy prompt"
+      },
+      "widgets_values": [
+        "she is shaking her hand",
+        "none",
+        "none"
+      ]
+    },
+    {
+      "id": 65,
+      "type": "LoadImage",
+      "pos": [
+        -1944.669189453125,
+        -116.6268310546875
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            184,
+            198
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "2.png",
+        "image"
+      ]
+    },
+    {
+      "id": 76,
+      "type": "BizyAirJoyCaption2",
+      "pos": [
+        -840.5855102539062,
+        -216.64276123046875
+      ],
+      "size": [
+        400,
+        270
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 198
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            192
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BizyAirJoyCaption2"
+      },
+      "widgets_values": [
+        true,
+        0.5,
+        256,
+        "Descriptive",
+        "any",
+        "If there is a person/character in the image you must refer to them as {name}.",
+        "Go Yoon Jung",
+        ""
+      ]
+    },
+    {
+      "id": 82,
+      "type": "PurgeVRAM",
+      "pos": [
+        1976.20458984375,
+        -161.3038330078125
+      ],
+      "size": [
+        315,
+        82
+      ],
+      "flags": {},
+      "order": 62,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 199
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PurgeVRAM"
+      },
+      "widgets_values": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": 84,
+      "type": "TopazVideoAI",
+      "pos": [
+        2453.622802734375,
+        50.73859405517578
+      ],
+      "size": [
+        579.5999755859375,
+        318
+      ],
+      "flags": {},
+      "order": 63,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 201
+        },
+        {
+          "name": "previous_upscale",
+          "type": "UPSCALE_PARAMS",
+          "link": 202,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            203
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TopazVideoAI"
+      },
+      "widgets_values": [
+        true,
+        2,
+        "aaa-9",
+        1,
+        0,
+        false,
+        60,
+        "auto",
+        true,
+        "C:\\Program Files\\Topaz Labs LLC\\Topaz Video AI",
+        true
+      ]
+    },
+    {
+      "id": 85,
+      "type": "TopazUpscaleParams",
+      "pos": [
+        2000.721923828125,
+        248.4490966796875
+      ],
+      "size": [
+        393,
+        130
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "previous_upscale",
+          "type": "UPSCALE_PARAMS",
+          "link": 204,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "UPSCALE_PARAMS",
+          "type": "UPSCALE_PARAMS",
+          "links": [
+            202
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TopazUpscaleParams"
+      },
+      "widgets_values": [
+        2,
+        "iris-3",
+        1,
+        0
+      ]
+    },
+    {
+      "id": 87,
+      "type": "TopazUpscaleParams",
+      "pos": [
+        2181.352783203125,
+        438.8512878417969
+      ],
+      "size": [
+        393,
+        130
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "previous_upscale",
+          "type": "UPSCALE_PARAMS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "UPSCALE_PARAMS",
+          "type": "UPSCALE_PARAMS",
+          "links": [
+            204
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TopazUpscaleParams"
+      },
+      "widgets_values": [
+        1,
+        "thm-2",
+        1,
+        0.5
+      ]
+    },
+    {
+      "id": 86,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        3184.535888671875,
+        88.47200012207031
+      ],
+      "size": [
+        385.0228271484375,
+        621.76708984375
+      ],
+      "flags": {},
+      "order": 69,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 203
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00003.mp4",
+            "subfolder": "",
+            "type": "output",
+            "format": "video/h264-mp4",
+            "frame_rate": 24,
+            "workflow": "AnimateDiff_00003.png",
+            "fullpath": "C:\\AI-video-onekey-20250117\\ComfyUI\\output\\AnimateDiff_00003.mp4"
+          },
+          "muted": false
+        }
+      }
+    },
+    {
+      "id": 88,
+      "type": "CLIPTextEncode",
+      "pos": [
+        895.4454956054688,
+        1579.512939453125
+      ],
+      "size": [
+        422.84503173828125,
+        164.31304931640625
+      ],
+      "flags": {},
+      "order": 50,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 205
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 206,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            208
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "very cute anime girl with massive fennec fox ears with long wavy blonde hair and large blue eyes and is wearing a pink coat and a long black skirt and is sitting in the middle of a beautiful scenery amazing view in japanese anime style standing up and walking away"
+      ]
+    },
+    {
+      "id": 89,
+      "type": "CLIPTextEncode",
+      "pos": [
+        895.4454956054688,
+        1789.512939453125
+      ],
+      "size": [
+        425.27801513671875,
+        180.6060791015625
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 207
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            209
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "The video captures a series of frames showing ugly scenes, static with no motion, motion blur, over-saturation, shaky footage, low resolution, grainy texture, pixelated images, poorly lit areas, underexposed and overexposed scenes, poor color balance, washed out colors, choppy sequences, jerky movements, low frame rate, artifacting, color banding, unnatural transitions, outdated special effects, fake elements, unconvincing visuals, poorly edited content, jump cuts, visual noise, and flickering. Overall, the video is of poor quality."
+      ]
+    },
+    {
+      "id": 90,
+      "type": "VAELoader",
+      "pos": [
+        971.3512573242188,
+        2069.951171875
+      ],
+      "size": [
+        278.68310546875,
+        58
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            211,
+            225
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "cosmos_cv8x8x8_1.0.safetensors"
+      ]
+    },
+    {
+      "id": 91,
+      "type": "LTXVConditioning",
+      "pos": [
+        1401.072021484375,
+        1633.8992919921875
+      ],
+      "size": [
+        210,
+        78
+      ],
+      "flags": {},
+      "order": 56,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 208
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 209
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            214
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            215
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVConditioning"
+      },
+      "widgets_values": [
+        24
+      ]
+    },
+    {
+      "id": 92,
+      "type": "ModelSamplingContinuousEDM",
+      "pos": [
+        1369.4337158203125,
+        1339.51953125
+      ],
+      "size": [
+        327.5999755859375,
+        106
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 210
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            213
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ModelSamplingContinuousEDM"
+      },
+      "widgets_values": [
+        "edm",
+        120,
+        0.002
+      ]
+    },
+    {
+      "id": 95,
+      "type": "KSampler",
+      "pos": [
+        1738.908935546875,
+        1582.204833984375
+      ],
+      "size": [
+        385.8114318847656,
+        262
+      ],
+      "flags": {},
+      "order": 60,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 213
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 214
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 215
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 216
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            224
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        192220229712561,
+        "fixed",
+        30,
+        7,
+        "res_multistep",
+        "karras",
+        1
+      ]
+    },
+    {
+      "id": 96,
+      "type": "easy promptConcat",
+      "pos": [
+        -15.99303913116455,
+        1757.3406982421875
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 51,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "prompt1",
+          "type": "STRING",
+          "link": 217,
+          "widget": {
+            "name": "prompt1"
+          },
+          "shape": 7
+        },
+        {
+          "name": "prompt2",
+          "type": "STRING",
+          "link": 218,
+          "widget": {
+            "name": "prompt2"
+          },
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            219
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy promptConcat"
+      },
+      "widgets_values": [
+        "",
+        "",
+        ""
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 97,
+      "type": "easy showAnything",
+      "pos": [
+        -617.9498901367188,
+        1980.64501953125
+      ],
+      "size": [
+        449.95721435546875,
+        225.41261291503906
+      ],
+      "flags": {},
+      "order": 57,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 219,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "best quality,\"Advanced Robotics Laboratory: A Futuristic Workspace\n\nIn this cutting-edge laboratory, a trio of humanoid robots, designated as 'NeuroSurgeons,' operate with precision and accuracy, navigating a complex network of surgical instruments and diagnostic equipment. The room is bathed in a cool, blue-green glow, emanating from the numerous high-definition screens and holographic displays that line the walls, providing a wealth of real-time data and diagnostic information.\n\nIn the foreground, a NeuroSurgeon expertly manipulates a delicate surgical tool, its slender fingers moving with a level of dexterity that belies its mechanical nature. The robot's gleaming white and silver body seems to shimmer in the light, its advanced sensors and cameras providing a 360-degree view of the operating area.\n\nTo the far right, a lone figure, identified as Go Yoon Jung, a skilled robotics engineer, observes the NeuroSurgeons at work, a look of intense focus etched on their face. Their eyes are fixed on the data streaming across the screens, as they analyze the robots' performance and make adjustments as needed.\n\nThe laboratory itself is a marvel of modern engineering, with sleek, minimalist design and an emphasis on functionality. The floor is made of polished, dark gray metal, and the"
+      ]
+    },
+    {
+      "id": 98,
+      "type": "CLIPLoader",
+      "pos": [
+        425.6741638183594,
+        1599.644775390625
+      ],
+      "size": [
+        315,
+        82
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            205,
+            207
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "oldt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "cosmos",
+        "default"
+      ]
+    },
+    {
+      "id": 99,
+      "type": "easy promptReplace",
+      "pos": [
+        -88.43951416015625,
+        1392.9000244140625
+      ],
+      "size": [
+        400,
+        202
+      ],
+      "flags": {},
+      "order": 44,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 220,
+          "widget": {
+            "name": "prompt"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            206,
+            218,
+            221
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy promptReplace"
+      },
+      "widgets_values": [
+        "",
+        "image",
+        "video",
+        "photo",
+        "video",
+        "picture",
+        "video"
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 103,
+      "type": "BizyAirJoyCaption2",
+      "pos": [
+        -569.1405639648438,
+        1292.1334228515625
+      ],
+      "size": [
+        400,
+        270
+      ],
+      "flags": {},
+      "order": 38,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 231
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            220
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BizyAirJoyCaption2"
+      },
+      "widgets_values": [
+        true,
+        0.5,
+        256,
+        "Descriptive",
+        "any",
+        "If there is a person/character in the image you must refer to them as {name}.",
+        "Go Yoon Jung",
+        ""
+      ]
+    },
+    {
+      "id": 104,
+      "type": "PurgeVRAM",
+      "pos": [
+        2247.649658203125,
+        1347.4722900390625
+      ],
+      "size": [
+        315,
+        82
+      ],
+      "flags": {},
+      "order": 70,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 223
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PurgeVRAM"
+      },
+      "widgets_values": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": 107,
+      "type": "TopazUpscaleParams",
+      "pos": [
+        2272.1669921875,
+        1757.2252197265625
+      ],
+      "size": [
+        393,
+        130
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "previous_upscale",
+          "type": "UPSCALE_PARAMS",
+          "link": 228,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "UPSCALE_PARAMS",
+          "type": "UPSCALE_PARAMS",
+          "links": [
+            227
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TopazUpscaleParams"
+      },
+      "widgets_values": [
+        2,
+        "iris-3",
+        1,
+        0
+      ]
+    },
+    {
+      "id": 108,
+      "type": "TopazUpscaleParams",
+      "pos": [
+        2452.79736328125,
+        1947.62744140625
+      ],
+      "size": [
+        393,
+        130
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "previous_upscale",
+          "type": "UPSCALE_PARAMS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "UPSCALE_PARAMS",
+          "type": "UPSCALE_PARAMS",
+          "links": [
+            228
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TopazUpscaleParams"
+      },
+      "widgets_values": [
+        1,
+        "thm-2",
+        1,
+        0.5
+      ]
+    },
+    {
+      "id": 100,
+      "type": "easy showAnything",
+      "pos": [
+        114.97920989990234,
+        2097.981201171875
+      ],
+      "size": [
+        449.95721435546875,
+        225.41261291503906
+      ],
+      "flags": {},
+      "order": 52,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 221,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "\"Advanced Robotics Laboratory: A Futuristic Workspace\n\nIn this cutting-edge laboratory, a trio of humanoid robots, designated as 'NeuroSurgeons,' operate with precision and accuracy, navigating a complex network of surgical instruments and diagnostic equipment. The room is bathed in a cool, blue-green glow, emanating from the numerous high-definition screens and holographic displays that line the walls, providing a wealth of real-time data and diagnostic information.\n\nIn the foreground, a NeuroSurgeon expertly manipulates a delicate surgical tool, its slender fingers moving with a level of dexterity that belies its mechanical nature. The robot's gleaming white and silver body seems to shimmer in the light, its advanced sensors and cameras providing a 360-degree view of the operating area.\n\nTo the far right, a lone figure, identified as Go Yoon Jung, a skilled robotics engineer, observes the NeuroSurgeons at work, a look of intense focus etched on their face. Their eyes are fixed on the data streaming across the screens, as they analyze the robots' performance and make adjustments as needed.\n\nThe laboratory itself is a marvel of modern engineering, with sleek, minimalist design and an emphasis on functionality. The floor is made of polished, dark gray metal, and the"
+      ]
+    },
+    {
+      "id": 101,
+      "type": "easy prompt",
+      "pos": [
+        -520.9061889648438,
+        1677.8779296875
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            217
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy prompt"
+      },
+      "widgets_values": [
+        "best quality,",
+        "none",
+        "none"
+      ]
+    },
+    {
+      "id": 110,
+      "type": "JWImageResizeByLongerSide",
+      "pos": [
+        -1176.6400146484375,
+        1713.100830078125
+      ],
+      "size": [
+        340.20001220703125,
+        82
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 230
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            231,
+            235
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "JWImageResizeByLongerSide"
+      },
+      "widgets_values": [
+        1024,
+        "bicubic"
+      ]
+    },
+    {
+      "id": 112,
+      "type": "JWImageResizeByLongerSide",
+      "pos": [
+        -471.284423828125,
+        2299.1650390625
+      ],
+      "size": [
+        340.20001220703125,
+        82
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 233
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            234
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "JWImageResizeByLongerSide"
+      },
+      "widgets_values": [
+        1024,
+        "bicubic"
+      ]
+    },
+    {
+      "id": 94,
+      "type": "CosmosImageToVideoLatent",
+      "pos": [
+        1291.5557861328125,
+        2076.512939453125
+      ],
+      "size": [
+        319.07012939453125,
+        170
+      ],
+      "flags": {},
+      "order": 39,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 211
+        },
+        {
+          "name": "start_image",
+          "type": "IMAGE",
+          "link": 235,
+          "shape": 7
+        },
+        {
+          "name": "end_image",
+          "type": "IMAGE",
+          "link": 234,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            216
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CosmosImageToVideoLatent"
+      },
+      "widgets_values": [
+        1024,
+        768,
+        121,
+        1
+      ]
+    },
+    {
+      "id": 105,
+      "type": "VAEDecode",
+      "pos": [
+        2166.13818359375,
+        1580.030029296875
+      ],
+      "size": [
+        210,
+        46
+      ],
+      "flags": {},
+      "order": 65,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 224
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 225
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            223,
+            226,
+            236
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 113,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        2004.8193359375,
+        2177.716796875
+      ],
+      "size": [
+        385.0228271484375,
+        621.76708984375
+      ],
+      "flags": {},
+      "order": 72,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 236
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00005.mp4",
+            "subfolder": "",
+            "type": "output",
+            "format": "video/h264-mp4",
+            "frame_rate": 24,
+            "workflow": "AnimateDiff_00005.png",
+            "fullpath": "C:\\AI-video-onekey-20250117\\ComfyUI\\output\\AnimateDiff_00005.mp4"
+          },
+          "muted": false
+        }
+      }
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        1894.6932373046875,
+        71.25381469726562
+      ],
+      "size": [
+        210,
+        46
+      ],
+      "flags": {},
+      "order": 59,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 87
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 76
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            199,
+            201,
+            238
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 115,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        1873.77392578125,
+        502.6325378417969
+      ],
+      "size": [
+        214.7587890625,
+        334
+      ],
+      "flags": {},
+      "order": 64,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 238
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {},
+          "muted": false
+        }
+      }
+    },
+    {
+      "id": 117,
+      "type": "MediaPlayer",
+      "pos": [
+        -2623.78564453125,
+        174.19615173339844
+      ],
+      "size": [
+        320,
+        264
+      ],
+      "flags": {
+        "showTitle": false
+      },
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "MediaPlayer",
+      "properties": {
+        "url": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/ElMZ4ssewR4?si=AqIxi2t-0fblU2KX\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+        "theme": "light"
+      },
+      "widgets_values": [
+        null
+      ],
+      "color": "#E0E0E0",
+      "bgcolor": "#FFFFFF",
+      "shape": 2
+    },
+    {
+      "id": 118,
+      "type": "MediaPlayer",
+      "pos": [
+        -2618.61572265625,
+        -163.91848754882812
+      ],
+      "size": [
+        320,
+        266
+      ],
+      "flags": {
+        "showTitle": false
+      },
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "MediaPlayer",
+      "properties": {
+        "url": "<iframe src=\"//player.bilibili.com/player.html?isOutside=true&aid=113838896716825&bvid=BV15pwLecEME&cid=27907787771&p=1\" scrolling=\"no\" border=\"0\" frameborder=\"no\" framespacing=\"0\" allowfullscreen=\"true\"></iframe>",
+        "theme": "light"
+      },
+      "widgets_values": [
+        null
+      ],
+      "color": "#E0E0E0",
+      "bgcolor": "#FFFFFF",
+      "shape": 2
+    },
+    {
+      "id": 116,
+      "type": "Note Plus (mtb)",
+      "pos": [
+        -2827.845458984375,
+        511.7281799316406
+      ],
+      "size": [
+        656,
+        128
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "<div class=\"startPage\">\n  <div class=\"hoverContainer\">\n    <a href=\"https://aix.studio\">\n      <span class=\"size-smallButton style-input\">🗃️ AIX官网</span>\n    </a>\n    <a href=\"https://t.zsxq.com/7F90A\">\n      <span class=\"size-smallButton style-input\">🪲 知识星球</span>\n    </a>\n    <a href=\"https://space.bilibili.com/385085361\">\n      <span class=\"size-smallButton style-input\">☕ B站首页</span>\n    </a>\n  </div>\n</div>",
+        "markdown",
+        "\r\n\r\n* {\r\n    font-family: Arial;\r\n  }\r\n\r\n\r\n  .startPage {\r\n    position: absolute;\r\n    width:auto;\r\n    z-index: 0;\r\n    transition: transform 0.3s ease;\r\n  }\r\n\r\n  .startPage:hover {\r\n    transform: translateY(-1%);\r\n  }\r\n\r\n  .hoverContainer {\r\n    background: black;\r\n    border-radius: 27px;\r\n    padding: 50px;\r\n    display: flex;\r\n    flex-direction: row;\r\n    margin: 12px auto;\r\n    position: relative;\r\n  }\r\n\r\n  .header {\r\n    padding-bottom: 24px;\r\n    margin-bottom: 24px;\r\n    border-bottom: 1px solid #3e3e3e;\r\n    width: 200%;\r\n    height: 72px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: space-between;\r\n  }\r\n\r\n  .header_discrip {\r\n    font-size: 21px;\r\n    font-weight: 200;\r\n    color: #6f6f6f;\r\n  }\r\n\r\n  .size-smallButton {\r\n    font-size: 21px;\r\n    border-radius: 12px;\r\n    height: 48px;\r\n    min-width: 48px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    width: 100%;\r\n    cursor: pointer;\r\n  }\r\n\r\n  .style-input {\r\n    background: #2a2a2b;\r\n    padding: 12px;\r\n    transition: background 0.3s;\r\n  }\r\n\r\n  .style-input:hover {\r\n    background: #3b3b3c;\r\n  }\r\na:not(:first-child) {\r\n      margin-left:8px;}\r\n  a {\r\n    color: #b6b6b7;\r\n  }\r\n\r\n  a:hover,\r\n  a:hover .header_discrip {\r\n    color: #dddddd !important;\r\n  }",
+        "one_dark"
+      ],
+      "color": "#3a3a3a",
+      "bgcolor": "#262626",
+      "shape": 1
+    },
+    {
+      "id": 102,
+      "type": "LoadImage",
+      "pos": [
+        -1684.0965576171875,
+        1641.96923828125
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            230
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "ComfyUI_00054_.png",
+        "image"
+      ]
+    },
+    {
+      "id": 111,
+      "type": "LoadImage",
+      "pos": [
+        -1618.1507568359375,
+        2043.0211181640625
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            233
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "ComfyUI_00057_.png",
+        "image"
+      ]
+    },
+    {
+      "id": 93,
+      "type": "UNETLoader",
+      "pos": [
+        886.2028198242188,
+        1412.2535400390625
+      ],
+      "size": [
+        315,
+        82
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            210
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "cosmos-i2v-7b.pt",
+        "default"
+      ]
+    },
+    {
+      "id": 106,
+      "type": "TopazVideoAI",
+      "pos": [
+        2725.0673828125,
+        1559.5147705078125
+      ],
+      "size": [
+        579.5999755859375,
+        318
+      ],
+      "flags": {},
+      "order": 71,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 226
+        },
+        {
+          "name": "previous_upscale",
+          "type": "UPSCALE_PARAMS",
+          "link": 227,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            239
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TopazVideoAI"
+      },
+      "widgets_values": [
+        true,
+        2,
+        "aaa-9",
+        1,
+        0,
+        false,
+        60,
+        "auto",
+        true,
+        "C:\\Program Files\\Topaz Labs LLC\\Topaz Video AI",
+        true
+      ]
+    },
+    {
+      "id": 119,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        3471.567138671875,
+        1530.5179443359375
+      ],
+      "size": [
+        214.7587890625,
+        494.069091796875
+      ],
+      "flags": {},
+      "order": 74,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 239
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00006.mp4",
+            "subfolder": "",
+            "type": "output",
+            "format": "video/h264-mp4",
+            "frame_rate": 24,
+            "workflow": "AnimateDiff_00006.png",
+            "fullpath": "C:\\AI-video-onekey-20250117\\ComfyUI\\output\\AnimateDiff_00006.mp4"
+          },
+          "muted": false
+        }
+      }
+    },
+    {
+      "id": 120,
+      "type": "CLIPTextEncode",
+      "pos": [
+        765.2271728515625,
+        3601.448974609375
+      ],
+      "size": [
+        422.84503173828125,
+        164.31304931640625
+      ],
+      "flags": {},
+      "order": 45,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 240
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 241,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            243
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "very cute anime girl with massive fennec fox ears with long wavy blonde hair and large blue eyes and is wearing a pink coat and a long black skirt and is sitting in the middle of a beautiful scenery amazing view in japanese anime style standing up and walking away"
+      ]
+    },
+    {
+      "id": 121,
+      "type": "CLIPTextEncode",
+      "pos": [
+        765.2271728515625,
+        3811.448974609375
+      ],
+      "size": [
+        425.27801513671875,
+        180.6060791015625
+      ],
+      "flags": {},
+      "order": 36,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 242
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            244
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "The video captures a series of frames showing ugly scenes, static with no motion, motion blur, over-saturation, shaky footage, low resolution, grainy texture, pixelated images, poorly lit areas, underexposed and overexposed scenes, poor color balance, washed out colors, choppy sequences, jerky movements, low frame rate, artifacting, color banding, unnatural transitions, outdated special effects, fake elements, unconvincing visuals, poorly edited content, jump cuts, visual noise, and flickering. Overall, the video is of poor quality."
+      ]
+    },
+    {
+      "id": 122,
+      "type": "VAELoader",
+      "pos": [
+        841.1329345703125,
+        4091.886962890625
+      ],
+      "size": [
+        278.68310546875,
+        58
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            246,
+            264
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "cosmos_cv8x8x8_1.0.safetensors"
+      ]
+    },
+    {
+      "id": 123,
+      "type": "LTXVConditioning",
+      "pos": [
+        1270.853759765625,
+        3655.835205078125
+      ],
+      "size": [
+        210,
+        78
+      ],
+      "flags": {},
+      "order": 53,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 243
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 244
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            249
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            250
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVConditioning"
+      },
+      "widgets_values": [
+        24
+      ]
+    },
+    {
+      "id": 124,
+      "type": "ModelSamplingContinuousEDM",
+      "pos": [
+        1239.2154541015625,
+        3361.45556640625
+      ],
+      "size": [
+        327.5999755859375,
+        106
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 245
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            248
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ModelSamplingContinuousEDM"
+      },
+      "widgets_values": [
+        "edm",
+        120,
+        0.002
+      ]
+    },
+    {
+      "id": 126,
+      "type": "CosmosImageToVideoLatent",
+      "pos": [
+        1161.3375244140625,
+        4098.44921875
+      ],
+      "size": [
+        319.07012939453125,
+        170
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 246
+        },
+        {
+          "name": "start_image",
+          "type": "IMAGE",
+          "link": 247,
+          "shape": 7
+        },
+        {
+          "name": "end_image",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            251
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CosmosImageToVideoLatent"
+      },
+      "widgets_values": [
+        1024,
+        768,
+        49,
+        1
+      ]
+    },
+    {
+      "id": 127,
+      "type": "KSampler",
+      "pos": [
+        1608.6905517578125,
+        3604.140625
+      ],
+      "size": [
+        385.8114318847656,
+        262
+      ],
+      "flags": {},
+      "order": 58,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 248
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 249
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 250
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 251
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            263
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        192220229712561,
+        "fixed",
+        30,
+        7,
+        "res_multistep",
+        "karras",
+        1
+      ]
+    },
+    {
+      "id": 128,
+      "type": "easy promptConcat",
+      "pos": [
+        -146.21127319335938,
+        3779.276611328125
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 46,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt1",
+          "type": "STRING",
+          "link": 252,
+          "widget": {
+            "name": "prompt1"
+          },
+          "shape": 7
+        },
+        {
+          "name": "prompt2",
+          "type": "STRING",
+          "link": 253,
+          "widget": {
+            "name": "prompt2"
+          },
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            254
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy promptConcat"
+      },
+      "widgets_values": [
+        "",
+        "",
+        ""
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 129,
+      "type": "easy showAnything",
+      "pos": [
+        -748.1680908203125,
+        4002.5810546875
+      ],
+      "size": [
+        449.95721435546875,
+        225.41261291503906
+      ],
+      "flags": {},
+      "order": 54,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 254,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "she is shaking her handGo Yoon Jung, a renowned Korean actress, is seen in this elegant portrait, captured at a high-profile event. Dressed in a stunning black evening gown adorned with intricate lace and beading, Go Yoon Jung exudes poise and sophistication. The delicate patterns of the gown's embroidery catch the light, accentuating the actress's refined features.\n\nAs she raises her hand in a subtle gesture, a sparkling diamond ring on her finger catches the eye, adding a touch of understated glamour to her overall appearance. Go Yoon Jung's hair is styled in a sleek, low bun, with a few loose strands framing her heart-shaped face.\n\nThe background of the video is blurred, with the faint outlines of cameras and other videographers visible, hinting at the excitement and energy of the event. However, Go Yoon Jung's serene expression and confident demeanor command attention, making her the true focus of the videograph."
+      ]
+    },
+    {
+      "id": 131,
+      "type": "easy promptReplace",
+      "pos": [
+        -218.65771484375,
+        3414.8359375
+      ],
+      "size": [
+        400,
+        202
+      ],
+      "flags": {},
+      "order": 40,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 255,
+          "widget": {
+            "name": "prompt"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            241,
+            253,
+            256
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy promptReplace"
+      },
+      "widgets_values": [
+        "",
+        "image",
+        "video",
+        "photo",
+        "video",
+        "picture",
+        "video"
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 132,
+      "type": "easy showAnything",
+      "pos": [
+        -30.908369064331055,
+        4006.749755859375
+      ],
+      "size": [
+        449.95721435546875,
+        225.41261291503906
+      ],
+      "flags": {},
+      "order": 47,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 256,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "Go Yoon Jung, a renowned Korean actress, is seen in this elegant portrait, captured at a high-profile event. Dressed in a stunning black evening gown adorned with intricate lace and beading, Go Yoon Jung exudes poise and sophistication. The delicate patterns of the gown's embroidery catch the light, accentuating the actress's refined features.\n\nAs she raises her hand in a subtle gesture, a sparkling diamond ring on her finger catches the eye, adding a touch of understated glamour to her overall appearance. Go Yoon Jung's hair is styled in a sleek, low bun, with a few loose strands framing her heart-shaped face.\n\nThe background of the video is blurred, with the faint outlines of cameras and other videographers visible, hinting at the excitement and energy of the event. However, Go Yoon Jung's serene expression and confident demeanor command attention, making her the true focus of the videograph."
+      ]
+    },
+    {
+      "id": 133,
+      "type": "easy prompt",
+      "pos": [
+        -651.1243896484375,
+        3699.813720703125
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            252
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "easy prompt"
+      },
+      "widgets_values": [
+        "she is shaking her hand",
+        "none",
+        "none"
+      ]
+    },
+    {
+      "id": 135,
+      "type": "BizyAirJoyCaption2",
+      "pos": [
+        -699.3587646484375,
+        3314.0693359375
+      ],
+      "size": [
+        400,
+        270
+      ],
+      "flags": {},
+      "order": 35,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 257
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            255
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BizyAirJoyCaption2"
+      },
+      "widgets_values": [
+        true,
+        0.5,
+        256,
+        "Descriptive",
+        "any",
+        "If there is a person/character in the image you must refer to them as {name}.",
+        "Go Yoon Jung",
+        ""
+      ]
+    },
+    {
+      "id": 136,
+      "type": "PurgeVRAM",
+      "pos": [
+        2117.431640625,
+        3369.408203125
+      ],
+      "size": [
+        315,
+        82
+      ],
+      "flags": {},
+      "order": 66,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 258
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PurgeVRAM"
+      },
+      "widgets_values": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": 137,
+      "type": "TopazVideoAI",
+      "pos": [
+        2594.849853515625,
+        3581.45068359375
+      ],
+      "size": [
+        579.5999755859375,
+        318
+      ],
+      "flags": {},
+      "order": 67,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 259
+        },
+        {
+          "name": "previous_upscale",
+          "type": "UPSCALE_PARAMS",
+          "link": 260,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            262
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TopazVideoAI"
+      },
+      "widgets_values": [
+        true,
+        2,
+        "aaa-9",
+        1,
+        0,
+        false,
+        60,
+        "auto",
+        true,
+        "C:\\Program Files\\Topaz Labs LLC\\Topaz Video AI",
+        true
+      ]
+    },
+    {
+      "id": 138,
+      "type": "TopazUpscaleParams",
+      "pos": [
+        2141.948974609375,
+        3779.1611328125
+      ],
+      "size": [
+        393,
+        130
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "previous_upscale",
+          "type": "UPSCALE_PARAMS",
+          "link": 261,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "UPSCALE_PARAMS",
+          "type": "UPSCALE_PARAMS",
+          "links": [
+            260
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TopazUpscaleParams"
+      },
+      "widgets_values": [
+        2,
+        "iris-3",
+        1,
+        0
+      ]
+    },
+    {
+      "id": 139,
+      "type": "TopazUpscaleParams",
+      "pos": [
+        2322.579833984375,
+        3969.5634765625
+      ],
+      "size": [
+        393,
+        130
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "previous_upscale",
+          "type": "UPSCALE_PARAMS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "UPSCALE_PARAMS",
+          "type": "UPSCALE_PARAMS",
+          "links": [
+            261
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TopazUpscaleParams"
+      },
+      "widgets_values": [
+        1,
+        "thm-2",
+        1,
+        0.5
+      ]
+    },
+    {
+      "id": 140,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        3325.762939453125,
+        3619.18408203125
+      ],
+      "size": [
+        385.0228271484375,
+        621.76708984375
+      ],
+      "flags": {},
+      "order": 73,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 262
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00003.mp4",
+            "subfolder": "",
+            "type": "output",
+            "format": "video/h264-mp4",
+            "frame_rate": 24,
+            "workflow": "AnimateDiff_00003.png",
+            "fullpath": "C:\\AI-video-onekey-20250117\\ComfyUI\\output\\AnimateDiff_00003.mp4"
+          },
+          "muted": false
+        }
+      }
+    },
+    {
+      "id": 141,
+      "type": "VAEDecode",
+      "pos": [
+        2035.9202880859375,
+        3601.9658203125
+      ],
+      "size": [
+        210,
+        46
+      ],
+      "flags": {},
+      "order": 61,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 263
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 264
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            258,
+            259,
+            265
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 142,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        2015.0010986328125,
+        4033.3447265625
+      ],
+      "size": [
+        214.7587890625,
+        334
+      ],
+      "flags": {},
+      "order": 68,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 265
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {},
+          "muted": false
+        }
+      }
+    },
+    {
+      "id": 125,
+      "type": "UNETLoader",
+      "pos": [
+        755.9844970703125,
+        3434.189453125
+      ],
+      "size": [
+        315,
+        82
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            245
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "cosmos-i2v-7b.pt",
+        "fp8_e4m3fn"
+      ]
+    },
+    {
+      "id": 134,
+      "type": "LoadImage",
+      "pos": [
+        -1145.8426513671875,
+        3309.43994140625
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            247,
+            257
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "2.png",
+        "image"
+      ]
+    },
+    {
+      "id": 130,
+      "type": "CLIPLoader",
+      "pos": [
+        295.4559020996094,
+        3621.580810546875
+      ],
+      "size": [
+        315,
+        82
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            240,
+            242
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "oldt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "cosmos",
+        "default"
+      ]
+    }
+  ],
+  "links": [
+    [
+      75,
+      38,
+      0,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      76,
+      39,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      87,
+      3,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      99,
+      38,
+      0,
+      42,
+      0,
+      "CLIP"
+    ],
+    [
+      157,
+      37,
+      0,
+      61,
+      0,
+      "MODEL"
+    ],
+    [
+      173,
+      39,
+      0,
+      70,
+      0,
+      "VAE"
+    ],
+    [
+      180,
+      70,
+      0,
+      3,
+      3,
+      "LATENT"
+    ],
+    [
+      184,
+      65,
+      0,
+      70,
+      1,
+      "IMAGE"
+    ],
+    [
+      185,
+      42,
+      0,
+      74,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      186,
+      7,
+      0,
+      74,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      187,
+      74,
+      0,
+      3,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      188,
+      74,
+      1,
+      3,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      191,
+      61,
+      0,
+      3,
+      0,
+      "MODEL"
+    ],
+    [
+      192,
+      76,
+      0,
+      77,
+      0,
+      "STRING"
+    ],
+    [
+      193,
+      79,
+      0,
+      78,
+      0,
+      "STRING"
+    ],
+    [
+      194,
+      77,
+      0,
+      78,
+      1,
+      "STRING"
+    ],
+    [
+      195,
+      78,
+      0,
+      80,
+      0,
+      "*"
+    ],
+    [
+      196,
+      77,
+      0,
+      81,
+      0,
+      "*"
+    ],
+    [
+      197,
+      77,
+      0,
+      42,
+      1,
+      "STRING"
+    ],
+    [
+      198,
+      65,
+      0,
+      76,
+      0,
+      "IMAGE"
+    ],
+    [
+      199,
+      8,
+      0,
+      82,
+      0,
+      "*"
+    ],
+    [
+      201,
+      8,
+      0,
+      84,
+      0,
+      "IMAGE"
+    ],
+    [
+      202,
+      85,
+      0,
+      84,
+      1,
+      "UPSCALE_PARAMS"
+    ],
+    [
+      203,
+      84,
+      0,
+      86,
+      0,
+      "IMAGE"
+    ],
+    [
+      204,
+      87,
+      0,
+      85,
+      0,
+      "UPSCALE_PARAMS"
+    ],
+    [
+      205,
+      98,
+      0,
+      88,
+      0,
+      "CLIP"
+    ],
+    [
+      206,
+      99,
+      0,
+      88,
+      1,
+      "STRING"
+    ],
+    [
+      207,
+      98,
+      0,
+      89,
+      0,
+      "CLIP"
+    ],
+    [
+      208,
+      88,
+      0,
+      91,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      209,
+      89,
+      0,
+      91,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      210,
+      93,
+      0,
+      92,
+      0,
+      "MODEL"
+    ],
+    [
+      211,
+      90,
+      0,
+      94,
+      0,
+      "VAE"
+    ],
+    [
+      213,
+      92,
+      0,
+      95,
+      0,
+      "MODEL"
+    ],
+    [
+      214,
+      91,
+      0,
+      95,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      215,
+      91,
+      1,
+      95,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      216,
+      94,
+      0,
+      95,
+      3,
+      "LATENT"
+    ],
+    [
+      217,
+      101,
+      0,
+      96,
+      0,
+      "STRING"
+    ],
+    [
+      218,
+      99,
+      0,
+      96,
+      1,
+      "STRING"
+    ],
+    [
+      219,
+      96,
+      0,
+      97,
+      0,
+      "*"
+    ],
+    [
+      220,
+      103,
+      0,
+      99,
+      0,
+      "STRING"
+    ],
+    [
+      221,
+      99,
+      0,
+      100,
+      0,
+      "*"
+    ],
+    [
+      223,
+      105,
+      0,
+      104,
+      0,
+      "*"
+    ],
+    [
+      224,
+      95,
+      0,
+      105,
+      0,
+      "LATENT"
+    ],
+    [
+      225,
+      90,
+      0,
+      105,
+      1,
+      "VAE"
+    ],
+    [
+      226,
+      105,
+      0,
+      106,
+      0,
+      "IMAGE"
+    ],
+    [
+      227,
+      107,
+      0,
+      106,
+      1,
+      "UPSCALE_PARAMS"
+    ],
+    [
+      228,
+      108,
+      0,
+      107,
+      0,
+      "UPSCALE_PARAMS"
+    ],
+    [
+      230,
+      102,
+      0,
+      110,
+      0,
+      "IMAGE"
+    ],
+    [
+      231,
+      110,
+      0,
+      103,
+      0,
+      "IMAGE"
+    ],
+    [
+      233,
+      111,
+      0,
+      112,
+      0,
+      "IMAGE"
+    ],
+    [
+      234,
+      112,
+      0,
+      94,
+      2,
+      "IMAGE"
+    ],
+    [
+      235,
+      110,
+      0,
+      94,
+      1,
+      "IMAGE"
+    ],
+    [
+      236,
+      105,
+      0,
+      113,
+      0,
+      "IMAGE"
+    ],
+    [
+      238,
+      8,
+      0,
+      115,
+      0,
+      "IMAGE"
+    ],
+    [
+      239,
+      106,
+      0,
+      119,
+      0,
+      "IMAGE"
+    ],
+    [
+      240,
+      130,
+      0,
+      120,
+      0,
+      "CLIP"
+    ],
+    [
+      241,
+      131,
+      0,
+      120,
+      1,
+      "STRING"
+    ],
+    [
+      242,
+      130,
+      0,
+      121,
+      0,
+      "CLIP"
+    ],
+    [
+      243,
+      120,
+      0,
+      123,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      244,
+      121,
+      0,
+      123,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      245,
+      125,
+      0,
+      124,
+      0,
+      "MODEL"
+    ],
+    [
+      246,
+      122,
+      0,
+      126,
+      0,
+      "VAE"
+    ],
+    [
+      247,
+      134,
+      0,
+      126,
+      1,
+      "IMAGE"
+    ],
+    [
+      248,
+      124,
+      0,
+      127,
+      0,
+      "MODEL"
+    ],
+    [
+      249,
+      123,
+      0,
+      127,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      250,
+      123,
+      1,
+      127,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      251,
+      126,
+      0,
+      127,
+      3,
+      "LATENT"
+    ],
+    [
+      252,
+      133,
+      0,
+      128,
+      0,
+      "STRING"
+    ],
+    [
+      253,
+      131,
+      0,
+      128,
+      1,
+      "STRING"
+    ],
+    [
+      254,
+      128,
+      0,
+      129,
+      0,
+      "*"
+    ],
+    [
+      255,
+      135,
+      0,
+      131,
+      0,
+      "STRING"
+    ],
+    [
+      256,
+      131,
+      0,
+      132,
+      0,
+      "*"
+    ],
+    [
+      257,
+      134,
+      0,
+      135,
+      0,
+      "IMAGE"
+    ],
+    [
+      258,
+      141,
+      0,
+      136,
+      0,
+      "*"
+    ],
+    [
+      259,
+      141,
+      0,
+      137,
+      0,
+      "IMAGE"
+    ],
+    [
+      260,
+      138,
+      0,
+      137,
+      1,
+      "UPSCALE_PARAMS"
+    ],
+    [
+      261,
+      139,
+      0,
+      138,
+      0,
+      "UPSCALE_PARAMS"
+    ],
+    [
+      262,
+      137,
+      0,
+      140,
+      0,
+      "IMAGE"
+    ],
+    [
+      263,
+      127,
+      0,
+      141,
+      0,
+      "LATENT"
+    ],
+    [
+      264,
+      122,
+      0,
+      141,
+      1,
+      "VAE"
+    ],
+    [
+      265,
+      141,
+      0,
+      142,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Group",
+      "bounding": [
+        -1954.669189453125,
+        -290.24273681640625,
+        5942.5791015625,
+        1452.662109375
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "Group",
+      "bounding": [
+        -1753.090087890625,
+        1218.533447265625,
+        5604.09375,
+        1590.950439453125
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "B站、Youtube：T8star-Aix",
+      "bounding": [
+        -1904.69873046875,
+        -759.6194458007812,
+        3274.687744140625,
+        321.76849365234375
+      ],
+      "color": "#3f789e",
+      "font_size": 240,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.23579476910002062,
+      "offset": [
+        1084.7720958078214,
+        -963.0524871065638
+      ]
+    },
+    "node_versions": {
+      "comfy-core": "0.3.12",
+      "comfyui-purgevram": "fb254fa9a7f6880d31d4fe472f3e3c578bafde5f",
+      "comfyui-various": "36454f91606bbff4fc36d90234981ca4a47e2695"
+    },
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0
+  },
+  "version": 0.4
+}

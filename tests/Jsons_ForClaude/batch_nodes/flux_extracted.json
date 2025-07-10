@@ -1,0 +1,228 @@
+[
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 34,
+        "name": "UltimateSDUpscale"
+    },
+    {
+        "id": 35,
+        "name": "ConditioningAverage"
+    },
+    {
+        "id": 36,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "award-winning composition, breathtaking detail, masterpiece quality, ultra-high resolution 32K, photorealistic rendering, impeccable lighting, studio-quality production, hyperrealistic textures, professional color grading, cutting-edge CGI, flawless execution, museum-worthy artistry, state-of-the-art techniques, unparalleled craftsmanship, extraordinary visual fidelity, cinematic atmosphere, precise brushwork, lifelike depiction, sublime aesthetics, exquisite attention to detail, perfect balance of elements, visually stunning, extraordinary depth and dimension, remarkable clarity, fine art quality, immaculate presentation, superior technical skill, awe-inspiring imagery"
+        }
+    },
+    {
+        "id": 37,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 38,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4xUltrasharp_4xUltrasharpV10.pth"
+        }
+    },
+    {
+        "id": 39,
+        "name": "SaveImage"
+    },
+    {
+        "id": 40,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 43,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "i_asked_for_something_supernaturally_pretty_08_by_riverfox1_dhwmco8-pre.jpg"
+        }
+    },
+    {
+        "id": 46,
+        "name": "CR Prompt Text",
+        "prompts": {
+            "text": "You identify as a cinematographer\nYou care deeply about light , shadow, depth, and composition, effects\nWhen coming up with image prompts, you always specify the position of the camera, the lens, and the depth\nYou are specific about the technical details of a shot.\nYour responses are brief and concise\nAlways respond with cinematographer prompt in one paragraph no more 80 token"
+        }
+    },
+    {
+        "id": 47,
+        "name": "Text Find and Replace"
+    },
+    {
+        "id": 48,
+        "name": "CR Prompt Text",
+        "prompts": {
+            "text": "You identify as an expert in color theory\nYou have a deep understanding of how color impacts one's psychological outlook\nYou are a fan of non-standard colors\nYour responses are brief and concise\nAlways respond with colors wheels ,degrees  and properties  prompt no more 80 token in one paragraph"
+        }
+    },
+    {
+        "id": 49,
+        "name": "CR Prompt Text",
+        "prompts": {
+            "text": "You care about the describe the scene ,unique details and specific descriptions of items.\nWhen describing things, be specific and not generic. \nFind the unique qualities of items that make them special and different.\nYour responses are brief and concise\nAlways respond with unique details and specific descriptions prompt no more 80 token in one paragraph"
+        }
+    },
+    {
+        "id": 50,
+        "name": "Text Concatenate"
+    },
+    {
+        "id": 51,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "I\n am a cinematographer. \n I am an AI language model, and I do not have personal feelings or preferences. However, I can provide information on color theory and its psychological impact based on research and knowledge from my training data. I am a language model. \n\"A surrealist dreamscape by Salvador Dal\u00ed and Gustav Klimt, rendered in the vibrant, swirling style of Van Gogh, with elements of Art Deco and cyberpunk. A lone figure, shrouded in a cloak of swirling stars, stands in a field of blooming, bioluminescent flowers, their petals pulsing with the rhythm of the cosmos. The background is a mesmerizing vortex of swirling galaxies and abstract forms, echoing the hypnotic beauty of the figure's silhouette.\" \n",
+            "text_2": "A woman with long, flowing, dark hair and futuristic goggles stands in a dimly lit futuristic hallway. She wears a long, red, button-up jacket and a thin black belt with a unique, glowing, blue, rectangular contraption attached to it. She is smoking a cigarette, which leaves a trail of swirling pink smoke. The hallway has glowing blue lights and many pipes and wires along the walls. The walls of the hallway are a deep blue, and the floor is a darker shade of blue. The scene is set in a futuristic city, and the woman is dressed in the latest fashion. The woman's expression is serious and stoic. She seems to be in deep thought, contemplating her next move. The scene is full of suspense and mystery.\nThis image evokes a sense of  mystery and wonder. The use of deep blues  (240\u00b0 - 270\u00b0) , cool purples  (270\u00b0 - 300\u00b0) and rich oranges (30\u00b0 - 60\u00b0) create a contrast that draws the viewer's eye towards the  central building and its reflection in the water, the light  (70\u00b0 - 80\u00b0)  creates a warm feeling  while the  darkness (180\u00b0 - 210\u00b0)  enhances the  feeling  of  mystery.  The scene evokes a  sense of  tranquility and peace, which are often associated with  purple  and  blue  while  orange  brings energy and life.A close-up macro shot of a dew-covered leaf.  A shallow depth of field with the camera positioned directly above the leaf. Use a 100mm macro lens to capture the texture of the leaf and the glistening water droplets. Light source from above, creating a dramatic silhouette of the leaf.  \nThis is a digital illustration in the style of caricature, reminiscent of the works of Al Hirschfeld and Gerald Scarfe, with a touch of Pop Art and Surrealism, reminiscent of the art movement of the 1960s and 1970s. \n"
+        }
+    },
+    {
+        "id": 52,
+        "name": "CR Prompt Text",
+        "prompts": {
+            "text": "You are an expert of arts word please  mention  artists team names , artstyles mix , art movements mix of this painting no more 80 token in one paragraph"
+        }
+    },
+    {
+        "id": 55,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "/imagine A lone figure, shrouded in a cloak of swirling stars, stands amidst a field of bioluminescent flowers, their petals pulsing with cosmic rhythm. The figure's silhouette is hypnotic, echoing the mesmerizing vortex of swirling galaxies and abstract forms that comprise the background. Rendered in the vibrant, swirling style of Van Gogh, with influences of Dal\u00ed's surrealism, Klimt's ornate detail, and touches of Art Deco and cyberpunk, this dreamscape is captured on a Hasselblad H5D-50c, resulting in a professional, sleek, and minimalist image with a touch of Ghibli-esque anime charm. The scene is illuminated by the ethereal glow of a moonlit ritual, as if the figure is conducting an ancient ceremony, imbued with a beautiful mystical allure.  The overall composition evokes a feeling of fantasy, shot with an f/16 aperture and a 14mm focal length, creating a dolly shot photograph with a shallow depth of field.\n",
+            "text_2": "Craft a captivating and enigmatic digital illustration of a woman in a futuristic, dimly lit hallway, adorned with intricate pipes and glowing blue lights. She wears a long red jacket, a thin black belt with a unique, glowing blue device, and futuristic goggles. Her long, dark hair flows freely as she smokes a cigarette, leaving a trail of swirling pink smoke. Her expression is stoic and contemplative, hinting at a hidden story. Render the scene in a style reminiscent of Al Hirschfeld and Gerald Scarfe, with touches of Pop Art and Surrealism, using deep blues, cool purples, and rich oranges to evoke a sense of mystery and wonder. Capture the scene with a 14mm focal length and an f/16 aperture to create a sense of depth and focus.\n"
+        }
+    },
+    {
+        "id": 56,
+        "name": "CR Prompt Text",
+        "prompts": {
+            "text": "convert those  descriptions  \" promptx \"    to one creative innovative professional prompt in one paragraph    , you must response  with professional prompt it self no more to create the most beautiful image could be imagine "
+        }
+    },
+    {
+        "id": 57,
+        "name": "ComfyUIStyler",
+        "prompts": {
+            "text": "style your prompt",
+            "text_2": "None - No specific camera angle applied."
+        }
+    },
+    {
+        "id": 65,
+        "name": "GeminiOllamaAPI",
+        "prompts": {
+            "text": "What is the meaning of life?",
+            "text_2": "gemini-1.5-flash"
+        }
+    },
+    {
+        "id": 66,
+        "name": "GeminiOllamaAPI",
+        "prompts": {
+            "text": "What is the meaning of life?",
+            "text_2": "gemini-1.5-pro-exp-0801"
+        }
+    },
+    {
+        "id": 67,
+        "name": "GeminiOllamaAPI",
+        "prompts": {
+            "text": "What is the meaning of life?",
+            "text_2": "gemini-1.5-flash"
+        }
+    },
+    {
+        "id": 68,
+        "name": "GeminiOllamaAPI",
+        "prompts": {
+            "text": "What is the meaning of life?",
+            "text_2": "gemini-1.5-flash"
+        }
+    },
+    {
+        "id": 69,
+        "name": "GeminiOllamaAPI",
+        "prompts": {
+            "text": "What is the meaning of life?",
+            "text_2": "gemini-1.5-flash"
+        }
+    },
+    {
+        "id": 71,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "black fluffy gorgeous dangerous cat animal creature, large orange eyes, big fluffy ears, piercing gaze, full moon, dark ambiance, best quality, extremely detailed\n"
+        }
+    },
+    {
+        "id": 74,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-schnell-fp8.safetensors"
+        }
+    },
+    {
+        "id": 75,
+        "name": "KSampler"
+    },
+    {
+        "id": 77,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 78,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "artwork-science-fiction-cyberpunk-women-wallpaper-002e2b4a76a802608b7f37ea9855664e.jpg"
+        }
+    },
+    {
+        "id": 79,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "leaves-water-drops-macro-wallpaper-preview.jpg"
+        }
+    },
+    {
+        "id": 81,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "terminator-terminator-2-judgment-day-arnold-schwarzenegger-cartoon-wallpaper-c2b162d07d565e4b9a585225b0e84962.jpg"
+        }
+    },
+    {
+        "id": 82,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 83,
+        "name": "CascadeResolutions",
+        "prompts": {
+            "text": "1280x896 (10:7) - Landscape Small HD"
+        }
+    },
+    {
+        "id": 84,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 85,
+        "name": "Reroute"
+    },
+    {
+        "id": 86,
+        "name": "Reroute"
+    },
+    {
+        "id": 87,
+        "name": "Reroute"
+    }
+]

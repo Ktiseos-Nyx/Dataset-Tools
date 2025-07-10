@@ -1,0 +1,58 @@
+[
+    {
+        "id": 21,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "hidream_i1_full_fp8.safetensors"
+        }
+    },
+    {
+        "id": 22,
+        "name": "ModelSamplingSD3"
+    },
+    {
+        "id": 23,
+        "name": "KSampler"
+    },
+    {
+        "id": 24,
+        "name": "QuadrupleCLIPLoader",
+        "prompts": {
+            "text": "clip_g_hidream.safetensors",
+            "text_2": "clip_l_hidream.safetensors"
+        }
+    },
+    {
+        "id": 25,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "A young woman takes a selfie in soft morning light. She wears casual clothes. Golden sunbeams fill the air in her balcony. She smiles gently into her phone, capturing the calm, fresh start to the day. The background is softly focused, high quality, 4k"
+        }
+    },
+    {
+        "id": 26,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry, bad quality"
+        }
+    },
+    {
+        "id": 27,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 28,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 29,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae.safetensors"
+        }
+    },
+    {
+        "id": 30,
+        "name": "SaveImage"
+    }
+]

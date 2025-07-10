@@ -1,0 +1,62 @@
+[
+    {
+        "id": "5fb20d02-51c5-4419-b119-c8621f799ecb",
+        "name": "Demo Real Time Painting"
+    },
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "analogMadnessSDXL_sdxlV10.safetensors"
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text, watermark"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 10,
+        "name": "PainterNode",
+        "prompts": {
+            "text": "Paint_0.png",
+            "text_2": "clear_painer"
+        }
+    },
+    {
+        "id": 11,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 12,
+        "name": "LatentUpscale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 13,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "LCM_LoRA_Weights.safetensors"
+        }
+    }
+]

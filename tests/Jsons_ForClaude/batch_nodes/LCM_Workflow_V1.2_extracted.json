@@ -1,0 +1,295 @@
+[
+    {
+        "id": 241,
+        "name": "CR Apply Model Merge"
+    },
+    {
+        "id": 242,
+        "name": "CR Model Merge Stack",
+        "prompts": {
+            "text": "SDVN7-NijiStyleXL_v1.safetensors",
+            "text_2": "SDXL_Niji_Special Edition.safetensors"
+        }
+    },
+    {
+        "id": 246,
+        "name": "SDXL Empty Latent Image (rgthree)",
+        "prompts": {
+            "text": " 896 x 1152  (portrait)"
+        }
+    },
+    {
+        "id": 247,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 248,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 249,
+        "name": "Reroute"
+    },
+    {
+        "id": 250,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "vae-sdxl.safetensors"
+        }
+    },
+    {
+        "id": 252,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "LCM-XL-LORA_Weights.safetensors"
+        }
+    },
+    {
+        "id": 253,
+        "name": "Reroute"
+    },
+    {
+        "id": 254,
+        "name": "Reroute"
+    },
+    {
+        "id": 255,
+        "name": "CR Apply LoRA Stack"
+    },
+    {
+        "id": 256,
+        "name": "ModelSamplingDiscrete"
+    },
+    {
+        "id": 257,
+        "name": "Reroute"
+    },
+    {
+        "id": 258,
+        "name": "CR LoRA Stack",
+        "prompts": {
+            "text": "Add-Detail-XL.safetensors",
+            "text_2": "3DRedmond_Render_XL_V1.safetensors"
+        }
+    },
+    {
+        "id": 259,
+        "name": "Reroute"
+    },
+    {
+        "id": 260,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 261,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 262,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 263,
+        "name": "CR Seed"
+    },
+    {
+        "id": 264,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_temp_zqkmj_00003_.png"
+        }
+    },
+    {
+        "id": 265,
+        "name": "CR Latent Input Switch"
+    },
+    {
+        "id": 266,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 267,
+        "name": "CannyEdgePreprocessor"
+    },
+    {
+        "id": 269,
+        "name": "KSamplerAdvanced (WLSH)",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 270,
+        "name": "Reroute"
+    },
+    {
+        "id": 271,
+        "name": "Reroute"
+    },
+    {
+        "id": 272,
+        "name": "Reroute"
+    },
+    {
+        "id": 275,
+        "name": "CR Multi-ControlNet Stack",
+        "prompts": {
+            "text": "t2i-adapter_diffusers_xl_canny.safetensors",
+            "text_2": "t2i-adapter_diffusers_xl_lineart.safetensors"
+        }
+    },
+    {
+        "id": 277,
+        "name": "CR Apply Multi-ControlNet"
+    },
+    {
+        "id": 281,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 287,
+        "name": "Reroute"
+    },
+    {
+        "id": 290,
+        "name": "Manga2Anime_LineArt_Preprocessor"
+    },
+    {
+        "id": 293,
+        "name": "BinaryPreprocessor"
+    },
+    {
+        "id": 294,
+        "name": "HEDPreprocessor"
+    },
+    {
+        "id": 295,
+        "name": "FakeScribblePreprocessor"
+    },
+    {
+        "id": 296,
+        "name": "LineArtPreprocessor"
+    },
+    {
+        "id": 297,
+        "name": "AnimeLineArtPreprocessor"
+    },
+    {
+        "id": 298,
+        "name": "M-LSDPreprocessor"
+    },
+    {
+        "id": 299,
+        "name": "PiDiNetPreprocessor"
+    },
+    {
+        "id": 300,
+        "name": "ScribblePreprocessor"
+    },
+    {
+        "id": 301,
+        "name": "Scribble_XDoG_Preprocessor"
+    },
+    {
+        "id": 304,
+        "name": "CR Image Input Switch (4 way)"
+    },
+    {
+        "id": 317,
+        "name": "Reroute"
+    },
+    {
+        "id": 318,
+        "name": "Reroute"
+    },
+    {
+        "id": 319,
+        "name": "Reroute"
+    },
+    {
+        "id": 320,
+        "name": "Reroute"
+    },
+    {
+        "id": 321,
+        "name": "Reroute"
+    },
+    {
+        "id": 322,
+        "name": "Reroute"
+    },
+    {
+        "id": 323,
+        "name": "Reroute"
+    },
+    {
+        "id": 324,
+        "name": "Reroute"
+    },
+    {
+        "id": 325,
+        "name": "Reroute"
+    },
+    {
+        "id": 326,
+        "name": "Reroute"
+    },
+    {
+        "id": 327,
+        "name": "Reroute"
+    },
+    {
+        "id": 328,
+        "name": "CR Image Input Switch (4 way)"
+    },
+    {
+        "id": 329,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 330,
+        "name": "CR Image Input Switch (4 way)"
+    },
+    {
+        "id": 331,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 332,
+        "name": "CR LoRA Stack"
+    },
+    {
+        "id": 334,
+        "name": "Reroute"
+    },
+    {
+        "id": 343,
+        "name": "CLIP Positive-Negative XL w/Text (WLSH)",
+        "prompts": {
+            "text": "(1boy ), (Lee Joon-Gi actor:1.3) as vampire, minimalism Niji style,  moon lover hair style, upper body portrait, lip, (hood cape),-material- helmet, fluorescent blue gradient background, deep purple hair,Loose waves hair, vampire color palette, jewelry, Gradient hair, Undercut hair, High-Tech, Troy Brooks, Hellenistic, art by joe madureira, wlop, (masterpiece, best quality, Niji style),((ultra-detailed)), Hyper Real,Photorealistic,16K,high detail, nhigh resolution\n",
+            "text_2": "(1boy ), (Lee Joon-Gi actor:1.3) as vampire, minimalism Niji style,  moon lover hair style, upper body portrait, lip, (hood cape),-material- helmet, fluorescent blue gradient background, deep purple hair,Loose waves hair, vampire color palette, jewelry, Gradient hair, Undercut hair, High-Tech, Troy Brooks, Hellenistic, art by joe madureira, wlop, (masterpiece, best quality, Niji style),((ultra-detailed)), Hyper Real,Photorealistic,16K,high detail, nhigh resolution\n"
+        }
+    },
+    {
+        "id": 384,
+        "name": "Save IMG Prompt",
+        "prompts": {
+            "text": "[time(%Y-%m-%d)]"
+        }
+    },
+    {
+        "id": 389,
+        "name": "Image Save with Prompt/Info File (WLSH)",
+        "prompts": {
+            "text": "%time_%seed",
+            "text_2": "K:\\ComfyUI\\ComfyUI\\output"
+        }
+    },
+    {
+        "id": 391,
+        "name": "PrimitiveNode"
+    }
+]

@@ -1,0 +1,35 @@
+[
+    {
+        "id": 2,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "female_diaosu.png"
+        }
+    },
+    {
+        "id": 48,
+        "name": "Gemini_Flash_200_Exp",
+        "prompts": {
+            "text": "What you see?",
+            "text_2": "gemini-2.0-flash-exp"
+        }
+    },
+    {
+        "id": 49,
+        "name": "MultiImagesInput"
+    },
+    {
+        "id": 50,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_temp_phkbg_00006_.png"
+        }
+    },
+    {
+        "id": 51,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "Here's a description of each image:\n\n**Image 1:**\n\n*   This image is a close-up of a marble bust.\n*   The bust depicts a young woman with delicate features.\n*   Her hair is styled in soft waves, with some strands framing her face.\n*   The marble has a smooth, polished finish, with subtle variations in tone that suggest the texture of the stone.\n*   The background is a soft, neutral gray, which helps to highlight the sculpture.\n\n**Image 2:**\n\n*   This image is a landscape photograph of a desert or canyon region.\n*   The scene is dominated by red rock formations, which are layered and textured.\n*   The sun is setting or rising, casting a warm, golden light across the landscape.\n*   A large cloud formation is present in the sky, with the sun's rays breaking through.\n*   The overall impression is one of vastness, beauty, and natural power."
+        }
+    }
+]

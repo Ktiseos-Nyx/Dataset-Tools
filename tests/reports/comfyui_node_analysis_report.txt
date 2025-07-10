@@ -1,0 +1,3233 @@
+================================================================================
+COMFYUI NODE ANALYSIS REPORT
+================================================================================
+Total Files Analyzed: 460
+Total Unique Nodes: 2345
+
+TOP 50 MOST COMMON NODES:
+----------------------------------------
+Reroute                                   2571
+Note                                      1041
+CLIPTextEncode                            1023
+GetNode                                    977
+PreviewImage                               938
+VAEDecode                                  656
+LoadImage                                  591
+PrimitiveNode                              580
+SaveImage                                  577
+SetNode                                    509
+KSampler                                   431
+CheckpointLoaderSimple                     382
+Anything Everywhere?                       301
+VAELoader                                  297
+EmptyLatentImage                           293
+UltralyticsDetectorProvider                209
+Label (rgthree)                            205
+VAEEncode                                  193
+mxSlider                                   174
+ControlNetLoader                           170
+UpscaleModelLoader                         164
+easy getNode                               158
+Fast Groups Bypasser (rgthree)             157
+ShowText|pysssss                           151
+MarkdownNote                               151
+Reroute (rgthree)                          146
+KSamplerSelect                             135
+Image Comparer (rgthree)                   133
+SeargeMagicBox                             132
+BasicScheduler                             125
+ImageScaleBy                               125
+LoraLoader                                 123
+KSamplerAdvanced                           123
+FaceDetailer                               120
+ImpactConditionalBranch                    118
+ImageScale                                 117
+ControlNetApplyAdvanced                    116
+Mute / Bypass Repeater (rgthree)           115
+ImageResize+                               108
+ImageUpscaleWithModel                      107
+CLIPSetLastLayer                           105
+ImageSelector                              105
+PrimitiveBoolean                           103
+easy setNode                               103
+EmptySD3LatentImage                        101
+DualCLIPLoader                              99
+Display Int (rgthree)                       91
+MathExpression|pysssss                      90
+MaskToImage                                 89
+UNETLoader                                  87
+
+NODES THAT CONTAIN PROMPTS:
+----------------------------------------
+ACN_ControlNetLoaderAdvanced                 1
+ADE_AnimateDiffLoRALoader                    8
+ADE_AnimateDiffLoaderGen1                    4
+ADE_AnimateDiffLoaderWithContext             8
+ADE_LoadAnimateDiffModel                     1
+ADE_UseEvolvedSampling                       2
+AIO_Preprocessor                            26
+APZmedia Fast image save                     1
+AV_ControlNetPreprocessor                    8
+AV_VAELoader                                 4
+AddLabel                                     3
+AdvancedTextSwitch                           4
+AdvancedVisionLoader                         1
+AnyLineArtPreprocessor_aux                   4
+Anything Everywhere                         68
+Anything Everywhere?                       301
+ApplyFBCacheOnModel                          3
+ApplyPulidFlux                               3
+ApplyStableSRUpscaler                        1
+ArtistsImage_Zho                             1
+AuraSR.AuraSRUpscaler                        8
+AutoNegativePrompt                           4
+Automatic CFG - Preset Loader                2
+BLIP Analyze Image                           2
+BLIP Model Loader                            2
+BNK_CLIPTextEncodeAdvanced                  11
+BNK_CutoffBasePrompt                         1
+BNK_CutoffSetRegions                         6
+BNK_TiledKSampler                            1
+BagelImageEdit                               4
+BagelModelLoader                             3
+BagelTextToImage                             1
+BasicPipeToDetailerPipeSDXL                  1
+BasicScheduler                             125
+BatchPromptSchedule                          2
+BboxDetectorSEGS                            37
+BiRefNet_Hugo                                2
+BiRefNet_ModelLoader_Zho                     1
+BizyAirJoyCaption2                          13
+BizyAir_CLIPTextEncode                       2
+BizyAir_DualCLIPLoader                       1
+BizyAir_UNETLoader                           1
+BizyAir_VAELoader                            1
+Bookmark (rgthree)                          83
+CCMSampler                                   1
+CFGPPSamplerSelect                           3
+CFICLS_SaveImageCaptionBatch                 1
+CLIP Positive-Negative XL w/Text (WLSH)      1
+CLIPLoader                                  38
+CLIPTextEncode                            1023
+CLIPTextEncode (NSP)                         1
+CLIPTextEncodeFlux                          30
+CLIPTextEncodeSD3                            7
+CLIPTextEncodeSDXL                          56
+CLIPTextEncodeSDXLRefiner                   10
+CLIPTextEncodeWildcards3                     1
+CLIPVisionLoader                            55
+CLIPshuffleLayersNode                        1
+CR Aspect Ratio                              3
+CR Aspect Ratio SDXL                         1
+CR Comic Panel Templates                     1
+CR Draw Text                                 1
+CR Hires Fix Process Switch                  4
+CR Image Output                              3
+CR LoRA Stack                               47
+CR Load LoRA                                23
+CR Model Merge Stack                         3
+CR Multi Upscale Stack                       1
+CR Multi-ControlNet Stack                   14
+CR Overlay Text                              7
+CR Prompt Scheduler                          1
+CR Prompt Text                              24
+CR SD1.5 Aspect Ratio                       10
+CR SDXL Aspect Ratio                        12
+CR Simple Prompt List                        2
+CR Text                                     20
+CR Text Concatenate                         16
+CR Text Input Switch                        12
+CR Text Replace                             10
+CR Upscale Image                            18
+CascadeResolutions                           3
+Checkpoint Loader (Simple)                   9
+Checkpoint Loader Simple Mikey               2
+Checkpoint Loader with Name (Image Saver)    10
+CheckpointLoaderNF4                          2
+CheckpointLoaderSimple                     382
+CheckpointLoaderSimpleExtended               3
+CheckpointLoaderSimpleText                   2
+CheckpointLoaderSimpleWithNoiseSelect        1
+CheckpointLoader|pysssss                     4
+CheckpointNameSelector                       1
+CheckpointSave                               9
+ChromaDiffusionLoader                        2
+ClipLoaderGGUF                               1
+ClownsharKSampler                            1
+ColorMatchImage                              4
+Combine Masks                               16
+ComfyUIStyler                                4
+ConcatText_Zho                               4
+ControlNetLoader                           170
+ControlNetLoaderAdvanced                    34
+ControlNetPreprocessorSelector               1
+CreatePromptVariant                          5
+CropFace                                     5
+DF_Latent_Scale_to_side                      1
+DF_Text_Box                                 31
+DF_To_text_(Debug)                           2
+DPMagicPrompt                                4
+DPRandomGenerator                            5
+DWPreprocessor                              25
+DYNAMIC_TRT_MODEL_CONVERSION                 1
+DeepDanbooruCaption                          1
+DeepTranslatorTextNode                       4
+DepthAnythingPreprocessor                    8
+DepthAnythingTensorrt                        1
+DepthAnythingV2Preprocessor                  3
+DetailerForEach                             19
+DetailerForEachPipe                          9
+Dictionary to Console                        2
+DiffControlNetLoader                         7
+DiffControlNetLoaderAdvanced                 3
+DiffusersMVModelMakeup                       1
+DiffusersMVSampler                           1
+DiffusersMVSchedulerLoader                   1
+Display Any (rgthree)                        6
+DisplayAny                                   2
+DisplayText_Zho                              5
+DownloadAndLoadCLIPModel                     1
+DownloadAndLoadCLIPVisionModel               1
+DownloadAndLoadDepthAnythingV2Model          1
+DownloadAndLoadDynamiCrafterModel            1
+DownloadAndLoadFlorence2Lora                 1
+DownloadAndLoadFlorence2Model                8
+DownloadAndLoadGIMMVFIModel                  1
+DownloadAndLoadHy3DDelightModel              2
+DownloadAndLoadHy3DPaintModel                3
+DownloadAndLoadKolorsModel                   4
+DownloadAndLoadSAM2Model                     1
+DrawText+                                    4
+DualCLIPLoader                              99
+DualCLIPLoaderGGUF                           9
+DualCLIPLoaderMultiGPU                       1
+DynamicThresholdingFull                     16
+ELLALoader                                   2
+EasyFunction_Lite                           10
+EditDetailerPipe                             3
+Efficient Loader                            28
+EmbeddingPicker                             10
+Environment_INFO                             1
+Evaluate Integers                           13
+F5TTSAudio                                   1
+FILM VFI                                     3
+FLUXResolutions                              1
+FL_Ascii                                     1
+FaceAutoFitSingle                            1
+FaceCombine                                  3
+FaceDetailer                               120
+FaceDetailerPipe                            19
+FaceRestoreCFWithModel                       1
+FaceRestoreModelLoader                       2
+FaceRestoreWithModel                         1
+FaceSwap_InfiniteYou                         3
+FacialPartColoringFromPoseKps                8
+Fast Actions Button (rgthree)                4
+FileNamePrefix                              12
+Florence2                                    1
+Florence2ModelLoader                         4
+Florence2Run                                13
+FluxBlockPatcherSampler                      3
+FluxBlocksBuster+                            2
+FluxLoraLoader                               1
+FramePackTimestampedTextEncode               1
+FreeU_V2 (Advanced)                         10
+GLIGENLoader                                 3
+GLIGENTextBoxApply                          18
+GeekyRemB                                    2
+GeminiAPI                                    6
+GeminiComfyUIStyler                          1
+GeminiFlash                                  1
+GeminiOllamaAPI                              5
+Gemini_API_S_Zho                             1
+Gemini_Flash_200_Exp                         7
+Get Date Time String (JPS)                   1
+GetNode                                    977
+GlobalSampler //Inspire                      2
+GroundingDinoModelLoader (segment anything)     2
+GroundingDinoModelLoader (segment anything2)     5
+GroundingDinoSAM2Segment (segment anything2)     5
+GroundingDinoSAMSegment (segment anything)     4
+HYDiTCheckpointLoader                        5
+HYDiTTextEncode                              2
+HYDiTTextEncodeSimple                        8
+HYDiTTextEncoderLoader                       5
+HighRes-Fix Script                           9
+HintImageEnchance                            2
+Hy3DCameraConfig                             7
+Hy3DDiffusersSchedulerConfig                 5
+Hy3DExportMesh                               8
+Hy3DGenerateMesh                             4
+Hy3DGenerateMeshMultiView                    1
+Hy3DModelLoader                              7
+Hy3DRenderSingleView                         1
+Hy3DVAELoader                                2
+IF_HFDownloadNode                            1
+IF_PromptMkr                                 1
+INPAINT_LoadFooocusInpaint                   2
+INPAINT_MaskedFill                           1
+IPAdapter                                    6
+IPAdapterAdvanced                           30
+IPAdapterApplyEncoded                        8
+IPAdapterApplyFaceID                         3
+IPAdapterClipVisionEnhancer                  1
+IPAdapterEmbeds                              6
+IPAdapterFaceID                              5
+IPAdapterFluxLoader                          1
+IPAdapterLoadEmbeds                         12
+IPAdapterMS                                  2
+IPAdapterModelLoader                        45
+IPAdapterSaveEmbeds                          4
+IPAdapterStyleComposition                    3
+IPAdapterTiled                               2
+IPAdapterUnifiedLoader                      15
+IPAdapterUnifiedLoaderFaceID                 5
+Image Color Palette                          1
+Image Comparer (rgthree)                   133
+Image Crop Face                              2
+Image Overlay                                6
+Image Rembg (Remove Background)              4
+Image Save                                  15
+Image Save with Prompt/Info File (WLSH)      1
+Image Saver                                 22
+Image Saver Simple                          15
+Image scale by ratio                         1
+Image scale to side                          6
+ImageApplyLUT+                               4
+ImageBatchMultiple+                          2
+ImageDesaturate+                             3
+ImageOnlyCheckpointLoader                    3
+ImageReceiver                                1
+ImageResize+                               108
+ImageResizeKJ                                6
+ImageResizeKJv2                             39
+ImageScale                                 117
+ImageScaleBy                               125
+ImageScaleToTotalPixels                     25
+ImpactKSamplerBasicPipe                      4
+ImpactMakeTileSEGS                           2
+ImpactSchedulerAdapter                      16
+ImpactSimpleDetectorSEGS_for_AD              2
+ImpactStringSelector                         4
+ImpactWildcardEncode                         7
+ImpactWildcardProcessor                     16
+InfiniteYouApply                            11
+InpaintCrop                                  6
+InpaintCropImproved                          1
+InpaintResize                                1
+Input Parameters (Image Saver)               6
+InstantIDModelLoader                         2
+InstantX Flux Union ControlNet Loader        1
+Int debug print                              4
+JWDatetimeString                             6
+JjkShowText                                  1
+JjkText                                     15
+KRestartSampler                              2
+KSampler                                   431
+KSampler (Efficient)                        39
+KSampler //Inspire                           7
+KSampler Adv. (Efficient)                   14
+KSampler Config (rgthree)                    4
+KSampler Cycle                               2
+KSamplerAdvanced                           123
+KSamplerAdvanced (WLSH)                      3
+KSamplerAdvancedProvider                     2
+KSamplerSelect                             135
+KepStringLiteral                             2
+KolorsSampler                                5
+KolorsTextEncode                             4
+LLava Loader Simple                          2
+LTXVLoader                                   1
+LanPaint_KSampler                            1
+Latent Diffusion Mega Modifier               8
+LatentNoisePresets                           1
+LatentPixelScale                             2
+LatentReceiver                               1
+LatentSender                                 1
+LatentUpscale                                8
+LatentUpscaleBy                             23
+LayerFilter: FilmV2                          2
+LayerMask: ObjectDetectorFL2                 1
+LayerMask: PersonMaskUltra V2                3
+LayerMask: SAM2Ultra                         1
+LayerMask: SegmentAnythingUltra V2           1
+LayerUtility: CropByMask V2                  2
+LayerUtility: ImageReel                      1
+LayerUtility: ImageReelComposit              1
+LayerUtility: JoyCaptionBeta1                2
+LayerUtility: LoadJoyCaptionBeta1Model       1
+LayerUtility: TextBox                        4
+LayeredDiffusionApply                        3
+LdmPipelineLoader                            1
+LdmVaeLoader                                 1
+List of strings [Crystools]                 22
+LlavaClipLoader                              2
+LoRA Stacker                                25
+Load Image Based on Number                   1
+Load Image Batch                            12
+Load Styles CSV                              1
+LoadAndApplyICLightUnet                      2
+LoadAndResizeImage                           5
+LoadChatGLM3                                 2
+LoadFluxControlNet                           2
+LoadFramePackModel                           1
+LoadImage                                  591
+LoadImageMask                               11
+LoadImageOutput                              1
+LoadImagesFromDir //Inspire                  9
+LoadOmniGen2Model                            3
+LoadPromptsFromFile //Inspire                1
+LoadVideo                                    1
+LoaderGGUF                                   1
+Lora Loader Stack (rgthree)                 20
+LoraInfo                                     3
+LoraListNames                                3
+LoraLoader                                 123
+LoraLoaderBlockWeight //Inspire              6
+LoraLoaderModelOnly                         80
+LoraLoaderStackedVanilla                     1
+LoraLoaderText                               3
+LoraLoader|pysssss                          19
+LoraStackLoader_PoP                          2
+MUSimpleWildcard                             3
+MZ_ChatGLM3                                  4
+MZ_ChatGLM3Loader                           16
+MZ_ChatGLM3_V2                              30
+MZ_KolorsUNETLoader                          2
+MZ_KolorsUNETLoaderV2                       15
+MangaNinjiaLoader                            4
+MarkdownNote                               151
+Mask To Region                              14
+MaskDetailerPipe                             7
+MathExpression|pysssss                      90
+MeshGraphormer+ImpactDetector-DepthMapPreprocessor     3
+MeshGraphormer-DepthMapPreprocessor          2
+MilehighStyler                               1
+ModelParameters                              3
+ModelSamplingContinuousEDM                  11
+ModelSamplingDiscrete                       19
+MovementsImage_Zho                           1
+Note                                      1041
+Note Plus (mtb)                             28
+Note _O                                     33
+Number Operation                             7
+NunchakuFluxDiTLoader                        1
+NunchakuFluxLoraLoader                       8
+NunchakuTextEncoderLoaderV2                  1
+NunchakuWheelInstaller                       1
+OllamaConnectivityV2                         1
+OllamaGenerate                               4
+OllamaGenerateAdvance                        3
+OllamaImageDescriber                         1
+OmniGen2                                     3
+OmniGenNode                                  1
+OmostLLMChatNode                             2
+OmostLLMLoaderNode                           1
+OmostLoadCanvasConditioningNode              1
+OneButtonSuperPrompt                         3
+PCLazyTextEncode                            14
+PCTextEncode                                 1
+PainterNode                                  1
+Paste By Mask                               67
+PatchModelAddDownscale                      23
+PatchModelPatcherOrder                       3
+PathchSageAttentionKJ                        8
+PixArtCheckpointLoader                      15
+PixArtCheckpointLoaderSimple                 2
+PixArtResolutionSelect                       7
+PixArtT5TextEncode                           6
+PixelKSampleUpscalerProvider                 6
+PixelPerfectResolution                       5
+Power KSampler Advanced (PPF Noise)          2
+Power Prompt - Simple (rgthree)             36
+Power Puter (rgthree)                        3
+Power-Law Noise (PPF Noise)                  1
+Preview Chooser                              7
+Preview3D                                    8
+Primitive string multiline [Crystools]      68
+PrimitiveNode                              580
+PrimitiveStringMultiline                    38
+ProjectFilePathNode                         54
+PromptGenerator                              1
+PromptSwap                                   7
+PulidFluxModelLoader                         3
+QuadrupleCLIPLoader                          5
+QuadrupleCLIPLoaderGGUF                      1
+Qwen2.5VL                                    1
+Qwen2_VQA                                    3
+RH_Captioner                                 1
+RandomNoise //Inspire                        3
+RdancerFlorence2SAM2GenerateMask             1
+ReActorFaceBoost                             6
+ReActorFaceSwap                             22
+ReActorFaceSwapOpt                           2
+ReActorLoadFaceModel                         6
+ReActorMaskHelper                            3
+ReActorRestoreFace                           4
+RecourseStrings                             15
+Regex Text Chopper /noEmbryo                 8
+RegexExtract                                 8
+RegexReplace                                 5
+RegionalConditioningSimple //Inspire        13
+RegionalIPAdapterColorMask //Inspire         3
+RegionalPromptSimple //Inspire               8
+RegionalSamplerAdvanced                      2
+RemBGSession+                                7
+ResizeMask                                   1
+RungeKuttaSampler                            2
+SAM2ModelLoader (segment anything2)          5
+SAMDetectorCombined                          4
+SAMLoader                                   85
+SAMModelLoader (segment anything)            2
+SD3LatentSelectRes                           2
+SDBatchLoader                                2
+SDLoraLoader                                 4
+SDLoraSelector                               5
+SDPromptReader                               4
+SDPromptSaver                               26
+SDXL Empty Latent Image (rgthree)           11
+SDXL Power Prompt - Simple / Negative (rgthree)     2
+SDXL Prompt Handling (JPS)                   2
+SDXL Prompt Styler (JPS)                     1
+SDXL Resolutions (JPS)                       3
+SDXLEmptyLatentSizePicker+                  12
+SDXLEmptyLatentSizePicker_v2                 3
+SDXLPromptStyler                             9
+SDXLPromptStylerbyOriginal                   1
+SDXLResolutionPresets                        3
+SEGSDetailerForAnimateDiff                   2
+SUPIR_Upscale                                2
+SUPIR_conditioner                           12
+SUPIR_model_loader                           1
+SUPIR_model_loader_v2                       11
+SUPIR_sample                                12
+Sampler Scheduler Settings (JPS)             3
+Sampler Selector                            13
+Sampler Selector (Image Saver)              18
+Sampler Settings (Small) // RvTools          3
+Save IMG Prompt                              2
+Save Image With Prompt Data                  4
+Save Image w/Metadata                       14
+Save Images // RvTools                       5
+Save Text File                               2
+SaveAudio                                    2
+SaveCryptoNode                               1
+SaveImage                                  577
+SaveImageWithMetaData                        9
+SaveLatent                                   2
+SavePoseKpsAsJsonFile                        1
+SaveSVG                                      1
+Scheduler Selector                          12
+Scheduler Selector (Comfy) (Image Saver)    16
+SeargeControlnetModels                       6
+SeargeGenerationParameters                   6
+SeargeImage2ImageAndInpainting               6
+SeargeImageSave                              7
+SeargeImageSaving                            6
+SeargeInput2                                 2
+SeargeInput4                                 2
+SeargeInput7                                 2
+SeargeLoras                                  6
+SeargeMagicBox                             132
+SeargeModelSelector                          6
+SeargeOperatingMode                          6
+SeargePromptText                            16
+SeargeSDXLPromptEncoder                      3
+SeargeSamplerInputs                          1
+SeargeSaveFolderInputs                       1
+SeargeStylePreprocessor                      2
+SeargeTextInputV2                           30
+SeargeUpscaleModels                          6
+SegmDetectorSEGS                            26
+Segment                                      1
+SekiSamplerSelector                          1
+Selector                                     5
+SetEllaTimesteps                             2
+SetNode                                    509
+SetUnionControlNetType                      25
+SharkSampler                                 4
+ShowTextForGPT                               5
+ShowText|pysssss                           151
+ShuffleFluxLayersNode                        1
+Simple String                                3
+Simple Wildcards                             1
+SimpleMathDual+                              6
+SimpleSampler                                1
+SimpleSamplerVAE                             1
+SimpleText                                   2
+SplineEditor                                 1
+StableCascade_CheckpointLoader //Inspire     1
+StoryDiffusion_Apply                        18
+StoryDiffusion_CLIPTextEncode               18
+String                                      20
+String Literal                              17
+String Literal (Image Saver)                 6
+String-🔬                                     2
+StringConstantMultiline                      1
+StringFunction|pysssss                      16
+StringStrip                                  1
+StructuredOutput                             2
+StyleModelLoader                             5
+StylesImage_Zho                              1
+SwarmInputCheckpoint                         2
+SwarmInputImage                              2
+SwarmInputText                               4
+SystemNotification|pysssss                  11
+T5TextEncode                                14
+T5TextEncode #ELLA                           2
+T5TextEncoderLoader #ELLA                    2
+T5v11Loader                                  7
+TIPO                                         4
+TIPOFormat                                   1
+TIPOOperation                                1
+TagRemover                                   1
+TaraApiKeyLoader                             2
+TaraPresetLLMConfig                          2
+TaraPrompterAdvanced                         2
+TensorRTLoader                               3
+Text                                         3
+Text Concatenate                            77
+Text Dictionary New                         13
+Text Find and Replace                        6
+Text Input [Dream]                           7
+Text Multiline                              55
+Text Prompt (JPS)                           15
+Text String                                  4
+Text _O                                      9
+Text box                                    11
+TextBox                                      2
+TextBox1                                    14
+TextBox3                                     1
+TextBoxMira                                 12
+TextCombinerTwo                              2
+TextEncodeAceStepAudio                       1
+Textbox                                      6
+Tiled Upscaler Script                        1
+TiledDiffusion                               4
+ToDetailerPipe                              12
+ToDetailerPipeSDXL                           2
+TopazVideoAI                                 3
+TorchCompileLoadControlNet                   1
+TorchCompileLoadVAE                          1
+TripleCLIPLoader                            36
+UNETLoader                                  87
+UNETLoaderNF4                                1
+UltimateSDUpscale                           44
+UltimateSDUpscaleCustomSample               17
+UltimateSDUpscaleNoUpscale                  15
+UltralyticsDetectorProvider                209
+UnetLoaderGGUF                              46
+UnetLoaderGGUFMultiGPU                       1
+Upscale Model Loader                        11
+Upscale by Factor with Model (WLSH)          3
+UpscaleModelLoader                         164
+VAELoader                                  297
+VaeGGUF                                      2
+WD14Tagger|pysssss                          14
+WidgetToString                              55
+WidthHeightMittimi01                         3
+Wildcard Processor                           1
+WildcardEncode //Inspire                     1
+XY Input: Checkpoint                         3
+XY Input: LoRA                               3
+XY Input: Manual XY Entry                    1
+XY Input: Sampler/Scheduler                  6
+ZenkaiPromptV2                               3
+ZenkaiPromptV4                               3
+ZuellniPickScoreLoader                       1
+[Comfy3D] Save 3D Mesh                       1
+easy ckptNames                               6
+easy controlnetNames                         1
+easy fullLoader                              4
+easy fullkSampler                            8
+easy getNode                               158
+easy hiresFix                                3
+easy imageInterrogator                       1
+easy imageSize                               8
+easy ipadapterApplyADV                       2
+easy loraStack                               2
+easy negative                                1
+easy positive                               12
+easy prompt                                  4
+easy promptReplace                           5
+easy setNode                               103
+easy showAnything                           35
+easy string                                  2
+easy stylesSelector                          1
+iToolsLineLoader                             1
+polymath_chat                                1
+show_text_party                              1
+translators                                  1
+ttN concat                                   3
+ttN multiModelMerge                          1
+ttN pipeKSampler                             2
+ttN pipeLoader                               1
+ttN text                                    10
+unCLIPCheckpointLoader                       3
+workflow/1st Pass                            1
+workflow/1st Pass (RegSampler)               1
+workflow/2nd Pass                            1
+workflow/Base Sampler                        1
+workflow/Face detailer with SD1.5 model      1
+workflow/Flux AIO Sampler                    1
+workflow/Image Load and Resize to Width      1
+workflow/Ksampler Config                     4
+workflow/Ksampler Setting                   10
+workflow/Load image                          1
+workflow/Loaders                             1
+workflow/Loras                               1
+workflow/Mine::Loaders (SD1.X/XL)            1
+workflow/Mine::Loaders (SD1.X/XL/Simple LoRA)     1
+workflow/OpenPose Preprocessor               1
+workflow/Prompt Preset Selector              2
+workflow/Res Limits                          2
+workflow/Scribble                            1
+workflow/Size Selector                       1
+workflow/Subject                             3
+workflow/Upscale                             1
+workflow/Upscale (Image/Cond/-CN)            1
+workflow/Upscale by 2x                       2
+workflow/VAE Stack                           2
+workflow/clips                               1
+workflow>1234                                1
+workflow>23                                  1
+workflow>Base sampler                        1
+workflow>Checkpoint Loader with Name (Image Saver) & Automatic CFG - Warp Drive     1
+workflow>ControlNet Models                   1
+workflow>End quality prompt (Optional)       1
+workflow>Extra nodes upscaler                1
+workflow>FLUX.1 Kontext Image Edit           2
+workflow>File name                           2
+workflow>IPAdapter Models                    1
+workflow>LoRA - 1                            3
+workflow>LoRA - 2                            3
+workflow>LoRA - 3                            3
+workflow>LoRA - 4                            1
+workflow>MaskFromDepth                       1
+workflow>Model Node                          1
+workflow>Other Nodes                         1
+workflow>Other Nodes 2                       2
+workflow>Sampler                             1
+workflow>Settings                            4
+workflow>Single Text Encode Group Node       1
+workflow>Start quality prompt (Optional)     1
+workflow>UltralyticsDetectorProvider & SAMLoader (Impact) 1     1
+workflow>UltralyticsDetectorProvider & SAMLoader (Impact) 2     1
+workflow>UltralyticsDetectorProvider & SAMLoader (Impact) 3     3
+workflow>Upscale                             1
+workflow>Upscale Image (using Model)         2
+workflow>image                               1
+workflow>positive prompt guidance            5
+📊AC_LCM采样器                                   1
+😀 LLMs_Chat                                  1
+
+ALL UNIQUE NODES (ALPHABETICAL):
+----------------------------------------
+   1.  GF20                                        1
+   2.  Img2Img                                     1
+   3. (1) CHECKPOINT / VAE                         1
+   4. (2) IMAGE SIZE                               1
+   5. (3) PROMPTS                                  1
+   6. (4) IMAGE PARAMETERS                         1
+   7. (5)  HIRESFIX                                1
+   8. (6) ADETAILER                                1
+   9. (7) SAVE IMAGE                               1
+  10. (IMPORTANT) Additional Confirmations         1
+  11. (Optional - Additional Confirmation) 2nd Checkpoint     1
+  12. (Optional - Required for ELLA) - Ollama Prompt Upsampling     1
+  13. (Optional - SD1.5 Exclusive - Additional Confirmation) ELLA     1
+  14. (Optional) Advanced Model Options            1
+  15. (Optional) CLIPSeg Watermark Removal         1
+  16. (Optional) ControlNet                        1
+  17. (Optional) DeepFashion Detailer              1
+  18. (Optional) Detailer                          1
+  19. (Optional) Face Detailer                     1
+  20. (Optional) Hand Detailer                     1
+  21. (Optional) IP-Adapter                        1
+  22. (Optional) Image References (ControlNet, IP-Adapter, Img2Img Settings)     1
+  23. (Optional) Person Detailer                   1
+  24. (Optional) WD1.4 Tagger                      1
+  25. -                                            1
+  26. .                                            2
+  27. 1                                           51
+  28. 1. Standard Sampler                          2
+  29. 1.Chroma basic workflow                      3
+  30. 1.HiRes-Fix module                           1
+  31. 1.Img2img Module                             3
+  32. 1st Pass                                     3
+  33. 1st Pass Output                              1
+  34. 1st pass                                     1
+  35. 1st t2i workflow organized                   1
+  36. 2                                           21
+  37. 2. CFG++SamplerSelect                        2
+  38. 2.52 (initial release)                       1
+  39. 2.52 (pruned)                                1
+  40. 2.52 (safetensors fixed)                     1
+  41. 2.5D                                         1
+  42. 2.Chroma inpaint workflow                    3
+  43. 2.HiRes-Fix Module                           3
+  44. 2.Ultimate SD Upscaler module                1
+  45. 2nd Pass                                     4
+  46. 2nd Pass — Tile ControlNet                   1
+  47. 2nd pass (upscaled)                          1
+  48. 3                                           12
+  49. 3.3                                          1
+  50. 3.31 baked vae                               1
+  51. 3.31-inpainting                              1
+  52. 3.32 baked vae (clip fix)                    1
+  53. 3.FaceDetailer Module                        2
+  54. 3.FaceDetailer module                        1
+  55. 3.Upscale Module                             1
+  56. 3D                                           1
+  57. 3D Mesh                                      2
+  58. 4                                            9
+  59. 4 baked vae                                  1
+  60. 4 baked vae fp16                             1
+  61. 4 no vae                                     1
+  62. 4 no vae fp16                                1
+  63. 4-inpainting                                 1
+  64. 4.FaceDetailer module                        1
+  65. 4.Post-production                            1
+  66. 4.Upscale Module                             2
+  67. 5 baked vae                                  1
+  68. 5 baked vae diffusers                        1
+  69. 5 pruned (no vae) - train                    1
+  70. 5-inpainting                                 1
+  71. 5.Overlay settings Module                    2
+  72. 5.Overlay settings module                    1
+  73. 5.Save Image module                          1
+  74. 6 baked vae                                  1
+  75. 6 diffusers                                  1
+  76. 6 no vae                                     1
+  77. 6-inpainting                                 1
+  78. 6.2 baked vae                                1
+  79. 6.31 baked vae                               1
+  80. 6.31 diffusers                               1
+  81. 6.31-inpainting                              1
+  82. 6.SaveImage Module                           1
+  83. 6.SaveImage with Metadata Module             2
+  84. 7                                            1
+  85. 7-diffusers                                  1
+  86. 7-inpainting                                 1
+  87. 8                                            1
+  88. 8 LCM                                        1
+  89. 8-diffusers                                  1
+  90. 8-inpainting                                 1
+  91. ACN_AdvancedControlNetApply                 46
+  92. ACN_AdvancedControlNetApply_v2               1
+  93. ACN_ControlNetLoaderAdvanced                 1
+  94. ACN_ReferenceControlNetFinetune              8
+  95. ACN_ReferencePreprocessor                    8
+  96. ADE_AnimateDiffLoRALoader                    8
+  97. ADE_AnimateDiffLoaderGen1                    4
+  98. ADE_AnimateDiffLoaderWithContext             8
+  99. ADE_AnimateDiffModelSettingsSimple           1
+ 100. ADE_AnimateDiffSamplingSettings              2
+ 101. ADE_AnimateDiffUniformContextOptions         6
+ 102. ADE_AnimateDiffUnload                        2
+ 103. ADE_ApplyAnimateDiffModelSimple              1
+ 104. ADE_BatchedContextOptions                    1
+ 105. ADE_LoadAnimateDiffModel                     1
+ 106. ADE_LoopedUniformContextOptions              3
+ 107. ADE_MultivalDynamic                          5
+ 108. ADE_StandardStaticContextOptions             1
+ 109. ADE_StandardUniformContextOptions            1
+ 110. ADE_UseEvolvedSampling                       2
+ 111. ADetailer                                    3
+ 112. ADetailer Face Double Pass, Plus Mouth, Eyes     1
+ 113. ADetailer LoRA                               2
+ 114. AIO_Preprocessor                            26
+ 115. APZmedia Fast image save                     1
+ 116. AV_ControlNetPreprocessor                    8
+ 117. AV_VAELoader                                 4
+ 118. AdaptiveGuidance                             2
+ 119. AddLabel                                     3
+ 120. AddMask                                      1
+ 121. Additional area prompt                       1
+ 122. Adetailer for the upscaled image (Frist one is BBOX and Second one is SEGM by default swtich to whatever like to by just swtiching BBOX Detector (SEGS)/ SEGM Detector    to     segs on DetailerDebug segs/pipe)     2
+ 123. Advanced Settings                            1
+ 124. AdvancedNoise                                1
+ 125. AdvancedTextSwitch                           4
+ 126. AdvancedVisionLoader                         1
+ 127. AlignYourStepsScheduler                     15
+ 128. Aligned Scheduler                            2
+ 129. All In One NSFW Detailer                     1
+ 130. All_in_One                                   1
+ 131. AlphaChanelAddByMask                         2
+ 132. Anime NSFW Detailers                         1
+ 133. AnimeLineArtPreprocessor                     3
+ 134. Anteprima & Salvataggio - d4N87              2
+ 135. Any Switch (rgthree)                        78
+ 136. AnyImagetoConditioning_flux_kontext          1
+ 137. AnyLineArtPreprocessor_aux                   4
+ 138. Anything Everywhere                         68
+ 139. Anything Everywhere3                        28
+ 140. Anything Everywhere?                       301
+ 141. Apply ControlNet Stack                       1
+ 142. Apply control nets (ADJUST the Strength in the second row)     1
+ 143. ApplyCLIPSeg+                                1
+ 144. ApplyDreamO                                  2
+ 145. ApplyFBCacheOnModel                          3
+ 146. ApplyFluxControlNet                          2
+ 147. ApplyIPAdapterFlux                           1
+ 148. ApplyInstantID                               2
+ 149. ApplyPulidFlux                               3
+ 150. ApplyRegionalIPAdapters //Inspire            1
+ 151. ApplyStableSRUpscaler                        1
+ 152. Area condition                               1
+ 153. ArgosTranslateTextNode                       1
+ 154. Artist Mixer                                 5
+ 155. ArtistsImage_Zho                             1
+ 156. AspectSize                                  12
+ 157. AspectSizeV2                                37
+ 158. Astraali BlueGOO 4                           1
+ 159. Astraali DarkLINE 1                          1
+ 160. Astraali RedLINE                             1
+ 161. AttentionCouple|cgem156                      1
+ 162. Audio EN                                     1
+ 163. Audio FR                                     1
+ 164. Aura Flow                                    2
+ 165. AuraSR.AuraSRUpscaler                        8
+ 166. AutoNegativePrompt                           4
+ 167. Automatic CFG                               10
+ 168. Automatic CFG - Preset Loader                2
+ 169. Automatic CFG - Warp Drive                   1
+ 170. BAE-NormalMapPreprocessor                    2
+ 171. BLIP Analyze Image                           2
+ 172. BLIP Model Loader                            2
+ 173. BNK_CLIPTextEncodeAdvanced                  11
+ 174. BNK_CutoffBasePrompt                         1
+ 175. BNK_CutoffRegionsToConditioning              1
+ 176. BNK_CutoffSetRegions                         6
+ 177. BNK_NoisyLatentImage                         1
+ 178. BNK_TiledKSampler                            1
+ 179. BNK_Unsampler                                4
+ 180. BSZColoredLatentImageXL                      1
+ 181. Back                                         2
+ 182. BackEnd1                                     1
+ 183. BackEnd2                                     1
+ 184. BackEnd3                                     1
+ 185. Backend - ControlNet                         1
+ 186. Backend - Detailer preperation               1
+ 187. Backend - IPAdapter Comp                     1
+ 188. Backend - IPAdapter Style                    1
+ 189. Backend - ImageSave                          1
+ 190. Backend - Model preperation                  1
+ 191. Backend - PreProcessor                       1
+ 192. BackgroundReplacement                        1
+ 193. BagelImageEdit                               4
+ 194. BagelModelLoader                             3
+ 195. BagelTextToImage                             1
+ 196. Base Settings SDXL + switch Load Image Version 02     1
+ 197. Basic data handling: FloatRound              4
+ 198. BasicGuider                                 57
+ 199. BasicPipeToDetailerPipeSDXL                  1
+ 200. BasicScheduler                             125
+ 201. BatchAverageImage                            3
+ 202. BatchPromptSchedule                          2
+ 203. BboxDetectorCombined_v2                      2
+ 204. BboxDetectorSEGS                            37
+ 205. Before & After                               1
+ 206. BetaSamplingScheduler                        2
+ 207. BetterFilmGrain                              1
+ 208. BiRefNet_Hugo                                2
+ 209. BiRefNet_ModelLoader_Zho                     1
+ 210. BiRefNet_Zho                                 1
+ 211. BinaryPreprocessor                           1
+ 212. BizyAirJoyCaption                            1
+ 213. BizyAirJoyCaption2                          13
+ 214. BizyAir_BasicGuider                          1
+ 215. BizyAir_BasicScheduler                       1
+ 216. BizyAir_CLIPTextEncode                       2
+ 217. BizyAir_DetailDaemonSamplerNode              1
+ 218. BizyAir_DualCLIPLoader                       1
+ 219. BizyAir_FluxGuidance                         1
+ 220. BizyAir_InpaintModelConditioning             1
+ 221. BizyAir_KSamplerSelect                       1
+ 222. BizyAir_RandomNoise                          1
+ 223. BizyAir_SamplerCustomAdvanced                1
+ 224. BizyAir_UNETLoader                           1
+ 225. BizyAir_VAEDecode                            1
+ 226. BizyAir_VAELoader                            1
+ 227. BlehGlobalSageAttention                      1
+ 228. BlehInsaneChainSampler                       9
+ 229. Blend Latents (PPF Noise)                    2
+ 230. Blur                                         3
+ 231. BlurImageFast                                1
+ 232. Body ADetailer                               3
+ 233. Body Detailer                                1
+ 234. Bookmark (rgthree)                          83
+ 235. Boolean To Text                              2
+ 236. Bounded Image Crop                           1
+ 237. Breast detailer                              1
+ 238. Bus Node                                    22
+ 239. B站、Youtube:T8star-Aix                        1
+ 240. B站、Youtube：T8star-Aix                        5
+ 241. B站，Youtube：T8star-Aix                        1
+ 242. CCMSampler                                   1
+ 243. CFGGuider                                   24
+ 244. CFGPPSamplerSelect                           3
+ 245. CFGZeroStar                                  3
+ 246. CFGZeroStarAndInit                           1
+ 247. CFICLS_SaveImageCaptionBatch                 1
+ 248. CHECKPOINTS ETC. 🏁                           1
+ 249. CLIP                                         7
+ 250. CLIP - d4N87                                 1
+ 251. CLIP Encoders                                1
+ 252. CLIP Input Switch                            2
+ 253. CLIP Positive-Negative XL w/Text (WLSH)      1
+ 254. CLIP Set Last Layer                          1
+ 255. CLIP Vector Sculptor text encode             2
+ 256. CLIPAttentionMultiply                        2
+ 257. CLIPLoader                                  38
+ 258. CLIPMergeAdd                                 3
+ 259. CLIPMergeSimple                              3
+ 260. CLIPMergeSubtract                            3
+ 261. CLIPNegPip                                   1
+ 262. CLIPS + STYLE                                1
+ 263. CLIPSave                                     1
+ 264. CLIPSeg                                      1
+ 265. CLIPSeg Masking                              1
+ 266. CLIPSetLastLayer                           105
+ 267. CLIPTextEncode                            1023
+ 268. CLIPTextEncode (NSP)                         1
+ 269. CLIPTextEncodeFlux                          30
+ 270. CLIPTextEncodeHunyuanDiT                     6
+ 271. CLIPTextEncodeSD3                            7
+ 272. CLIPTextEncodeSDXL                          56
+ 273. CLIPTextEncodeSDXLRefiner                   10
+ 274. CLIPTextEncodeWildcards3                     1
+ 275. CLIPTokenCounter                             2
+ 276. CLIPVisionEncode                            24
+ 277. CLIPVisionLoader                            55
+ 278. CLIPshuffleLayersNode                        1
+ 279. CLIPtionBeamSearch                           1
+ 280. CLIPtionLoader                               1
+ 281. CM_FloatBinaryOperation                      7
+ 282. CM_IntToFloat                                4
+ 283. CM_NearestSDXLResolution                    11
+ 284. CM_SDXLResolution                            6
+ 285. CNet — Classic                               2
+ 286. CNet — Flux Tools                            2
+ 287. CNet — Flux Tools — Prep                     2
+ 288. CNet — Flux Tools — SVDQ                     1
+ 289. CNet — Image Input                           3
+ 290. CNet — Image Padding                         2
+ 291. CONDITION                                    6
+ 292. CR Apply ControlNet                          7
+ 293. CR Apply LoRA Stack                         45
+ 294. CR Apply Model Merge                         3
+ 295. CR Apply Multi Upscale                       1
+ 296. CR Apply Multi-ControlNet                   10
+ 297. CR Aspect Ratio                              3
+ 298. CR Aspect Ratio SDXL                         1
+ 299. CR Batch Process Switch                      8
+ 300. CR Clip Input Switch                         5
+ 301. CR Color Gradient                            1
+ 302. CR Color Tint                                5
+ 303. CR Comic Panel Templates                     1
+ 304. CR Conditioning Input Switch                18
+ 305. CR ControlNet Input Switch                   7
+ 306. CR Draw Text                                 1
+ 307. CR Encode Scheduled Prompts                  1
+ 308. CR Float To String                           4
+ 309. CR Halftone Grid                             3
+ 310. CR Hires Fix Process Switch                  4
+ 311. CR Image Border                              4
+ 312. CR Image Input Switch                       60
+ 313. CR Image Input Switch (4 way)               24
+ 314. CR Image Output                              3
+ 315. CR Image Pipe In                             1
+ 316. CR Image Pipe Out                            6
+ 317. CR Img2Img Process Switch                    7
+ 318. CR Integer Multiple                         22
+ 319. CR Integer To String                         7
+ 320. CR Latent Batch Size                         6
+ 321. CR Latent Input Switch                      10
+ 322. CR LoRA Stack                               47
+ 323. CR Load LoRA                                23
+ 324. CR Model Input Switch                        9
+ 325. CR Model Merge Stack                         3
+ 326. CR Module Input                              5
+ 327. CR Module Output                             1
+ 328. CR Module Pipe Loader                        3
+ 329. CR Multi Upscale Stack                       1
+ 330. CR Multi-ControlNet Stack                   14
+ 331. CR Overlay Text                              7
+ 332. CR Overlay Transparent Image                 1
+ 333. CR Prompt Scheduler                          1
+ 334. CR Prompt Text                              24
+ 335. CR Random LoRA Stack                         3
+ 336. CR SD1.5 Aspect Ratio                       10
+ 337. CR SDXL Aspect Ratio                        12
+ 338. CR SDXL Base Prompt Encoder                  3
+ 339. CR Seed                                     15
+ 340. CR Seed to Int                               1
+ 341. CR Simple Prompt List                        2
+ 342. CR Simple Prompt List Keyframes              1
+ 343. CR Split String                              2
+ 344. CR String To Combo                          24
+ 345. CR String To Number                          2
+ 346. CR Switch Model and CLIP                     3
+ 347. CR Text                                     20
+ 348. CR Text Concatenate                         16
+ 349. CR Text Input Switch                        12
+ 350. CR Text Input Switch (4 way)                 7
+ 351. CR Text Replace                             10
+ 352. CR TriMesh Input Switch JK                   1
+ 353. CR Upscale Image                            18
+ 354. CR VAE Input Switch                         10
+ 355. CR Value                                     2
+ 356. CRMPoserConfig                               1
+ 357. CV2InpaintTexture                            3
+ 358. CameraStyler                                 1
+ 359. Canny                                       11
+ 360. CannyEdgePreprocessor                       19
+ 361. CanvasCreatorAdvanced                        1
+ 362. Canvas_Tab                                   1
+ 363. Captioning                                   1
+ 364. Caricamento CLIP - d4N87                     1
+ 365. Caricamento LoRA - d4N87                     1
+ 366. Caricamento immagine - d4N87                 1
+ 367. Caricamento modello - d4N87                  3
+ 368. Caricamento soggetto - d4N87                 1
+ 369. CascadeResolutions                           3
+ 370. Cfg Literal                                  5
+ 371. Cfg Literal (Image Saver)                    4
+ 372. Change Channel Count                        40
+ 373. ChangeImageBatchSize //Inspire               2
+ 374. Checkpoint Load — AIO                        2
+ 375. Checkpoint Load — SVDQuant                   1
+ 376. Checkpoint Load — UNet                       2
+ 377. Checkpoint Load — UNet - GGUF                2
+ 378. Checkpoint Loader (Simple)                   9
+ 379. Checkpoint Loader Simple Mikey               2
+ 380. Checkpoint Loader with Name (Image Saver)    10
+ 381. CheckpointLoaderNF4                          2
+ 382. CheckpointLoaderSimple                     382
+ 383. CheckpointLoaderSimpleExtended               3
+ 384. CheckpointLoaderSimpleText                   2
+ 385. CheckpointLoaderSimpleWithNoiseSelect        1
+ 386. CheckpointLoader|pysssss                     4
+ 387. CheckpointNameSelector                       1
+ 388. CheckpointSave                               9
+ 389. Checkpoints                                  1
+ 390. Choose new resolution                        1
+ 391. Chorma loader                                1
+ 392. Chorma model loader                          2
+ 393. Chroma workflow settings                     3
+ 394. ChromaDiffusionLoader                        2
+ 395. ChromaPaddingRemoval                         4
+ 396. Clip Loader                                  2
+ 397. Clip Vision                                  1
+ 398. ClipLoaderGGUF                               1
+ 399. Clipboard                                    3
+ 400. ClownsharKSampler                            1
+ 401. Cnet DW Openpose                             1
+ 402. Cnet Depth                                   1
+ 403. Cnet Reference Stack                         1
+ 404. Color Correct                                2
+ 405. Color Correct (mtb)                          1
+ 406. Color Match                                  4
+ 407. Color Transfer                               1
+ 408. Color background.                            1
+ 409. Color mask                                   1
+ 410. ColorBlend                                   1
+ 411. ColorCorrect                                 9
+ 412. ColorMatch                                  30
+ 413. ColorMatchImage                              4
+ 414. ColorPreprocessor                            1
+ 415. ColorToMask                                  3
+ 416. Combine Masks                               16
+ 417. CombineRegionalPrompts                       3
+ 418. Combined Detailer                            1
+ 419. ComfyUIStyler                                4
+ 420. CompileModel                                 2
+ 421. Concat Text _O                               2
+ 422. ConcatStringSingle                           1
+ 423. ConcatText_Zho                               4
+ 424. Conditioning                                 5
+ 425. Conditioning Input Switch                   12
+ 426. Conditioning Parameters                      1
+ 427. Conditioning area scale by ratio             1
+ 428. ConditioningAverage                          2
+ 429. ConditioningAverage                          8
+ 430. ConditioningCombine                         61
+ 431. ConditioningCombineMultiple+                 2
+ 432. ConditioningConcat                          34
+ 433. ConditioningMultiCombine                     1
+ 434. ConditioningSetArea                          6
+ 435. ConditioningSetMask                          3
+ 436. ConditioningSetMaskAndCombine3               1
+ 437. ConditioningSetTimestepRange                37
+ 438. ConditioningZeroOut                         55
+ 439. Constant Number                              8
+ 440. Context (rgthree)                           63
+ 441. Context Big (rgthree)                       42
+ 442. Context Switch (rgthree)                     2
+ 443. Context Switch Big (rgthree)                 6
+ 444. Control Center                               4
+ 445. Control Net Model Input Switch               4
+ 446. Control Net Stacker                         20
+ 447. ControlNet                                   6
+ 448. ControlNet (Optional)                        1
+ 449. ControlNet Conditions                        1
+ 450. ControlNet Models                            1
+ 451. ControlNet 构图控制                              3
+ 452. ControlNetApply                             20
+ 453. ControlNetApplyAdvanced                    116
+ 454. ControlNetApplySD3                           6
+ 455. ControlNetInpaintingAliMamaApply             1
+ 456. ControlNetLoader                           170
+ 457. ControlNetLoaderAdvanced                    34
+ 458. ControlNetPreprocessorSelector               1
+ 459. Control_Panel                                1
+ 460. Controlnet                                   1
+ 461. Controlnet Depth                             1
+ 462. Controlnets                                  1
+ 463. Convert Masks to Images                      1
+ 464. ConvertRasterToVector                        1
+ 465. Core Settings                                3
+ 466. CoreMLDetailerHookProvider                   1
+ 467. CosmosImageToVideoLatent                     3
+ 468. Costants                                     2
+ 469. Create Grid Image from Batch                 5
+ 470. Create Rect Mask                             1
+ 471. CreatePromptVariant                          5
+ 472. CreateShapeMaskOnPath                        1
+ 473. CreateTillingPNGMask                         1
+ 474. Crop Image TargetSize (JPS)                  3
+ 475. CropFace                                     5
+ 476. Custom Advanced Sampler SDXL                 1
+ 477. CustomNoise                                  1
+ 478. CustomScheduler                              1
+ 479. Cut By Mask                                 33
+ 480. DECODE                                       3
+ 481. DEFAULT                                      1
+ 482. DENOISE                                      3
+ 483. DF_DynamicPrompts_Text_Box                   1
+ 484. DF_Float                                     2
+ 485. DF_Get_image_size                            2
+ 486. DF_Int_to_Float                              1
+ 487. DF_Latent_Scale_to_side                      1
+ 488. DF_Logic_node                                3
+ 489. DF_Text                                      1
+ 490. DF_Text_Box                                 31
+ 491. DF_To_text_(Debug)                           2
+ 492. DPMagicPrompt                                4
+ 493. DPRandomGenerator                            5
+ 494. DRAFT Render                                 1
+ 495. DSINE-NormalMapPreprocessor                  1
+ 496. DWPreprocessor                              25
+ 497. DYNAMIC_TRT_MODEL_CONVERSION                 1
+ 498. Debug                                        1
+ 499. Debug Detailer                               1
+ 500. DeepDanbooruCaption                          1
+ 501. DeepTranslatorTextNode                       4
+ 502. Demo 2 subjects in a background              1
+ 503. Demo 2 upscales                              1
+ 504. Demo Basic Image to SVD                      1
+ 505. Demo Basic Inpaint                           1
+ 506. Demo Compare 2 Loras                         1
+ 507. Demo Contronet                               1
+ 508. Demo Dick's t2i workflow 20240511            1
+ 509. Demo Face Detailer                           1
+ 510. Demo Face Plus                               1
+ 511. Demo IP Adapter                              1
+ 512. Demo IP Adapter Instant ID                   1
+ 513. Demo Image to Image                          1
+ 514. Demo Image to OpenPose Skeleton              1
+ 515. Demo Lora                                    1
+ 516. Demo Real Time Painting                      1
+ 517. Demo SVD Text to Video                       1
+ 518. Demo face ID                                 1
+ 519. Depth                                        1
+ 520. Depth mask                                   1
+ 521. DepthAnythingPreprocessor                    8
+ 522. DepthAnythingTensorrt                        1
+ 523. DepthAnythingV2Preprocessor                  3
+ 524. DepthAnything_V2                             1
+ 525. Detail Daemon                                3
+ 526. Detail Daemon 1                              2
+ 527. Detail Daemon 2                              2
+ 528. Detail Daemon 3                              2
+ 529. DetailDaemonGraphSigmasNode                  3
+ 530. DetailDaemonSamplerNode                     18
+ 531. Detailer                                     6
+ 532. Detailer 1                                   2
+ 533. Detailer 2                                   2
+ 534. Detailer 3                                   2
+ 535. Detailer LoRA's (Optional)                   1
+ 536. Detailer Models                              1
+ 537. Detailer Prompts (Optional)                  1
+ 538. Detailer Wildcards                           1
+ 539. DetailerForEach                             19
+ 540. DetailerForEachDebug                         8
+ 541. DetailerForEachDebugPipe                    18
+ 542. DetailerForEachPipe                          9
+ 543. Detailers                                    2
+ 544. Details                                      1
+ 545. Detection Models                             1
+ 546. Dictionary to Console                        2
+ 547. DiffControlNetLoader                         7
+ 548. DiffControlNetLoaderAdvanced                 3
+ 549. Differential Diffusion                       1
+ 550. DifferentialDiffusion                       20
+ 551. DifferentialDiffusionAdvanced                1
+ 552. DiffusersMVModelMakeup                       1
+ 553. DiffusersMVSampler                           1
+ 554. DiffusersMVSchedulerLoader                   1
+ 555. Diffusion model                              1
+ 556. DiffusionCG                                  2
+ 557. DinskyPlus                                   1
+ 558. DisableNoise                                 4
+ 559. Displace Image with Depth                    1
+ 560. Display Any (rgthree)                        6
+ 561. Display Int (rgthree)                       91
+ 562. DisplayAny                                   2
+ 563. DisplayText_Zho                              5
+ 564. Divide                                      10
+ 565. Don't change anything                        1
+ 566. DownloadAndLoadCLIPModel                     1
+ 567. DownloadAndLoadCLIPVisionModel               1
+ 568. DownloadAndLoadChatGLM3                      2
+ 569. DownloadAndLoadDepthAnythingV2Model          1
+ 570. DownloadAndLoadDynamiCrafterModel            1
+ 571. DownloadAndLoadFlorence2Lora                 1
+ 572. DownloadAndLoadFlorence2Model                8
+ 573. DownloadAndLoadGIMMVFIModel                  1
+ 574. DownloadAndLoadHy3DDelightModel              2
+ 575. DownloadAndLoadHy3DPaintModel                3
+ 576. DownloadAndLoadKolorsModel                   4
+ 577. DownloadAndLoadSAM2Model                     1
+ 578. Downscale                                    1
+ 579. DrawText+                                    4
+ 580. DreamO nf4                                   1
+ 581. DreamO-int8                                  1
+ 582. DreamOProcessorLoader                        2
+ 583. DreamORefEncode                              2
+ 584. DreamShaper                                  1
+ 585. DualCFGGuider                                2
+ 586. DualCLIPLoader                              99
+ 587. DualCLIPLoaderGGUF                           9
+ 588. DualCLIPLoaderMultiGPU                       1
+ 589. DynamiCrafterI2V                             1
+ 590. Dynamic Thresholding                         3
+ 591. Dynamic Thresholding - Post KSampler         1
+ 592. DynamicThresholdingFull                     16
+ 593. DynamicThresholdingSimple                    1
+ 594. ELLALoader                                   2
+ 595. ENCODE                                       3
+ 596. ETN_ApplyMaskToImage                         4
+ 597. EYES Detailer (SEGM Only)                    2
+ 598. Easy SDXL Prompt Settings                    1
+ 599. Easy add LORA + SDXL Conditioning            1
+ 600. EasyFunction_Lite                           10
+ 601. EditBasicPipe                               11
+ 602. EditDetailerPipe                             3
+ 603. Efficient Loader                            28
+ 604. Elaborazione - d4N87                         3
+ 605. Elaborazione ReActor - d4N87                 1
+ 606. EllaEncode                                   2
+ 607. EllaTextEncode                               2
+ 608. EmbeddingPicker                             10
+ 609. Empty Latent by Ratio (WLSH)                 2
+ 610. EmptyAceStepLatentAudio                      1
+ 611. EmptyCosmosLatentVideo                       1
+ 612. EmptyHunyuanLatentVideo                      4
+ 613. EmptyImage                                  13
+ 614. EmptyLatentImage                           293
+ 615. EmptyLatentImageScaleBy                      3
+ 616. EmptyMochiLatentVideo                        2
+ 617. EmptySD3LatentImage                        101
+ 618. End Image                                    1
+ 619. Environment_INFO                             1
+ 620. Evaluate Integers                           13
+ 621. Eye detailer                                 1
+ 622. Eye_Detailer                                 1
+ 623. Eyes ADetailer                               3
+ 624. Eyes Detailer                                1
+ 625. EyesDetailer                                 1
+ 626. F5TTSAudio                                   1
+ 627. FACE DETAILER                                1
+ 628. FACE Detailer (First box then segm)          2
+ 629. FACESWAP                                     1
+ 630. FB - d4N87                                   1
+ 631. FILM VFI                                     3
+ 632. FINISH Render                                1
+ 633. FLUX                                         1
+ 634. FLUX  ♊ IMG2IMG Ver. 2.0                     1
+ 635. FLUX OUTPAINT PRO                            1
+ 636. FLUX-GGUF METHOD                             1
+ 637. FLUXResolutions                              1
+ 638. FL_Ascii                                     1
+ 639. FL_RandomNumber                              4
+ 640. FL_SDUltimate_Slices                         5
+ 641. FS: Crop Image Into Even Pieces              4
+ 642. FS: Pick Image From Batch                    4
+ 643. Face ADetailer                               3
+ 644. Face Detailer                                4
+ 645. Face Detailer + Controlnet                   1
+ 646. Face Swap                                    1
+ 647. FaceAutoFitSingle                            1
+ 648. FaceCombine                                  3
+ 649. FaceDetailer                               120
+ 650. FaceDetailer settings                        2
+ 651. FaceDetailerPipe                            19
+ 652. FaceKeypointsPreprocessor                    1
+ 653. FaceRestoreCFWithModel                       1
+ 654. FaceRestoreModelLoader                       2
+ 655. FaceRestoreWithModel                         1
+ 656. FaceSwap                                     1
+ 657. FaceSwap_InfiniteYou                         3
+ 658. FacialPartColoringFromPoseKps                8
+ 659. FakeScribblePreprocessor                     1
+ 660. Fashion detailer                             1
+ 661. Fast Actions Button (rgthree)                4
+ 662. Fast Bypasser (rgthree)                     48
+ 663. Fast Groups Bypasser (rgthree)             157
+ 664. Fast Groups Muter (rgthree)                 63
+ 665. Fast Muter (rgthree)                        13
+ 666. FeatherMask                                  2
+ 667. FileNamePrefix                              12
+ 668. Film Grain                                   1
+ 669. FilmGrain                                    1
+ 670. Final Generatio                              1
+ 671. Final Image                                  1
+ 672. Final Image Saver                            1
+ 673. Final images                                 1
+ 674. Fix Face                                     1
+ 675. Flex2Conditioner                             1
+ 676. Float                                       15
+ 677. Float Literal (Image Saver)                  9
+ 678. FloatConstant                               38
+ 679. FloatRange //Inspire                         1
+ 680. FloatSlider                                  3
+ 681. Florence                                     1
+ 682. Florence 2 Caption + WD14 Tagger             1
+ 683. Florence Detailing                           1
+ 684. Florence Prompt                              1
+ 685. Florence prompt                              2
+ 686. Florence2                                    1
+ 687. Florence2ModelLoader                         4
+ 688. Florence2Postprocess                         1
+ 689. Florence2Run                                13
+ 690. Florence2toCoordinates                       1
+ 691. Flux - Image to Image                        1
+ 692. Flux - Text to Image                         1
+ 693. Flux - Upscale - Advanced                    1
+ 694. Flux Generation                              2
+ 695. Flux Outpaint Pro                            1
+ 696. FluxAttentionSeeker+                         2
+ 697. FluxBlockPatcherSampler                      3
+ 698. FluxBlocksBuster+                            2
+ 699. FluxGuidance                                80
+ 700. FluxKontextImageScale                        8
+ 701. FluxLoraLoader                               1
+ 702. FluxRegionBBOX                               2
+ 703. FluxRegionMask                               2
+ 704. Flux_PulID img2img only                      1
+ 705. Flux_Repaint                                 1
+ 706. Flux_Upscaler (Optional)                     1
+ 707. Flux_inpaint                                 1
+ 708. ForeachListBegin //Inspire                   1
+ 709. ForeachListEnd //Inspire                     1
+ 710. FrameInterpolator                            1
+ 711. FramePackFindNearestBucket                   1
+ 712. FramePackSampler_F1                          1
+ 713. FramePackTimestampedTextEncode               1
+ 714. FreSca                                       3
+ 715. FreeU                                        5
+ 716. FreeU V2                                     3
+ 717. FreeUExtreme                                 1
+ 718. FreeUExtremeConfig                           2
+ 719. FreeU_V2                                    26
+ 720. FreeU_V2 (Advanced)                         10
+ 721. FreeU_V2 - Post KSampler                     1
+ 722. FrequencyCombination                         2
+ 723. FrequencySeparation                          1
+ 724. FrequencySeparationHSV                       1
+ 725. FromBasicPipe                                4
+ 726. FromBasicPipe_v2                             7
+ 727. FromDetailerPipeSDXL                         1
+ 728. FromDetailerPipe_v2                          2
+ 729. Front                                        1
+ 730. Function Control                             1
+ 731. GENERATION 👨‍🔧                               1
+ 732. GIMMVFI_interpolate                          1
+ 733. GLIGENLoader                                 3
+ 734. GLIGENTextBoxApply                          18
+ 735. GPUTemperatureProtection                     2
+ 736. GUIDER                                       3
+ 737. GeekyRemB                                    2
+ 738. Gemini                                       2
+ 739. GeminiAPI                                    6
+ 740. GeminiComfyUIStyler                          1
+ 741. GeminiFlash                                  1
+ 742. GeminiOllamaAPI                              5
+ 743. Gemini_API_S_Zho                             1
+ 744. Gemini_Flash_200_Exp                         7
+ 745. General Settings                             1
+ 746. Generate                                     2
+ 747. Generate Initial Image                       2
+ 748. Generate 新生成                                 2
+ 749. Generation                                   1
+ 750. Get Date Time String (JPS)                   1
+ 751. Get Image Size                              11
+ 752. Get image size                               1
+ 753. Get latent size                              1
+ 754. Get resolution [Crystools]                   4
+ 755. GetImageSize                                 6
+ 756. GetImageSize+                               80
+ 757. GetImageSizeAndCount                         7
+ 758. GetNode                                    977
+ 759. GetWarpedNoiseFromVideoHunyuan               1
+ 760. Global Seed                                  3
+ 761. GlobalSampler //Inspire                      2
+ 762. GlobalSeed //Inspire                         3
+ 763. Global_inputs                                1
+ 764. Global_outputs                               1
+ 765. GoogleTranslator                             1
+ 766. GroundingDinoModelLoader (segment anything)     2
+ 767. GroundingDinoModelLoader (segment anything2)     5
+ 768. GroundingDinoSAM2Segment (segment anything2)     5
+ 769. GroundingDinoSAMSegment (segment anything)     4
+ 770. Group                                       20
+ 771. GrowMask                                    18
+ 772. GrowMaskWithBlur                            15
+ 773. Gss                                          1
+ 774. Guidance                                     2
+ 775. Guidance Limiter                             1
+ 776. HANDs Detailer (SEGM Only)                   2
+ 777. HDR and Various Filters                      1
+ 778. HEDPreprocessor                             12
+ 779. HFRemoteVAEDecode                            1
+ 780. HJ 1st_Pass                                  3
+ 781. HJ 2nd_Pass                                  3
+ 782. HYDiTCheckpointLoader                        5
+ 783. HYDiTTextEncode                              2
+ 784. HYDiTTextEncodeSimple                        8
+ 785. HYDiTTextEncoderLoader                       5
+ 786. Hair detailer                                1
+ 787. Hand ADetailer                               3
+ 788. Hand Detailer                                1
+ 789. Hand detailer                                1
+ 790. Hand_Detailer                                1
+ 791. HandsDetailer                                1
+ 792. HelperNodes_Steps                            1
+ 793. Hi-Res Fix                                   1
+ 794. HiRes-Fix settings                           2
+ 795. HighRes-Fix Script                           9
+ 796. HintImageEnchance                            2
+ 797. Hires                                        1
+ 798. HiresFix                                     5
+ 799. Hunyuan                                      2
+ 800. Hy3DApplyTexture                             3
+ 801. Hy3DBakeFromMultiview                        3
+ 802. Hy3DCameraConfig                             7
+ 803. Hy3DDelightImage                             2
+ 804. Hy3DDiffusersSchedulerConfig                 5
+ 805. Hy3DExportMesh                               8
+ 806. Hy3DGenerateMesh                             4
+ 807. Hy3DGenerateMeshMultiView                    1
+ 808. Hy3DMeshUVWrap                               3
+ 809. Hy3DMeshVerticeInpaintTexture                3
+ 810. Hy3DModelLoader                              7
+ 811. Hy3DPostprocessMesh                          5
+ 812. Hy3DRenderMultiView                          7
+ 813. Hy3DRenderMultiViewDepth                     1
+ 814. Hy3DRenderSingleView                         1
+ 815. Hy3DSampleMultiView                          5
+ 816. Hy3DVAEDecode                                5
+ 817. Hy3DVAELoader                                2
+ 818. HyperTile                                    2
+ 819. IC lora 主体延续                                 2
+ 820. IC lora 主体延续裁剪分离                             1
+ 821. ICLightConditioning                          2
+ 822. IF_HFDownloadNode                            1
+ 823. IF_PromptMkr                                 1
+ 824. IF_SaveText                                  1
+ 825. IMAGE IN                                     3
+ 826. IMAGE SCORER - PICKER                        1
+ 827. IMG2VDO                                      1
+ 828. IMG_To_IMG                                   2
+ 829. INPAINTING                                   2
+ 830. INPAINT_ApplyFooocusInpaint                  2
+ 831. INPAINT_LoadFooocusInpaint                   2
+ 832. INPAINT_MaskedBlur                           1
+ 833. INPAINT_MaskedFill                           1
+ 834. INPAINT_VAEEncodeInpaintConditioning         2
+ 835. INPUT OUTPUT                                 1
+ 836. INTConstant                                 26
+ 837. IP-Adapter FaceID                            1
+ 838. IP-Adapter Style & Composition               1
+ 839. IPA — Control                                1
+ 840. IPA — Default Image Loader                   1
+ 841. IPA — Random Image Loader                    1
+ 842. IPAdapter                                    6
+ 843. IPAdapter (Optional)                         1
+ 844. IPAdapter — FaceID                           1
+ 845. IPAdapter — General                          1
+ 846. IPAdapterAdvanced                           30
+ 847. IPAdapterApply                              12
+ 848. IPAdapterApplyEncoded                        8
+ 849. IPAdapterApplyFaceID                         3
+ 850. IPAdapterClipVisionEnhancer                  1
+ 851. IPAdapterCombineEmbeds                       6
+ 852. IPAdapterCombineParams                       1
+ 853. IPAdapterEmbeds                              6
+ 854. IPAdapterEncoder                            15
+ 855. IPAdapterFaceID                              5
+ 856. IPAdapterFluxLoader                          1
+ 857. IPAdapterFromParams                          1
+ 858. IPAdapterInsightFaceLoader                   2
+ 859. IPAdapterLoadEmbeds                         12
+ 860. IPAdapterMS                                  2
+ 861. IPAdapterModelLoader                        45
+ 862. IPAdapterNoise                              13
+ 863. IPAdapterRegionalConditioning                4
+ 864. IPAdapterSaveEmbeds                          4
+ 865. IPAdapterStyleComposition                    3
+ 866. IPAdapterTiled                               2
+ 867. IPAdapterUnifiedLoader                      15
+ 868. IPAdapterUnifiedLoaderFaceID                 5
+ 869. IPadapter 风格控制                               1
+ 870. Illustrious 📋                                1
+ 871. Image                                        1
+ 872. Image Blank                                  3
+ 873. Image Blend                                  2
+ 874. Image Blend by Mask                          4
+ 875. Image Blending Mode                         11
+ 876. Image Bounds                                 1
+ 877. Image Color Palette                          1
+ 878. Image Combine                                1
+ 879. Image Comparer (rgthree)                   133
+ 880. Image Comparer settings                      2
+ 881. Image Crop Face                              2
+ 882. Image Crop Location                          1
+ 883. Image Dragan Photography Filter              2
+ 884. Image Film Grain                             2
+ 885. Image Filter                                 4
+ 886. Image Filter Adjustments                    25
+ 887. Image Filters                                2
+ 888. Image Generation                             1
+ 889. Image History                                1
+ 890. Image History Loader                         2
+ 891. Image Input Switch                           8
+ 892. Image Levels Adjustment                      4
+ 893. Image Loader                                 1
+ 894. Image Lucy Sharpen                           5
+ 895. Image Overlay                                6
+ 896. Image Padding                                4
+ 897. Image Paste Crop                             1
+ 898. Image Paste Crop by Location                 2
+ 899. Image Perlin Noise                           2
+ 900. Image Perlin Power Fractal                   2
+ 901. Image Power Noise                            2
+ 902. Image Rembg (Remove Background)              4
+ 903. Image Remove Background (Alpha)              4
+ 904. Image Resize                                 3
+ 905. Image Save                                  15
+ 906. Image Save with Prompt/Info File (WLSH)      1
+ 907. Image Saver                                 22
+ 908. Image Saver Metadata                         3
+ 909. Image Saver Simple                          15
+ 910. Image Select Color                           1
+ 911. Image Settings                               1
+ 912. Image Setup                                  1
+ 913. Image Sharpen                                1
+ 914. Image Size to Number                        14
+ 915. Image Style Filter                           8
+ 916. Image To Image                               1
+ 917. Image To Mask                               27
+ 918. Image Transpose                              6
+ 919. Image or Latent Size (rgthree)               1
+ 920. Image scale by ratio                         1
+ 921. Image scale to side                          6
+ 922. Image to Image                               1
+ 923. ImageApplyLUT+                               4
+ 924. ImageBatch                                  36
+ 925. ImageBatchMulti                              2
+ 926. ImageBatchMultiple+                          2
+ 927. ImageBlend                                   8
+ 928. ImageBlur                                    3
+ 929. ImageCASharpening+                           2
+ 930. ImageColorMatch+                             9
+ 931. ImageColorMatchAdobe+                        6
+ 932. ImageColorTransferMira                       1
+ 933. ImageCombine                                 1
+ 934. ImageComposite                               1
+ 935. ImageCompositeMasked                        21
+ 936. ImageConcanate                               5
+ 937. ImageConcatMulti                             7
+ 938. ImageCrop                                    4
+ 939. ImageCrop+                                   3
+ 940. ImageDesaturate+                             3
+ 941. ImageFilterGaussianBlurAdvanced              1
+ 942. ImageFromBatch                               2
+ 943. ImageFromBatch+                              2
+ 944. ImageGaussianBlur                            1
+ 945. ImageGenResolutionFromImage                  2
+ 946. ImageGridtoBatch                             3
+ 947. ImageInterleavedUpscaler                     1
+ 948. ImageInterleavedUpscalerV2                   1
+ 949. ImageInvert                                 10
+ 950. ImageListToImageBatch                        3
+ 951. ImageLoader                                  1
+ 952. ImageMaskSwitch                              1
+ 953. ImageNoiseAugmentation                       3
+ 954. ImageOnlyCheckpointLoader                    3
+ 955. ImagePadForOutpaint                          6
+ 956. ImagePass                                    4
+ 957. ImageRandomTransform+                        4
+ 958. ImageReceiver                                1
+ 959. ImageRemoveBackground+                      11
+ 960. ImageResize+                               108
+ 961. ImageResizeKJ                                6
+ 962. ImageResizeKJv2                             39
+ 963. ImageScale                                 117
+ 964. ImageScaleBy                               125
+ 965. ImageScaleDownToSize                         2
+ 966. ImageScaleToMegapixels                       1
+ 967. ImageScaleToTotalPixels                     25
+ 968. ImageSelector                              105
+ 969. ImageSender                                  1
+ 970. ImageSharpen                                11
+ 971. ImageSimpleResize                            1
+ 972. ImageSizeAdjusterV2                          6
+ 973. ImageSizeAndBatchSize                        2
+ 974. ImageSmartSharpen+                           1
+ 975. ImageStitch                                 18
+ 976. ImageToMask                                 16
+ 977. ImageUpscaleWithModel                      107
+ 978. Image_latent 图片输入                            2
+ 979. Images Preview                               2
+ 980. ImagesGridByColumns                          1
+ 981. ImagesGridByRows                             1
+ 982. Img2img                                      1
+ 983. ImpactCombineConditionings                   2
+ 984. ImpactCompare                                5
+ 985. ImpactConcatConditionings                    3
+ 986. ImpactConditionalBranch                    118
+ 987. ImpactControlBridge                          3
+ 988. ImpactControlNetApplyAdvancedSEGS            2
+ 989. ImpactConvertDataType                       44
+ 990. ImpactDilateMask                             1
+ 991. ImpactDilateMaskInSEGS                       5
+ 992. ImpactFloat                                  9
+ 993. ImpactGaussianBlurMask                       2
+ 994. ImpactImageBatchToImageList                  5
+ 995. ImpactImageInfo                              8
+ 996. ImpactInt                                    6
+ 997. ImpactInversedSwitch                         6
+ 998. ImpactKSamplerBasicPipe                      4
+ 999. ImpactLatentInfo                             4
+1000. ImpactMakeImageBatch                        13
+1001. ImpactMakeImageList                          1
+1002. ImpactMakeTileSEGS                           2
+1003. ImpactMinMax                                 1
+1004. ImpactSEGSOrderedFilter                      7
+1005. ImpactSEGSRangeFilter                        4
+1006. ImpactSchedulerAdapter                      16
+1007. ImpactSegsAndMask                            2
+1008. ImpactSimpleDetectorSEGS                    22
+1009. ImpactSimpleDetectorSEGSPipe                 1
+1010. ImpactSimpleDetectorSEGS_for_AD              2
+1011. ImpactStringSelector                         4
+1012. ImpactSwitch                                51
+1013. ImpactWildcardEncode                         7
+1014. ImpactWildcardProcessor                     16
+1015. InfiniteYouApply                            11
+1016. Init                                         1
+1017. Initial Gen                                  2
+1018. Initial Sampler                              1
+1019. Inpaint Background                           1
+1020. Inpaint 局部重绘                                 2
+1021. Inpaint/Outpaint 局部改图                        2
+1022. InpaintCrop                                  6
+1023. InpaintCropImproved                          1
+1024. InpaintModelConditioning                    15
+1025. InpaintPreprocessor                          5
+1026. InpaintResize                                1
+1027. InpaintStitch                                6
+1028. InpaintStitchImproved                        1
+1029. Inpainting                                   4
+1030. Input                                        3
+1031. Input Parameters (Image Saver)               6
+1032. Inputs                                       1
+1033. Inset Image Bounds                           1
+1034. InsightFaceLoader                            3
+1035. InstantCharacter                             1
+1036. InstantIDFaceAnalysis                        2
+1037. InstantIDModelLoader                         2
+1038. InstantX Flux Union ControlNet Loader        1
+1039. InstructPixToPixConditioning                 9
+1040. Int                                         11
+1041. Int Literal                                 23
+1042. Int Literal (Image Saver)                    5
+1043. Int debug print                              4
+1044. Int to float                                 1
+1045. Int-🔬                                        1
+1046. Int2String                                   2
+1047. Integer                                     35
+1048. InvertMask                                   5
+1049. IterativeImageUpscale                        2
+1050. IterativeLatentUpscale                       4
+1051. JDC_AutoContrast                             1
+1052. JDC_Contrast                                 2
+1053. JPEG artifacts removal FBCNN                 1
+1054. JWDatetimeString                             6
+1055. JWFloat                                      4
+1056. JWImageResize                               10
+1057. JWImageResizeByLongerSide                    6
+1058. JWImageResizeToClosestSDXLResolution         1
+1059. JWInteger                                    7
+1060. JWIntegerAdd                                 4
+1061. JWIntegerSub                                 8
+1062. JWString                                     3
+1063. JWStringToInteger                            1
+1064. JjkShowText                                  1
+1065. JjkText                                     15
+1066. Join XY Inputs of Same Type                  3
+1067. JoinImageWithAlpha                           2
+1068. JoinStringMulti                              1
+1069. JoinStrings                                  4
+1070. KOLOR face                                   1
+1071. KRestartSampler                              2
+1072. KSampler                                   431
+1073. KSampler (Efficient)                        39
+1074. KSampler (WAS)                               1
+1075. KSampler //Inspire                           7
+1076. KSampler Adv. (Efficient)                   14
+1077. KSampler Config (rgthree)                    4
+1078. KSampler Controlnet                          1
+1079. KSampler Cycle                               2
+1080. KSampler Settings + Documentations and Navigations     1
+1081. KSamplerAdvanced                           123
+1082. KSamplerAdvanced (WLSH)                      3
+1083. KSamplerAdvancedProvider                     2
+1084. KSamplerSelect                             135
+1085. KSamplers                                    1
+1086. KarrasScheduler                              1
+1087. KepStringLiteral                             2
+1088. KolorsSampler                                5
+1089. KolorsTextEncode                             4
+1090. Ksamplers                                    1
+1091. L1                                           1
+1092. L2                                           1
+1093. LATENT                                       3
+1094. LLM + PROMPTS                                1
+1095. LLM Prompt                                   2
+1096. LLM 提示词优化                                    2
+1097. LLava Loader Simple                          2
+1098. LOAD                                         3
+1099. LOAD FROM DIRECTORY 🗂️                       1
+1100. LOAD SHUTTLE                                 1
+1101. LORA LOADING                                 3
+1102. LTXVConditioning                             4
+1103. LTXVImgToVideo                               1
+1104. LTXVLoader                                   1
+1105. LTXVModelConfigurator                        1
+1106. LYING SIGMA                                  1
+1107. Label (rgthree)                            205
+1108. LamaRemover                                  1
+1109. LamaRemoverIMG                               3
+1110. LanPaint_KSampler                            1
+1111. LaplaceScheduler                             1
+1112. Larger Guide and Max Size                    1
+1113. LastFrame                                    1
+1114. Latent - d4N87                               1
+1115. Latent Couple                                1
+1116. Latent Diffusion Mega Modifier               8
+1117. Latent Noise Injection                       2
+1118. Latent Scale to side                         1
+1119. Latent Size to Number                        1
+1120. Latent Upscale                               1
+1121. Latent Upscale by Factor (WAS)               5
+1122. Latent space                                 1
+1123. LatentApplyOperationCFG                      1
+1124. LatentBatchSeedBehavior                      2
+1125. LatentBlend                                  1
+1126. LatentComposite                              4
+1127. LatentCompositeMasked                        1
+1128. LatentCrop                                   2
+1129. LatentGC                                     1
+1130. LatentInterposer                             3
+1131. LatentKeyframeTiming                         1
+1132. LatentMath                                   1
+1133. LatentNoisePresets                           1
+1134. LatentOperationTonemapReinhard               1
+1135. LatentPixelScale                             2
+1136. LatentReceiver                               1
+1137. LatentSender                                 1
+1138. LatentSwitch                                 5
+1139. LatentUpscale                                8
+1140. LatentUpscaleBy                             23
+1141. Latent_Upscale aka Highresfix with 2nd Model     1
+1142. Layer Diffuse comatible generation           1
+1143. Layer Diffusion Model                        1
+1144. Layer Diffusion compatible checkpoin         1
+1145. LayerColor: AutoAdjustV2                     3
+1146. LayerFilter: FilmV2                          2
+1147. LayerFilter: HDREffects                      1
+1148. LayerFilter: Sharp & Soft                    2
+1149. LayerMask: LoadFlorence2Model                1
+1150. LayerMask: MaskGradient                      4
+1151. LayerMask: MaskGrow                          2
+1152. LayerMask: ObjectDetectorFL2                 1
+1153. LayerMask: PersonMaskUltra V2                3
+1154. LayerMask: RmBgUltra V2                      1
+1155. LayerMask: SAM2Ultra                         1
+1156. LayerMask: SegmentAnythingUltra V2           1
+1157. LayerUtility: ColorImage V2                  2
+1158. LayerUtility: CropByMask V2                  2
+1159. LayerUtility: GetImageSize                   2
+1160. LayerUtility: ImageBlend                     1
+1161. LayerUtility: ImageBlendAdvance V2           4
+1162. LayerUtility: ImageReel                      1
+1163. LayerUtility: ImageReelComposit              1
+1164. LayerUtility: ImageRemoveAlpha               1
+1165. LayerUtility: ImageScaleByAspectRatio V2     7
+1166. LayerUtility: ImageScaleRestore              1
+1167. LayerUtility: JoyCaptionBeta1                2
+1168. LayerUtility: LaMa                           1
+1169. LayerUtility: LoadJoyCaptionBeta1Model       1
+1170. LayerUtility: PurgeVRAM                      6
+1171. LayerUtility: PurgeVRAM V2                   1
+1172. LayerUtility: TextBox                        4
+1173. LayerUtility: TextJoin                       1
+1174. LayerUtility: TextJoinV2                     1
+1175. LayeredDiffusionApply                        3
+1176. LayeredDiffusionDecode                       2
+1177. LayeredDiffusionDecodeRGBA                   2
+1178. LdmPipelineLoader                            1
+1179. LdmVaeLoader                                 1
+1180. LeReS-DepthMapPreprocessor                   1
+1181. Left                                         1
+1182. LineArtPreprocessor                         13
+1183. LineartStandardPreprocessor                  1
+1184. List of strings [Crystools]                 22
+1185. LlavaClipLoader                              2
+1186. LoRA                                         3
+1187. LoRA Settings                                1
+1188. LoRA Settings — Default                      2
+1189. LoRA Settings — SVDQuant                     1
+1190. LoRA Stack to String converter               4
+1191. LoRA Stacker                                25
+1192. LoRA's                                       1
+1193. Load & Perpare Images                        2
+1194. Load Image                                   1
+1195. Load Image Based on Number                   1
+1196. Load Image Batch                            12
+1197. Load Image From Url (mtb)                    1
+1198. Load Image for Img2Img or Image optimize / upscale V2     1
+1199. Load Models                                  3
+1200. Load Styles CSV                              1
+1201. LoadAndApplyICLightUnet                      2
+1202. LoadAndResizeImage                           5
+1203. LoadCLIPSegModels+                           1
+1204. LoadChatGLM3                                 2
+1205. LoadFlorence2Model                           1
+1206. LoadFluxControlNet                           2
+1207. LoadFramePackModel                           1
+1208. LoadImage                                  591
+1209. LoadImageFromUrl                             1
+1210. LoadImageMask                               11
+1211. LoadImageOutput                              1
+1212. LoadImagesFromDir //Inspire                  9
+1213. LoadLatent                                   1
+1214. LoadOmniGen2Model                            3
+1215. LoadPromptsFromFile //Inspire                1
+1216. LoadVideo                                    1
+1217. Load_models                                  1
+1218. Loader                                       4
+1219. LoaderGGUF                                   1
+1220. Loaders                                      1
+1221. Loaders and Constants                        2
+1222. Logic Boolean Primitive                      6
+1223. Lora                                         1
+1224. Lora Loader Stack (rgthree)                 20
+1225. LoraInfo                                     3
+1226. LoraListNames                                3
+1227. LoraLoader                                 123
+1228. LoraLoaderBlockWeight //Inspire              6
+1229. LoraLoaderModelOnly                         80
+1230. LoraLoaderStackedAdvanced                   13
+1231. LoraLoaderStackedVanilla                     1
+1232. LoraLoaderText                               3
+1233. LoraLoader|pysssss                          19
+1234. LoraStackLoader_PoP                          2
+1235. LoraTagLoader                                2
+1236. Lora_Randomizer                              1
+1237. Low Ram Model Loader                         1
+1238. LyingSigmaSampler                            7
+1239. M-LSDPreprocessor                            1
+1240. MOCHI-VIDEO                                  1
+1241. MODEL                                        9
+1242. MODELS LOADERS                               2
+1243. MOUTH Detailer (SEGM Only)                   2
+1244. MS IMG2IMG                                   1
+1245. MULTIPLY SIGMA                               1
+1246. MUSimpleWildcard                             3
+1247. MV Adapater                                  1
+1248. MZ_ChatGLM3                                  4
+1249. MZ_ChatGLM3Loader                           16
+1250. MZ_ChatGLM3_V2                              30
+1251. MZ_Flux1PartialLoad_Patch                    8
+1252. MZ_KolorsControlNetPatch                     1
+1253. MZ_KolorsUNETLoader                          2
+1254. MZ_KolorsUNETLoaderV2                       15
+1255. MagCache                                     2
+1256. Mahiro                                       8
+1257. Main 2D Area                                 1
+1258. Main Area                                    1
+1259. Main Workflow                                1
+1260. Main loader                                  1
+1261. Main1_Highres2                               2
+1262. Main2_Highres3                               2
+1263. Main4_D1_Face                                2
+1264. Main4_D2_Other                               2
+1265. Main4_D3_Eyes                                2
+1266. Main4_D4_Hands                               2
+1267. Main4_D6_Breasts                             2
+1268. MainX_SAVELR                                 2
+1269. MainX_SAVE_FINAL                             2
+1270. Manga2Anime_LineArt_Preprocessor             1
+1271. MangaNinjiaLoader                            4
+1272. MangaNinjiaSampler                           3
+1273. Manual                                       2
+1274. Manual Masking                               1
+1275. MarkdownNote                               151
+1276. Mask                                         1
+1277. Mask Crop Region                             1
+1278. Mask Dominant Region                         1
+1279. Mask Gaussian Region                         4
+1280. Mask Invert                                  1
+1281. Mask Morphology                              3
+1282. Mask Rect Area                               4
+1283. Mask Setup                                   1
+1284. Mask To Region                              14
+1285. MaskBlur+                                    6
+1286. MaskComposite                                7
+1287. MaskDetailerPipe                             7
+1288. MaskFix+                                    34
+1289. MaskFromRGBCMYBW+                            4
+1290. MaskPreview                                  1
+1291. MaskPreview+                                59
+1292. MaskToImage                                 89
+1293. MaskToSEGS                                  12
+1294. Masking                                      1
+1295. Masks Add                                    2
+1296. Masks Subtract                               2
+1297. MathExpression|pysssss                      90
+1298. MediaPipeFaceMeshDetectorProvider //Inspire     5
+1299. MediaPlayer                                  8
+1300. Merge                                        1
+1301. Merge many sigmas by average                 1
+1302. MergeString                                  2
+1303. MeshGraphormer+ImpactDetector-DepthMapPreprocessor     3
+1304. MeshGraphormer-DepthMapPreprocessor          2
+1305. Metadata Relay                               2
+1306. MiDaS-DepthMapPreprocessor                  11
+1307. MilehighStyler                               1
+1308. Model Backend                                1
+1309. Model Input Switch                           2
+1310. Model Loader                                 2
+1311. Model Sampling - d4N87                       1
+1312. Model Select                                 1
+1313. Model Setup                                  3
+1314. Model 模型                                     2
+1315. ModelMergeAdd                                4
+1316. ModelMergeBlockNumber                       14
+1317. ModelMergeSDXL                              20
+1318. ModelMergeSimple                             6
+1319. ModelMergeSubtract                           4
+1320. ModelParameters                              3
+1321. ModelPassThrough                             1
+1322. ModelSamplerTonemapNoiseTest                 1
+1323. ModelSamplingAuraFlow                        8
+1324. ModelSamplingContinuousEDM                  11
+1325. ModelSamplingDiscrete                       19
+1326. ModelSamplingFlux                           41
+1327. ModelSamplingSD3                            32
+1328. ModelSamplingStableCascade                   2
+1329. Modello soggetto - d4N87                     1
+1330. Models                                       4
+1331. Modifiers                                    1
+1332. MovementsImage_Zho                           1
+1333. MultiAreaConditioning                        2
+1334. MultiImagesInput                             4
+1335. MultiView Configuration                      2
+1336. MultiplePathsInput                           2
+1337. Multiply                                     2
+1338. Multiply Int Int (JPS)                       2
+1339. MultiplySigmas                               8
+1340. Multiview Mesh Generation                    1
+1341. Mute / Bypass Relay (rgthree)                6
+1342. Mute / Bypass Repeater (rgthree)           115
+1343. NNLatentUpscale                              5
+1344. NSFW ADetailer                               3
+1345. NSFW Detailer                                1
+1346. NSFW Detailer (BBOX and SEGM) Choose what you want.     2
+1347. Natural Caption Models                       1
+1348. Negative Prompt & CLIP Text Encode (Prompt)     1
+1349. Negative Prompt - d4N87                      1
+1350. Node Collector (rgthree)                    20
+1351. Noise Control Script                         6
+1352. NoisePlusBlend                               2
+1353. NoisyLatentLike                              1
+1354. Normal Ram Model Loader                      1
+1355. Normalization                                2
+1356. NormalizationXL                              2
+1357. NormalizedAttentionGuidance                  1
+1358. Note                                      1041
+1359. Note Plus (mtb)                             28
+1360. Note _O                                     33
+1361. Notes                                        1
+1362. Number Operation                             7
+1363. Number to Int                                5
+1364. Number to Text                               1
+1365. NunchakuFluxDiTLoader                        1
+1366. NunchakuFluxLoraLoader                       8
+1367. NunchakuPulidApply                           1
+1368. NunchakuPulidLoader                          1
+1369. NunchakuTextEncoderLoaderV2                  1
+1370. NunchakuWheelInstaller                       1
+1371. OUT                                          3
+1372. OUTPAINT FOOCUS STYLE (SDXL Output)          1
+1373. OUTPUT                                       4
+1374. Ollama                                       1
+1375. OllamaConnectivityV2                         1
+1376. OllamaGenerate                               4
+1377. OllamaGenerateAdvance                        3
+1378. OllamaGenerateV2                             2
+1379. OllamaImageDescriber                         1
+1380. OllamaOptionsV2                              1
+1381. OmniGen2                                     3
+1382. OmniGenLoader                                1
+1383. OmniGenNode                                  1
+1384. OmostDenseDiffusionLayoutNode                1
+1385. OmostGreedyBagsTextEmbeddingNode             1
+1386. OmostLLMChatNode                             2
+1387. OmostLLMLoaderNode                           1
+1388. OmostLayoutCondNode                          1
+1389. OmostLoadCanvasConditioningNode              1
+1390. OmostRenderCanvasConditioningNode            1
+1391. OneButtonSuperPrompt                         3
+1392. OneFormer-COCO-SemSegPreprocessor            1
+1393. Only Change Checkpoint Model & Lora          1
+1394. Only Use this with Yogi Realistic            1
+1395. OpenPose                                     2
+1396. Openpose                                     1
+1397. OpenposePreprocessor                         9
+1398. Optional Upscale>Downscale before USDU2      1
+1399. Original                                     1
+1400. Others_1_Detailer                            1
+1401. Others_2_Detailer                            1
+1402. Outpaint 扩图                                  2
+1403. Output                                       9
+1404. Output min/max sigmas                        1
+1405. Overall Prompt Setup                         1
+1406. OverrideCLIPDevice                           7
+1407. PAGAttention                                 2
+1408. PCLazyLoraLoader                             6
+1409. PCLazyTextEncode                            14
+1410. PCTextEncode                                 1
+1411. PNG Info                                     1
+1412. POSITIVE Prompt                              1
+1413. PROMPT                                       4
+1414. PROMPTING                                    2
+1415. PROMPTS ✍️                                   1
+1416. PainterNode                                  1
+1417. ParametersToString                           3
+1418. Params In // RvTools                         2
+1419. Pass Clip // RvTools                         1
+1420. Pass Input Hijack                            3
+1421. Pass VAE // RvTools                          1
+1422. Paste By Mask                               67
+1423. PatchModelAddDownscale                      23
+1424. PatchModelPatcherOrder                       3
+1425. PathchSageAttentionKJ                        8
+1426. PerpNegGuider                                3
+1427. PerturbedAttention                           9
+1428. PerturbedAttentionGuidance                  22
+1429. Phase 1A: Load Models                        1
+1430. Phase 1B: Load Image 1                       1
+1431. Phase 1C: Load Image 2                       1
+1432. Phase 1D: Load Image 3                       1
+1433. Phase 1E: Load Image 4                       1
+1434. Phase 2A: Prompt & Sampling                  1
+1435. Phase 2B: Output: Stitched Images            1
+1436. Phase 2C: Output: Image - Low Res            1
+1437. Phase 3A: Ultimate SD Upscaler (UU)          1
+1438. Phase 3B: Output: Image - Ultimate Upscaler     1
+1439. Phase 4A: Adetailer #1                       1
+1440. Phase 4B: Adetailer #2                       1
+1441. Phase 4C: Adetailer #3                       1
+1442. Phase I-A: Sampling Image (Optional)         1
+1443. Phase I: Load models and image to inpaint     1
+1444. Phase II: Generation of inpainted region     1
+1445. PiDiNetPreprocessor                          3
+1446. Pick From Batch (mtb)                        1
+1447. PixArt                                       3
+1448. PixArt Sigma :: Models                       2
+1449. PixArtCheckpointLoader                      15
+1450. PixArtCheckpointLoaderSimple                 2
+1451. PixArtControlNetCond                         1
+1452. PixArtResolutionSelect                       7
+1453. PixArtT5FromSD3CLIP                          3
+1454. PixArtT5TextEncode                           6
+1455. Pixel Upscale                                1
+1456. PixelKSampleUpscalerProvider                 6
+1457. PixelPerfectResolution                       5
+1458. PlaySound|pysssss                           13
+1459. PlotBlockParams                              3
+1460. PngRectanglesToMask                          1
+1461. Positive Prompt - d4N87                      1
+1462. Positive Prompts                             1
+1463. Post production                              3
+1464. Post-Processing                              1
+1465. Power KSampler Advanced (PPF Noise)          2
+1466. Power Lora Loader (rgthree)                 63
+1467. Power Prompt - Simple (rgthree)             36
+1468. Power Puter (rgthree)                        3
+1469. Power-Law Noise (PPF Noise)                  1
+1470. Pre-USDU1 Upscale                            2
+1471. Pre-USDU2 Upscale                            2
+1472. PrepImageForClipVision                      32
+1473. Preview                                      1
+1474. Preview Chooser                              7
+1475. Preview Images                               4
+1476. Preview volto - d4N87                        1
+1477. Preview3D                                    8
+1478. PreviewAnimation                             1
+1479. PreviewAudio                                 1
+1480. PreviewBridge                               12
+1481. PreviewImage                               938
+1482. Previews                                     2
+1483. Primitive boolean [Crystools]                2
+1484. Primitive float [Crystools]                 33
+1485. Primitive integer [Crystools]               36
+1486. Primitive string multiline [Crystools]      68
+1487. PrimitiveBoolean                           103
+1488. PrimitiveFloat                              22
+1489. PrimitiveInt                                30
+1490. PrimitiveNode                              580
+1491. PrimitiveString                             16
+1492. PrimitiveStringMultiline                    38
+1493. Project Folder // RvTools                    3
+1494. ProjectFilePathNode                         54
+1495. Prompt                                      14
+1496. Prompt & 1st Pass Size                       1
+1497. Prompt & Config                              1
+1498. Prompt & Styling                             1
+1499. Prompt + Tags                                1
+1500. Prompt - d4N87                               2
+1501. Prompt Mixer                                 1
+1502. Prompt Saver                                 3
+1503. PromptGenerator                              1
+1504. PromptSwap                                   7
+1505. Prompting                                    1
+1506. Prompts                                      6
+1507. Prompts Everywhere                          10
+1508. PuLID                                        2
+1509. PuLID — SVDQuant                             1
+1510. PulidFluxEvaClipLoader                       3
+1511. PulidFluxInsightFaceLoader                   3
+1512. PulidFluxModelLoader                         3
+1513. PurgeVRAM                                   22
+1514. QuadrupleCLIPLoader                          5
+1515. QuadrupleCLIPLoaderGGUF                      1
+1516. Qwen2.5VL                                    1
+1517. Qwen2_VQA                                    3
+1518. QwenVL - Image to Prompt                     1
+1519. REACTOR                                      1
+1520. REACTOR ON/OFF                               1
+1521. RH_Captioner                                 1
+1522. RIFE VFI                                     6
+1523. RMBG                                         6
+1524. ROUTE                                       18
+1525. ROUTING                                      3
+1526. Random Number                               11
+1527. Random Resolution Selector                   1
+1528. RandomInt                                    3
+1529. RandomNoise                                 75
+1530. RandomNoise //Inspire                        3
+1531. RandomSeedGenerator                          1
+1532. RandomSeedNode                               1
+1533. RdancerFlorence2SAM2GenerateMask             1
+1534. ReActorFaceBoost                             6
+1535. ReActorFaceSwap                             22
+1536. ReActorFaceSwapOpt                           2
+1537. ReActorLoadFaceModel                         6
+1538. ReActorMaskHelper                            3
+1539. ReActorOptions                               1
+1540. ReActorRestoreFace                           4
+1541. ReActorSaveFaceModel                         2
+1542. RealCustom                                   1
+1543. RebatchImages                                5
+1544. Recenter                                     1
+1545. Recenter XL                                  1
+1546. RecourseCkpt                                18
+1547. RecourseImage                                3
+1548. RecoursePolar                                3
+1549. RecourseStrings                             15
+1550. Redraw                                       1
+1551. Redux                                        2
+1552. Redux / PuLID — Default Image Loader         2
+1553. Redux / PuLID — Random Image Loader          2
+1554. Redux 主体延续/主体混合                              1
+1555. ReferenceLatent                             10
+1556. Refiner                                      1
+1557. Refiner 1                                    1
+1558. Refiner 2                                    1
+1559. Refiner Pass                                 1
+1560. Regex Text Chopper /noEmbryo                 8
+1561. RegexExtract                                 8
+1562. RegexReplace                                 5
+1563. RegionAttention                              1
+1564. Regional Prompt Mask                         1
+1565. Regional Prompt Setup                        1
+1566. Regional Prompts (Gligen)                    1
+1567. Regional conditioning                        1
+1568. Regional prompting                           1
+1569. RegionalConditioningSimple //Inspire        13
+1570. RegionalIPAdapterColorMask //Inspire         3
+1571. RegionalPromptSimple //Inspire               8
+1572. RegionalSamplerAdvanced                      2
+1573. RemBGSession+                                7
+1574. RemapImageRange                              6
+1575. RemapMaskRange                               4
+1576. Remove Background                            1
+1577. RenderTextures                               1
+1578. RenormCFG                                    2
+1579. Reorder Batch                                2
+1580. RepeatImageBatch                             3
+1581. RepeatLatentBatch                            9
+1582. Replace Text _O                              1
+1583. Reroute                                   2571
+1584. Reroute (rgthree)                          146
+1585. ReroutePrimitive|pysssss                     2
+1586. RescaleCFG                                  26
+1587. RescaleCFGPost                               1
+1588. ResizeMask                                   1
+1589. Restore_Detail (Optional)                    1
+1590. ReverseImageBatch                            1
+1591. Right                                        1
+1592. Risoluzione - d4N87                          1
+1593. Risoluzione e lunghezza - d4N87              1
+1594. RungeKuttaSampler                            2
+1595. SAM Loader for All Detailers                 2
+1596. SAM2ModelLoader (segment anything2)          5
+1597. SAMDetectorCombined                          4
+1598. SAMDetectorSegmented                         3
+1599. SAMLoader                                   85
+1600. SAMModelLoader (segment anything)            2
+1601. SAMPLER                                      4
+1602. SAMPLERS                                     2
+1603. SAMPLING                                     3
+1604. SAVE                                         5
+1605. SD 3.5 - Text to Image                       1
+1606. SD 3.5- Image to Image                       1
+1607. SD 3.5-MEDIUM                                2
+1608. SD3LatentSelectRes                           2
+1609. SD3NegativeConditioning+                     7
+1610. SDBatchLoader                                2
+1611. SDLoraLoader                                 4
+1612. SDLoraSelector                               5
+1613. SDPromptReader                               4
+1614. SDPromptSaver                               26
+1615. SDTurboScheduler                             3
+1616. SDXL - Text to Image                         1
+1617. SDXL Comfort Image Saver 2.0                 1
+1618. SDXL Empty Latent Image (rgthree)           11
+1619. SDXL Models                                  1
+1620. SDXL Power Prompt - Simple / Negative (rgthree)     2
+1621. SDXL Prompt Handling (JPS)                   2
+1622. SDXL Prompt Styler (JPS)                     1
+1623. SDXL Refiner                                 2
+1624. SDXL Resolutions (JPS)                       3
+1625. SDXL WITH REFINER (i.e. Comfy From Scratch Part 3 as listed at https://followfoxai.substack.com/p/part-3-sdxl-in-comfyui-from-scratch )     1
+1626. SDXL-NO REFINER                              1
+1627. SDXL-Output                                  1
+1628. SDXLAspectRatioSelector                      1
+1629. SDXLEmptyLatentSizePicker+                  12
+1630. SDXLEmptyLatentSizePicker_v2                 3
+1631. SDXLPromptStyler                             9
+1632. SDXLPromptStylerAdvanced                     3
+1633. SDXLPromptStylerbyOriginal                   1
+1634. SDXLResolutionPresets                        3
+1635. SDXL_Outpaint                                1
+1636. SD_4XUpscale_Conditioning                    2
+1637. SEG                                          1
+1638. SEGSDetailer                                 3
+1639. SEGSDetailerForAnimateDiff                   2
+1640. SEGSOrderedFilterDetailerHookProvider        1
+1641. SEGSPaste                                    5
+1642. SEGSPreview                                  1
+1643. SEGSPreviewCNet                              1
+1644. SELECT                                       3
+1645. SIGMA                                        6
+1646. SOURCE IMAGE                                 1
+1647. SUPIR + Saving                               1
+1648. SUPIR_Upscale                                2
+1649. SUPIR_conditioner                           12
+1650. SUPIR_decode                                12
+1651. SUPIR_encode                                12
+1652. SUPIR_first_stage                           12
+1653. SUPIR_model_loader                           1
+1654. SUPIR_model_loader_v2                       11
+1655. SUPIR_sample                                12
+1656. SVD-VIDEO                                    1
+1657. SVD_img2vid_Conditioning                     3
+1658. Sam2Segmentation                             1
+1659. Sampler                                      9
+1660. Sampler Scheduler Settings (JPS)             3
+1661. Sampler Selector                            13
+1662. Sampler Selector (Image Saver)              18
+1663. Sampler Settings                             1
+1664. Sampler Settings (Small) // RvTools          3
+1665. Sampler Settings Out (Small) // RvTools      3
+1666. SamplerCustom                               37
+1667. SamplerCustomAdvanced                       86
+1668. SamplerCustomNoise                           2
+1669. SamplerDPMAdaptative                         1
+1670. SamplerDPMPP_2M_SDE                          1
+1671. SamplerDPMPP_2S_Ancestral                    3
+1672. SamplerEulerAncestral                        3
+1673. SamplerLCMCustom                             2
+1674. SamplerLMS                                   3
+1675. SamplerSonarDPMPPSDE                         2
+1676. Samplers                                     1
+1677. Samplr                                       1
+1678. Save                                         1
+1679. Save & Compare                               2
+1680. Save Before Detailer                         1
+1681. Save IMG Prompt                              2
+1682. Save Image                                   2
+1683. Save Image Base                              2
+1684. Save Image FaceDetailer                      2
+1685. Save Image Final                             2
+1686. Save Image HiRes-Fix                         2
+1687. Save Image Upscaled                          2
+1688. Save Image With Prompt Data                  4
+1689. Save Image w/Metadata                       14
+1690. Save Images // RvTools                       5
+1691. Save Menu                                    3
+1692. Save Preupscaled                             1
+1693. Save Text File                               2
+1694. Save upscaled                                1
+1695. Save upscaled detailed                       1
+1696. Save upscaled watermark                      1
+1697. Save with image path, without metadata       1
+1698. SaveAnimatedWEBP                             4
+1699. SaveAudio                                    2
+1700. SaveAvif                                     1
+1701. SaveCryptoBridgeNode                         1
+1702. SaveCryptoNode                               1
+1703. SaveImage                                  577
+1704. SaveImageExtended                            1
+1705. SaveImagePlus                                2
+1706. SaveImageToLocal                             1
+1707. SaveImageWithMetaData                        9
+1708. SaveLatent                                   2
+1709. SavePoseKpsAsJsonFile                        1
+1710. SaveSVG                                      1
+1711. ScaledSoftControlNetWeights                 26
+1712. Scheduler Selector                          12
+1713. Scheduler Selector (Comfy) (Image Saver)    16
+1714. Scheduler Selector (Image Saver)             4
+1715. ScribblePreprocessor                         2
+1716. Scribble_XDoG_Preprocessor                   1
+1717. Scripts                                      1
+1718. SeargeAdvancedParameters                     6
+1719. SeargeCheckpointLoader                       4
+1720. SeargeConditionMixing                        6
+1721. SeargeConditioningMuxer2                    16
+1722. SeargeConditioningMuxer5                    16
+1723. SeargeConditioningParameters                 6
+1724. SeargeControlnetAdapterV2                   30
+1725. SeargeControlnetModels                       6
+1726. SeargeCustomAfterUpscaling                   6
+1727. SeargeCustomAfterVaeDecode                  12
+1728. SeargeCustomPromptMode                       6
+1729. SeargeDebugPrinter                           6
+1730. SeargeEnablerInputs                          1
+1731. SeargeFreeU                                  2
+1732. SeargeGenerated1                             4
+1733. SeargeGenerationParameters                   6
+1734. SeargeHighResolution                         6
+1735. SeargeImage2ImageAndInpainting               6
+1736. SeargeImageAdapterV2                         6
+1737. SeargeImageSave                              7
+1738. SeargeImageSaving                            6
+1739. SeargeInput1                                 2
+1740. SeargeInput2                                 2
+1741. SeargeInput3                                 2
+1742. SeargeInput4                                 2
+1743. SeargeInput5                                 2
+1744. SeargeInput6                                 2
+1745. SeargeInput7                                 2
+1746. SeargeIntegerConstant                        2
+1747. SeargeIntegerPair                            1
+1748. SeargeIntegerScaler                         16
+1749. SeargeLatentMuxer3                           2
+1750. SeargeLoraLoader                             2
+1751. SeargeLoras                                  6
+1752. SeargeMagicBox                             132
+1753. SeargeModelSelector                          6
+1754. SeargeOperatingMode                          6
+1755. SeargeOutput1                                4
+1756. SeargeOutput2                               10
+1757. SeargeOutput3                                6
+1758. SeargeOutput4                                2
+1759. SeargeOutput5                                4
+1760. SeargeOutput6                                2
+1761. SeargeOutput7                                2
+1762. SeargeParameterProcessor                     2
+1763. SeargePipelineStart                          6
+1764. SeargePipelineTerminator                     6
+1765. SeargePreviewImage                          60
+1766. SeargePromptAdapterV2                        6
+1767. SeargePromptStyles                           6
+1768. SeargePromptText                            16
+1769. SeargeSDXLBasePromptEncoder                  2
+1770. SeargeSDXLImage2ImageSampler                 1
+1771. SeargeSDXLImage2ImageSampler2                1
+1772. SeargeSDXLPromptEncoder                      3
+1773. SeargeSDXLRefinerPromptEncoder               2
+1774. SeargeSDXLSampler                            1
+1775. SeargeSDXLSampler2                           2
+1776. SeargeSamplerInputs                          1
+1777. SeargeSaveFolderInputs                       1
+1778. SeargeSeparator                              6
+1779. SeargeStylePreprocessor                      2
+1780. SeargeTextInputV2                           30
+1781. SeargeUpscaleModelLoader                     4
+1782. SeargeUpscaleModels                          6
+1783. SeargeVAELoader                              2
+1784. Seed                                         5
+1785. Seed (rgthree)                              37
+1786. Seed Everywhere                              6
+1787. Seed Generator                               8
+1788. Seed Generator (Image Saver)                 1
+1789. SegmDetectorSEGS                            26
+1790. Segment                                      1
+1791. SegsToCombinedMask                          31
+1792. SekiSamplerSelector                          1
+1793. SelInClip                                    9
+1794. SelInFloat                                   9
+1795. SelInGuider                                  3
+1796. SelInInt                                     3
+1797. SelInLatent                                  6
+1798. SelInModel                                  18
+1799. SelInPolar                                  18
+1800. SelInSampler                                15
+1801. SelInSigmas                                 24
+1802. SelInVae                                     3
+1803. SelOutCLIP                                   3
+1804. SelOutModel                                  6
+1805. Selector                                     5
+1806. Selector Advanced                           26
+1807. Selector Hub                                15
+1808. SelfAttentionGuidance                       24
+1809. Separate Mask Components                    14
+1810. SetEllaTimesteps                             2
+1811. SetLatentNoiseMask                          30
+1812. SetMetadataForSaveVideo                      1
+1813. SetNode                                    509
+1814. SetUnionControlNetType                      25
+1815. Settings                                     2
+1816. Setup                                        1
+1817. Shared Positive Prompt                       2
+1818. SharkSampler                                 4
+1819. Sharpen                                      1
+1820. Show any [Crystools]                        21
+1821. ShowTextForGPT                               5
+1822. ShowText|pysssss                           151
+1823. ShuffleFluxLayersNode                        1
+1824. Shuttle 3.1反推文生图 GGUF                        1
+1825. Shuttle 3.1文生图 GGUF                          1
+1826. Sigma :: Settings                            2
+1827. Sigma Logic                                  2
+1828. Simple Detailers                             1
+1829. Simple String                                3
+1830. Simple Wildcards                             1
+1831. SimpleMath+                                 20
+1832. SimpleMathDual+                              6
+1833. SimpleMathFloat+                            11
+1834. SimpleMathInt+                               4
+1835. SimpleSampler                                1
+1836. SimpleSamplerVAE                             1
+1837. SimpleText                                   2
+1838. Size                                         1
+1839. Sizing 设定尺寸                                  1
+1840. Skimmed CFG                                  1
+1841. Skin detailer                                1
+1842. SkipLayerGuidanceSD3                         1
+1843. SmoothedEnergyGuidanceAdvanced               9
+1844. SolidMask                                   10
+1845. SomethingToString                           16
+1846. SonarPowerFilter                             2
+1847. SplineEditor                                 1
+1848. SplitImageWithAlpha                         16
+1849. SplitSigmas                                 20
+1850. SplitSigmasDenoise                           2
+1851. Stable Diffusion XL                          1
+1852. StableCascade_CheckpointLoader //Inspire     1
+1853. StableCascade_EmptyLatentImage               4
+1854. StableCascade_StageB_Conditioning            6
+1855. StableCascade_StageC_VAEEncode               2
+1856. StableSRColorFix                             1
+1857. Start Image                                  1
+1858. Start Mesh                                   2
+1859. Step 1- Load models                          2
+1860. Step 2 - Upload images                       2
+1861. Step 3 - Prompt                              2
+1862. StepsAndCfg                                  1
+1863. StoryDiffusion_Apply                        18
+1864. StoryDiffusion_CLIPTextEncode               18
+1865. StoryDiffusion_KSampler                     18
+1866. String                                      20
+1867. String Literal                              17
+1868. String Literal (Image Saver)                 6
+1869. String-🔬                                     2
+1870. StringConcatenate                           16
+1871. StringConstant                               4
+1872. StringConstantMultiline                      1
+1873. StringContains                               6
+1874. StringFunction|pysssss                      16
+1875. StringMultiReplace                           1
+1876. StringStrip                                  1
+1877. StringToFloatList                            1
+1878. StringToInt                                  1
+1879. StringWeights                                2
+1880. StructuredOutput                             2
+1881. Style Transfer                               1
+1882. StyleModelAdvancedApply                      2
+1883. StyleModelApply                              8
+1884. StyleModelApplySimple                        1
+1885. StyleModelLoader                             5
+1886. StylesImage_Zho                              1
+1887. SubtractMaskForEach                          2
+1888. Sum                                          1
+1889. SwarmInputCheckpoint                         2
+1890. SwarmInputGroup                              4
+1891. SwarmInputImage                              2
+1892. SwarmInputText                               4
+1893. Switch                                       1
+1894. Switch any [Crystools]                      40
+1895. Switch conditioning [Crystools]              2
+1896. Switch image [Crystools]                     3
+1897. Switch mask [Crystools]                      1
+1898. Switch string [Crystools]                    6
+1899. SystemNotification|pysssss                  11
+1900. T5TextEncode                                14
+1901. T5TextEncode #ELLA                           2
+1902. T5TextEncoderLoader #ELLA                    2
+1903. T5TokenizerOptions                           7
+1904. T5v11Loader                                  7
+1905. TCDModelSamplingDiscrete                     1
+1906. TCDScheduler                                 1
+1907. TIPO                                         4
+1908. TIPOFormat                                   1
+1909. TIPOOperation                                1
+1910. TIPS 💡                                       1
+1911. TTP_Image_Assy                               1
+1912. TTP_Image_Tile_Batch                         1
+1913. TTP_Tile_image_size                          1
+1914. TTPlanet_TileSimple_Preprocessor             4
+1915. TXT2IMG                                      1
+1916. TagRemover                                   1
+1917. TagsSelector                                 8
+1918. TaraApiKeyLoader                             2
+1919. TaraPresetLLMConfig                          2
+1920. TaraPrompterAdvanced                         2
+1921. TeaCache                                     6
+1922. Tensor RT                                    1
+1923. TensorRTLoader                               3
+1924. Text                                         3
+1925. Text Concatenate                            77
+1926. Text Concatenate (JPS)                      13
+1927. Text Dictionary Get                         22
+1928. Text Dictionary New                         13
+1929. Text Dictionary Update                       9
+1930. Text Find and Replace                        6
+1931. Text Input Switch                            2
+1932. Text Input [Dream]                           7
+1933. Text List to Text                            1
+1934. Text Multiline                              55
+1935. Text Multiline (Code Compatible)             6
+1936. Text Prompt (JPS)                           15
+1937. Text Prompt Inputs                           1
+1938. Text Random Line                             5
+1939. Text Shuffle                                 1
+1940. Text String                                  4
+1941. Text _O                                      9
+1942. Text box                                    11
+1943. Text to Conditioning                        20
+1944. TextBox                                      2
+1945. TextBox1                                    14
+1946. TextBox3                                     1
+1947. TextBoxMira                                 12
+1948. TextCombinerSix                              1
+1949. TextCombinerTwo                              2
+1950. TextConcatenateNikosis                       1
+1951. TextEncodeAceStepAudio                       1
+1952. TextInputBasic                               5
+1953. Text_To_IMG                                  1
+1954. Text_prompt_edit 提示词（局部改图）                   2
+1955. Text_prompt_generate 提示词（新生成）                2
+1956. Text_prompt_negative 负向提示词                   1
+1957. Text_prompt_transfer 提示词（主体延续）               1
+1958. Textbox                                      6
+1959. Things to Change                             1
+1960. TilePreprocessor                             9
+1961. Tiled Upscaler Script                        1
+1962. TiledDiffusion                               4
+1963. TimestepKeyframe                             1
+1964. ToBasicPipe                                 39
+1965. ToBinaryMask                                 1
+1966. ToDetailerPipe                              12
+1967. ToDetailerPipeSDXL                           2
+1968. ToIPAdapterPipe //Inspire                    1
+1969. TokenCounter                                 6
+1970. TomePatchModel                               2
+1971. TopazUpscaleParams                           6
+1972. TopazVideoAI                                 3
+1973. TorchCompileLoadControlNet                   1
+1974. TorchCompileLoadVAE                          1
+1975. TorchCompileModel                            4
+1976. TorchCompileModelHyVideo                     3
+1977. TransparentBGSession+                        2
+1978. Trigger Word Loaders                         1
+1979. TripleCLIPLoader                            36
+1980. UNETLoader                                  87
+1981. UNETLoaderNF4                                1
+1982. UNetSelfAttentionMultiply                    7
+1983. UPSCALE                                      3
+1984. UPSCALE + DUMP VRAM                          1
+1985. UPSCALER                                     3
+1986. UPSCALER / DETAILER                          2
+1987. USDU 1                                       1
+1988. USDU 2                                       1
+1989. USDU1 ControlNet                             1
+1990. USDU2 Controlnet                             1
+1991. Ultimate SD Upscale 1                        2
+1992. Ultimate SD Upscale 1 ControlNet             2
+1993. Ultimate SD Upscale 2                        2
+1994. Ultimate SD Upscale 2 ControlNet             2
+1995. UltimateSDUpscale                           44
+1996. UltimateSDUpscaleCustomSample               17
+1997. UltimateSDUpscaleNoUpscale                  15
+1998. UltimateSD_Upscale                           1
+1999. UltralyticsDetectorProvider                209
+2000. Unary Mask Op                                3
+2001. UnetLoaderGGUF                              46
+2002. UnetLoaderGGUFMultiGPU                       1
+2003. UnloadAllModels                              2
+2004. UnsharpMask                                  1
+2005. UpperBodyTrackingFromPoseKps                 2
+2006. Upscale                                      9
+2007. Upscale #1                                   1
+2008. Upscale + TextureSampling                    1
+2009. Upscale - Simple                             1
+2010. Upscale Model Loader                        11
+2011. Upscale Model Switch                         1
+2012. Upscale Settings                             1
+2013. Upscale and Bake                             2
+2014. Upscale by Factor with Model (WLSH)          3
+2015. Upscale settings                             2
+2016. Upscale#2                                    1
+2017. UpscaleImageByModelThenResize                1
+2018. UpscaleModelLoader                         164
+2019. Upscaler                                    11
+2020. Upscaler & Attention Controlnet              1
+2021. Upscaling                                    2
+2022. VAE                                          4
+2023. VAE - d4N87                                  1
+2024. VAE Decode (Tiled)                           1
+2025. VAE Input Switch                             3
+2026. VAEDecode                                  656
+2027. VAEDecodeAudio                               1
+2028. VAEDecodeTiled                              44
+2029. VAEDecodeTiled_TiledDiffusion                9
+2030. VAEEncode                                  193
+2031. VAEEncodeForInpaint                          8
+2032. VAEEncodeTiled                              25
+2033. VAELoader                                  297
+2034. VAELoaderMultiGPU                            1
+2035. VHS_LoadImages                               4
+2036. VHS_LoadImagesPath                           3
+2037. VHS_LoadVideo                                8
+2038. VHS_LoadVideoPath                            1
+2039. VHS_SelectFilename                           1
+2040. VHS_VAEDecodeBatched                         1
+2041. VHS_VAEEncodeBatched                         2
+2042. VHS_VideoCombine                            59
+2043. VRAM_Debug                                   1
+2044. VaeGGUF                                      2
+2045. VectorscopeCC                                2
+2046. Video                                        1
+2047. VideoLinearCFGGuidance                       2
+2048. ViewSelector                                 1
+2049. WD14Tagger|pysssss                          14
+2050. WF Images Preview and Save (select what images you want to save from the menu above)     2
+2051. WF Switches Group                            2
+2052. WM Detection and Removal                     2
+2053. WanImageToVideo                              2
+2054. Watermark Detection and Removal (a)          1
+2055. Watermark Detection and Removal (b)          1
+2056. WidgetToString                              55
+2057. Width / Height // RvTools                    1
+2058. Width/Height Literal                         2
+2059. Width/Height Literal (Image Saver)           2
+2060. WidthHeightMittimi01                         3
+2061. Wildcard Processor                           1
+2062. WildcardEncode //Inspire                     1
+2063. Work in Texture                              2
+2064. Workflow notes                               1
+2065. Workflow settings                            1
+2066. Workflow switches                            3
+2067. WorklistToItemList //Inspire                 1
+2068. XY Input: CFG Scale                          4
+2069. XY Input: Checkpoint                         3
+2070. XY Input: Clip Skip                          3
+2071. XY Input: LoRA                               3
+2072. XY Input: LoRA Stacks                        3
+2073. XY Input: Manual XY Entry                    1
+2074. XY Input: Sampler/Scheduler                  6
+2075. XY Plot                                      6
+2076. XlabsSampler                                 3
+2077. ZenkaiPromptV2                               3
+2078. ZenkaiPromptV4                               3
+2079. Zoe-DepthMapPreprocessor                    11
+2080. ZuellniPickScoreLoader                       1
+2081. ZuellniPickScoreProcessor                    1
+2082. ZuellniPickScoreSelector                     1
+2083. [Comfy3D] Load TripoSR Model                 1
+2084. [Comfy3D] Preview 3DMesh                     1
+2085. [Comfy3D] Save 3D Mesh                       1
+2086. [Comfy3D] Switch Mesh Axis                   1
+2087. [Comfy3D] TripoSR                            1
+2088. [PREVIEW] Controlnet Depth                   1
+2089. [PREVIEW] Initial Generation                 1
+2090. chaosaiart_TextCLIPEncode                    1
+2091. comfyui classic sd1.5 SDXL Flux SD3.5...     1
+2092. dreamshaper_252InitialRelease.ckpt           1
+2093. dreamshaper_252Pruned.ckpt                   1
+2094. dreamshaper_252Pruned.safetensors            1
+2095. dreamshaper_252SafetensorsFixed.ckpt         2
+2096. dreamshaper_252SafetensorsFixed.safetensors     2
+2097. dreamshaper_33.ckpt                          2
+2098. dreamshaper_33.safetensors                   2
+2099. dreamshaper_331-inpainting.safetensors       1
+2100. dreamshaper_331BakedVae.ckpt                 2
+2101. dreamshaper_331BakedVae.safetensors          2
+2102. dreamshaper_332BakedVaeClipFix.ckpt          2
+2103. dreamshaper_332BakedVaeClipFix.safetensors     2
+2104. dreamshaper_4-inpainting.safetensors         1
+2105. dreamshaper_4BakedVae.safetensors            1
+2106. dreamshaper_4BakedVaeFp16.ckpt               1
+2107. dreamshaper_4BakedVaeFp16.safetensors        1
+2108. dreamshaper_4NoVae.ckpt                      1
+2109. dreamshaper_4NoVae.safetensors               1
+2110. dreamshaper_4NoVaeFp16.ckpt                  1
+2111. dreamshaper_4NoVaeFp16.safetensors           1
+2112. dreamshaper_5-inpainting.safetensors         1
+2113. dreamshaper_5BakedVae.ckpt                   2
+2114. dreamshaper_5BakedVae.safetensors            2
+2115. dreamshaper_5BakedVaeDiffusers_trainingData.zip     1
+2116. dreamshaper_5PrunedNoVaeTrain.ckpt           1
+2117. dreamshaper_5PrunedNoVaeTrain.safetensors     1
+2118. dreamshaper_62BakedVae.safetensors           2
+2119. dreamshaper_631BakedVae.safetensors          2
+2120. dreamshaper_631Diffusers_trainingData.zip     1
+2121. dreamshaper_631Inpainting.safetensors        1
+2122. dreamshaper_6BakedVae.safetensors            2
+2123. dreamshaper_6Diffusers_trainingData.zip      1
+2124. dreamshaper_6Inpainting.safetensors          1
+2125. dreamshaper_6NoVae.safetensors               2
+2126. dreamshaper_7-inpainting.safetensors         1
+2127. dreamshaper_7.safetensors                    1
+2128. dreamshaper_7Diffusers_trainingData.zip      1
+2129. dreamshaper_8.safetensors                    1
+2130. dreamshaper_8Diffusers.zip                   1
+2131. dreamshaper_8Inpainting.safetensors          1
+2132. dreamshaper_8LCM.safetensors                 1
+2133. easy anythingIndexSwitch                     4
+2134. easy bookmark                                1
+2135. easy boolean                                 7
+2136. easy ckptNames                               6
+2137. easy cleanGpuUsed                           15
+2138. easy clearCacheAll                           8
+2139. easy compare                                 2
+2140. easy controlnetNames                         1
+2141. easy controlnetStack                         3
+2142. easy controlnetStackApply                    3
+2143. easy float                                  13
+2144. easy fullLoader                              4
+2145. easy fullkSampler                            8
+2146. easy getNode                               158
+2147. easy globalSeed                              5
+2148. easy hiresFix                                3
+2149. easy ifElse                                 31
+2150. easy imageBatchToImageList                   1
+2151. easy imageConcat                             2
+2152. easy imageInterrogator                       1
+2153. easy imageScaleDownToSize                    3
+2154. easy imageSize                               8
+2155. easy imageSizeByLongerSide                   4
+2156. easy imageSwitch                             2
+2157. easy int                                    31
+2158. easy ipadapterApplyADV                       2
+2159. easy loraStack                               2
+2160. easy negative                                1
+2161. easy pipeEdit                                3
+2162. easy pipeOut                                10
+2163. easy positive                               12
+2164. easy prompt                                  4
+2165. easy promptConcat                            8
+2166. easy promptReplace                           5
+2167. easy seed                                    8
+2168. easy setNode                               103
+2169. easy showAnything                           35
+2170. easy string                                  2
+2171. easy stylesSelector                          1
+2172. easy textIndexSwitch                         1
+2173. face detailer                                1
+2174. faceid换脸                                     1
+2175. flux UNO                                     1
+2176. flux 生图                                      1
+2177. iToolsLineLoader                             1
+2178. img2img Upscale                              1
+2179. img2path                                     1
+2180. infiniteyou gguf mode                        1
+2181. infiniteyou nf4                              1
+2182. infiniteyou svdq mode                        1
+2183. lamaPreprocessor                             1
+2184. mistoline转线稿，自动剪裁匹配尺寸后上色                     1
+2185. msdiffusion+story+ 2rolesin1img ,support txt2img and img2img cn     1
+2186. mxSlider                                   174
+2187. mxSlider2D                                   7
+2188. mxStop                                       4
+2189. polymath_chat                                1
+2190. save upscaled detailed watermarked           1
+2191. show_text_party                              1
+2192. smZ CLIPTextEncode                           2
+2193. story and maker txt2img                      1
+2194. story_img2img_v1 or v2                       1
+2195. story_text2img                               1
+2196. storyandmaker img2img                        1
+2197. storymaker onlyimg2img                       1
+2198. string_combine                               1
+2199. test_multigpuinit                            1
+2200. translators                                  1
+2201. ttN concat                                   3
+2202. ttN multiModelMerge                          1
+2203. ttN pipeKSampler                             2
+2204. ttN pipeLoader                               1
+2205. ttN seed                                     3
+2206. ttN text                                    10
+2207. ttN text3BOX_3WAYconcat                      1
+2208. txt2img                                      1
+2209. txt2img Settings                             1
+2210. unCLIPCheckpointLoader                       3
+2211. unCLIPConditioning                          11
+2212. workflow/1st Pass                            1
+2213. workflow/1st Pass (RegSampler)               1
+2214. workflow/2nd Pass                            1
+2215. workflow/Base Sampler                        1
+2216. workflow/Bus                                 1
+2217. workflow/Bus 2                               1
+2218. workflow/CLIP Text Encode 1.5                3
+2219. workflow/CondMix                             1
+2220. workflow/Contrast Fix & Sharpen              3
+2221. workflow/Face detailer with SD1.5 model      1
+2222. workflow/Flux AIO Sampler                    1
+2223. workflow/Image Load and Resize to Width      1
+2224. workflow/ImgParams                           1
+2225. workflow/KSampler + VAE Decode               2
+2226. workflow/Ksampler Config                     4
+2227. workflow/Ksampler Setting                   10
+2228. workflow/Load image                          1
+2229. workflow/Loaders                             1
+2230. workflow/Loras                               1
+2231. workflow/Mine::Loaders (SD1.X/XL)            1
+2232. workflow/Mine::Loaders (SD1.X/XL/Simple LoRA)     1
+2233. workflow/OpenPose Preprocessor               1
+2234. workflow/Prompt                              1
+2235. workflow/Prompt Preset Selector              2
+2236. workflow/Res Limits                          2
+2237. workflow/SD Upscale                          1
+2238. workflow/Scribble                            1
+2239. workflow/Size                                2
+2240. workflow/Size Selector                       1
+2241. workflow/Subject                             3
+2242. workflow/Switch Detector                     1
+2243. workflow/Tile Settings                       1
+2244. workflow/Upscale                             1
+2245. workflow/Upscale (Image/Cond/-CN)            1
+2246. workflow/Upscale Output                      1
+2247. workflow/Upscale by 2x                       2
+2248. workflow/VAE E                               1
+2249. workflow/VAE Stack                           2
+2250. workflow/Workflow Mode Control               1
+2251. workflow/XY                                  1
+2252. workflow/clips                               1
+2253. workflow/invert Strength for cn models       2
+2254. workflow>1234                                1
+2255. workflow>23                                  1
+2256. workflow>Adaptive Sample Group Node          1
+2257. workflow>Aspect Ratio                        1
+2258. workflow>Aspect Ratio 2 Pixels Encode Group Node     1
+2259. workflow>Base sampler                        1
+2260. workflow>Checkpoint Loader with Name (Image Saver) & Automatic CFG - Warp Drive     1
+2261. workflow>Combined mask                       2
+2262. workflow>ControlNet Models                   1
+2263. workflow>Decode Node                         1
+2264. workflow>Encode By Megapixel                 1
+2265. workflow>End quality prompt (Optional)       1
+2266. workflow>Extra nodes upscaler                1
+2267. workflow>FLUX.1 Kontext Image Edit           2
+2268. workflow>File name                           2
+2269. workflow>Flux Schnell Sampler                1
+2270. workflow>IP2PSampler                         1
+2271. workflow>IPAdapter Models                    1
+2272. workflow>Image gen sampler                   1
+2273. workflow>Input                               1
+2274. workflow>LoRA - 1                            3
+2275. workflow>LoRA - 2                            3
+2276. workflow>LoRA - 3                            3
+2277. workflow>LoRA - 4                            1
+2278. workflow>MaskBlur                            3
+2279. workflow>MaskFromColorIntensity              1
+2280. workflow>MaskFromDepth                       1
+2281. workflow>Model Node                          1
+2282. workflow>Other Nodes                         1
+2283. workflow>Other Nodes 2                       2
+2284. workflow>Param                               1
+2285. workflow>STEPS / CFG                         1
+2286. workflow>Sampler                             1
+2287. workflow>Settings                            4
+2288. workflow>Single Text Encode Group Node       1
+2289. workflow>Start quality prompt (Optional)     1
+2290. workflow>Steps & Cfg & Empty Latent Image     1
+2291. workflow>UltralyticsDetectorProvider & SAMLoader (Impact) 1     1
+2292. workflow>UltralyticsDetectorProvider & SAMLoader (Impact) 2     1
+2293. workflow>UltralyticsDetectorProvider & SAMLoader (Impact) 3     3
+2294. workflow>Upscale                             1
+2295. workflow>Upscale Image (using Model)         2
+2296. workflow>VAE Decode (Tiled)                  1
+2297. workflow>image                               1
+2298. workflow>otherimg                            1
+2299. workflow>positive prompt guidance            5
+2300. workflow>sampler and seed upscaler           1
+2301. workflow>sampler img                         2
+2302. ​                                            1
+2303. Ⅰ                                            2
+2304. Ⅱ                                            2
+2305. Ⅲ                                            2
+2306. Ⅳ                                            2
+2307. Ⅴ                                            2
+2308. ♊ 2.0 FLASH 💫                                1
+2309. 一次放大                                         1
+2310. 上传图片                                         1
+2311. 两倍放大                                         1
+2312. 二次放大                                         1
+2313. 使用vPred模型时启用                                 1
+2314. 反推dev提示词                                     1
+2315. 手部修复                                         1
+2316. 文生图                                          1
+2317. 方案0                                          1
+2318. 方案1                                          1
+2319. 方案2                                          1
+2320. 方案3                                          1
+2321. 方案4                                          1
+2322. 方案5                                          1
+2323. 方案6                                          1
+2324. 方案展示                                         1
+2325. 本地解码                                         1
+2326. 构图重绘                                         1
+2327. 线稿直接上色                                       1
+2328. 线稿自动上色                                       1
+2329. 背景提示词生成                                      1
+2330. 设置生图高度                                       1
+2331. 选择长宽比方案                                      1
+2332. 重绘区域排版                                       1
+2333. 面部细化                                         1
+2334. 预设方案                                         1
+2335. 🎨 Civitai: https://civitai.com/user/Stable_Yogi     1
+2336. 🎮 Discord: https://discord.gg/shd97NSeTw     1
+2337. 👆You can run this workflow without setting up a ComfyUI environment, and it's free.     1
+2338. 📊AC_LCM采样器                                   1
+2339. 📟AC_Lora加载器                                  1
+2340. 📺AC_Checkpoint加载器                            1
+2341. 🔗 Patreon: https://www.patreon.com/Stable_yogi     1
+2342. 🔥 Workflow by Stable Yogi 🔥                  1
+2343. 🔹Photoshop ComfyUI Plugin                    9
+2344. 🔹SendTo Photoshop Plugin                     9
+2345. 😀 LLMs_Chat                                  1
+
+SAMPLE PROMPT EXAMPLES:
+----------------------------------------
+
+Selector:
+  text: 1:1___1024x1024
+    (from: mode4_extracted.json)
+  text: 1:1___1024x1024
+    (from: mode4_extracted.json)
+  text: 1:1___1024x1024
+    (from: mode5_extracted.json)
+
+VAELoader:
+  text: flatpiecexlVAE_baseonA1579.safetensors
+    (from: mode4_extracted.json)
+  text: ae.safetensors
+    (from: mode4_extracted.json)
+  text: auraflow.vae.diffusers.safetensors
+    (from: mode4_extracted.json)
+
+KSamplerSelect:
+  text: res_multistep
+    (from: mode4_extracted.json)
+  text: dpmpp_3m_sde
+    (from: PixArt_Poetic_Prowess 3_extracted.json)
+  text: dpmpp_2m_sde_gpu
+    (from: basic_turbo_w_refiner_extracted.json)
+
+UpscaleModelLoader:
+  text: 4x_foolhardy_Remacri.pth
+    (from: mode4_extracted.json)
+  text: 4x_NMKD-Siax_200k.pth
+    (from: Supir_IncreDetail_v4_1_extracted.json)
+  text: 4x-UltraSharp.pth
+    (from: LCM_Workflow_V1.2_extracted.json)
+
+SaveImage:
+  text: %date:MM%/%date:dd-mm-ss%_%RandomNoise.noise_seed%_%CheckpointLoaderSimple.ckpt_name%_type_%Recourse...
+    (from: mode4_extracted.json)
+  text: %date:yyMMdd%/%date:yyMMdd-hhmmss%_T2I-BAS_SDCA_WSN_%ksampler_b.seed%
+    (from: txt2img-basic-sdca-wsn_extracted.json)
+  text: _SD3/sd3-HD
+    (from: Thoda-BasicSUPIR-v3_extracted.json)
+
+RecourseStrings:
+  text: уныло的 hyper-modern Город-пустошь, где holograms 与 wetware 交相错位，超-tech 与 slums 间生。 протестанты 与 beg...
+    (from: mode4_extracted.json)
+  text: уныло的 hyper-modern Город-пустошь, где holograms 与 wetware 交相错位，超-tech 与 slums 间生。 протестанты 与 beg...
+    (from: mode5_extracted.json)
+  text: уныло的 hyper-modern Город-пустошь, где holograms 与 wetware 交相错位，超-tech 与 slums 间生。 протестанты 与 beg...
+    (from: mode4api_extracted.json)
+
+DualCLIPLoader:
+  text: t5-xxl_fp16.cui.safetensors
+    (from: mode4_extracted.json)
+  text_2: clip_l.flux.safetensors
+    (from: mode4_extracted.json)
+  text: Long-ViT-L-14-BEST-GmP-smooth-ft.safetensors
+    (from: mode4_extracted.json)
+
+TripleCLIPLoader:
+  text: clip_l.sd35.safetensors
+    (from: mode4_extracted.json)
+  text_2: clip_g.sd35.safetensors
+    (from: mode4_extracted.json)
+  text: clip_l.safetensors
+    (from: Thoda-BasicSUPIR-v3_extracted.json)
+
+CheckpointLoaderSimple:
+  text: sd3/sd35FusionV1Fp8AIO.26bs.safetensors
+    (from: mode4_extracted.json)
+  text: xl_realvisxlV50_v50vae.safetensors
+    (from: Supir_IncreDetail_v4_1_extracted.json)
+  text: 1.5\realisticVisionV51_v51VAE.safetensors
+    (from: Fictiverse_Parallax_extracted.json)
+
+UNETLoader:
+  text: sd3/sd35FusionV1Fp8AIO.26bs.safetensors
+    (from: mode4_extracted.json)
+  text: hyvideo\skyreels_hunyuan_i2v_fp8_e4m3fn.safetensors
+    (from: Skyreels-i2v-QwenVL-i2p-lines-v50_extracted.json)
+  text: furry-flux-pilot-alpha_model.safetensors
+    (from: comfy-workflow_extracted.json)
+
+LoraLoader:
+  text: xl/xl_more_art-full_v1.safetensors
+    (from: mode4_extracted.json)
+  text: xl/xl_more_art-full_v1.safetensors
+    (from: mode4_extracted.json)
+  text: Upgrade\pytorch_lora_weights.safetensors
+    (from: Fictiverse_Parallax_extracted.json)
+
+BasicScheduler:
+  text: sgm_uniform
+    (from: mode4_extracted.json)
+  text: sgm_uniform
+    (from: mode4_extracted.json)
+  text: sgm_uniform
+    (from: smdb NoobAI workflow v1.5_extracted.json)
+
+PrimitiveNode:
+  text: sd3/sd35FusionV1Fp8AIO.26bs.safetensors
+    (from: mode4_extracted.json)
+  text: photos of a (chicken dressed like human:1.2), (sipping tea in an English pub:1.2), in the background...
+    (from: d4N87_Hunyuan_DiT_v0.1_extracted.json)
+  text: Fallout-style post-apocalyptic,1940s clothes, damaged and scarred by time, kodachrome colors
+    (from: d4N87_Hunyuan_DiT_v0.1_extracted.json)
+
+MathExpression|pysssss:
+  text: (a-b) + (b/(a+ .00001-b)) 
+    (from: mode4_extracted.json)
+  text: (a+b)%2**50
+    (from: SDXL_Advanced_v10_extracted.json)
+  text: (a+b)%2**50
+    (from: SDXL_Advanced_v10_extracted.json)
+
+SAM2ModelLoader (segment anything2):
+  text: sam2_hiera_tiny
+    (from: mode4_extracted.json)
+  text: sam2_hiera_tiny
+    (from: mode5_extracted.json)
+  text: sam2_hiera_large.pt
+    (from: DiffDiff_color_depth_extracted.json)
+
+GroundingDinoModelLoader (segment anything2):
+  text: GroundingDINO_SwinB (938MB)
+    (from: mode4_extracted.json)
+  text: GroundingDINO_SwinB (938MB)
+    (from: mode5_extracted.json)
+  text: GroundingDINO_SwinB (938MB)
+    (from: DiffDiff_color_depth_extracted.json)
+
+OllamaGenerateAdvance:
+  text: Write a vivid depiction of an illustrative artwork with some  of the following elements:  hopelessne...
+    (from: mode4_extracted.json)
+  text_2: http://127.0.0.1:11434
+    (from: mode4_extracted.json)
+  text: Write a vivid depiction of an illustrative artwork with some  of the following elements:  hopelessne...
+    (from: mode5_extracted.json)
+
+ShowText|pysssss:
+  text:  In a bleak near-future cityscape, towering holographic adverts loom over crumbling slums. Cyberneti...
+    (from: mode4_extracted.json)
+  text_2:  In a bleak near-future cityscape, towering holographic adverts loom over crumbling slums. Cyberneti...
+    (from: mode4_extracted.json)
+  text: FPS-24,, (The video depicts a futuristic, steampunk-inspired scene featuring a woman with long red h...
+    (from: Skyreels-i2v-QwenVL-i2p-lines-v50_extracted.json)
+
+LatentUpscaleBy:
+  text: nearest-exact
+    (from: mode4_extracted.json)
+  text: nearest-exact
+    (from: VpredV11_extracted.json)
+  text: nearest-exact
+    (from: vPred Ultra_extracted.json)
+
+CLIPLoader:
+  text: Long-ViT-L-14-BEST-GmP-smooth-ft.safetensors
+    (from: mode4_extracted.json)
+  text: oldt5_xxl_fp8_e4m3fn_scaled.safetensors
+    (from: Cosmos图生视频及首尾帧（支持nsfw）工作流 _extracted.json)
+  text: oldt5_xxl_fp8_e4m3fn_scaled.safetensors
+    (from: Cosmos图生视频及首尾帧（支持nsfw）工作流 _extracted.json)

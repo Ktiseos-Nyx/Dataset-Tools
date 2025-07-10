@@ -1,0 +1,89 @@
+[
+    {
+        "id": 1,
+        "name": "LoadFlorence2Model"
+    },
+    {
+        "id": 2,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "20240613205138-SD3_stableDiffusion3SD3_sd3MediumInclT5XXL.safetensors-209668683433461-euler_sgm_uniform-5_hires.fix_00001_.png"
+        }
+    },
+    {
+        "id": 3,
+        "name": "Florence2",
+        "prompts": {
+            "text": "referring expression segmentation"
+        }
+    },
+    {
+        "id": 5,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 6,
+        "name": "Florence2Postprocess"
+    },
+    {
+        "id": 7,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 11,
+        "name": "ImageCrop"
+    },
+    {
+        "id": 12,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 13,
+        "name": "GrowMaskWithBlur"
+    },
+    {
+        "id": 14,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 15,
+        "name": "MaskDetailerPipe",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 20,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 21,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "SDXL\\pixelAlchemy_pixelAlchemyHyperV22.safetensors"
+        }
+    },
+    {
+        "id": 22,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a beautiful young woman, beautiful face, detailed skin texture,"
+        }
+    },
+    {
+        "id": 23,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 24,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 25,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 28,
+        "name": "Image Comparer (rgthree)"
+    }
+]

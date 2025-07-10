@@ -1,0 +1,512 @@
+{
+  "extra": {
+    "ds": {
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ]
+    }
+  },
+  "links": [
+    [
+      1,
+      1,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      3,
+      0,
+      4,
+      4,
+      "INT"
+    ],
+    [
+      3,
+      3,
+      1,
+      4,
+      5,
+      "INT"
+    ],
+    [
+      4,
+      2,
+      0,
+      4,
+      6,
+      "STRING"
+    ],
+    [
+      5,
+      1,
+      0,
+      4,
+      1,
+      "IMAGE"
+    ],
+    [
+      6,
+      5,
+      0,
+      4,
+      0,
+      "OMNIGEN2MODEL"
+    ],
+    [
+      7,
+      4,
+      0,
+      7,
+      1,
+      "IMAGE"
+    ],
+    [
+      8,
+      1,
+      0,
+      7,
+      0,
+      "IMAGE"
+    ],
+    [
+      9,
+      4,
+      0,
+      8,
+      0,
+      "IMAGE"
+    ],
+    [
+      10,
+      7,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "nodes": [
+    {
+      "id": 3,
+      "pos": {
+        "0": 198,
+        "1": 241
+      },
+      "mode": 0,
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "type": "DF_Get_image_size",
+      "flags": {
+        "collapsed": true
+      },
+      "order": 3,
+      "inputs": [
+        {
+          "link": 1,
+          "name": "image",
+          "type": "IMAGE",
+          "label": "image"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "WIDTH",
+          "type": "INT",
+          "label": "WIDTH",
+          "links": [
+            2
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "HEIGHT",
+          "type": "INT",
+          "label": "HEIGHT",
+          "links": [
+            3
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DF_Get_image_size"
+      }
+    },
+    {
+      "id": 5,
+      "pos": {
+        "0": 473,
+        "1": 141
+      },
+      "mode": 0,
+      "size": {
+        "0": 315,
+        "1": 154
+      },
+      "type": "OmniGen2ModelLoader",
+      "flags": {
+        "collapsed": true
+      },
+      "order": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "OMNIGEN2MODEL",
+          "type": "OMNIGEN2MODEL",
+          "label": "OMNIGEN2MODEL",
+          "links": [
+            6
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OmniGen2ModelLoader"
+      },
+      "widgets_values": [
+        "OmniGen2/OmniGen2",
+        "bf16",
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "id": 4,
+      "pos": {
+        "0": 425,
+        "1": 96
+      },
+      "mode": 0,
+      "size": {
+        "0": 395.9527587890625,
+        "1": 549.4329833984375
+      },
+      "type": "OmniGen2Sampler",
+      "flags": {},
+      "order": 4,
+      "inputs": [
+        {
+          "link": 6,
+          "name": "omnigen2model",
+          "type": "OMNIGEN2MODEL",
+          "label": "omnigen2model"
+        },
+        {
+          "link": 5,
+          "name": "image1",
+          "type": "IMAGE",
+          "label": "image1"
+        },
+        {
+          "link": null,
+          "name": "image2",
+          "type": "IMAGE",
+          "label": "image2"
+        },
+        {
+          "link": null,
+          "name": "image3",
+          "type": "IMAGE",
+          "label": "image3"
+        },
+        {
+          "link": 2,
+          "name": "width",
+          "type": "INT",
+          "label": "width",
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "link": 3,
+          "name": "height",
+          "type": "INT",
+          "label": "height",
+          "widget": {
+            "name": "height"
+          }
+        },
+        {
+          "link": 4,
+          "name": "prompt",
+          "type": "STRING",
+          "label": "prompt",
+          "widget": {
+            "name": "prompt"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "label": "IMAGE",
+          "links": [
+            7,
+            9
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OmniGen2Sampler"
+      },
+      "widgets_values": [
+        "",
+        1024,
+        1024,
+        "euler",
+        50,
+        5,
+        2,
+        0,
+        1,
+        1,
+        276,
+        "randomize",
+        "(((deformed))), blurry, over saturation, bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), fused fingers, messy drawing, broken legs censor, censored, censor_bar",
+        1024,
+        1048576
+      ]
+    },
+    {
+      "id": 2,
+      "pos": {
+        "0": 93,
+        "1": 480
+      },
+      "mode": 0,
+      "size": {
+        "0": 307.2418212890625,
+        "1": 169.39002990722656
+      },
+      "type": "TensorArt_PromptText",
+      "flags": {},
+      "order": 1,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "label": "STRING",
+          "links": [
+            4
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TensorArt_PromptText"
+      },
+      "widgets_values": [
+        "The model wears sunglasses slid halfway down the nose, supporting them gently with one hand while gazing at the camera over the top of the lenses."
+      ]
+    },
+    {
+      "id": 8,
+      "pos": {
+        "0": 846,
+        "1": 100
+      },
+      "mode": 0,
+      "size": {
+        "0": 253.4683837890625,
+        "1": 318.8040771484375
+      },
+      "type": "TensorArt_SaveImage",
+      "flags": {},
+      "order": 6,
+      "inputs": [
+        {
+          "link": 9,
+          "name": "images",
+          "type": "IMAGE",
+          "label": "images"
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "TensorArt_SaveImage"
+      },
+      "widgets_values": [
+        "SDFX"
+      ]
+    },
+    {
+      "id": 7,
+      "pos": {
+        "0": 847,
+        "1": 467
+      },
+      "mode": 0,
+      "size": [
+        249.66015625,
+        170.7265625
+      ],
+      "type": "ImageConcatMulti",
+      "flags": {},
+      "order": 5,
+      "inputs": [
+        {
+          "link": 8,
+          "name": "image_1",
+          "type": "IMAGE",
+          "label": "image_1",
+          "localized_name": "image_1"
+        },
+        {
+          "link": 7,
+          "name": "image_2",
+          "type": "IMAGE",
+          "label": "image_2",
+          "localized_name": "image_2"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "label": "images",
+          "links": [
+            10
+          ],
+          "slot_index": 0,
+          "localized_name": "images"
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        2,
+        "right",
+        true,
+        null
+      ]
+    },
+    {
+      "id": 1,
+      "pos": {
+        "0": 97,
+        "1": 92
+      },
+      "mode": 0,
+      "size": [
+        296.36328125,
+        341.96875
+      ],
+      "type": "TensorArt_LoadImage",
+      "flags": {},
+      "order": 2,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "label": "IMAGE",
+          "links": [
+            1,
+            5,
+            8
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "label": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TensorArt_LoadImage"
+      },
+      "widgets_values": [
+        "https://image.tensorartassets.com/workflow_media_daily/user_upload/877864854277360447/ae705ef4-b923-41d3-9b28-598018983114.jpg",
+        "image"
+      ]
+    },
+    {
+      "id": 9,
+      "pos": {
+        "0": 1118,
+        "1": 101
+      },
+      "mode": 0,
+      "size": [
+        374.54296875,
+        529.46875
+      ],
+      "type": "TensorArt_SaveImage",
+      "flags": {},
+      "order": 7,
+      "inputs": [
+        {
+          "link": 10,
+          "name": "images",
+          "type": "IMAGE",
+          "label": "images"
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "TensorArt_SaveImage"
+      },
+      "widgets_values": [
+        "SDFX"
+      ]
+    }
+  ],
+  "config": {},
+  "groups": [],
+  "version": 0.4,
+  "_tensorNodes": [
+    {
+      "nodeId": "1",
+      "nodeName": "TensorArt_LoadImage",
+      "fieldName": "image",
+      "fieldValue": "https://image.tensorartassets.com/workflow_media_daily/user_upload/877864854277360447/ae705ef4-b923-41d3-9b28-598018983114.jpg",
+      "inputString": "[{\"name\":\"image\",\"type\":\"combo\",\"value\":\"https://image.tensorartassets.com/workflow_media_daily/user_upload/877864854277360447/ae705ef4-b923-41d3-9b28-598018983114.jpg\",\"options\":{\"values\":[\"car.jpeg\",\"cloth_1.jpg\",\"example.png\",\"ggirl.png\",\"girl.png\",\"girl2.png\",\"inpaint.png\",\"inpaint_mask.png\",\"model_1.png\",\"pose.png\",\"sd3.png\",\"toon_01.png\",\"toon_02.png\",\"https://image.tensorartassets.com/workflow_media_daily/user_upload/877864854277360447/ae705ef4-b923-41d3-9b28-598018983114.jpg\"]}},{\"name\":\"upload\",\"type\":\"button\",\"value\":\"image\",\"options\":{}}]",
+      "fieldDisplayName": "TA Node - LoadImage"
+    },
+    {
+      "nodeId": "2",
+      "nodeName": "TensorArt_PromptText",
+      "fieldName": "Text",
+      "fieldValue": "The model wears sunglasses slid halfway down the nose, supporting them gently with one hand while gazing at the camera over the top of the lenses.",
+      "inputString": "[{\"name\":\"Text\",\"type\":\"customtext\",\"value\":\"The model wears sunglasses slid halfway down the nose, supporting them gently with one hand while gazing at the camera over the top of the lenses.\",\"options\":{\"hideOnZoom\":true,\"selectOn\":[\"focus\",\"click\"]}}]",
+      "fieldDisplayName": "TA Node - PromptText"
+    },
+    {
+      "nodeId": "8",
+      "nodeName": "TensorArt_SaveImage",
+      "fieldName": "filename_prefix",
+      "fieldValue": "SDFX",
+      "inputString": "[{\"name\":\"filename_prefix\",\"type\":\"text\",\"value\":\"SDFX\",\"options\":{}}]",
+      "fieldDisplayName": "TA Node - SaveImage"
+    },
+    {
+      "nodeId": "9",
+      "nodeName": "TensorArt_SaveImage",
+      "fieldName": "filename_prefix",
+      "fieldValue": "SDFX",
+      "inputString": "[{\"name\":\"filename_prefix\",\"type\":\"text\",\"value\":\"SDFX\",\"options\":{}}]",
+      "fieldDisplayName": "TA Node - SaveImage"
+    }
+  ],
+  "last_link_id": 10,
+  "last_node_id": 9
+}

@@ -1,0 +1,207 @@
+[
+    {
+        "id": 2,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "model.vae.pt"
+        }
+    },
+    {
+        "id": 3,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "anime Assassinkahb style man with red hair, demonic looking skeleton"
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "drawing, sketch, fake"
+        }
+    },
+    {
+        "id": 7,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 10,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 50,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 70,
+        "name": "ControlNetLoaderAdvanced",
+        "prompts": {
+            "text": "XL\\OpenPoseXL2.safetensors"
+        }
+    },
+    {
+        "id": 71,
+        "name": "LineArtPreprocessor"
+    },
+    {
+        "id": 72,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 92,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 93,
+        "name": "ADE_AnimateDiffLoaderWithContext",
+        "prompts": {
+            "text": "mm_sdxl_v10_beta.ckpt",
+            "text_2": "linear (AnimateDiff-SDXL)"
+        }
+    },
+    {
+        "id": 94,
+        "name": "ADE_AnimateDiffUniformContextOptions"
+    },
+    {
+        "id": 107,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "RealVisXL_V3.0.safetensors"
+        }
+    },
+    {
+        "id": 108,
+        "name": "LoadVideo",
+        "prompts": {
+            "text": "video/man_with_red_hair_wearing_black_tracksuit_standing_and_talking_in_front_of_a_simple_background_c (4).mp4"
+        }
+    },
+    {
+        "id": 111,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 112,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 113,
+        "name": "IPAdapterApply"
+    },
+    {
+        "id": 114,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "SDXL\\CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors"
+        }
+    },
+    {
+        "id": 115,
+        "name": "IPAdapterModelLoader",
+        "prompts": {
+            "text": "ip-adapter_sdxl_vit-h.safetensors"
+        }
+    },
+    {
+        "id": 116,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "cascade_00390_.png"
+        }
+    },
+    {
+        "id": 117,
+        "name": "Image scale to side",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 119,
+        "name": "Reroute"
+    },
+    {
+        "id": 120,
+        "name": "Reroute"
+    },
+    {
+        "id": 121,
+        "name": "Note",
+        "prompts": {
+            "text": "Odinson-SDXL-v11\n+ vid2vid \n+ OpenPoseXL2\n+ animateDiff XL \n+ Lora loader"
+        }
+    },
+    {
+        "id": 122,
+        "name": "Image scale to side",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 125,
+        "name": "OpenposePreprocessor"
+    },
+    {
+        "id": 126,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "ZenkaiXL-v0.2.safetensors"
+        }
+    },
+    {
+        "id": 130,
+        "name": "Note",
+        "prompts": {
+            "text": "Photo of (best quality:1.2), driving on a highway (AbstractChaos style space station with a lot of smoke coming out:1)"
+        }
+    },
+    {
+        "id": 131,
+        "name": "Note",
+        "prompts": {
+            "text": "Photo of (best quality:1.2), driving inside an incredibly long hallway (artinart style a painting of a large room with many pictures on the walls:1)"
+        }
+    },
+    {
+        "id": 132,
+        "name": "Note",
+        "prompts": {
+            "text": "Photo of (best quality:1.2) (CosmicGate style a large godlike void hole in the middle of an ethereal golden building:1)"
+        }
+    },
+    {
+        "id": 133,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 134,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 135,
+        "name": "ControlNetLoaderAdvanced",
+        "prompts": {
+            "text": "controlnet_loras\\control-lora-sketch-rank128-metadata.safetensors"
+        }
+    },
+    {
+        "id": 136,
+        "name": "ImageDesaturate+"
+    },
+    {
+        "id": 138,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 139,
+        "name": "RIFE VFI"
+    }
+]

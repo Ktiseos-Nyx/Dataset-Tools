@@ -1,0 +1,168 @@
+{
+  "parser_name": "ComfyUI Advanced Node Discovery",
+  "priority": 200,
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: EXIF UserComment must exist and be valid JSON",
+      "source_type": "exif_user_comment",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: Must contain ComfyUI class_type signatures",
+      "source_type": "exif_user_comment",
+      "operator": "contains",
+      "value": "\"class_type\""
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "exif_user_comment",
+          "decode_as": "json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis", 
+        "target_key": "workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "multi_stage_conditioning", 
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
+      },
+      {
+        "comment": "Standard ComfyUI fields for compatibility",
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustom"
+        ],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "CLIPTextEncodeSDXL",
+          "T5TextEncode"
+        ]
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler", 
+          "KSamplerAdvanced",
+          "SamplerCustom"
+        ],
+        "positive_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "CLIPTextEncodeSDXL", 
+          "T5TextEncode"
+        ]
+      },
+      {
+        "target_key": "steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustom"
+        ],
+        "input_name": "steps"
+      },
+      {
+        "target_key": "cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced", 
+          "SamplerCustom"
+        ],
+        "input_name": "cfg"
+      },
+      {
+        "target_key": "seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustom"
+        ],
+        "input_name": "seed"
+      },
+      {
+        "target_key": "sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler", 
+          "KSamplerAdvanced",
+          "SamplerCustom"
+        ],
+        "input_name": "sampler_name"
+      },
+      {
+        "target_key": "scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustom"
+        ],
+        "input_name": "scheduler"
+      }
+    ]
+  },
+  "template_instructions": {
+    "output_format": "comprehensive",
+    "include_advanced_metadata": true,
+    "include_raw_data": false
+  }
+}

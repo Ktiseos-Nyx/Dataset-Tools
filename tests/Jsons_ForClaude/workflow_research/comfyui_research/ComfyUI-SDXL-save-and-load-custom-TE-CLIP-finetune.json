@@ -1,0 +1,189 @@
+{
+  "last_node_id": 7,
+  "last_link_id": 1,
+  "nodes": [
+    {
+      "id": 3,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        814,
+        415
+      ],
+      "size": [
+        436,
+        98
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            1
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "sd_xl_base_1.0.safetensors"
+      ]
+    },
+    {
+      "id": 1,
+      "type": "CLIPSave",
+      "pos": [
+        1313,
+        430
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPSave"
+      },
+      "widgets_values": [
+        "clip/TE-"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "Note",
+      "pos": [
+        759,
+        189
+      ],
+      "size": [
+        974.5205965909092,
+        181.18178488991475
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "1. Simply hit \"Queue Prompt\", and this will save the two CLIP text encoders wrapped in the \"sd_xl_base_1.0.safetensors\" file to ComfyUI/output/clip/.\n2. Move the .safetensors file to ComfyUI/models/clip.\n\n3. Use the TE that has \"g\" (CLIP ViT-G) in clip_name1 (SDXL text encoder 1 out of 2).\n4. You can replace the \"l\" (CLIP ViT-L) in clip_name2 (SDXL text encoder 2 out of 2) with my custom fine-tuned model.\n\nhttps://huggingface.co/zer0int/CLIP-GmP-ViT-L-14/blob/main/ViT-L-14-GmP-ft-TE-only-HF-format.safetensors"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 7,
+      "type": "Note",
+      "pos": [
+        780,
+        800
+      ],
+      "size": [
+        583.7181850464876,
+        86.70694247159088
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "You need *both* text encoders for SDXL, alas use this node in your workflow, and you're good to go! \nYou can find this node at: Right click -> Add Node -> Advanced -> Loaders -> DualCLIPLoader "
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 4,
+      "type": "DualCLIPLoader",
+      "pos": [
+        781,
+        647
+      ],
+      "size": [
+        587.4642223011363,
+        106
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DualCLIPLoader"
+      },
+      "widgets_values": [
+        "TE-_clip_g_00001_.safetensors",
+        "ViT-L-14-GmP-ft-TE-only-HF-format.safetensors",
+        "sdxl"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      3,
+      1,
+      1,
+      0,
+      "CLIP"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "Prepare SDXL for taking a custom Text Encoder CLIP fine-tune",
+      "bounding": [
+        727,
+        99,
+        1047,
+        451
+      ],
+      "color": "#3f789e",
+      "font_size": 24
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.3310000000000004,
+      "offset": [
+        67.7449094010964,
+        112.11955568297373
+      ]
+    }
+  },
+  "version": 0.4
+}

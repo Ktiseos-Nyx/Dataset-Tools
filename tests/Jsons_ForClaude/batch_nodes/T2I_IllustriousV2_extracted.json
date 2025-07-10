@@ -1,0 +1,366 @@
+[
+    {
+        "id": 1,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "FabricatedXL_v30.safetensors"
+        }
+    },
+    {
+        "id": 4,
+        "name": "Lora Loader Stack (rgthree)"
+    },
+    {
+        "id": 5,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\n\n1girl, solo,",
+            "text_2": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\n\n1girl, solo,"
+        }
+    },
+    {
+        "id": 8,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "bad quality,worst quality,worst detail,sketch,censor, bad hand, bad anatomy, deformed, artist name, watermark, signature, username, twitter username, patreon, ",
+            "text_2": "bad quality,worst quality,worst detail,sketch,censor, bad hand, bad anatomy, deformed, artist name, watermark, signature, username, twitter username, patreon, "
+        }
+    },
+    {
+        "id": 9,
+        "name": "Prompt"
+    },
+    {
+        "id": 10,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 11,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 11,
+        "name": "Sampler"
+    },
+    {
+        "id": 12,
+        "name": "Refiner Pass"
+    },
+    {
+        "id": 13,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 13,
+        "name": "Notes"
+    },
+    {
+        "id": 14,
+        "name": "Face Detailer"
+    },
+    {
+        "id": 15,
+        "name": "Body Detailer"
+    },
+    {
+        "id": 17,
+        "name": "Hand Detailer"
+    },
+    {
+        "id": 18,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 18,
+        "name": "Upscaler"
+    },
+    {
+        "id": 19,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 19,
+        "name": "NSFW Detailer"
+    },
+    {
+        "id": 21,
+        "name": "CLIPTextEncodeSDXLRefiner",
+        "prompts": {
+            "text": "masterpiece, best quality,"
+        }
+    },
+    {
+        "id": 21,
+        "name": "Eyes Detailer"
+    },
+    {
+        "id": 22,
+        "name": "CLIPTextEncodeSDXLRefiner",
+        "prompts": {
+            "text": "artist name, signature, watermark, blurry, low quality, bad anatomy, text, censored, deformed, bad hand, "
+        }
+    },
+    {
+        "id": 23,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd_xl_refiner_1.0.safetensors"
+        }
+    },
+    {
+        "id": 25,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 32,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 33,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 34,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 35,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 38,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8s.pt"
+        }
+    },
+    {
+        "id": 39,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 61,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 65,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 66,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 73,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\n\n1girl, solo, looking at viewer, "
+        }
+    },
+    {
+        "id": 74,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "bad quality,worst quality,worst detail,sketch,censor, bad hand, bad anatomy, deformed, artist name, watermark, signature, username, twitter username, patreon, "
+        }
+    },
+    {
+        "id": 75,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 76,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 77,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 78,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/person_yolov8m-seg.pt"
+        }
+    },
+    {
+        "id": 86,
+        "name": "Note"
+    },
+    {
+        "id": 87,
+        "name": "Note"
+    },
+    {
+        "id": 88,
+        "name": "Note"
+    },
+    {
+        "id": 89,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 90,
+        "name": "Seed Everywhere"
+    },
+    {
+        "id": 95,
+        "name": "TIPO",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\n\n1girl, solo, looking at viewer, ",
+            "text_2": "bad quality,worst quality,worst detail,sketch,censor, bad hand, bad anatomy, deformed, artist name, watermark, signature, username, twitter username, patreon, "
+        }
+    },
+    {
+        "id": 102,
+        "name": "CR Text Input Switch"
+    },
+    {
+        "id": 103,
+        "name": "Note",
+        "prompts": {
+            "text": "1 for enhanced prompt\n2 for only formatted"
+        }
+    },
+    {
+        "id": 104,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "1girl, \n\namazing quality, high resolution, ultra-detailed, solo, looking at viewer, cleavage, thighs, long hair, black pantyhose, hairband, huge breasts, shirt, skirt, white hairband, white shirt, parted lips, breasts, blue hair, long sleeves, shirt tucked in, thick thighs, black skirt, pencil skirt, collared shirt, pantyhose, blue eyes, blush,\n\nmasterpiece, best quality, very aesthetic, absurdres"
+        }
+    },
+    {
+        "id": 109,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_foolhardy_Remacri.pth"
+        }
+    },
+    {
+        "id": 110,
+        "name": "UltimateSDUpscale",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 112,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 113,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "diffusers_xl_canny_full.safetensors"
+        }
+    },
+    {
+        "id": 117,
+        "name": "Note",
+        "prompts": {
+            "text": "<|special|>, \n<|characters|>, <|copyrights|>, \n<|artist|>, \n\n<|general|>,\n\n<|extended|>.\n\n<|quality|>, <|meta|>, <|rating|>"
+        }
+    },
+    {
+        "id": 119,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 120,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "ceil(a * b) + 8\n\n"
+        }
+    },
+    {
+        "id": 121,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "ceil(a * b) + 8\n\n"
+        }
+    },
+    {
+        "id": 123,
+        "name": "easy float"
+    },
+    {
+        "id": 128,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 132,
+        "name": "Save Image w/Metadata",
+        "prompts": {
+            "text": "FabricatedXL_v30.safetensors",
+            "text_2": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 135,
+        "name": "Scheduler Selector"
+    },
+    {
+        "id": 136,
+        "name": "Sampler Selector",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 138,
+        "name": "Save Image w/Metadata",
+        "prompts": {
+            "text": "Upscaled%time",
+            "text_2": "FabricatedXL_v30.safetensors"
+        }
+    },
+    {
+        "id": 142,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/ntd11_anime_nsfw_segm_v2_all.pt"
+        }
+    },
+    {
+        "id": 143,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 146,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Eyeful_v2-Paired.pt"
+        }
+    },
+    {
+        "id": 147,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    }
+]

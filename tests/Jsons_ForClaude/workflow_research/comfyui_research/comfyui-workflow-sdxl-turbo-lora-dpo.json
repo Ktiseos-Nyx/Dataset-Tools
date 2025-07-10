@@ -1,0 +1,472 @@
+{
+  "last_node_id": 150,
+  "last_link_id": 194,
+  "nodes": [
+    {
+      "id": 109,
+      "type": "XY Plot",
+      "pos": [
+        1128,
+        867
+      ],
+      "size": {
+        "0": 307.7000732421875,
+        "1": 194
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "dependencies",
+          "type": "DEPENDENCIES",
+          "link": 174
+        },
+        {
+          "name": "X",
+          "type": "XY",
+          "link": 191
+        },
+        {
+          "name": "Y",
+          "type": "XY",
+          "link": 194,
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SCRIPT",
+          "type": "SCRIPT",
+          "links": [
+            184
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "XY Plot"
+      },
+      "widgets_values": [
+        0,
+        "False",
+        "Vertical",
+        "True",
+        "Plot"
+      ],
+      "color": "#223",
+      "bgcolor": "#335",
+      "shape": 1
+    },
+    {
+      "id": 112,
+      "type": "Efficient Loader",
+      "pos": [
+        499,
+        154
+      ],
+      "size": {
+        "0": 380,
+        "1": 540
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "lora_stack",
+          "type": "LORA_STACK",
+          "link": null
+        },
+        {
+          "name": "cnet_stack",
+          "type": "CONTROL_NET_STACK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            173
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": [
+            172
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": [
+            171
+          ],
+          "shape": 3,
+          "slot_index": 2
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            170
+          ],
+          "shape": 3,
+          "slot_index": 3
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            169
+          ],
+          "shape": 3,
+          "slot_index": 4
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": null,
+          "shape": 3,
+          "slot_index": 5
+        },
+        {
+          "name": "DEPENDENCIES",
+          "type": "DEPENDENCIES",
+          "links": [
+            174
+          ],
+          "shape": 3,
+          "slot_index": 6
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Efficient Loader"
+      },
+      "widgets_values": [
+        "sd_xl_turbo_1.0_fp16.safetensors",
+        "Baked VAE",
+        -1,
+        "None",
+        1,
+        1,
+        "professional portrait photo of a girl, photograph, highly detailed face, depth of field, moody light, golden hour, style by Dan Winters, Russell James, Steve McCurry, centered, extremely detailed, Nikon D850, award winning photography",
+        "3d render, cartoon, drawing, art, low light, blur, pixelated, low resolution, black and white",
+        "none",
+        "comfy",
+        512,
+        512,
+        1
+      ],
+      "color": "#232",
+      "bgcolor": "#353",
+      "shape": 1
+    },
+    {
+      "id": 119,
+      "type": "SaveImage",
+      "pos": [
+        1549,
+        117
+      ],
+      "size": {
+        "0": 859.837890625,
+        "1": 566.6695556640625
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 185
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "ComfyUI\\xyplot_00"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 148,
+      "type": "XY Input: CFG Scale",
+      "pos": [
+        1041,
+        1220
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "X or Y",
+          "type": "XY",
+          "links": [
+            194
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "XY Input: CFG Scale"
+      },
+      "widgets_values": [
+        4,
+        1,
+        1.5
+      ],
+      "color": "#223333",
+      "bgcolor": "#335555",
+      "shape": 1
+    },
+    {
+      "id": 139,
+      "type": "XY Input: Manual XY Entry",
+      "pos": [
+        433,
+        985
+      ],
+      "size": {
+        "0": 546.9246826171875,
+        "1": 195.56741333007812
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "X or Y",
+          "type": "XY",
+          "links": [
+            191
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "XY Input: Manual XY Entry"
+      },
+      "widgets_values": [
+        "LoRA",
+        "pytorch_lora_weights-sdxl-turbo-comfyui.safetensors,0;\npytorch_lora_weights-sdxl-turbo-comfyui.safetensors,0.5;\npytorch_lora_weights-sdxl-turbo-comfyui.safetensors,0.8;\npytorch_lora_weights-sdxl-turbo-comfyui.safetensors,1.0;\npytorch_lora_weights-sdxl-turbo-comfyui.safetensors,1.5;\npytorch_lora_weights-sdxl-turbo-comfyui.safetensors,2.0;\npytorch_lora_weights-sdxl-turbo-comfyui.safetensors,2.5;\n\n\n\n"
+      ],
+      "color": "#223333",
+      "bgcolor": "#335555",
+      "shape": 1
+    },
+    {
+      "id": 55,
+      "type": "KSampler (Efficient)",
+      "pos": [
+        1059,
+        157
+      ],
+      "size": {
+        "0": 355.16064453125,
+        "1": 586.9736938476562
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 173
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 172
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 171
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 170
+        },
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": 169,
+          "slot_index": 4
+        },
+        {
+          "name": "script",
+          "type": "SCRIPT",
+          "link": 184
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": [],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": [],
+          "shape": 3,
+          "slot_index": 2
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [],
+          "shape": 3,
+          "slot_index": 3
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [],
+          "shape": 3,
+          "slot_index": 4
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            185
+          ],
+          "shape": 3,
+          "slot_index": 5
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler (Efficient)"
+      },
+      "widgets_values": [
+        12341234123,
+        "randomize",
+        4,
+        7,
+        "euler_ancestral",
+        "normal",
+        1,
+        "taesd",
+        "true"
+      ],
+      "color": "#322",
+      "bgcolor": "#533",
+      "shape": 1
+    }
+  ],
+  "links": [
+    [
+      169,
+      112,
+      4,
+      55,
+      4,
+      "VAE"
+    ],
+    [
+      170,
+      112,
+      3,
+      55,
+      3,
+      "LATENT"
+    ],
+    [
+      171,
+      112,
+      2,
+      55,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      172,
+      112,
+      1,
+      55,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      173,
+      112,
+      0,
+      55,
+      0,
+      "MODEL"
+    ],
+    [
+      174,
+      112,
+      6,
+      109,
+      0,
+      "DEPENDENCIES"
+    ],
+    [
+      184,
+      109,
+      0,
+      55,
+      5,
+      "SCRIPT"
+    ],
+    [
+      185,
+      55,
+      5,
+      119,
+      0,
+      "IMAGE"
+    ],
+    [
+      191,
+      139,
+      0,
+      109,
+      1,
+      "XY"
+    ],
+    [
+      194,
+      148,
+      0,
+      109,
+      2,
+      "XY"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

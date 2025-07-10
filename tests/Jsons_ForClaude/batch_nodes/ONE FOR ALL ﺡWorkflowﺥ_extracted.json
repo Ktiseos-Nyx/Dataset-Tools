@@ -1,0 +1,200 @@
+[
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "ONE FOR ALL \u00abPlus Ultra\u00bb.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "\\\\ Made with ONE FOR ALL model by Chaos Experience @ https://civitai.com/user/ChaosExperience/ \\\\\n(Ultra-HD-details, discreet, emphasized-details, life-size-body, cutesie)\n(1girl, pink hair, big long hair, blue eyes, hair between eyes, blush, confident smile, perfect cuteness, bangs, medium breasts, smile, black sweater, turtleneck sweater, sleeveless, necklace, skirt, pleated skirt, black skirt, black belt)\n(upper body, solo, night city background, starry night)\nfantasy, glowing\n(cinematic light, depth of field)"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(polydactyly), (((physically-uncommon))), embedding:negativeXL_D.safetensors"
+        }
+    },
+    {
+        "id": 11,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu",
+            "text_2": "exponential"
+        }
+    },
+    {
+        "id": 12,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "ONE FOR ALL \u00abPlus Ultra\u00bb.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "\\\\ Made with ONE FOR ALL model by Chaos Experience @ https://civitai.com/user/ChaosExperience/ \\\\\n(Ultra-HD-details, discreet, emphasized-details, life-size-body, cutesie)\n(1girl, pink hair, big long hair, blue eyes, hair between eyes, blush, confident smile, perfect cuteness, bangs, medium breasts, smile, black sweater, turtleneck sweater, sleeveless, necklace, skirt, pleated skirt, black skirt, black belt)\n(upper body, solo, night city background, starry night)\nfantasy, glowing\n(cinematic light, depth of field)"
+        }
+    },
+    {
+        "id": 14,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "(polydactyly), (((physically-uncommon))), embedding:negativeXL_D.safetensors"
+        }
+    },
+    {
+        "id": 15,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "\\\\ Made with ONE FOR ALL model by Chaos Experience @ https://civitai.com/user/ChaosExperience/ \\\\\n(Ultra-HD-details, discreet, emphasized-details, life-size-body, cutesie)\n(1girl, pink hair, big long hair, blue eyes, hair between eyes, blush, confident smile, perfect cuteness, bangs, medium breasts, smile, black sweater, turtleneck sweater, sleeveless, necklace, skirt, pleated skirt, black skirt, black belt)\n(upper body, solo, night city background, starry night)\nfantasy, glowing\n(cinematic light, depth of field)"
+        }
+    },
+    {
+        "id": 16,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(polydactyly), (((physically-uncommon))), embedding:negativeXL_D.safetensors"
+        }
+    },
+    {
+        "id": 17,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 19,
+        "name": "SaveImage"
+    },
+    {
+        "id": 36,
+        "name": "Note",
+        "prompts": {
+            "text": "This is a checkpoint model loader. \n - This is set up automatically with the optimal settings for whatever SD model version you choose to use.\n - In this example, it is for the Base SDXL model\n - This node is also used for SD1.5 and SD2.x models\n \nNOTE: When loading in another person's workflow, be sure to manually choose your own *local* model. This also applies to LoRas and all their deviations"
+        }
+    },
+    {
+        "id": 37,
+        "name": "Note",
+        "prompts": {
+            "text": "This is a checkpoint model loader. \n - This is set up automatically with the optimal settings for whatever SD model version you choose to use.\n - In this example, it is for the Refiner SDXL model\n\nNOTE: When loading in another person's workflow, be sure to manually choose your own *local* model. This also applies to LoRas and all their deviations."
+        }
+    },
+    {
+        "id": 38,
+        "name": "Note",
+        "prompts": {
+            "text": "These nodes are where you include the text for:\n - what you want in the picture (Positive Prompt, Green)\n - or what you don't want in the picture (Negative Prompt, Red)\n\nThis node type is called a \"PrimitiveNode\" if you are searching for the node type."
+        }
+    },
+    {
+        "id": 39,
+        "name": "Note",
+        "prompts": {
+            "text": "These nodes receive the text from the prompt and use the optimal CLIP settings for the specified checkpoint model (in this case: SDXL Base)"
+        }
+    },
+    {
+        "id": 40,
+        "name": "Note",
+        "prompts": {
+            "text": "Here are the settings that SHOULD stay in place if you want this workflow to work correctly:\n - add_noise: enable = This adds random noise into the picture so the model can denoise it\n\n - return_with_leftover_noise: enable = This sends the latent image data and all it's leftover noise to the next KSampler node.\n\nThe settings to pay attention to:\n - control_after_generate = generates a new random seed after each workflow job completed.\n - steps = This is the amount of iterations you would like to run the positive and negative CLIP prompts through. Each Step will add (positive) or remove (negative) pixels based on what stable diffusion \"thinks\" should be there according to the model's training\n - cfg = This is how much you want SDXL to adhere to the prompt. Lower CFG gives you more creative but often blurrier results. Higher CFG (recommended max 10) gives you stricter results according to the CLIP prompt. If the CFG value is too high, it can also result in \"burn-in\" where the edges of the picture become even stronger, often highlighting details in unnatural ways. ONE FOR ALL \u00abPlus Ultra\u00bb works well with 7 ~ 9.\n - sampler_name = This is the sampler type, and unfortunately different samplers and schedulers have better results with fewer steps, while others have better success with higher steps. This will require experimentation on your part!\n - scheduler = The algorithm/method used to choose the timesteps to denoise the picture.\n - start_at_step = This is the step number the KSampler will start out it's process of de-noising the picture or \"removing the random noise to reveal the picture within\". The first KSampler usually starts with Step 0. Starting at step 0 is the same as setting denoise to 1.0 in the regular Sampler node.\n - end_at_step = This is the step number the KSampler will stop it's process of de-noising the picture. If there is any remaining leftover noise and return_with_leftover_noise is enabled, then it will pass on the left over noise to the next KSampler (assuming there is another one)."
+        }
+    },
+    {
+        "id": 41,
+        "name": "Note",
+        "prompts": {
+            "text": "This node will take the latent data from the KSampler and, using the VAE, it will decode it into visible data\n\nVAE = Latent --> Visible\n\nThis can then be sent to the Save Image node to be saved as a PNG."
+        }
+    },
+    {
+        "id": 42,
+        "name": "Note",
+        "prompts": {
+            "text": "This node sets the image's resolution in Width and Height.\n\nONE FOR ALL \u00abPlus Ultra\u00bb works well with 1280 x 800 | 800 x 1280 and 1024 x 1536 | 1536 x 1024, for others SDXL models (OFA \u00abPS\u00bb inclusive), it is recommended to use trained values listed below:\n\n - 1024 x 1024\n - 1152 x 896 | 896  x 1152\n - 1216 x 832 | 832  x 1216\n - 1344 x 768 | 768  x 1344\n - 1536 x 640 | 640  x 1536"
+        }
+    },
+    {
+        "id": 43,
+        "name": "Note",
+        "prompts": {
+            "text": "These nodes receive the text from the prompt and use the optimal CLIP settings for the specified checkpoint model (in this case: SDXL Refiner)"
+        }
+    },
+    {
+        "id": 45,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 47,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 48,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 54,
+        "name": "Note",
+        "prompts": {
+            "text": "Important: More LoRA means more time to render the image, keep that in mind.\n- You can add more LoRA by right-clicking on the LoRA group panel and going to ADD NODE --> LOADERS --> LOAD LORA. After that you need to connect the new node to the first LOAD LORA and then to the last LOAD LORA (connect MODEL and CLIP).\n- Set the STRENGTH to ZERO to disable the module from reading the LoRA or use ByPass option."
+        }
+    },
+    {
+        "id": 59,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu",
+            "text_2": "exponential"
+        }
+    },
+    {
+        "id": 64,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu",
+            "text_2": "exponential"
+        }
+    },
+    {
+        "id": 68,
+        "name": "Note",
+        "prompts": {
+            "text": "- Use this space to store the TRIGGER WORDS of the LoRAS you use that need trigger words. Normally just activating them on the Lod LoRA will make them work, but in any case (I was wrong once, so). \ud83e\udd37\ud83c\udffb\u200d\u2640\ufe0f\ud83d\ude05\n\nEx: PerfectEyesXL: perfecteyes\n"
+        }
+    },
+    {
+        "id": 69,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "ClearHand-V2.safetensors"
+        }
+    },
+    {
+        "id": 70,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "ClearHand-V2.safetensors"
+        }
+    },
+    {
+        "id": 71,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "PerfectEyesXL.safetensors"
+        }
+    }
+]

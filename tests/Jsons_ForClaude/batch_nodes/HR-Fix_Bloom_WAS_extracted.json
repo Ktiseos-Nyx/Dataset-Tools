@@ -1,0 +1,96 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "ddim_uniform"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "SenzusMix.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(painting, cgi, 3d, sketch, low quality, bad art:1.3), (bad hands, bad proportions:1.2)"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 13,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 14,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 16,
+        "name": "KSampler"
+    },
+    {
+        "id": 18,
+        "name": "SaveImage"
+    },
+    {
+        "id": 19,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 20,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "kl-f8-anime2.vae.pt"
+        }
+    },
+    {
+        "id": 21,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 24,
+        "name": "LatentUpscale"
+    },
+    {
+        "id": 38,
+        "name": "SaveImage"
+    },
+    {
+        "id": 39,
+        "name": "Image Filters"
+    },
+    {
+        "id": 78,
+        "name": "CLIPTextEncode (NSP)",
+        "prompts": {
+            "text": "((anime portrait)) of a beautiful __nationality__ woman ((wearing a traditional outfit))"
+        }
+    },
+    {
+        "id": 79,
+        "name": "SaveImage"
+    },
+    {
+        "id": 80,
+        "name": "Image Filters"
+    },
+    {
+        "id": 81,
+        "name": "Image Combine"
+    }
+]

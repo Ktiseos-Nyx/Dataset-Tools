@@ -1,0 +1,296 @@
+[
+    {
+        "id": 1,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "Hephaistos_NEXTGEN_XL_TENSOR_V1.1.safetensors"
+        }
+    },
+    {
+        "id": 2,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 30,
+        "name": "KSampler //Inspire",
+        "prompts": {
+            "text": "dpm_2_ancestral",
+            "text_2": "GPU(=A1111)"
+        }
+    },
+    {
+        "id": 67,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 90,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "SDXL_Output-%date:yyyy-MM-dd%/%CheckpointLoaderSimple.ckpt_name%Stage3"
+        }
+    },
+    {
+        "id": 95,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 111,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 112,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 113,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 115,
+        "name": "ModelSamplingDiscrete"
+    },
+    {
+        "id": 116,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 117,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "face portrait of woman, orange hair, fur, 20 years old, short hair, natural lighting, front bangs, fox ears"
+        }
+    },
+    {
+        "id": 118,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "bad quality"
+        }
+    },
+    {
+        "id": 119,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "face portrait of woman, orange hair, fur, 20 years old, short hair, natural lighting, front bangs, fox ears",
+            "text_2": "face portrait of woman, orange hair, fur, 20 years old, short hair, natural lighting, front bangs, fox ears"
+        }
+    },
+    {
+        "id": 120,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "bad quality",
+            "text_2": "bad quality"
+        }
+    },
+    {
+        "id": 121,
+        "name": "CR SDXL Aspect Ratio",
+        "prompts": {
+            "text": "3:4 portrait 896x1152"
+        }
+    },
+    {
+        "id": 123,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 124,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "secondpass_ldsr_dpmpp_sde_karras_cfg_1_00007_.png"
+        }
+    },
+    {
+        "id": 125,
+        "name": "CR Text Input Switch",
+        "prompts": {
+            "text": "face portrait of woman, orange hair, fur, 20 years old, short hair, natural lighting, front bangs, fox ears"
+        }
+    },
+    {
+        "id": 127,
+        "name": "CR Text Input Switch",
+        "prompts": {
+            "text": "bad quality"
+        }
+    },
+    {
+        "id": 130,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 131,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 132,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 136,
+        "name": "PatchModelAddDownscale"
+    },
+    {
+        "id": 138,
+        "name": "CR Upscale Image",
+        "prompts": {
+            "text": "4x_foolhardy_Remacri.pth"
+        }
+    },
+    {
+        "id": 140,
+        "name": "VAEEncodeTiled"
+    },
+    {
+        "id": 141,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 143,
+        "name": "KSampler //Inspire",
+        "prompts": {
+            "text": "dpm_2_ancestral",
+            "text_2": "GPU(=A1111)"
+        }
+    },
+    {
+        "id": 144,
+        "name": "CR Upscale Image",
+        "prompts": {
+            "text": "4x_foolhardy_Remacri.pth"
+        }
+    },
+    {
+        "id": 147,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "face portrait of woman, orange hair, fur, 20 years old, short hair, natural lighting, front bangs, fox ears"
+        }
+    },
+    {
+        "id": 148,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "bad quality"
+        }
+    },
+    {
+        "id": 149,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 150,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 151,
+        "name": "CR Img2Img Process Switch"
+    },
+    {
+        "id": 152,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "afro_enhanced.safetensors"
+        }
+    },
+    {
+        "id": 153,
+        "name": "KSampler //Inspire",
+        "prompts": {
+            "text": "dpmpp_2s_ancestral",
+            "text_2": "GPU(=A1111)"
+        }
+    },
+    {
+        "id": 157,
+        "name": "CR LoRA Stack"
+    },
+    {
+        "id": 158,
+        "name": "CR Apply LoRA Stack"
+    },
+    {
+        "id": 159,
+        "name": "FreeU_V2"
+    },
+    {
+        "id": 161,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "afro_enhanced.safetensors"
+        }
+    },
+    {
+        "id": 165,
+        "name": "CR Multi Upscale Stack",
+        "prompts": {
+            "text": "1x_ArtClarity.pth",
+            "text_2": "4x_foolhardy_Remacri.pth"
+        }
+    },
+    {
+        "id": 166,
+        "name": "CR Apply Multi Upscale"
+    },
+    {
+        "id": 168,
+        "name": "VAEEncodeTiled"
+    },
+    {
+        "id": 174,
+        "name": "ImageSharpen"
+    },
+    {
+        "id": 179,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 180,
+        "name": "CR Model Input Switch"
+    },
+    {
+        "id": 223,
+        "name": "Load Image Batch",
+        "prompts": {
+            "text": "single_image"
+        }
+    },
+    {
+        "id": 227,
+        "name": "CR Batch Process Switch"
+    },
+    {
+        "id": 280,
+        "name": "ModelSamplingDiscrete"
+    },
+    {
+        "id": 282,
+        "name": "KSampler //Inspire",
+        "prompts": {
+            "text": "dpmpp_2s_ancestral",
+            "text_2": "GPU(=A1111)"
+        }
+    },
+    {
+        "id": 287,
+        "name": "Note",
+        "prompts": {
+            "text": "Hi, thanks for downloading this workflow alongside with my models.\n\nFirst I highly recommend to download my enhancer.. It's working without it but you will get better results with it. You can download it from here: https://ko-fi.com/s/34e553e28c\n\nI have tested it with following checkpoints: \n- Hephaistos NextGen Tensor V1.1 avaible on Tensor.art: https://tensor.art/models/697912008114231188\n- Colossus Project V6 Exprimental 2 on civitai: https://civitai.com/models/147720/colossus-project-xl-sfwandnsfw\n\n\nHere is a basic overview over this basic enhancer workflow:\n\nCONDITIONING:\n\n- This workflow has two different conditioning sytems.. you can toggle them with the two conditioning switches. sometimes its worth to toggle those\n\nGROUP BYPASSER:\n\n- You can use the fast group bypasser on the left; here you can enable or disable different things like Lora, deepshrink and the different stages. If you want bypass stage 2 you must also use the bypass stage 2 switch..\nAlso you can enable IMG to IMG\n\nIMG to IMG:\n\nTo get this mode to work you have to do following steps:\n- enable IMG to IMG on the bypasser. \n- set the CR img2img switch to img to img\n- Disable Stage 1\n\nDown below is the control for the IMG to IMG mode:\n\n\nYou can here enhance old AI images or whatever you want. you can even load image batches\nmake sure that your computer can handle the image size.. (for the best results the image should roughly has the same size as the normal input. Use the CR upscale image for up- or downscaling.\n\nSometimes you want add something to the image.. use that ksampler for that or just bypass it.\nYou can also bypass the second stage as I explained above.\n\nPro tricks:\n\n- if you just simple want to enhance the image without adding something you can also switch the two text inputs of the third stage to 2. This can be also used to add something only for the third stage.\n- on Stage 2 is a model switch. It allows to disable or enable the Lora for stage 2 set it to \"1\" if your Lora has negative effects on the image.\n\nHave fun creating\n\n\n\n\n"
+        }
+    },
+    {
+        "id": 288,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "SDXL_Output-%date:yyyy-MM-dd%/%CheckpointLoaderSimple.ckpt_name%Stage2"
+        }
+    },
+    {
+        "id": 289,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "SDXL_Output-%date:yyyy-MM-dd%/%CheckpointLoaderSimple.ckpt_name%Stage1"
+        }
+    }
+]

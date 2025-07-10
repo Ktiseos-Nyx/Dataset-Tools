@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "name": "NunchakuWheelInstaller",
+        "prompts": {
+            "text": "GitHub Release"
+        }
+    },
+    {
+        "id": 1,
+        "name": "\u200b"
+    },
+    {
+        "id": 2,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "\u2705 Successfully installed nunchaku-0.3.0+torch2.6-cp310-cp310-win_amd64.whl from GitHub Release."
+        }
+    }
+]

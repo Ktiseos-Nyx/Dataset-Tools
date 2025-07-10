@@ -1,0 +1,295 @@
+[
+    {
+        "id": 1,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "ponyDiffusionV6XL_v6.safetensors"
+        }
+    },
+    {
+        "id": 1,
+        "name": "LLM \u63d0\u793a\u8bcd\u4f18\u5316"
+    },
+    {
+        "id": 2,
+        "name": "Text_prompt_edit \u63d0\u793a\u8bcd\uff08\u5c40\u90e8\u6539\u56fe\uff09"
+    },
+    {
+        "id": 3,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "Pony_DetailV2.0.safetensors"
+        }
+    },
+    {
+        "id": 3,
+        "name": "Inpaint/Outpaint \u5c40\u90e8\u6539\u56fe"
+    },
+    {
+        "id": 4,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up. anime artwork, masterpiece, best quality.\n\na cute anime girl, 24 year old, slim, curvy silver hair, brown eyes, yellow casual boho deep v neck short sleeve ruffle hem split beach long dress, earrings with red ruby.\n\nstanding in the living room, looking at viewer, (medium shot:1.2), clean background.\n\nperfect eyes, eyebrows, normal lips, natural color lips, character design, key visual, vibrant, studio anime, sharp focus, cinematic, natural lighting, extremely detailed, detailed facial features and expressive body language.\n\nwatercolor painting, source_anime, rating_safe, (embedding:zPDXL3:1), (embedding:zPDXLpg:1)"
+        }
+    },
+    {
+        "id": 4,
+        "name": "Generate \u65b0\u751f\u6210"
+    },
+    {
+        "id": 5,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "score_7, score_6, score_5, score_4. \n\n(hands:0.9), (arms:0.7), (liquid on face:1.2), naked.\n\n3d, photo, deformed, black and white, realism, disfigured, low contrast, (worst quality:1.2), (low quality:1.2), (normal quality:1.2), (bad anatomy, bad hands:1.2), signature, watermarks, ugly, imperfect eyes, skewed eyes, unnatural face, unnatural body, error, extra limb, missing limbs, painting by bad-artist, (embedding:zPDXLpg-neg:1)"
+        }
+    },
+    {
+        "id": 5,
+        "name": "Outpaint \u6269\u56fe"
+    },
+    {
+        "id": 6,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 6,
+        "name": "Inpaint \u5c40\u90e8\u91cd\u7ed8"
+    },
+    {
+        "id": 7,
+        "name": "Image_latent \u56fe\u7247\u8f93\u5165"
+    },
+    {
+        "id": 8,
+        "name": "ControlNet \u6784\u56fe\u63a7\u5236"
+    },
+    {
+        "id": 9,
+        "name": "Text_prompt_generate \u63d0\u793a\u8bcd\uff08\u65b0\u751f\u6210\uff09"
+    },
+    {
+        "id": 10,
+        "name": "Model \u6a21\u578b"
+    },
+    {
+        "id": 18,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "mistoLine_rank256.safetensors"
+        }
+    },
+    {
+        "id": 19,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example-3.jpg"
+        }
+    },
+    {
+        "id": 23,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 24,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 25,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example-golden-gate.webp"
+        }
+    },
+    {
+        "id": 26,
+        "name": "VAEEncodeForInpaint"
+    },
+    {
+        "id": 27,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example-young-woman.jpg"
+        }
+    },
+    {
+        "id": 28,
+        "name": "ImagePadForOutpaint"
+    },
+    {
+        "id": 30,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 31,
+        "name": "SaveImage"
+    },
+    {
+        "id": 33,
+        "name": "Note",
+        "prompts": {
+            "text": "## Pony Diffusion V6 XL\nsteps: 25-30\ncfg: 6-9\nsampler_name: euler_a\nscheduler: karras"
+        }
+    },
+    {
+        "id": 34,
+        "name": "Note"
+    },
+    {
+        "id": 35,
+        "name": "VAEEncodeForInpaint"
+    },
+    {
+        "id": 37,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 38,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 40,
+        "name": "Note"
+    },
+    {
+        "id": 43,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 57,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up. anime artwork, masterpiece, best quality.\n\na cute anime girl, 24 year old, slim, curvy silver hair, brown eyes, yellow casual boho deep v neck short sleeve ruffle hem split beach long dress, earrings with red ruby.\n\nstanding in the living room, looking at viewer, (medium shot:1.2), clean background.\n\nperfect eyes, eyebrows, normal lips, natural color lips, character design, key visual, vibrant, studio anime, sharp focus, cinematic, natural lighting, extremely detailed, detailed facial features and expressive body language.\n\nwatercolor painting, source_anime, rating_safe, (embedding:zPDXL3:1), (embedding:zPDXLpg:1)"
+        }
+    },
+    {
+        "id": 58,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "score_7, score_6, score_5, score_4. \n\n(embedding:zPDXLpg-neg:1)"
+        }
+    },
+    {
+        "id": 60,
+        "name": "SaveImage"
+    },
+    {
+        "id": 101,
+        "name": "SDXLEmptyLatentSizePicker+",
+        "prompts": {
+            "text": "1024x1024 (1.0)"
+        }
+    },
+    {
+        "id": 116,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 119,
+        "name": "CannyEdgePreprocessor"
+    },
+    {
+        "id": 122,
+        "name": "MiDaS-DepthMapPreprocessor"
+    },
+    {
+        "id": 123,
+        "name": "TaraPrompterAdvanced",
+        "prompts": {
+            "text": "You are a SDXL Prompt Generator\n\nA good prompt for the SDXL stable diffusion model is a meticulously crafted narrative that starts with specifying the image type to set the artistic tone. It then lays out a clear and engaging scene, methodically adding layers of detail about the main subject, the surrounding environment, and their spatial relationships. It should use precise, descriptive language to define the mood, style, and execution, incorporating technical aspects like weight syntax (e.g., \"(smiling:1.1)\") to prioritize certain features. This approach ensures a rich, coherent, and visually compelling image that aligns with the intended vision. It should be only descriptive, avoid any guidance, avoid imperative sentences and remove any such guidance from prompts beforehand.\n\nConversely, a bad prompt lacks clarity and coherence, providing insufficient context or detail. It might jump into specifics without setting the scene, mix incompatible styles or themes, or neglect to specify spatial relationships and relative importance of elements, leading to a fragmented and confusing image. It may also misuse technical tools like weight syntax, resulting in an imbalanced and ineffective visual representation.\n\nThe words to the beginning has a higher weight the words in the end. Stable diffusion models works best when we give them a clear and concise prompt. Only relevant content should be to the beginning ( AVOID IGNORE tags like \"Create a xyz\" or \"Scene:\" or \"image_type:\" etc)\n\nFurthermore, we can use various artist, studio, movie names etc to get a likeness to that style. For example, \"painting by Van Gogh\" or \"scene from the movie Up\".\nSome keywords that can be useful are: 4k, ultra hd, masterpiece, cinematic, painting, drawing, sketch, scene, movie, artist, studio, style, trending on ArtStation, DeviantArt, Behance etc. (Use extreme caution when using these, also it's better to use them in the end unless mentioned elsewhere)\n\nThe prompt is specific and detailed, guiding the AI to produce a targeted and expressive image.\n\nUse parenthesis to highlight specific words or spaces and use a colon followed by an weight to the end of a word or group to increase or decrease weight, for example (red panda:1.2) banana:1.5 or (yellow rose:0.9)\n\nThe negative prompt should be comma-seperated keywords, and not a sentence. And it should generally describe things we absolutely don't want in an image, if a image is about cartoon, we may put photorealistic in the negative. But if it's about a person, we should not put animal in negative (unless specified) because there are some similarities, in general it should be more qualitative than tangible such as JPEG artifacts, blurry, watermark etc. \n \n\nIf a specific aesthetic, style, studio etc is mentioned, it should be accentuated as much as possible, we should increase its weight (surrealistic:1.4) or (watercolor:2.0) etc., and also add other keywords, artists, references to increase its weight.\n---\nFollow the prompt as closely as possible without violating the guidelines. Generate both an amazing positive and negative prompt",
+            "text_2": "art of a young girl cyborg with long brown hair, butterfly filigree, chest armor, robot joints"
+        }
+    },
+    {
+        "id": 124,
+        "name": "TaraApiKeyLoader",
+        "prompts": {
+            "text": "groq/llama3-70b-8192"
+        }
+    },
+    {
+        "id": 125,
+        "name": "TaraPresetLLMConfig",
+        "prompts": {
+            "text": "groq/llama3-70b-8192"
+        }
+    },
+    {
+        "id": 126,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "groq/llama3-70b-8192"
+        }
+    },
+    {
+        "id": 127,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 128,
+        "name": "easy showAnything"
+    },
+    {
+        "id": 132,
+        "name": "Reroute"
+    },
+    {
+        "id": 134,
+        "name": "Reroute"
+    },
+    {
+        "id": 137,
+        "name": "Reroute"
+    },
+    {
+        "id": 140,
+        "name": "Note",
+        "prompts": {
+            "text": "## Anime_2\nStrength: 0.8\n\n## Smooth_Anime_2\nStrength: 0.8\n\n## Summer_Days_2\nStrength: 0.8\n\n## Watercolor_Anime\nStrength: 0.7\nTrigger words: watercolor (medium), traditional media,\n\n## LineArt_Mono\nStrength: 0.7\nTrigger words: flat color, / lineart, monochrome, greyscale,"
+        }
+    },
+    {
+        "id": 142,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "Anime_Summer_Days_2_Style_SDXL_LoRA_Pony_Diffusion_V6_XL.safetensors"
+        }
+    },
+    {
+        "id": 143,
+        "name": "LoraLoader"
+    },
+    {
+        "id": 145,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 146,
+        "name": "Note",
+        "prompts": {
+            "text": "Style Source:\nsource_pony\nsource_furry\nsource_cartoon\nsource_anime\n\nContent Rating:\nrating_safe\nrating_questionable\nrating_explicit"
+        }
+    },
+    {
+        "id": 147,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 148,
+        "name": "AnyLineArtPreprocessor_aux",
+        "prompts": {
+            "text": "lineart_standard"
+        }
+    }
+]

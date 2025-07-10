@@ -1,0 +1,176 @@
+[
+    {
+        "id": 1,
+        "name": "MZ_ChatGLM3Loader",
+        "prompts": {
+            "text": "checkpoints\\chatglm3-8bit.safetensors"
+        }
+    },
+    {
+        "id": 7,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 9,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fixed.safetensors"
+        }
+    },
+    {
+        "id": 20,
+        "name": "MZ_KolorsUNETLoaderV2",
+        "prompts": {
+            "text": "Kolors\\diffusion_pytorch_model.fp16.safetensors"
+        }
+    },
+    {
+        "id": 21,
+        "name": "MZ_ChatGLM3_V2",
+        "prompts": {
+            "text": "a knight, short red hair, realistic, female focus, full body, standing, arms outstretched, (ornate gold plate full armor suit:0.9), baroque chest plate, (red cape), diffuse light, plain black walls, (solo:1)"
+        }
+    },
+    {
+        "id": 22,
+        "name": "MZ_ChatGLM3_V2"
+    },
+    {
+        "id": 27,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_00016_.png"
+        }
+    },
+    {
+        "id": 46,
+        "name": "IPAdapterModelLoader",
+        "prompts": {
+            "text": "kolors\\ip_adapter_plus_general.bin"
+        }
+    },
+    {
+        "id": 48,
+        "name": "Note",
+        "prompts": {
+            "text": "koda-LCM-ipa-v1\n\nVideo: https://www.youtube.com/@FiveBelowFiveUK\nWorkflow: https://civitai.com/models/589666\n\nKoda Pack v1\nNew Base Model - Kolor\n\nip adapter with LCM lora weights"
+        }
+    },
+    {
+        "id": 50,
+        "name": "IPAdapterAdvanced"
+    },
+    {
+        "id": 51,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 52,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/ipa/koda"
+        }
+    },
+    {
+        "id": 53,
+        "name": "easy setNode"
+    },
+    {
+        "id": 54,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "kolors\\pytorch_model.bin"
+        }
+    },
+    {
+        "id": 55,
+        "name": "easy setNode",
+        "prompts": {
+            "text": "CLIP_VISION"
+        }
+    },
+    {
+        "id": 56,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "CLIP_VISION"
+        }
+    },
+    {
+        "id": 57,
+        "name": "easy getNode"
+    },
+    {
+        "id": 58,
+        "name": "easy setNode"
+    },
+    {
+        "id": 59,
+        "name": "easy getNode"
+    },
+    {
+        "id": 60,
+        "name": "easy setNode",
+        "prompts": {
+            "text": "conditioning"
+        }
+    },
+    {
+        "id": 61,
+        "name": "easy setNode",
+        "prompts": {
+            "text": "conditioning_0"
+        }
+    },
+    {
+        "id": 62,
+        "name": "ImpactMakeImageBatch"
+    },
+    {
+        "id": 63,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_00015_.png"
+        }
+    },
+    {
+        "id": 64,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_00014_.png"
+        }
+    },
+    {
+        "id": 65,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_00013_.png"
+        }
+    },
+    {
+        "id": 68,
+        "name": "IPAdapterNoise"
+    },
+    {
+        "id": 69,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 76,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "LCMXL\\LCM_LoRA_Weights.safetensors"
+        }
+    },
+    {
+        "id": 77,
+        "name": "easy getNode"
+    }
+]
