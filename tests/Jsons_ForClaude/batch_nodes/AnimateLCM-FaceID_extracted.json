@@ -1,0 +1,150 @@
+[
+    {
+        "id": 64,
+        "name": "Efficient Loader",
+        "prompts": {
+            "text": "realDream14.ZWQ3.safetensors",
+            "text_2": "AnimateLCM_sd15_t2v_lora.safetensors"
+        }
+    },
+    {
+        "id": 69,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "sgm_uniform",
+            "text_2": "vae_decoded_only"
+        }
+    },
+    {
+        "id": 70,
+        "name": "ADE_ApplyAnimateDiffModelSimple"
+    },
+    {
+        "id": 71,
+        "name": "ADE_LoadAnimateDiffModel",
+        "prompts": {
+            "text": "AnimateLCM_sd15_t2v.ckpt"
+        }
+    },
+    {
+        "id": 72,
+        "name": "ADE_UseEvolvedSampling",
+        "prompts": {
+            "text": "sqrt_linear (AnimateDiff)"
+        }
+    },
+    {
+        "id": 73,
+        "name": "ADE_StandardUniformContextOptions"
+    },
+    {
+        "id": 74,
+        "name": "ADE_AnimateDiffSamplingSettings"
+    },
+    {
+        "id": 76,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 82,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "sgm_uniform",
+            "text_2": "vae_decoded_only"
+        }
+    },
+    {
+        "id": 83,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 90,
+        "name": "RIFE VFI"
+    },
+    {
+        "id": 91,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 93,
+        "name": "ImageSelector"
+    },
+    {
+        "id": 94,
+        "name": "ImageBatch"
+    },
+    {
+        "id": 102,
+        "name": "ELLALoader",
+        "prompts": {
+            "text": "ella-sd1.5-tsc-t5xl.safetensors"
+        }
+    },
+    {
+        "id": 103,
+        "name": "T5TextEncoderLoader #ELLA",
+        "prompts": {
+            "text": "models--google--flan-t5-xl--text_encoder"
+        }
+    },
+    {
+        "id": 104,
+        "name": "T5TextEncode #ELLA",
+        "prompts": {
+            "text": "A stylish woman walks down a Tokyo street filled with warm glowing neon and animated city signage. She wears a black leather jacket, a long red dress, and black boots, and carries a black purse. She wears sunglasses and red lipstick. She walks confidently and casually. The street is damp and reflective, creating a mirror effect of the colorful lights. Many pedestrians walk about."
+        }
+    },
+    {
+        "id": 105,
+        "name": "SetEllaTimesteps",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 106,
+        "name": "EllaEncode"
+    },
+    {
+        "id": 107,
+        "name": "T5TextEncode #ELLA"
+    },
+    {
+        "id": 108,
+        "name": "EllaEncode"
+    },
+    {
+        "id": 114,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 116,
+        "name": "ADE_MultivalDynamic"
+    },
+    {
+        "id": 159,
+        "name": "IPAdapterUnifiedLoaderFaceID",
+        "prompts": {
+            "text": "FACEID PLUS V2"
+        }
+    },
+    {
+        "id": 161,
+        "name": "IPAdapterAdvanced",
+        "prompts": {
+            "text": "strong style transfer"
+        }
+    },
+    {
+        "id": 171,
+        "name": "Load Image From Url (mtb)"
+    },
+    {
+        "id": 179,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 180,
+        "name": "ImageScaleBy"
+    }
+]

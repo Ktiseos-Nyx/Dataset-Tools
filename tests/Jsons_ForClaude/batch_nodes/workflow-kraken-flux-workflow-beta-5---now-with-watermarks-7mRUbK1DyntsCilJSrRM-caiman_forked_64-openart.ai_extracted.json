@@ -1,0 +1,274 @@
+[
+    {
+        "id": 9,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 17,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Kraken/Normal/changethis"
+        }
+    },
+    {
+        "id": 18,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 19,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Kraken/Upscaled/changethis"
+        }
+    },
+    {
+        "id": 23,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4xNMKDSuperscale_4xNMKDSuperscale.pt"
+        }
+    },
+    {
+        "id": 51,
+        "name": "Note",
+        "prompts": {
+            "text": "Below in the green box is where I put my positive prompts. At the bottom you can select various artists, movies and styles. Doesn't hurt to experiment."
+        }
+    },
+    {
+        "id": 52,
+        "name": "Note",
+        "prompts": {
+            "text": "First, be careful. I didn't lock any of the nodes so it is easy to move them out of place ;)  Secondly, this is Beta2 of my previous workflow that uses checkpoint models instead of unet/clips. Head over to Civitai and grab some baked Checkpoint s. Make sure you read the instructions on what to set the steps at! Thirdly, read all the notes before you begin. This might save you some frustration.\nOr, visit a youtube video where I go over all this: Youtube Video Instructions: https://youtu.be/fCD8H6i78Gc"
+        }
+    },
+    {
+        "id": 53,
+        "name": "Note",
+        "prompts": {
+            "text": "Please ignore the text panels in the SDXL Prompt Styler above.\n\nAlthough I suppose you could split your prompts up so that you always have specific words or phrases that you share between all your work typed out in one of them and then your specific prompts in the other?  \n\nSo I added this one because I liked the \"style\" drop down better than the other BUT I do like being able to choose artist, movie too.  You'll notice that style exists both above and to the right.  I think it is a good idea to pick one or the other, not both. But maybe some cool effects if you did do two?  Try it and see!\n\nTo the right is the LoRaStacker.  Get some Flux lora's from Civitai and put them in your loras folder.  Refresh, restart the server, and you can select them.  Make sure you enable the switch and look at the details on Civitai for the weights that have the best results. Also if any loras have trigger words, don't forget to include them in the prompts."
+        }
+    },
+    {
+        "id": 55,
+        "name": "Note",
+        "prompts": {
+            "text": "\nSo lets say you create a text prompt and just want to see what happens.  You'd probably set the batch to 1 and you don't need to upscale. What do you do?\n\nIf you right click on \"Upscale Stuff\" window/group, you can go down and somewhere near the middle you'll  see \"bypass group nodes\"  Click on that and it will make it all \"bypassed\".;)\n\nWhen you want to upscale again, go back and choose: \"Set Group Nodes to Always\" and it'll bring them all back online again. \n\nThis will save you a ton of time.\n\nIf you like this workflow, please make sure you go back and give it a positive review.  \n\nIf you hate it, please be nice about it.  I am trying to learn this stuff.  I am still very new."
+        }
+    },
+    {
+        "id": 56,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 57,
+        "name": "UltimateSDUpscale"
+    },
+    {
+        "id": 58,
+        "name": "KSamplerAdvanced"
+    },
+    {
+        "id": 59,
+        "name": "CR Aspect Ratio",
+        "prompts": {
+            "text": "SDXL - 16:9 landscape 1344x768"
+        }
+    },
+    {
+        "id": 60,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "a * b /2 + 32"
+        }
+    },
+    {
+        "id": 61,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "a * b /2 + 32"
+        }
+    },
+    {
+        "id": 62,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "A very hot sci-fi woman holding a sign that says \"Flux.1 Dev Test\""
+        }
+    },
+    {
+        "id": 63,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 64,
+        "name": "SDXLPromptStyler"
+    },
+    {
+        "id": 65,
+        "name": "easy float"
+    },
+    {
+        "id": 66,
+        "name": "SDXL Prompt Styler (JPS)",
+        "prompts": {
+            "text": "Beautiful sexy woman With messy white-blonde hair, blue eyes, pale white skin, in plate armor holding a sword horizontally across her face with her eyes peering over the edge of the blade. Etched onto the blade is the text \"Kraken Flux Workflow Beta 5\".  Background is a lush broadleaf forest with a pond and a waterfall.  A lot of foilage. Detailed text in the blade. Pay attention to the spelling."
+        }
+    },
+    {
+        "id": 83,
+        "name": "Note",
+        "prompts": {
+            "text": "The only thing you *should* change is the aspect ratio drop down and the batch size.  Flux Guidance I believe should remain at 3.5 but you should test it in .5 +/- and see what happens?  You will see at the bottom I've added LoRA.  That is because some new Flux Checkpoints now support LoRAs and more are coming out every day."
+        }
+    },
+    {
+        "id": 84,
+        "name": "Note",
+        "prompts": {
+            "text": "If you are using the normal Dev Flux, you should start with steps at 20. If Schnell you should drop it way down to around 4-6.  Leave CFG at 1. euler is what Flux likes but knock yourself out. Scheduler=Normal but again, experiment!"
+        }
+    },
+    {
+        "id": 85,
+        "name": "Note",
+        "prompts": {
+            "text": "Pretty straight forward here.  Below you'll find the first window that has the images that have been saved.  I've created a directory called Kraken which has sub directories /normal & /upscaled to make it easier to find them. Change \"Saves\" to your own descripter eg, bunny or butterfly.  At the bottom is a preview window that is totally unnecessary but I did it anyways so I could disable the \"save image\" window by selecting \"bypass\" and still see what the images look like."
+        }
+    },
+    {
+        "id": 86,
+        "name": "Note",
+        "prompts": {
+            "text": "So this is all the upscale stuff.  Honestly it is way over my head but from what I understand you should have the steps and cfg the same as the Ksampler for best results. Since I run a 2K monitor, 2560x1440, I don't need things to be upscaled to 4k. There are work flows that have some pretty intense upscale that you could simply drop your existing images into and run them through.  I am still looking for one I like.  Anyways, at the very bottom is the filter/engine that you push the image through.  There are many choices out there.  Check out Civitai for upscaler options."
+        }
+    },
+    {
+        "id": 87,
+        "name": "Note",
+        "prompts": {
+            "text": "Lastly we have the upscaled save window, once again with the Kraken\\Upscaled folder assignment.  Change \"Saves\" to your own descripter eg, bunny or butterfly.\n\nBelow that is the image comparerer er er ree re thingy.  slide the line back and forth and see if you like what you see.  If not, try a different upscale model in the drop down below Ultimate SD Upscale."
+        }
+    },
+    {
+        "id": 88,
+        "name": "CheckpointLoader|pysssss"
+    },
+    {
+        "id": 92,
+        "name": "LoraStackLoader_PoP",
+        "prompts": {
+            "text": "FLUX\\xlabs_flux_realism_lora_comfui.safetensors",
+            "text_2": "FLUX\\xlabs_flux_scenery_lora_comfyui.safetensors"
+        }
+    },
+    {
+        "id": 93,
+        "name": "Note",
+        "prompts": {
+            "text": "How many do you want?  Change (batch_size)^"
+        }
+    },
+    {
+        "id": 97,
+        "name": "Image Overlay",
+        "prompts": {
+            "text": "Resize by rescale_factor"
+        }
+    },
+    {
+        "id": 98,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "kraken_overlay.png"
+        }
+    },
+    {
+        "id": 99,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion",
+            "text_2": "downscale if bigger"
+        }
+    },
+    {
+        "id": 101,
+        "name": "Get Image Size"
+    },
+    {
+        "id": 102,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "ceil(a * 10 / 100)"
+        }
+    },
+    {
+        "id": 106,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 107,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 108,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Kraken/Normal/watermarked/changethis"
+        }
+    },
+    {
+        "id": 110,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "kraken_overlay.png"
+        }
+    },
+    {
+        "id": 111,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "ceil(a * 10 / 100)"
+        }
+    },
+    {
+        "id": 112,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 113,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 114,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 115,
+        "name": "Image Overlay",
+        "prompts": {
+            "text": "Resize by rescale_factor"
+        }
+    },
+    {
+        "id": 116,
+        "name": "Get Image Size"
+    },
+    {
+        "id": 117,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Kraken/Upscaled/watermarked/changethis"
+        }
+    },
+    {
+        "id": 124,
+        "name": "Note",
+        "prompts": {
+            "text": "Load up your logo with a transparent background in 1:1 aspect ratio and it will be resized and put into the bottom right corner of your imagages at 80% opacity.  You can change that value if you expand the \"image overlay\" window. (I made mine 1024x1024 and used photoshop to remove the background)\n\nIf you want the size of the logo-overlay to be greater than 10% of the image size you can increase the default of \"10\" to whatever you like.\n\nIf you do not want any overlay, you can bypass each group.\n\n\n<---- The left side is to put the overlay on normal size images..\n\nThe right is where the overlay is placed on the upscaled images ---------->\n\n"
+        }
+    }
+]

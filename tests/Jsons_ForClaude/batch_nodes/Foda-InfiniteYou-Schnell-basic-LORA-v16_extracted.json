@@ -1,0 +1,149 @@
+[
+    {
+        "id": "Latent",
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": "Prompt",
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "photo of woman with red hair and blue eyes, standing at a bus shelter in the rain"
+        }
+    },
+    {
+        "id": "Guidance",
+        "name": "FluxGuidance"
+    },
+    {
+        "id": "Seed",
+        "name": "RandomNoise"
+    },
+    {
+        "id": "Sampler",
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 1,
+        "name": "OUTPUT"
+    },
+    {
+        "id": 2,
+        "name": "SAMPLING"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "VAELoader"
+    },
+    {
+        "id": 11,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "t5xxl_fp8_e4m3fn.safetensors",
+            "text_2": "clip_l.safetensors"
+        }
+    },
+    {
+        "id": 12,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-schnell.sft"
+        }
+    },
+    {
+        "id": 13,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 16,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 22,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 23,
+        "name": "InfiniteYouApply",
+        "prompts": {
+            "text": "sim_stage1_img_proj.bin"
+        }
+    },
+    {
+        "id": 24,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "sim_stage1_control_net.safetensors"
+        }
+    },
+    {
+        "id": 25,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 26,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "flux_00005_.png"
+        }
+    },
+    {
+        "id": 31,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 32,
+        "name": "ProjectFilePathNode",
+        "prompts": {
+            "text": "InfiniteYou"
+        }
+    },
+    {
+        "id": 33,
+        "name": "SaveImage"
+    },
+    {
+        "id": 37,
+        "name": "Note",
+        "prompts": {
+            "text": "Foda-InfiniteYou-Schnell-basic-LORA-v16\n\nVideo: https://www.youtube.com/@ScuffedEpoch\nhttps://civitai.com/user/driftjohnson\nhttps://www.ScuffedEpoch.com\n\nsetup guide:\nhttps://civitai.com/articles/13224\n\n[discord early editions]\nhttps://discord.com/invite/uubQXhwzkj \n"
+        }
+    },
+    {
+        "id": 38,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 42,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 44,
+        "name": "AspectSizeV2"
+    },
+    {
+        "id": 45,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 47,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "AAA_testing\\Thorra_Redblade-000009.safetensors"
+        }
+    },
+    {
+        "id": 48,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "photo of kxk woman with red hair and blue eyes, standing at a bus shelter in the rain"
+        }
+    },
+    {
+        "id": 49,
+        "name": "FluxGuidance"
+    }
+]

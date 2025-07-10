@@ -1,0 +1,1001 @@
+{
+  "last_node_id": 47,
+  "last_link_id": 69,
+  "nodes": [
+    {
+      "id": 28,
+      "type": "DownloadAndLoadChatGLM3",
+      "pos": [
+        228.20226982454227,
+        777.6009556573915
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "chatglm3_model",
+          "type": "CHATGLM3MODEL",
+          "links": [
+            37
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DownloadAndLoadChatGLM3"
+      },
+      "widgets_values": [
+        "fp16"
+      ]
+    },
+    {
+      "id": 26,
+      "type": "DownloadAndLoadKolorsModel",
+      "pos": [
+        222.20226982454224,
+        652.6009556573914
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "kolors_model",
+          "type": "KOLORSMODEL",
+          "links": [
+            36,
+            67
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DownloadAndLoadKolorsModel"
+      },
+      "widgets_values": [
+        "Kwai-Kolors/Kolors",
+        "fp16"
+      ]
+    },
+    {
+      "id": 38,
+      "type": "CM_SDXLResolution",
+      "pos": [
+        222.20226982454224,
+        520.6009556573911
+      ],
+      "size": {
+        "0": 315,
+        "1": 78
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            56
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            57
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CM_SDXLResolution"
+      },
+      "widgets_values": [
+        "832x1216"
+      ]
+    },
+    {
+      "id": 27,
+      "type": "KolorsSampler",
+      "pos": [
+        1085.2022698245414,
+        565.6009556573912
+      ],
+      "size": {
+        "0": 315,
+        "1": 266
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "kolors_model",
+          "type": "KOLORSMODEL",
+          "link": 36
+        },
+        {
+          "name": "kolors_embeds",
+          "type": "KOLORS_EMBEDS",
+          "link": 38
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": null
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 56,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 57,
+          "widget": {
+            "name": "height"
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 61,
+          "widget": {
+            "name": "seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            40,
+            64
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KolorsSampler"
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        449648658555020,
+        "fixed",
+        25,
+        5,
+        "EulerDiscreteScheduler",
+        1
+      ]
+    },
+    {
+      "id": 30,
+      "type": "VAELoader",
+      "pos": [
+        1079.2022698245414,
+        916.6009556573913
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            41,
+            65,
+            66,
+            69
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "sdxl_vae.safetensors"
+      ]
+    },
+    {
+      "id": 31,
+      "type": "PreviewImage",
+      "pos": [
+        1525,
+        411
+      ],
+      "size": {
+        "0": 811.4278564453125,
+        "1": 1376.0155029296875
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 42
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        1180,
+        475
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 40
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 41
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            42
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 29,
+      "type": "KolorsTextEncode",
+      "pos": [
+        608.2022698245421,
+        713.6009556573913
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "chatglm3_model",
+          "type": "CHATGLM3MODEL",
+          "link": 37
+        }
+      ],
+      "outputs": [
+        {
+          "name": "kolors_embeds",
+          "type": "KOLORS_EMBEDS",
+          "links": [
+            38,
+            68
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KolorsTextEncode"
+      },
+      "widgets_values": [
+        "Whimsical and fantastical digital art of a woman with flowing black hair looking at a bird perched on her hand",
+        "",
+        1
+      ]
+    },
+    {
+      "id": 44,
+      "type": "Seed (rgthree)",
+      "pos": {
+        "0": 722.2021484375,
+        "1": 430.6008605957031,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0
+      },
+      "size": {
+        "0": 210,
+        "1": 130
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SEED",
+          "type": "INT",
+          "links": [
+            61
+          ],
+          "shape": 3,
+          "dir": 4,
+          "slot_index": 0
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        388735096519632,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": 47,
+      "type": "workflow/Upscale",
+      "pos": [
+        2363,
+        113
+      ],
+      "size": {
+        "0": 817.9612426757812,
+        "1": 1635.984130859375
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 64
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 65
+        },
+        {
+          "name": "VAEEncode vae",
+          "type": "VAE",
+          "link": 66
+        },
+        {
+          "name": "kolors_model",
+          "type": "KOLORSMODEL",
+          "link": 67
+        },
+        {
+          "name": "kolors_embeds",
+          "type": "KOLORS_EMBEDS",
+          "link": 68
+        },
+        {
+          "name": "VAEDecode vae",
+          "type": "VAE",
+          "link": 69
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow/Upscale"
+      },
+      "widgets_values": [
+        "4x_NMKD-Siax_200k.pth",
+        "bilinear",
+        0.5,
+        1024,
+        1024,
+        288872196880334,
+        "randomize",
+        15,
+        5,
+        "EulerDiscreteScheduler",
+        0.35000000000000003
+      ]
+    }
+  ],
+  "links": [
+    [
+      36,
+      26,
+      0,
+      27,
+      0,
+      "KOLORSMODEL"
+    ],
+    [
+      37,
+      28,
+      0,
+      29,
+      0,
+      "CHATGLM3MODEL"
+    ],
+    [
+      38,
+      29,
+      0,
+      27,
+      1,
+      "KOLORS_EMBEDS"
+    ],
+    [
+      40,
+      27,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      41,
+      30,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      42,
+      8,
+      0,
+      31,
+      0,
+      "IMAGE"
+    ],
+    [
+      56,
+      38,
+      0,
+      27,
+      3,
+      "INT"
+    ],
+    [
+      57,
+      38,
+      1,
+      27,
+      4,
+      "INT"
+    ],
+    [
+      61,
+      44,
+      0,
+      27,
+      5,
+      "INT"
+    ],
+    [
+      64,
+      27,
+      0,
+      47,
+      0,
+      "LATENT"
+    ],
+    [
+      65,
+      30,
+      0,
+      47,
+      1,
+      "VAE"
+    ],
+    [
+      66,
+      30,
+      0,
+      47,
+      2,
+      "VAE"
+    ],
+    [
+      67,
+      26,
+      0,
+      47,
+      3,
+      "KOLORSMODEL"
+    ],
+    [
+      68,
+      29,
+      0,
+      47,
+      4,
+      "KOLORS_EMBEDS"
+    ],
+    [
+      69,
+      30,
+      0,
+      47,
+      5,
+      "VAE"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "Txt2Img",
+      "bounding": [
+        204,
+        383,
+        1211,
+        708
+      ],
+      "color": "#a1309b",
+      "font_size": 24
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.52098684819244,
+      "offset": {
+        "0": 629.6466423383979,
+        "1": 262.5286089833294
+      }
+    },
+    "groupNodes": {
+      "Upscale": {
+        "nodes": [
+          {
+            "type": "UpscaleModelLoader",
+            "pos": [
+              1288,
+              -39
+            ],
+            "size": {
+              "0": 315,
+              "1": 58
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "UPSCALE_MODEL",
+                "type": "UPSCALE_MODEL",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "UpscaleModelLoader"
+            },
+            "widgets_values": [
+              "4x_NMKD-Siax_200k.pth"
+            ],
+            "index": 0
+          },
+          {
+            "type": "VAEDecode",
+            "pos": [
+              990,
+              32
+            ],
+            "size": {
+              "0": 210,
+              "1": 46
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "samples",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEDecode"
+            },
+            "index": 1
+          },
+          {
+            "type": "ImageUpscaleWithModel",
+            "pos": [
+              1631,
+              4
+            ],
+            "size": {
+              "0": 226.8000030517578,
+              "1": 46
+            },
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "upscale_model",
+                "type": "UPSCALE_MODEL",
+                "link": null
+              },
+              {
+                "name": "image",
+                "type": "IMAGE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ImageUpscaleWithModel"
+            },
+            "index": 2
+          },
+          {
+            "type": "ImageScaleBy",
+            "pos": [
+              1926,
+              24
+            ],
+            "size": {
+              "0": 315,
+              "1": 82
+            },
+            "flags": {},
+            "order": 12,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "image",
+                "type": "IMAGE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ImageScaleBy"
+            },
+            "widgets_values": [
+              "bilinear",
+              0.5
+            ],
+            "index": 3
+          },
+          {
+            "type": "VAEEncode",
+            "pos": [
+              2459.099560546873,
+              103.0200455284118
+            ],
+            "size": {
+              "0": 210,
+              "1": 46
+            },
+            "flags": {},
+            "order": 13,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "pixels",
+                "type": "IMAGE",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEEncode"
+            },
+            "index": 4
+          },
+          {
+            "type": "KolorsSampler",
+            "pos": [
+              2829,
+              143
+            ],
+            "size": {
+              "0": 315,
+              "1": 266
+            },
+            "flags": {},
+            "order": 14,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "kolors_model",
+                "type": "KOLORSMODEL",
+                "link": null
+              },
+              {
+                "name": "kolors_embeds",
+                "type": "KOLORS_EMBEDS",
+                "link": null
+              },
+              {
+                "name": "latent",
+                "type": "LATENT",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "latent",
+                "type": "LATENT",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "KolorsSampler"
+            },
+            "widgets_values": [
+              1024,
+              1024,
+              11964943924697,
+              "randomize",
+              25,
+              5,
+              "EulerDiscreteScheduler",
+              0.35000000000000003
+            ],
+            "index": 5
+          },
+          {
+            "type": "VAEDecode",
+            "pos": [
+              3221.2198632812506,
+              232.38004726409918
+            ],
+            "size": {
+              "0": 210,
+              "1": 46
+            },
+            "flags": {},
+            "order": 15,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "samples",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEDecode"
+            },
+            "index": 6
+          },
+          {
+            "type": "PreviewImage",
+            "pos": [
+              3508,
+              253
+            ],
+            "size": {
+              "0": 651.7158813476562,
+              "1": 638.3383178710938
+            },
+            "flags": {},
+            "order": 16,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": null,
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PreviewImage"
+            },
+            "index": 7
+          }
+        ],
+        "links": [
+          [
+            null,
+            0,
+            1,
+            0,
+            27,
+            "LATENT"
+          ],
+          [
+            null,
+            0,
+            1,
+            1,
+            30,
+            "VAE"
+          ],
+          [
+            0,
+            0,
+            2,
+            0,
+            23,
+            "UPSCALE_MODEL"
+          ],
+          [
+            1,
+            0,
+            2,
+            1,
+            39,
+            "IMAGE"
+          ],
+          [
+            2,
+            0,
+            3,
+            0,
+            22,
+            "IMAGE"
+          ],
+          [
+            3,
+            0,
+            4,
+            0,
+            35,
+            "IMAGE"
+          ],
+          [
+            null,
+            0,
+            4,
+            1,
+            30,
+            "VAE"
+          ],
+          [
+            null,
+            0,
+            5,
+            0,
+            26,
+            "KOLORSMODEL"
+          ],
+          [
+            null,
+            0,
+            5,
+            1,
+            29,
+            "KOLORS_EMBEDS"
+          ],
+          [
+            4,
+            0,
+            5,
+            2,
+            20,
+            "LATENT"
+          ],
+          [
+            5,
+            0,
+            6,
+            0,
+            32,
+            "LATENT"
+          ],
+          [
+            null,
+            0,
+            6,
+            1,
+            30,
+            "VAE"
+          ],
+          [
+            6,
+            0,
+            7,
+            0,
+            13,
+            "IMAGE"
+          ]
+        ],
+        "external": []
+      }
+    }
+  },
+  "version": 0.4
+}

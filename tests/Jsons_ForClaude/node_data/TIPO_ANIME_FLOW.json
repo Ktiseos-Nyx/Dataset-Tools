@@ -1,0 +1,387 @@
+[
+    {
+        "id": 3,
+        "name": "i2i upscale"
+    },
+    {
+        "id": 4,
+        "name": "Group"
+    },
+    {
+        "id": 1420,
+        "name": "negative"
+    },
+    {
+        "id": 1422,
+        "name": "T5v11Loader",
+        "prompts": {
+            "text": "t5-v1_1-xxl-fp16\\model-00001-of-00002.safetensors"
+        }
+    },
+    {
+        "id": 1427,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 1430,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "diffusion_pytorch_model.safetensors"
+        }
+    },
+    {
+        "id": 1431,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 1497,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 1505,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 1506,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "2x-AnimeSharpV2_RPLKSR_Sharp.pth"
+        }
+    },
+    {
+        "id": 1667,
+        "name": "animetune_512px_model",
+        "prompts": {
+            "text": "2025-02-03_12-38-15-save-440656-151-2303.safetensors",
+            "text_2": "PixArtMS_Sigma_XL_2"
+        }
+    },
+    {
+        "id": 1761,
+        "name": "2D_aesthetic_dynamic_good",
+        "prompts": {
+            "text": "A highly detailed anime-style character with smooth, radiant skin and vibrant, balanced colors, depicted in a dynamic and expressive pose with flawless anatomy and natural proportions. The composition is visually compelling, with intricate textures and exquisite detailing in the character's design. Soft, nuanced lighting enhances depth and warmth, interacting harmoniously with the surroundings to create a cohesive, immersive atmosphere. The background is richly detailed and dynamic, filled with captivating elements that complement the scene without overwhelming the character. Subtle highlights and shadows accentuate the character's curves, clothing, and features, adding realism and a luminous glow. The overall image captures a perfect balance between artistic stylization and a convincingly grounded presence.\nnikke, azur lane, blue archive, kancolle, virtual youtuber, arknights, girls' frontline, genshin impact"
+        }
+    },
+    {
+        "id": 1879,
+        "name": "GITSScheduler"
+    },
+    {
+        "id": 1881,
+        "name": "Seed"
+    },
+    {
+        "id": 1882,
+        "name": "Width"
+    },
+    {
+        "id": 1883,
+        "name": "Height"
+    },
+    {
+        "id": 1884,
+        "name": "Tags Input",
+        "prompts": {
+            "text": "1girl, looking at viewer, school swimsuit, pool, outdoors, tile floor, large breasts, from behind, thick thighs, long hair, high ponytail, water, looking back, thighs, blush, ponytail, one-piece swimsuit, blue eyes, wide hips, covered nipples, ass focus, curvy, white one-piece swimsuit, tiles, cloudy sky, day, cameltoe, skin tight, impossible clothes, skindentation, cloud, swimsuit, wading, thigh gap, grey hair, sky, solo focus, poolside, impossible swimsuit, standing, covered navel, breasts, shiny clothes, wet, \n\nA detailed character and background with intricate textures. the overall mood of the image is mysterious and powerful."
+        }
+    },
+    {
+        "id": 1885,
+        "name": "Ban Tags",
+        "prompts": {
+            "text": "text, censor, speech, say, illustrations, doll, background, full body, multiple views, koma, comic, monochrome, greyscale, overwatch, anime, manga, blood, guro, ryona, heart, dildo, sex toy, artist name, patreon username, twitter username, pixiv id, angry, anger vein, 3d, weapon, gun, sword, holding, game, arrow, logo, name, pixel art, no humans, robot, mecha, character profile, web address, signature, dated, letterboxed, framed, official, reference sheet, border, animal, muscular, abs, biceps, ribs "
+        }
+    },
+    {
+        "id": 1886,
+        "name": "TIPO",
+        "prompts": {
+            "text": "1girl, looking at viewer, school swimsuit, pool, outdoors, tile floor, large breasts, from behind, thick thighs, long hair, high ponytail, water, looking back, thighs, blush, ponytail, one-piece swimsuit, blue eyes, wide hips, covered nipples, ass focus, curvy, white one-piece swimsuit, tiles, cloudy sky, day, cameltoe, skin tight, impossible clothes, skindentation, cloud, swimsuit, wading, thigh gap, grey hair, sky, solo focus, poolside, impossible swimsuit, standing, covered navel, breasts, shiny clothes, wet, \n\nA detailed character and background with intricate textures. the overall mood of the image is mysterious and powerful.",
+            "text_2": "A detailed character and background with intricate textures"
+        }
+    },
+    {
+        "id": 1887,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "1girl, multiple boys, looking at viewer, magical girl, pink hair, large breasts, torn clothes, wedgie, zettai ryouiki, thighhighs, corruption, exhibitionism, public indecency, bondage, latex, evil smile, pubic, vaginal, pubic tattoo, from below, foreshortening, outdoors, scenery, crowd, building, black thighhighs, smile, glowing eyes, breast, corset, pink eyes, nipples, glowing, bdsm, dark persona, tattoo, latex legwear, power lines, hetero, solo focus, breasts apart, \n\nA detailed character and background with intricate textures. the overall color scheme is predominantly red, gold, and black, giving the image a futuristic and edgy feel.",
+            "text_2": "1girl, looking at viewer, school swimsuit, pool, outdoors, tile floor, large breasts, from behind, thick thighs, long hair, high ponytail, water, looking back, thighs, blush, ponytail, one-piece swimsuit, blue eyes, wide hips, covered nipples, ass focus, curvy, white one-piece swimsuit, tiles, cloudy sky, day, cameltoe, skin tight, impossible clothes, skindentation, cloud, swimsuit, wading, thigh gap, grey hair, sky, solo focus, poolside, impossible swimsuit, standing, covered navel, breasts, shiny clothes, wet, A detailed character and background with intricate textures. the overall mood of the image is mysterious and powerful., \n\nA detailed character and background with intricate textures."
+        }
+    },
+    {
+        "id": 1888,
+        "name": "NL input",
+        "prompts": {
+            "text": "A detailed character and background with intricate textures"
+        }
+    },
+    {
+        "id": 1889,
+        "name": "note",
+        "prompts": {
+            "text": "<|special|>, \n<|characters|>, <|copyrights|>, \n<|artist|>, \n\n<|general|>,\n\n<|extended|>.\n\n<|quality|>, <|meta|>, <|rating|>\n\n\ngeneral\nsensitive \nquestionable \nexplicit"
+        }
+    },
+    {
+        "id": 1890,
+        "name": "Base Prompt",
+        "prompts": {
+            "text": "1girl, looking at viewer, solo focus, solo, dutch angle, outdoors, scenery, black thighhighs, pink eyes, white footwear, very long hair, standing, high heels, long hair, side cutout, thighhighs, polearm, clothing cutout, detached sleeves, bare shoulders, boots, elbow glove, white hair, thigh boots, dress, armor, zettai ryouiki, gloves, thigh strap, from above, short sleeves, looking up, ponytail, white dress, lance, high heel boots, nikke, azur lane, blue archive, kancolle, virtual youtuber, arknights, girls' frontline,genshin impact, \n\nA detailed character and background with intricate textures. the character is standing in a heroic pose with their arms outstretched, as if they are ready to take on any challenge."
+        }
+    },
+    {
+        "id": 1907,
+        "name": "SamplerCustom"
+    },
+    {
+        "id": 1911,
+        "name": "Uncond Zero"
+    },
+    {
+        "id": 1922,
+        "name": "2D_aesthetic_Stability_look_best",
+        "prompts": {
+            "text": "A highly detailed character with smooth, glowing skin and vibrant, natural colors, A dynamic, expressive pose with natural proportions and accurate composition. Soft, balanced lighting enhances depth and warmth, while surrounding light subtly interacts with the character, blending tones and creating a harmonious connection with the environment. Rich facial expressions convey emotion and presence, and soft highlights accentuate the character\u2019s curves and details, adding depth and a natural, luminous glow.\nnikke, azur lane, blue archive, kancolle, virtual youtuber, arknights, girls' frontline, genshin impact"
+        }
+    },
+    {
+        "id": 1924,
+        "name": "SamplerDPMPP_SDE"
+    },
+    {
+        "id": 1936,
+        "name": "ImageSharpen"
+    },
+    {
+        "id": 1939,
+        "name": "ProPostFilmGrain"
+    },
+    {
+        "id": 1952,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 1953,
+        "name": "SamplerEulerAncestral"
+    },
+    {
+        "id": 1958,
+        "name": "SD15 Guidance"
+    },
+    {
+        "id": 1960,
+        "name": "SD15 VAE Encoder"
+    },
+    {
+        "id": 1963,
+        "name": "SD15 Sampler"
+    },
+    {
+        "id": 1964,
+        "name": "Final SD15 VAE Decoder"
+    },
+    {
+        "id": 1990,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "1girl, looking at viewer, solo focus, solo, dutch angle, outdoors, scenery, black thighhighs, pink eyes, white footwear, very long hair, standing, high heels, long hair, side cutout, thighhighs, polearm, clothing cutout, detached sleeves, bare shoulders, boots, elbow glove, white hair, thigh boots, dress, armor, zettai ryouiki, gloves, thigh strap, from above, short sleeves, looking up, ponytail, white dress, lance, high heel boots, nikke, azur lane, blue archive, kancolle, virtual youtuber, arknights, girls' frontline,genshin impact, \n\nA detailed character and background with intricate textures. the character is standing in a heroic pose with their arms outstretched, as if they are ready to take on any challenge."
+        }
+    },
+    {
+        "id": 1991,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(worst quality, low quality:1.6\n)"
+        }
+    },
+    {
+        "id": 2004,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "bestmerge_ALL.safetensors"
+        }
+    },
+    {
+        "id": 2007,
+        "name": "Reroute"
+    },
+    {
+        "id": 2036,
+        "name": "Tags Input",
+        "prompts": {
+            "text": "A highly detailed anime-style character with smooth, radiant skin and vibrant, balanced colors, depicted in a dynamic and expressive pose with flawless anatomy and natural proportions. The composition is visually compelling, with intricate textures and exquisite detailing in the character's design. Soft, nuanced lighting enhances depth and warmth, interacting harmoniously with the surroundings to create a cohesive, immersive atmosphere. The background is richly detailed and dynamic, filled with captivating elements that complement the scene without overwhelming the character. Subtle highlights and shadows accentuate the character's curves, clothing, and features, adding realism and a luminous glow. The overall image captures a perfect balance between artistic stylization and a convincingly grounded presence.\nnikke, azur lane, blue archive, kancolle, virtual youtuber, arknights, girls' frontline, genshin impact"
+        }
+    },
+    {
+        "id": 2042,
+        "name": "Uncond Zero"
+    },
+    {
+        "id": 2045,
+        "name": "SD15 Scheduler"
+    },
+    {
+        "id": 2046,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 2047,
+        "name": "SplitSigmasDenoise"
+    },
+    {
+        "id": 2049,
+        "name": "negative",
+        "prompts": {
+            "text": "1girl, 4boys, anal, anal object insertion, arms behind back, ass, bdsm, black bodysuit, blush, bodysuit, bondage, bound, bound ankles, bound arms, bound legs, breast bondage, breasts, butt plug, cleft of venus, clitoris, clitoris piercing, dark-skinned male, dark skin, dildo, dildo gag, ear piercing, earrings, erection, flaccid, from behind, gag, group sex, hair ribbon, heart, heart-shaped pupils, interracial, jewel butt plug, jewelry, large breasts, long hair, mask, multiple boys, nipple piercing, nipples, object insertion, penis, piercing, pink eyes, pink ribbon, plant, potted plant, pussy, pussy piercing, red rope, reverse prayer, ribbon, rope, saliva, saliva trail, sex toy, shibari, shibari over clothes, symbol-shaped pupils, tongue, tongue out, twintails, uncensored, unworn gag, vibrator, white hair, hetero, hair bun, double bun, open mouth, grey hair, extra ears, gangbang, solo focus, multiple penises, chain, bangs, anus, bodystocking, oral"
+        }
+    },
+    {
+        "id": 2050,
+        "name": "negative",
+        "prompts": {
+            "text": "1girl, :d, backpack, bag, black jacket, black pantyhose, blazer, blue eyes, bow, bowtie, box, breasts, brown cardigan, brown hair, brown skirt, buttons, candy, candy cane, cardigan, christmas, cowboy shot, food, gift, gift box, jacket, long hair, long sleeves, looking at viewer, medium breasts, miniskirt, night, open clothes, open jacket, open mouth, outdoors, pantyhose, paper bag, pavement, plaid bow, plaid bowtie, plaid clothes, pleated skirt, scarf, skirt, smile, snowing, solo, standing, undershirt, winter, winter clothes, school uniform, lamppost, blush, bangs, building, plaid scarf, red bow, white shirt, hands up, plaid, shirt"
+        }
+    },
+    {
+        "id": 2060,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 2063,
+        "name": "Reroute"
+    },
+    {
+        "id": 2065,
+        "name": "SamplerEulerAncestralCFGPP"
+    },
+    {
+        "id": 2066,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "light_shadow_fp16.safetensors"
+        }
+    },
+    {
+        "id": 2067,
+        "name": "Tags Input"
+    },
+    {
+        "id": 2070,
+        "name": "negative",
+        "prompts": {
+            "text": "amputated, bad anatomy, bad proportions, blurry, dated, deformed, extra limbs, fused fingers, low quality, malformed limbs, missing limbs, mutated, ugly, overexposed, underexposed, flat colors, low detail,"
+        }
+    },
+    {
+        "id": 2071,
+        "name": "SamplerDPMPP_SDE"
+    },
+    {
+        "id": 2072,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 2073,
+        "name": "SaveImagePlus",
+        "prompts": {
+            "text": "WEBP (lossless)"
+        }
+    },
+    {
+        "id": 2074,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "_sd1.5_model\\merge\\real\\real_merge.safetensors"
+        }
+    },
+    {
+        "id": 2075,
+        "name": "ModelMergeSimple"
+    },
+    {
+        "id": 2079,
+        "name": "Tags Input"
+    },
+    {
+        "id": 2080,
+        "name": "Reroute"
+    },
+    {
+        "id": 2081,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 2082,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "novel-200520-17-2708.safetensors"
+        }
+    },
+    {
+        "id": 2083,
+        "name": "Tags Input",
+        "prompts": {
+            "text": "1girl, looking at viewer, solo focus, solo, dutch angle, outdoors, scenery, black thighhighs, pink eyes, white footwear, very long hair, standing, high heels, long hair, side cutout, thighhighs, polearm, clothing cutout, detached sleeves, bare shoulders, boots, elbow glove, white hair, thigh boots, dress, armor, zettai ryouiki, gloves, thigh strap, from above, short sleeves, looking up, ponytail, white dress, lance, high heel boots, nikke, azur lane, blue archive, kancolle, virtual youtuber, arknights, girls' frontline,genshin impact, \n\nA detailed character and background with intricate textures. the character is standing in a heroic pose with their arms outstretched, as if they are ready to take on any challenge."
+        }
+    },
+    {
+        "id": 2084,
+        "name": "FreeU_V2"
+    },
+    {
+        "id": 2085,
+        "name": "SamplerEulerAncestralCFGPP"
+    },
+    {
+        "id": 2086,
+        "name": "GITSScheduler"
+    },
+    {
+        "id": 2087,
+        "name": "SamplerEulerAncestralCFGPP"
+    },
+    {
+        "id": 2088,
+        "name": "SamplerDPMPP_2M_SDE"
+    },
+    {
+        "id": 2089,
+        "name": "SamplerEulerAncestral"
+    },
+    {
+        "id": 2091,
+        "name": "SamplerDPMPP_3M_SDE"
+    },
+    {
+        "id": 2093,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 2094,
+        "name": "SamplerDPMPP_2M_SDE"
+    },
+    {
+        "id": 2103,
+        "name": "SaveImagePlus"
+    },
+    {
+        "id": 2104,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 2105,
+        "name": "PixArtResolutionSelect",
+        "prompts": {
+            "text": "PixArtMS_Sigma_XL_2_512"
+        }
+    },
+    {
+        "id": 2106,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 2108,
+        "name": "SamplerEulerAncestralCFGPP"
+    }
+]

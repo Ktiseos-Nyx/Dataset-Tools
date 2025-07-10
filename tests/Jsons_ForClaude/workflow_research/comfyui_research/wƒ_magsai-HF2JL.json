@@ -1,0 +1,966 @@
+{
+  "last_node_id": 266,
+  "last_link_id": 65,
+  "nodes": [
+    {
+      "id": 18,
+      "type": "Label (rgthree)",
+      "pos": [
+        10,
+        -3730
+      ],
+      "size": [
+        240,
+        3360
+      ],
+      "flags": {
+        "pinned": true,
+        "allow_interaction": false
+      },
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\n\n\n\n📸\n",
+      "properties": {
+        "fontSize": 240,
+        "fontFamily": "arial",
+        "fontColor": "#cdcdcd",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 22,
+      "type": "Label (rgthree)",
+      "pos": [
+        270,
+        -1280
+      ],
+      "size": [
+        308.4296875,
+        888
+      ],
+      "flags": {
+        "pinned": true,
+        "allow_interaction": false
+      },
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\n\nworkƒlow\n",
+      "properties": {
+        "fontSize": 74,
+        "fontFamily": "arial",
+        "fontColor": "#9c9c9c",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 25,
+      "type": "Label (rgthree)",
+      "pos": [
+        60,
+        -1330
+      ],
+      "size": [
+        40,
+        720
+      ],
+      "flags": {
+        "pinned": true,
+        "allow_interaction": false
+      },
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n★",
+      "properties": {
+        "fontSize": 40,
+        "fontFamily": "arial black",
+        "fontColor": "#fccb00",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 26,
+      "type": "Label (rgthree)",
+      "pos": [
+        -30,
+        -1310
+      ],
+      "size": [
+        70,
+        700
+      ],
+      "flags": {
+        "pinned": true,
+        "allow_interaction": false
+      },
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n★",
+      "properties": {
+        "fontSize": 70,
+        "fontFamily": "arial black",
+        "fontColor": "#fcaa00",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 27,
+      "type": "Label (rgthree)",
+      "pos": [
+        120,
+        -1310
+      ],
+      "size": [
+        20,
+        680
+      ],
+      "flags": {
+        "pinned": true,
+        "allow_interaction": false
+      },
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n★",
+      "properties": {
+        "fontSize": 20,
+        "fontFamily": "arial black",
+        "fontColor": "#fce76d",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 28,
+      "type": "Label (rgthree)",
+      "pos": [
+        -120,
+        -1310
+      ],
+      "size": [
+        114,
+        798
+      ],
+      "flags": {
+        "pinned": true,
+        "allow_interaction": false
+      },
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n★",
+      "properties": {
+        "fontSize": 114,
+        "fontFamily": "arial black",
+        "fontColor": "#fc8500",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 31,
+      "type": "Label (rgthree)",
+      "pos": [
+        30,
+        -770
+      ],
+      "size": [
+        1041.3984375,
+        528
+      ],
+      "flags": {
+        "pinned": true,
+        "allow_interaction": false
+      },
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\nTransfert direct de HuggingFace vers JupyterLab",
+      "properties": {
+        "fontSize": 48,
+        "fontFamily": "arial",
+        "fontColor": "#fc8500",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 244,
+      "type": "Label (rgthree)",
+      "pos": [
+        0,
+        -120
+      ],
+      "size": [
+        28.919921875,
+        52
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "1",
+      "properties": {
+        "fontSize": 52,
+        "fontFamily": "arial",
+        "fontColor": "#ff8200",
+        "textAlign": "right",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 242,
+      "type": "Label (rgthree)",
+      "pos": [
+        40,
+        -120
+      ],
+      "size": [
+        314.30859375,
+        24
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Liens vers HuggingFace",
+      "properties": {
+        "fontSize": 24,
+        "fontFamily": "arial black",
+        "fontColor": "#cdcdcd",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 248,
+      "type": "Label (rgthree)",
+      "pos": [
+        540,
+        -120
+      ],
+      "size": [
+        287.0625,
+        24
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Le fichier à transférer",
+      "properties": {
+        "fontSize": 24,
+        "fontFamily": "arial black",
+        "fontColor": "#cdcdcd",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 251,
+      "type": "Label (rgthree)",
+      "pos": [
+        1080,
+        -120
+      ],
+      "size": [
+        170.12109375,
+        24
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Confirmation",
+      "properties": {
+        "fontSize": 24,
+        "fontFamily": "arial black",
+        "fontColor": "#cdcdcd",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 252,
+      "type": "Label (rgthree)",
+      "pos": [
+        1080,
+        -90
+      ],
+      "size": [
+        181.7421875,
+        16
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Affiche le tranfert effectué",
+      "properties": {
+        "fontSize": 16,
+        "fontFamily": "arial",
+        "fontColor": "#9c9c9c",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 249,
+      "type": "Label (rgthree)",
+      "pos": [
+        540,
+        -90
+      ],
+      "size": [
+        358.4296875,
+        16
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 12,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Entrer le token crée au préalable sur HuggingFace",
+      "properties": {
+        "fontSize": 16,
+        "fontFamily": "arial",
+        "fontColor": "#9c9c9c",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 247,
+      "type": "Label (rgthree)",
+      "pos": [
+        500,
+        -120
+      ],
+      "size": [
+        28.919921875,
+        52
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 13,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "2",
+      "properties": {
+        "fontSize": 52,
+        "fontFamily": "arial",
+        "fontColor": "#158bb2",
+        "textAlign": "right",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 243,
+      "type": "Label (rgthree)",
+      "pos": [
+        40,
+        -90
+      ],
+      "size": [
+        358.4296875,
+        16
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 14,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Entrer le token crée au préalable sur HuggingFace",
+      "properties": {
+        "fontSize": 16,
+        "fontFamily": "arial",
+        "fontColor": "#9c9c9c",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 250,
+      "type": "Label (rgthree)",
+      "pos": [
+        1040,
+        -120
+      ],
+      "size": [
+        28.919921875,
+        52
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 15,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "3",
+      "properties": {
+        "fontSize": 52,
+        "fontFamily": "arial",
+        "fontColor": "#008528",
+        "textAlign": "right",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 33,
+      "type": "Label (rgthree)",
+      "pos": [
+        -30,
+        -1880
+      ],
+      "size": [
+        1552.0810546875,
+        1596
+      ],
+      "flags": {
+        "pinned": true,
+        "allow_interaction": false
+      },
+      "order": 16,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\n\n\n\nHUGGINGFACE Transfert\n",
+      "properties": {
+        "fontSize": 114,
+        "fontFamily": "arial black",
+        "fontColor": "#cdcdcd",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 254,
+      "type": "Note",
+      "pos": [
+        650,
+        400
+      ],
+      "size": [
+        290,
+        90
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "\n Après avoir rempli ce node,\n vous pouvez lancer le workflow."
+      ],
+      "color": "#f4d614",
+      "bgcolor": "#e0c200"
+    },
+    {
+      "id": 4,
+      "type": "IF_HFDownloadNode",
+      "pos": [
+        500,
+        20
+      ],
+      "size": [
+        440,
+        380
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "provided_token",
+          "type": "STRING",
+          "link": 3,
+          "widget": {
+            "name": "provided_token"
+          },
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "IF_HFDownloadNode"
+      },
+      "widgets_values": [
+        "black-forest-labs/FLUX.1-Depth-dev-lora",
+        "FLUX.1-Depth-dev-lora.safetensors",
+        "",
+        "loras",
+        "comma-separated list to exclude",
+        false,
+        "",
+        [
+          false,
+          true
+        ],
+        [
+          false,
+          true
+        ]
+      ],
+      "color": "#299fc6",
+      "bgcolor": "#158bb2"
+    },
+    {
+      "id": 261,
+      "type": "Label (rgthree)",
+      "pos": [
+        1610,
+        -670
+      ],
+      "size": [
+        339.890625,
+        768
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 18,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMAG's A.I. Bros",
+      "properties": {
+        "fontSize": 48,
+        "fontFamily": "arial",
+        "fontColor": "#fc8500",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 262,
+      "type": "Label (rgthree)",
+      "pos": [
+        1690,
+        -400
+      ],
+      "size": [
+        76.2509765625,
+        527
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 19,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYouTube :",
+      "properties": {
+        "fontSize": 17,
+        "fontFamily": "arial",
+        "fontColor": "#9c9c9c",
+        "textAlign": "right",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 263,
+      "type": "Label (rgthree)",
+      "pos": [
+        1770,
+        -400
+      ],
+      "size": [
+        107.0302734375,
+        527
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 20,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n@themagbros\n",
+      "properties": {
+        "fontSize": 17,
+        "fontFamily": "arial",
+        "fontColor": "#ffffff",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 264,
+      "type": "Label (rgthree)",
+      "pos": [
+        1640,
+        -380
+      ],
+      "size": [
+        84.103515625,
+        527
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 21,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFacebook :",
+      "properties": {
+        "fontSize": 17,
+        "fontFamily": "arial",
+        "fontColor": "#9c9c9c",
+        "textAlign": "right",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 266,
+      "type": "Label (rgthree)",
+      "pos": [
+        1730,
+        -380
+      ],
+      "size": [
+        204.45654296875,
+        527
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 22,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nComfyUI Mag's AI - France\n",
+      "properties": {
+        "fontSize": 17,
+        "fontFamily": "arial",
+        "fontColor": "#ffffff",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 260,
+      "type": "Label (rgthree)",
+      "pos": [
+        1620,
+        -1870
+      ],
+      "size": [
+        140,
+        1960
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "pinned": true
+      },
+      "order": 23,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "\n\n\n\n\n\n\n\n\n\n\n\n\n🦦",
+      "properties": {
+        "fontSize": 140,
+        "fontFamily": "arial",
+        "fontColor": "#cdcdcd",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 7,
+      "type": "ShowText|pysssss",
+      "pos": [
+        1040,
+        20
+      ],
+      "size": [
+        410,
+        140
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 2,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null,
+          "shape": 6
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "",
+        "Downloaded files:  from black-forest-labs/FLUX.1-Depth-dev-lora to /workspace/ComfyUI/models/loras/FLUX.1-Depth-dev-lora"
+      ],
+      "color": "#14993c",
+      "bgcolor": "#008528"
+    },
+    {
+      "id": 265,
+      "type": "Note",
+      "pos": [
+        1980,
+        60
+      ],
+      "size": [
+        320,
+        100
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 24,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Bloc-note",
+      "properties": {},
+      "widgets_values": [
+        "\n   Quel plaisir de s'amuser avec vous !\n\n           Seb & Denis Mag's"
+      ],
+      "color": "#f4d614",
+      "bgcolor": "#e0c200"
+    },
+    {
+      "id": 10,
+      "type": "Text Multiline",
+      "pos": [
+        0,
+        20
+      ],
+      "size": [
+        390,
+        81
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 25,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Text Multiline"
+      },
+      "widgets_values": [
+        "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",
+        [
+          false,
+          true
+        ]
+      ],
+      "color": "#ff9614",
+      "bgcolor": "#ff8200"
+    }
+  ],
+  "links": [
+    [
+      2,
+      4,
+      0,
+      7,
+      0,
+      "STRING"
+    ],
+    [
+      3,
+      10,
+      0,
+      4,
+      0,
+      "STRING"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.7972024500000009,
+      "offset": [
+        136.30871959321672,
+        531.3459776272367
+      ]
+    },
+    "ue_links": []
+  },
+  "version": 0.4
+}

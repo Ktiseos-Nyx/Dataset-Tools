@@ -1,0 +1,2050 @@
+{
+  "last_node_id": 628,
+  "last_link_id": 1303,
+  "nodes": [
+    {
+      "id": 2,
+      "type": "CLIPSetLastLayer",
+      "pos": [
+        90,
+        -30
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1,
+          "label": "CLIP"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            1286
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "CLIP"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPSetLastLayer"
+      },
+      "widgets_values": [
+        -2
+      ]
+    },
+    {
+      "id": 1,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        90,
+        -210
+      ],
+      "size": [
+        320,
+        130
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            98
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "模型"
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            1
+          ],
+          "shape": 3,
+          "label": "CLIP"
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "slot_index": 2,
+          "shape": 3,
+          "label": "VAE"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "XL\\ntrMIXIllustriousXL_xiii.safetensors",
+        null
+      ]
+    },
+    {
+      "id": 8,
+      "type": "VAELoader",
+      "pos": [
+        90,
+        -340
+      ],
+      "size": [
+        320,
+        82
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            245,
+            1291
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "VAE"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "sdxl_vae_fp16fix.safetensors",
+        null
+      ]
+    },
+    {
+      "id": 46,
+      "type": "FreeU_V2",
+      "pos": [
+        90,
+        70
+      ],
+      "size": [
+        315,
+        130
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 98,
+          "label": "模型"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1285
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "模型"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FreeU_V2"
+      },
+      "widgets_values": [
+        1.05,
+        1.1500000000000001,
+        0.9500000000000001,
+        0.9
+      ]
+    },
+    {
+      "id": 6,
+      "type": "EmptyLatentImage",
+      "pos": [
+        90,
+        -500
+      ],
+      "size": [
+        320,
+        110
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            81,
+            1293
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "Latent"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        832,
+        1248,
+        1
+      ]
+    },
+    {
+      "id": 598,
+      "type": "CR Text",
+      "pos": [
+        2150,
+        -1470
+      ],
+      "size": [
+        450,
+        170
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "*",
+          "links": [
+            1141
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "文本"
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "label": "显示帮助"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Text"
+      },
+      "widgets_values": [
+        "\n\n----\n\nExtract content within # #, excluding  # #. \nJust output the content within # #, nothing less, nothing more."
+      ]
+    },
+    {
+      "id": 599,
+      "type": "CR Text Concatenate",
+      "pos": [
+        2690,
+        -1720
+      ],
+      "size": [
+        210,
+        80
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text1",
+          "type": "STRING",
+          "link": 1140,
+          "slot_index": 0,
+          "widget": {
+            "name": "text1"
+          },
+          "label": "文本1",
+          "shape": 7
+        },
+        {
+          "name": "text2",
+          "type": "STRING",
+          "link": 1141,
+          "slot_index": 1,
+          "widget": {
+            "name": "text2"
+          },
+          "label": "文本2",
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "*",
+          "links": [
+            1138,
+            1139
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "字符串"
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "label": "显示帮助"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Text Concatenate"
+      },
+      "widgets_values": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 600,
+      "type": "SetNode",
+      "pos": [
+        2930,
+        -1590
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "flags": {},
+      "order": 35,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "link": 1142
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": null,
+          "label": "输出"
+        }
+      ],
+      "properties": {
+        "previousName": "Ollama处理后"
+      },
+      "widgets_values": [
+        "Ollama处理后"
+      ],
+      "color": "#af3535"
+    },
+    {
+      "id": 587,
+      "type": "CR Text Concatenate",
+      "pos": [
+        1540,
+        -1780
+      ],
+      "size": [
+        210,
+        80
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text1",
+          "type": "STRING",
+          "link": 1131,
+          "slot_index": 0,
+          "widget": {
+            "name": "text1"
+          },
+          "label": "文本1",
+          "shape": 7
+        },
+        {
+          "name": "text2",
+          "type": "STRING",
+          "link": 1148,
+          "slot_index": 1,
+          "widget": {
+            "name": "text2"
+          },
+          "label": "文本2",
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "*",
+          "links": [
+            1133
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "字符串"
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "label": "显示帮助"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Text Concatenate"
+      },
+      "widgets_values": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 588,
+      "type": "OllamaGenerate",
+      "pos": [
+        1540,
+        -1440
+      ],
+      "size": [
+        350,
+        154
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 1133,
+          "widget": {
+            "name": "prompt"
+          },
+          "label": "prompt"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "response",
+          "type": "STRING",
+          "links": [
+            1136
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "response"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OllamaGenerate"
+      },
+      "widgets_values": [
+        "What is Art?",
+        "enable",
+        "http://127.0.0.1:11434",
+        "llama3.2-vision:latest",
+        5,
+        "text"
+      ]
+    },
+    {
+      "id": 601,
+      "type": "GetNode",
+      "pos": [
+        650,
+        -850
+      ],
+      "size": [
+        210,
+        70
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            1144
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Get_Ollama处理前",
+      "properties": {},
+      "widgets_values": [
+        "Ollama处理前"
+      ],
+      "color": "#af3535"
+    },
+    {
+      "id": 595,
+      "type": "CR Text",
+      "pos": [
+        1270,
+        -2110
+      ],
+      "size": [
+        240,
+        130
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "*",
+          "links": [
+            1129
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "文本"
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "label": "显示帮助"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Text"
+      },
+      "widgets_values": [
+        "Translate the following into English, do not add any text other than the prompt:"
+      ]
+    },
+    {
+      "id": 602,
+      "type": "SetNode",
+      "pos": [
+        1910,
+        -1650
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "link": 1143
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": null,
+          "label": "输出"
+        }
+      ],
+      "properties": {
+        "previousName": "Ollama处理前"
+      },
+      "widgets_values": [
+        "Ollama处理前"
+      ],
+      "color": "#af3535"
+    },
+    {
+      "id": 605,
+      "type": "GetNode",
+      "pos": [
+        1280,
+        -1830
+      ],
+      "size": [
+        210,
+        60
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": [
+            1147,
+            1148
+          ],
+          "slot_index": 0,
+          "label": "输出"
+        }
+      ],
+      "title": "Get_Ollama初始文本",
+      "properties": {},
+      "widgets_values": [
+        "Ollama初始文本"
+      ],
+      "color": "#af3535"
+    },
+    {
+      "id": 593,
+      "type": "DisplayText_Zho",
+      "pos": [
+        3160,
+        -1790
+      ],
+      "size": [
+        660,
+        490
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 1138,
+          "widget": {
+            "name": "text"
+          },
+          "label": "text"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "label": "text"
+        }
+      ],
+      "title": "Polished prompt",
+      "properties": {
+        "Node name for S&R": "DisplayText_Zho"
+      },
+      "widgets_values": [
+        "",
+        "I'll follow the steps to refine the prompt.\n\n**Step 1: List the names, gender and verbs of all characters in the prompt.**\n\n* Names: none\n* Gender: girl\n* Verbs: none\n\nSince there are no verbs, I can skip this step.\n\n**Step 2: Use a short phrase to describe all the characters in the prompt.**\n\n- This girl has dirty clothes, unkempt hair, and a sad expression.\n\n**Step 3: Please use the verbs listed above to provide a detailed description.**\n\nSince there are no verbs, I can skip this step.\n\n**Step 4: Merge the information from the previous two steps, listing them with commas.**\n\ngirl, dirty clothes, unkempt hair, sad expression\n\nSince there is a prominent subject in the prompt, I will proceed to the next step.\n\n**Step 5: Refine the prompt as a whole**\n\n# A young girl standing alone on a dirty street, from a low-angle shot with a wide lens. The camera captures her worn-out shoes, tattered clothes, and messy hair blown by the wind. The girl looks down at the ground, her eyes filled with sadness and despair. In the background, there are dilapidated buildings, trash-filled alleys, and a faint smell of garbage hangs in the air. The street is empty except for a few stray cats wandering around, adding to the sense of desolation. #\n\n----\n\nExtract content within # #, excluding  # #. \nJust output the content within # #, nothing less, nothing more."
+      ]
+    },
+    {
+      "id": 590,
+      "type": "OllamaGenerate",
+      "pos": [
+        1540,
+        -1650
+      ],
+      "size": [
+        350,
+        154
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 1135,
+          "widget": {
+            "name": "prompt"
+          },
+          "label": "prompt"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "response",
+          "type": "STRING",
+          "links": [
+            1143
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "response"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OllamaGenerate"
+      },
+      "widgets_values": [
+        "What is Art?",
+        "enable",
+        "http://127.0.0.1:11434",
+        "llama3.2-vision:latest",
+        5,
+        "text"
+      ]
+    },
+    {
+      "id": 586,
+      "type": "CR Text Concatenate",
+      "pos": [
+        1530,
+        -1900
+      ],
+      "size": [
+        210,
+        80
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text1",
+          "type": "STRING",
+          "link": 1129,
+          "slot_index": 0,
+          "widget": {
+            "name": "text1"
+          },
+          "label": "文本1",
+          "shape": 7
+        },
+        {
+          "name": "text2",
+          "type": "STRING",
+          "link": 1147,
+          "widget": {
+            "name": "text2"
+          },
+          "label": "文本2",
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "*",
+          "links": [
+            1135
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "字符串"
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "label": "显示帮助"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Text Concatenate"
+      },
+      "widgets_values": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 594,
+      "type": "OllamaGenerate",
+      "pos": [
+        2660,
+        -1460
+      ],
+      "size": [
+        260,
+        154
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 1139,
+          "widget": {
+            "name": "prompt"
+          },
+          "label": "prompt"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "response",
+          "type": "STRING",
+          "links": [
+            1142
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "response"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OllamaGenerate"
+      },
+      "widgets_values": [
+        "What is Art?",
+        "enable",
+        "http://127.0.0.1:11434",
+        "llama3.2-vision:latest",
+        5,
+        "text"
+      ]
+    },
+    {
+      "id": 603,
+      "type": "GetNode",
+      "pos": [
+        650,
+        -690
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            1145
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Get_Ollama处理后",
+      "properties": {},
+      "widgets_values": [
+        "Ollama处理后"
+      ],
+      "color": "#af3535"
+    },
+    {
+      "id": 604,
+      "type": "SetNode",
+      "pos": [
+        880,
+        -1070
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "link": 1146,
+          "label": "输入"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": null,
+          "label": "输出"
+        }
+      ],
+      "properties": {
+        "previousName": "Ollama初始文本"
+      },
+      "widgets_values": [
+        "Ollama初始文本"
+      ],
+      "color": "#af3535"
+    },
+    {
+      "id": 597,
+      "type": "CR Text",
+      "pos": [
+        690,
+        -2140
+      ],
+      "size": [
+        570,
+        870
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "*",
+          "links": [
+            1131
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "文本"
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "label": "显示帮助"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Text"
+      },
+      "widgets_values": [
+        "You are a prompt engineer proficient in SDXL painting, especially skilled in refining prompts.    Please strictly follow the steps below to refine the prompts that need to be refined, operate step by step and output the results of each step:\n\nStep 1: List the names, gender and verbs of all characters in the prompt.       If there are no characters in the prompt, skip this step.\n\nStep 2: Use a short phrase to describe all the characters in the prompt.     If this sentence describes a girl, please provide a detailed description of her appearance.\nThe format is as follows:\n- This girl has thick thighs, wide hips, fair skin, long white hair, red eyes, and an awkward smile.\n\nStep 3: Please use the verbs listed above to provide a detailed description.     For example: eating, what food is eaten;     taking a bath, is it taken in a bathtub or shower.      Please see below for the format.\n- Enjoying a warm bowl of curry accompanied by cold ice cream and fresh apple.\n\nIf there are no verbs in the prompt, skip this step.\n\nStep 4: Merge the information from the previous two steps, listing them with commas. If there is no prominent subject in the prompt, such as if the prompt is pure scenery, skip this step and do not output any characters.  \n\nStep 5:\nIf the prompt contains characters, use the result of the previous step as a starting point, add the camera angle and focal length of the camera, and creatively improve the rest of the prompt as a whole in English,1000 words,following the format: Number of characters and gender of characters, [character 1], [character 2], [character ...                    ], everything else in any order.                     Examples of refined prompt:\n- A young woman lying on her back on a bed.       looking directly at the viewer with a blushing, smiling face and an open mouth.            Her brown eyes are visible, and she's dressed in a school uniform consisting of a white shirt, panties, a jacket, and a plaid skirt.            She has a red bow in her hair and is wearing a collared shirt with long sleeves that extend past her wrists, a bowtie, and black pantyhose.            The girl has nail polish on her nails.            Her panties are white, and her skirt is blue, complemented by a blue blazer.            scene is set indoors with curtains, a couch, and an air conditioner.            There's also an electrical outlet in the background.         The girl is sitting on the couch,from above and dutch_angle,           Her layered sleeves are noticeable as she relaxes in the room with a door nearby.\nIf the prompt does not contain a character but does contain a clear subject, use the result of the previous step as the beginning and use your imagination to refine the prompt as a whole.               The language should be English and the format should be \"subject name, everything else in any order.\"\n\nIf the prompt does not contain a character or a clear subject, use your imagination to refine the prompt as a whole, in English.\n\nStep 6: Enclose the result of the previous step within # #\n\nPrompt that need refining:"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "CLIPTextEncode",
+      "pos": [
+        700,
+        110
+      ],
+      "size": [
+        610,
+        180
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1301,
+          "label": "CLIP"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            451,
+            1290
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "条件"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "lowres, (worst quality, bad quality:1.2), bad anatomy, sketch, jpeg artifacts, signature, watermark, old, oldest, censored, bar_censor,bad anatomy,bad proportions,extra fingers,extra legs,fused fingers,missing fingers,simple background,dildo,"
+      ]
+    },
+    {
+      "id": 591,
+      "type": "DisplayText_Zho",
+      "pos": [
+        2150,
+        -2120
+      ],
+      "size": [
+        450,
+        610
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 1136,
+          "widget": {
+            "name": "text"
+          },
+          "label": "text"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            1140
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "text"
+        }
+      ],
+      "title": "Polished prompt",
+      "properties": {
+        "Node name for S&R": "DisplayText_Zho"
+      },
+      "widgets_values": [
+        "",
+        "I'll follow the steps to refine the prompt.\n\n**Step 1: List the names, gender and verbs of all characters in the prompt.**\n\n* Names: none\n* Gender: girl\n* Verbs: none\n\nSince there are no verbs, I can skip this step.\n\n**Step 2: Use a short phrase to describe all the characters in the prompt.**\n\n- This girl has dirty clothes, unkempt hair, and a sad expression.\n\n**Step 3: Please use the verbs listed above to provide a detailed description.**\n\nSince there are no verbs, I can skip this step.\n\n**Step 4: Merge the information from the previous two steps, listing them with commas.**\n\ngirl, dirty clothes, unkempt hair, sad expression\n\nSince there is a prominent subject in the prompt, I will proceed to the next step.\n\n**Step 5: Refine the prompt as a whole**\n\n# A young girl standing alone on a dirty street, from a low-angle shot with a wide lens. The camera captures her worn-out shoes, tattered clothes, and messy hair blown by the wind. The girl looks down at the ground, her eyes filled with sadness and despair. In the background, there are dilapidated buildings, trash-filled alleys, and a faint smell of garbage hangs in the air. The street is empty except for a few stray cats wandering around, adding to the sense of desolation. #"
+      ]
+    },
+    {
+      "id": 628,
+      "type": "Fast Groups Bypasser (rgthree)",
+      "pos": [
+        1100,
+        -1070
+      ],
+      "size": [
+        210,
+        60
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "OPT_CONNECTION",
+          "type": "*",
+          "links": null,
+          "label": "可选连接"
+        }
+      ],
+      "properties": {
+        "matchColors": "",
+        "matchTitle": "",
+        "showNav": true,
+        "sort": "position",
+        "customSortAlphabet": "",
+        "toggleRestriction": "default"
+      },
+      "color": "#af3535"
+    },
+    {
+      "id": 626,
+      "type": "KSampler (Efficient)",
+      "pos": [
+        1960,
+        30
+      ],
+      "size": [
+        450,
+        670
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1300,
+          "label": "模型"
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 1289,
+          "label": "正面条件"
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 1290,
+          "label": "负面条件"
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 1293,
+          "label": "Latent"
+        },
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": 1291,
+          "label": "VAE(可选)",
+          "shape": 7
+        },
+        {
+          "name": "script",
+          "type": "SCRIPT",
+          "link": null,
+          "label": "脚本",
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "模型"
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": [],
+          "slot_index": 1,
+          "shape": 3,
+          "label": "正面条件"
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": null,
+          "slot_index": 2,
+          "shape": 3,
+          "label": "负面条件"
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [],
+          "slot_index": 3,
+          "shape": 3,
+          "label": "Latent"
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "shape": 3,
+          "label": "VAE"
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1287
+          ],
+          "slot_index": 5,
+          "shape": 3,
+          "label": "图像"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler (Efficient)"
+      },
+      "widgets_values": [
+        137207544419040,
+        null,
+        30,
+        5.5,
+        "euler_ancestral",
+        "karras",
+        1,
+        "auto",
+        "true"
+      ],
+      "color": "#443322",
+      "bgcolor": "#665533",
+      "shape": 1
+    },
+    {
+      "id": 624,
+      "type": "OllamaGenerate",
+      "pos": [
+        -790,
+        -1870
+      ],
+      "size": [
+        700,
+        500
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "response",
+          "type": "STRING",
+          "links": [
+            1201
+          ],
+          "slot_index": 0,
+          "label": "response"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OllamaGenerate"
+      },
+      "widgets_values": [
+        "Please translate this sentence into English：如果提示符包含字符，则使用前一步的结果作为开始，添加相机的角度和相机的焦距并创造性地改进提示符的其余部分\n",
+        "enable",
+        "http://127.0.0.1:11434",
+        "llama3.2-vision:latest",
+        5,
+        "text"
+      ]
+    },
+    {
+      "id": 625,
+      "type": "JjkShowText",
+      "pos": [
+        -60,
+        -1870
+      ],
+      "size": [
+        710,
+        610
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 1201,
+          "widget": {
+            "name": "text"
+          },
+          "label": "text"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": null,
+          "shape": 6,
+          "label": "text"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "JjkShowText"
+      },
+      "widgets_values": [
+        "Here is the translation:\n\n\"If the prompt contains characters, use the result from the previous step as a starting point, add the camera's angle and focal length, and creatively improve the rest of the prompt.\""
+      ]
+    },
+    {
+      "id": 42,
+      "type": "KSampler (Efficient)",
+      "pos": [
+        1440,
+        30
+      ],
+      "size": [
+        450,
+        670
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1299,
+          "label": "模型"
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 397,
+          "label": "正面条件"
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 451,
+          "label": "负面条件"
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 81,
+          "label": "Latent"
+        },
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": 245,
+          "label": "VAE(可选)",
+          "shape": 7
+        },
+        {
+          "name": "script",
+          "type": "SCRIPT",
+          "link": null,
+          "label": "脚本",
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "模型"
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": [],
+          "slot_index": 1,
+          "shape": 3,
+          "label": "正面条件"
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": null,
+          "slot_index": 2,
+          "shape": 3,
+          "label": "负面条件"
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [],
+          "slot_index": 3,
+          "shape": 3,
+          "label": "Latent"
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "shape": 3,
+          "label": "VAE"
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            481
+          ],
+          "slot_index": 5,
+          "shape": 3,
+          "label": "图像"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler (Efficient)"
+      },
+      "widgets_values": [
+        137207544419040,
+        null,
+        30,
+        5.5,
+        "euler_ancestral",
+        "karras",
+        1,
+        "auto",
+        "true"
+      ],
+      "color": "#443322",
+      "bgcolor": "#665533",
+      "shape": 1
+    },
+    {
+      "id": 592,
+      "type": "DisplayText_Zho",
+      "pos": [
+        890,
+        -720
+      ],
+      "size": [
+        420,
+        170
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 1145,
+          "widget": {
+            "name": "text"
+          },
+          "label": "text"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "label": "text"
+        }
+      ],
+      "title": "Polished prompt",
+      "properties": {
+        "Node name for S&R": "DisplayText_Zho"
+      },
+      "widgets_values": [
+        "",
+        "# A young girl standing alone on a dirty street, from a low-angle shot with a wide lens. The camera captures her worn-out shoes, tattered clothes, and messy hair blown by the wind. The girl looks down at the ground, her eyes filled with sadness and despair. In the background, there are dilapidated buildings, trash-filled alleys, and a faint smell of garbage hangs in the air. The street is empty except for a few stray cats wandering around, adding to the sense of desolation. #"
+      ]
+    },
+    {
+      "id": 627,
+      "type": "CLIPTextEncode",
+      "pos": [
+        700,
+        -190
+      ],
+      "size": [
+        590,
+        260
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1303,
+          "label": "CLIP"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            1289
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "条件"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "A young girl standing alone on a dirty street, from a low-angle shot with a wide lens. The camera captures her worn-out shoes, tattered clothes, and messy hair blown by the wind. The girl looks down at the ground, her eyes filled with sadness and despair. In the background, there are dilapidated buildings, trash-filled alleys, and a faint smell of garbage hangs in the air. The street is empty except for a few stray cats wandering around, adding to the sense of desolation.\n\n\nmasterpiece, absurdres, aesthetic, best quality,newest, very awa, highres, absurdres, detailed, hyper-detailed,outdoors,[:dark theme:15], black theme,"
+      ]
+    },
+    {
+      "id": 589,
+      "type": "DisplayText_Zho",
+      "pos": [
+        890,
+        -920
+      ],
+      "size": [
+        420,
+        160
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 1144,
+          "widget": {
+            "name": "text"
+          },
+          "label": "text"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "label": "text"
+        }
+      ],
+      "title": "Original prompt",
+      "properties": {
+        "Node name for S&R": "DisplayText_Zho"
+      },
+      "widgets_values": [
+        "",
+        "A girl on a dirty street."
+      ]
+    },
+    {
+      "id": 3,
+      "type": "CLIPTextEncode",
+      "pos": [
+        700,
+        -490
+      ],
+      "size": [
+        590,
+        260
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1302,
+          "label": "CLIP"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            397
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "条件"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "A girl on a dirty street.\n\nmasterpiece, absurdres, aesthetic, best quality,newest, very awa, highres, absurdres, detailed, hyper-detailed,outdoors,[:dark theme:15], black theme,"
+      ]
+    },
+    {
+      "id": 118,
+      "type": "PreviewImage",
+      "pos": [
+        1330,
+        -1070
+      ],
+      "size": [
+        450,
+        690
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 481,
+          "label": "图像"
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 51,
+      "type": "PreviewImage",
+      "pos": [
+        1790,
+        -1070
+      ],
+      "size": [
+        450,
+        690
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 1287,
+          "label": "图像"
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 577,
+      "type": "LoraLoader",
+      "pos": [
+        1440,
+        -180
+      ],
+      "size": [
+        300,
+        160
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1285,
+          "label": "模型"
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1286,
+          "label": "CLIP"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1299,
+            1300
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "模型"
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            1301,
+            1302,
+            1303
+          ],
+          "slot_index": 1,
+          "shape": 3,
+          "label": "CLIP"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "Noob\\nb-基础\\illustrious_very_aesthetic_v1.safetensors",
+        0.5,
+        0.5,
+        null
+      ]
+    },
+    {
+      "id": 596,
+      "type": "CR Text",
+      "pos": [
+        650,
+        -1070
+      ],
+      "size": [
+        210,
+        130
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "*",
+          "links": [
+            1146
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "label": "文本"
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "label": "显示帮助"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Text"
+      },
+      "widgets_values": [
+        "一个女孩在榻榻米上吃饭"
+      ],
+      "color": "#346434"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      1,
+      2,
+      0,
+      "CLIP"
+    ],
+    [
+      81,
+      6,
+      0,
+      42,
+      3,
+      "LATENT"
+    ],
+    [
+      98,
+      1,
+      0,
+      46,
+      0,
+      "MODEL"
+    ],
+    [
+      245,
+      8,
+      0,
+      42,
+      4,
+      "VAE"
+    ],
+    [
+      397,
+      3,
+      0,
+      42,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      451,
+      4,
+      0,
+      42,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      481,
+      42,
+      5,
+      118,
+      0,
+      "IMAGE"
+    ],
+    [
+      1129,
+      595,
+      0,
+      586,
+      0,
+      "STRING"
+    ],
+    [
+      1131,
+      597,
+      0,
+      587,
+      0,
+      "STRING"
+    ],
+    [
+      1133,
+      587,
+      0,
+      588,
+      0,
+      "STRING"
+    ],
+    [
+      1135,
+      586,
+      0,
+      590,
+      0,
+      "STRING"
+    ],
+    [
+      1136,
+      588,
+      0,
+      591,
+      0,
+      "STRING"
+    ],
+    [
+      1138,
+      599,
+      0,
+      593,
+      0,
+      "STRING"
+    ],
+    [
+      1139,
+      599,
+      0,
+      594,
+      0,
+      "STRING"
+    ],
+    [
+      1140,
+      591,
+      0,
+      599,
+      0,
+      "STRING"
+    ],
+    [
+      1141,
+      598,
+      0,
+      599,
+      1,
+      "STRING"
+    ],
+    [
+      1142,
+      594,
+      0,
+      600,
+      0,
+      "*"
+    ],
+    [
+      1143,
+      590,
+      0,
+      602,
+      0,
+      "*"
+    ],
+    [
+      1144,
+      601,
+      0,
+      589,
+      0,
+      "STRING"
+    ],
+    [
+      1145,
+      603,
+      0,
+      592,
+      0,
+      "STRING"
+    ],
+    [
+      1146,
+      596,
+      0,
+      604,
+      0,
+      "*"
+    ],
+    [
+      1147,
+      605,
+      0,
+      586,
+      1,
+      "STRING"
+    ],
+    [
+      1148,
+      605,
+      0,
+      587,
+      1,
+      "STRING"
+    ],
+    [
+      1201,
+      624,
+      0,
+      625,
+      0,
+      "STRING"
+    ],
+    [
+      1285,
+      46,
+      0,
+      577,
+      0,
+      "MODEL"
+    ],
+    [
+      1286,
+      2,
+      0,
+      577,
+      1,
+      "CLIP"
+    ],
+    [
+      1287,
+      626,
+      5,
+      51,
+      0,
+      "IMAGE"
+    ],
+    [
+      1289,
+      627,
+      0,
+      626,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      1290,
+      4,
+      0,
+      626,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      1291,
+      8,
+      0,
+      626,
+      4,
+      "VAE"
+    ],
+    [
+      1293,
+      6,
+      0,
+      626,
+      3,
+      "LATENT"
+    ],
+    [
+      1299,
+      577,
+      0,
+      42,
+      0,
+      "MODEL"
+    ],
+    [
+      1300,
+      577,
+      0,
+      626,
+      0,
+      "MODEL"
+    ],
+    [
+      1301,
+      577,
+      1,
+      4,
+      0,
+      "CLIP"
+    ],
+    [
+      1302,
+      577,
+      1,
+      3,
+      0,
+      "CLIP"
+    ],
+    [
+      1303,
+      577,
+      1,
+      627,
+      0,
+      "CLIP"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 6,
+      "title": "Ollama",
+      "bounding": [
+        670,
+        -2210,
+        3170,
+        960
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.5559917313492327,
+      "offset": [
+        98.82731693460221,
+        1404.0062364668258
+      ]
+    },
+    "workspace_info": {
+      "id": "lY-gWJqQ7OJr5mXuCnobK",
+      "saveLock": false,
+      "cloudID": null,
+      "coverMediaPath": null
+    }
+  },
+  "version": 0.4
+}

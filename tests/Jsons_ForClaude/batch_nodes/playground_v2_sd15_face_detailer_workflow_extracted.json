@@ -1,0 +1,396 @@
+[
+    {
+        "id": 43,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "detailed face,beautyfull,woman, african"
+        }
+    },
+    {
+        "id": 58,
+        "name": "ImageSharpen"
+    },
+    {
+        "id": 59,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 60,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 61,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 62,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 63,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 64,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 65,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 66,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 67,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 68,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 69,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 70,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 71,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 72,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 73,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 74,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 75,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 76,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 77,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 78,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 79,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 80,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 81,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 82,
+        "name": "Note",
+        "prompts": {
+            "text": "..Credits:\nDennis Sch\u00f6neberg\n\nhttps://www.linkedin.com/in/dennis-sch%C3%B6neberg-3420a2221/\n\nhttps://civitai.com/user/denrakeiw"
+        }
+    },
+    {
+        "id": 96,
+        "name": "ImpactSimpleDetectorSEGS"
+    },
+    {
+        "id": 103,
+        "name": "ImpactSEGSOrderedFilter"
+    },
+    {
+        "id": 106,
+        "name": "DetailerForEach"
+    },
+    {
+        "id": 114,
+        "name": "SegsToCombinedMask"
+    },
+    {
+        "id": 115,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 117,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "detailed face, woman, beautyfull, japanese"
+        }
+    },
+    {
+        "id": 118,
+        "name": "ImpactSEGSOrderedFilter"
+    },
+    {
+        "id": 119,
+        "name": "DetailerForEach"
+    },
+    {
+        "id": 121,
+        "name": "SegsToCombinedMask"
+    },
+    {
+        "id": 122,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 124,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "detailed face, woman, south american, beautyfull"
+        }
+    },
+    {
+        "id": 125,
+        "name": "ImpactSEGSOrderedFilter"
+    },
+    {
+        "id": 126,
+        "name": "DetailerForEach"
+    },
+    {
+        "id": 128,
+        "name": "SegsToCombinedMask"
+    },
+    {
+        "id": 129,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 131,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "detailed face, beautyfull, caucasian"
+        }
+    },
+    {
+        "id": 132,
+        "name": "ImpactSEGSOrderedFilter"
+    },
+    {
+        "id": 133,
+        "name": "DetailerForEach"
+    },
+    {
+        "id": 135,
+        "name": "SegsToCombinedMask"
+    },
+    {
+        "id": 136,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 138,
+        "name": "SaveImage"
+    },
+    {
+        "id": 144,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "detailed face,"
+        }
+    },
+    {
+        "id": 145,
+        "name": "ImpactSEGSOrderedFilter"
+    },
+    {
+        "id": 146,
+        "name": "DetailerForEach"
+    },
+    {
+        "id": 148,
+        "name": "SegsToCombinedMask"
+    },
+    {
+        "id": 149,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 157,
+        "name": "SegsToCombinedMask"
+    },
+    {
+        "id": 158,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 182,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 202,
+        "name": "SDXL Resolutions (JPS)",
+        "prompts": {
+            "text": "landscape - 1216x832 (3:2)"
+        }
+    },
+    {
+        "id": 203,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 208,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "SDXL\\juggernautXL_v7Rundiffusion.safetensors"
+        }
+    },
+    {
+        "id": 209,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 214,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 218,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "SD15\\epicrealism_pureEvolutionV5-inpainting.safetensors"
+        }
+    },
+    {
+        "id": 221,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8n_v2.pt"
+        }
+    },
+    {
+        "id": 222,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 226,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "Sonstige\\playground-v2.5-1024px-aesthetic.fp16.safetensors"
+        }
+    },
+    {
+        "id": 229,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "fashion models, transparent bubble coats, colorful outfit, patterned dress, urban backdrop, bold makeup, contemporary style, street fashion photography, diverse group, trendy footwear, dynamic pose\n"
+        }
+    },
+    {
+        "id": 230,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 232,
+        "name": "ModelSamplingContinuousEDM",
+        "prompts": {
+            "text": "edm_playground_v2.5"
+        }
+    },
+    {
+        "id": 234,
+        "name": "KSampler (Efficient)"
+    },
+    {
+        "id": 235,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "SD15\\epicrealism_naturalSinRC1VAE.safetensors"
+        }
+    },
+    {
+        "id": 236,
+        "name": "CLIPTextEncode"
+    }
+]

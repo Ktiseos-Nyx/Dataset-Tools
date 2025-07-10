@@ -1,0 +1,53 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "v1-5-pruned-emaonly.ckpt"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a photo of a cat"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 15,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "Hyper-SD15-2steps-lora.safetensors"
+        }
+    },
+    {
+        "id": 19,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 20,
+        "name": "Note",
+        "prompts": {
+            "text": "Use the LoRA corresponding to the number of inference steps to obtain the best inference effect.\n\nAttention: The scheduler type must be set to sgm_uniform!!!  "
+        }
+    }
+]

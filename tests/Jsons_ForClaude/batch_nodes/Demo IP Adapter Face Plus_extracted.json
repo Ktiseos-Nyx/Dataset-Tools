@@ -1,0 +1,68 @@
+[
+    {
+        "id": "25e4fe6c-83e4-4fd7-8dc0-b6fc62cac061",
+        "name": "Demo Face Plus"
+    },
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "analogMadnessSDXL_sdxlV10.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "close up on face,1girl,"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text, watermark"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 10,
+        "name": "IPAdapterApply"
+    },
+    {
+        "id": 11,
+        "name": "IPAdapterModelLoader",
+        "prompts": {
+            "text": "ip-adapter-plus-face_sdxl_vit-h.safetensors"
+        }
+    },
+    {
+        "id": 12,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "Martial_arts053_example.png"
+        }
+    }
+]

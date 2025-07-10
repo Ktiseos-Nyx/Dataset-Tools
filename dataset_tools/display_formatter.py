@@ -108,6 +108,7 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
 
     append_unpacked_section("EXIF Details", DownField.EXIF)
     append_unpacked_section("Tags (XMP/IPTC)", UpField.TAGS)
+    append_unpacked_section("Workflow Analysis", UpField.WORKFLOW_ANALYSIS)
 
     # Raw Data / Workflow
     if raw_content := str(metadata_dict.get(DownField.RAW_DATA.value, "")):

@@ -119,7 +119,12 @@
         "text_encoder_node_types": [
           "CLIPTextEncode",
           "BNK_CLIPTextEncodeAdvanced",
-          "CLIPTextEncodeAdvanced"
+          "CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PixArtT5TextEncode",
+          "CLIPTextEncodeSDXL",
+          "CLIPTextEncodeSDXLRefiner",
+          "smZ CLIPTextEncode"
         ]
       },
       {
@@ -137,7 +142,12 @@
         "text_encoder_node_types": [
           "CLIPTextEncode",
           "BNK_CLIPTextEncodeAdvanced",
-          "CLIPTextEncodeAdvanced"
+          "CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PixArtT5TextEncode",
+          "CLIPTextEncodeSDXL",
+          "CLIPTextEncodeSDXLRefiner",
+          "smZ CLIPTextEncode"
         ]
       },
       {
@@ -150,7 +160,7 @@
           "SamplerCustomAdvanced",
           "KSampler_A1111"
         ],
-        "input_key": "seed",
+        "input_field": "seed",
         "value_type": "integer"
       },
       {
@@ -163,7 +173,7 @@
           "SamplerCustomAdvanced",
           "KSampler_A1111"
         ],
-        "input_key": "steps",
+        "input_field": "steps",
         "value_type": "integer"
       },
       {
@@ -176,7 +186,7 @@
           "SamplerCustomAdvanced",
           "KSampler_A1111"
         ],
-        "input_key": "cfg",
+        "input_field": "cfg",
         "value_type": "float"
       },
       {
@@ -189,7 +199,7 @@
           "SamplerCustomAdvanced",
           "KSampler_A1111"
         ],
-        "input_key": "sampler_name",
+        "input_field": "sampler_name",
         "value_type": "string"
       },
       {
@@ -202,9 +212,15 @@
           },
           {
             "class_type": "LatentUpscale"
+          },
+          {
+            "class_type": "EmptyLatentImageFromPresetsSDXL"
+          },
+          {
+            "class_type": "EmptySD3LatentImage"
           }
         ],
-        "input_key": "width",
+        "input_field": "width",
         "value_type": "integer"
       },
       {
@@ -217,9 +233,15 @@
           },
           {
             "class_type": "LatentUpscale"
+          },
+          {
+            "class_type": "EmptyLatentImageFromPresetsSDXL"
+          },
+          {
+            "class_type": "EmptySD3LatentImage"
           }
         ],
-        "input_key": "height",
+        "input_field": "height",
         "value_type": "integer"
       },
       {

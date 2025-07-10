@@ -26,12 +26,9 @@ class ComfyUITraversalExtractor:
         if isinstance(nodes, dict):
             return nodes.get(str(node_id))
         if isinstance(nodes, list):
-            try:
-                idx = int(node_id)
-                if 0 <= idx < len(nodes):
-                    return nodes[idx]
-            except (ValueError, IndexError):
-                pass
+            for node in nodes:
+                if str(node.get("id", "")) == str(node_id):
+                    return node
         return None
 
     def get_nodes_from_data(self, data: dict) -> dict | list:
@@ -49,19 +46,19 @@ class ComfyUITraversalExtractor:
 
     def follow_input_link(self, nodes: dict | list, node_id: str, input_name: str) -> tuple[str, str] | None:
         """Follow an input link to find the source node and output slot.
-        
+
         Args:
-            nodes: The nodes dictionary or list
-            node_id: ID of the node to check
-            input_name: Name of the input to follow
-            
+            nodes: The nodes dictionary or list.
+            node_id: ID of the node to check.
+            input_name: Name of the input to follow.
+
         Returns:
-            Tuple of (source_node_id, output_slot_name) or None if not found
+            A tuple of (source_node_id, output_slot_name) or None if not found.
         """
         node = self.get_node_by_id(nodes, node_id)
         if not node:
             return None
-            
+
         # Check inputs for the specified input_name
         inputs = node.get("inputs", [])
         if isinstance(inputs, list):
@@ -87,28 +84,29 @@ class ComfyUITraversalExtractor:
                         if isinstance(outputs, list) and output_slot_index < len(outputs):
                             output_slot_name = outputs[output_slot_index].get("name", "")
                             return (source_node_id, output_slot_name)
-        
+
         return None
 
     def find_node_by_output_link(self, nodes: dict | list, link_id: int) -> tuple[str, str] | None:
         """Find a node that has the specified link_id in its outputs.
-        
+
         Args:
-            nodes: The nodes dictionary or list
-            link_id: The link ID to search for
-            
+            nodes: The nodes dictionary or list.
+            link_id: The link ID to search for.
+
         Returns:
-            Tuple of (node_id, output_slot_name) or None if not found
+            A tuple of (node_id, output_slot_name) or None if not found.
         """
         if isinstance(nodes, dict):
             node_items = nodes.items()
         else:
-            node_items = enumerate(nodes)
-            
+            # Assumes list of nodes, where index might not match ID
+            node_items = [(node.get("id"), node) for node in nodes]
+
         for node_id, node_data in node_items:
             if not isinstance(node_data, dict):
                 continue
-                
+
             outputs = node_data.get("outputs", [])
             if isinstance(outputs, list):
                 for output_info in outputs:
@@ -116,88 +114,164 @@ class ComfyUITraversalExtractor:
                         links = output_info.get("links", [])
                         if isinstance(links, list) and link_id in links:
                             return (str(node_id), output_info.get("name", ""))
-        
+
         return None
 
-    def trace_text_flow(self, nodes: dict | list, start_node_id: str) -> str:
+    def trace_text_flow(self, data: dict | list, start_node_id: str) -> str:
         """Trace text flow from a node backwards through the workflow.
-        
+
         Args:
-            nodes: The nodes dictionary or list
-            start_node_id: ID of the node to start tracing from
-            
+            data: The full workflow data (containing nodes and links).
+            start_node_id: ID of the node to start tracing from.
+
         Returns:
-            The traced text content or empty string if not found
+            The traced text content or an empty string if not found.
         """
+        nodes = self.get_nodes_from_data(data)
         visited = set()
-        
+
         def trace_recursive(node_id: str, depth: int = 0) -> str:
             if depth > 20 or node_id in visited:  # Prevent infinite loops
                 return ""
-                
+
             visited.add(node_id)
             node = self.get_node_by_id(nodes, node_id)
             if not node:
                 return ""
-                
+
             node_type = node.get("class_type", node.get("type", ""))
+            self.logger.debug(f"[TRAVERSAL] Tracing node {node_id} (Type: {node_type})")
 
             # Base Case: If this node is a primitive string holder, return its value.
-            # This is the ultimate source of the text.
             if "Primitive" in node_type and node.get("widgets_values"):
-                return node["widgets_values"][0]
+                text_content = node["widgets_values"][0]
+                self.logger.debug(f"[TRAVERSAL] Found Primitive text: {text_content[:50]}...")
+                return text_content
 
-            # Recursive Step: Check known text-processing or text-holding nodes.
-            # The order matters: check for specific processors before generic text nodes.
-            
-            # For nodes that process text (like wildcards), we need to trace their INPUTS.
-            if "WildcardProcessor" in node_type or "PowerPrompt" in node_type:
-                # Try to trace common input names for these processor nodes.
-                for input_name in ["text", "prompt", "wildcard_text"]:
+            # Handle text encoder nodes
+            if any(encoder_type in node_type for encoder_type in [
+                "CLIPTextEncode", "T5TextEncode", "ImpactWildcardEncode",
+                "BNK_CLIPTextEncodeAdvanced", "CLIPTextEncodeAdvanced",
+                "PixArtT5TextEncode", "DPRandomGenerator"
+            ]):
+                widgets = node.get("widgets_values", [])
+                if widgets and isinstance(widgets[0], str):
+                    text_content = widgets[0]
+                    self.logger.debug(f"[TRAVERSAL] Found Text Encoder text: {text_content[:50]}...")
+                    return text_content
+
+            # Handle modern wildcard and prompt processing nodes
+            if "ImpactWildcardProcessor" in node_type:
+                inputs = node.get("inputs", {})
+                if isinstance(inputs, dict):
+                    populated_text = inputs.get("populated_text", "")
+                    if isinstance(populated_text, str) and populated_text.strip():
+                        self.logger.debug(f"[TRAVERSAL] Found ImpactWildcardProcessor populated_text: {populated_text[:50]}...")
+                        return populated_text
+                    wildcard_text = inputs.get("wildcard_text", "")
+                    if isinstance(wildcard_text, str) and wildcard_text.strip():
+                        self.logger.debug(f"[TRAVERSAL] Found ImpactWildcardProcessor wildcard_text: {wildcard_text[:50]}...")
+                        return wildcard_text
+
+            if "AutoNegativePrompt" in node_type:
+                inputs = node.get("inputs", {})
+                if isinstance(inputs, dict):
+                    base_negative = inputs.get("base_negative", "")
+                    if isinstance(base_negative, str) and base_negative.strip():
+                        self.logger.debug(f"[TRAVERSAL] Found AutoNegativePrompt base_negative: {base_negative[:50]}...")
+                        return base_negative
+
+            # Handle ConcatStringSingle nodes
+            if "ConcatStringSingle" in node_type:
+                concatenated_text = ""
+                for input_name in ["string_a", "string_b"]:
                     link_info = self.follow_input_link(nodes, node_id, input_name)
                     if link_info:
                         source_node_id, _ = link_info
-                        return trace_recursive(source_node_id, depth + 1)
+                        traced_part = trace_recursive(source_node_id, depth + 1)
+                        concatenated_text += traced_part
+                self.logger.debug(f"[TRAVERSAL] Found ConcatStringSingle concatenated_text: {concatenated_text[:50]}...")
+                return concatenated_text
 
-            # For text encoders, trace their "text" input link.
-            if "CLIPTextEncode" in node_type:
-                link_info = self.follow_input_link(nodes, node_id, "text")
-                if link_info:
-                    source_node_id, _ = link_info
-                    return trace_recursive(source_node_id, depth + 1)
-            
-            # Fallback/Default Case: If no link is followed, the node itself might hold the text.
-            # This applies to simple text nodes or processors where the input is a direct widget.
+            # Handle intermediate nodes that pass through data
+            elif node_type in [
+                "ConditioningConcat", "ConditioningCombine", "ConditioningAverage",
+                "ConditioningSetArea", "ConditioningSetMask", "ConditioningMultiply",
+                "ConditioningSubtract", "ConditioningAddConDelta", "CFGlessNegativePrompt",
+                "Reroute", "LoraLoader", "CheckpointLoaderSimple", "UNETLoader", "VAELoader",
+                "ModelSamplingFlux", "BasicGuider", "SamplerCustomAdvanced", "FluxGuidance",
+                "ConditioningRecastFP64", "ImpactConcatConditionings", "ImpactCombineConditionings",
+                "ControlNetApplyAdvanced", "ControlNetApply", "ControlNetApplySD3"
+            ]:
+                self.logger.debug(f"[TRAVERSAL] Encountered intermediate node type: {node_type}. Attempting to follow inputs.")
+                for input_name_candidate in ["conditioning", "model", "clip", "samples", "latent_image", "string_a", "string_b"]:
+                    link_info = self.follow_input_link(nodes, node_id, input_name_candidate)
+                    if link_info:
+                        source_node_id, _ = link_info
+                        self.logger.debug(f"[TRAVERSAL] Following input '{input_name_candidate}' from {node_id} to {source_node_id}")
+                        traced_text = trace_recursive(source_node_id, depth + 1)
+                        if traced_text:
+                            return traced_text
+
+                node_inputs = node.get("inputs", [])
+                if isinstance(node_inputs, list):
+                    for input_item in node_inputs:
+                        if isinstance(input_item, dict):
+                            input_link_id = input_item.get("link")
+                            if input_link_id:
+                                source_node_id = self._find_source_node_for_link(data, input_link_id)
+                                if source_node_id:
+                                    self.logger.debug(f"[TRAVERSAL] Following generic input link {input_link_id} from {node_id} to {source_node_id}")
+                                    traced_text = trace_recursive(source_node_id, depth + 1)
+                                    if traced_text:
+                                        return traced_text
+
+            # Fallback: Check for direct 'text' input or widget values
             inputs = node.get("inputs", {})
             if isinstance(inputs, dict) and "text" in inputs:
                 text_value = inputs["text"]
                 if isinstance(text_value, str):
+                    self.logger.debug(f"[TRAVERSAL] Found direct 'text' input: {text_value[:50]}...")
                     return text_value
 
             widgets = node.get("widgets_values", [])
             if widgets and isinstance(widgets[0], str):
-                return widgets[0]
-            
+                text_content = widgets[0]
+                self.logger.debug(f"[TRAVERSAL] Found widget value: {text_content[:50]}...")
+                return text_content
+
+            self.logger.debug(f"[TRAVERSAL] No text found in node {node_id} after checking all methods.")
             return ""
-        
+
         return trace_recursive(start_node_id)
+
+    def _find_source_node_for_link(self, data: dict | list, link_id: int) -> str | None:
+        """Find the source node ID for a given link ID using global link data."""
+        # This function is specific to workflow formats that have a top-level "links" array.
+        if isinstance(data, dict) and "links" in data:
+            links = data.get("links", [])
+            # Links format: [link_id, source_node_id, source_output_idx, target_node_id, target_input_idx, type]
+            for link in links:
+                if len(link) >= 4 and link[0] == link_id:
+                    return str(link[1])  # Return source node ID
+        return None
 
     def find_connected_nodes(self, nodes: dict | list, start_node_id: str, connection_type: str = "input") -> list[str]:
         """Find all nodes connected to a given node.
-        
+
         Args:
-            nodes: The nodes dictionary or list
-            start_node_id: ID of the node to start from
-            connection_type: "input" or "output" connections
-            
+            nodes: The nodes dictionary or list.
+            start_node_id: ID of the node to start from.
+            connection_type: "input" or "output" connections.
+
         Returns:
-            List of connected node IDs
+            A list of connected node IDs.
         """
         connected = []
         start_node = self.get_node_by_id(nodes, start_node_id)
         if not start_node:
             return connected
-            
+
         if connection_type == "input":
             inputs = start_node.get("inputs", [])
             if isinstance(inputs, list):
@@ -212,7 +286,7 @@ class ComfyUITraversalExtractor:
                 for input_info in inputs.values():
                     if isinstance(input_info, list) and len(input_info) >= 1:
                         connected.append(str(input_info[0]))
-        
+
         elif connection_type == "output":
             outputs = start_node.get("outputs", [])
             if isinstance(outputs, list):
@@ -224,7 +298,7 @@ class ComfyUITraversalExtractor:
                                 # Find nodes that have this link in their inputs
                                 target_nodes = self.find_nodes_with_input_link(nodes, link_id)
                                 connected.extend(target_nodes)
-        
+
         return connected
 
     def find_nodes_with_input_link(self, nodes: dict | list, link_id: int) -> list[str]:
@@ -233,16 +307,17 @@ class ComfyUITraversalExtractor:
         if isinstance(nodes, dict):
             node_items = nodes.items()
         else:
-            node_items = enumerate(nodes)
-            
+            # Assumes list of nodes, where index might not match ID
+            node_items = [(node.get("id"), node) for node in nodes]
+
         for node_id, node_data in node_items:
             if not isinstance(node_data, dict):
                 continue
-                
+
             inputs = node_data.get("inputs", [])
             if isinstance(inputs, list):
                 for input_info in inputs:
                     if isinstance(input_info, dict) and input_info.get("link") == link_id:
                         result.append(str(node_id))
-        
+
         return result

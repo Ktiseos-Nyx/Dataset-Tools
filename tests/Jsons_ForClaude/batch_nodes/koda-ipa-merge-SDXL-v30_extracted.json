@@ -1,0 +1,530 @@
+[
+    {
+        "id": 1,
+        "name": "MZ_ChatGLM3Loader",
+        "prompts": {
+            "text": "checkpoints\\chatglm3-8bit.safetensors"
+        }
+    },
+    {
+        "id": 7,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 9,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fixed.safetensors"
+        }
+    },
+    {
+        "id": 20,
+        "name": "MZ_KolorsUNETLoaderV2",
+        "prompts": {
+            "text": "Kolors\\diffusion_pytorch_model.fp16.safetensors"
+        }
+    },
+    {
+        "id": 21,
+        "name": "MZ_ChatGLM3_V2",
+        "prompts": {
+            "text": "Real photo, street corner at dusk, Wong Kar Wai style, sexy Chinese girl in the 1990s drinking Coke with a straw, wearing a red cheongsam, half of her shoulders exposed, next to her is a billboard with \"KFC\" written on it, with a bustling crowd in the background, high Contrast, film texture, nostalgia, light and shadow, sunset"
+        }
+    },
+    {
+        "id": 22,
+        "name": "MZ_ChatGLM3_V2",
+        "prompts": {
+            "text": "Wrong limbs, wrong anatomy"
+        }
+    },
+    {
+        "id": 27,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01581_.png"
+        }
+    },
+    {
+        "id": 46,
+        "name": "IPAdapterModelLoader",
+        "prompts": {
+            "text": "kolors\\ip_adapter_plus_general.bin"
+        }
+    },
+    {
+        "id": 48,
+        "name": "Note",
+        "prompts": {
+            "text": "koda-ipa-merge-SDXL-v30\n\nVideo: https://www.youtube.com/watch?v=MCjGKy3qqe8\nWorkflow: https://civitai.com/models/589666\n\nKoda Pack v4\nNew Base Model - Kolor\n\nKolors SDXL Merge\nip adapter advanced mode switch\n"
+        }
+    },
+    {
+        "id": 50,
+        "name": "IPAdapterAdvanced",
+        "prompts": {
+            "text": "style transfer"
+        }
+    },
+    {
+        "id": 52,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/ipa/koda"
+        }
+    },
+    {
+        "id": 53,
+        "name": "easy setNode"
+    },
+    {
+        "id": 54,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "kolors\\pytorch_model.bin"
+        }
+    },
+    {
+        "id": 55,
+        "name": "easy setNode",
+        "prompts": {
+            "text": "CLIP_VISION"
+        }
+    },
+    {
+        "id": 56,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "CLIP_VISION"
+        }
+    },
+    {
+        "id": 57,
+        "name": "easy getNode"
+    },
+    {
+        "id": 58,
+        "name": "easy setNode"
+    },
+    {
+        "id": 59,
+        "name": "easy getNode"
+    },
+    {
+        "id": 62,
+        "name": "ImpactMakeImageBatch"
+    },
+    {
+        "id": 63,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01584_.png"
+        }
+    },
+    {
+        "id": 64,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01582_.png"
+        }
+    },
+    {
+        "id": 65,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01583_.png"
+        }
+    },
+    {
+        "id": 68,
+        "name": "IPAdapterNoise"
+    },
+    {
+        "id": 69,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 75,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 93,
+        "name": "easy setNode"
+    },
+    {
+        "id": 114,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 117,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 118,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 119,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 120,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 124,
+        "name": "AspectSize"
+    },
+    {
+        "id": 129,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01588_.png"
+        }
+    },
+    {
+        "id": 130,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "koda_01578_.png"
+        }
+    },
+    {
+        "id": 131,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 132,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 142,
+        "name": "easy setNode",
+        "prompts": {
+            "text": "conditioning"
+        }
+    },
+    {
+        "id": 143,
+        "name": "easy setNode",
+        "prompts": {
+            "text": "conditioning_0"
+        }
+    },
+    {
+        "id": 146,
+        "name": "easy setNode"
+    },
+    {
+        "id": 179,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 182,
+        "name": "easy setNode"
+    },
+    {
+        "id": 186,
+        "name": "easy setNode"
+    },
+    {
+        "id": 187,
+        "name": "easy getNode"
+    },
+    {
+        "id": 188,
+        "name": "PerturbedAttentionGuidance"
+    },
+    {
+        "id": 191,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 192,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/ipa/kodaAlt1"
+        }
+    },
+    {
+        "id": 193,
+        "name": "easy setNode"
+    },
+    {
+        "id": 194,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "conditioning"
+        }
+    },
+    {
+        "id": 195,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "conditioning_0"
+        }
+    },
+    {
+        "id": 196,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_2m_alt",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 197,
+        "name": "easy getNode"
+    },
+    {
+        "id": 198,
+        "name": "easy getNode"
+    },
+    {
+        "id": 199,
+        "name": "easy getNode"
+    },
+    {
+        "id": 209,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 210,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/ipa/kodaALT2"
+        }
+    },
+    {
+        "id": 211,
+        "name": "easy setNode"
+    },
+    {
+        "id": 212,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "conditioning"
+        }
+    },
+    {
+        "id": 213,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "conditioning_0"
+        }
+    },
+    {
+        "id": 214,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 215,
+        "name": "easy getNode"
+    },
+    {
+        "id": 216,
+        "name": "easy getNode"
+    },
+    {
+        "id": 217,
+        "name": "easy getNode"
+    },
+    {
+        "id": 219,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 225,
+        "name": "ModelMergeSimple"
+    },
+    {
+        "id": 226,
+        "name": "SamplerCustom"
+    },
+    {
+        "id": 227,
+        "name": "AlignYourStepsScheduler"
+    },
+    {
+        "id": 228,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 229,
+        "name": "Automatic CFG - Preset Loader",
+        "prompts": {
+            "text": "SDXL_Analog_photo_helper",
+            "text_2": "From preset"
+        }
+    },
+    {
+        "id": 231,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "DJZmerger\\realvis_juggernaut_hermite.safetensors"
+        }
+    },
+    {
+        "id": 248,
+        "name": "easy getNode"
+    },
+    {
+        "id": 249,
+        "name": "easy getNode"
+    },
+    {
+        "id": 250,
+        "name": "easy getNode"
+    },
+    {
+        "id": 251,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "conditioning_0"
+        }
+    },
+    {
+        "id": 252,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "conditioning"
+        }
+    },
+    {
+        "id": 254,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Real photo, street corner at dusk, Wong Kar Wai style, sexy Chinese girl in the 1990s drinking Coke with a straw, wearing a red cheongsam, half of her shoulders exposed, next to her is a billboard with \"KFC\" written on it, with a bustling crowd in the background, high Contrast, film texture, nostalgia, light and shadow, sunset"
+        }
+    },
+    {
+        "id": 255,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Wrong limbs, wrong anatomy"
+        }
+    },
+    {
+        "id": 256,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 257,
+        "name": "easy getNode"
+    },
+    {
+        "id": 258,
+        "name": "Reroute"
+    },
+    {
+        "id": 259,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 261,
+        "name": "easy getNode"
+    },
+    {
+        "id": 264,
+        "name": "CR Model Input Switch"
+    },
+    {
+        "id": 265,
+        "name": "easy getNode"
+    },
+    {
+        "id": 266,
+        "name": "easy getNode"
+    },
+    {
+        "id": 267,
+        "name": "easy setNode"
+    },
+    {
+        "id": 282,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/ipa/koda/sdxlmerge"
+        }
+    },
+    {
+        "id": 283,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/ipa/koda/sdxl"
+        }
+    },
+    {
+        "id": 295,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2m_alt",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 296,
+        "name": "easy getNode"
+    },
+    {
+        "id": 297,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "conditioning_0"
+        }
+    },
+    {
+        "id": 298,
+        "name": "easy getNode",
+        "prompts": {
+            "text": "conditioning"
+        }
+    },
+    {
+        "id": 299,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 300,
+        "name": "easy getNode"
+    },
+    {
+        "id": 301,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./koda/ipa/koda/sdxlmergeAlt"
+        }
+    }
+]

@@ -1,0 +1,175 @@
+[
+    {
+        "id": 1,
+        "name": "BizyAir_SamplerCustomAdvanced"
+    },
+    {
+        "id": 1,
+        "name": "Flux_inpaint"
+    },
+    {
+        "id": 2,
+        "name": "BizyAir_VAEDecode"
+    },
+    {
+        "id": 2,
+        "name": "Load_models"
+    },
+    {
+        "id": 3,
+        "name": "Global_inputs"
+    },
+    {
+        "id": 4,
+        "name": "BizyAir_RandomNoise"
+    },
+    {
+        "id": 4,
+        "name": "Global_outputs"
+    },
+    {
+        "id": 5,
+        "name": "BizyAir_BasicGuider"
+    },
+    {
+        "id": 7,
+        "name": "BizyAir_KSamplerSelect"
+    },
+    {
+        "id": 8,
+        "name": "BizyAir_BasicScheduler"
+    },
+    {
+        "id": 9,
+        "name": "BizyAir_InpaintModelConditioning"
+    },
+    {
+        "id": 10,
+        "name": "BizyAir_FluxGuidance"
+    },
+    {
+        "id": 11,
+        "name": "BizyAir_CLIPTextEncode"
+    },
+    {
+        "id": 12,
+        "name": "ImpactGaussianBlurMask"
+    },
+    {
+        "id": 15,
+        "name": "BizyAir_CLIPTextEncode",
+        "prompts": {
+            "text": "A cute dog head plush style"
+        }
+    },
+    {
+        "id": 29,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 32,
+        "name": "BizyAir_DetailDaemonSamplerNode"
+    },
+    {
+        "id": 33,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "clipspace/clipspace-mask-758649.png [input]"
+        }
+    },
+    {
+        "id": 53,
+        "name": "SetNode"
+    },
+    {
+        "id": 54,
+        "name": "BizyAir_UNETLoader",
+        "prompts": {
+            "text": "flux/flux1-dev.sft"
+        }
+    },
+    {
+        "id": 55,
+        "name": "BizyAir_DualCLIPLoader",
+        "prompts": {
+            "text": "t5xxl_fp16.safetensors",
+            "text_2": "clip_l.safetensors"
+        }
+    },
+    {
+        "id": 56,
+        "name": "SetNode"
+    },
+    {
+        "id": 57,
+        "name": "BizyAir_VAELoader",
+        "prompts": {
+            "text": "flux/ae.sft"
+        }
+    },
+    {
+        "id": 58,
+        "name": "SetNode"
+    },
+    {
+        "id": 59,
+        "name": "GetNode"
+    },
+    {
+        "id": 60,
+        "name": "GetNode"
+    },
+    {
+        "id": 61,
+        "name": "SetNode",
+        "prompts": {
+            "text": "Flux_inpaint_result_0"
+        }
+    },
+    {
+        "id": 63,
+        "name": "GetNode",
+        "prompts": {
+            "text": "Flux_inpaint_result_0"
+        }
+    },
+    {
+        "id": 65,
+        "name": "GetNode"
+    },
+    {
+        "id": 67,
+        "name": "SetNode",
+        "prompts": {
+            "text": "global_img_0"
+        }
+    },
+    {
+        "id": 68,
+        "name": "SetNode",
+        "prompts": {
+            "text": "global_mask_0"
+        }
+    },
+    {
+        "id": 69,
+        "name": "GetNode",
+        "prompts": {
+            "text": "global_img_0"
+        }
+    },
+    {
+        "id": 70,
+        "name": "GetNode",
+        "prompts": {
+            "text": "global_mask_0"
+        }
+    },
+    {
+        "id": 71,
+        "name": "GetNode",
+        "prompts": {
+            "text": "global_img_0"
+        }
+    }
+]

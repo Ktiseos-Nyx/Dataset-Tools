@@ -1,0 +1,149 @@
+[
+    {
+        "id": "Sampler",
+        "name": "BasicScheduler"
+    },
+    {
+        "id": "Guidance",
+        "name": "FluxGuidance"
+    },
+    {
+        "id": "Seed",
+        "name": "RandomNoise"
+    },
+    {
+        "id": "Latent",
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": "Prompt",
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "retro anime kzk woman with red hair blue cosmic eyes, standing in the bank vault, closeup portrait, surrounded by cash and money and gold"
+        }
+    },
+    {
+        "id": 1,
+        "name": "LORA LOADING"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "VAELoader"
+    },
+    {
+        "id": 11,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "t5xxl_fp8_e4m3fn.safetensors",
+            "text_2": "clip_l.safetensors"
+        }
+    },
+    {
+        "id": 12,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-dev.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 16,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 22,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 23,
+        "name": "InfiniteYouApply",
+        "prompts": {
+            "text": "aes_stage2_img_proj.bin"
+        }
+    },
+    {
+        "id": 24,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "aes_stage2_control.safetensors"
+        }
+    },
+    {
+        "id": 25,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 26,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "jaguar_00015_.png"
+        }
+    },
+    {
+        "id": 27,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 30,
+        "name": "SaveImage"
+    },
+    {
+        "id": 31,
+        "name": "ProjectFilePathNode"
+    },
+    {
+        "id": 32,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 34,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 35,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 36,
+        "name": "Note",
+        "prompts": {
+            "text": "Foda-InfiniteYou-devFP8-basic-Lora-AES-v22\n\nVideo: https://www.youtube.com/@ScuffedEpoch\nhttps://civitai.com/user/driftjohnson\nhttps://www.ScuffedEpoch.com\n\nsetup guide:\nhttps://civitai.com/articles/13224\n\n[discord early editions]\nhttps://discord.com/invite/uubQXhwzkj \n"
+        }
+    },
+    {
+        "id": 37,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "AAA_testing\\Genesis-QVL-v2-000003.safetensors"
+        }
+    },
+    {
+        "id": 38,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "retro anime kzk woman with red hair blue cosmic eyes, standing in the bank vault, closeup portrait, surrounded by cash and money and gold"
+        }
+    },
+    {
+        "id": 39,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 40,
+        "name": "AspectSizeV2"
+    },
+    {
+        "id": 41,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "retro anime kzk woman with red hair blue cosmic eyes, standing in the bank vault, closeup portrait, surrounded by cash and money and gold"
+        }
+    }
+]

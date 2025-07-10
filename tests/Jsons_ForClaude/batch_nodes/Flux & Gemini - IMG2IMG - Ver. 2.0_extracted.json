@@ -1,0 +1,177 @@
+[
+    {
+        "id": 1,
+        "name": "CHECKPOINTS ETC. \ud83c\udfc1"
+    },
+    {
+        "id": 2,
+        "name": "\u264a 2.0 FLASH \ud83d\udcab"
+    },
+    {
+        "id": 3,
+        "name": "GENERATION \ud83d\udc68\u200d\ud83d\udd27"
+    },
+    {
+        "id": 4,
+        "name": "PROMPTS \u270d\ufe0f"
+    },
+    {
+        "id": 5,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "Shuttle\\diffusion_pytorch_model.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "."
+    },
+    {
+        "id": 6,
+        "name": "FLUX  \u264a IMG2IMG Ver. 2.0"
+    },
+    {
+        "id": 7,
+        "name": "LOAD FROM DIRECTORY \ud83d\uddc2\ufe0f"
+    },
+    {
+        "id": 8,
+        "name": "TIPS \ud83d\udca1"
+    },
+    {
+        "id": 9,
+        "name": "."
+    },
+    {
+        "id": 50,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 71,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 72,
+        "name": "KSampler"
+    },
+    {
+        "id": 266,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "Flux dev\\flux_dev.safetensors"
+        }
+    },
+    {
+        "id": 267,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "L clip\\ViT-L-14-TEXT-detail-improved-hiT-GmP-HF.safetensors",
+            "text_2": "t5-xxl\\t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 279,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "flux\\Hyper-FLUX.1-dev-8steps-lora.safetensors"
+        }
+    },
+    {
+        "id": 280,
+        "name": "Gemini_Flash_200_Exp"
+    },
+    {
+        "id": 281,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "You are an AI assistant specializing in crafting professional and efective prompts for the Flux model, suitable for the t5-xxl clip. You are specialized in creating prompts for generating realistic looking images based off another image. When an image is provided, you should generate a concise and descriptive prompt that will create a realistic looking image based of the traits of the image that is provided. Ignore any text in the original image. Ignore any imperfections in the original image. Ignore any facial tattoos. The prompt should be between 150-300 tokens and start with the words: \"amateur photography\". The output should only show the final prompt, without any additional comments or instructions. "
+        }
+    },
+    {
+        "id": 282,
+        "name": "CLIPTextEncodeFlux"
+    },
+    {
+        "id": 284,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "Amateur photography, captured with a Sony Alpha camera and a Zeiss lens, f/2.8 aperture, ISO 100, 1/125 shutter speed, color grading to enhance the realism of the textures, post-processing in Adobe Lightroom and Photoshop to refine the details and enhance the overall image quality. "
+        }
+    },
+    {
+        "id": 285,
+        "name": "VHS_LoadVideo"
+    },
+    {
+        "id": 286,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 287,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "amateur photography, a captivating close-up shot of a young woman indoors, bathed in soft, natural light streaming through a large window overlooking a cityscape. She is seated on a plush bed, adorned in a delicate red corset with a subtle polka dot pattern, complemented by matching lingerie. Her dark hair frames her face, accentuating her striking purple eyes and fair skin. She wears a delicate silver necklace and small pearl earrings. The overall mood is intimate and alluring, with a focus on capturing her natural beauty and the serene atmosphere of the room. The background features blurred buildings, adding depth and context to the scene. The composition is carefully balanced, drawing the viewer's attention to the subject's gaze and the intricate details of her attire. The lighting creates soft shadows and highlights, enhancing the realism and dimensionality of the image. The photograph evokes a sense of quiet confidence and understated elegance."
+        }
+    },
+    {
+        "id": 289,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "flux\\lightning\\amateurphoto_v2.safetensors"
+        }
+    },
+    {
+        "id": 290,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; GEMINI INFO\n>  \n>  \n>  \nFor instructions on how to install and use Gemini, visit the [Github](https://github.com/ShmuelRonen/ComfyUI-Gemini_Flash_2.0_Exp)  \n>  \n>  \n>"
+        }
+    },
+    {
+        "id": 291,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## Gemini System Prompt  \nAt the bottom of the you can add a short general prompt that you want Gemini to focus on, besides the input image.  \n\n## L Prompt  \nThis can be treated as a normal SDXL prompt, more or less.\n\n"
+        }
+    },
+    {
+        "id": 292,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; DENOISE  \n>\n>Low denoise = more similar to original image  \n>\n>High denoise = less similar to original image\n>  \n>For large changes to an image, use denoise 1.0"
+        }
+    },
+    {
+        "id": 297,
+        "name": "LoadImagesFromDir //Inspire",
+        "prompts": {
+            "text": "C:\\AI\\Comfy\\ComfyUI\\input\\Ny mapp\\"
+        }
+    },
+    {
+        "id": 299,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 302,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 303,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 304,
+        "name": "Image Save",
+        "prompts": {
+            "text": "[time(%Y-%m-%d)]"
+        }
+    },
+    {
+        "id": 307,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; LOAD FROM DIRECTORY\n>  \n> Set path to your folder that contains the images to load in \"directory\"  \n>  \n> Leave \"Image Load Cap\" at value 1 and \"fixed\"  \n>  \n> Set Idex Value to 0 and \"increment\"  \n>  \n> Set your queue to the the number of images you want to generate  \n>  \n> If you have issues with loading the images, select all images in the folder using alt+a and then press F2 and change the names to something like \"1\". All images with change name to 1(1).png, 1(2).png, 1(3).png etc\n"
+        }
+    }
+]

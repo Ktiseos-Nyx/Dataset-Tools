@@ -1,0 +1,276 @@
+[
+    {
+        "id": -1,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Change to Half-length corporate portrait  while maintaining the same facial features, hairstyle, and expression, scale, and pose keeping the same identity and personality and preserving their distinctive appearance. Authentic, candid snapshot photo, HDR, post-processing in Lightroom. Maximum detail and realism."
+        }
+    },
+    {
+        "id": -1,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": -1,
+        "name": "Reroute"
+    },
+    {
+        "id": -1,
+        "name": "ReferenceLatent"
+    },
+    {
+        "id": -1,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": -1,
+        "name": "KSampler"
+    },
+    {
+        "id": -1,
+        "name": "VAEDecode"
+    },
+    {
+        "id": -1,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 1,
+        "name": "Prompts"
+    },
+    {
+        "id": 2,
+        "name": "Color background."
+    },
+    {
+        "id": 3,
+        "name": "Low Ram Model Loader"
+    },
+    {
+        "id": 4,
+        "name": "Normal Ram Model Loader"
+    },
+    {
+        "id": 5,
+        "name": "FaceSwap"
+    },
+    {
+        "id": 42,
+        "name": "FluxKontextImageScale"
+    },
+    {
+        "id": 124,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 133,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "98d0d21466c3909d4b0185e53104f5c1.jpg"
+        }
+    },
+    {
+        "id": 150,
+        "name": "ImageStitch"
+    },
+    {
+        "id": 152,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00240_.png"
+        }
+    },
+    {
+        "id": 172,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 175,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 178,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 216,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 232,
+        "name": "iToolsLineLoader",
+        "prompts": {
+            "text": "Arms raised overhead, hands clasped together, elbows bent outward \nBack facing the camera, head upright, arms relaxed at sides \nFacing forward, head turned slightly to the left, shoulders squared \nThree-quarter profile to the left, head turned toward the camera, shoulders angled \nRight profile, head turned to the right, shoulders angled away from the camera \nLeaning forward, resting right cheek on crossed arms atop a surface, body angled left \nLeaning on left elbow, left hand supporting chin, right arm relaxed on surface \nThree-quarter profile to the right, head turned slightly left, hand raised near collar \nLeft profile, head turned to the left, shoulders angled away from the camera \nFacing forward, head upright, shoulders squared, arms relaxed at sides \nFacing forward, head turned slightly to the right, shoulders squared \nLeaning on both elbows on a surface, hands clasped together, shoulders squared "
+        }
+    },
+    {
+        "id": 234,
+        "name": "LayerUtility: TextBox",
+        "prompts": {
+            "text": "Change the pose to "
+        }
+    },
+    {
+        "id": 235,
+        "name": "LayerUtility: TextJoinV2"
+    },
+    {
+        "id": 236,
+        "name": "LayerUtility: TextBox",
+        "prompts": {
+            "text": "while maintaining the same facial features, hairstyle, and expression. Authentic, candid snapshot photo, HDR, post-processing in Lightroom. Maximum detail and realism."
+        }
+    },
+    {
+        "id": 237,
+        "name": "SaveImage"
+    },
+    {
+        "id": 238,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "Change the pose to Leaning on both elbows on a surface, hands clasped together, shoulders squared while maintaining the same facial features, hairstyle, and expression. Authentic, candid snapshot photo, HDR, post-processing in Lightroom. Maximum detail and realism."
+        }
+    },
+    {
+        "id": 239,
+        "name": "DualCLIPLoaderMultiGPU",
+        "prompts": {
+            "text": "flux\\t5xxl_fp8_e4m3fn.safetensors",
+            "text_2": "flux\\clip_l.safetensors"
+        }
+    },
+    {
+        "id": 240,
+        "name": "VAELoaderMultiGPU"
+    },
+    {
+        "id": 241,
+        "name": "UnetLoaderGGUFMultiGPU",
+        "prompts": {
+            "text": "flux1-kontext-dev-Q5_K_S.gguf"
+        }
+    },
+    {
+        "id": 247,
+        "name": "SaveImage"
+    },
+    {
+        "id": 254,
+        "name": "workflow>FLUX.1 Kontext Image Edit",
+        "prompts": {
+            "text": "Change camera to a chest up front facing, corporate portrait photo while maintaining the same facial features, hairstyle, and expression, scale, and pose keeping the same identity and personality and preserving their distinctive appearance. Authentic, candid snapshot photo, HDR, post-processing in Lightroom. Maximum detail and realism."
+        }
+    },
+    {
+        "id": 258,
+        "name": "workflow>FLUX.1 Kontext Image Edit",
+        "prompts": {
+            "text": "Change to Half-length corporate portrait  while maintaining the same facial features, hairstyle, and expression, scale, and pose keeping the same identity and personality and preserving their distinctive appearance. Authentic, candid snapshot photo, HDR, post-processing in Lightroom. Maximum detail and realism."
+        }
+    },
+    {
+        "id": 259,
+        "name": "Note",
+        "prompts": {
+            "text": " Set seed to 0 in iTools Line Loader in prompts group                                                                       \n                                                                                \n                            @@@@@@@@@@@                                            \n                          @@@@@@@@@@@@@@@                               \n                   ((( @@@@@@@@@@###@@@@@@@@                            \n                 (      @@@@@@@(    (#@@@@@@@@                          \n                   {   (@@@@@@@(    (#@@@@@@@@@                         \n                   @@@@@@@@@@@@((@#%@@@@@@@@@@@@                        \n                   @@@@@@@@@@@(@@@@@@@@@@@@@@@@@                        \n                   @@@@@@@((((@@@@@@@@@#####@@@                         \n                    @@@@(((((((&@@@@@@#######@@                         \n                      @@@@(((((@@@@@@@@#######                           \n                        @@@@@@@@@@@@@@@@@@@@                             \n                            @@@@@@@@@@@@                                 \n                          zGenMedia Group \nhttps://www.facebook.com/groups/alrevolutionmidjourneydalle2stablediffusion"
+        }
+    },
+    {
+        "id": 260,
+        "name": "LayerUtility: PurgeVRAM"
+    },
+    {
+        "id": 261,
+        "name": "LayerMask: RmBgUltra V2"
+    },
+    {
+        "id": 263,
+        "name": "LayerUtility: ImageBlendAdvance V2"
+    },
+    {
+        "id": 264,
+        "name": "LayerUtility: ColorImage V2"
+    },
+    {
+        "id": 265,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 266,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 269,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 270,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "flux\\clip_l.safetensors",
+            "text_2": "flux\\t5xxl_fp8_e4m3fn.safetensors"
+        }
+    },
+    {
+        "id": 271,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "Flux\\flux1-dev-kontext_fp8_scaled.safetensors"
+        }
+    },
+    {
+        "id": 272,
+        "name": "VAELoader"
+    },
+    {
+        "id": 273,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 274,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 275,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 276,
+        "name": "ReActorFaceSwap",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "GFPGANv1.4.pth"
+        }
+    },
+    {
+        "id": 277,
+        "name": "LayerMask: PersonMaskUltra V2"
+    },
+    {
+        "id": 278,
+        "name": "LayerUtility: ImageBlendAdvance V2"
+    },
+    {
+        "id": 279,
+        "name": "Reroute"
+    },
+    {
+        "id": 280,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Replicate flux-kontext-apps zGenMedia"
+        }
+    },
+    {
+        "id": 281,
+        "name": "Note",
+        "prompts": {
+            "text": "Block if you do not have this installed."
+        }
+    },
+    {
+        "id": 282,
+        "name": "Fast Groups Muter (rgthree)"
+    }
+]

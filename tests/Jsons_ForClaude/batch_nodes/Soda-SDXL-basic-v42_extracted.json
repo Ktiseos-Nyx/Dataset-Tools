@@ -1,0 +1,178 @@
+[
+    {
+        "id": 5,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2m_alt",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 7,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 9,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 69,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fixed.safetensors"
+        }
+    },
+    {
+        "id": 80,
+        "name": "AspectSizeV2"
+    },
+    {
+        "id": 202,
+        "name": "easy seed"
+    },
+    {
+        "id": 221,
+        "name": "Note",
+        "prompts": {
+            "text": "Soda-SDXL-Basic-v42\n\nVideo: https://www.youtube.com/@FiveBelowFiveUK\nWorkflow: https://civitai.com/models/\n\nhttps://www.fivebelowfive.uk\n\nSoda Pack v1\nBase Model - SDXL\n\nTrio modes\nSampler Garden\nControl Net Pose, Canny & Depth\nFace swap with occulusion and boost\n3 step 12K upscaling process with color match/remix\n\n\n"
+        }
+    },
+    {
+        "id": 384,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./soda/base/sdxl"
+        }
+    },
+    {
+        "id": 387,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "DJZmerger\\cosRealJuggXL-hermit.safetensors"
+        }
+    },
+    {
+        "id": 467,
+        "name": "SetNode"
+    },
+    {
+        "id": 473,
+        "name": "GetNode"
+    },
+    {
+        "id": 483,
+        "name": "SetNode"
+    },
+    {
+        "id": 485,
+        "name": "GetNode"
+    },
+    {
+        "id": 486,
+        "name": "SetNode"
+    },
+    {
+        "id": 487,
+        "name": "GetNode"
+    },
+    {
+        "id": 496,
+        "name": "SetNode"
+    },
+    {
+        "id": 497,
+        "name": "GetNode"
+    },
+    {
+        "id": 504,
+        "name": "SetNode",
+        "prompts": {
+            "text": "int_AspectWidth"
+        }
+    },
+    {
+        "id": 505,
+        "name": "SetNode",
+        "prompts": {
+            "text": "int_AspectHeight"
+        }
+    },
+    {
+        "id": 512,
+        "name": "SetNode",
+        "prompts": {
+            "text": "condPos_base"
+        }
+    },
+    {
+        "id": 513,
+        "name": "SetNode",
+        "prompts": {
+            "text": "condNeg_base"
+        }
+    },
+    {
+        "id": 514,
+        "name": "SetNode",
+        "prompts": {
+            "text": "latent_base"
+        }
+    },
+    {
+        "id": 529,
+        "name": "GetNode",
+        "prompts": {
+            "text": "latent_base"
+        }
+    },
+    {
+        "id": 572,
+        "name": "SetNode",
+        "prompts": {
+            "text": "image_baseOut"
+        }
+    },
+    {
+        "id": 573,
+        "name": "SetNode",
+        "prompts": {
+            "text": "latent_Trio1"
+        }
+    },
+    {
+        "id": 646,
+        "name": "CLIPTextEncodeSDXL"
+    },
+    {
+        "id": 647,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 649,
+        "name": "GetNode",
+        "prompts": {
+            "text": "condPos_base"
+        }
+    },
+    {
+        "id": 650,
+        "name": "GetNode",
+        "prompts": {
+            "text": "condNeg_base"
+        }
+    },
+    {
+        "id": 652,
+        "name": "DF_Text_Box",
+        "prompts": {
+            "text": "RAW photo of an attractive woman, wearing casual clothes staring into the sunset, war photography, diffuse light, 8K"
+        }
+    },
+    {
+        "id": 653,
+        "name": "DF_Text_Box",
+        "prompts": {
+            "text": "terrible, bad, poor, painting, drawing, fake, sketch, mistake, MSPAINT"
+        }
+    }
+]

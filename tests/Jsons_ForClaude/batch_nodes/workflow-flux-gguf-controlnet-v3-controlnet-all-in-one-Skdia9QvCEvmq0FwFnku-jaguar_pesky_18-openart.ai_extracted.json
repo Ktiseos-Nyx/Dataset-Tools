@@ -1,0 +1,164 @@
+[
+    {
+        "id": 3,
+        "name": "XlabsSampler"
+    },
+    {
+        "id": 4,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "t5xxl_fp8_e4m3fn.safetensors",
+            "text_2": "clip guff.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "CLIPTextEncodeFlux",
+        "prompts": {
+            "text": "an image of hindi man with glowing clothes",
+            "text_2": "an image of hindi man with glowing clothes"
+        }
+    },
+    {
+        "id": 6,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 7,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 8,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "LoadFluxControlNet",
+        "prompts": {
+            "text": "flux-canny-controlnet-v3.safetensors"
+        }
+    },
+    {
+        "id": 14,
+        "name": "ApplyFluxControlNet"
+    },
+    {
+        "id": 15,
+        "name": "CannyEdgePreprocessor"
+    },
+    {
+        "id": 16,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00272_ (1).png"
+        }
+    },
+    {
+        "id": 17,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 19,
+        "name": "CLIPTextEncodeFlux"
+    },
+    {
+        "id": 23,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "flux1-dev-Q4_K_S.gguf"
+        }
+    },
+    {
+        "id": 27,
+        "name": "SaveImage"
+    },
+    {
+        "id": 28,
+        "name": "DepthAnythingPreprocessor",
+        "prompts": {
+            "text": "depth_anything_vitl14.pth"
+        }
+    },
+    {
+        "id": 30,
+        "name": "InstantX Flux Union ControlNet Loader",
+        "prompts": {
+            "text": "allinone flux.safetensors"
+        }
+    },
+    {
+        "id": 31,
+        "name": "ControlNetApplySD3"
+    },
+    {
+        "id": 32,
+        "name": "Reroute"
+    },
+    {
+        "id": 33,
+        "name": "Reroute"
+    },
+    {
+        "id": 34,
+        "name": "Reroute"
+    },
+    {
+        "id": 35,
+        "name": "Reroute"
+    },
+    {
+        "id": 36,
+        "name": "Note",
+        "prompts": {
+            "text": " \nXlab flux\n https://github.com/XLabs-AI/x-flux-comfyui\n\nControlnet all in one loader\n https://github.com/EeroHeikkinen/ComfyUI-eesahesNodes\n\nControlnet V3 models\n https://huggingface.co/XLabs-AI\n\nControlnet all in one models\n https://huggingface.co/Shakker-Labs/FLUX.1-dev-ControlNet-Union-Pro\n"
+        }
+    },
+    {
+        "id": 38,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 39,
+        "name": "HEDPreprocessor"
+    },
+    {
+        "id": 40,
+        "name": "Reroute"
+    },
+    {
+        "id": 41,
+        "name": "Reroute"
+    },
+    {
+        "id": 42,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 43,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 44,
+        "name": "Reroute"
+    },
+    {
+        "id": 45,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00419_.png"
+        }
+    },
+    {
+        "id": 46,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "00021-18935858.png"
+        }
+    }
+]

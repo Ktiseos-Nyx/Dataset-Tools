@@ -1,0 +1,114 @@
+[
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd3.5_medium.safetensors"
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "beautiful scenery nature glass bottle landscape, purple galaxy bottle,"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 11,
+        "name": "TripleCLIPLoader",
+        "prompts": {
+            "text": "clip_g.safetensors",
+            "text_2": "clip_l.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "ModelSamplingSD3"
+    },
+    {
+        "id": 71,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 105,
+        "name": "Note",
+        "prompts": {
+            "text": "Make sure the downscale factor is 64 pixels, to ensuire lengths are divisble by 64.\n\nSDXL option will find Aspect Rations that add up to 1 megapixel (1024x1024) which is suitable for SD3.5"
+        }
+    },
+    {
+        "id": 135,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 294,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 301,
+        "name": "SD3NegativeConditioning+"
+    },
+    {
+        "id": 302,
+        "name": "OverrideCLIPDevice"
+    },
+    {
+        "id": 303,
+        "name": "AspectSizeV2"
+    },
+    {
+        "id": 304,
+        "name": "Note",
+        "prompts": {
+            "text": "Thoda-SD35-Medium-SLG-Opti-v3\n\n- SD3.5 Medium (FP16)\n- Skip Layer Guidance\n- Clip T5XXL (FP16) \n(optional CLIP CPU offload, bypass if you prefer)\n- aspect size\n- project file path\n"
+        }
+    },
+    {
+        "id": 305,
+        "name": "ProjectFilePathNode",
+        "prompts": {
+            "text": "SLGon-Medium"
+        }
+    },
+    {
+        "id": 306,
+        "name": "SaveImage"
+    },
+    {
+        "id": 307,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 308,
+        "name": "SkipLayerGuidanceSD3"
+    },
+    {
+        "id": 309,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 310,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 311,
+        "name": "ProjectFilePathNode",
+        "prompts": {
+            "text": "SLGoff-Medium"
+        }
+    },
+    {
+        "id": 312,
+        "name": "SaveImage"
+    }
+]

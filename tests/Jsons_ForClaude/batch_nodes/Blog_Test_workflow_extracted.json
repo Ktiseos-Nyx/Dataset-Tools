@@ -1,0 +1,280 @@
+[
+    {
+        "id": 1,
+        "name": "VHS_LoadImages"
+    },
+    {
+        "id": 2,
+        "name": "ControlNetLoaderAdvanced",
+        "prompts": {
+            "text": "models/control_v11f1p_sd15_depth.pth"
+        }
+    },
+    {
+        "id": 3,
+        "name": "ACN_AdvancedControlNetApply"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "zHina/8964_detailRealisticBakedVAE_SP_fp16_v35.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "adult girl, dancing, whole body, slim body, medium breasts, shy, white skirt, short top, (beach background), "
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(normal quality), (worst quality), (low quality), 3d, disabled body, (ugly), sketches, blurry, text, missing fingers, fewer digits, signature, username, censorship, old, amateur drawing, bad hands,"
+        }
+    },
+    {
+        "id": 7,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 8,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 9,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 12,
+        "name": "PixelPerfectResolution",
+        "prompts": {
+            "text": "Just Resize"
+        }
+    },
+    {
+        "id": 16,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 17,
+        "name": "CR Load LoRA",
+        "prompts": {
+            "text": "Hina/hinaFailedButSmellsGood_v25.safetensors"
+        }
+    },
+    {
+        "id": 18,
+        "name": "LineArtPreprocessor"
+    },
+    {
+        "id": 19,
+        "name": "ControlNetLoaderAdvanced",
+        "prompts": {
+            "text": "models/control_v11p_sd15_lineart.pth"
+        }
+    },
+    {
+        "id": 20,
+        "name": "ACN_AdvancedControlNetApply"
+    },
+    {
+        "id": 22,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 23,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 25,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 26,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 28,
+        "name": "ControlNetLoaderAdvanced",
+        "prompts": {
+            "text": "models/control_v11p_sd15_openpose.pth"
+        }
+    },
+    {
+        "id": 29,
+        "name": "ACN_AdvancedControlNetApply"
+    },
+    {
+        "id": 30,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 31,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 32,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 33,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 35,
+        "name": "DWPreprocessor"
+    },
+    {
+        "id": 52,
+        "name": "LeReS-DepthMapPreprocessor"
+    },
+    {
+        "id": 53,
+        "name": "ACN_AdvancedControlNetApply"
+    },
+    {
+        "id": 54,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 55,
+        "name": "PiDiNetPreprocessor"
+    },
+    {
+        "id": 56,
+        "name": "ControlNetLoaderAdvanced",
+        "prompts": {
+            "text": "models/control_v11p_sd15_softedge.pth"
+        }
+    },
+    {
+        "id": 57,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 58,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 59,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 71,
+        "name": "ADE_AnimateDiffLoaderWithContext",
+        "prompts": {
+            "text": "mm-HighlystableItimacy_v01.ckpt",
+            "text_2": "sqrt_linear (AnimateDiff)"
+        }
+    },
+    {
+        "id": 72,
+        "name": "ADE_AnimateDiffUniformContextOptions"
+    },
+    {
+        "id": 76,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 77,
+        "name": "CR Seed"
+    },
+    {
+        "id": 78,
+        "name": "CR Value"
+    },
+    {
+        "id": 79,
+        "name": "CR Value"
+    },
+    {
+        "id": 81,
+        "name": "CR SD1.5 Aspect Ratio",
+        "prompts": {
+            "text": "3:4 portrait 512x682"
+        }
+    },
+    {
+        "id": 83,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 85,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 86,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 87,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 88,
+        "name": "ImpactImageBatchToImageList"
+    },
+    {
+        "id": 89,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 90,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8n_v2.pt"
+        }
+    },
+    {
+        "id": 91,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 92,
+        "name": "ImageListToImageBatch"
+    },
+    {
+        "id": 93,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 95,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 96,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 98,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "detailed face,"
+        }
+    }
+]

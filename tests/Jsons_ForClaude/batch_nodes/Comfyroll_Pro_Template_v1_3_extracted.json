@@ -1,0 +1,801 @@
+[
+    {
+        "id": 2,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 3,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "high quality, masterpiece, photorealistic, realistic, \n\n20yo girl, (period costume),"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "embedding:embedding:easynegative,\nembedding:bad-hands-5,\nworst quality, bad quality:1.2,\nmonochrome,\npen, pencil, paintbrush,\nnsfw,\n"
+        }
+    },
+    {
+        "id": 6,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 7,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 8,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "vae-ft-mse-840000-ema-pruned.safetensors"
+        }
+    },
+    {
+        "id": 10,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 11,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 12,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 13,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 14,
+        "name": "VAEEncodeTiled"
+    },
+    {
+        "id": 19,
+        "name": "Reroute"
+    },
+    {
+        "id": 21,
+        "name": "Reroute"
+    },
+    {
+        "id": 27,
+        "name": "Reroute"
+    },
+    {
+        "id": 37,
+        "name": "LoadImage"
+    },
+    {
+        "id": 39,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 40,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 41,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 42,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "RealESRGAN_x2plus.pth"
+        }
+    },
+    {
+        "id": 43,
+        "name": "ImageInvert"
+    },
+    {
+        "id": 65,
+        "name": "Image Padding"
+    },
+    {
+        "id": 78,
+        "name": "DiffControlNetLoader",
+        "prompts": {
+            "text": "controlnetPreTrained_depthDifferenceV10.safetensors"
+        }
+    },
+    {
+        "id": 79,
+        "name": "LoadImage"
+    },
+    {
+        "id": 80,
+        "name": "ControlNetApply"
+    },
+    {
+        "id": 83,
+        "name": "Reroute"
+    },
+    {
+        "id": 90,
+        "name": "Reroute"
+    },
+    {
+        "id": 91,
+        "name": "Note",
+        "prompts": {
+            "text": "Comfyroll Pro Template\nhttps://civitai.com/models/85619/comfyroll-pro-template\n\nThis template can be used with any model\n\nOn first use:\n- select models and VAE\n- select a default LoRA in each Load LoRA node\n- select upscale models\n- select ControlNet models\n- add an image in each of the Load Images nodes (purple nodes)\n- add a default image batch in the Load Image Batch node\n- save a copy to use as a template\n\nExample noise masks can be found in the Comfyroll Workflow Templates download\n\nNotes can be opened by clicking on the dots in the title bars (green nodes)\n\nEach optional component can be bypassed using logic switches (red nodes)\n\nThe default setting for all logic switches is OFF (1) \n\nRecommended >10GB VRAM\n\nRequires:\nWAS Custom Nodes\nhttps://civitai.com/models/20793/was-node-suite-comfyui\nComfyroll Custom Nodes\nhttps://civitai.com/models/87609/comfyroll-custom-nodes-for-comfyui\n\nAugust 2023\nAkatsuzi\n\n"
+        }
+    },
+    {
+        "id": 104,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control_sd15_depth.pth"
+        }
+    },
+    {
+        "id": 105,
+        "name": "LoadImage"
+    },
+    {
+        "id": 108,
+        "name": "Load Image Batch",
+        "prompts": {
+            "text": "single_image",
+            "text_2": "E:\\Comfy Projects\\default batch"
+        }
+    },
+    {
+        "id": 110,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 111,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 135,
+        "name": "Reroute"
+    },
+    {
+        "id": 139,
+        "name": "Reroute"
+    },
+    {
+        "id": 144,
+        "name": "Reroute"
+    },
+    {
+        "id": 145,
+        "name": "Reroute"
+    },
+    {
+        "id": 146,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 171,
+        "name": "Note",
+        "prompts": {
+            "text": "optional second ControlNet for adding detail or complexity to the output\n\nstrength typically set to between 0.3 and 0.5"
+        }
+    },
+    {
+        "id": 203,
+        "name": "Reroute"
+    },
+    {
+        "id": 224,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 227,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 231,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "RAW, 8k ultra-detailed, highest quality, masterpiece, flat colors, watercolor, gelatinous texture, stained glass, depth of field blur, bokeh, \n"
+        }
+    },
+    {
+        "id": 232,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "embedding:easynegative,\nembedding:bad-hands-5,\nworst quality, bad quality:1.2,\nmonochrome,"
+        }
+    },
+    {
+        "id": 234,
+        "name": "Reroute"
+    },
+    {
+        "id": 238,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 239,
+        "name": "CR Conditioning Input Switch"
+    },
+    {
+        "id": 242,
+        "name": "Reroute"
+    },
+    {
+        "id": 253,
+        "name": "Note",
+        "prompts": {
+            "text": "optional second prompt\n"
+        }
+    },
+    {
+        "id": 255,
+        "name": "Note",
+        "prompts": {
+            "text": "optional border\n\nswitch between no border (1) and border (2)"
+        }
+    },
+    {
+        "id": 256,
+        "name": "Note",
+        "prompts": {
+            "text": "add a default batch path on first use\n\nset to single_image when not in use"
+        }
+    },
+    {
+        "id": 257,
+        "name": "Note",
+        "prompts": {
+            "text": "optional ControlNet\n\nswitch between single image (1) or batch image (2)\n"
+        }
+    },
+    {
+        "id": 261,
+        "name": "Note",
+        "prompts": {
+            "text": "optional second prompt\n\nswitch between OFF (1) and ON (2)"
+        }
+    },
+    {
+        "id": 262,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 264,
+        "name": "Note",
+        "prompts": {
+            "text": "optional second prompt\n\nswitch between OFF (1) and ON (2)"
+        }
+    },
+    {
+        "id": 271,
+        "name": "Image Blending Mode"
+    },
+    {
+        "id": 272,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 274,
+        "name": "Note",
+        "prompts": {
+            "text": "optional second ControlNet\n\nswitch between OFF (1) and ON (2)"
+        }
+    },
+    {
+        "id": 275,
+        "name": "Reroute"
+    },
+    {
+        "id": 276,
+        "name": "Reroute"
+    },
+    {
+        "id": 277,
+        "name": "Reroute"
+    },
+    {
+        "id": 287,
+        "name": "Reroute"
+    },
+    {
+        "id": 288,
+        "name": "Note",
+        "prompts": {
+            "text": "optional LoRAs"
+        }
+    },
+    {
+        "id": 298,
+        "name": "Latent Upscale by Factor (WAS)"
+    },
+    {
+        "id": 299,
+        "name": "Reroute"
+    },
+    {
+        "id": 300,
+        "name": "Reroute"
+    },
+    {
+        "id": 301,
+        "name": "CR Latent Input Switch"
+    },
+    {
+        "id": 309,
+        "name": "Reroute"
+    },
+    {
+        "id": 310,
+        "name": "Reroute"
+    },
+    {
+        "id": 311,
+        "name": "Reroute"
+    },
+    {
+        "id": 312,
+        "name": "Reroute"
+    },
+    {
+        "id": 313,
+        "name": "Reroute"
+    },
+    {
+        "id": 314,
+        "name": "Reroute"
+    },
+    {
+        "id": 317,
+        "name": "Reroute"
+    },
+    {
+        "id": 318,
+        "name": "Reroute"
+    },
+    {
+        "id": 319,
+        "name": "Reroute"
+    },
+    {
+        "id": 320,
+        "name": "Reroute"
+    },
+    {
+        "id": 321,
+        "name": "Reroute"
+    },
+    {
+        "id": 322,
+        "name": "Reroute"
+    },
+    {
+        "id": 323,
+        "name": "Reroute"
+    },
+    {
+        "id": 324,
+        "name": "Reroute"
+    },
+    {
+        "id": 326,
+        "name": "Note",
+        "prompts": {
+            "text": "switch between hires fix (1) and bypass hires fix"
+        }
+    },
+    {
+        "id": 327,
+        "name": "Reroute"
+    },
+    {
+        "id": 336,
+        "name": "Reroute"
+    },
+    {
+        "id": 337,
+        "name": "Reroute"
+    },
+    {
+        "id": 359,
+        "name": "Reroute"
+    },
+    {
+        "id": 361,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 367,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 368,
+        "name": "Reroute"
+    },
+    {
+        "id": 369,
+        "name": "Reroute"
+    },
+    {
+        "id": 370,
+        "name": "Reroute"
+    },
+    {
+        "id": 371,
+        "name": "Reroute"
+    },
+    {
+        "id": 373,
+        "name": "Reroute"
+    },
+    {
+        "id": 374,
+        "name": "CR Clip Input Switch"
+    },
+    {
+        "id": 378,
+        "name": "CR Model Input Switch"
+    },
+    {
+        "id": 379,
+        "name": "Reroute"
+    },
+    {
+        "id": 380,
+        "name": "Reroute"
+    },
+    {
+        "id": 384,
+        "name": "Checkpoint Loader (Simple)",
+        "prompts": {
+            "text": "SD1_5\\Comfyroll_v1_fp16_pruned.safetensors"
+        }
+    },
+    {
+        "id": 385,
+        "name": "Checkpoint Loader (Simple)",
+        "prompts": {
+            "text": "SD1_5\\ComfyrollAnime_v1_fp16_pruned.safetensors"
+        }
+    },
+    {
+        "id": 387,
+        "name": "Image Perlin Noise"
+    },
+    {
+        "id": 392,
+        "name": "Image Levels Adjustment"
+    },
+    {
+        "id": 395,
+        "name": "Image Filter Adjustments"
+    },
+    {
+        "id": 398,
+        "name": "CR Integer Multiple"
+    },
+    {
+        "id": 399,
+        "name": "CR Integer Multiple"
+    },
+    {
+        "id": 400,
+        "name": "Reroute"
+    },
+    {
+        "id": 401,
+        "name": "Reroute"
+    },
+    {
+        "id": 411,
+        "name": "Reroute"
+    },
+    {
+        "id": 414,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 418,
+        "name": "Reroute"
+    },
+    {
+        "id": 419,
+        "name": "Reroute"
+    },
+    {
+        "id": 420,
+        "name": "Reroute"
+    },
+    {
+        "id": 422,
+        "name": "Note",
+        "prompts": {
+            "text": "switch between no upscale (1), upscale with model (2), upscale with model + image upscale (3)"
+        }
+    },
+    {
+        "id": 431,
+        "name": "Note",
+        "prompts": {
+            "text": "switch between image (1) or noise (2) or (3)"
+        }
+    },
+    {
+        "id": 439,
+        "name": "Reroute"
+    },
+    {
+        "id": 441,
+        "name": "Reroute"
+    },
+    {
+        "id": 442,
+        "name": "CR Load LoRA"
+    },
+    {
+        "id": 443,
+        "name": "Reroute"
+    },
+    {
+        "id": 465,
+        "name": "CR Image Input Switch (4 way)"
+    },
+    {
+        "id": 466,
+        "name": "Reroute"
+    },
+    {
+        "id": 469,
+        "name": "CR ControlNet Input Switch"
+    },
+    {
+        "id": 472,
+        "name": "Note",
+        "prompts": {
+            "text": "switch between ControlNet models"
+        }
+    },
+    {
+        "id": 475,
+        "name": "Reroute"
+    },
+    {
+        "id": 477,
+        "name": "CR Image Input Switch (4 way)"
+    },
+    {
+        "id": 482,
+        "name": "Note",
+        "prompts": {
+            "text": "switch between image post-processing OFF (1) and ON (2)"
+        }
+    },
+    {
+        "id": 483,
+        "name": "Image Style Filter"
+    },
+    {
+        "id": 485,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 486,
+        "name": "Note",
+        "prompts": {
+            "text": "switch between image style OFF (1) and ON (2)"
+        }
+    },
+    {
+        "id": 487,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 492,
+        "name": "Reroute"
+    },
+    {
+        "id": 493,
+        "name": "Image Power Noise"
+    },
+    {
+        "id": 494,
+        "name": "CR Image Input Switch (4 way)"
+    },
+    {
+        "id": 495,
+        "name": "Image Perlin Power Fractal"
+    },
+    {
+        "id": 496,
+        "name": "Reroute"
+    },
+    {
+        "id": 497,
+        "name": "Reroute"
+    },
+    {
+        "id": 505,
+        "name": "Note",
+        "prompts": {
+            "text": "switch model and CLIP between model 1 (1) or model 2 (2)\n"
+        }
+    },
+    {
+        "id": 514,
+        "name": "CR Load LoRA",
+        "prompts": {
+            "text": "SD1_5\\ukiyoE_ukiyoE.pt"
+        }
+    },
+    {
+        "id": 525,
+        "name": "Note",
+        "prompts": {
+            "text": "%date:d-M-yy%/\n-%CheckpointLoader1.ckpt_name%\n_%Seed.seed%\n\n%date:d-M-yy%/%CheckpointLoader1.ckpt_name%_%Seed.seed%\n\nThe prefixes only work in the Save Image node"
+        }
+    },
+    {
+        "id": 530,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "%date:d-M-yy%/%CheckpointLoader1.ckpt_name%_%Seed.seed%"
+        }
+    },
+    {
+        "id": 534,
+        "name": "Note",
+        "prompts": {
+            "text": "output switch positions\n1,1 = default image (from output 1)\n1,2 = enhanced image (from output 3)\n2,1 = styled image (from output 2)\n2,2 = styled enhanced images (from output 3)\n"
+        }
+    },
+    {
+        "id": 539,
+        "name": "Reroute"
+    },
+    {
+        "id": 549,
+        "name": "DiffControlNetLoader",
+        "prompts": {
+            "text": "controlnetPreTrained_depthDifferenceV10.safetensors"
+        }
+    },
+    {
+        "id": 550,
+        "name": "Reroute"
+    },
+    {
+        "id": 564,
+        "name": "KSampler"
+    },
+    {
+        "id": 565,
+        "name": "KSampler"
+    },
+    {
+        "id": 567,
+        "name": "Reroute"
+    },
+    {
+        "id": 568,
+        "name": "CR Color Tint"
+    },
+    {
+        "id": 569,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 571,
+        "name": "Reroute"
+    },
+    {
+        "id": 572,
+        "name": "Reroute"
+    },
+    {
+        "id": 582,
+        "name": "CR Apply ControlNet"
+    },
+    {
+        "id": 583,
+        "name": "CR Img2Img Process Switch"
+    },
+    {
+        "id": 584,
+        "name": "CR Hires Fix Process Switch",
+        "prompts": {
+            "text": "latent_upscale"
+        }
+    },
+    {
+        "id": 586,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 587,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 588,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 589,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 591,
+        "name": "CR LoRA Stack"
+    },
+    {
+        "id": 592,
+        "name": "CR Apply LoRA Stack"
+    },
+    {
+        "id": 593,
+        "name": "CR LoRA Stack"
+    },
+    {
+        "id": 595,
+        "name": "CR Latent Batch Size"
+    },
+    {
+        "id": 596,
+        "name": "Reroute"
+    },
+    {
+        "id": 597,
+        "name": "Reroute"
+    },
+    {
+        "id": 598,
+        "name": "Reroute"
+    },
+    {
+        "id": 599,
+        "name": "CR Halftone Grid"
+    },
+    {
+        "id": 600,
+        "name": "CR Seed"
+    },
+    {
+        "id": 601,
+        "name": "Reroute"
+    },
+    {
+        "id": 602,
+        "name": "CR Batch Process Switch"
+    },
+    {
+        "id": 603,
+        "name": "CR Batch Process Switch"
+    },
+    {
+        "id": 604,
+        "name": "CR SD1.5 Aspect Ratio",
+        "prompts": {
+            "text": "2:3 portrait 512x768"
+        }
+    }
+]

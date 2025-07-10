@@ -1,0 +1,39 @@
+[
+    {
+        "id": 1,
+        "name": "BagelModelLoader",
+        "prompts": {
+            "text": "models/BAGEL-7B-MoT"
+        }
+    },
+    {
+        "id": 1,
+        "name": "B\u7ad9\u3001Youtube\uff1aT8star-Aix"
+    },
+    {
+        "id": 2,
+        "name": "BagelTextToImage",
+        "prompts": {
+            "text": "A female cosplayer portraying an ethereal fairy or elf, wearing a flowing dress made of delicate fabrics in soft, mystical colors like emerald green and silver. She has pointed ears, a gentle, enchanting expression, and her outfit is adorned with sparkling jewels and intricate patterns. The background is a magical forest with glowing plants, mystical creatures, and a serene atmosphere."
+        }
+    },
+    {
+        "id": 4,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "<think>\nAlright, let's bring this vision to life. First, the subject is a female cosplayer dressed as an ethereal fairy or elf. She should have a flowing dress made of delicate fabrics in soft, mystical colors like emerald green and silver. The fabric should appear light and airy, with intricate patterns that shimmer and catch the light. Her pointed ears are a key feature, adding to the elf-like appearance. Her expression should be gentle and enchanting, with a soft gaze that conveys a sense of wonder and magic. The outfit should be adorned with sparkling jewels, perhaps in shades of silver and emerald, adding to the mystical and otherworldly feel. The background is a magical forest, with glowing plants that emit a soft, ethereal light. There might be mystical creatures like fairies, butterflies, or small mythical beings fluttering around, enhancing the enchanting atmosphere. The overall mood should be serene and mystical, with a focus on creating a sense of wonder and fantasy. The lighting should be soft and diffused, with a gentle glow that complements the magical theme. The composition should be balanced, with the subject positioned in a way that draws the viewer's eye to her, while the background elements add depth and context to the scene. The image should evoke a sense of fantasy and enchantment, making the viewer feel as though they've stepped into a magical realm.\n</think>",
+            "text_2": "<think>\nAlright, let's bring this vision to life. First, the subject is a female cosplayer dressed as an ethereal fairy or elf. She should have a flowing dress made of delicate fabrics in soft, mystical colors like emerald green and silver. The fabric should appear light and airy, with intricate patterns that shimmer and catch the light. Her pointed ears are a key feature, adding to the elf-like appearance. Her expression should be gentle and enchanting, with a soft gaze that conveys a sense of wonder and magic. The outfit should be adorned with sparkling jewels, perhaps in shades of silver and emerald, adding to the mystical and otherworldly feel. The background is a magical forest, with glowing plants that emit a soft, ethereal light. There might be mystical creatures like fairies, butterflies, or small mythical beings fluttering around, enhancing the enchanting atmosphere. The overall mood should be serene and mystical, with a focus on creating a sense of wonder and fantasy. The lighting should be soft and diffused, with a gentle glow that complements the magical theme. The composition should be balanced, with the subject positioned in a way that draws the viewer's eye to her, while the background elements add depth and context to the scene. The image should evoke a sense of fantasy and enchantment, making the viewer feel as though they've stepped into a magical realm.\n</think>"
+        }
+    },
+    {
+        "id": 5,
+        "name": "SaveImage"
+    },
+    {
+        "id": 7,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "A female cosplayer portraying an ethereal fairy or elf, wearing a flowing dress made of delicate fabrics in soft, mystical colors like emerald green and silver. She has pointed ears, a gentle, enchanting expression, and her outfit is adorned with sparkling jewels and intricate patterns. The background is a magical forest with glowing plants, mystical creatures, and a serene atmosphere."
+        }
+    }
+]

@@ -1,0 +1,658 @@
+[
+    {
+        "id": 1,
+        "name": "Details"
+    },
+    {
+        "id": 2,
+        "name": "LYING SIGMA"
+    },
+    {
+        "id": 3,
+        "name": "MULTIPLY SIGMA"
+    },
+    {
+        "id": 4,
+        "name": "FLUX"
+    },
+    {
+        "id": 6,
+        "name": "CLIPS + STYLE"
+    },
+    {
+        "id": 7,
+        "name": "DEFAULT"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "SOURCE IMAGE"
+    },
+    {
+        "id": 11,
+        "name": "TripleCLIPLoader",
+        "prompts": {
+            "text": "G clip\\clip_g_sdxl_base.safetensors",
+            "text_2": "L clip\\ViT-L-14-TEXT-detail-improved-hiT-GmP-HF.safetensors"
+        }
+    },
+    {
+        "id": 11,
+        "name": "LLM + PROMPTS"
+    },
+    {
+        "id": 12,
+        "name": "IMAGE SCORER - PICKER"
+    },
+    {
+        "id": 13,
+        "name": "UPSCALE + DUMP VRAM"
+    },
+    {
+        "id": 14,
+        "name": "LOAD SHUTTLE"
+    },
+    {
+        "id": 15,
+        "name": "FACE DETAILER"
+    },
+    {
+        "id": 16,
+        "name": "FACESWAP"
+    },
+    {
+        "id": 17,
+        "name": "REACTOR"
+    },
+    {
+        "id": 18,
+        "name": "REACTOR ON/OFF"
+    },
+    {
+        "id": 301,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Flux/redux/_default_"
+        }
+    },
+    {
+        "id": 306,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 307,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 308,
+        "name": "DetailDaemonSamplerNode"
+    },
+    {
+        "id": 309,
+        "name": "DetailDaemonGraphSigmasNode"
+    },
+    {
+        "id": 310,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Flux/redux/_detail_"
+        }
+    },
+    {
+        "id": 312,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 313,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "Flux\\f_VAE.safetensors"
+        }
+    },
+    {
+        "id": 314,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 315,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 316,
+        "name": "LyingSigmaSampler"
+    },
+    {
+        "id": 317,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Flux/redux/_lying_"
+        }
+    },
+    {
+        "id": 319,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 320,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 322,
+        "name": "MultiplySigmas"
+    },
+    {
+        "id": 323,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Flux/redux/_multi_"
+        }
+    },
+    {
+        "id": 325,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 327,
+        "name": "SetNode"
+    },
+    {
+        "id": 329,
+        "name": "GetNode"
+    },
+    {
+        "id": 330,
+        "name": "GetNode"
+    },
+    {
+        "id": 331,
+        "name": "SetNode"
+    },
+    {
+        "id": 332,
+        "name": "GetNode"
+    },
+    {
+        "id": 333,
+        "name": "GetNode"
+    },
+    {
+        "id": 334,
+        "name": "GetNode"
+    },
+    {
+        "id": 336,
+        "name": "GetNode"
+    },
+    {
+        "id": 337,
+        "name": "SetNode"
+    },
+    {
+        "id": 338,
+        "name": "GetNode"
+    },
+    {
+        "id": 339,
+        "name": "GetNode"
+    },
+    {
+        "id": 340,
+        "name": "GetNode"
+    },
+    {
+        "id": 341,
+        "name": "GetNode"
+    },
+    {
+        "id": 342,
+        "name": "SetNode"
+    },
+    {
+        "id": 343,
+        "name": "GetNode"
+    },
+    {
+        "id": 344,
+        "name": "GetNode"
+    },
+    {
+        "id": 345,
+        "name": "GetNode"
+    },
+    {
+        "id": 346,
+        "name": "GetNode"
+    },
+    {
+        "id": 347,
+        "name": "SetNode"
+    },
+    {
+        "id": 348,
+        "name": "GetNode"
+    },
+    {
+        "id": 349,
+        "name": "GetNode"
+    },
+    {
+        "id": 350,
+        "name": "GetNode"
+    },
+    {
+        "id": 354,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 355,
+        "name": "GetNode"
+    },
+    {
+        "id": 357,
+        "name": "GetNode"
+    },
+    {
+        "id": 364,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "Flux dev\\flux_dev.safetensors"
+        }
+    },
+    {
+        "id": 366,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "flux\\opt-Hyper-FLUX.1-dev-8steps-lora.safetensors"
+        }
+    },
+    {
+        "id": 384,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "A tense argument in a dimly lit alleyway. A young woman with an angry expression confronts a man whose back is to the viewer. She is wearing a black sports bra and denim shorts, barefoot. The man is shirtless, wearing dark pants. The alleyway is narrow, with peeling paint and debris on the ground. The lighting is harsh, casting long shadows. The scene conveys a sense of conflict and desperation. The woman's body language suggests she is standing her ground, while the man's posture is defensive. The setting adds to the overall feeling of unease."
+        }
+    },
+    {
+        "id": 386,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 388,
+        "name": "StyleModelLoader",
+        "prompts": {
+            "text": "flux1-redux-dev.safetensors"
+        }
+    },
+    {
+        "id": 389,
+        "name": "CLIPVisionEncode"
+    },
+    {
+        "id": 390,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "sigclip_vision_patch14_384.safetensors"
+        }
+    },
+    {
+        "id": 391,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "_multi__00156_.png"
+        }
+    },
+    {
+        "id": 392,
+        "name": "Get Image Size"
+    },
+    {
+        "id": 393,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 394,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 395,
+        "name": "SetNode"
+    },
+    {
+        "id": 396,
+        "name": "SetNode"
+    },
+    {
+        "id": 397,
+        "name": "GetNode"
+    },
+    {
+        "id": 398,
+        "name": "GetNode"
+    },
+    {
+        "id": 399,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 400,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 401,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 403,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 404,
+        "name": "Int2String"
+    },
+    {
+        "id": 405,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 406,
+        "name": "Int2String"
+    },
+    {
+        "id": 407,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 411,
+        "name": "ZuellniPickScoreProcessor"
+    },
+    {
+        "id": 415,
+        "name": "ZuellniPickScoreLoader",
+        "prompts": {
+            "text": "yuvalkirstain/PickScore_v1"
+        }
+    },
+    {
+        "id": 416,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 418,
+        "name": "UnloadAllModels"
+    },
+    {
+        "id": 420,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 421,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "SwinIR\\SwinIR_RealworldSR_X4_64_BSRGAN_PSNR.v2.pth"
+        }
+    },
+    {
+        "id": 422,
+        "name": "ImageSimpleResize"
+    },
+    {
+        "id": 423,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 427,
+        "name": "Reroute"
+    },
+    {
+        "id": 428,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Bad quality, low quality, blurry"
+        }
+    },
+    {
+        "id": 429,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 430,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 431,
+        "name": "ConditioningSetTimestepRange"
+    },
+    {
+        "id": 432,
+        "name": "ConditioningSetTimestepRange"
+    },
+    {
+        "id": 433,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 434,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 435,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 436,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "Flux/redux/_final_"
+        }
+    },
+    {
+        "id": 437,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "flux\\sexy\\Natural_Beautiful_Breasts.safetensors"
+        }
+    },
+    {
+        "id": 444,
+        "name": "ZuellniPickScoreSelector"
+    },
+    {
+        "id": 446,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 452,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 453,
+        "name": "ImageBatchMulti"
+    },
+    {
+        "id": 454,
+        "name": "LyingSigmaSampler"
+    },
+    {
+        "id": 455,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 456,
+        "name": "SetNode"
+    },
+    {
+        "id": 457,
+        "name": "GetNode"
+    },
+    {
+        "id": 458,
+        "name": "GetNode"
+    },
+    {
+        "id": 459,
+        "name": "GetNode"
+    },
+    {
+        "id": 460,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 461,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 462,
+        "name": "SetNode"
+    },
+    {
+        "id": 463,
+        "name": "GetNode"
+    },
+    {
+        "id": 466,
+        "name": "SetNode"
+    },
+    {
+        "id": 467,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 468,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Extremely detailed and beautiful face of a woman. She has detailed violet eyes."
+        }
+    },
+    {
+        "id": 469,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 472,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 476,
+        "name": "ReActorFaceSwap",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "retinaface_resnet50"
+        }
+    },
+    {
+        "id": 477,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "pasted/image (363).png"
+        }
+    },
+    {
+        "id": 478,
+        "name": "SetNode"
+    },
+    {
+        "id": 479,
+        "name": "GetNode"
+    },
+    {
+        "id": 480,
+        "name": "ReActorFaceSwap",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "retinaface_resnet50"
+        }
+    },
+    {
+        "id": 481,
+        "name": "GetNode"
+    },
+    {
+        "id": 482,
+        "name": "ReActorFaceSwap",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "retinaface_resnet50"
+        }
+    },
+    {
+        "id": 483,
+        "name": "ReActorFaceSwap",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "retinaface_resnet50"
+        }
+    },
+    {
+        "id": 484,
+        "name": "ReActorFaceSwap",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "retinaface_resnet50"
+        }
+    },
+    {
+        "id": 485,
+        "name": "GetNode"
+    },
+    {
+        "id": 486,
+        "name": "UnloadAllModels"
+    },
+    {
+        "id": 487,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "Shuttle\\shuttle-3.1-aesthetic-fp8.safetensors"
+        }
+    },
+    {
+        "id": 488,
+        "name": "GetNode"
+    },
+    {
+        "id": 489,
+        "name": "StyleModelApplySimple"
+    },
+    {
+        "id": 493,
+        "name": "Gemini_Flash_200_Exp"
+    },
+    {
+        "id": 494,
+        "name": "VHS_LoadVideo"
+    },
+    {
+        "id": 495,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "You are an AI assistant specializing in crafting professional and efective prompts for the Flux model, suitable for the t5-xxl clip. When an image is provided, you should generate a concise and descriptive prompt. The prompt should be between 100-200 tokens. The output should only show the final prompt, without any additional comments or instructions.\n\n"
+        }
+    },
+    {
+        "id": 496,
+        "name": "CLIPTextEncodeFlux"
+    },
+    {
+        "id": 497,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "Full body, medium shot, night time photo, Documentary film, Amateur photography, captured with a Sony Alpha camera and a Zeiss lens, f/2.8 aperture, ISO 100, 1/125 shutter speed, color grading to enhance the realism of the skin tones and fabric textures, post-processing in Adobe Lightroom and Photoshop to refine the details and enhance the overall image quality. full body portrait, detailed hands, extremely detailed face, direct gaze, Highly detailed face. realistic face, natural skin texture, beautiful eyes.\n\n"
+        }
+    },
+    {
+        "id": 502,
+        "name": "Fast Groups Bypasser (rgthree)"
+    }
+]

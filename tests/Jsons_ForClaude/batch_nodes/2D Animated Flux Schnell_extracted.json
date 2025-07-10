@@ -1,0 +1,303 @@
+[
+    {
+        "id": 2,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 3,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 4,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 5,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 6,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 7,
+        "name": "SaveImage"
+    },
+    {
+        "id": 8,
+        "name": "CheckpointLoaderNF4",
+        "prompts": {
+            "text": "flux1-schnell-bnb-nf4.safetensors"
+        }
+    },
+    {
+        "id": 9,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 10,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 11,
+        "name": "String Literal",
+        "prompts": {
+            "text": "Anime Style, Woman with green eyes and blond hair on a plain dark background "
+        }
+    },
+    {
+        "id": 12,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 13,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 14,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 15,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 16,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 17,
+        "name": "String Literal",
+        "prompts": {
+            "text": "Green Font on Red Backrgound, Neon Letters Spelling \"Flux\" "
+        }
+    },
+    {
+        "id": 18,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 19,
+        "name": "SaveImage"
+    },
+    {
+        "id": 20,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 21,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 22,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 23,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 24,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 25,
+        "name": "String Literal",
+        "prompts": {
+            "text": "Green Smiley Face"
+        }
+    },
+    {
+        "id": 26,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 27,
+        "name": "SaveImage"
+    },
+    {
+        "id": 28,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 29,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 30,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 31,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 32,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 33,
+        "name": "Efficient Loader",
+        "prompts": {
+            "text": "GeekyGhost_LCM_v2.safetensors"
+        }
+    },
+    {
+        "id": 34,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 35,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 36,
+        "name": "Seed Generator"
+    },
+    {
+        "id": 37,
+        "name": "CR LoRA Stack",
+        "prompts": {
+            "text": "add_details.safetensors"
+        }
+    },
+    {
+        "id": 38,
+        "name": "CR Multi-ControlNet Stack",
+        "prompts": {
+            "text": "qrCodeMonster_v20.safetensors"
+        }
+    },
+    {
+        "id": 40,
+        "name": "String Literal"
+    },
+    {
+        "id": 42,
+        "name": "String Literal"
+    },
+    {
+        "id": 43,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 44,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 49,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 51,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 53,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 54,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "8x_NMKD-Superscale_150000_G.pth"
+        }
+    },
+    {
+        "id": 55,
+        "name": "SaveImage"
+    },
+    {
+        "id": 56,
+        "name": "ReActorFaceSwapOpt",
+        "prompts": {
+            "text": "inswapper_128.onnx",
+            "text_2": "retinaface_resnet50"
+        }
+    },
+    {
+        "id": 57,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "00080-1257259033.png"
+        }
+    },
+    {
+        "id": 58,
+        "name": "Note",
+        "prompts": {
+            "text": "Last bg remover node needs to be set to RGB if you want to upscale it. You can use RGBA otherwise if you want. "
+        }
+    },
+    {
+        "id": 59,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 60,
+        "name": "Note",
+        "prompts": {
+            "text": "This is the text group, essentially if you add \"on a mono green chroma background for easy removal\" you can use the chroma key remover to remove those bits of background that sometimes linger. I was going to make a lora for the chroma backgrounds, but, I don't have to now. Since it's just text on background, 4 to 12 steps is more than enough usually for Flux Schnell NF4. It's a banger model. It is feeding these top 3 groups. \n\nhttps://civitai.com/models/638187/flux1-dev-v1v2-flux1-schnell-bnb-nf4"
+        }
+    },
+    {
+        "id": 61,
+        "name": "Note",
+        "prompts": {
+            "text": "Background group, just prompt what you want the background to be, also fed by first node. "
+        }
+    },
+    {
+        "id": 62,
+        "name": "Note",
+        "prompts": {
+            "text": "Subject grooup/Primary group. This feeds the other 2.\n\nWith the subject, background, and text being broken up into different instances to be layered individually things are a little easier. "
+        }
+    },
+    {
+        "id": 63,
+        "name": "Note",
+        "prompts": {
+            "text": "https://github.com/Gourieff/comfyui-reactor-node.git\n\nthis is known to be rough getting up and running. I advise checking the repo for help. "
+        }
+    },
+    {
+        "id": 64,
+        "name": "Note",
+        "prompts": {
+            "text": "https://github.com/GeekyGhost/ComfyUI-GeekyRemB.git\n\nOne of my personal nodes! I have an automatic1111 extension as well. \n\nMy full fledge video editor is on the way soon also. I have a lot of tools and more coming. Then my crescendo, a massive system that incorporates all my tools, some old, some new, some suprises! "
+        }
+    },
+    {
+        "id": 65,
+        "name": "Note",
+        "prompts": {
+            "text": "LCM group for image2image and etc. The QRcodemonster controlnet model helps transfer the shape of the words and etc. I have an animation version of this workflow coming at some point. "
+        }
+    },
+    {
+        "id": 73,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 74,
+        "name": "Note",
+        "prompts": {
+            "text": "256x256 is possible with the ModelSamplingFlux node with this workflow and model. This means more lower end systems can use Flux with this node. You can always upscale after, use it for text, I've made emojis. "
+        }
+    },
+    {
+        "id": 75,
+        "name": "GeekyRemB",
+        "prompts": {
+            "text": "transparent"
+        }
+    },
+    {
+        "id": 76,
+        "name": "GeekyRemB"
+    }
+]

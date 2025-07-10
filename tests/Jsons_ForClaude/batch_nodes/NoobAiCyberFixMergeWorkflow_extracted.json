@@ -1,0 +1,59 @@
+[
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "noobaiXLNAIXL_epsilonPred075.safetensors"
+        }
+    },
+    {
+        "id": 10,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "cyberrealisticXL_v31.safetensors"
+        }
+    },
+    {
+        "id": 11,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd_xl_base_1.0_0.9vae.safetensors"
+        }
+    },
+    {
+        "id": 12,
+        "name": "ModelMergeSubtract"
+    },
+    {
+        "id": 13,
+        "name": "ModelMergeAdd"
+    },
+    {
+        "id": 14,
+        "name": "CheckpointSave",
+        "prompts": {
+            "text": "checkpoints/ComfyUI"
+        }
+    },
+    {
+        "id": 16,
+        "name": "Note",
+        "prompts": {
+            "text": "stable-diffusion-xl-base-1.0 "
+        }
+    },
+    {
+        "id": 17,
+        "name": "Note",
+        "prompts": {
+            "text": "cyberrealisticXL_v31"
+        }
+    },
+    {
+        "id": 18,
+        "name": "Note",
+        "prompts": {
+            "text": "NoobAI-Epsilon075"
+        }
+    }
+]

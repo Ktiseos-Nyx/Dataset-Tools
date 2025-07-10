@@ -1,0 +1,143 @@
+[
+    {
+        "id": 1,
+        "name": "B\u7ad9\u3001Youtube\uff1aT8star-Aix"
+    },
+    {
+        "id": 2,
+        "name": "Shuttle 3.1\u53cd\u63a8\u6587\u751f\u56fe GGUF"
+    },
+    {
+        "id": 3,
+        "name": "Shuttle 3.1\u6587\u751f\u56fe GGUF"
+    },
+    {
+        "id": 384,
+        "name": "SaveImage"
+    },
+    {
+        "id": 385,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 386,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 387,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 388,
+        "name": "KSampler"
+    },
+    {
+        "id": 389,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 390,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 391,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 392,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 393,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "T8-shuttle-3.1-aesthetic-Q4_K.gguf"
+        }
+    },
+    {
+        "id": 394,
+        "name": "LayerUtility: ImageScaleByAspectRatio V2"
+    },
+    {
+        "id": 395,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "Please provide a precise and detailed description of all the content and details of the image"
+        }
+    },
+    {
+        "id": 396,
+        "name": "LoadImage"
+    },
+    {
+        "id": 412,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 413,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 414,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 415,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 416,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "T8-shuttle-3.1-aesthetic-Q4_K.gguf"
+        }
+    },
+    {
+        "id": 418,
+        "name": "KSampler"
+    },
+    {
+        "id": 419,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 420,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 421,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 422,
+        "name": "SaveImage"
+    },
+    {
+        "id": 424,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    }
+]

@@ -1,0 +1,285 @@
+[
+    {
+        "id": -1,
+        "name": "ModelPassThrough"
+    },
+    {
+        "id": -1,
+        "name": "Pass Clip // RvTools"
+    },
+    {
+        "id": -1,
+        "name": "Pass VAE // RvTools"
+    },
+    {
+        "id": 1,
+        "name": "Merge"
+    },
+    {
+        "id": 2,
+        "name": "Regional conditioning"
+    },
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 3,
+        "name": "1st pass"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "5\\SDXL\\realcartoonXL_v7.safetensors"
+        }
+    },
+    {
+        "id": 4,
+        "name": "2nd pass (upscaled)"
+    },
+    {
+        "id": 5,
+        "name": "Mask"
+    },
+    {
+        "id": 6,
+        "name": "Main loader"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry, lowres, photo, distorted, ill, malformed, glitch, dirt, weird, text, naked"
+        }
+    },
+    {
+        "id": 7,
+        "name": "Additional area prompt"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 18,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 41,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "ultra detailed, best quality, artistic,\n"
+        }
+    },
+    {
+        "id": 68,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 69,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "fairy_00106_.png"
+        }
+    },
+    {
+        "id": 70,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "fairy_00125_.png"
+        }
+    },
+    {
+        "id": 71,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "4iMQ63x.jpeg"
+        }
+    },
+    {
+        "id": 72,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "rgb (1).png"
+        }
+    },
+    {
+        "id": 73,
+        "name": "MaskFromRGBCMYBW+"
+    },
+    {
+        "id": 79,
+        "name": "IPAdapterRegionalConditioning"
+    },
+    {
+        "id": 80,
+        "name": "IPAdapterRegionalConditioning"
+    },
+    {
+        "id": 81,
+        "name": "IPAdapterRegionalConditioning"
+    },
+    {
+        "id": 83,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 84,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "bad quality"
+        }
+    },
+    {
+        "id": 85,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "astonishing magical world"
+        }
+    },
+    {
+        "id": 86,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(dirt, scar, tattoo:1.1)"
+        }
+    },
+    {
+        "id": 87,
+        "name": "IPAdapterCombineParams"
+    },
+    {
+        "id": 88,
+        "name": "ConditioningCombineMultiple+"
+    },
+    {
+        "id": 89,
+        "name": "ConditioningCombineMultiple+"
+    },
+    {
+        "id": 91,
+        "name": "IPAdapterFromParams"
+    },
+    {
+        "id": 92,
+        "name": "IPAdapterUnifiedLoader",
+        "prompts": {
+            "text": "VIT-G (medium strength)"
+        }
+    },
+    {
+        "id": 97,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 98,
+        "name": "KSampler"
+    },
+    {
+        "id": 99,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 101,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "RealESRGAN_x4plus_anime_6B.pth"
+        }
+    },
+    {
+        "id": 102,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 103,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 105,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 106,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "FLUX_00002_2.png"
+        }
+    },
+    {
+        "id": 107,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 108,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(dirt, scar, tattoo:1.1)"
+        }
+    },
+    {
+        "id": 109,
+        "name": "IPAdapterRegionalConditioning"
+    },
+    {
+        "id": 110,
+        "name": "WD14Tagger|pysssss",
+        "prompts": {
+            "text": "wd-v1-4-moat-tagger-v2"
+        }
+    },
+    {
+        "id": 111,
+        "name": "WD14Tagger|pysssss",
+        "prompts": {
+            "text": "wd-v1-4-moat-tagger-v2"
+        }
+    },
+    {
+        "id": 112,
+        "name": "WD14Tagger|pysssss",
+        "prompts": {
+            "text": "wd-v1-4-moat-tagger-v2"
+        }
+    },
+    {
+        "id": 113,
+        "name": "easy promptConcat"
+    },
+    {
+        "id": 115,
+        "name": "easy promptConcat"
+    },
+    {
+        "id": 116,
+        "name": "easy promptConcat"
+    },
+    {
+        "id": 118,
+        "name": "CR Apply LoRA Stack"
+    },
+    {
+        "id": 120,
+        "name": "Width / Height // RvTools"
+    },
+    {
+        "id": 122,
+        "name": "easy loraStack",
+        "prompts": {
+            "text": "SDXL\\extremely_detailed.safetensors",
+            "text_2": "SDXL\\_Styles\\RetFutCom-V1.safetensors"
+        }
+    },
+    {
+        "id": 132,
+        "name": "ttN text"
+    },
+    {
+        "id": 135,
+        "name": "ttN text"
+    },
+    {
+        "id": 136,
+        "name": "ttN text"
+    }
+]

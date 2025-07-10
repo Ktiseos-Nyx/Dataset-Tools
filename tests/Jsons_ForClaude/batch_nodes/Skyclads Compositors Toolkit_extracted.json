@@ -1,0 +1,136 @@
+[
+    {
+        "id": 1,
+        "name": "VHS_LoadVideo"
+    },
+    {
+        "id": 3,
+        "name": "DWPreprocessor",
+        "prompts": {
+            "text": "yolox_l.onnx",
+            "text_2": "dw-ll_ucoco_384_bs5.torchscript.pt"
+        }
+    },
+    {
+        "id": 4,
+        "name": "DepthAnythingPreprocessor",
+        "prompts": {
+            "text": "depth_anything_vitl14.pth"
+        }
+    },
+    {
+        "id": 5,
+        "name": "LineArtPreprocessor"
+    },
+    {
+        "id": 7,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 11,
+        "name": "Image Rembg (Remove Background)"
+    },
+    {
+        "id": 12,
+        "name": "SaveImage"
+    },
+    {
+        "id": 13,
+        "name": "FileNamePrefix",
+        "prompts": {
+            "text": "Alpha Masks"
+        }
+    },
+    {
+        "id": 14,
+        "name": "Load Image Based on Number",
+        "prompts": {
+            "text": "C:\\Users\\Aphrodite\\Documents\\Ai Base\\Ai Renders\\Special People"
+        }
+    },
+    {
+        "id": 21,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 22,
+        "name": "Seed Everywhere"
+    },
+    {
+        "id": 23,
+        "name": "Note",
+        "prompts": {
+            "text": "Paste your image directory here! \n\n"
+        }
+    },
+    {
+        "id": 24,
+        "name": "Note",
+        "prompts": {
+            "text": "custom_directory will show up in your output folder \n"
+        }
+    },
+    {
+        "id": 25,
+        "name": "Note",
+        "prompts": {
+            "text": "I use u2net for the model. It works OK.\n\nOnly_mask is just the white mask\n\npost_processing true\nalpha_matting is true\n\n\n"
+        }
+    },
+    {
+        "id": 28,
+        "name": "FileNamePrefix"
+    },
+    {
+        "id": 29,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 30,
+        "name": "FileNamePrefix"
+    },
+    {
+        "id": 31,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 32,
+        "name": "FileNamePrefix"
+    },
+    {
+        "id": 35,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "DSC09142.png"
+        }
+    },
+    {
+        "id": 36,
+        "name": "Image Rembg (Remove Background)"
+    },
+    {
+        "id": 37,
+        "name": "FileNamePrefix",
+        "prompts": {
+            "text": "Alpha Video"
+        }
+    },
+    {
+        "id": 38,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 40,
+        "name": "Note",
+        "prompts": {
+            "text": "Switch the noodle to single image "
+        }
+    },
+    {
+        "id": 41,
+        "name": "Note",
+        "prompts": {
+            "text": "Right Mouse click and \"Set Group Nodes to Always\" Make sure to \"Set Groups Nodes to Never\" for the alpha.\n"
+        }
+    }
+]

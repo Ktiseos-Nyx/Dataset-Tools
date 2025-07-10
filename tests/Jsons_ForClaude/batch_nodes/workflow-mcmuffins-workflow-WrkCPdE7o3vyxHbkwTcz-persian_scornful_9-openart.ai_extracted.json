@@ -1,0 +1,323 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2s_ancestral"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "wildcardxXLTURBO_wildcardxXLTURBOV10.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "watermark, 3d, text, title, signature, (worst quality, low quality, lowres, low details, oversaturated, undersaturated, overexposed, grayscale, bw, bad photo, bad art:1.4), ( username, error, logo, autograph, trademark, name:1.2), (nsfw), multiple people, group, duplicate, headgear, cropped, out of frame, cut off, jpeg artifacts, out of focus, glitch, duplicate, (amateur:1.3), merging, clipping, hair circlet, hat, covered head,"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 12,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2s_ancestral"
+        }
+    },
+    {
+        "id": 16,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 17,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-ClearRealityV1.pth"
+        }
+    },
+    {
+        "id": 18,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 19,
+        "name": "SaveImage"
+    },
+    {
+        "id": 21,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 35,
+        "name": "ACN_AdvancedControlNetApply"
+    },
+    {
+        "id": 36,
+        "name": "ControlNetLoaderAdvanced",
+        "prompts": {
+            "text": "sdxl\\mistoLine_rank256.safetensors"
+        }
+    },
+    {
+        "id": 37,
+        "name": "LoadImage"
+    },
+    {
+        "id": 38,
+        "name": "ImageInvert"
+    },
+    {
+        "id": 43,
+        "name": "IPAdapterUnifiedLoader",
+        "prompts": {
+            "text": "PLUS FACE (portraits)"
+        }
+    },
+    {
+        "id": 44,
+        "name": "IPAdapter"
+    },
+    {
+        "id": 45,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "faceRefine_00197_.png"
+        }
+    },
+    {
+        "id": 46,
+        "name": "PrepImageForClipVision"
+    },
+    {
+        "id": 47,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 57,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 58,
+        "name": "MaskFromRGBCMYBW+"
+    },
+    {
+        "id": 59,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 60,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 61,
+        "name": "GrowMaskWithBlur"
+    },
+    {
+        "id": 62,
+        "name": "GrowMaskWithBlur"
+    },
+    {
+        "id": 65,
+        "name": "IPAdapter"
+    },
+    {
+        "id": 66,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "faceRefine_00174_.png"
+        }
+    },
+    {
+        "id": 67,
+        "name": "PrepImageForClipVision"
+    },
+    {
+        "id": 69,
+        "name": "GrowMaskWithBlur"
+    },
+    {
+        "id": 70,
+        "name": "ConditioningSetMaskAndCombine3"
+    },
+    {
+        "id": 71,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "((masterpiece)), ((photography)), an 80s movie still, a large hall in an old castle, a female knight covered standing in the middle, she is laughing, gnomes emerging from there hiding places, ruins, film grain, retro, vintage, dvd screenshot of 1987 Dark Souls fantasy film,  cinematic, dark fantasy, earthy color tones, saturated colors, DVD screengrab, 1980s cinema, halation, shot on 16mm film, late night, dark hall, side view, (inside a giant stone cathedral), (medieval throne hall), dof, wooden barrels, dust, the desert night is visible through an open door, "
+        }
+    },
+    {
+        "id": 72,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(a female knight, brunette hair, she smiles), she is wearing silver knights armor, elegant, elven, full body metal armor, (behind her views of a desert), metal leg armor, fully covered legs, (behind her a view of the desert at night, late sunset)"
+        }
+    },
+    {
+        "id": 73,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(laughing gnomes, happy, amazed, wearing pointy white hat on his head, green clothes, colorful), dancing, screaming, joyful, party, climbing, white beards"
+        }
+    },
+    {
+        "id": 74,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 85,
+        "name": "IPAdapter",
+        "prompts": {
+            "text": "style transfer"
+        }
+    },
+    {
+        "id": 86,
+        "name": "PrepImageForClipVision"
+    },
+    {
+        "id": 87,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_03573_.png"
+        }
+    },
+    {
+        "id": 89,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 90,
+        "name": "SaveImage"
+    },
+    {
+        "id": 108,
+        "name": "DetailerForEach",
+        "prompts": {
+            "text": "dpmpp_2s_ancestral",
+            "text_2": "(laughing), happy"
+        }
+    },
+    {
+        "id": 109,
+        "name": "MaskToSEGS"
+    },
+    {
+        "id": 111,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 116,
+        "name": "SubtractMaskForEach"
+    },
+    {
+        "id": 117,
+        "name": "DetailerForEach",
+        "prompts": {
+            "text": "dpmpp_2s_ancestral",
+            "text_2": "(happy), laughing, smiling, gnome, beard"
+        }
+    },
+    {
+        "id": 118,
+        "name": "SubtractMaskForEach"
+    },
+    {
+        "id": 119,
+        "name": "MaskToSEGS"
+    },
+    {
+        "id": 120,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 121,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 122,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 123,
+        "name": "ImageToMask"
+    },
+    {
+        "id": 124,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 125,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 126,
+        "name": "ImageToMask"
+    },
+    {
+        "id": 131,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "<h1 id=\"storyboardingandvancedv01\">Storyboarding Andvanced v01</h1>\n<p><br></p>\n<h2 id=\"howtouse\">How to use:</h2>\n<p><br></p>\n<p>With this workflow, you can turn your scribbles and storyboard panels into final images in any style! </p>\n<p><br></p>\n<p>I have tested this workflow mainly with the wildcard XL model, but any other model will work as well. Just remember to adjust the sampler settings to the respective model. Also don't forget to adjust the controlnet model if you want to use an SD15 model, for example. </p>\n<br>\n<p>You can find the model here: <a href=\"https://civitai.com/models/293331/wildcardx-xl-turbo\">Wildcard Turbo XL</a>.</p>\n<p><br></p>\n\n\n<h2 id=\"ifyourehavingproblems\">If you're having problems:</h2>\n<p><br></p>\n<p>Don't expect it to work every time the first time. Be precise in your prompts and try out different seeds in the kSampler. </p>\n<p><br></p>\n\n<p> Post Screenshots of your error messages and workflow in the #need-help channel in our Community Discord. You will be automatically invited when you join my <a href=\"https://www.patreon.com/Mickmumpitz\"> Patreon.</a></p>\n<br>\n<p>Feel free to share your creations in our community Discord #show-your-work.</p>"
+        }
+    },
+    {
+        "id": 132,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "\n<p>You can use an image as a style reference here. Deactivate the group if you don't need it and prompt for your style in the master prompts.  </p><p><br></p>\n<p>All ipAdapters in this workflow are optional! Deacticvate them if you don't need them.  </p>"
+        }
+    },
+    {
+        "id": 134,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "<p>For SDXL models use: <a href=\"https://civitai.com/models/293331/wildcardx-xl-turbo\">mistoLine_rank256.safetensors\n</a> </p>\n<p> Place here: \\ComfyUI_windows_portable\\ComfyUI\\models\\controlnet\\sdxl\n</p>\n<p>For SD15 you can try out Canny, Scribble and lineArt. You can find the models in the ComfyUI Model Manager. \n</p><p><br></p>\n"
+        }
+    },
+    {
+        "id": 135,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "<p> If you're using upscale models like <a href=\"https://openmodeldb.info/models/4x-ClearRealityV1\">4x-ClearReality\n</a> you can bring down the overall upscaling of the image down with the \"upscale image by\" node. In my case I wanted to upscale 2x so I used 0.50 there. \n</p> <br>\n<p>Use Denoise between 0.15 and 0.5.\n</p><p></p>\n"
+        }
+    },
+    {
+        "id": 136,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "<p> Here you can change the characters emotion. Deactivate if you don't need it! Make sure to match the settings to your model. This is adjusted for the Wildcard model. \n</p> <br>\n<p>Use Denoise between 0.15 and 0.5. A higher denoise value changes the emotion more strongly. \n</p><p></p>\n"
+        }
+    },
+    {
+        "id": 137,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "\n<p> </p><h1 id=\"storyboardingandvancedv02\">I deactivated all optional nodes! Select them and use CNTR+B to activate.</h1>"
+        }
+    }
+]

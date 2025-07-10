@@ -1,0 +1,198 @@
+[
+    {
+        "id": 9,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "FLUX_Output-%date:yyyy-MM-dd%/%CheckpointLoaderSimple.ckpt_name%"
+        }
+    },
+    {
+        "id": 13,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 16,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 17,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 22,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 25,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 26,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 31,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "RatatoskrFluxV4_fp8.safetensors"
+        }
+    },
+    {
+        "id": 56,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 58,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae - Kopie.safetensors"
+        }
+    },
+    {
+        "id": 71,
+        "name": "Text to Conditioning"
+    },
+    {
+        "id": 75,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": " photo, anthro, black dragon female, (detailed dragon eyes) ,scales, medium breast , detailed pussy,   realistic fangs, laying, pawpads,  in a mystic forest, natural light"
+        }
+    },
+    {
+        "id": 94,
+        "name": "SD3LatentSelectRes",
+        "prompts": {
+            "text": "3:4 [896x1152 portrait]"
+        }
+    },
+    {
+        "id": 116,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "bad quality"
+        }
+    },
+    {
+        "id": 145,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "DAT_2_x4.pth"
+        }
+    },
+    {
+        "id": 158,
+        "name": "Text to Conditioning"
+    },
+    {
+        "id": 166,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 167,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 180,
+        "name": "IterativeLatentUpscale"
+    },
+    {
+        "id": 181,
+        "name": "PixelKSampleUpscalerProvider",
+        "prompts": {
+            "text": "nearest-exact",
+            "text_2": "dpmpp_2s_ancestral"
+        }
+    },
+    {
+        "id": 184,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_foolhardy_Remacri.pth"
+        }
+    },
+    {
+        "id": 185,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "aidmaHyperrealism-FLUX-V0.1.safetensors"
+        }
+    },
+    {
+        "id": 186,
+        "name": "SUPIR_Upscale",
+        "prompts": {
+            "text": "SUPIR-v0Q.ckpt",
+            "text_2": "RatatoskrV7.3.safetensors"
+        }
+    },
+    {
+        "id": 187,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "RatatoskrV7.3.safetensors"
+        }
+    },
+    {
+        "id": 189,
+        "name": "LatentInterposer"
+    },
+    {
+        "id": 191,
+        "name": "Text to Conditioning"
+    },
+    {
+        "id": 192,
+        "name": "Text to Conditioning"
+    },
+    {
+        "id": 193,
+        "name": "KSamplerAdvanced (WLSH)"
+    },
+    {
+        "id": 194,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 195,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 196,
+        "name": "AV_VAELoader"
+    },
+    {
+        "id": 197,
+        "name": "Upscale by Factor with Model (WLSH)",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 198,
+        "name": "JDC_Contrast"
+    },
+    {
+        "id": 200,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 202,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 203,
+        "name": "AV_VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 206,
+        "name": "VAEDecode"
+    }
+]

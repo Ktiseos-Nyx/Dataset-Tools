@@ -1,0 +1,164 @@
+[
+    {
+        "id": 1,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 1,
+        "name": "Regional prompting"
+    },
+    {
+        "id": 2,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 3,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 4,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 5,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 6,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 7,
+        "name": "MaskFromRGBCMYBW+"
+    },
+    {
+        "id": 8,
+        "name": "easy positive",
+        "prompts": {
+            "text": "A teenage girl."
+        }
+    },
+    {
+        "id": 9,
+        "name": "easy positive",
+        "prompts": {
+            "text": "The base of a floating island."
+        }
+    },
+    {
+        "id": 10,
+        "name": "easy positive",
+        "prompts": {
+            "text": "Storm clouds."
+        }
+    },
+    {
+        "id": 11,
+        "name": "easy positive",
+        "prompts": {
+            "text": "Surreal mountains with turqouise glaciers."
+        }
+    },
+    {
+        "id": 12,
+        "name": "easy positive",
+        "prompts": {
+            "text": "A purple and orange sky painted by the setting sun."
+        }
+    },
+    {
+        "id": 13,
+        "name": "easy positive",
+        "prompts": {
+            "text": "A toxic world, with poisoned river, intense dark green color."
+        }
+    },
+    {
+        "id": 14,
+        "name": "RegionalConditioningSimple //Inspire",
+        "prompts": {
+            "text": "A frozen river, lined with pebbles. "
+        }
+    },
+    {
+        "id": 15,
+        "name": "RegionalConditioningSimple //Inspire"
+    },
+    {
+        "id": 16,
+        "name": "RegionalConditioningSimple //Inspire"
+    },
+    {
+        "id": 17,
+        "name": "RegionalConditioningSimple //Inspire"
+    },
+    {
+        "id": 18,
+        "name": "RegionalConditioningSimple //Inspire"
+    },
+    {
+        "id": 19,
+        "name": "RegionalConditioningSimple //Inspire"
+    },
+    {
+        "id": 20,
+        "name": "LoadImage"
+    },
+    {
+        "id": 21,
+        "name": "Reroute"
+    },
+    {
+        "id": 22,
+        "name": "ImpactCombineConditionings"
+    },
+    {
+        "id": 24,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "deformed, black and white, disfigured, ugly, photographic, realistic, frame, text, glitch, noise, noisy, cross-eyed, closed eyes, bad anatomy, ugly, sloppy, duplicate, mutated, longbody, lowres, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry, grainy"
+        }
+    },
+    {
+        "id": 25,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "SDXL\\ostanderani4mix_v10.safetensors"
+        }
+    },
+    {
+        "id": 27,
+        "name": "easy loraStack",
+        "prompts": {
+            "text": "SDXL\\_Styles\\aesthetic_anime_v1s.safetensors",
+            "text_2": "SDXL\\_Styles\\Dark_Ghibli.safetensors"
+        }
+    },
+    {
+        "id": 28,
+        "name": "KSampler"
+    },
+    {
+        "id": 29,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(score_9_up,score_8_up:1.3),score_6_up,score_7_up, \npg-rating, h4v_h0l0, masterpiece, amazing quality, best quality, ultra-detailed, 8K, illustration, amazing quality, vivid colors, highly-detailed, masterpiece, (source anime:1.2), hand drawn anime art, "
+        }
+    },
+    {
+        "id": 30,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 31,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 32,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 33,
+        "name": "CR Apply LoRA Stack"
+    }
+]

@@ -1,0 +1,1308 @@
+[
+    {
+        "id": 1,
+        "name": "LoRA Stacker",
+        "prompts": {
+            "text": "Anna_024.safetensors"
+        }
+    },
+    {
+        "id": 8,
+        "name": "KSampler Adv. (Efficient)",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 10,
+        "name": "Preview Chooser",
+        "prompts": {
+            "text": "Progress first pick"
+        }
+    },
+    {
+        "id": 12,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 13,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 14,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 15,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 16,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 17,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 43,
+        "name": "CR Upscale Image",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 45,
+        "name": "KSampler Adv. (Efficient)",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 49,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 51,
+        "name": "Preview Chooser",
+        "prompts": {
+            "text": "Pass through"
+        }
+    },
+    {
+        "id": 52,
+        "name": "PlaySound|pysssss"
+    },
+    {
+        "id": 57,
+        "name": "Image Lucy Sharpen"
+    },
+    {
+        "id": 61,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 62,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 63,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 64,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 85,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "Thorsten-Geisser-white-hires.png"
+        }
+    },
+    {
+        "id": 86,
+        "name": "Image Overlay",
+        "prompts": {
+            "text": "Resize to width & heigth"
+        }
+    },
+    {
+        "id": 87,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 88,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "downscale if bigger"
+        }
+    },
+    {
+        "id": 90,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "ceil(a * 50 / 100)"
+        }
+    },
+    {
+        "id": 91,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 92,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 93,
+        "name": "Image Filter Adjustments"
+    },
+    {
+        "id": 101,
+        "name": "Preview Chooser",
+        "prompts": {
+            "text": "Pass through"
+        }
+    },
+    {
+        "id": 106,
+        "name": "PreviewBridge"
+    },
+    {
+        "id": 107,
+        "name": "PreviewBridge"
+    },
+    {
+        "id": 108,
+        "name": "PreviewBridge"
+    },
+    {
+        "id": 109,
+        "name": "PreviewBridge"
+    },
+    {
+        "id": 110,
+        "name": "PreviewBridge"
+    },
+    {
+        "id": 111,
+        "name": "PreviewBridge"
+    },
+    {
+        "id": 112,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "detailed skin, skin pores,"
+        }
+    },
+    {
+        "id": 113,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 114,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 115,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "beautiful facial features, stunning, detailed, beautiful girl"
+        }
+    },
+    {
+        "id": 116,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 117,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "beautiful detailed eyes,"
+        }
+    },
+    {
+        "id": 118,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/skin_yolov8m-seg_400.pt"
+        }
+    },
+    {
+        "id": 119,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/deepfashion2_yolov8s-seg.pt"
+        }
+    },
+    {
+        "id": 120,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8s.pt"
+        }
+    },
+    {
+        "id": 121,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8n_v2.pt"
+        }
+    },
+    {
+        "id": 122,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/hair_yolov8n-seg_60.pt"
+        }
+    },
+    {
+        "id": 123,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/full_eyes_detect_v1.pt"
+        }
+    },
+    {
+        "id": 124,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 125,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 126,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 127,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 128,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 129,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 130,
+        "name": "CR Load LoRA"
+    },
+    {
+        "id": 131,
+        "name": "CR Load LoRA"
+    },
+    {
+        "id": 132,
+        "name": "CR Load LoRA"
+    },
+    {
+        "id": 133,
+        "name": "CR Load LoRA"
+    },
+    {
+        "id": 134,
+        "name": "CR Load LoRA"
+    },
+    {
+        "id": 135,
+        "name": "CR Load LoRA",
+        "prompts": {
+            "text": "PerfectEyesXL.safetensors"
+        }
+    },
+    {
+        "id": 136,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 137,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 138,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 139,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 140,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 141,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 142,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 143,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 144,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 145,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 146,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 147,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 148,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 149,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 150,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 151,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 152,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 153,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 154,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 155,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 156,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 157,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 158,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 159,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 160,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 161,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 162,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 163,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 164,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 165,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 166,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 167,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 168,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 169,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 170,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 171,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 173,
+        "name": "Sampler Selector"
+    },
+    {
+        "id": 174,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 175,
+        "name": "Primitive integer [Crystools]"
+    },
+    {
+        "id": 176,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "KS1|KS2|PKS"
+        }
+    },
+    {
+        "id": 177,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 178,
+        "name": "Primitive float [Crystools]"
+    },
+    {
+        "id": 179,
+        "name": "Primitive integer [Crystools]"
+    },
+    {
+        "id": 180,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 181,
+        "name": "Primitive integer [Crystools]"
+    },
+    {
+        "id": 182,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "start_at_step"
+        }
+    },
+    {
+        "id": 183,
+        "name": "Scheduler Selector",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 184,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 185,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 186,
+        "name": "Primitive float [Crystools]"
+    },
+    {
+        "id": 187,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "width|tile_size"
+        }
+    },
+    {
+        "id": 188,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 189,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 190,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "549837356131415"
+        }
+    },
+    {
+        "id": 191,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 192,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 196,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 197,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 198,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 199,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 200,
+        "name": "Evaluate Integers"
+    },
+    {
+        "id": 201,
+        "name": "Evaluate Integers"
+    },
+    {
+        "id": 202,
+        "name": "Evaluate Integers",
+        "prompts": {
+            "text": "((a + b) - c) / 2"
+        }
+    },
+    {
+        "id": 203,
+        "name": "Evaluate Integers"
+    },
+    {
+        "id": 204,
+        "name": "Evaluate Integers"
+    },
+    {
+        "id": 205,
+        "name": "Evaluate Integers"
+    },
+    {
+        "id": 206,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 207,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 208,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/female_breast_v3.2.pt"
+        }
+    },
+    {
+        "id": 209,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 210,
+        "name": "CR Load LoRA"
+    },
+    {
+        "id": 211,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 212,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 213,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 214,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 215,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 216,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 217,
+        "name": "Evaluate Integers"
+    },
+    {
+        "id": 218,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 219,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 220,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/vagina-v4.1.pt"
+        }
+    },
+    {
+        "id": 221,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 222,
+        "name": "CR Load LoRA"
+    },
+    {
+        "id": 223,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 224,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 225,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 226,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 227,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 228,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 229,
+        "name": "Evaluate Integers"
+    },
+    {
+        "id": 233,
+        "name": "PreviewBridge"
+    },
+    {
+        "id": 234,
+        "name": "PreviewBridge"
+    },
+    {
+        "id": 236,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 237,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 238,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 239,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 240,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 241,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 242,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 243,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 244,
+        "name": "ImagePass"
+    },
+    {
+        "id": 245,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 246,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 247,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 248,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 249,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 250,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 253,
+        "name": "Evaluate Integers"
+    },
+    {
+        "id": 254,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 255,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 256,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 257,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 258,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 259,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 262,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 263,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 264,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 265,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 266,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 271,
+        "name": "Image Filter Adjustments"
+    },
+    {
+        "id": 272,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 273,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 274,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 275,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 276,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 279,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 280,
+        "name": "Get resolution [Crystools]"
+    },
+    {
+        "id": 281,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 282,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 283,
+        "name": "Image Save",
+        "prompts": {
+            "text": "K:\\output\\FokusOut\\txt2img-images\\Jadewind"
+        }
+    },
+    {
+        "id": 286,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 287,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 300,
+        "name": "Prompts Everywhere"
+    },
+    {
+        "id": 301,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "latent_image",
+            "text_2": "Latent shape torch.Size([1, 16, 144, 112])"
+        }
+    },
+    {
+        "id": 302,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "conditioning_to",
+            "text_2": "[[tensor([[[-3.8917e+00, -2.5113e+00,  4.7167e+00,  ...,  0.0000e+00,  0.0000e+00,  0.0000e+00],\n         [ 2.3963e-01, -2.4650e-01,  5.2355e-01,  ...,  0.0000e+00,  0.0000e+00,  0.0000e+00],\n         [ 5.5755e-03, -1.0694e+00,  9.6038e-01,  ...,  0.0000e+00,  0.0000e+00,  0.0000e+00],\n         ...,\n         [ 5.8278e-02, -1.0670e-02,  4.4628e-02,  ...,  1.2993e-03, -4.6298e-02, -1.7905e-02],\n         [ 5.8344e-02, -8.9585e-03,  2.9451e-02,  ..., -2.0952e-03, -3.9726e-02, -2.4704e-02],\n         [ 5.2541e-04,  2.2571e-02, -1.1793e-02,  ...,  6.6061e-03, -2.1331e-02,  1.3511e-02]]]), {'pooled_output': tensor([[ 0.6346,  0.4567,  1.9760,  ..., -1.1438,  2.3306,  0.6724]])}]]"
+        }
+    },
+    {
+        "id": 304,
+        "name": "TripleCLIPLoader",
+        "prompts": {
+            "text": "clip_g.safetensors",
+            "text_2": "clip_l.safetensors"
+        }
+    },
+    {
+        "id": 305,
+        "name": "ModelSamplingSD3"
+    },
+    {
+        "id": 306,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 307,
+        "name": "ConditioningSetTimestepRange"
+    },
+    {
+        "id": 308,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 309,
+        "name": "ConditioningSetTimestepRange"
+    },
+    {
+        "id": 310,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "bad quality, poor quality, doll, disfigured, jpg, toy, bad anatomy, missing limbs, missing fingers, 3d, cgi,"
+        }
+    },
+    {
+        "id": 311,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 312,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sdv3\\sd3_medium.safetensors"
+        }
+    },
+    {
+        "id": 316,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 317,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 318,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 319,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 321,
+        "name": "Anything Everywhere",
+        "prompts": {
+            "text": "<comfy.sd.VAE object at 0x000002141FD85840>"
+        }
+    },
+    {
+        "id": 322,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "<comfy.sd.CLIP object at 0x00000214C2B66710>"
+        }
+    },
+    {
+        "id": 330,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 331,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 332,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "rescale_factor"
+        }
+    },
+    {
+        "id": 333,
+        "name": "CLIPTextEncodeSD3",
+        "prompts": {
+            "text": "surreal, psychedelic, dreamlike, abstract, avant-garde, pop art, glitch art",
+            "text_2": "A close-up portrait of a person with [unusual facial features].\nTheir skin is [texture/color], and their eyes are [color/shape].\nThey are wearing [unusual headwear/accessories].\nThe background is a swirling vortex of [colors/patterns].\nThe lighting is [dramatic/colorful/surreal].\nThe overall effect is one of [emotion/feeling]."
+        }
+    },
+    {
+        "id": 334,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 335,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 336,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 340,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 347,
+        "name": "PlaySound|pysssss"
+    },
+    {
+        "id": 348,
+        "name": "UltimateSDUpscale",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 349,
+        "name": "Note",
+        "prompts": {
+            "text": "SD3 (Standard Settings):\nsampler: dpmpp_2m\nscheduler: sgm_uniform\nsteps: 28\nstart at: 13\ncfg: 4.5\n"
+        }
+    },
+    {
+        "id": 356,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "<comfy.model_patcher.ModelPatcher object at 0x00000214C2B662F0>"
+        }
+    },
+    {
+        "id": 357,
+        "name": "ImagePass"
+    },
+    {
+        "id": 358,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "IEP_Upscale",
+            "text_2": "Tensor shape torch.Size([1, 1152, 896, 3])"
+        }
+    },
+    {
+        "id": 359,
+        "name": "ImagePass"
+    },
+    {
+        "id": 360,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "IEP_Preview",
+            "text_2": "Tensor shape torch.Size([1, 2304, 1792, 3])"
+        }
+    },
+    {
+        "id": 361,
+        "name": "ImagePass"
+    },
+    {
+        "id": 362,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 363,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 364,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 365,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 366,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 367,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 368,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 369,
+        "name": "ConditioningConcat"
+    },
+    {
+        "id": 370,
+        "name": "CR Clip Input Switch"
+    },
+    {
+        "id": 376,
+        "name": "Primitive float [Crystools]"
+    },
+    {
+        "id": 377,
+        "name": "Primitive float [Crystools]"
+    },
+    {
+        "id": 380,
+        "name": "CM_SDXLResolution"
+    },
+    {
+        "id": 381,
+        "name": "Primitive integer [Crystools]"
+    },
+    {
+        "id": 382,
+        "name": "DynamicThresholdingFull",
+        "prompts": {
+            "text": "Half Cosine Up",
+            "text_2": "Half Cosine Up"
+        }
+    },
+    {
+        "id": 383,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "conditioning_to",
+            "text_2": "[[tensor([[[-4.1106, -2.3093,  4.1213,  ...,  0.2235,  0.4336, -0.2912],\n         [ 0.2684, -0.6847,  0.7572,  ...,  0.0688,  0.1440,  0.6458],\n         [-0.3541, -1.0941,  1.1560,  ..., -0.1392, -0.1691, -0.0943],\n         ...,\n         [-0.1034,  0.2304,  0.8262,  ...,  0.1487, -0.0847,  0.3055],\n         [-0.1089,  0.2385,  0.8077,  ...,  0.0614, -0.1900,  0.2832],\n         [-0.1448,  0.2222,  0.9259,  ...,  0.0800, -0.0969,  0.2786]]]), {'pooled_output': tensor([[ 0.2365,  1.9387,  0.0544,  ..., -1.0610, -0.1515,  0.0449]])}]]"
+        }
+    },
+    {
+        "id": 384,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 385,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 386,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 387,
+        "name": "Anything Everywhere",
+        "prompts": {
+            "text": "<comfy.sd.VAE object at 0x0000021695090280>"
+        }
+    },
+    {
+        "id": 388,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "<comfy.sd.CLIP object at 0x000002169A2E49A0>"
+        }
+    },
+    {
+        "id": 389,
+        "name": "PatchModelAddDownscale"
+    },
+    {
+        "id": 390,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "<comfy.model_patcher.ModelPatcher object at 0x000002141B6FAB60>"
+        }
+    },
+    {
+        "id": 391,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 392,
+        "name": "PerturbedAttentionGuidance"
+    },
+    {
+        "id": 393,
+        "name": "SelfAttentionGuidance"
+    },
+    {
+        "id": 394,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 395,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 396,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "pixelAlchemy_pixelAlchemyHV22.safetensors"
+        }
+    },
+    {
+        "id": 397,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "surreal, psychedelic, dreamlike, abstract, avant-garde, pop art, glitch art"
+        }
+    },
+    {
+        "id": 398,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": " (octane render, render, drawing, anime, bad photo, bad photography:1.3), (worst quality, low quality, blurry:1.2), (bad teeth, deformed teeth, deformed lips), (bad anatomy, bad proportions:1.1), (deformed iris, deformed pupils), (deformed eyes, bad eyes), (deformed face, ugly face, bad face), (deformed hands, bad hands, fused fingers), morbid, mutilated, mutat"
+        }
+    },
+    {
+        "id": 399,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "[[tensor([[[-4.1106, -2.3093,  4.1213,  ...,  0.2235,  0.4336, -0.2912],\n         [ 0.2684, -0.6847,  0.7572,  ...,  0.0688,  0.1440,  0.6458],\n         [-0.3541, -1.0941,  1.1560,  ..., -0.1392, -0.1691, -0.0943],\n         ...,\n         [-0.1034,  0.2304,  0.8262,  ...,  0.1487, -0.0847,  0.3055],\n         [-0.1089,  0.2385,  0.8077,  ...,  0.0614, -0.1900,  0.2832],\n         [-0.1448,  0.2222,  0.9259,  ...,  0.0800, -0.0969,  0.2786]]]), {'pooled_output': tensor([[ 0.2365,  1.9387,  0.0544,  ..., -1.0610, -0.1515,  0.0449]])}]]"
+        }
+    },
+    {
+        "id": 400,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "[[tensor([[[-4.1106, -2.3093,  4.1213,  ...,  0.2235,  0.4336, -0.2912],\n         [ 1.0463, -0.2695, -0.1948,  ...,  0.4003,  0.3351, -1.0920],\n         [ 1.5191, -1.7871,  0.7562,  ...,  1.1653, -0.2249,  0.3536],\n         ...,\n         [ 0.0864,  0.3950, -0.4561,  ...,  0.4833,  0.1451,  0.6491],\n         [ 0.0955,  0.3727, -0.4605,  ...,  0.4400,  0.0303,  0.6416],\n         [ 0.0543,  0.3829, -0.4430,  ...,  0.5040,  0.2311,  0.6260]]]), {'pooled_output': tensor([[-1.9687,  0.5214,  0.7299,  ...,  1.0501,  0.2596, -1.1070]])}]]"
+        }
+    },
+    {
+        "id": 401,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 402,
+        "name": "CR Clip Input Switch"
+    },
+    {
+        "id": 403,
+        "name": "CR VAE Input Switch"
+    },
+    {
+        "id": 404,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "vae-ft-mse-840000-ema-pruned.safetensors"
+        }
+    },
+    {
+        "id": 405,
+        "name": "Primitive integer [Crystools]"
+    },
+    {
+        "id": 406,
+        "name": "Primitive integer [Crystools]"
+    },
+    {
+        "id": 407,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 408,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "latent_image",
+            "text_2": "Latent shape torch.Size([1, 4, 144, 112])"
+        }
+    },
+    {
+        "id": 409,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 410,
+        "name": "CR Apply LoRA Stack"
+    }
+]

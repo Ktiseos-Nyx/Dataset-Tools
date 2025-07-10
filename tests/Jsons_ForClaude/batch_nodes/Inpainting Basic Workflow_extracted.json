@@ -1,0 +1,231 @@
+[
+    {
+        "id": 19,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "juggernaut_reborn.safetensors"
+        }
+    },
+    {
+        "id": 20,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 21,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Raw photo of a woman, medium green hair, blue eyes, selvatic background,"
+        }
+    },
+    {
+        "id": 22,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "nude, canvas frame, cartoon, 3d, out-of-frame, ugly, embedding:JuggernautNegative-neg,"
+        }
+    },
+    {
+        "id": 25,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "vae-ft-mse-840000-ema-pruned.ckpt"
+        }
+    },
+    {
+        "id": 26,
+        "name": "Reroute"
+    },
+    {
+        "id": 30,
+        "name": "ImpactKSamplerBasicPipe",
+        "prompts": {
+            "text": "dpmpp_sde_gpu"
+        }
+    },
+    {
+        "id": 32,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 34,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 35,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00457_.png"
+        }
+    },
+    {
+        "id": 39,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control_v11p_sd15_normalbae.pth"
+        }
+    },
+    {
+        "id": 45,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 84,
+        "name": "RepeatLatentBatch"
+    },
+    {
+        "id": 90,
+        "name": "SetLatentNoiseMask"
+    },
+    {
+        "id": 91,
+        "name": "InpaintPreprocessor"
+    },
+    {
+        "id": 92,
+        "name": "Reroute"
+    },
+    {
+        "id": 109,
+        "name": "Paste By Mask",
+        "prompts": {
+            "text": "source_size"
+        }
+    },
+    {
+        "id": 110,
+        "name": "ImpactImageBatchToImageList"
+    },
+    {
+        "id": 112,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 113,
+        "name": "MaskToImage"
+    },
+    {
+        "id": 114,
+        "name": "Reroute"
+    },
+    {
+        "id": 115,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 116,
+        "name": "Cut By Mask"
+    },
+    {
+        "id": 145,
+        "name": "Blur"
+    },
+    {
+        "id": 146,
+        "name": "Mask Morphology"
+    },
+    {
+        "id": 147,
+        "name": "ImpactInt"
+    },
+    {
+        "id": 148,
+        "name": "ImpactInt"
+    },
+    {
+        "id": 149,
+        "name": "ImpactKSamplerBasicPipe",
+        "prompts": {
+            "text": "dpmpp_sde_gpu"
+        }
+    },
+    {
+        "id": 150,
+        "name": "EditBasicPipe"
+    },
+    {
+        "id": 151,
+        "name": "Reroute"
+    },
+    {
+        "id": 152,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 153,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 154,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 155,
+        "name": "Reroute"
+    },
+    {
+        "id": 157,
+        "name": "Reroute"
+    },
+    {
+        "id": 158,
+        "name": "Reroute"
+    },
+    {
+        "id": 159,
+        "name": "Reroute"
+    },
+    {
+        "id": 160,
+        "name": "Reroute"
+    },
+    {
+        "id": 161,
+        "name": "Reroute"
+    },
+    {
+        "id": 162,
+        "name": "Reroute"
+    },
+    {
+        "id": 163,
+        "name": "Reroute"
+    },
+    {
+        "id": 164,
+        "name": "Reroute"
+    },
+    {
+        "id": 165,
+        "name": "Reroute"
+    },
+    {
+        "id": 166,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 167,
+        "name": "Reroute"
+    },
+    {
+        "id": 168,
+        "name": "Note",
+        "prompts": {
+            "text": "Demonstrating the normal in-paint. Not needed for the final output."
+        }
+    },
+    {
+        "id": 170,
+        "name": "Note",
+        "prompts": {
+            "text": "VAE Encode -> VAE Decode can be lossy.\n\nThus even the parts not masked might change slightly. We can mitigate this by pasting the new masked image on top of the old image."
+        }
+    },
+    {
+        "id": 171,
+        "name": "Reroute"
+    },
+    {
+        "id": 172,
+        "name": "Reroute"
+    }
+]

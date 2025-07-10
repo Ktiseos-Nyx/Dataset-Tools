@@ -1,0 +1,47 @@
+[
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "v1-5-pruned-emaonly.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a lovely cute cat"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "Hyper-SD15-1step-lora.safetensors"
+        }
+    },
+    {
+        "id": 11,
+        "name": "SamplerCustom"
+    },
+    {
+        "id": 12,
+        "name": "TCDModelSamplingDiscrete"
+    },
+    {
+        "id": 13,
+        "name": "PreviewImage"
+    }
+]

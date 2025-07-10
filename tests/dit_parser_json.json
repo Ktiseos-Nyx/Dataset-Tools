@@ -1,0 +1,540 @@
+{
+  "parser_name": "DiT (Diffusion Transformer) Universal Parser",
+  "priority": 95,
+  "version": "1.0",
+  "maintainer": "unfudging_team",
+  "description": "Handles all DiT-based architectures: HunyuanDiT, SD3, Flux, and future transformer variants",
+  "status": "production_ready",
+
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+
+  "platform_info": {
+    "description": "DiT represents the evolution from U-Net to Transformer backbones in diffusion models",
+    "architecture_shift": "U-Net → Transformer",
+    "key_advantages": ["better_scalability", "attention_mechanisms", "multi_modal_support"],
+    "supported_models": ["HunyuanDiT", "SD3", "Flux", "future_transformer_variants"]
+  },
+
+  "detection_rules": [
+    {
+      "comment": "HunyuanDiT - Chinese transformer powerhouse",
+      "method": "detect_hunyuan_dit_signatures",
+      "priority": 1,
+      "confidence": "definitive_dit",
+
+      "required_nodes": [
+        {
+          "node_type": "HYDiTCheckpointLoader",
+          "required": true,
+          "confidence": "definitive_hunyuan"
+        },
+        {
+          "node_type": "HYDiTTextEncoderLoader", 
+          "required": true,
+          "confidence": "definitive_hunyuan"
+        }
+      ],
+
+      "supporting_nodes": [
+        {
+          "node_type": "HYDiTTextEncodeSimple",
+          "confidence_boost": "high"
+        },
+        {
+          "node_type": "SamplerCustomNoise",
+          "confidence_boost": "medium"
+        }
+      ]
+    },
+
+    {
+      "comment": "SD3 - Triple encoder transformer",
+      "method": "detect_sd3_dit_signatures", 
+      "priority": 2,
+      "confidence": "definitive_dit",
+
+      "required_nodes": [
+        {
+          "node_type": "TripleCLIPLoader",
+          "required": true,
+          "confidence": "definitive_sd3"
+        }
+      ],
+
+      "supporting_nodes": [
+        {
+          "node_type": "CLIPTextEncodeSD3",
+          "confidence_boost": "high"
+        },
+        {
+          "node_type": "EmptySD3LatentImage",
+          "latent_channels": 16,
+          "confidence_boost": "high"
+        },
+        {
+          "node_type": "ModelSamplingSD3",
+          "confidence_boost": "medium"
+        }
+      ]
+    },
+
+    {
+      "comment": "Advanced DiT features - research level",
+      "method": "detect_advanced_dit_features",
+      "priority": 3,
+      "confidence": "likely_dit",
+
+      "experimental_nodes": [
+        {
+          "node_type": "SkipLayerGuidanceSD3",
+          "research_paper": "Perturbed Attention Guidance",
+          "confidence_boost": "experimental"
+        },
+        {
+          "node_type": "ConditioningSetTimestepRange",
+          "purpose": "temporal_conditioning_control",
+          "confidence_boost": "medium"
+        }
+      ]
+    },
+
+    {
+      "comment": "Generic DiT indicators",
+      "method": "detect_generic_dit_patterns",
+      "priority": 4,
+      "confidence": "possible_dit",
+
+      "pattern_indicators": [
+        {
+          "node_type": "SamplerCustomNoise",
+          "comment": "Advanced sampling often indicates transformer models"
+        },
+        {
+          "multiple_text_encoders": true,
+          "comment": "Multiple CLIP encoders suggest advanced architecture"
+        }
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_strategy": {
+      "comment": "Extract from ComfyUI workflow JSON structure",
+      "data_source": "comfyui_workflow_json",
+      "approach": "node_traversal_with_dit_specialization"
+    },
+
+    "architecture_detection": {
+      "method": "progressive_confidence_scoring",
+      "scoring": {
+        "definitive_dit": 0.95,
+        "likely_dit": 0.8, 
+        "possible_dit": 0.6,
+        "fallback": 0.3
+      }
+    },
+
+    "extraction_rules": [
+      {
+        "section": "model_identification",
+        "rules": [
+          {
+            "target_key": "dit_model",
+            "method": "find_node_widget_value",
+            "node_type": "HYDiTCheckpointLoader",
+            "widget_key": "ckpt_name",
+            "value_type": "string",
+            "optional": true
+          },
+          {
+            "target_key": "dit_precision",
+            "method": "find_node_widget_value", 
+            "node_type": "HYDiTCheckpointLoader",
+            "widget_key": "precision",
+            "value_type": "string",
+            "optional": true
+          },
+          {
+            "target_key": "sd3_model",
+            "method": "find_node_widget_value",
+            "node_type": "CheckpointLoaderSimple",
+            "context": "connected_to_TripleCLIPLoader",
+            "widget_key": "ckpt_name", 
+            "value_type": "string",
+            "optional": true
+          }
+        ]
+      },
+
+      {
+        "section": "text_encoding_extraction",
+        "rules": [
+          {
+            "target_key": "prompt_clip_l",
+            "method": "find_node_widget_value",
+            "node_type": "CLIPTextEncodeSD3",
+            "widget_key": "clip_l",
+            "value_type": "string",
+            "optional": true
+          },
+          {
+            "target_key": "prompt_clip_g",
+            "method": "find_node_widget_value",
+            "node_type": "CLIPTextEncodeSD3", 
+            "widget_key": "clip_g",
+            "value_type": "string",
+            "optional": true
+          },
+          {
+            "target_key": "prompt_t5xxl",
+            "method": "find_node_widget_value",
+            "node_type": "CLIPTextEncodeSD3",
+            "widget_key": "t5xxl", 
+            "value_type": "string",
+            "optional": true
+          },
+          {
+            "target_key": "prompt_simple",
+            "method": "find_node_widget_value",
+            "node_type": "HYDiTTextEncodeSimple",
+            "widget_key": "text",
+            "value_type": "string",
+            "optional": true
+          },
+          {
+            "target_key": "chinese_encoder",
+            "method": "find_node_widget_value",
+            "node_type": "HYDiTTextEncoderLoader",
+            "widget_key": "clip_name1",
+            "value_type": "string",
+            "optional": true
+          },
+          {
+            "target_key": "t5_encoder",
+            "method": "find_node_widget_value",
+            "node_type": "HYDiTTextEncoderLoader", 
+            "widget_key": "clip_name2",
+            "value_type": "string",
+            "optional": true
+          }
+        ]
+      },
+
+      {
+        "section": "advanced_sampling_parameters",
+        "rules": [
+          {
+            "target_key": "custom_noise_enabled",
+            "method": "detect_node_existence",
+            "node_type": "SamplerCustomNoise",
+            "value_type": "boolean",
+            "optional": true
+          },
+          {
+            "target_key": "noise_power_function",
+            "method": "find_node_widget_value",
+            "node_type": "SamplerCustomNoise",
+            "widget_key": "noise_mode",
+            "value_type": "string",
+            "optional": true
+          },
+          {
+            "target_key": "custom_sigmas",
+            "method": "detect_connected_input",
+            "node_type": "SamplerCustomNoise",
+            "input_name": "sigmas",
+            "value_type": "boolean",
+            "optional": true
+          },
+          {
+            "target_key": "sd3_shift_value",
+            "method": "find_node_widget_value",
+            "node_type": "ModelSamplingSD3",
+            "widget_key": "shift",
+            "value_type": "float",
+            "optional": true
+          }
+        ]
+      },
+
+      {
+        "section": "research_features",
+        "rules": [
+          {
+            "target_key": "skip_layer_guidance",
+            "method": "extract_skip_layer_config",
+            "node_type": "SkipLayerGuidanceSD3",
+            "extract_fields": ["layers", "scale", "start_percent", "end_percent"],
+            "value_type": "object",
+            "optional": true
+          },
+          {
+            "target_key": "timestep_conditioning",
+            "method": "extract_timestep_ranges", 
+            "node_type": "ConditioningSetTimestepRange",
+            "extract_fields": ["start", "end"],
+            "value_type": "array",
+            "optional": true
+          },
+          {
+            "target_key": "conditioning_combinations",
+            "method": "count_node_occurrences",
+            "node_type": "ConditioningCombine",
+            "value_type": "integer",
+            "optional": true
+          }
+        ]
+      },
+
+      {
+        "section": "standard_parameters",
+        "rules": [
+          {
+            "target_key": "steps",
+            "method": "find_sampler_parameter",
+            "sampler_types": ["SamplerCustomNoise", "KSampler"],
+            "parameter": "steps",
+            "value_type": "integer",
+            "optional": true
+          },
+          {
+            "target_key": "cfg_scale",
+            "method": "find_sampler_parameter", 
+            "sampler_types": ["SamplerCustomNoise", "KSampler"],
+            "parameter": "cfg",
+            "value_type": "float",
+            "optional": true
+          },
+          {
+            "target_key": "seed",
+            "method": "find_sampler_parameter",
+            "sampler_types": ["SamplerCustomNoise", "KSampler"],
+            "parameter": "seed",
+            "value_type": "integer",
+            "optional": true
+          },
+          {
+            "target_key": "sampler_name",
+            "method": "find_sampler_parameter",
+            "sampler_types": ["SamplerCustomNoise", "KSampler"],
+            "parameter": "sampler_name",
+            "value_type": "string",
+            "optional": true
+          },
+          {
+            "target_key": "scheduler",
+            "method": "find_sampler_parameter",
+            "sampler_types": ["SamplerCustomNoise", "KSampler"], 
+            "parameter": "scheduler",
+            "value_type": "string",
+            "optional": true
+          }
+        ]
+      },
+
+      {
+        "section": "image_dimensions",
+        "rules": [
+          {
+            "target_key": "width",
+            "method": "find_latent_dimensions",
+            "node_types": ["EmptyLatentImage", "EmptySD3LatentImage"],
+            "dimension": "width",
+            "value_type": "integer",
+            "optional": true
+          },
+          {
+            "target_key": "height", 
+            "method": "find_latent_dimensions",
+            "node_types": ["EmptyLatentImage", "EmptySD3LatentImage"],
+            "dimension": "height",
+            "value_type": "integer",
+            "optional": true
+          },
+          {
+            "target_key": "latent_channels",
+            "method": "detect_latent_format",
+            "sd3_channels": 16,
+            "standard_channels": 4,
+            "value_type": "integer",
+            "optional": true
+          }
+        ]
+      }
+    ]
+  },
+
+  "output_format": {
+    "tool": "ComfyUI",
+    "parser_version": "unfudged_v1",
+    "workflow_type": "dit_transformer_architecture",
+    "architecture_detected": "{detected_dit_variant}",
+    "confidence": "{confidence_score}",
+
+    "prompt": "{primary_prompt}",
+    "negative_prompt": "{negative_prompt}",
+
+    "parameters": {
+      "core": {
+        "steps": "{steps}",
+        "cfg_scale": "{cfg_scale}",
+        "seed": "{seed}",
+        "sampler_name": "{sampler_name}",
+        "scheduler": "{scheduler}",
+        "width": "{width}",
+        "height": "{height}"
+      },
+
+      "dit_specific": {
+        "model": "{dit_model}",
+        "precision": "{dit_precision}",
+        "architecture": "{detected_dit_variant}",
+        "latent_channels": "{latent_channels}",
+        "custom_noise": "{custom_noise_enabled}",
+        "sd3_shift": "{sd3_shift_value}"
+      },
+
+      "text_encoding": {
+        "encoding_type": "{single|dual|triple}_encoder",
+        "clip_l_prompt": "{prompt_clip_l}",
+        "clip_g_prompt": "{prompt_clip_g}",
+        "t5xxl_prompt": "{prompt_t5xxl}",
+        "simple_prompt": "{prompt_simple}",
+        "chinese_encoder": "{chinese_encoder}",
+        "t5_encoder": "{t5_encoder}"
+      },
+
+      "advanced_features": {
+        "skip_layer_guidance": "{skip_layer_guidance}",
+        "timestep_conditioning": "{timestep_conditioning}",
+        "conditioning_combinations": "{conditioning_combinations}",
+        "noise_power_function": "{noise_power_function}",
+        "custom_sigmas": "{custom_sigmas}"
+      }
+    },
+
+    "research_info": {
+      "experimental_features": "{list_of_experimental_nodes}",
+      "research_papers": "{applicable_research_references}",
+      "stability_warnings": "{experimental_feature_warnings}"
+    },
+
+    "raw_workflow": "{original_comfyui_workflow_json}"
+  },
+
+  "dit_variants": {
+    "HunyuanDiT": {
+      "description": "Chinese transformer with dual language support",
+      "key_features": ["chinese_roberta", "mT5", "custom_noise"],
+      "native_resolution": "1024x1024",
+      "languages": ["chinese", "english"],
+      "precision_modes": ["G/2", "fp16", "fp32"]
+    },
+
+    "SD3": {
+      "description": "Triple encoder transformer architecture", 
+      "key_features": ["clip_l", "clip_g", "t5xxl", "16_channel_latents"],
+      "native_resolution": "1024x1024",
+      "encoder_count": 3,
+      "latent_format": "16_channel"
+    },
+
+    "Flux": {
+      "description": "Black Forest Labs transformer (future detection)",
+      "key_features": ["flow_matching", "rectified_flow"],
+      "detection_patterns": ["flux", "bfl", "black_forest"],
+      "status": "future_implementation"
+    },
+
+    "Generic_DiT": {
+      "description": "Unknown transformer variant",
+      "detection": "advanced_sampling_without_specific_signatures",
+      "confidence": "low_but_useful"
+    }
+  },
+
+  "confidence_scoring": {
+    "definitive_dit": {
+      "score": 0.95,
+      "criteria": "Specific DiT nodes detected",
+      "examples": ["HYDiTCheckpointLoader", "TripleCLIPLoader"]
+    },
+    "likely_dit": {
+      "score": 0.8,
+      "criteria": "Advanced features suggesting transformer",
+      "examples": ["SamplerCustomNoise", "Multi-encoder setup"]
+    },
+    "possible_dit": {
+      "score": 0.6, 
+      "criteria": "Some transformer indicators",
+      "examples": ["Complex conditioning", "Advanced sampling"]
+    },
+    "fallback": {
+      "score": 0.3,
+      "criteria": "No clear indicators",
+      "action": "classify_as_unknown_advanced"
+    }
+  },
+
+  "future_proofing": {
+    "extensible_detection": {
+      "approach": "pattern_based_node_detection",
+      "new_dit_variants": "automatically_flagged_for_investigation",
+      "research_features": "experimental_node_tracking"
+    },
+
+    "evolution_tracking": {
+      "u_net_to_dit_transition": "tracked_and_documented",
+      "new_encoder_types": "flexible_multi_encoder_support", 
+      "sampling_innovations": "advanced_parameter_extraction"
+    }
+  },
+
+  "implementation_notes": {
+    "key_challenges": [
+      "Multiple DiT variants with different node structures",
+      "Experimental features with unstable APIs",
+      "Research nodes that may change frequently",
+      "Multi-language text encoding complexity"
+    ],
+
+    "parsing_strategy": [
+      "Progressive confidence scoring",
+      "Flexible node pattern matching", 
+      "Graceful degradation for unknown features",
+      "Future-proof architecture detection"
+    ],
+
+    "performance_considerations": [
+      "Complex workflow traversal",
+      "Multiple text encoder extraction",
+      "Research feature safety checks",
+      "Large model path handling"
+    ]
+  },
+
+  "examples": {
+    "hunyuan_workflow": {
+      "detected_architecture": "HunyuanDiT",
+      "confidence": 0.95,
+      "key_nodes": ["HYDiTCheckpointLoader", "HYDiTTextEncoderLoader"],
+      "language_support": "chinese_english"
+    },
+
+    "sd3_workflow": {
+      "detected_architecture": "SD3",
+      "confidence": 0.95, 
+      "key_nodes": ["TripleCLIPLoader", "CLIPTextEncodeSD3"],
+      "encoder_count": 3
+    },
+
+    "research_workflow": {
+      "detected_architecture": "SD3_Experimental",
+      "confidence": 0.8,
+      "experimental_features": ["SkipLayerGuidanceSD3"],
+      "research_warning": "experimental_features_present"
+    }
+  },
+
+  "status": "production_ready_with_experimental_support"
+}

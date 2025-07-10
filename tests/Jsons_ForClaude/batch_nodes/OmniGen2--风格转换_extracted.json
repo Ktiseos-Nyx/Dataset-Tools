@@ -1,0 +1,48 @@
+[
+    {
+        "id": 1,
+        "name": "LayerUtility: ImageScaleByAspectRatio V2"
+    },
+    {
+        "id": 1,
+        "name": "Group"
+    },
+    {
+        "id": 2,
+        "name": "LoadOmniGen2Model",
+        "prompts": {
+            "text": "E:\\ComfyUI_windows_portable\\ComfyUI\\models\\OmniGen2",
+            "text_2": "model_offload"
+        }
+    },
+    {
+        "id": 3,
+        "name": "OmniGen2",
+        "prompts": {
+            "text": "The person in the first picture is holding the doll in the second picture.",
+            "text_2": "(((deformed))), blurry, over saturation, bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), fused fingers, messy drawing, broken legs censor, censored, censor_bar"
+        }
+    },
+    {
+        "id": 4,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 5,
+        "name": "Text",
+        "prompts": {
+            "text": "Change the style of Figure 1 to Miyazaki style."
+        }
+    },
+    {
+        "id": 6,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "upekpr15.png"
+        }
+    },
+    {
+        "id": 7,
+        "name": "PreviewImage"
+    }
+]

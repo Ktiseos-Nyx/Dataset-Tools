@@ -1,0 +1,228 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd3.5_large_fp8_scaled.safetensors"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 16,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a rainbow galaxy inside it on top of a wooden table on a snowy mountain top with the ocean and clouds in the background with a shot glass beside containing darkness beside a snow sculpture in the shape of a fox"
+        }
+    },
+    {
+        "id": 40,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 50,
+        "name": "Note",
+        "prompts": {
+            "text": "Thoda-SimpleFluxUpscaler-v4\n\n- Combined Checkpoint\n- SD3.5 Large (FP8)\n- Clip T5XXL (FP8)\n- aspect size\n- project file path\n\n- FLUX SCHNELL FP8 UPSCALER\n"
+        }
+    },
+    {
+        "id": 53,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 54,
+        "name": "ProjectFilePathNode"
+    },
+    {
+        "id": 55,
+        "name": "AspectSizeV2"
+    },
+    {
+        "id": 75,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "fill / crop"
+        }
+    },
+    {
+        "id": 76,
+        "name": "Note",
+        "prompts": {
+            "text": "Foda-Boosted-Upscaler-lines-V30\n\nVideo: https://www.youtube.com/@FiveBelowFiveUK\nWorkflow: https://civitai.com/models/620294\n\nhttps://www.fivebelowfive.uk\n\nFoda Pack v16\n\nNative Flux Upscaling 4X with BOOOST\nbatch directory seed mode\nColour correction module (LUTs)\n\n\nuse only upscale stage 1 if you run into problems with memory limit.\n\n\n[discord early editions]\nhttps://discord.com/invite/uubQXhwzkj \n"
+        }
+    },
+    {
+        "id": 77,
+        "name": "Reroute"
+    },
+    {
+        "id": 78,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./foda/UP/stage1"
+        }
+    },
+    {
+        "id": 79,
+        "name": "ImageColorMatch+"
+    },
+    {
+        "id": 80,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 81,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 82,
+        "name": "BasicScheduler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 83,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 84,
+        "name": "VAEEncodeTiled"
+    },
+    {
+        "id": 85,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 86,
+        "name": "CLIPTextEncodeFlux",
+        "prompts": {
+            "text": "very detailed, masterpiece, intricate details, UHD, 8K,",
+            "text_2": "very detailed, masterpiece, intricate details, UHD, 8K,"
+        }
+    },
+    {
+        "id": 87,
+        "name": "ImageApplyLUT+",
+        "prompts": {
+            "text": "FiLMiC_deLog_V3.CUBE"
+        }
+    },
+    {
+        "id": 88,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "./foda/CC/flux"
+        }
+    },
+    {
+        "id": 89,
+        "name": "Note",
+        "prompts": {
+            "text": "Need Lokk up tables for the colour correction node? the files are named with .cube extension.\n\nplace inside\n\\comfy-essentials\\luts\\\n\nfind some free .cube format LUT#s here:\n\nhttps://tdcat.com/downloads/free-lut-packs\nhttps://www.dropbox.com/scl/fi/h51yraty372pvo4lu6l25/Creative-LUTs-DC1-PC.zip?rlkey=cymxpkjppk4i23dl8soczn8cv&e=2\nhttps://drive.google.com/file/d/1EsmlAkeE48LUtOyDfHvt7gN8GmQmGDhb/view\nhttps://emilio.media/free-cinematic-luts/\n\nhttps://fixthephoto.com/free-luts <--- lots here\nDL one at a time for the free ones here."
+        }
+    },
+    {
+        "id": 90,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 91,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 92,
+        "name": "SplitSigmas"
+    },
+    {
+        "id": 93,
+        "name": "Reroute"
+    },
+    {
+        "id": 94,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "fill / crop"
+        }
+    },
+    {
+        "id": 95,
+        "name": "Reroute"
+    },
+    {
+        "id": 96,
+        "name": "Reroute"
+    },
+    {
+        "id": 97,
+        "name": "ImpactImageInfo"
+    },
+    {
+        "id": 98,
+        "name": "Note",
+        "prompts": {
+            "text": "very detailed, masterpiece, intricate details, UHD, 8K,"
+        }
+    },
+    {
+        "id": 99,
+        "name": "Reroute"
+    },
+    {
+        "id": 100,
+        "name": "Reroute"
+    },
+    {
+        "id": 101,
+        "name": "Reroute"
+    },
+    {
+        "id": 102,
+        "name": "Reroute"
+    },
+    {
+        "id": 105,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-schnell.sft"
+        }
+    },
+    {
+        "id": 106,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp8_e4m3fn.safetensors"
+        }
+    },
+    {
+        "id": 107,
+        "name": "VAELoader"
+    },
+    {
+        "id": 108,
+        "name": "ProjectFilePathNode"
+    },
+    {
+        "id": 109,
+        "name": "ProjectFilePathNode"
+    },
+    {
+        "id": 110,
+        "name": "RandomNoise"
+    }
+]

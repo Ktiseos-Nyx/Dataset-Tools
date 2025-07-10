@@ -1,0 +1,134 @@
+[
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "change the image to black and white coloring book page"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 10,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae.safetensors"
+        }
+    },
+    {
+        "id": 11,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "t5xxl_fp8_e4m3fn.safetensors",
+            "text_2": "clip_l.safetensors"
+        }
+    },
+    {
+        "id": 12,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-dev-kontext_fp8_scaled.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 16,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 17,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 22,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 25,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 26,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 27,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 28,
+        "name": "Note",
+        "prompts": {
+            "text": "If you get an error in any of the nodes above make sure the files are in the correct directories.\n\nSee the examples page for the links : https://comfyanonymous.github.io/ComfyUI_examples/flux/\n\nflux1-kontext-dev.safetensors goes in: ComfyUI/models/unet/\n\nt5xxl_fp16.safetensors and clip_l.safetensors go in: ComfyUI/models/clip/\n\nae.safetensors goes in: ComfyUI/models/vae/\n\n\nTip: You can set the weight_dtype above to one of the fp8 types if you have memory issues."
+        }
+    },
+    {
+        "id": 30,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 34,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 35,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 37,
+        "name": "Note",
+        "prompts": {
+            "text": "The reference sampling implementation auto adjusts the shift value based on the resolution, if you don't want this you can just bypass (CTRL-B) this ModelSamplingFlux node.\n"
+        }
+    },
+    {
+        "id": 39,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 40,
+        "name": "FluxKontextImageScale"
+    },
+    {
+        "id": 41,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "fennec_girl_sing.png"
+        }
+    },
+    {
+        "id": 42,
+        "name": "ReferenceLatent"
+    },
+    {
+        "id": 53,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 59,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "flux1-kontext-dev-Q2_K.gguf"
+        }
+    },
+    {
+        "id": 60,
+        "name": "TeaCache"
+    },
+    {
+        "id": 61,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "Turbo_alph_8steps.safetensors"
+        }
+    }
+]

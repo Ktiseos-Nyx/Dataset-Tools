@@ -1,0 +1,148 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "ddim_uniform"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 11,
+        "name": "HYDiTCheckpointLoader",
+        "prompts": {
+            "text": "Hunyuan_DiT_v1.1.pt"
+        }
+    },
+    {
+        "id": 12,
+        "name": "HYDiTTextEncoderLoader",
+        "prompts": {
+            "text": "CLIP_Hunyuan.bin"
+        }
+    },
+    {
+        "id": 13,
+        "name": "HYDiTTextEncode",
+        "prompts": {
+            "text": "photos of a (chicken dressed like human:1.2), (sipping tea in an English pub:1.2), in the background pipe-smoking gentlemens, all dressed in elegant 1940s clothes, swing style, very sophisticated, detailed, humanoid, damaged and scarred by time, wearing gloves",
+            "text_2": "Fallout-style post-apocalyptic,1940s clothes, damaged and scarred by time, kodachrome colors"
+        }
+    },
+    {
+        "id": 15,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "SDXL_VAE.safetensors"
+        }
+    },
+    {
+        "id": 16,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 17,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 18,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "photos of a (chicken dressed like human:1.2), (sipping tea in an English pub:1.2), in the background pipe-smoking gentlemens, all dressed in elegant 1940s clothes, swing style, very sophisticated, detailed, humanoid, damaged and scarred by time, wearing gloves"
+        }
+    },
+    {
+        "id": 19,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "Fallout-style post-apocalyptic,1940s clothes, damaged and scarred by time, kodachrome colors"
+        }
+    },
+    {
+        "id": 20,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "illutration, 3d, cg, digital art, low quality, watermark, bad hands, low res, bad dressing"
+        }
+    },
+    {
+        "id": 21,
+        "name": "HYDiTTextEncode",
+        "prompts": {
+            "text": "illutration, 3d, cg, digital art, low quality, watermark, bad hands, low res, bad dressing",
+            "text_2": "illutration, 3d, cg, digital art, low quality, watermark, bad hands, low res, bad dressing"
+        }
+    },
+    {
+        "id": 23,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "illutration, 3d, cg, digital art, low quality, watermark, bad hands, low res, bad dressing"
+        }
+    },
+    {
+        "id": 24,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui viene caricato il modello Hunyuan."
+        }
+    },
+    {
+        "id": 25,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui vengono caricati il CLIP e l'mT5."
+        }
+    },
+    {
+        "id": 26,
+        "name": "Reroute"
+    },
+    {
+        "id": 27,
+        "name": "Reroute"
+    },
+    {
+        "id": 28,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui \u00e8 possibile scrivere il positive e negative prompt.\n\n"
+        }
+    },
+    {
+        "id": 29,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui si sceglie la risoluzione della generazione.\n\n"
+        }
+    },
+    {
+        "id": 30,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui avviene la generazione vera e propria.\n"
+        }
+    },
+    {
+        "id": 32,
+        "name": "Reroute"
+    },
+    {
+        "id": 33,
+        "name": "SaveImage"
+    },
+    {
+        "id": 34,
+        "name": "Note"
+    },
+    {
+        "id": 35,
+        "name": "Note",
+        "prompts": {
+            "text": "Qua \u00e8 possibile vedere l'anteprima e il salvataggio della generazione finale."
+        }
+    }
+]

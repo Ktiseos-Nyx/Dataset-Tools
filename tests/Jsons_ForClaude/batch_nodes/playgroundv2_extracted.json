@@ -1,0 +1,43 @@
+[
+    {
+        "id": 24,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "playground/playground-v2.5-1024px-aesthetic.fp16.safetensors"
+        }
+    },
+    {
+        "id": 25,
+        "name": "KSampler"
+    },
+    {
+        "id": 26,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 27,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "A woman, looking off into the distance, with brunette hair, her eyes sad and heavy, black and white photography, "
+        }
+    },
+    {
+        "id": 28,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 29,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 75,
+        "name": "ModelSamplingContinuousEDM",
+        "prompts": {
+            "text": "edm_playground_v2.5"
+        }
+    },
+    {
+        "id": 76,
+        "name": "SaveImage"
+    }
+]

@@ -1,0 +1,83 @@
+[
+    {
+        "id": 1,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "The set of four images highlights a serif font with Victorian-style details. [IMAGE1] displays \"Vintage Charm\" on an old book cover; [IMAGE2] shows \"Elegance\" on a dark lace background; [IMAGE3] features \"Old Times\" on a vintage clock; [IMAGE4] presents \"Antique\" on an ornate mirror, perfect for historical themes"
+        }
+    },
+    {
+        "id": 2,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 3,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 4,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux/flux_dev_fp16.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "t5xxl_fp16.safetensors",
+            "text_2": "clip_l.safetensors"
+        }
+    },
+    {
+        "id": 6,
+        "name": "VAELoader"
+    },
+    {
+        "id": 7,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 8,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 9,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 10,
+        "name": "KSamplerSelect",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 11,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 12,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 13,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 14,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 15,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 16,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 18,
+        "name": "LoraLoader|pysssss"
+    }
+]

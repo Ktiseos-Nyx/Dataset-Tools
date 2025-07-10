@@ -1,0 +1,602 @@
+[
+    {
+        "id": 2,
+        "name": "\u53cd\u63a8dev\u63d0\u793a\u8bcd"
+    },
+    {
+        "id": 3,
+        "name": "faceid\u6362\u8138"
+    },
+    {
+        "id": 4,
+        "name": "\u8bbe\u7f6e\u751f\u56fe\u9ad8\u5ea6"
+    },
+    {
+        "id": 5,
+        "name": "\u9009\u62e9\u957f\u5bbd\u6bd4\u65b9\u6848"
+    },
+    {
+        "id": 6,
+        "name": "\u4e0a\u4f20\u56fe\u7247"
+    },
+    {
+        "id": 7,
+        "name": "\u6784\u56fe\u91cd\u7ed8"
+    },
+    {
+        "id": 8,
+        "name": "\u65b9\u68480"
+    },
+    {
+        "id": 9,
+        "name": "\u65b9\u68481"
+    },
+    {
+        "id": 10,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "\u65b9\u68482"
+    },
+    {
+        "id": 11,
+        "name": "\u65b9\u68483"
+    },
+    {
+        "id": 12,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors",
+            "text_2": "fp8_e4m3fn_fast"
+        }
+    },
+    {
+        "id": 12,
+        "name": "\u65b9\u68484"
+    },
+    {
+        "id": 13,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "t5xxl_fp8_e4m3fn.safetensors",
+            "text_2": "clip_l.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "\u65b9\u68485"
+    },
+    {
+        "id": 14,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae.safetensors"
+        }
+    },
+    {
+        "id": 14,
+        "name": "\u65b9\u68486"
+    },
+    {
+        "id": 15,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "Flux\\\u624b\u7ed8\u8c46\u8c46\u773cFlux\u7248_v1.1.safetensors"
+        }
+    },
+    {
+        "id": 15,
+        "name": "\u80cc\u666f\u63d0\u793a\u8bcd\u751f\u6210"
+    },
+    {
+        "id": 16,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 16,
+        "name": "\u91cd\u7ed8\u533a\u57df\u6392\u7248"
+    },
+    {
+        "id": 17,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 17,
+        "name": "\u65b9\u6848\u5c55\u793a"
+    },
+    {
+        "id": 18,
+        "name": "Reroute"
+    },
+    {
+        "id": 18,
+        "name": "flux \u751f\u56fe"
+    },
+    {
+        "id": 19,
+        "name": "Reroute"
+    },
+    {
+        "id": 19,
+        "name": "\u9884\u8bbe\u65b9\u6848"
+    },
+    {
+        "id": 20,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 20,
+        "name": "\u4e24\u500d\u653e\u5927"
+    },
+    {
+        "id": 21,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 22,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 23,
+        "name": "LoadImage"
+    },
+    {
+        "id": 26,
+        "name": "CLIPTextEncodeFlux"
+    },
+    {
+        "id": 37,
+        "name": "IPAdapterFaceID"
+    },
+    {
+        "id": 38,
+        "name": "IPAdapterUnifiedLoader",
+        "prompts": {
+            "text": "PLUS (high strength)"
+        }
+    },
+    {
+        "id": 42,
+        "name": "LayerUtility: TextJoin"
+    },
+    {
+        "id": 46,
+        "name": "RepeatLatentBatch"
+    },
+    {
+        "id": 49,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 58,
+        "name": "FaceAutoFitSingle",
+        "prompts": {
+            "text": "insightface"
+        }
+    },
+    {
+        "id": 59,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 62,
+        "name": "LayerUtility: ColorImage V2"
+    },
+    {
+        "id": 64,
+        "name": "ImageToMask"
+    },
+    {
+        "id": 65,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 66,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-fill-dev.safetensors",
+            "text_2": "fp8_e4m3fn_fast"
+        }
+    },
+    {
+        "id": 67,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 68,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "ae.safetensors"
+        }
+    },
+    {
+        "id": 69,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "The background in the picture."
+        }
+    },
+    {
+        "id": 70,
+        "name": "DifferentialDiffusion"
+    },
+    {
+        "id": 71,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 73,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 74,
+        "name": "InpaintModelConditioning"
+    },
+    {
+        "id": 75,
+        "name": "KSampler"
+    },
+    {
+        "id": 76,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 77,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 79,
+        "name": "Int"
+    },
+    {
+        "id": 80,
+        "name": "LayerMask: MaskGrow"
+    },
+    {
+        "id": 81,
+        "name": "InvertMask"
+    },
+    {
+        "id": 82,
+        "name": "LayerUtility: ImageReel",
+        "prompts": {
+            "text": "CHAOS workflow"
+        }
+    },
+    {
+        "id": 83,
+        "name": "LayerUtility: ImageReelComposit",
+        "prompts": {
+            "text": "Alibaba-PuHuiTi-Heavy.ttf"
+        }
+    },
+    {
+        "id": 84,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 85,
+        "name": "easy anythingIndexSwitch"
+    },
+    {
+        "id": 87,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 90,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 91,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 92,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 93,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 94,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 99,
+        "name": "easy anythingIndexSwitch"
+    },
+    {
+        "id": 100,
+        "name": "String"
+    },
+    {
+        "id": 101,
+        "name": "String"
+    },
+    {
+        "id": 102,
+        "name": "String"
+    },
+    {
+        "id": 103,
+        "name": "String"
+    },
+    {
+        "id": 104,
+        "name": "String"
+    },
+    {
+        "id": 105,
+        "name": "String"
+    },
+    {
+        "id": 106,
+        "name": "String"
+    },
+    {
+        "id": 107,
+        "name": "Int"
+    },
+    {
+        "id": 108,
+        "name": "JoinStringMulti"
+    },
+    {
+        "id": 109,
+        "name": "String"
+    },
+    {
+        "id": 110,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "16:9 \u6bd4\u4f8b\u4e0b\u751f\u6210\u56fe"
+        }
+    },
+    {
+        "id": 113,
+        "name": "Int"
+    },
+    {
+        "id": 118,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 119,
+        "name": "LayerUtility: PurgeVRAM"
+    },
+    {
+        "id": 122,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "This is a photograph featuring a soft, pastel pink background adorned with a variety of colorful, playful fruit and plant illustrations. The illustrations include a slice of watermelon with a red interior and black seeds, a pair of yellow cherries with green stems, a single blue apple, a yellow lemon, and green leaves with a string of yellow beads. There are also abstract green and blue shapes scattered throughout the image. The central focus is a large, blurry, shadowy figure in the middle, creating a sense of depth and contrast against the brightly colored background. The shadow is white with a subtle green tint, blending into the pink backdrop. The overall style is whimsical and childlike, with a modern, digital illustration aesthetic. The textures are smooth, and the colors are vibrant yet soft, creating a dreamy, almost ethereal atmosphere. The image is well-lit, with even lighting that highlights the bright colors of the illustrations while the shadow adds a mysterious element to the composition."
+        }
+    },
+    {
+        "id": 130,
+        "name": "LayerUtility: LaMa"
+    },
+    {
+        "id": 131,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 136,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 137,
+        "name": "LayerMask: MaskGrow"
+    },
+    {
+        "id": 138,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "2xNomosUni_span_multijpg_ldl.pth"
+        }
+    },
+    {
+        "id": 139,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 140,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 141,
+        "name": "Reroute"
+    },
+    {
+        "id": 142,
+        "name": "Note",
+        "prompts": {
+            "text": "\u8fd8\u539f\u80cc\u666f\u65f6\nlama \u4e0e mat \u53ef\u5207\u6362\u6d4b\u8bd5\n\u4e0d\u540c\u56fe\u6848\u6548\u679c\u4e0d\u4e00\u6837"
+        }
+    },
+    {
+        "id": 143,
+        "name": "easy anythingIndexSwitch"
+    },
+    {
+        "id": 144,
+        "name": "Note",
+        "prompts": {
+            "text": "\u9ed8\u8ba40 \n\n0-\u4ec5\u80cc\u666f\u5728\u9009\u533a\u91cd\u7ed8\n1-\u80cc\u666f\u4eba\u7269\u4e00\u8d77\u5728\u9009\u533a\u91cd\u7ed8\n\n1\u5728\u4ec0\u4e48\u65f6\u5019\u7528\uff0c\u5728\u91cd\u7ed8\u533a\u57df\u9700\u8981\u4eba\u7269\u4fe1\u606f\u65f6\uff0c\u6bd4\u5982\u539f\u56fe\u53ea\u6709\u8138\u90e8\uff0c\u800c\u91cd\u7ed8\u9700\u8981\u5168\u8eab\u3002\u800c0\u7684\u6a21\u5f0f\u4e0b\u751f\u6210\u4eba\u7269\u8eab\u4f53\u4e0d\u80fd\u7528\u7684\u60c5\u51b5\u3002\u8bd5\u7740\u90091"
+        }
+    },
+    {
+        "id": 145,
+        "name": "easy anythingIndexSwitch"
+    },
+    {
+        "id": 146,
+        "name": "LayerUtility: TextBox"
+    },
+    {
+        "id": 147,
+        "name": "Note",
+        "prompts": {
+            "text": "\u9ed8\u8ba4\u81ea\u52a8\u80cc\u666f\u53cd\u63a8\u90090\n\u5982\u679c\u80cc\u666f\u63cf\u8ff0\u4e0d\u4f73\uff0c\u53ef\u624b\u52a8\u8f93\u5165\u80cc\u666f\u63d0\u793a\u8bcd\u5230textbox,\u7136\u540e\u90091"
+        }
+    },
+    {
+        "id": 148,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "Pixel style, Japanese manga face,, , The image is a  of an East Asian woman standing against a vibrant, pastel pink background adorned with colorful, playful stickers and illustrations of fruits, leaves, and numbers. The woman has a fair complexion, shoulder-length black wavy hair, and is wearing a sleeveless, tight-fitting, bright red crop top that reveals her midriff. She pairs this with high-waisted, light blue denim jeans that have a slight flare at the bottom. Her makeup is subtly done, featuring red lipstick that matches her top, and she is wearing small, dangling earrings. \n\nIn the lower left corner of the image, there is an old-fashioned, silver CRT television with a small black antenna on top, placed on a flat surface. The background is decorated with various stickers, including a slice of watermelon, cherries, leaves, and the number \"10\" in green and blue, adding a whimsical and youthful feel to the . The woman's pose is relaxed, with her right hand resting on her hip and her left arm hanging naturally by her side. The overall style of the  is modern and playful, with a focus on bright colors and a casual, trendy fashion sense., masterpiece, best quality, "
+        }
+    },
+    {
+        "id": 150,
+        "name": "Note",
+        "prompts": {
+            "text": "\u751f\u56fe\u4e0d\u51c6\u786e \u53ef\u4ee5\u8003\u8651\u624b\u52a8\u8f93\u5165\u5230textbox\n"
+        }
+    },
+    {
+        "id": 154,
+        "name": "Note",
+        "prompts": {
+            "text": "\u901a\u8fc7\u8c03\u6574face autofit single \u8282\u70b9\u53ef\u4ee5\u8c03\u6574\n\u4eba\u8138XY\u8f74\u4f4d\u7f6e\uff0c\u4eba\u8138\u5927\u5c0f\uff0c\u4eba\u8138\u89d2\u5ea6\u3002"
+        }
+    },
+    {
+        "id": 155,
+        "name": "easy imageSizeByLongerSide"
+    },
+    {
+        "id": 156,
+        "name": "easy ifElse"
+    },
+    {
+        "id": 157,
+        "name": "easy compare"
+    },
+    {
+        "id": 158,
+        "name": "Int"
+    },
+    {
+        "id": 163,
+        "name": "Text _O",
+        "prompts": {
+            "text": "ddy\uff0cHand drawn style."
+        }
+    },
+    {
+        "id": 164,
+        "name": "Text _O",
+        "prompts": {
+            "text": "masterpiece, best quality,"
+        }
+    },
+    {
+        "id": 166,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 169,
+        "name": "LayerMask: SAM2Ultra",
+        "prompts": {
+            "text": "sam2.1_hiera_small.safetensors"
+        }
+    },
+    {
+        "id": 170,
+        "name": "LayerMask: ObjectDetectorFL2",
+        "prompts": {
+            "text": "left_to_right"
+        }
+    },
+    {
+        "id": 171,
+        "name": "LayerMask: LoadFlorence2Model"
+    },
+    {
+        "id": 172,
+        "name": "Reroute"
+    },
+    {
+        "id": 173,
+        "name": "LayerUtility: JoyCaptionBeta1",
+        "prompts": {
+            "text": "Descriptive"
+        }
+    },
+    {
+        "id": 174,
+        "name": "LayerUtility: LoadJoyCaptionBeta1Model",
+        "prompts": {
+            "text": "fancyfeast/llama-joycaption-beta-one-hf-llava"
+        }
+    },
+    {
+        "id": 175,
+        "name": "LayerUtility: JoyCaptionBeta1",
+        "prompts": {
+            "text": "Descriptive"
+        }
+    },
+    {
+        "id": 176,
+        "name": "CFGZeroStar"
+    },
+    {
+        "id": 177,
+        "name": "Note",
+        "prompts": {
+            "text": "CHAOS \u624b\u7ed8\u98ce\u591a\u5e45 (Hand-drawn Art Multi-Ratio)\n\u8f7b\u677e\u5c06\u4f60\u7684\u4eba\u7269\u7167\u7247\u8f6c\u6362\u6210\u6781\u5177\u827a\u672f\u611f\u7684\u624b\u7ed8\u63d2\u753b\u98ce\u683c\uff0c\u5e76\u81ea\u7531\u9009\u62e97\u79cd\u7ecf\u5178\u753b\u5e45\u6bd4\u4f8b\uff0c\u521b\u4f5c\u72ec\u4e00\u65e0\u4e8c\u7684\u4e2a\u6027\u4f5c\u54c1\uff01\n\n\u6838\u5fc3\u529f\u80fd\uff1a\n\u6807\u5fd7\u6027\u624b\u7ed8\u98ce\u683c\u8f6c\u6362\n\u91c7\u7528\u7cbe\u5fc3\u8c03\u6821\u7684\u624b\u7ed8\u63d2\u753b\u98ce\u683c LORA \u6a21\u578b\uff0c\u4e00\u952e\u8d4b\u4e88\u4f60\u7684\u4eba\u7269\u7167\u7247\u67d4\u548c\u7ec6\u817b\u3001\u5bcc\u6709\u8868\u73b0\u529b\u7684\u7ed8\u753b\u8d28\u611f\uff0c\u4eff\u4f5b\u51fa\u81ea\u4e13\u4e1a\u753b\u5e08\u4e4b\u624b\u3002\n\n7\u79cd\u753b\u5e45\u81ea\u7531\u9009\n\u63d0\u4f9b7\u79cd\u5e38\u7528\u753b\u5e45\u6bd4\u4f8b\u65b9\u6848\uff0c\u6ee1\u8db3\u4f60\u5728\u4e0d\u540c\u573a\u666f\u4e0b\u7684\u5c55\u793a\u9700\u6c42\uff1a\n\n\u65b9\u6848 0: 1:1\uff08\u7ecf\u5178\u65b9\u5f62\uff0c\u9002\u5408\u793e\u4ea4\u5a92\u4f53\u5934\u50cf\u3001\u5e16\u5b50\uff09\n\n\u65b9\u6848 1: 16:9\uff08\u5bbd\u5c4f\uff0c\u9002\u5408\u89c6\u9891\u5c01\u9762\u3001\u6a2a\u5411\u5c55\u793a\uff09\n\n\u65b9\u6848 2: 4:3\uff08\u4f20\u7edf\u663e\u793a\u6bd4\u4f8b\uff09\n\n\u65b9\u6848 3: 1:2\uff08\u7ad6\u5411\u957f\u56fe\uff0c\u9002\u5408\u6545\u4e8b\u3001\u90e8\u5206\u79fb\u52a8\u7aef\u5c55\u793a\uff09\n\n\u65b9\u6848 4: 2:1\uff08\u7535\u5f71\u611f\u5bbd\u5e45\uff09\n\n\u65b9\u6848 5: 3:4\uff08\u7ad6\u5411\uff0c\u9002\u5408\u4eba\u50cf\u7279\u5199\u3001\u90e8\u5206\u793e\u4ea4\u5a92\u4f53\uff09\n\n\u65b9\u6848 6: 9:16\uff08\u7ad6\u5c4f\uff0c\u9002\u5408\u77ed\u89c6\u9891\u3001\u624b\u673a\u58c1\u7eb8\uff09\n\n\u667a\u80fd\u753b\u5e03\u6269\u5c55\n\u5f53\u4f60\u9009\u62e9\u7684\u753b\u5e45\u6bd4\u4f8b\u5927\u4e8e\u539f\u59cb\u7167\u7247\u753b\u5e03\u65f6\uff0c\u5de5\u4f5c\u6d41\u4f1a\u81ea\u52a8\u8fdb\u884c\u667a\u80fd\u6269\u56fe\uff0c\u4fdd\u6301\u98ce\u683c\u7edf\u4e00\uff0c\u753b\u9762\u81ea\u7136\u5ef6\u4f38\u3002\n\n\u81ea\u5b9a\u4e49\u56fe\u50cf\u9ad8\u5ea6\n\u9ed8\u8ba4\u8f93\u51fa\u56fe\u50cf\u9ad8\u5ea6\u4e3a1024\u50cf\u7d20\uff08\u5bbd\u5ea6\u6839\u636e\u6240\u9009\u753b\u5e45\u81ea\u52a8\u8ba1\u7b97\uff09\uff0c\u4f60\u4e5f\u53ef\u4ee5\u6839\u636e\u9700\u8981\u81ea\u884c\u8c03\u6574\u6b64\u53c2\u6570\uff0c\u4ee5\u83b7\u5f97\u4e0d\u540c\u5c3a\u5bf8\u548c\u6e05\u6670\u5ea6\u7684\u56fe\u7247\u3002\n\n\u4f7f\u7528\u6b65\u9aa4\uff1a\n\u4e0a\u4f20\u7167\u7247\uff1a\u70b9\u51fb\u4e0a\u4f20\u6309\u94ae\uff0c\u9009\u62e9\u4e00\u5f20\u4f60\u60f3\u8981\u8f6c\u6362\u7684\u4eba\u7269\u7167\u7247\u3002\u5efa\u8bae\u4f7f\u7528\u6e05\u6670\u3001\u5149\u7ebf\u826f\u597d\u7684\u4eba\u7269\u6b63\u9762\u6216\u534a\u8eab\u7167\uff0c\u4ee5\u83b7\u5f97\u6700\u4f73\u6548\u679c\u3002\n\n\u9009\u62e9\u753b\u5e45\uff1a\u4ece\u63d0\u4f9b\u76847\u4e2a\u753b\u5e45\u65b9\u6848\u4e2d\uff0c\u9009\u62e9\u4e00\u4e2a\u4f60\u6700\u559c\u6b22\u7684\u6bd4\u4f8b\uff08\u8f93\u5165\u65b9\u6848\u7f16\u53f70-6\uff09\u3002\n\n\u8c03\u6574\u53c2\u6570\uff08\u53ef\u9009\uff09\uff1a\u5982\u6709\u9700\u8981\uff0c\u53ef\u4ee5\u81ea\u5b9a\u4e49\u56fe\u50cf\u751f\u6210\u9ad8\u5ea6\u3002\n\n\u70b9\u51fb\u8fd0\u884c\uff1a\u786e\u8ba4\u8bbe\u7f6e\u540e\uff0c\u70b9\u51fb\u201c\u8fd0\u884c\u201d\u6309\u94ae\u3002\n\n\u7b49\u5f85\u751f\u6210\uff1a\u8bf7\u7a0d\u4f5c\u7b49\u5f85\uff0cCHAOS \u624b\u7ed8\u98ce\u591a\u5e45\u5de5\u4f5c\u6d41\u5c06\u4e3a\u4f60\u5448\u73b0\u4e00\u5e45\u72ec\u5177\u4e2a\u6027\u7684\u827a\u672f\u63d2\u753b\uff01\n\n\u6e29\u99a8\u63d0\u793a\u4e0e\u652f\u6301\uff1a\n\u751f\u6210\u6548\u679c\u53d7\u539f\u59cb\u7167\u7247\u8d28\u91cf\u3001\u4eba\u7269\u59ff\u6001\u548c\u80cc\u666f\u590d\u6742\u5ea6\u5f71\u54cd\uff1b\n\n\u9f13\u52b1\u591a\u5c1d\u8bd5\u4e0d\u540c\u7167\u7247\u4e0e\u753b\u5e45\u7ec4\u5408\uff0c\u6316\u6398\u66f4\u591a\u98ce\u683c\u53d8\u5316\uff1b\n\n\u6211\u4eec\u6301\u7eed\u4f18\u5316\u6a21\u578b\u4e0e\u529f\u80fd\uff0c\u656c\u8bf7\u671f\u5f85\u66f4\u591a\u66f4\u65b0\u4e0e\u60ca\u559c\uff01\n\n\u5982\u9047\u95ee\u9898\uff0c\u6b22\u8fce\u8fdb\u7fa4\u514d\u8d39\u54a8\u8be2\uff08QQ\u7fa4\uff1a247228975\uff09"
+        }
+    },
+    {
+        "id": 178,
+        "name": "Note",
+        "prompts": {
+            "text": "CHAOS Hand-Drawn Art Multi-Ratio\nEffortlessly transform your portrait photos into beautifully stylized hand-drawn illustrations, and freely choose from 7 classic aspect ratios to create truly unique and personal artwork!\n\nCore Features\nSignature Hand-Drawn Style Conversion\nPowered by a finely tuned hand-drawn illustration LORA model, your photo is instantly infused with soft, detailed, and expressive artistic qualities \u2014 as if drawn by a professional illustrator.\n\n7 Flexible Aspect Ratio Options\nChoose from 7 commonly used aspect ratios to suit different display and sharing scenarios:\n\nOption 0: 1:1 \u2013 Classic square format, ideal for social media profile pictures or posts\n\nOption 1: 16:9 \u2013 Widescreen, perfect for video covers and horizontal displays\n\nOption 2: 4:3 \u2013 Traditional display format\n\nOption 3: 1:2 \u2013 Vertical long format, great for stories or mobile-focused layouts\n\nOption 4: 2:1 \u2013 Cinematic widescreen format\n\nOption 5: 3:4 \u2013 Vertical portrait, suitable for close-ups and social platforms\n\nOption 6: 9:16 \u2013 Full vertical screen, perfect for mobile wallpapers or short videos\n\nSmart Canvas Expansion\nIf your chosen aspect ratio exceeds the original image dimensions, the workflow will automatically perform intelligent canvas extension \u2014 ensuring visual consistency and a natural composition.\n\nCustomizable Image Height\nBy default, images are generated with a height of 1024 pixels (width is auto-calculated based on aspect ratio). You may adjust this value to produce outputs of different sizes and resolutions.\n\nHow to Use\nUpload Your Photo\nClick the upload button and select a clear portrait or half-body photo with good lighting. For best results, use front-facing images.\n\nChoose Aspect Ratio\nSelect your preferred aspect ratio from the 7 available options by entering the corresponding number (0\u20136).\n\nAdjust Settings (Optional)\nCustomize the output image height if needed.\n\nClick \u201cRun\u201d\nOnce settings are confirmed, click the Run button.\n\nWait for Rendering\nPlease wait a moment \u2014 the CHAOS Hand-Drawn Art Multi-Ratio workflow will generate your personalized, high-quality illustration.\n\nTips & Support\nThe final result may vary depending on photo quality, pose, and background complexity.\n\nTry various photo and ratio combinations to explore different artistic effects.\n\nWe are continuously improving our models and features \u2014 stay tuned for exciting updates!\n\nNeed help? Join our support group for free assistance: QQ Group: 247228975"
+        }
+    },
+    {
+        "id": 179,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 180,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 181,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 182,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 184,
+        "name": "easy clearCacheAll"
+    },
+    {
+        "id": 185,
+        "name": "Note",
+        "prompts": {
+            "text": "\u6a21\u578b\u4e0b\u8f7d\u5730\u5740\uff1ahttps://www.liblib.art/modelinfo/af422ce43739485fa789a38440c6cd41?versionUuid=429addb366204d4a9983f5973ac1dbb8\n\n\u89e6\u53d1\u8bcd\uff1addy"
+        }
+    },
+    {
+        "id": 187,
+        "name": "Replace Text _O"
+    },
+    {
+        "id": 188,
+        "name": "LayerUtility: TextBox",
+        "prompts": {
+            "text": "Pixel style, Japanese manga face,, a young Asian woman standing outdoors on a city sidewalk. She has long, straight, dark brown hair that falls past her shoulders and is wearing a form-fitting, ribbed, olive-green long-sleeve top that accentuates her slim figure. She is also wearing a high-waisted, black leather mini skirt that hugs her hips and thighs, showcasing her slender legs. Her skin is fair and smooth, and she has a subtle, natural makeup look with a hint of pink lipstick.\n\nIn her right hand, she is holding a small, black, chain-strap handbag with a silver clasp. The handbag has a sleek, modern design. She is standing in front of a white, slightly textured wall with a black base and a sign attached to it. Behind her, there is a set of stone steps leading up to a black metal railing and a small, landscaped area with green plants and a few rocks. The background includes a building with large windows and a glass door, suggesting an urban setting. The lighting is natural, indicating that the photograph was taken during the day. The overall style of the photograph is modern and urban, capturing a stylish and confident moment in a city environment., masterpiece, best quality, "
+        }
+    }
+]

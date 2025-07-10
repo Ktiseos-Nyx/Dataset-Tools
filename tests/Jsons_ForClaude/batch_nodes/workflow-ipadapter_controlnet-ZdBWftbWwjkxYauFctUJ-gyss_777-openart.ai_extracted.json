@@ -1,0 +1,165 @@
+[
+    {
+        "id": 17,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "juggernautXL_v9Rdphoto2Lightning.safetensors"
+        }
+    },
+    {
+        "id": 60,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 61,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 62,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 305,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "juggernautXL_v9Rdphoto2Lightning.safetensors"
+        }
+    },
+    {
+        "id": 306,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Jade sculpture in the shape of a car"
+        }
+    },
+    {
+        "id": 307,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text watermark "
+        }
+    },
+    {
+        "id": 308,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 309,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 310,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 311,
+        "name": "IPAdapterEmbeds",
+        "prompts": {
+            "text": "style transfer"
+        }
+    },
+    {
+        "id": 312,
+        "name": "IPAdapterUnifiedLoader",
+        "prompts": {
+            "text": "PLUS (high strength)"
+        }
+    },
+    {
+        "id": 313,
+        "name": "IPAdapterEncoder"
+    },
+    {
+        "id": 315,
+        "name": "IPAdapterCombineEmbeds"
+    },
+    {
+        "id": 316,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "8a5886a4cbcba690818c9b02d0cb3330.jpg"
+        }
+    },
+    {
+        "id": 317,
+        "name": "PrepImageForClipVision"
+    },
+    {
+        "id": 324,
+        "name": "IPAdapterUnifiedLoader",
+        "prompts": {
+            "text": "PLUS (high strength)"
+        }
+    },
+    {
+        "id": 326,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "1ae8e6b616f194fc50c53d02b15801b1.jpg"
+        }
+    },
+    {
+        "id": 327,
+        "name": "IPAdapterEncoder"
+    },
+    {
+        "id": 328,
+        "name": "PrepImageForClipVision"
+    },
+    {
+        "id": 333,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 334,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "diffusers_xl_canny_full.safetensors"
+        }
+    },
+    {
+        "id": 335,
+        "name": "AIO_Preprocessor",
+        "prompts": {
+            "text": "CannyEdgePreprocessor"
+        }
+    },
+    {
+        "id": 338,
+        "name": "IPAdapterNoise"
+    },
+    {
+        "id": 339,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "78d2e1f592b926ec8bc9221afa69662b.jpg"
+        }
+    },
+    {
+        "id": 340,
+        "name": "IPAdapterEncoder"
+    },
+    {
+        "id": 341,
+        "name": "PrepImageForClipVision"
+    },
+    {
+        "id": 348,
+        "name": "SaveImage"
+    },
+    {
+        "id": 349,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 352,
+        "name": "LoadImage"
+    },
+    {
+        "id": 353,
+        "name": "PreviewImage"
+    }
+]

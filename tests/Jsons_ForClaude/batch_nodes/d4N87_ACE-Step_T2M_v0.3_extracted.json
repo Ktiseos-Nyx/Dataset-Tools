@@ -1,0 +1,96 @@
+[
+    {
+        "id": 1,
+        "name": "Caricamento modello - d4N87"
+    },
+    {
+        "id": 2,
+        "name": "Prompt - d4N87"
+    },
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "res_multistep"
+        }
+    },
+    {
+        "id": 3,
+        "name": "Latent - d4N87"
+    },
+    {
+        "id": 4,
+        "name": "Elaborazione - d4N87"
+    },
+    {
+        "id": 14,
+        "name": "TextEncodeAceStepAudio",
+        "prompts": {
+            "text": "saxphone, jazz\t\n",
+            "text_2": "[instrumental]\n[break down]\n[drum fill]\n[chopped samples]"
+        }
+    },
+    {
+        "id": 17,
+        "name": "EmptyAceStepLatentAudio"
+    },
+    {
+        "id": 18,
+        "name": "VAEDecodeAudio"
+    },
+    {
+        "id": 19,
+        "name": "SaveAudio",
+        "prompts": {
+            "text": "audio/ACE_Step"
+        }
+    },
+    {
+        "id": 40,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "ACE_Step\\ACE_Step_v1_3.5B.safetensors"
+        }
+    },
+    {
+        "id": 44,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 45,
+        "name": "ModelSamplingSD3"
+    },
+    {
+        "id": 48,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "**ACE** attualmente utilizza due tipi di prompt: **tag** e **testi**.\n\n- **tag:** utilizzati principalmente per descrivere stili musicali, scene, ecc. Simili ai prompt che utilizziamo per altre generazioni, descrivono principalmente lo stile generale e i requisiti dell'audio, separati da virgole.\n- **testi:** utilizzati principalmente per descrivere i testi, supportano tag di struttura del testo come [strofa], [ritornello] e [bridge] per distinguere le diverse parti del testo. \u00c8 anche possibile inserire i nomi degli strumenti per la musica puramente strumentale.\n\n---\n\n# **Tags (prompt)**\n\nQuelli riportati qui sotto sono alcuni esempi, che possono aiutare a creare un prompt pi\u00f9 utile a ACE-Step\n\n## Mainstream Music Styles\n\nUtilizza combinazioni di tag brevi per generare stili musicali specifici:\n\n- electronic\n- rock\n- pop\n- funk\n-soul\n- cyberpunk\n- Acid jazz\n- electro\n- em (electronic music)\n- soft electric drums\n-melodic\n\n## Tipi di scena\n\nCombina scenari di utilizzo e atmosfere specifiche per generare musica che corrisponda al mood corrispondente:\n\n- background music for parties\n- radio broadcasts\n- workout playlists\n\n## Elementi strumentali\n\n- saxophone\n- jazz\n- piano, violin\n\n## Tipi vocali\n\n- female voice\n- male voice\n- clean vocals\n\n## Termini professionali\n\nUtilizza alcuni termini professionali comunemente usati in musica per controllare con precisione gli effetti musicali:\n\n- 110 bpm (beats per minute is 110)\n- fast tempo\n- slow tempo\n- loops\n- fills\n- acoustic guitar\n- electric bass\n\n# Testo (prompt)\n\n## Tag della struttura del testo\n\n- [outro]\n- [verse]\n- [chorus]\n- [bridge]\n\nAttualmente ACE-Step supporta 19 lingue, ma le seguenti dieci lingue sono supportate meglio:\n\n- English\n- Chinese: **[zh]**\n- Russian: **[ru]**\n- Spanish: **[es]**\n- Japanese: **[ja]**\n- German: **[de]**\n- French: **[fr]**\n- Portuguese: **[pt]**\n- Italian: **[it]**\n- Korean: **[ko]**"
+        }
+    },
+    {
+        "id": 49,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui viene caricato il modello di ACE-Step"
+        }
+    },
+    {
+        "id": 50,
+        "name": "Reroute"
+    },
+    {
+        "id": 51,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui impostate i secondi totali e il numero di tracce che verranno elaborate insieme, una dopo l'altra."
+        }
+    },
+    {
+        "id": 52,
+        "name": "LatentOperationTonemapReinhard"
+    },
+    {
+        "id": 53,
+        "name": "LatentApplyOperationCFG"
+    }
+]

@@ -1,0 +1,2913 @@
+{
+  "last_node_id": 783,
+  "last_link_id": 1308,
+  "nodes": [
+    {
+      "id": 668,
+      "type": "Power Lora Loader (rgthree)",
+      "pos": {
+        "0": 471,
+        "1": 291
+      },
+      "size": {
+        "0": 398.15484619140625,
+        "1": 168.45016479492188
+      },
+      "flags": {
+        "pinned": true
+      },
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1306,
+          "dir": 3
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1297,
+          "dir": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1282
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "dir": 4
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [],
+          "slot_index": 1,
+          "shape": 3,
+          "dir": 4
+        }
+      ],
+      "title": "LoRA - 2",
+      "properties": {
+        "Show Strengths": "Single Strength"
+      },
+      "widgets_values": [
+        null,
+        {
+          "type": "PowerLoraLoaderHeaderWidget"
+        },
+        {
+          "on": false,
+          "lora": "ume_modern_pixelart.safetensors",
+          "strength": 0.6,
+          "strengthTwo": null
+        },
+        {
+          "on": true,
+          "lora": "3dkitten.safetensors",
+          "strength": 0.5,
+          "strengthTwo": null
+        },
+        null,
+        ""
+      ],
+      "color": "#323",
+      "bgcolor": "#535",
+      "shape": 1
+    },
+    {
+      "id": 670,
+      "type": "Power Lora Loader (rgthree)",
+      "pos": {
+        "0": 471,
+        "1": 502
+      },
+      "size": {
+        "0": 397.8378601074219,
+        "1": 168.1352996826172
+      },
+      "flags": {
+        "pinned": true
+      },
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1305,
+          "dir": 3
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1298,
+          "dir": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1275
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "dir": 4
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [],
+          "slot_index": 1,
+          "shape": 3,
+          "dir": 4
+        }
+      ],
+      "title": "LoRA - 3",
+      "properties": {
+        "Show Strengths": "Single Strength"
+      },
+      "widgets_values": [
+        null,
+        {
+          "type": "PowerLoraLoaderHeaderWidget"
+        },
+        {
+          "on": false,
+          "lora": "ume_modern_pixelart.safetensors",
+          "strength": 0.9,
+          "strengthTwo": null
+        },
+        {
+          "on": true,
+          "lora": "3dkitten.safetensors",
+          "strength": 0.75,
+          "strengthTwo": null
+        },
+        null,
+        ""
+      ],
+      "color": "#323",
+      "bgcolor": "#535",
+      "shape": 1
+    },
+    {
+      "id": 671,
+      "type": "Power Lora Loader (rgthree)",
+      "pos": {
+        "0": 472,
+        "1": 712
+      },
+      "size": {
+        "0": 396.9328918457031,
+        "1": 166
+      },
+      "flags": {
+        "pinned": true
+      },
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1304,
+          "dir": 3
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1303,
+          "dir": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1289
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "dir": 4
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [],
+          "slot_index": 1,
+          "shape": 3,
+          "dir": 4
+        }
+      ],
+      "title": "LoRA - 4",
+      "properties": {
+        "Show Strengths": "Single Strength"
+      },
+      "widgets_values": [
+        null,
+        {
+          "type": "PowerLoraLoaderHeaderWidget"
+        },
+        {
+          "on": false,
+          "lora": "ume_modern_pixelart.safetensors",
+          "strength": 0.3,
+          "strengthTwo": null
+        },
+        {
+          "on": true,
+          "lora": "3dkitten.safetensors",
+          "strength": 1,
+          "strengthTwo": null
+        },
+        null,
+        ""
+      ],
+      "color": "#323",
+      "bgcolor": "#535",
+      "shape": 1
+    },
+    {
+      "id": 674,
+      "type": "SaveImage",
+      "pos": {
+        "0": 21,
+        "1": 544
+      },
+      "size": {
+        "0": 436.8682861328125,
+        "1": 347.00579833984375
+      },
+      "flags": {
+        "collapsed": false,
+        "pinned": true
+      },
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 1261
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": 1018,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "outputs": [],
+      "title": "Base Image",
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "shape": 1
+    },
+    {
+      "id": 687,
+      "type": "Power Lora Loader (rgthree)",
+      "pos": {
+        "0": 471,
+        "1": 81
+      },
+      "size": {
+        "0": 397.45941162109375,
+        "1": 167.317138671875
+      },
+      "flags": {
+        "pinned": true
+      },
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1307,
+          "dir": 3
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1296,
+          "dir": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1268
+          ],
+          "slot_index": 0,
+          "shape": 3,
+          "dir": 4
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [],
+          "shape": 3,
+          "dir": 4
+        }
+      ],
+      "title": "LoRA - 1",
+      "properties": {
+        "Show Strengths": "Single Strength"
+      },
+      "widgets_values": [
+        null,
+        {
+          "type": "PowerLoraLoaderHeaderWidget"
+        },
+        {
+          "on": false,
+          "lora": "ume_modern_pixelart.safetensors",
+          "strength": 0.3,
+          "strengthTwo": null
+        },
+        {
+          "on": true,
+          "lora": "3dkitten.safetensors",
+          "strength": 0.25,
+          "strengthTwo": null
+        },
+        null,
+        ""
+      ],
+      "color": "#323",
+      "bgcolor": "#535",
+      "shape": 1
+    },
+    {
+      "id": 689,
+      "type": "workflow>positive prompt guidance",
+      "pos": {
+        "0": 21,
+        "1": 71
+      },
+      "size": {
+        "0": 438.09808349609375,
+        "1": 153.71656799316406
+      },
+      "flags": {
+        "collapsed": false,
+        "pinned": true
+      },
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1302
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            1263,
+            1269,
+            1276,
+            1283,
+            1290
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "title": "Prompt",
+      "properties": {
+        "Node name for S&R": "workflow/positive prompt guidance"
+      },
+      "widgets_values": [
+        "3dkitten, An eye-level, high-angle, 3D, animated cartoonish grey-white cat with big, round, black eyes looks at the camera while holding an iphone in its right hand. The cat has a round nose, a small mouth, and a small nose. The eyes are wide and round, and the whiskers are long and thin. The ears are large, rounded, and gray-brown. The phone in the left hand is a dark blue color, and it is held in a right-hand position with the fingers wrapped around the back of the cat's body to hold the phone. The background is a light blue-grayish-white color, making the cat and phone the focus of the image.",
+        3.5
+      ],
+      "color": "#232",
+      "bgcolor": "#353",
+      "shape": 1
+    },
+    {
+      "id": 699,
+      "type": "SaveImage",
+      "pos": {
+        "0": 889,
+        "1": 72
+      },
+      "size": {
+        "0": 455.6142272949219,
+        "1": 377.417236328125
+      },
+      "flags": {
+        "pinned": true
+      },
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 1267
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": 1014,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "outputs": [],
+      "title": "LoRA - 1",
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "shape": 1
+    },
+    {
+      "id": 700,
+      "type": "SaveImage",
+      "pos": {
+        "0": 1372.241943359375,
+        "1": 70.75816345214844
+      },
+      "size": {
+        "0": 455.3815612792969,
+        "1": 378.7293701171875
+      },
+      "flags": {
+        "pinned": true
+      },
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 1281
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": 1015,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "outputs": [],
+      "title": "LoRA - 2",
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "shape": 1
+    },
+    {
+      "id": 701,
+      "type": "SaveImage",
+      "pos": {
+        "0": 891,
+        "1": 500
+      },
+      "size": {
+        "0": 456.4582214355469,
+        "1": 379.2395935058594
+      },
+      "flags": {
+        "pinned": true
+      },
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 1274
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": 1016,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "outputs": [],
+      "title": "LoRA - 3",
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "shape": 1
+    },
+    {
+      "id": 704,
+      "type": "SaveImage",
+      "pos": {
+        "0": 1371,
+        "1": 501
+      },
+      "size": {
+        "0": 456.1060791015625,
+        "1": 377.56768798828125
+      },
+      "flags": {
+        "pinned": true
+      },
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 1288
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": 1017,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "outputs": [],
+      "title": "LoRA - 4",
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "shape": 1
+    },
+    {
+      "id": 727,
+      "type": "workflow>File name",
+      "pos": {
+        "0": 1697,
+        "1": 942
+      },
+      "size": {
+        "0": 315,
+        "1": 234
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            1014
+          ]
+        },
+        {
+          "name": "Name STRING",
+          "type": "STRING",
+          "links": [
+            1015
+          ]
+        },
+        {
+          "name": "Name 2 STRING",
+          "type": "STRING",
+          "links": [
+            1016
+          ]
+        },
+        {
+          "name": "Name 3 STRING",
+          "type": "STRING",
+          "links": [
+            1017
+          ]
+        },
+        {
+          "name": "Name 4 STRING",
+          "type": "STRING",
+          "links": [
+            1018
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow>File name"
+      },
+      "widgets_values": [
+        "./LoRA_Test/%Y-%m-%d/Flux_1_",
+        "./LoRA_Test/%Y-%m-%d/Flux_2_",
+        "./LoRA_Test/%Y-%m-%d/Flux_3_",
+        "./LoRA_Test/%Y-%m-%d/Flux_4_",
+        "./LoRA_Test/%Y-%m-%d/Flux_0_"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 745,
+      "type": "CLIPTextEncode",
+      "pos": {
+        "0": 21,
+        "1": 266
+      },
+      "size": {
+        "0": 436.90313720703125,
+        "1": 76
+      },
+      "flags": {
+        "pinned": true
+      },
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1301
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            1264,
+            1270,
+            1277,
+            1284,
+            1291
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Negative prompt",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 747,
+      "type": "VAELoader",
+      "pos": {
+        "0": 317,
+        "1": 942
+      },
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            1266,
+            1273,
+            1280,
+            1287,
+            1294
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "VAE",
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "diffusion_pytorch_model.safetensors"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 758,
+      "type": "workflow>Settings",
+      "pos": {
+        "0": 21,
+        "1": 381
+      },
+      "size": {
+        "0": 437.1399230957031,
+        "1": 126
+      },
+      "flags": {
+        "pinned": true
+      },
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            1265,
+            1271,
+            1278,
+            1285,
+            1292
+          ]
+        },
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            1272,
+            1279,
+            1286,
+            1293
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow>Settings"
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        1,
+        40
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 776,
+      "type": "workflow>Base sampler",
+      "pos": {
+        "0": 604,
+        "1": 942
+      },
+      "size": {
+        "0": 315,
+        "1": 282
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1308
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 1263
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 1264
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 1265
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 1266
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1261
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow>Base sampler"
+      },
+      "widgets_values": [
+        5,
+        "increment",
+        100,
+        8,
+        "dpmpp_2m",
+        "sgm_uniform",
+        1
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 777,
+      "type": "workflow>LoRA - 1",
+      "pos": {
+        "0": 979,
+        "1": 942
+      },
+      "size": {
+        "0": 315,
+        "1": 282
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1268
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 1269
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 1270
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 1271
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 1273
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": 1272,
+          "widget": {
+            "name": "steps"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1267
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow>LoRA - 1"
+      },
+      "widgets_values": [
+        5,
+        "increment",
+        8,
+        "dpmpp_2m",
+        "sgm_uniform",
+        1,
+        20
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 778,
+      "type": "workflow>LoRA - 3",
+      "pos": {
+        "0": 1161,
+        "1": 942
+      },
+      "size": {
+        "0": 315,
+        "1": 282
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1275
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 1276
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 1277
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 1278
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 1280
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": 1279,
+          "widget": {
+            "name": "steps"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1274
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow>LoRA - 3"
+      },
+      "widgets_values": [
+        5,
+        "increment",
+        8,
+        "dpmpp_2m",
+        "sgm_uniform",
+        1,
+        20
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 779,
+      "type": "workflow>LoRA - 2",
+      "pos": {
+        "0": 1399,
+        "1": 942
+      },
+      "size": {
+        "0": 315,
+        "1": 282
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1282
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 1283
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 1284
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 1285
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 1287
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": 1286,
+          "widget": {
+            "name": "steps"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1281
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow>LoRA - 2"
+      },
+      "widgets_values": [
+        5,
+        "increment",
+        8,
+        "dpmpp_2m",
+        "sgm_uniform",
+        1,
+        20
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 780,
+      "type": "workflow>LoRA - 4",
+      "pos": {
+        "0": 1545,
+        "1": 942
+      },
+      "size": {
+        "0": 315,
+        "1": 282
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1289
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 1290
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 1291
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 1292
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 1294
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": 1293,
+          "widget": {
+            "name": "steps"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1288
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow>LoRA - 4"
+      },
+      "widgets_values": [
+        5,
+        "increment",
+        8,
+        "dpmpp_2m",
+        "sgm_uniform",
+        1,
+        20
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 782,
+      "type": "TripleCLIPLoader",
+      "pos": {
+        "0": 190,
+        "1": 943
+      },
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            1296,
+            1297,
+            1298,
+            1301,
+            1302,
+            1303
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Clip",
+      "properties": {
+        "Node name for S&R": "TripleCLIPLoader"
+      },
+      "widgets_values": [
+        "clip_g.safetensors",
+        "clip_l.safetensors",
+        "t5xxl_fp16.safetensors"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 783,
+      "type": "UnetLoaderGGUF",
+      "pos": {
+        "0": 48,
+        "1": 942
+      },
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1304,
+            1305,
+            1306,
+            1307,
+            1308
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Model",
+      "properties": {
+        "Node name for S&R": "UnetLoaderGGUF"
+      },
+      "widgets_values": [
+        "stableDiffusion35Large_q80.gguf"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    }
+  ],
+  "links": [
+    [
+      1014,
+      727,
+      0,
+      699,
+      1,
+      "STRING"
+    ],
+    [
+      1015,
+      727,
+      1,
+      700,
+      1,
+      "STRING"
+    ],
+    [
+      1016,
+      727,
+      2,
+      701,
+      1,
+      "STRING"
+    ],
+    [
+      1017,
+      727,
+      3,
+      704,
+      1,
+      "STRING"
+    ],
+    [
+      1018,
+      727,
+      4,
+      674,
+      1,
+      "STRING"
+    ],
+    [
+      1261,
+      776,
+      0,
+      674,
+      0,
+      "IMAGE"
+    ],
+    [
+      1263,
+      689,
+      0,
+      776,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      1264,
+      745,
+      0,
+      776,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      1265,
+      758,
+      0,
+      776,
+      3,
+      "LATENT"
+    ],
+    [
+      1266,
+      747,
+      0,
+      776,
+      4,
+      "VAE"
+    ],
+    [
+      1267,
+      777,
+      0,
+      699,
+      0,
+      "IMAGE"
+    ],
+    [
+      1268,
+      687,
+      0,
+      777,
+      0,
+      "MODEL"
+    ],
+    [
+      1269,
+      689,
+      0,
+      777,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      1270,
+      745,
+      0,
+      777,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      1271,
+      758,
+      0,
+      777,
+      3,
+      "LATENT"
+    ],
+    [
+      1272,
+      758,
+      1,
+      777,
+      5,
+      "INT"
+    ],
+    [
+      1273,
+      747,
+      0,
+      777,
+      4,
+      "VAE"
+    ],
+    [
+      1274,
+      778,
+      0,
+      701,
+      0,
+      "IMAGE"
+    ],
+    [
+      1275,
+      670,
+      0,
+      778,
+      0,
+      "MODEL"
+    ],
+    [
+      1276,
+      689,
+      0,
+      778,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      1277,
+      745,
+      0,
+      778,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      1278,
+      758,
+      0,
+      778,
+      3,
+      "LATENT"
+    ],
+    [
+      1279,
+      758,
+      1,
+      778,
+      5,
+      "INT"
+    ],
+    [
+      1280,
+      747,
+      0,
+      778,
+      4,
+      "VAE"
+    ],
+    [
+      1281,
+      779,
+      0,
+      700,
+      0,
+      "IMAGE"
+    ],
+    [
+      1282,
+      668,
+      0,
+      779,
+      0,
+      "MODEL"
+    ],
+    [
+      1283,
+      689,
+      0,
+      779,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      1284,
+      745,
+      0,
+      779,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      1285,
+      758,
+      0,
+      779,
+      3,
+      "LATENT"
+    ],
+    [
+      1286,
+      758,
+      1,
+      779,
+      5,
+      "INT"
+    ],
+    [
+      1287,
+      747,
+      0,
+      779,
+      4,
+      "VAE"
+    ],
+    [
+      1288,
+      780,
+      0,
+      704,
+      0,
+      "IMAGE"
+    ],
+    [
+      1289,
+      671,
+      0,
+      780,
+      0,
+      "MODEL"
+    ],
+    [
+      1290,
+      689,
+      0,
+      780,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      1291,
+      745,
+      0,
+      780,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      1292,
+      758,
+      0,
+      780,
+      3,
+      "LATENT"
+    ],
+    [
+      1293,
+      758,
+      1,
+      780,
+      5,
+      "INT"
+    ],
+    [
+      1294,
+      747,
+      0,
+      780,
+      4,
+      "VAE"
+    ],
+    [
+      1296,
+      782,
+      0,
+      687,
+      1,
+      "CLIP"
+    ],
+    [
+      1297,
+      782,
+      0,
+      668,
+      1,
+      "CLIP"
+    ],
+    [
+      1298,
+      782,
+      0,
+      670,
+      1,
+      "CLIP"
+    ],
+    [
+      1301,
+      782,
+      0,
+      745,
+      0,
+      "CLIP"
+    ],
+    [
+      1302,
+      782,
+      0,
+      689,
+      0,
+      "CLIP"
+    ],
+    [
+      1303,
+      782,
+      0,
+      671,
+      1,
+      "CLIP"
+    ],
+    [
+      1304,
+      783,
+      0,
+      671,
+      0,
+      "MODEL"
+    ],
+    [
+      1305,
+      783,
+      0,
+      670,
+      0,
+      "MODEL"
+    ],
+    [
+      1306,
+      783,
+      0,
+      668,
+      0,
+      "MODEL"
+    ],
+    [
+      1307,
+      783,
+      0,
+      687,
+      0,
+      "MODEL"
+    ],
+    [
+      1308,
+      783,
+      0,
+      776,
+      0,
+      "MODEL"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "SDXL LoRA TEST",
+      "bounding": [
+        1,
+        1,
+        1846,
+        897
+      ],
+      "color": "#696969",
+      "font_size": 24,
+      "flags": {
+        "pinned": true
+      }
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.1,
+      "offset": [
+        193.7954444744113,
+        -269.1784343331158
+      ]
+    },
+    "groupNodes": {
+      "positive prompt guidance": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "CLIPTextEncode",
+            "pos": {
+              "0": 115,
+              "1": 4180
+            },
+            "size": {
+              "0": 422.84503173828125,
+              "1": 164.31304931640625
+            },
+            "flags": {},
+            "order": 87,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "clip",
+                "type": "CLIP",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "CLIPTextEncode"
+            },
+            "widgets_values": [
+              "Vintage low-poly style with coarse textures, reminiscent of PS1 and PS2 era gaming graphics. a rugged, heavy-duty truck"
+            ],
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "FluxGuidance",
+            "pos": {
+              "0": 735.5810546875,
+              "1": 4220.24267578125
+            },
+            "size": {
+              "0": 317.4000244140625,
+              "1": 58
+            },
+            "flags": {},
+            "order": 120,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "conditioning",
+                "type": "CONDITIONING",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "FluxGuidance"
+            },
+            "widgets_values": [
+              3.5
+            ],
+            "index": 1
+          }
+        ],
+        "links": [
+          [
+            0,
+            0,
+            1,
+            0,
+            353,
+            "CONDITIONING"
+          ]
+        ],
+        "external": []
+      },
+      "Settings": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "EmptySD3LatentImage",
+            "pos": {
+              "0": -581,
+              "1": 1213
+            },
+            "size": {
+              "0": 315,
+              "1": 106
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "EmptySD3LatentImage"
+            },
+            "widgets_values": [
+              1024,
+              1024,
+              1
+            ],
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "JWInteger",
+            "pos": {
+              "0": -585,
+              "1": 1362
+            },
+            "size": {
+              "0": 315,
+              "1": 58
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "INT",
+                "type": "INT",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "JWInteger"
+            },
+            "widgets_values": [
+              100
+            ],
+            "index": 1
+          }
+        ],
+        "links": [],
+        "external": [
+          [
+            0,
+            0,
+            "LATENT"
+          ],
+          [
+            1,
+            0,
+            "INT"
+          ]
+        ],
+        "config": {
+          "0": {
+            "input": {
+              "batch_size": {
+                "visible": false
+              }
+            }
+          },
+          "1": {
+            "input": {
+              "value": {
+                "name": "Steps"
+              }
+            }
+          }
+        }
+      },
+      "File name": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "JWDatetimeString",
+            "pos": {
+              "0": 890,
+              "1": 954
+            },
+            "size": {
+              "0": 315,
+              "1": 58
+            },
+            "flags": {
+              "collapsed": true
+            },
+            "order": 2,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "title": "Name",
+            "properties": {
+              "Node name for S&R": "JWDatetimeString"
+            },
+            "widgets_values": [
+              "./LoRA_Test/%Y-%m-%d/Flux_1_"
+            ],
+            "shape": 1,
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "JWDatetimeString",
+            "pos": {
+              "0": 1350,
+              "1": 956
+            },
+            "size": {
+              "0": 315,
+              "1": 58
+            },
+            "flags": {
+              "collapsed": true
+            },
+            "order": 3,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "title": "Name",
+            "properties": {
+              "Node name for S&R": "JWDatetimeString"
+            },
+            "widgets_values": [
+              "./LoRA_Test/%Y-%m-%d/Flux_2_"
+            ],
+            "shape": 1,
+            "index": 1
+          },
+          {
+            "id": -1,
+            "type": "JWDatetimeString",
+            "pos": {
+              "0": 1691,
+              "1": 957
+            },
+            "size": {
+              "0": 315,
+              "1": 58
+            },
+            "flags": {
+              "collapsed": true
+            },
+            "order": 4,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "title": "Name",
+            "properties": {
+              "Node name for S&R": "JWDatetimeString"
+            },
+            "widgets_values": [
+              "./LoRA_Test/%Y-%m-%d/Flux_3_"
+            ],
+            "shape": 1,
+            "index": 2
+          },
+          {
+            "id": -1,
+            "type": "JWDatetimeString",
+            "pos": {
+              "0": 1236,
+              "1": 955
+            },
+            "size": {
+              "0": 315,
+              "1": 58
+            },
+            "flags": {
+              "collapsed": true
+            },
+            "order": 5,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "title": "Name",
+            "properties": {
+              "Node name for S&R": "JWDatetimeString"
+            },
+            "widgets_values": [
+              "./LoRA_Test/%Y-%m-%d/Flux_4_"
+            ],
+            "shape": 1,
+            "index": 3
+          },
+          {
+            "id": -1,
+            "type": "JWDatetimeString",
+            "pos": {
+              "0": 500,
+              "1": 987
+            },
+            "size": {
+              "0": 315,
+              "1": 58
+            },
+            "flags": {
+              "collapsed": true
+            },
+            "order": 7,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "title": "Name",
+            "properties": {
+              "Node name for S&R": "JWDatetimeString"
+            },
+            "widgets_values": [
+              "./LoRA_Test/%Y-%m-%d/Flux_0_"
+            ],
+            "shape": 1,
+            "index": 4
+          }
+        ],
+        "links": [],
+        "external": [
+          [
+            0,
+            0,
+            "STRING"
+          ],
+          [
+            1,
+            0,
+            "STRING"
+          ],
+          [
+            2,
+            0,
+            "STRING"
+          ],
+          [
+            3,
+            0,
+            "STRING"
+          ],
+          [
+            4,
+            0,
+            "STRING"
+          ]
+        ]
+      },
+      "LoRA - 4": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "KSampler",
+            "pos": {
+              "0": 1448,
+              "1": 1614
+            },
+            "size": {
+              "0": 315,
+              "1": 262
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "MODEL",
+                "link": null
+              },
+              {
+                "name": "positive",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "negative",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "latent_image",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "steps",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "steps"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "title": "LoRA - 4",
+            "properties": {
+              "Node name for S&R": "KSampler"
+            },
+            "widgets_values": [
+              1,
+              "increment",
+              20,
+              8,
+              "dpmpp_2m",
+              "sgm_uniform",
+              1
+            ],
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "VAEDecode",
+            "pos": {
+              "0": 1922.6422119140625,
+              "1": 1627.4107666015625
+            },
+            "size": {
+              "0": 210,
+              "1": 46
+            },
+            "flags": {},
+            "order": 15,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "samples",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEDecode"
+            },
+            "index": 1
+          }
+        ],
+        "links": [
+          [
+            null,
+            0,
+            0,
+            0,
+            671,
+            "MODEL"
+          ],
+          [
+            null,
+            0,
+            0,
+            1,
+            689,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            0,
+            0,
+            2,
+            745,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            0,
+            0,
+            3,
+            758,
+            "LATENT"
+          ],
+          [
+            null,
+            1,
+            0,
+            4,
+            758,
+            "INT"
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            774,
+            "LATENT"
+          ],
+          [
+            null,
+            0,
+            1,
+            1,
+            747,
+            "VAE"
+          ]
+        ],
+        "external": [
+          [
+            1,
+            0,
+            "IMAGE"
+          ]
+        ]
+      },
+      "LoRA - 1": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "KSampler",
+            "pos": {
+              "0": 683,
+              "1": 982
+            },
+            "size": {
+              "0": 315,
+              "1": 262
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "MODEL",
+                "link": null
+              },
+              {
+                "name": "positive",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "negative",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "latent_image",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "steps",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "steps"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "title": "LoRA - 1",
+            "properties": {
+              "Node name for S&R": "KSampler"
+            },
+            "widgets_values": [
+              1,
+              "increment",
+              20,
+              8,
+              "dpmpp_2m",
+              "sgm_uniform",
+              1
+            ],
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "VAEDecode",
+            "pos": {
+              "0": 677,
+              "1": 1336
+            },
+            "size": {
+              "0": 210,
+              "1": 46
+            },
+            "flags": {},
+            "order": 15,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "samples",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEDecode"
+            },
+            "index": 1
+          }
+        ],
+        "links": [
+          [
+            null,
+            0,
+            0,
+            0,
+            687,
+            "MODEL"
+          ],
+          [
+            null,
+            0,
+            0,
+            1,
+            689,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            0,
+            0,
+            2,
+            745,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            0,
+            0,
+            3,
+            758,
+            "LATENT"
+          ],
+          [
+            null,
+            1,
+            0,
+            4,
+            758,
+            "INT"
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            768,
+            "LATENT"
+          ],
+          [
+            null,
+            0,
+            1,
+            1,
+            747,
+            "VAE"
+          ]
+        ],
+        "external": [
+          [
+            1,
+            0,
+            "IMAGE"
+          ]
+        ]
+      },
+      "LoRA - 3": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "KSampler",
+            "pos": {
+              "0": 1046,
+              "1": 994
+            },
+            "size": {
+              "0": 315,
+              "1": 262
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "MODEL",
+                "link": null
+              },
+              {
+                "name": "positive",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "negative",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "latent_image",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "steps",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "steps"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "title": "LoRA - 3",
+            "properties": {
+              "Node name for S&R": "KSampler"
+            },
+            "widgets_values": [
+              1,
+              "increment",
+              20,
+              8,
+              "dpmpp_2m",
+              "sgm_uniform",
+              1
+            ],
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "VAEDecode",
+            "pos": {
+              "0": 1039,
+              "1": 1338
+            },
+            "size": {
+              "0": 210,
+              "1": 46
+            },
+            "flags": {},
+            "order": 15,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "samples",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEDecode"
+            },
+            "index": 1
+          }
+        ],
+        "links": [
+          [
+            null,
+            0,
+            0,
+            0,
+            670,
+            "MODEL"
+          ],
+          [
+            null,
+            0,
+            0,
+            1,
+            689,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            0,
+            0,
+            2,
+            745,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            0,
+            0,
+            3,
+            758,
+            "LATENT"
+          ],
+          [
+            null,
+            1,
+            0,
+            4,
+            758,
+            "INT"
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            770,
+            "LATENT"
+          ],
+          [
+            null,
+            0,
+            1,
+            1,
+            747,
+            "VAE"
+          ]
+        ],
+        "external": [
+          [
+            1,
+            0,
+            "IMAGE"
+          ]
+        ]
+      },
+      "LoRA - 2": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "KSampler",
+            "pos": {
+              "0": 1503,
+              "1": 1109
+            },
+            "size": {
+              "0": 315,
+              "1": 262
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "MODEL",
+                "link": null
+              },
+              {
+                "name": "positive",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "negative",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "latent_image",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "steps",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "steps"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "title": "LoRA - 2",
+            "properties": {
+              "Node name for S&R": "KSampler"
+            },
+            "widgets_values": [
+              1,
+              "increment",
+              20,
+              8,
+              "dpmpp_2m",
+              "sgm_uniform",
+              1
+            ],
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "VAEDecode",
+            "pos": {
+              "0": 1851,
+              "1": 1111
+            },
+            "size": {
+              "0": 210,
+              "1": 46
+            },
+            "flags": {},
+            "order": 15,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "samples",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEDecode"
+            },
+            "index": 1
+          }
+        ],
+        "links": [
+          [
+            null,
+            0,
+            0,
+            0,
+            668,
+            "MODEL"
+          ],
+          [
+            null,
+            0,
+            0,
+            1,
+            689,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            0,
+            0,
+            2,
+            745,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            0,
+            0,
+            3,
+            758,
+            "LATENT"
+          ],
+          [
+            null,
+            1,
+            0,
+            4,
+            758,
+            "INT"
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            772,
+            "LATENT"
+          ],
+          [
+            null,
+            0,
+            1,
+            1,
+            747,
+            "VAE"
+          ]
+        ],
+        "external": [
+          [
+            1,
+            0,
+            "IMAGE"
+          ]
+        ]
+      },
+      "Base sampler": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "KSampler",
+            "pos": {
+              "0": -77,
+              "1": 1046
+            },
+            "size": {
+              "0": 315,
+              "1": 262
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "MODEL",
+                "link": null
+              },
+              {
+                "name": "positive",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "negative",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "latent_image",
+                "type": "LATENT",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "KSampler"
+            },
+            "widgets_values": [
+              1,
+              "increment",
+              100,
+              8,
+              "dpmpp_2m",
+              "sgm_uniform",
+              1
+            ],
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "VAEDecode",
+            "pos": {
+              "0": 320,
+              "1": 1037
+            },
+            "size": {
+              "0": 210,
+              "1": 46
+            },
+            "flags": {},
+            "order": 15,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "samples",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEDecode"
+            },
+            "index": 1
+          }
+        ],
+        "links": [
+          [
+            null,
+            0,
+            0,
+            0,
+            734,
+            "MODEL"
+          ],
+          [
+            null,
+            0,
+            0,
+            1,
+            689,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            0,
+            0,
+            2,
+            745,
+            "CONDITIONING"
+          ],
+          [
+            null,
+            0,
+            0,
+            3,
+            758,
+            "LATENT"
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            766,
+            "LATENT"
+          ],
+          [
+            null,
+            0,
+            1,
+            1,
+            747,
+            "VAE"
+          ]
+        ],
+        "external": [
+          [
+            1,
+            0,
+            "IMAGE"
+          ]
+        ]
+      }
+    }
+  },
+  "version": 0.4
+}

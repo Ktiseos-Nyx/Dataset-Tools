@@ -1,0 +1,171 @@
+[
+    {
+        "id": 8,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a beautifull 30 years old unordinary woman sit in a stair in front of her house, at sunset, smiling, detailed visible hand, gloomy"
+        }
+    },
+    {
+        "id": 9,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(worst quality, low quality, normal quality:2), artifacts, close up, (bad anatomy, bad proportions:1.8), (poorly drawn:1.3), monochrome, greyscale, white cum, (extra limbs, bad fingers, missing fingers, extra fingers, fused fingers, fused limbs, fused hands, floating limbs, disembodied limbs, blur, blurry, depth of field, bad hands, extra hands, bad fingers, bad skins, bad features:1.5), fat, child, teen, belly fat, doll, huge breasts, large breasts, bad or inverted knuckles, bad fabrics, bad clothes, bad fluid, anal fluid, high heels, bad genitals, misplaced genitals,watermark, filigree, text, logo, signature, overbright, oversaturated, (deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime), text, cropped, out of frame, worst quality, low quality, jpeg artifacts, duplicate, mutilated, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, dehydrated, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, too many fingers, long neck, long labias, long legs, long feet, expressionless, boring, letters, deformed letters, broken letters, unrecognizable letters, unrecognizable text, broken kanji, fake kanji, fake letters, fake words, fake text, deformed iris, deformed pupils, deformed feet, out of frame, bad feet, closed eyes, (head out of frame:1.3), bad framing, (close-up:1.4), bad vulva, bad architecture, chubby, close up, nsfw, naked, nude"
+        }
+    },
+    {
+        "id": 10,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 11,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 15,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 16,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 17,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "detailed perfect unordinary face, detailed perfect green eyes, detailed perfectly round iris, detailed perfect teeth, skin details, visible pores, vibrant hair"
+        }
+    },
+    {
+        "id": 20,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 21,
+        "name": "Reroute"
+    },
+    {
+        "id": 22,
+        "name": "Reroute"
+    },
+    {
+        "id": 23,
+        "name": "Reroute"
+    },
+    {
+        "id": 24,
+        "name": "Reroute"
+    },
+    {
+        "id": 25,
+        "name": "Reroute"
+    },
+    {
+        "id": 27,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 33,
+        "name": "CR Upscale Image",
+        "prompts": {
+            "text": "x1_ITF_SkinDiffDetail_Lite_v1.pth"
+        }
+    },
+    {
+        "id": 40,
+        "name": "KSampler Cycle",
+        "prompts": {
+            "text": "dpmpp_3m_sde"
+        }
+    },
+    {
+        "id": 41,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_NMKD-Siax_200k.pth"
+        }
+    },
+    {
+        "id": 53,
+        "name": "Efficient Loader",
+        "prompts": {
+            "text": "epicphotogasm_x.safetensors"
+        }
+    },
+    {
+        "id": 54,
+        "name": "SaveImage"
+    },
+    {
+        "id": 57,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "dpmpp_3m_sde",
+            "text_2": "detailed perfect hands, detailed perfect fingers, detailed perfect nails, skin details, visible pores"
+        }
+    },
+    {
+        "id": 58,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8s.pt"
+        }
+    },
+    {
+        "id": 59,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 60,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 68,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 70,
+        "name": "Reroute"
+    },
+    {
+        "id": 76,
+        "name": "Note",
+        "prompts": {
+            "text": "<<<<you can choose to bypass ADetailer here>>>>"
+        }
+    },
+    {
+        "id": 92,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 93,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 95,
+        "name": "Image Style Filter"
+    },
+    {
+        "id": 103,
+        "name": "LoRA Stacker",
+        "prompts": {
+            "text": "epiCRealismHelper.safetensors",
+            "text_2": "more_details.safetensors"
+        }
+    },
+    {
+        "id": 104,
+        "name": "SaveImage"
+    }
+]

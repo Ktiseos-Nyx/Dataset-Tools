@@ -1,0 +1,107 @@
+[
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "cosxl_edit.safetensors"
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "low quality"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 13,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_temp_ayyqd_00003_.png"
+        }
+    },
+    {
+        "id": 41,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 52,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 53,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 55,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 58,
+        "name": "InstructPixToPixConditioning"
+    },
+    {
+        "id": 59,
+        "name": "DualCFGGuider"
+    },
+    {
+        "id": 60,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 62,
+        "name": "ArtistsImage_Zho",
+        "prompts": {
+            "text": "James Gilleard.png"
+        }
+    },
+    {
+        "id": 63,
+        "name": "MovementsImage_Zho",
+        "prompts": {
+            "text": "Generative Art.png"
+        }
+    },
+    {
+        "id": 64,
+        "name": "StylesImage_Zho",
+        "prompts": {
+            "text": "Watercolor.png"
+        }
+    },
+    {
+        "id": 66,
+        "name": "ConcatText_Zho",
+        "prompts": {
+            "text": "high quality"
+        }
+    },
+    {
+        "id": 67,
+        "name": "ConcatText_Zho"
+    },
+    {
+        "id": 68,
+        "name": "ConcatText_Zho"
+    },
+    {
+        "id": 69,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 70,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 71,
+        "name": "Any Switch (rgthree)"
+    }
+]

@@ -1,0 +1,810 @@
+{
+  "extra": {
+    "ds": {
+      "scale": 0.8264462809917362,
+      "offset": [
+        488.95118122720856,
+        51.23573155873587
+      ]
+    },
+    "info": {
+      "name": "workflow",
+      "author": "",
+      "created": "2024-08-05T06:15:49.737Z",
+      "version": "1",
+      "modified": "2024-09-03T06:46:17.006Z",
+      "software": "ComfyUI",
+      "description": ""
+    }
+  },
+  "links": [
+    [
+      46,
+      30,
+      2,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      51,
+      27,
+      0,
+      31,
+      3,
+      "LATENT"
+    ],
+    [
+      52,
+      31,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      57,
+      35,
+      0,
+      31,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      58,
+      30,
+      0,
+      38,
+      0,
+      "MODEL"
+    ],
+    [
+      59,
+      30,
+      1,
+      38,
+      1,
+      "CLIP"
+    ],
+    [
+      68,
+      41,
+      0,
+      31,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      70,
+      42,
+      0,
+      35,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      72,
+      43,
+      0,
+      44,
+      0,
+      "UPSCALE_MODEL"
+    ],
+    [
+      73,
+      8,
+      0,
+      44,
+      1,
+      "IMAGE"
+    ],
+    [
+      74,
+      44,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      75,
+      38,
+      0,
+      49,
+      0,
+      "MODEL"
+    ],
+    [
+      76,
+      38,
+      1,
+      49,
+      1,
+      "CLIP"
+    ],
+    [
+      80,
+      49,
+      0,
+      50,
+      0,
+      "MODEL"
+    ],
+    [
+      81,
+      49,
+      1,
+      50,
+      1,
+      "CLIP"
+    ],
+    [
+      82,
+      50,
+      0,
+      31,
+      0,
+      "MODEL"
+    ],
+    [
+      83,
+      50,
+      1,
+      41,
+      0,
+      "CLIP"
+    ],
+    [
+      84,
+      50,
+      1,
+      42,
+      0,
+      "CLIP"
+    ]
+  ],
+  "nodes": [
+    {
+      "id": 34,
+      "pos": {
+        "0": 831,
+        "1": 501
+      },
+      "mode": 0,
+      "size": {
+        "0": 282.8617858886719,
+        "1": 164.08004760742188
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 0,
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "Note that Flux dev and schnell do not have any negative prompt so CFG should be set to 1.0. Setting CFG to 1.0 means the negative prompt is ignored."
+      ]
+    },
+    {
+      "id": 35,
+      "pos": {
+        "0": 576,
+        "1": 96
+      },
+      "mode": 0,
+      "size": {
+        "0": 211.6000061035156,
+        "1": 58
+      },
+      "type": "FluxGuidance",
+      "flags": {},
+      "order": 9,
+      "inputs": [
+        {
+          "link": 70,
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "label": "conditioning",
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "label": "CONDITIONING",
+          "links": [
+            57
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FluxGuidance"
+      },
+      "widgets_values": [
+        3.5
+      ]
+    },
+    {
+      "id": 41,
+      "pos": {
+        "0": 398,
+        "1": 529
+      },
+      "mode": 0,
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "type": "CLIPTextEncode",
+      "flags": {
+        "collapsed": true
+      },
+      "order": 7,
+      "inputs": [
+        {
+          "link": 83,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "label": "CONDITIONING",
+          "links": [
+            68
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 31,
+      "pos": {
+        "0": 816,
+        "1": 192
+      },
+      "mode": 0,
+      "size": {
+        "0": 315,
+        "1": 262
+      },
+      "type": "KSampler",
+      "flags": {},
+      "order": 10,
+      "inputs": [
+        {
+          "link": 82,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 57,
+          "name": "positive",
+          "type": "CONDITIONING",
+          "label": "positive"
+        },
+        {
+          "link": 68,
+          "name": "negative",
+          "type": "CONDITIONING",
+          "label": "negative",
+          "slot_index": 2
+        },
+        {
+          "link": 51,
+          "name": "latent_image",
+          "type": "LATENT",
+          "label": "latent_image"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "label": "LATENT",
+          "links": [
+            52
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        934641229406892,
+        "randomize",
+        20,
+        1,
+        "euler",
+        "normal",
+        1
+      ]
+    },
+    {
+      "id": 8,
+      "pos": {
+        "0": 846,
+        "1": 726
+      },
+      "mode": 0,
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "type": "VAEDecode",
+      "flags": {},
+      "order": 11,
+      "inputs": [
+        {
+          "link": 52,
+          "name": "samples",
+          "type": "LATENT",
+          "label": "samples"
+        },
+        {
+          "link": 46,
+          "name": "vae",
+          "type": "VAE",
+          "label": "vae"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "label": "IMAGE",
+          "links": [
+            73
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 9,
+      "pos": {
+        "0": 1158,
+        "1": 137
+      },
+      "mode": 0,
+      "size": {
+        "0": 985.3012084960938,
+        "1": 1060.3828125
+      },
+      "type": "SaveImage",
+      "flags": {},
+      "order": 13,
+      "inputs": [
+        {
+          "link": 74,
+          "name": "images",
+          "type": "IMAGE",
+          "label": "images"
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "TensorArt"
+      ]
+    },
+    {
+      "id": 44,
+      "pos": {
+        "0": 431,
+        "1": 760
+      },
+      "mode": 0,
+      "size": {
+        "0": 241.79998779296875,
+        "1": 46
+      },
+      "type": "ImageUpscaleWithModel",
+      "flags": {},
+      "order": 12,
+      "inputs": [
+        {
+          "link": 72,
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "label": "upscale_model"
+        },
+        {
+          "link": 73,
+          "name": "image",
+          "type": "IMAGE",
+          "label": "image"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "label": "IMAGE",
+          "links": [
+            74
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageUpscaleWithModel"
+      }
+    },
+    {
+      "id": 30,
+      "pos": {
+        "0": 4,
+        "1": 191
+      },
+      "mode": 0,
+      "size": {
+        "0": 315,
+        "1": 122
+      },
+      "type": "CheckpointLoaderSimple",
+      "flags": {},
+      "order": 1,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            58
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [
+            59
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "label": "VAE",
+          "links": [
+            46
+          ],
+          "shape": 3,
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "757279507095956705",
+        "FLUX.1 - dev-fp8"
+      ]
+    },
+    {
+      "id": 38,
+      "pos": {
+        "0": 13,
+        "1": 366
+      },
+      "mode": 0,
+      "size": {
+        "0": 315,
+        "1": 150
+      },
+      "type": "LoraLoader",
+      "flags": {},
+      "order": 4,
+      "inputs": [
+        {
+          "link": 58,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 59,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            75
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [
+            76
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "764836094031419103",
+        "XLabs Flux Realism LoRA - v1.0",
+        1,
+        1
+      ]
+    },
+    {
+      "id": 49,
+      "pos": {
+        "0": 10,
+        "1": 574
+      },
+      "mode": 0,
+      "size": {
+        "0": 315,
+        "1": 150
+      },
+      "type": "LoraLoader",
+      "flags": {},
+      "order": 5,
+      "inputs": [
+        {
+          "link": 75,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 76,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            80
+          ],
+          "shape": 3
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [
+            81
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "773757230731340663",
+        "Flux Detailed Skin - 1.0",
+        1,
+        1
+      ]
+    },
+    {
+      "id": 42,
+      "pos": {
+        "0": 368,
+        "1": 195
+      },
+      "mode": 0,
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "type": "CLIPTextEncode",
+      "flags": {},
+      "order": 8,
+      "inputs": [
+        {
+          "link": 84,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "label": "CONDITIONING",
+          "links": [
+            70
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "A closeup of a super sexy Swedish woman with wavy red hair and piercing blue eyes"
+      ]
+    },
+    {
+      "id": 27,
+      "pos": {
+        "0": 398,
+        "1": 586
+      },
+      "mode": 0,
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "type": "EmptySD3LatentImage",
+      "color": "#323",
+      "flags": {},
+      "order": 2,
+      "inputs": [],
+      "bgcolor": "#535",
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "label": "LATENT",
+          "links": [
+            51
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptySD3LatentImage"
+      },
+      "widgets_values": [
+        768,
+        1152,
+        1
+      ]
+    },
+    {
+      "id": 43,
+      "pos": {
+        "0": 751,
+        "1": 827
+      },
+      "mode": 0,
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "type": "UpscaleModelLoader",
+      "flags": {},
+      "order": 3,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "label": "UPSCALE_MODEL",
+          "links": [
+            72
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UpscaleModelLoader"
+      },
+      "widgets_values": [
+        "RealESRGAN_x4plus.pth"
+      ]
+    },
+    {
+      "id": 50,
+      "pos": {
+        "0": 18,
+        "1": 777
+      },
+      "mode": 4,
+      "size": {
+        "0": 315,
+        "1": 150
+      },
+      "type": "LoraLoader",
+      "flags": {},
+      "order": 6,
+      "inputs": [
+        {
+          "link": 80,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 81,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            82
+          ],
+          "shape": 3
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [
+            83,
+            84
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "",
+        "",
+        1,
+        1
+      ]
+    }
+  ],
+  "config": {},
+  "groups": [],
+  "version": 0.4,
+  "_tensorNodes": [],
+  "last_link_id": 84,
+  "last_node_id": 50
+}

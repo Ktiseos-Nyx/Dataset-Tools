@@ -1,0 +1,1107 @@
+{
+  "last_node_id": 58,
+  "last_link_id": 86,
+  "nodes": [
+    {
+      "id": 41,
+      "type": "UltralyticsDetectorProvider",
+      "pos": [
+        1615,
+        -9
+      ],
+      "size": {
+        "0": 318.318115234375,
+        "1": 92.12886047363281
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "BBOX_DETECTOR",
+          "type": "BBOX_DETECTOR",
+          "links": [
+            61
+          ],
+          "shape": 3
+        },
+        {
+          "name": "SEGM_DETECTOR",
+          "type": "SEGM_DETECTOR",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UltralyticsDetectorProvider"
+      },
+      "widgets_values": [
+        "bbox/Anzhc Face -seg.pt"
+      ]
+    },
+    {
+      "id": 40,
+      "type": "FaceDetailer",
+      "pos": [
+        1247,
+        -30
+      ],
+      "size": {
+        "0": 337.6000061035156,
+        "1": 880
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 57
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 56
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 58
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 55
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 59
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 60,
+          "slot_index": 5
+        },
+        {
+          "name": "bbox_detector",
+          "type": "BBOX_DETECTOR",
+          "link": 61,
+          "slot_index": 6
+        },
+        {
+          "name": "sam_model_opt",
+          "type": "SAM_MODEL",
+          "link": null
+        },
+        {
+          "name": "segm_detector_opt",
+          "type": "SEGM_DETECTOR",
+          "link": null
+        },
+        {
+          "name": "detailer_hook",
+          "type": "DETAILER_HOOK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            77,
+            78
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "cropped_refined",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 6
+        },
+        {
+          "name": "cropped_enhanced_alpha",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 6
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "detailer_pipe",
+          "type": "DETAILER_PIPE",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "cnet_images",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 6
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FaceDetailer"
+      },
+      "widgets_values": [
+        512,
+        true,
+        1024,
+        853533773665642,
+        "randomize",
+        20,
+        6,
+        "euler",
+        "normal",
+        0.4,
+        5,
+        true,
+        true,
+        0.5,
+        10,
+        3,
+        "center-1",
+        0,
+        0.93,
+        0,
+        0.7,
+        "False",
+        10,
+        "",
+        1,
+        false,
+        20
+      ]
+    },
+    {
+      "id": 12,
+      "type": "HYDiTCheckpointLoader",
+      "pos": [
+        -171,
+        38
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            29
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "HYDiTCheckpointLoader"
+      },
+      "widgets_values": [
+        "hunuyan_dit_11\\HunYuanDiT.pt",
+        "G/2"
+      ]
+    },
+    {
+      "id": 14,
+      "type": "HYDiTTextEncoderLoader",
+      "pos": [
+        -179,
+        179
+      ],
+      "size": {
+        "0": 340,
+        "1": 150
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            13,
+            46,
+            58
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "T5",
+          "type": "T5",
+          "links": [
+            14,
+            47
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "HYDiTTextEncoderLoader"
+      },
+      "widgets_values": [
+        "hunuyan\\chinese-roberta-wwm-ext-large.bin",
+        "hunuyan\\mT5-xl.safetensors",
+        "cpu",
+        "default"
+      ]
+    },
+    {
+      "id": 54,
+      "type": "SaveImage",
+      "pos": [
+        1148.3899673145752,
+        -731.1949828248061
+      ],
+      "size": {
+        "0": 359.3956298828125,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 76
+        }
+      ],
+      "title": "Saves Original gen",
+      "properties": {},
+      "widgets_values": [
+        "ComfyUI_%date:yyMdhms%_Hunyuan_original"
+      ],
+      "shape": 4
+    },
+    {
+      "id": 32,
+      "type": "HYDiTTextEncodeSimple",
+      "pos": [
+        189,
+        167
+      ],
+      "size": {
+        "0": 385.4192199707031,
+        "1": 74
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "link": 46,
+          "slot_index": 0
+        },
+        {
+          "name": "T5",
+          "type": "T5",
+          "link": 47,
+          "slot_index": 1
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 84,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            48,
+            60
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "HYDiTTextEncodeSimple"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 5,
+      "type": "EmptyLatentImage",
+      "pos": [
+        270.58661202485666,
+        -249.01925952189188
+      ],
+      "size": {
+        "0": 320,
+        "1": 110
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            32
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        832,
+        1216,
+        1
+      ]
+    },
+    {
+      "id": 13,
+      "type": "HYDiTTextEncodeSimple",
+      "pos": [
+        202,
+        32
+      ],
+      "size": {
+        "0": 369.3297119140625,
+        "1": 77.83087921142578
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "link": 13
+        },
+        {
+          "name": "T5",
+          "type": "T5",
+          "link": 14,
+          "slot_index": 1
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 83,
+          "widget": {
+            "name": "text"
+          },
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            30,
+            59
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "HYDiTTextEncodeSimple"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 11,
+      "type": "VAELoader",
+      "pos": [
+        216,
+        291
+      ],
+      "size": {
+        "0": 338.70819091796875,
+        "1": 59.82878875732422
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            33,
+            55
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "fixFP16ErrorsSDXLLowerMemoryUse_v10.safetensors"
+      ]
+    },
+    {
+      "id": 57,
+      "type": "CR Text Input Switch",
+      "pos": [
+        271.58661202485666,
+        -426.019259521892
+      ],
+      "size": {
+        "0": 315,
+        "1": 126
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text1",
+          "type": "STRING",
+          "link": 85,
+          "widget": {
+            "name": "text1"
+          }
+        },
+        {
+          "name": "text2",
+          "type": "STRING",
+          "link": 86,
+          "widget": {
+            "name": "text2"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            83
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "title": "Select Positive to pass",
+      "properties": {
+        "Node name for S&R": "CR Text Input Switch"
+      },
+      "widgets_values": [
+        1,
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 56,
+      "type": "PreviewImage",
+      "pos": [
+        1094,
+        -634
+      ],
+      "size": {
+        "0": 310.0635986328125,
+        "1": 474.1271667480469
+      },
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 78
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 55,
+      "type": "SaveImage",
+      "pos": [
+        1131,
+        -675
+      ],
+      "size": {
+        "0": 210,
+        "1": 270
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 77
+        }
+      ],
+      "title": "Saves FaceDetailer gen",
+      "properties": {},
+      "widgets_values": [
+        "ComfyUI_%date:yyMdhms%_Hunyuan_facedetailer"
+      ],
+      "shape": 4
+    },
+    {
+      "id": 45,
+      "type": "String Literal",
+      "pos": [
+        262,
+        -676
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            86
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "title": "[2] Positive Prompt",
+      "properties": {
+        "Node name for S&R": "String Literal"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 58,
+      "type": "String Literal",
+      "pos": [
+        -189.4133879751434,
+        -422.0192595218921
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            84
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "title": "Negative Prompt",
+      "properties": {
+        "Node name for S&R": "String Literal"
+      },
+      "widgets_values": [
+        "错误的眼睛，糟糕的人脸，毁容，糟糕的艺术，变形，多余的肢体，模糊的颜色，模糊，重复，病态，残缺，"
+      ]
+    },
+    {
+      "id": 36,
+      "type": "ImpactWildcardProcessor",
+      "pos": [
+        -189,
+        -689
+      ],
+      "size": {
+        "0": 399.9589538574219,
+        "1": 222
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            85
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "title": "[1] Positive Prompt (Wildcard)",
+      "properties": {
+        "Node name for S&R": "ImpactWildcardProcessor"
+      },
+      "widgets_values": [
+        "anime, __pony1__",
+        "anime, an extremely delicate and beautiful female, floating, disheveled hair, liquid hair, solo, beautiful detailed girl, witch hat, holding staff, colorful eyes, beautiful detailed eyes, platinum hair, multicolored hair, streaked hair, multicolored clothes, halloween, colorful bubble, colorful background, surrounded by colorful splashes",
+        true,
+        859849444717365,
+        "randomize",
+        "Select the Wildcard to add to the text"
+      ]
+    },
+    {
+      "id": 19,
+      "type": "KSampler (Efficient)",
+      "pos": [
+        735,
+        -19
+      ],
+      "size": {
+        "0": 325,
+        "1": 562
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 29,
+          "slot_index": 0
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 30,
+          "slot_index": 1
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 48
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 32
+        },
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": 33
+        },
+        {
+          "name": "script",
+          "type": "SCRIPT",
+          "link": null,
+          "slot_index": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            56
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            49,
+            76
+          ],
+          "shape": 3,
+          "slot_index": 5
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler (Efficient)"
+      },
+      "widgets_values": [
+        -1,
+        null,
+        20,
+        6,
+        "euler",
+        "normal",
+        1,
+        "auto",
+        "true"
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159",
+      "shape": 1
+    },
+    {
+      "id": 33,
+      "type": "Preview Chooser",
+      "pos": [
+        740,
+        -799
+      ],
+      "size": {
+        "0": 330.4187316894531,
+        "1": 646.1754760742188
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 49,
+          "slot_index": 0
+        },
+        {
+          "name": "latents",
+          "type": "LATENT",
+          "link": null
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            57
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "latents",
+          "type": "LATENT",
+          "links": [],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "selected",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "title": "Continue with Facedetailer?",
+      "properties": {
+        "Node name for S&R": "Preview Chooser"
+      },
+      "widgets_values": [
+        "Always pause",
+        1,
+        "",
+        ""
+      ],
+      "shape": 4
+    }
+  ],
+  "links": [
+    [
+      13,
+      14,
+      0,
+      13,
+      0,
+      "CLIP"
+    ],
+    [
+      14,
+      14,
+      1,
+      13,
+      1,
+      "T5"
+    ],
+    [
+      29,
+      12,
+      0,
+      19,
+      0,
+      "MODEL"
+    ],
+    [
+      30,
+      13,
+      0,
+      19,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      32,
+      5,
+      0,
+      19,
+      3,
+      "LATENT"
+    ],
+    [
+      33,
+      11,
+      0,
+      19,
+      4,
+      "VAE"
+    ],
+    [
+      46,
+      14,
+      0,
+      32,
+      0,
+      "CLIP"
+    ],
+    [
+      47,
+      14,
+      1,
+      32,
+      1,
+      "T5"
+    ],
+    [
+      48,
+      32,
+      0,
+      19,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      49,
+      19,
+      5,
+      33,
+      0,
+      "IMAGE"
+    ],
+    [
+      55,
+      11,
+      0,
+      40,
+      3,
+      "VAE"
+    ],
+    [
+      56,
+      19,
+      0,
+      40,
+      1,
+      "MODEL"
+    ],
+    [
+      57,
+      33,
+      0,
+      40,
+      0,
+      "IMAGE"
+    ],
+    [
+      58,
+      14,
+      0,
+      40,
+      2,
+      "CLIP"
+    ],
+    [
+      59,
+      13,
+      0,
+      40,
+      4,
+      "CONDITIONING"
+    ],
+    [
+      60,
+      32,
+      0,
+      40,
+      5,
+      "CONDITIONING"
+    ],
+    [
+      61,
+      41,
+      0,
+      40,
+      6,
+      "BBOX_DETECTOR"
+    ],
+    [
+      76,
+      19,
+      5,
+      54,
+      0,
+      "IMAGE"
+    ],
+    [
+      77,
+      40,
+      0,
+      55,
+      0,
+      "IMAGE"
+    ],
+    [
+      78,
+      40,
+      0,
+      56,
+      0,
+      "IMAGE"
+    ],
+    [
+      83,
+      57,
+      0,
+      13,
+      2,
+      "STRING"
+    ],
+    [
+      84,
+      58,
+      0,
+      32,
+      2,
+      "STRING"
+    ],
+    [
+      85,
+      36,
+      0,
+      57,
+      0,
+      "STRING"
+    ],
+    [
+      86,
+      45,
+      0,
+      57,
+      1,
+      "STRING"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "Previews and Output",
+      "bounding": [
+        726,
+        -876,
+        719,
+        762
+      ],
+      "color": "#A88",
+      "font_size": 24,
+      "locked": false
+    },
+    {
+      "title": "Inputs",
+      "bounding": [
+        -209,
+        -761,
+        913,
+        637
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "locked": false
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.5131581182307067,
+      "offset": [
+        536.7320937681641,
+        963.5579857922909
+      ]
+    }
+  },
+  "version": 0.4
+}

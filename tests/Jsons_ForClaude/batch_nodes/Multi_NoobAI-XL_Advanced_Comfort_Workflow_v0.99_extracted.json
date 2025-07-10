@@ -1,0 +1,1470 @@
+[
+    {
+        "id": 0,
+        "name": "Base Settings SDXL + switch Load Image Version 02"
+    },
+    {
+        "id": 1,
+        "name": "Easy add LORA + SDXL Conditioning"
+    },
+    {
+        "id": 2,
+        "name": "Easy SDXL Prompt Settings"
+    },
+    {
+        "id": 3,
+        "name": "Back"
+    },
+    {
+        "id": 4,
+        "name": "Custom Advanced Sampler SDXL"
+    },
+    {
+        "id": 5,
+        "name": "Image to Image"
+    },
+    {
+        "id": 7,
+        "name": "Save with image path, without metadata"
+    },
+    {
+        "id": 8,
+        "name": "Load Image"
+    },
+    {
+        "id": 9,
+        "name": "Choose new resolution"
+    },
+    {
+        "id": 10,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 10,
+        "name": "Load Image for Img2Img or Image optimize / upscale V2"
+    },
+    {
+        "id": 11,
+        "name": "Florence prompt"
+    },
+    {
+        "id": 12,
+        "name": "Prompt Mixer"
+    },
+    {
+        "id": 13,
+        "name": "Switch"
+    },
+    {
+        "id": 14,
+        "name": "SDXL Power Prompt - Simple / Negative (rgthree)",
+        "prompts": {
+            "text": "woman with red hair embedding:SDXL\\pos\\SK_ANIME embedding:SDXL\\pos\\SK_ANIME embedding:SDXL\\pos\\SK_ANIME"
+        }
+    },
+    {
+        "id": 14,
+        "name": "SDXL Comfort Image Saver 2.0"
+    },
+    {
+        "id": 15,
+        "name": "Florence prompt"
+    },
+    {
+        "id": 16,
+        "name": "SDXL Power Prompt - Simple / Negative (rgthree)",
+        "prompts": {
+            "text": "woman with red hair embedding:SDXL\\pos\\SK_ANIME embedding:SDXL\\pos\\SK_ANIME embedding:SDXL\\pos\\SK_ANIME"
+        }
+    },
+    {
+        "id": 31,
+        "name": "Int Literal"
+    },
+    {
+        "id": 43,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 51,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 60,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 61,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 62,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 63,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 107,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 112,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 113,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 114,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 115,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 144,
+        "name": "CR Text Concatenate"
+    },
+    {
+        "id": 145,
+        "name": "CR Text Concatenate"
+    },
+    {
+        "id": 216,
+        "name": "Multiply Int Int (JPS)"
+    },
+    {
+        "id": 217,
+        "name": "Multiply Int Int (JPS)"
+    },
+    {
+        "id": 218,
+        "name": "Text Prompt (JPS)"
+    },
+    {
+        "id": 223,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 260,
+        "name": "CheckpointLoader|pysssss",
+        "prompts": {
+            "text": "noobaiXLNAIXL_vPred10Version.safetensors"
+        }
+    },
+    {
+        "id": 335,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 359,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 360,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 367,
+        "name": "CFGGuider"
+    },
+    {
+        "id": 368,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 369,
+        "name": "KSamplerSelect",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 370,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 371,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 372,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 373,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 374,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 375,
+        "name": "Context Switch Big (rgthree)"
+    },
+    {
+        "id": 376,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 377,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 378,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 379,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 380,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 381,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 382,
+        "name": "PreviewBridge"
+    },
+    {
+        "id": 383,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 384,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 385,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 387,
+        "name": "LyingSigmaSampler"
+    },
+    {
+        "id": 388,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 389,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 390,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 391,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 423,
+        "name": "Note",
+        "prompts": {
+            "text": "Check out Lying Sigma Sampler for more details!"
+        }
+    },
+    {
+        "id": 532,
+        "name": "Context Switch Big (rgthree)"
+    },
+    {
+        "id": 542,
+        "name": "Note",
+        "prompts": {
+            "text": "Group Prompt        #C8F0F0\nGroup Sampler       #ffffff\nGroup Save          #ffffee"
+        }
+    },
+    {
+        "id": 582,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 583,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 584,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 585,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 586,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 588,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 589,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 592,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 593,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 595,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 597,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 599,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 600,
+        "name": "Node Collector (rgthree)"
+    },
+    {
+        "id": 601,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 602,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 603,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 605,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 606,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 607,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 911,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 912,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "AnythingXL_xl.safetensors"
+        }
+    },
+    {
+        "id": 913,
+        "name": "KSampler Config (rgthree)"
+    },
+    {
+        "id": 915,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 916,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 917,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 918,
+        "name": "CR SDXL Aspect Ratio"
+    },
+    {
+        "id": 919,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 920,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 921,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 922,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 923,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 924,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 925,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 926,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 929,
+        "name": "SDXL Prompt Handling (JPS)",
+        "prompts": {
+            "text": "Copy to Both if Empty"
+        }
+    },
+    {
+        "id": 930,
+        "name": "SDXL Prompt Handling (JPS)",
+        "prompts": {
+            "text": "Copy to Both if Empty"
+        }
+    },
+    {
+        "id": 931,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 932,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 933,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 934,
+        "name": "Text Prompt (JPS)"
+    },
+    {
+        "id": 935,
+        "name": "Text Prompt (JPS)"
+    },
+    {
+        "id": 936,
+        "name": "Text Prompt (JPS)",
+        "prompts": {
+            "text": "nsfw, worst quality, old, early, low quality, lowres, signature, username, logo, bad hands, mutated hands, mammal, anthro, furry, ambiguous form, feral, semi-anthro"
+        }
+    },
+    {
+        "id": 937,
+        "name": "Text Prompt (JPS)",
+        "prompts": {
+            "text": "masterpiece, best quality, newest, absurdres, highres, safe, closeup of a cut anime girl, red shirt, green shorts, fairytale castle in the background,"
+        }
+    },
+    {
+        "id": 938,
+        "name": "Note",
+        "prompts": {
+            "text": "CLIP L: can help capture the intricate details and nuances. This prompt emphasizes the realistic aspects of the scene, such as the warrior's appearance, the car's restoration, and the lifelike desert environment.\n\nGLIP G: is designed to work with stable diffusion models, like SDXL, to create hyperrealistic images. This prompt focuses on the visual impact of the scene, highlighting the warrior's ruggedness, the car's appearance, and the vibrant desert setting."
+        }
+    },
+    {
+        "id": 949,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 965,
+        "name": "LoraLoader|pysssss",
+        "prompts": {
+            "text": "SDXL_Caracter_01\\caricart.safetensors"
+        }
+    },
+    {
+        "id": 1073,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1078,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 1080,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 1086,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 1093,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 1094,
+        "name": "easy ckptNames",
+        "prompts": {
+            "text": "noobaiXLNAIXL_vPred10Version.safetensors"
+        }
+    },
+    {
+        "id": 1106,
+        "name": "Bookmark (rgthree)",
+        "prompts": {
+            "text": "ALT + SHIFT + S"
+        }
+    },
+    {
+        "id": 1213,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1214,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 1215,
+        "name": "Text Prompt (JPS)",
+        "prompts": {
+            "text": "Murphylanga"
+        }
+    },
+    {
+        "id": 1216,
+        "name": "CR Text Concatenate"
+    },
+    {
+        "id": 1217,
+        "name": "Get Date Time String (JPS)",
+        "prompts": {
+            "text": "%Y%m%d%H%M%S"
+        }
+    },
+    {
+        "id": 1218,
+        "name": "Text Prompt (JPS)",
+        "prompts": {
+            "text": "D:\\Spezial\\_outputs\\murphylanga\\easy_jepg"
+        }
+    },
+    {
+        "id": 1219,
+        "name": "APZmedia Fast image save",
+        "prompts": {
+            "text": "[time(%Y-%m-%d)]"
+        }
+    },
+    {
+        "id": 1220,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 1221,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1222,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 1223,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 1224,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1225,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1226,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1227,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1228,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1229,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1230,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1231,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1232,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1233,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1234,
+        "name": "Crop Image TargetSize (JPS)"
+    },
+    {
+        "id": 1235,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1236,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1237,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1238,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1239,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 1240,
+        "name": "CM_NearestSDXLResolution"
+    },
+    {
+        "id": 1241,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 1242,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 1243,
+        "name": "Display Any (rgthree)"
+    },
+    {
+        "id": 1244,
+        "name": "Display Any (rgthree)"
+    },
+    {
+        "id": 1245,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1246,
+        "name": "Note",
+        "prompts": {
+            "text": "If you want to use image to image, you must not turn off load image!If you enable Load Image the size of the existing image will be used"
+        }
+    },
+    {
+        "id": 1247,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1248,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1249,
+        "name": "SDXL Resolutions (JPS)",
+        "prompts": {
+            "text": "portrait - 832x1216 (2:3)"
+        }
+    },
+    {
+        "id": 1250,
+        "name": "PreviewBridge"
+    },
+    {
+        "id": 1251,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 1252,
+        "name": "Note",
+        "prompts": {
+            "text": "Strong ceck threshold 0.1 - 0.9"
+        }
+    },
+    {
+        "id": 1253,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1254,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1255,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1256,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1257,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1258,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1259,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1260,
+        "name": "Text Concatenate (JPS)"
+    },
+    {
+        "id": 1261,
+        "name": "Text Concatenate (JPS)"
+    },
+    {
+        "id": 1262,
+        "name": "CR Text Input Switch (4 way)"
+    },
+    {
+        "id": 1263,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1264,
+        "name": "Text Concatenate (JPS)"
+    },
+    {
+        "id": 1265,
+        "name": "Text Concatenate (JPS)"
+    },
+    {
+        "id": 1266,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1267,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1268,
+        "name": "CR Text Input Switch (4 way)"
+    },
+    {
+        "id": 1269,
+        "name": "Text Concatenate (JPS)"
+    },
+    {
+        "id": 1270,
+        "name": "Text Concatenate (JPS)"
+    },
+    {
+        "id": 1271,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1272,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1273,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1274,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1275,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1276,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 1277,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1278,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 1279,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1280,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1281,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1282,
+        "name": "Text Concatenate (JPS)"
+    },
+    {
+        "id": 1283,
+        "name": "Text Concatenate (JPS)"
+    },
+    {
+        "id": 1284,
+        "name": "CR Text Input Switch (4 way)"
+    },
+    {
+        "id": 1285,
+        "name": "CR Text Input Switch (4 way)"
+    },
+    {
+        "id": 1286,
+        "name": "Display Any (rgthree)",
+        "prompts": {
+            "text": "A paper doll in a pink dress standing on a hill."
+        }
+    },
+    {
+        "id": 1287,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1288,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 1289,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1290,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1291,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 1292,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1293,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1294,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 1295,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1296,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1297,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1298,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1299,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1300,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1301,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 1302,
+        "name": "Display Any (rgthree)",
+        "prompts": {
+            "text": "nsfw, worst quality, old, early, low quality, lowres, signature, username, logo, bad hands, mutated hands, mammal, anthro, furry, ambiguous form, feral, semi-anthro"
+        }
+    },
+    {
+        "id": 1303,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1304,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 1305,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1306,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1307,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1308,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1309,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1312,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 1313,
+        "name": "CM_NearestSDXLResolution"
+    },
+    {
+        "id": 1315,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 1316,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 1317,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 1318,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1319,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1320,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1321,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 1322,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1323,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1324,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1325,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1326,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1327,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1328,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1329,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 1331,
+        "name": "Crop Image TargetSize (JPS)"
+    },
+    {
+        "id": 1332,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1334,
+        "name": "Context Switch Big (rgthree)"
+    },
+    {
+        "id": 1335,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 1336,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 1337,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 1338,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1339,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1340,
+        "name": "Note",
+        "prompts": {
+            "text": "shift + r -> new node\nshift + s -> rotate the node input\nshift + d -> rotate the node output\nshift + a -> rotate node\nshift + x -> size node"
+        }
+    },
+    {
+        "id": 1345,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1346,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1350,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 1351,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 1352,
+        "name": "Context Switch Big (rgthree)"
+    },
+    {
+        "id": 1353,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 1355,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 1356,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 1357,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 1360,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 1362,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 1363,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 1369,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1370,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 1371,
+        "name": "FreeU_V2"
+    },
+    {
+        "id": 1372,
+        "name": "Note",
+        "prompts": {
+            "text": "Multi_NoobAI-XL_Advanced_Comfort_Workflow_v0.99\nBase Module Workflow by Murphylanga; April 05, 2025\n\nv3.0 new comfort save (compatible with new Comfy manager)\n\n2025 https://www.youtube.com/playlist?list=PLOlk3DTLbLzSJzShrwN0m9GWrlA8BxDU1\n2024 https://www.youtube.com/playlist?list=PLOlk3DTLbLzQQzMTytsq8oEjdeRhDjI3j  \n\nSubscribe to my YouTube channel https://www.youtube.com/@murphylanga/videos\nNow, have fun, Murphy Langa \n\nNodes are not pinned\nUse https://github.com/blib-la/blibla-comfyui-extensions to pin or frezze the Nodes and Groups!\n\nOr select with CTRL and mouse and then press the P key\nColor Save Group #ffffee"
+        }
+    },
+    {
+        "id": 1373,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 1374,
+        "name": "Text Prompt (JPS)",
+        "prompts": {
+            "text": "Murphylanga"
+        }
+    },
+    {
+        "id": 1375,
+        "name": "Text Prompt (JPS)",
+        "prompts": {
+            "text": "D:\\Spezial\\_outputs\\murphylanga\\easy"
+        }
+    },
+    {
+        "id": 1376,
+        "name": "Text Prompt (JPS)",
+        "prompts": {
+            "text": "%time-%basemodelname-%sampler_name-%scheduler-seed-%seed-%counter"
+        }
+    },
+    {
+        "id": 1378,
+        "name": "Sampler Selector (Image Saver)"
+    },
+    {
+        "id": 1379,
+        "name": "Scheduler Selector (Comfy) (Image Saver)"
+    },
+    {
+        "id": 1380,
+        "name": "Text Concatenate (JPS)"
+    },
+    {
+        "id": 1381,
+        "name": "Image Saver",
+        "prompts": {
+            "text": "%time_%basemodelname_%seed",
+            "text_2": "%Y-%m-%d-%H%M%S"
+        }
+    },
+    {
+        "id": 1382,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1383,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 1384,
+        "name": "Text Concatenate (JPS)"
+    },
+    {
+        "id": 1385,
+        "name": "Text Concatenate (JPS)"
+    },
+    {
+        "id": 1386,
+        "name": "Text Prompt (JPS)"
+    },
+    {
+        "id": 1387,
+        "name": "Text Prompt (JPS)"
+    },
+    {
+        "id": 1388,
+        "name": "easy float"
+    },
+    {
+        "id": 1389,
+        "name": "easy float"
+    },
+    {
+        "id": 1394,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "masterpiece, best quality, newest, absurdres, highres, safe, , 1girl, :3, :d, aqua background, arms up, black eyes, blue eyes, blue sky, blush stickers, closed mouth, cloud, cloudy sky, day, dress, field, flat color, full body, gradient, gradient background, grass, green background, hands up, happy, hill, looking at viewer, mountainous horizon, on grass, open mouth, outdoors, pink dress, sky, smile, solo, standing, tree, white skin"
+        }
+    },
+    {
+        "id": 1395,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "masterpiece, best quality, newest, absurdres, highres, safe, closeup of a cut anime girl, red shirt, green shorts, fairytale castle in the background,"
+        }
+    },
+    {
+        "id": 1396,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "masterpiece, best quality, newest, absurdres, highres, safe, closeup of a cut anime girl, red shirt, green shorts, fairytale castle in the background,"
+        }
+    },
+    {
+        "id": 1397,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "nsfw, worst quality, old, early, low quality, lowres, signature, username, logo, bad hands, mutated hands, mammal, anthro, furry, ambiguous form, feral, semi-anthro"
+        }
+    },
+    {
+        "id": 1398,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "nsfw, worst quality, old, early, low quality, lowres, signature, username, logo, bad hands, mutated hands, mammal, anthro, furry, ambiguous form, feral, semi-anthro"
+        }
+    },
+    {
+        "id": 1408,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "nsfw, worst quality, old, early, low quality, lowres, signature, username, logo, bad hands, mutated hands, mammal, anthro, furry, ambiguous form, feral, semi-anthro"
+        }
+    },
+    {
+        "id": 1409,
+        "name": "ModelSamplingDiscrete",
+        "prompts": {
+            "text": "v_prediction"
+        }
+    },
+    {
+        "id": 1410,
+        "name": "DeepDanbooruCaption",
+        "prompts": {
+            "text": "masterpiece, best quality, newest, absurdres, highres, safe, "
+        }
+    },
+    {
+        "id": 1411,
+        "name": "Note",
+        "prompts": {
+            "text": "I have not tested the models, the  \nFlorence-2-base-PromptGen-v2.0\nproduces very good results"
+        }
+    },
+    {
+        "id": 1412,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1413,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1414,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1415,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1416,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1417,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1418,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1419,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 1420,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1421,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1422,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1423,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1424,
+        "name": "DownloadAndLoadFlorence2Model",
+        "prompts": {
+            "text": "MiaoshouAI/Florence-2-large-PromptGen-v2.0"
+        }
+    },
+    {
+        "id": 1425,
+        "name": "DownloadAndLoadFlorence2Lora",
+        "prompts": {
+            "text": "NikshepShetty/Florence-2-pixelprose"
+        }
+    },
+    {
+        "id": 1426,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 1427,
+        "name": "CM_NearestSDXLResolution"
+    },
+    {
+        "id": 1428,
+        "name": "Context Big (rgthree)"
+    },
+    {
+        "id": 1429,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1430,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1431,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1432,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1433,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1434,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1435,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 1436,
+        "name": "Crop Image TargetSize (JPS)"
+    },
+    {
+        "id": 1437,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1438,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1439,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 1440,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "A paper doll in a pink dress standing on a hill."
+        }
+    },
+    {
+        "id": 1441,
+        "name": "Florence2Run"
+    },
+    {
+        "id": 1442,
+        "name": "Florence2ModelLoader",
+        "prompts": {
+            "text": "Florence-2-base"
+        }
+    },
+    {
+        "id": 1443,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 1444,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "nsfw, worst quality, old, early, low quality, lowres, signature, username, logo, bad hands, mutated hands, mammal, anthro, furry, ambiguous form, feral, semi-anthro"
+        }
+    },
+    {
+        "id": 1445,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 1446,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 1449,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1450,
+        "name": "Text Prompt (JPS)",
+        "prompts": {
+            "text": "1girl, side ponytail, blue eyes, sundress, flowers, summer vibe, park, shoulder tattoo, butterfly tattoo, DETAILER logo, (sky:1.2), clouds, golden hour, lace choker, scenery, breasts, light, shadow, focus on scenery, feet out of frame, glasses, adjusting eyewear, hand up, grass, water, lace trim, aoi sakura \\(seak5545\\), achyue, momoko \\momopoco\\, (torino aqua:0.7), hebbtia, toto \\(caaaaarrot\\), nagi itsuki, mappaninatta, nanohana \\(november.\\), masterpiece,best quality,amazing quality,very aesthetic,absurdres,newest, very awa, crisp, sharp, 8k"
+        }
+    },
+    {
+        "id": 1451,
+        "name": "Text Prompt (JPS)",
+        "prompts": {
+            "text": "worst quality,low quality,quality,lowres, worst aesthetic, jpeg artifacts, scan artifacts, signature,username,bad id,bad twitter id,english commentary,logo,bad hands,mutated hands, mammal,anthro,furry, scanlines, username, logo, blur, blurry, comic, (long body, long neck:1.3), extra digit, missing digit, old, , (censored:1.3), stomach bulge,cleft of venus, bar censor, twins, splatter, plump, wet, leotard, yellow skin, expressionless, steam, extra ears, (blurry background, bokeh:1.3), hair intakes, futanari, mosaic censoring, pixelated,, cum, pov, sea,"
+        }
+    },
+    {
+        "id": 1452,
+        "name": "Note",
+        "prompts": {
+            "text": "Recommended Settings\nParameters\nCFG: 4 ~ 5\n\nSteps: 28 ~ 35\n\nSampling Method: Euler (ddpm)\n\nResolution: Total area around 1024x1024. Best to choose from: 768x1344, 832x1216, 896x1152, 1024x1024, 1152x896, 1216x832, 1344x768\n\nPrompts:\n\nPrompt Prefix:\nmasterpiece, best quality, newest, absurdres, highres, safe,\n\nNegative Prompt:\nnsfw, worst quality, old, early, low quality, lowres, signature, username, logo, bad hands, mutated hands, mammal, anthro, furry, ambiguous form, feral, semi-anthro\n\n\nUsage Guidelines\nCaption\n<1girl/1boy/1other/...>, <character>, <series>, <artists>, <special tags>, <general tags>, <other tags>\nQuality Tags\nFor quality tags, we evaluated image popularity through the following process:\n\nData normalization based on various sources and ratings.\n\nApplication of time-based decay coefficients according to date recency.\n\nRanking of images within the entire dataset based on this processing.\n\nOur ultimate goal is to ensure that quality tags effectively track user preferences in recent years.\n\nPercentile RangeQuality Tags> 95thmasterpiece> 85th, <= 95thbest quality> 60th, <= 85thgood quality> 30th, <= 60thnormal quality<= 30thworst quality\n\n\n"
+        }
+    },
+    {
+        "id": 1453,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1455,
+        "name": "Context Switch Big (rgthree)"
+    },
+    {
+        "id": 1456,
+        "name": "Context Switch Big (rgthree)"
+    },
+    {
+        "id": 1458,
+        "name": "Text Prompt (JPS)",
+        "prompts": {
+            "text": "noobaiXLNAIXL_vPred10Version"
+        }
+    }
+]

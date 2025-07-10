@@ -1,0 +1,48 @@
+[
+    {
+        "id": "eed3096d-3766-4a84-b1a7-51c3a8e072b4",
+        "name": "Demo Image to OpenPose Skeleton"
+    },
+    {
+        "id": 1,
+        "name": "DWPreprocessor",
+        "prompts": {
+            "text": "yolox_l.torchscript.pt",
+            "text_2": "dw-ll_ucoco_384_bs5.torchscript.pt"
+        }
+    },
+    {
+        "id": 2,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "sittingmple105_example.png"
+        }
+    },
+    {
+        "id": 4,
+        "name": "SavePoseKpsAsJsonFile",
+        "prompts": {
+            "text": "PoseKeypoint"
+        }
+    },
+    {
+        "id": 8,
+        "name": "SaveImage"
+    },
+    {
+        "id": 10,
+        "name": "LineArtPreprocessor"
+    },
+    {
+        "id": 12,
+        "name": "SaveImage"
+    },
+    {
+        "id": 14,
+        "name": "SaveImage"
+    },
+    {
+        "id": 20,
+        "name": "Zoe-DepthMapPreprocessor"
+    }
+]

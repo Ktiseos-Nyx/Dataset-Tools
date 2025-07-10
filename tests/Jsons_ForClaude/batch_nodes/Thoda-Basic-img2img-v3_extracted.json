@@ -1,0 +1,116 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd3.5_large.safetensors"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 16,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a rainbow galaxy inside it on top of a wooden table on a snowy mountain top with the ocean and clouds in the background with a shot glass beside containing darkness beside a snow sculpture in the shape of a fox"
+        }
+    },
+    {
+        "id": 40,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 43,
+        "name": "TripleCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "clip_g.safetensors"
+        }
+    },
+    {
+        "id": 50,
+        "name": "Note",
+        "prompts": {
+            "text": "Thoda-Basic-img2img-v3\n\n- SD3.5 Large (FP16)\n- Clip T5XXL (FP8)\n- aspect size V2\n- project file path\n- Image size Adjuster V2\n\n- txt2img/img2img switch\n"
+        }
+    },
+    {
+        "id": 53,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 54,
+        "name": "ProjectFilePathNode"
+    },
+    {
+        "id": 55,
+        "name": "AspectSizeV2"
+    },
+    {
+        "id": 56,
+        "name": "LatentSwitch"
+    },
+    {
+        "id": 57,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 58,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "fill / crop"
+        }
+    },
+    {
+        "id": 59,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "00002-LotusMIX-V1_2313748910.png"
+        }
+    },
+    {
+        "id": 60,
+        "name": "Primitive float [Crystools]"
+    },
+    {
+        "id": 61,
+        "name": "ImageSizeAdjusterV2"
+    },
+    {
+        "id": 62,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 63,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 64,
+        "name": "Primitive float [Crystools]"
+    },
+    {
+        "id": 65,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 66,
+        "name": "easy showAnything"
+    },
+    {
+        "id": 67,
+        "name": "easy showAnything"
+    }
+]

@@ -1,0 +1,325 @@
+{
+  "parser_name": "ComfyUI Chroma",
+  "priority": 160,
+  "description": "Chroma - Flux-based model with enhanced color generation and modular workflow system",
+  "version": "1.0",
+  "maintainer": "unfudging_team",
+
+  "target_file_types": ["PNG"],
+
+  "detection_rules": [
+    {
+      "comment": "Detect Chroma by model name and distinctive modules",
+      "method": "detect_chroma_signature",
+      "required_patterns": [
+        "chroma",
+        "DetailDaemon",
+        "Chroma Modular WF"
+      ],
+      "match_type": "any_two",
+      "confidence": "high"
+    },
+    {
+      "comment": "Alternative detection via Chroma-specific nodes and settings",
+      "method": "detect_chroma_ecosystem",
+      "chroma_indicators": [
+        "DetailDaemonSamplerNode",
+        "SetNode",
+        "FaceDetailer",
+        "cfg.*4.00-6.00"
+      ],
+      "flux_base_indicators": [
+        "DualCLIPLoader",
+        "t5xxl",
+        "ae.safetensors"
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_source": {
+      "primary": "pil_info.workflow",
+      "fallback": "pil_info.prompt",
+      "preprocessing": "parse_comfyui_json"
+    },
+
+    "extraction_strategy": "chroma_modular_workflow_analysis",
+    "format": "Flux-based Chroma with modular enhancement system",
+
+    "fields": [
+      {
+        "name": "prompt",
+        "method": "extract_from_clip_encode",
+        "node_type": "CLIPTextEncode",
+        "title_contains": "Positive prompt",
+        "required": true
+      },
+
+      {
+        "name": "negative_prompt",
+        "method": "extract_from_clip_encode",
+        "node_type": "CLIPTextEncode", 
+        "title_contains": "Negative prompt",
+        "fallback": ""
+      },
+
+      {
+        "name": "chroma_model",
+        "method": "extract_chroma_model_info",
+        "model_patterns": ["chroma", "Chroma"],
+        "version_detection": true,
+        "description": "Chroma model version and variant"
+      },
+
+      {
+        "name": "detail_daemon_settings",
+        "method": "extract_detail_daemon_config",
+        "node_type": "DetailDaemonSamplerNode",
+        "fields": ["detail_amount", "start", "end", "bias", "exponent"],
+        "description": "Detail enhancement configuration"
+      },
+
+      {
+        "name": "workflow_modules",
+        "method": "detect_active_modules",
+        "module_patterns": [
+          "HiRes-Fix",
+          "FaceDetailer", 
+          "Ultimate SD Upscaler",
+          "Overlay Settings",
+          "Save Image with Metadata"
+        ],
+        "description": "Active workflow modules"
+      },
+
+      {
+        "name": "performance_config",
+        "method": "extract_performance_settings",
+        "optimization_indicators": ["FP8", "GGUF", "quantized"],
+        "memory_usage": "detect_vram_requirements",
+        "description": "Performance and memory optimization"
+      },
+
+      {
+        "name": "upscaler_models",
+        "method": "extract_upscaler_info",
+        "upscaler_patterns": [
+          "4xUltrasharp_v2",
+          "1x-ITF-SkinDiffDetail",
+          "skin-enhancer"
+        ],
+        "description": "Upscaling model configuration"
+      },
+
+      {
+        "name": "face_enhancement",
+        "method": "extract_face_detailer_config",
+        "node_type": "FaceDetailer",
+        "fields": ["guide_size", "max_size", "steps", "cfg", "denoise", "cycle"],
+        "description": "Face enhancement settings"
+      },
+
+      {
+        "name": "cfg_guidance",
+        "method": "extract_cfg_settings",
+        "recommended_range": "4.00-6.00",
+        "chroma_optimized": true,
+        "description": "Chroma-optimized CFG scale"
+      },
+
+      {
+        "name": "flux_base_detection",
+        "method": "confirm_flux_base",
+        "indicators": ["DualCLIPLoader", "t5xxl_fp16", "ae.safetensors"],
+        "description": "Flux architecture confirmation"
+      },
+
+      {
+        "name": "modular_switches",
+        "method": "extract_workflow_switches",
+        "switch_types": ["txt2img", "img2img", "inpaint"],
+        "module_toggles": "detect_module_activation",
+        "description": "Workflow mode and module switches"
+      }
+    ],
+
+    "chroma_specific_analysis": {
+      "model_variants": {
+        "standard": {
+          "description": "Full Chroma model - requires 24GB+ VRAM",
+          "performance": "Best quality, highest VRAM usage",
+          "file_pattern": "chroma-v*.safetensors"
+        },
+
+        "fp8": {
+          "description": "FP8 quantized version for reduced VRAM",
+          "performance": "Good quality, moderate VRAM usage",
+          "file_pattern": "*fp8*",
+          "optimization": "memory_efficient"
+        },
+
+        "gguf": {
+          "description": "GGUF quantized version for lowest VRAM",
+          "performance": "Acceptable quality, minimal VRAM usage", 
+          "file_pattern": "*.gguf",
+          "optimization": "ultra_memory_efficient"
+        }
+      },
+
+      "workflow_modules": {
+        "detail_daemon": {
+          "description": "AI-powered detail enhancement",
+          "parameters": ["detail_amount", "start", "end", "bias"],
+          "recommended": "detail_amount: 0.10 (0.00 = off)"
+        },
+
+        "hires_fix": {
+          "description": "Latent upscaling with detail addition",
+          "recommended_scale": "1.2x - 1.5x (up to 2.0x)",
+          "purpose": "resolution_enhancement"
+        },
+
+        "face_detailer": {
+          "description": "Face-specific enhancement module",
+          "variable_settings": "test different steps/cfg/denoise",
+          "cycle_support": "1-2+ cycles for better quality"
+        },
+
+        "ultimate_upscaler": {
+          "description": "Final upscaling with skin enhancement",
+          "skin_enhancer": "1x-ITF-SkinDiffDetail for portraits",
+          "general_upscaler": "4xUltrasharp_v2 all-around"
+        }
+      },
+
+      "performance_optimization": {
+        "vram_requirements": {
+          "standard_model": "24GB+ VRAM",
+          "fp8_model": "16GB VRAM (RTX 4070 Ti Super compatible)",
+          "gguf_model": "8-12GB VRAM"
+        },
+
+        "performance_benchmarks": {
+          "l40_gpu": "1.30s/it using RunPod template",
+          "rtx_4070_ti_super": "3.10s/it using FP8 + t5xxl",
+          "optimization": "FP8 provides best quality/performance balance"
+        }
+      }
+    }
+  },
+
+  "output_format": {
+    "tool": "ComfyUI (Chroma)",
+    "parser_version": "unfudged_v1",
+    "workflow_type": "chroma_modular_workflow",
+    "architecture": "Flux + Chroma Enhancement",
+
+    "prompt": "{prompt}",
+    "negative_prompt": "{negative_prompt}",
+
+    "parameters": {
+      "model": "{chroma_model}",
+      "steps": "{steps}",
+      "cfg_scale": "{cfg_guidance}",
+      "seed": "{seed}",
+      "sampler_name": "{sampler_name}",
+      "scheduler": "{scheduler}",
+      "width": "{width}",
+      "height": "{height}"
+    },
+
+    "chroma_specific": {
+      "model_variant": "{performance_config.variant}",
+      "detail_daemon": "{detail_daemon_settings}",
+      "active_modules": "{workflow_modules}",
+      "optimization": "{performance_config}",
+      "flux_base_confirmed": "{flux_base_detection}",
+      "modular_workflow": true,
+      "color_enhanced": true
+    },
+
+    "enhancement_modules": {
+      "detail_enhancement": "{detail_daemon_settings}",
+      "face_enhancement": "{face_enhancement}",
+      "upscaling": "{upscaler_models}",
+      "workflow_switches": "{modular_switches}"
+    },
+
+    "performance_info": {
+      "vram_optimized": "{performance_config.optimized}",
+      "memory_usage": "{performance_config.memory_usage}",
+      "recommended_cfg": "4.00-6.00 for Chroma optimization",
+      "training_status": "in_development (v0.35 as of workflow)"
+    },
+
+    "workflow_complexity": {
+      "modular_design": true,
+      "professional_features": ["metadata_saving", "module_switching", "performance_optimization"],
+      "production_ready": true,
+      "complexity_level": "advanced_modular"
+    },
+
+    "raw_workflow": "{original_workflow_json}"
+  },
+
+  "error_handling": {
+    "no_chroma_model": "check_for_flux_base_with_chroma_indicators",
+    "missing_detail_daemon": "flag_as_chroma_lite_workflow",
+    "incomplete_modules": "extract_basic_chroma_with_available_modules"
+  },
+
+  "chroma_architecture_explained": {
+    "what_is_chroma": [
+      "Chroma is a Flux Schnell-based model enhanced for color generation",
+      "Uses same CLIP/VAE as Flux (t5xxl_fp16.safetensors + ae.safetensors)",
+      "Adds distilled guidance layers for enhanced color control",
+      "Currently in development (v0.35+ as of workflows)"
+    ],
+
+    "flux_base_advantages": [
+      "Inherits Flux's fast generation capabilities",
+      "Benefits from Flux's excellent text understanding",
+      "Compatible with Flux ecosystem (LoRAs, techniques)",
+      "Can use Flux optimizations (FP8, GGUF quantization)"
+    ],
+
+    "chroma_enhancements": [
+      "Enhanced color generation and vibrancy",
+      "Distilled guidance for better control",
+      "Professional workflow modules",
+      "Optimized CFG range (4.0-6.0 vs Flux's 1.0-3.5)"
+    ],
+
+    "modular_workflow_system": [
+      "Switch between txt2img, img2img, and inpaint modes",
+      "Toggle modules: HiRes-Fix, FaceDetailer, Upscaler",
+      "DetailDaemon for AI-powered enhancement",
+      "Professional metadata and overlay systems"
+    ]
+  },
+
+  "real_workflow_insights": {
+    "from_chroma_modular_wf": [
+      "Professional modular design with clear documentation",
+      "Performance optimization for different hardware levels",
+      "Advanced upscaling with skin enhancement capabilities",
+      "Metadata saving for CivitAI upload compatibility",
+      "Workflow navigation shortcuts (1 = Frontend, 2 = Backend)"
+    ],
+
+    "performance_considerations": [
+      "Still in training - results may vary with version updates",
+      "High VRAM requirements unless using optimized variants",
+      "Slower than base Flux due to enhanced processing",
+      "FP8 version provides best quality/performance balance"
+    ]
+  },
+
+  "notes": [
+    "Chroma = Flux Schnell + enhanced color generation + modular workflow",
+    "Uses Flux CLIP/VAE but adds distilled guidance layers",
+    "Professional workflow system with switchable modules",
+    "Currently in active development (expect version updates)",
+    "Optimized for color-focused generation with advanced enhancement"
+  ]
+}

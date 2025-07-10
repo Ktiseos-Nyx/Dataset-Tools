@@ -1,0 +1,561 @@
+{
+  "6": {
+    "inputs": {
+      "positive": "the sword with a red and black blade, a digital rendering inspired by Jin Homura, Artstation, vanitas, holds a black sword, glaive, war blade weapon"
+    },
+    "class_type": "easy positive",
+    "_meta": {
+      "title": "Positive"
+    }
+  },
+  "7": {
+    "inputs": {
+      "negative": ""
+    },
+    "class_type": "easy negative",
+    "_meta": {
+      "title": "Negative"
+    }
+  },
+  "30": {
+    "inputs": {
+      "styles": "fooocus_styles",
+      "select_styles": "game-cyberpunk game,Fooocus Negative,sai-3d-model",
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ]
+    },
+    "class_type": "easy stylesSelector",
+    "_meta": {
+      "title": "Styles Selector"
+    }
+  },
+  "70": {
+    "inputs": {
+      "text_0": "historical, natural, rustic, low detailed, deformed, bad anatomy, disfigured, poorly drawn face, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, disconnected head, malformed hands, long neck, mutated hands and fingers, bad hands, missing fingers, cropped, worst quality, low quality, mutation, poorly drawn, huge calf, bad hands, fused hand, missing hand, disappearing arms, disappearing thigh, disappearing calf, disappearing legs, missing fingers, fused fingers, abnormal eye proportion, Abnormal hands, abnormal legs, abnormal feet, abnormal fingers, drawing, painting, crayon, sketch, graphite, impressionist, noisy, blurry, soft, deformed, ugly, anime, cartoon, graphic, text, painting, crayon, graphite, abstract, glitch, ugly, deformed, noisy, low poly, blurry, painting",
+      "text": [
+        "30",
+        1
+      ]
+    },
+    "class_type": "ShowText|pysssss",
+    "_meta": {
+      "title": "Negative Prompt: AFTER"
+    }
+  },
+  "80": {
+    "inputs": {
+      "text_0": "cyberpunk game style the sword with a red and black blade, a digital rendering inspired by Jin Homura, Artstation, vanitas, holds a black sword, glaive, war blade weapon . neon, dystopian, futuristic, digital, vibrant, detailed, high contrast, reminiscent of cyberpunk genre video games, professional 3d model  . octane render, highly detailed, volumetric, dramatic lighting",
+      "text": [
+        "30",
+        0
+      ]
+    },
+    "class_type": "ShowText|pysssss",
+    "_meta": {
+      "title": "Positive prompt: AFTER"
+    }
+  },
+  "85": {
+    "inputs": {
+      "separator": ",",
+      "prompt1": [
+        "6",
+        0
+      ],
+      "prompt2": [
+        "80",
+        0
+      ]
+    },
+    "class_type": "easy promptConcat",
+    "_meta": {
+      "title": "PromptConcat"
+    }
+  },
+  "86": {
+    "inputs": {
+      "separator": ",",
+      "prompt1": [
+        "7",
+        0
+      ],
+      "prompt2": [
+        "70",
+        0
+      ]
+    },
+    "class_type": "easy promptConcat",
+    "_meta": {
+      "title": "PromptConcat"
+    }
+  },
+  "95": {
+    "inputs": {
+      "image": "a547551b-ad1a-46d4-b4a6-cb820c3378bd.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "102": {
+    "inputs": {
+      "seed": 585397609680739
+    },
+    "class_type": "easy seed",
+    "_meta": {
+      "title": "EasySeed"
+    }
+  },
+  "112": {
+    "inputs": {
+      "steps": 27,
+      "cfg": 7,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 0.6,
+      "seed": 415678471446650,
+      "pipe": [
+        "378",
+        0
+      ],
+      "image_to_latent": [
+        "95",
+        0
+      ]
+    },
+    "class_type": "easy preSampling",
+    "_meta": {
+      "title": "PreSampling"
+    }
+  },
+  "113": {
+    "inputs": {
+      "image_output": "Save",
+      "link_id": 0,
+      "save_prefix": "ComfyUI",
+      "pipe": [
+        "277",
+        0
+      ],
+      "model": [
+        "221",
+        0
+      ]
+    },
+    "class_type": "easy kSampler",
+    "_meta": {
+      "title": "EasyKSampler"
+    }
+  },
+  "129": {
+    "inputs": {
+      "steps": 27,
+      "cfg": 7,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 1,
+      "seed": 602312803334507,
+      "pipe": [
+        "367",
+        0
+      ]
+    },
+    "class_type": "easy preSampling",
+    "_meta": {
+      "title": "PreSampling"
+    }
+  },
+  "130": {
+    "inputs": {
+      "image_output": "Save",
+      "link_id": 0,
+      "save_prefix": "TT QR CODE",
+      "pipe": [
+        "129",
+        0
+      ],
+      "model": [
+        "367",
+        1
+      ]
+    },
+    "class_type": "easy kSampler",
+    "_meta": {
+      "title": "EasyKSampler"
+    }
+  },
+  "132": {
+    "inputs": {
+      "toggle": true,
+      "mode": "simple",
+      "num_controlnet": 1,
+      "controlnet_1": "qrCodeMonster_v20.safetensors",
+      "controlnet_1_strength": 1.0000000000000002,
+      "start_percent_1": 0,
+      "end_percent_1": 1,
+      "scale_soft_weight_1": 1,
+      "controlnet_2": "None",
+      "controlnet_2_strength": 1,
+      "start_percent_2": 0,
+      "end_percent_2": 1,
+      "scale_soft_weight_2": 1,
+      "controlnet_3": "None",
+      "controlnet_3_strength": 1,
+      "start_percent_3": 0,
+      "end_percent_3": 1,
+      "scale_soft_weight_3": 1,
+      "image_1": [
+        "133",
+        0
+      ],
+      "image_3": [
+        "95",
+        0
+      ]
+    },
+    "class_type": "easy controlnetStack",
+    "_meta": {
+      "title": "EasyControlnetStack"
+    }
+  },
+  "133": {
+    "inputs": {
+      "url": "https://www.youtube.com/c/TripTrap1?sub_confirmation=1",
+      "width": 512,
+      "height": 512,
+      "error_correct": "L",
+      "box_size": 16,
+      "border": 2,
+      "invert": "BOOLEAN"
+    },
+    "class_type": "Qr Code (mtb)",
+    "_meta": {
+      "title": "Qr Code (mtb)"
+    }
+  },
+  "134": {
+    "inputs": {
+      "images": [
+        "133",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "149": {
+    "inputs": {
+      "grow_mask_by": 15,
+      "image_output": "Save",
+      "link_id": 0,
+      "save_prefix": "ComfyUI",
+      "additional": "None",
+      "pipe": [
+        "273",
+        0
+      ],
+      "model": [
+        "221",
+        0
+      ],
+      "mask": [
+        "150",
+        0
+      ]
+    },
+    "class_type": "easy kSamplerInpainting",
+    "_meta": {
+      "title": "EasyKSampler (Inpainting)"
+    }
+  },
+  "150": {
+    "inputs": {
+      "mask": [
+        "289",
+        1
+      ]
+    },
+    "class_type": "InvertMask",
+    "_meta": {
+      "title": "InvertMask"
+    }
+  },
+  "221": {
+    "inputs": {
+      "hard_mode": false,
+      "boost": false,
+      "model": [
+        "378",
+        1
+      ]
+    },
+    "class_type": "Automatic CFG",
+    "_meta": {
+      "title": "Automatic CFG"
+    }
+  },
+  "273": {
+    "inputs": {
+      "steps": 27,
+      "cfg": 7,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 1,
+      "seed": 462619646078664,
+      "pipe": [
+        "366",
+        0
+      ],
+      "image_to_latent": [
+        "95",
+        0
+      ]
+    },
+    "class_type": "easy preSampling",
+    "_meta": {
+      "title": "PreSampling"
+    }
+  },
+  "277": {
+    "inputs": {
+      "anything": [
+        "112",
+        0
+      ]
+    },
+    "class_type": "easy cleanGpuUsed",
+    "_meta": {
+      "title": "Clean VRAM Used"
+    }
+  },
+  "289": {
+    "inputs": {
+      "alpha_matting": true,
+      "alpha_matting_foreground_threshold": 240,
+      "alpha_matting_background_threshold": 10,
+      "alpha_matting_erode_size": 10,
+      "post_process_mask": true,
+      "bgcolor": "#808080",
+      "image": [
+        "95",
+        0
+      ]
+    },
+    "class_type": "Image Remove Background Rembg (mtb)",
+    "_meta": {
+      "title": "Image Remove Background Rembg (mtb)"
+    }
+  },
+  "290": {
+    "inputs": {
+      "images": [
+        "289",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "366": {
+    "inputs": {
+      "ckpt_name": "sd15_epicrealism_naturalSinRC1VAE.safetensors",
+      "config_name": "Default",
+      "vae_name": "Baked VAE",
+      "clip_skip": -2,
+      "lora_name": "None",
+      "lora_model_strength": 1,
+      "lora_clip_strength": 1,
+      "resolution": "1024 x 1024",
+      "empty_latent_width": 512,
+      "empty_latent_height": 512,
+      "positive": [
+        "85",
+        0
+      ],
+      "positive_token_normalization": "none",
+      "positive_weight_interpretation": "comfy",
+      "negative": [
+        "86",
+        0
+      ],
+      "negative_token_normalization": "none",
+      "negative_weight_interpretation": "comfy",
+      "batch_size": 1,
+      "a1111_prompt_style": false
+    },
+    "class_type": "easy fullLoader",
+    "_meta": {
+      "title": "EasyLoader (Full)"
+    }
+  },
+  "367": {
+    "inputs": {
+      "ckpt_name": "sd15_epicrealism_naturalSinRC1VAE.safetensors",
+      "config_name": "Default",
+      "vae_name": "Baked VAE",
+      "clip_skip": -2,
+      "lora_name": "None",
+      "lora_model_strength": 1,
+      "lora_clip_strength": 1,
+      "resolution": "1024 x 1024",
+      "empty_latent_width": 512,
+      "empty_latent_height": 512,
+      "positive": [
+        "85",
+        0
+      ],
+      "positive_token_normalization": "none",
+      "positive_weight_interpretation": "comfy",
+      "negative": [
+        "86",
+        0
+      ],
+      "negative_token_normalization": "none",
+      "negative_weight_interpretation": "comfy",
+      "batch_size": 1,
+      "a1111_prompt_style": false,
+      "optional_controlnet_stack": [
+        "132",
+        0
+      ]
+    },
+    "class_type": "easy fullLoader",
+    "_meta": {
+      "title": "EasyLoader (Full)"
+    }
+  },
+  "378": {
+    "inputs": {
+      "ckpt_name": "sd15_epicrealism_naturalSinRC1VAE.safetensors",
+      "config_name": "Default",
+      "vae_name": "Baked VAE",
+      "clip_skip": -2,
+      "lora_name": "None",
+      "lora_model_strength": 1,
+      "lora_clip_strength": 1,
+      "resolution": "1024 x 1024",
+      "empty_latent_width": 512,
+      "empty_latent_height": 512,
+      "positive": [
+        "85",
+        0
+      ],
+      "positive_token_normalization": "none",
+      "positive_weight_interpretation": "comfy",
+      "negative": [
+        "86",
+        0
+      ],
+      "negative_token_normalization": "none",
+      "negative_weight_interpretation": "comfy",
+      "batch_size": 1,
+      "a1111_prompt_style": false
+    },
+    "class_type": "easy fullLoader",
+    "_meta": {
+      "title": "EasyLoader (Full)"
+    }
+  },
+  "380": {
+    "inputs": {
+      "control_net_name": "1.5\\control_v11p_sd15_lineart_fp16.safetensors",
+      "strength": 0.75,
+      "scale_soft_weights": 0.8250000000000001,
+      "pipe": [
+        "112",
+        0
+      ],
+      "image": [
+        "382",
+        0
+      ],
+      "control_net": [
+        "385",
+        0
+      ]
+    },
+    "class_type": "easy controlnetLoader",
+    "_meta": {
+      "title": "EasyControlnet"
+    }
+  },
+  "381": {
+    "inputs": {
+      "steps": 27,
+      "cfg": 7,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 1,
+      "seed": 859954471735846,
+      "pipe": [
+        "380",
+        0
+      ]
+    },
+    "class_type": "easy preSampling",
+    "_meta": {
+      "title": "PreSampling"
+    }
+  },
+  "382": {
+    "inputs": {
+      "preprocessor": "LineArtPreprocessor",
+      "resolution": 1024,
+      "image": [
+        "95",
+        0
+      ]
+    },
+    "class_type": "AIO_Preprocessor",
+    "_meta": {
+      "title": "AIO Aux Preprocessor"
+    }
+  },
+  "383": {
+    "inputs": {
+      "image_output": "Save",
+      "link_id": 0,
+      "save_prefix": "ComfyUI",
+      "pipe": [
+        "381",
+        0
+      ]
+    },
+    "class_type": "easy kSampler",
+    "_meta": {
+      "title": "EasyKSampler"
+    }
+  },
+  "384": {
+    "inputs": {
+      "images": [
+        "382",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "385": {
+    "inputs": {
+      "control_net_name": "1.5\\control_v11p_sd15_lineart_fp16.safetensors"
+    },
+    "class_type": "ControlNetLoader",
+    "_meta": {
+      "title": "Load ControlNet Model"
+    }
+  }
+}

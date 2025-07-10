@@ -1,0 +1,83 @@
+[
+    {
+        "id": 2,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00037_.png"
+        }
+    },
+    {
+        "id": 3,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 5,
+        "name": "SUPIR_first_stage"
+    },
+    {
+        "id": 6,
+        "name": "SUPIR_model_loader",
+        "prompts": {
+            "text": "SUPIR-v0F.ckpt",
+            "text_2": "juggernautXL_v9Rundiffusionphoto2.safetensors"
+        }
+    },
+    {
+        "id": 7,
+        "name": "SUPIR_sample",
+        "prompts": {
+            "text": "RestoreDPMPP2MSampler"
+        }
+    },
+    {
+        "id": 9,
+        "name": "SUPIR_conditioner",
+        "prompts": {
+            "text": "high quality, detailed, photograph of multicolored cat",
+            "text_2": "bad quality, blurry, messy"
+        }
+    },
+    {
+        "id": 10,
+        "name": "SUPIR_decode"
+    },
+    {
+        "id": 11,
+        "name": "SUPIR_encode"
+    },
+    {
+        "id": 12,
+        "name": "Reroute"
+    },
+    {
+        "id": 13,
+        "name": "ImageResize+"
+    },
+    {
+        "id": 14,
+        "name": "ColorMatch"
+    },
+    {
+        "id": 15,
+        "name": "SetNode"
+    },
+    {
+        "id": 16,
+        "name": "GetNode"
+    },
+    {
+        "id": 17,
+        "name": "SetNode"
+    },
+    {
+        "id": 19,
+        "name": "GetNode"
+    },
+    {
+        "id": 20,
+        "name": "Image Comparer (rgthree)",
+        "prompts": {
+            "text": "/view?filename=rgthree.compare._temp_xhexe_00001_.png&type=temp&subfolder=&rand=0.6781202232416763"
+        }
+    }
+]

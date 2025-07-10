@@ -1,0 +1,81 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "res_multistep"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "lumina_2.safetensors"
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "You are an assistant designed to generate superior images with the superior degree of image-text alignment based on textual prompts or user prompts. <Prompt Start> RAW illustration of xcx style, Cthulu Bishop, unholy ordained cult leader of secret lovecraftian eldritch order, tentacle mutation,, moon, tentacles, night, hat, sitting, holding, multiple others, full moon, (large font title at top reads \"HARD\":1)"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry ugly bad concept"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 13,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 20,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": " <Prompt Start> ",
+            "text_2": "You are an assistant designed to generate superior images with the superior degree of illustration-text alignment based on textual prompts or user prompts., <Prompt Start>, RAW illustration of xcx style, Cthulu Bishop, unholy ordained cult leader of secret lovecraftian eldritch order, tentacle mutation,, moon, standing, solo, tentacles, holding, 1other, monster, (large font title at top reads \"HARD\":1)"
+        }
+    },
+    {
+        "id": 21,
+        "name": "ProjectFilePathNode"
+    },
+    {
+        "id": 25,
+        "name": "AspectSizeV2"
+    },
+    {
+        "id": 39,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 85,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 97,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 98,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 99,
+        "name": "Note",
+        "prompts": {
+            "text": "LUDA-Lumina-t2i-basic-v10\n\n\nVideo: https://www.youtube.com/@FiveBelowFiveUK\nWorkflow: https://civitai.com/user/driftjohnson\nhttps://www.fivebelowfive.uk\n\n\n\n\n[discord early editions]\nhttps://discord.com/invite/uubQXhwzkj "
+        }
+    }
+]

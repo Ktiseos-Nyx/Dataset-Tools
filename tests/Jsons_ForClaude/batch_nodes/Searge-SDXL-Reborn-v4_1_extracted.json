@@ -1,0 +1,602 @@
+[
+    {
+        "id": 3,
+        "name": "SeargeTextInputV2",
+        "prompts": {
+            "text": "gordon freeman from half life, glasses, shaved head, beard, wearing mech armor"
+        }
+    },
+    {
+        "id": 5,
+        "name": "SeargeTextInputV2",
+        "prompts": {
+            "text": "gordon freeman from half life, glasses, shaved head, beard, wearing mech armor"
+        }
+    },
+    {
+        "id": 6,
+        "name": "SeargeTextInputV2",
+        "prompts": {
+            "text": "cinematic photo <prompt>, 35mm photograph, film, bokeh, professional, 4k, highly detailed"
+        }
+    },
+    {
+        "id": 7,
+        "name": "SeargeTextInputV2"
+    },
+    {
+        "id": 8,
+        "name": "SeargeTextInputV2",
+        "prompts": {
+            "text": "drawing, painting, crayon, sketch, impressionist"
+        }
+    },
+    {
+        "id": 19,
+        "name": "SeargePreviewImage"
+    },
+    {
+        "id": 86,
+        "name": "SeargePreviewImage"
+    },
+    {
+        "id": 87,
+        "name": "SeargePreviewImage"
+    },
+    {
+        "id": 126,
+        "name": "Note",
+        "prompts": {
+            "text": "\n Searge-SDXL v20230905.0815-beta-unstable-prerelease-0.007-sneak-preview-8\n\n [TODO: add description here]\n"
+        }
+    },
+    {
+        "id": 268,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 269,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 463,
+        "name": "SeargePreviewImage"
+    },
+    {
+        "id": 468,
+        "name": "Note",
+        "prompts": {
+            "text": "  Searge-SDXL: EVOLVED Workflow for SDXL 1.0  |  Version 4.1 updated on Sep 05, 2023\n\n    !!! REQUIRES CUSTOM NODE EXTENSION: https://github.com/SeargeDP/SeargeSDXL !!!\n\n More information about using this workflow is next to the upscaled image preview -=>\n                      ( 1.25 x 1.2 = 1.5  |  1.5 x 1.333 = 2.0 )"
+        }
+    },
+    {
+        "id": 484,
+        "name": "SeargeSeparator"
+    },
+    {
+        "id": 497,
+        "name": "Reroute"
+    },
+    {
+        "id": 498,
+        "name": "Reroute"
+    },
+    {
+        "id": 499,
+        "name": "Reroute"
+    },
+    {
+        "id": 500,
+        "name": "Reroute"
+    },
+    {
+        "id": 502,
+        "name": "Reroute"
+    },
+    {
+        "id": 503,
+        "name": "Reroute"
+    },
+    {
+        "id": 506,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "load checkpoints",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 519,
+        "name": "SeargeDebugPrinter"
+    },
+    {
+        "id": 520,
+        "name": "Reroute"
+    },
+    {
+        "id": 521,
+        "name": "Reroute"
+    },
+    {
+        "id": 522,
+        "name": "Reroute"
+    },
+    {
+        "id": 523,
+        "name": "Reroute"
+    },
+    {
+        "id": 524,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "apply loras",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 525,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "none - skip",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 526,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "prompt styling",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 527,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "clip conditioning",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 528,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "clip mixing",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 529,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "apply controlnet",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 530,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "none - skip",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 531,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "latent inputs",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 532,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "none - skip",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 533,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "data stream",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 534,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "vae decode sampled",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 535,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "latent detailer",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 536,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "high resolution",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 537,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "pre-process data",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 538,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "hires detailer",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 539,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "vae decode hi-res",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 540,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "none - skip",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 541,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "data stream",
+            "text_2": "custom stage & data stream"
+        }
+    },
+    {
+        "id": 542,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "none - skip",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 543,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "image saving",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 544,
+        "name": "SeargeMagicBox",
+        "prompts": {
+            "text": "none - skip",
+            "text_2": "data stream"
+        }
+    },
+    {
+        "id": 551,
+        "name": "Reroute"
+    },
+    {
+        "id": 554,
+        "name": "SeargeCustomAfterVaeDecode"
+    },
+    {
+        "id": 557,
+        "name": "Reroute"
+    },
+    {
+        "id": 558,
+        "name": "Reroute"
+    },
+    {
+        "id": 559,
+        "name": "Reroute"
+    },
+    {
+        "id": 560,
+        "name": "Reroute"
+    },
+    {
+        "id": 562,
+        "name": "Reroute"
+    },
+    {
+        "id": 563,
+        "name": "Reroute"
+    },
+    {
+        "id": 564,
+        "name": "Reroute"
+    },
+    {
+        "id": 565,
+        "name": "Reroute"
+    },
+    {
+        "id": 566,
+        "name": "Reroute"
+    },
+    {
+        "id": 567,
+        "name": "Reroute"
+    },
+    {
+        "id": 568,
+        "name": "Reroute"
+    },
+    {
+        "id": 569,
+        "name": "Reroute"
+    },
+    {
+        "id": 571,
+        "name": "Reroute"
+    },
+    {
+        "id": 573,
+        "name": "SeargeCustomAfterVaeDecode"
+    },
+    {
+        "id": 590,
+        "name": "SeargePipelineTerminator"
+    },
+    {
+        "id": 609,
+        "name": "SeargeModelSelector",
+        "prompts": {
+            "text": "sd_xl_base_1.0_0.9vae.safetensors",
+            "text_2": "sd_xl_refiner_1.0_0.9vae.safetensors"
+        }
+    },
+    {
+        "id": 610,
+        "name": "SeargeGenerationParameters",
+        "prompts": {
+            "text": "1344x768 (16:9)",
+            "text_2": "1 - DPM++ 2M Karras"
+        }
+    },
+    {
+        "id": 611,
+        "name": "SeargeOperatingMode",
+        "prompts": {
+            "text": "text-to-image",
+            "text_2": "default - all prompts"
+        }
+    },
+    {
+        "id": 612,
+        "name": "SeargeImageSaving",
+        "prompts": {
+            "text": "output/Searge-SDXL-%date%",
+            "text_2": "generated-%seed%"
+        }
+    },
+    {
+        "id": 613,
+        "name": "SeargeImage2ImageAndInpainting",
+        "prompts": {
+            "text": "masked - full"
+        }
+    },
+    {
+        "id": 614,
+        "name": "SeargeConditioningParameters"
+    },
+    {
+        "id": 615,
+        "name": "SeargeAdvancedParameters"
+    },
+    {
+        "id": 616,
+        "name": "SeargeCustomPromptMode"
+    },
+    {
+        "id": 617,
+        "name": "SeargePromptStyles"
+    },
+    {
+        "id": 618,
+        "name": "SeargeHighResolution"
+    },
+    {
+        "id": 619,
+        "name": "SeargeConditionMixing"
+    },
+    {
+        "id": 620,
+        "name": "SeargeUpscaleModels",
+        "prompts": {
+            "text": "1x-ITF-SkinDiffDetail-Lite-v1.pth",
+            "text_2": "4x_Nickelback_70000G.pth"
+        }
+    },
+    {
+        "id": 621,
+        "name": "SeargeLoras",
+        "prompts": {
+            "text": "sd_xl_offset_example-lora_1.0.safetensors"
+        }
+    },
+    {
+        "id": 622,
+        "name": "SeargePromptAdapterV2"
+    },
+    {
+        "id": 626,
+        "name": "SeargeImageAdapterV2"
+    },
+    {
+        "id": 628,
+        "name": "SeargePipelineStart"
+    },
+    {
+        "id": 634,
+        "name": "SeargePreviewImage"
+    },
+    {
+        "id": 635,
+        "name": "Reroute"
+    },
+    {
+        "id": 636,
+        "name": "Reroute"
+    },
+    {
+        "id": 637,
+        "name": "Reroute"
+    },
+    {
+        "id": 638,
+        "name": "Reroute"
+    },
+    {
+        "id": 639,
+        "name": "Reroute"
+    },
+    {
+        "id": 640,
+        "name": "Reroute"
+    },
+    {
+        "id": 641,
+        "name": "Reroute"
+    },
+    {
+        "id": 642,
+        "name": "Reroute"
+    },
+    {
+        "id": 645,
+        "name": "Reroute"
+    },
+    {
+        "id": 647,
+        "name": "LoadImageMask",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 648,
+        "name": "Reroute"
+    },
+    {
+        "id": 649,
+        "name": "Reroute"
+    },
+    {
+        "id": 658,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 666,
+        "name": "SeargePreviewImage"
+    },
+    {
+        "id": 667,
+        "name": "SeargePreviewImage"
+    },
+    {
+        "id": 668,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 669,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 670,
+        "name": "SeargePreviewImage"
+    },
+    {
+        "id": 671,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 672,
+        "name": "SeargePreviewImage"
+    },
+    {
+        "id": 673,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 674,
+        "name": "SeargePreviewImage"
+    },
+    {
+        "id": 676,
+        "name": "SeargeCustomAfterUpscaling"
+    },
+    {
+        "id": 678,
+        "name": "SeargeControlnetAdapterV2"
+    },
+    {
+        "id": 679,
+        "name": "SeargeControlnetAdapterV2"
+    },
+    {
+        "id": 680,
+        "name": "SeargeControlnetAdapterV2"
+    },
+    {
+        "id": 681,
+        "name": "SeargeControlnetAdapterV2"
+    },
+    {
+        "id": 682,
+        "name": "SeargeControlnetAdapterV2"
+    },
+    {
+        "id": 683,
+        "name": "SeargeControlnetModels",
+        "prompts": {
+            "text": "clip_vision_g.safetensors",
+            "text_2": "control-lora-canny-rank256.safetensors"
+        }
+    }
+]

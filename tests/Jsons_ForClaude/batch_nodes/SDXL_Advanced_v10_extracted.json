@@ -1,0 +1,1860 @@
+[
+    {
+        "id": 1,
+        "name": "Global Seed"
+    },
+    {
+        "id": 4,
+        "name": "Core Settings"
+    },
+    {
+        "id": 5,
+        "name": "IPAdapter \u2014 General"
+    },
+    {
+        "id": 6,
+        "name": "IPA \u2014 Random Image Loader"
+    },
+    {
+        "id": 7,
+        "name": "IPA \u2014 Default Image Loader"
+    },
+    {
+        "id": 8,
+        "name": "IPAdapter \u2014 FaceID"
+    },
+    {
+        "id": 9,
+        "name": "IPA \u2014 Control"
+    },
+    {
+        "id": 15,
+        "name": "Conditioning"
+    },
+    {
+        "id": 21,
+        "name": "LoRA Settings"
+    },
+    {
+        "id": 22,
+        "name": "CNet \u2014 Image Input"
+    },
+    {
+        "id": 23,
+        "name": "ControlNet"
+    },
+    {
+        "id": 25,
+        "name": "Clipboard"
+    },
+    {
+        "id": 26,
+        "name": "Advanced Settings"
+    },
+    {
+        "id": 27,
+        "name": "1st Pass"
+    },
+    {
+        "id": 28,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 28,
+        "name": "Pass Input Hijack"
+    },
+    {
+        "id": 29,
+        "name": "HJ 1st_Pass"
+    },
+    {
+        "id": 30,
+        "name": "HJ 2nd_Pass"
+    },
+    {
+        "id": 33,
+        "name": "Inpainting"
+    },
+    {
+        "id": 34,
+        "name": "2nd Pass \u2014 Tile ControlNet"
+    },
+    {
+        "id": 35,
+        "name": "2nd Pass"
+    },
+    {
+        "id": 36,
+        "name": "ADetailer"
+    },
+    {
+        "id": 42,
+        "name": "Save Menu"
+    },
+    {
+        "id": 104,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 105,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 112,
+        "name": "Image Input Switch"
+    },
+    {
+        "id": 113,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 114,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 115,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 116,
+        "name": "Conditioning Input Switch"
+    },
+    {
+        "id": 117,
+        "name": "Conditioning Input Switch"
+    },
+    {
+        "id": 118,
+        "name": "Conditioning Input Switch"
+    },
+    {
+        "id": 119,
+        "name": "Conditioning Input Switch"
+    },
+    {
+        "id": 120,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 121,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 136,
+        "name": "Note"
+    },
+    {
+        "id": 137,
+        "name": "Note"
+    },
+    {
+        "id": 138,
+        "name": "Note"
+    },
+    {
+        "id": 156,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "-EXAMPLE-VAE-.safetensors"
+        }
+    },
+    {
+        "id": 157,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 159,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "^(?!.*(Advanced|Core) Settings)"
+        }
+    },
+    {
+        "id": 160,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "^(?!.*(Advanced|Core) Settings)"
+        }
+    },
+    {
+        "id": 161,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 162,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## \u25bc Accelerator LoRAs\n### \u25ba Download via Manager\n\n1. Go to **ComfyUI Manager > Model Manager**<br>\n2. Type the following names into the search box to find them<br>\n<br>\n  \u2022 *sdxl_lightning_4step* <br>\n  \u2022 *Hyper-SDXL-8steps-CFG-lora* <br>\n  \u2022 *dmd2_sdxl_4step_lora* <br>\n\n### \u25ba Manual download\n\u2192 ComfyUI\\models\\loras\n\n- [**sdxl_lightning_4step**](https://huggingface.co/ByteDance/SDXL-Lightning/blob/main/sdxl_lightning_4step_lora.safetensors)\n<br>\n- [**Hyper-SDXL-8steps-CFG-lora**](https://huggingface.co/ByteDance/Hyper-SD/blob/main/Hyper-SDXL-8steps-CFG-lora.safetensors)\n<br>\n- [**dmd2_sdxl_4step_lora** (current personal favorite)](https://huggingface.co/tianweiy/DMD2/blob/main/dmd2_sdxl_4step_lora.safetensors)\n<br>\n<br>\n\n---\n\n## \u25bc Union ControlNet\n\u2192 ComfyUI\\models\\controlnet\n\n- [**Union ProMax**](https://civitai.com/models/136070?modelVersionId=655836)\n  > ! does not work with SageAttention\n\n&#160;\n\n---\n\n## \u25bc Text Encoders\n\u2192 `ComfyUI\\models\\text_encoders`\n\n### \u25ba Clip L\n- [**Long Clip L (by zer0int)**](https://huggingface.co/zer0int/LongCLIP-GmP-ViT-L-14/blob/main/Long-ViT-L-14-BEST-GmP-smooth-ft.safetensors)\n<br>\n- [**ViT-L-14-REG-GATED-balanced-ckpt12 (by zer0int)**](https://huggingface.co/zer0int/CLIP-Registers-Gated_MLP-ViT-L-14/blob/main/ViT-L-14-REG-GATED-balanced-ckpt12.safetensors)<br>\n\u2192 [additional info](https://github.com/zer0int/CLIP-fine-tune-registers-gated)\n<br>\n\n### \u25ba Clip G\n- [**Simulacrum Clip G (by AbstractPhil)**](https://civitai.com/models/1044804?modelVersionId=1369648)\n<br>\n\n### \u25ba Various different Clips\n- [**Clip Dump (by AbstractPhil)**](https://huggingface.co/AbstractPhil/clips/tree/main)\n\n&#160;\n\n---\n## \u25bc TAESD (live-preview VAEs)\n> To activate select:<br>\n**Comfy Manager > Preview Method > TAESD**<br>\n\u2192 might require restarting of Comfy to take effect\n\n### \u25ba Download via ComfyUI Model Manager\n1. Open up ComfyUI Manager and go to **Model Manager**\n2. At the top in the **Search** type **TAE**\n3. Download encoder and decoder for **SDXL / SD1.x**\n\n&#160;\n\n### \u25ba Manual download\n\u2192 `ComfyUI\\models\\vae_approx`\n<br>\n\n- [**taesdxl_decoder**](https://huggingface.co/madebyollin/taesdxl/blob/main/taesdxl_decoder.safetensors)\n- [**taesdxl_encoder**](https://huggingface.co/madebyollin/taesdxl/blob/main/taesdxl_encoder.safetensors)\n<br>\n\u2192 **SDXL / Pony / Illustrious**\n<br>\n\n- [**taesd_decoder**](https://huggingface.co/madebyollin/taesd/blob/main/taesd_decoder.safetensors)\n- [**taesd_encoder**](https://huggingface.co/madebyollin/taesd/blob/main/taesd_encoder.safetensors)\n<br>\n\u2192 **SD15**\n\n\n"
+        }
+    },
+    {
+        "id": 163,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "Make sure to pick a model for every dropdown menu slot with a selection, especially ones with an **\"-EXAMPLE-...\"** model, to avoid getting errors like this :\n\n```\nAttributeError: 'NoneType' object has no attribute 'lower'\n```"
+        }
+    },
+    {
+        "id": 165,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 175,
+        "name": "Random Number"
+    },
+    {
+        "id": 176,
+        "name": "Load Image Batch"
+    },
+    {
+        "id": 177,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "(a+b)%2**50"
+        }
+    },
+    {
+        "id": 178,
+        "name": "PrimitiveInt"
+    },
+    {
+        "id": 179,
+        "name": "PrimitiveInt"
+    },
+    {
+        "id": 180,
+        "name": "Random Number"
+    },
+    {
+        "id": 181,
+        "name": "PrimitiveInt"
+    },
+    {
+        "id": 182,
+        "name": "SplitImageWithAlpha"
+    },
+    {
+        "id": 183,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 184,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 185,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 186,
+        "name": "Load Image Batch"
+    },
+    {
+        "id": 187,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 188,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 189,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# ControlNet\n\n\n### Image Input\n\n- **Load CNet Image + Crop + Image Resize**<br>\n\u2192 loads image and allows adjusting crop and size\n\n\u2192 right-click on **Preview Image** to queue and check the cropped/resized image\n<br>\n<br>\n\n### Using Union/Promax ControlNet ?\n- allows switching between regular and Union ControlNet\n<br>\n\u2192 **Sage Attention** does not work with the Union models \n<br>\n### SetUnionControlNetType\n- selection of ControlNet type<br>\n\u2192 only when using Union ControlNet\n<br>\n### AIO Aux Preprocessor\n- choose **preprocessor** corresponding to selected ControlNet type\n<br>\n- **resolution** at which the input image is processed<br>\n\n### CNet for 1st/2nd Pass ?\n- allows targetting individual passes"
+        }
+    },
+    {
+        "id": 190,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 191,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "-EXAMPLE-CONTROLNET-UNION-.safetensors"
+        }
+    },
+    {
+        "id": 194,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# IPA Control\n- allows targetting individual passes by passing through the regular **model** where set to **false**<br>\n\u2192 This group should remain active at all times"
+        }
+    },
+    {
+        "id": 200,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 201,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 202,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 203,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 204,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 205,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 214,
+        "name": "Note"
+    },
+    {
+        "id": 215,
+        "name": "Note"
+    },
+    {
+        "id": 216,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 217,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 218,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 219,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 222,
+        "name": "SetUnionControlNetType",
+        "prompts": {
+            "text": "canny/lineart/anime_lineart/mlsd"
+        }
+    },
+    {
+        "id": 223,
+        "name": "AIO_Preprocessor",
+        "prompts": {
+            "text": "CannyEdgePreprocessor"
+        }
+    },
+    {
+        "id": 224,
+        "name": "mxSlider"
+    },
+    {
+        "id": 225,
+        "name": "Sampler Selector (Image Saver)"
+    },
+    {
+        "id": 226,
+        "name": "Scheduler Selector (Comfy) (Image Saver)"
+    },
+    {
+        "id": 227,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 230,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 239,
+        "name": "PrimitiveStringMultiline",
+        "prompts": {
+            "text": "D:\\VER_13\\_AI\\ComfyUI\\ComfyUI\\input\\collections\\portraits"
+        }
+    },
+    {
+        "id": 240,
+        "name": "PrimitiveStringMultiline",
+        "prompts": {
+            "text": "D:\\VER_13\\_AI\\ComfyUI\\ComfyUI\\input\\collections\\portraits"
+        }
+    },
+    {
+        "id": 248,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 249,
+        "name": "LoadImage"
+    },
+    {
+        "id": 302,
+        "name": "mxSlider"
+    },
+    {
+        "id": 303,
+        "name": "PrimitiveInt"
+    },
+    {
+        "id": 304,
+        "name": "mxSlider"
+    },
+    {
+        "id": 315,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "^(?!.*(Advanced|Core) Settings)"
+        }
+    },
+    {
+        "id": 317,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 338,
+        "name": "mxSlider"
+    },
+    {
+        "id": 339,
+        "name": "mxSlider"
+    },
+    {
+        "id": 344,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 345,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "^(?!.*(Advanced|Core) Settings)"
+        }
+    },
+    {
+        "id": 346,
+        "name": "DetailDaemonSamplerNode"
+    },
+    {
+        "id": 351,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 352,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "(1st|2nd) Pass"
+        }
+    },
+    {
+        "id": 384,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 385,
+        "name": "CR String To Combo"
+    },
+    {
+        "id": 386,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 387,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 388,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 389,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 391,
+        "name": "ImageResizeKJv2"
+    },
+    {
+        "id": 392,
+        "name": "ImageStitch"
+    },
+    {
+        "id": 393,
+        "name": "ImageResizeKJv2"
+    },
+    {
+        "id": 394,
+        "name": "ImageStitch"
+    },
+    {
+        "id": 395,
+        "name": "ImageResizeKJv2"
+    },
+    {
+        "id": 396,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 397,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 398,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# LoRA Settings<br>\n\n### Accelerator + LoRA 1-6\n- LoRAs are automatically appended to the positive prompt metadata<br>\n\u2192 the **Accelerator** position at the top is not different in any way and only labeled out of personal preference\n<br>\n\n### Strength Sliders\n>Preset to the most common range of **0-1.0**\n\n- to enter specific values, double-click the number\n<br>\n- value ranges and steps can be tweaked within the **Properties Panel**<br>\n\u2192 *(right-click context menu)*\n<br>\n- holding the **ctrl** key while pulling the slider against one of the edges allows exceeding the preset range"
+        }
+    },
+    {
+        "id": 399,
+        "name": "Anything Everywhere3"
+    },
+    {
+        "id": 400,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# Core Settings<br>\n\n### Image Dimensions\n>Quick and dynamic resolution selection for the empty latent\n\n- to enter specific values, double-click the numbers<br>\n- value ranges and steps can be tweaked within the **Properties Panel**<br>\n\u2192 *(right-click context menu)*"
+        }
+    },
+    {
+        "id": 401,
+        "name": "ImageStitch"
+    },
+    {
+        "id": 402,
+        "name": "ImageResizeKJv2"
+    },
+    {
+        "id": 403,
+        "name": "ImageStitch"
+    },
+    {
+        "id": 404,
+        "name": "ImageResizeKJv2",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 405,
+        "name": "ImageResizeKJv2",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 406,
+        "name": "ImageResizeKJv2",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 407,
+        "name": "ImageResizeKJv2",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 408,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 409,
+        "name": "ImageBlur"
+    },
+    {
+        "id": 410,
+        "name": "ImageCompositeMasked"
+    },
+    {
+        "id": 411,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 412,
+        "name": "ImpactLatentInfo"
+    },
+    {
+        "id": 417,
+        "name": "ImageResizeKJv2"
+    },
+    {
+        "id": 425,
+        "name": "Power Puter (rgthree)",
+        "prompts": {
+            "text": "W_target = a\nH_target = b\nW_input = c\nH_input = d\n\n# Check whether to pad horizontally or vertically; boolean (Wildcard * b/c BOOL != BOOLEAN)\npad_horizontal = True if (W_target > W_input) else False\n\n# Width difference\nW_diff = (W_target - W_input) / 2\n\n# Height difference\nH_diff = (H_target - H_input) / 2\n\n\nreturn (pad_horizontal, W_diff, H_diff)"
+        }
+    },
+    {
+        "id": 434,
+        "name": "ImageRandomTransform+"
+    },
+    {
+        "id": 439,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 443,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "^(?!.*Settings$)"
+        }
+    },
+    {
+        "id": 444,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 445,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "hijack_input",
+            "text_2": "(1st|2nd) Pass"
+        }
+    },
+    {
+        "id": 447,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# Advanced Settings<br>\n\n### Sage Attention Patch KJ\n- Enables/Disables SageAttention<br>\n\u2192 requires [**Triton**](https://github.com/woct0rdho/triton-windows) and [**SageAttention**](https://github.com/thu-ml/SageAttention) to be installed\n<br>\n\u2192 **not** compatible with : **Union/Promax ControlNet**, **SD15** models\n<br>\n\n### Alternative CLIP Loader\n> Allows loading in different finetunes for CLIP L and CLIP G\n\n### Alternative VAE\n> Allows use of different VAE models, which mainly affect the generated images' saturation and contrast in a similar way filter adjustments would"
+        }
+    },
+    {
+        "id": 448,
+        "name": "PathchSageAttentionKJ"
+    },
+    {
+        "id": 449,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "-EXAMPLE-CLIP-L-.safetensors",
+            "text_2": "-EXAMPLE-CLIP-G-.safetensors"
+        }
+    },
+    {
+        "id": 450,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 451,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 453,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# 1st Pass\n> regular sampling process with addtion of **Detail Daemon Sampler**\n\n- **daemon_detail_amount**  \n\u2192 positive values leave some noise to turn into detail  \n\u2192 negative values denoise more creating cleaner results<br><br>\n\u2192 ***Detail Daemon Sampler** contains further settings for timing etc. to experiment with, but can generally be left alone.<br>\nHighlighted as a \u2666\ufe0fred node\u2666\ufe0f above the **SamplerCustomAdvanced***\n<br>\n- **Variation Seed Offset**<br>\n\u2192 like the main **Seed Offset** this value is added to the **Global Seed** and the sum used internally\n<br>\n- **Noise Variation Strength**\n  > Dials in the **Variation Seed** gradually.\n\n   \u2192 a value of **0.00** will only use the main seed<br>\n   \u2192 a value of **1.00** will only use the variation seed<br>\n<br>\n\n## CustomSamplerAdvanced\n> Serves as a live preview of the sampling process when **Preview Method** is enabled in the Comfy Manager.<br>\nTo see the live previews rendered best, make sure to download the **TAESD** VAEs linked in the **resources** section."
+        }
+    },
+    {
+        "id": 454,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 455,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "Chris_mlc, 1girl, black hair, ponytail;\n\nCinematic moviestill photo portraying Chris_mlc closeup, seated in a cafe setting with volumetric lighting.\n\nThe focal point of the portrait shot is on her face, putting emphasis on the choker necklace and sleeveleless crop top she's wearing. \n\nShe has black hair in a messy spiky ponytail style. Her yearning gaze exudes mystery and melancholy with her head turned slightly, looking to the side, emphasizing the nostalgic mood of the image.\nBlack mascara, long lashes and red lipstick complement her pale complexion.\n\nHer black turtleneck crop top features frayed edges, adding to the edgy style of her black leather choker necklace.\n\nThe cafe setting is drenched in a moody atmosphere with view of a suburban area on a late sunny afternoon draped in dramatic sunlight. The golden light creates a subsurface scattering effect illuminating her pale skin beautifully."
+        }
+    },
+    {
+        "id": 463,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# Pass Input Hijack\n> Allows the **Input Image** to act as a specific Pass' result to prevent regeneration.\n\n\u2192 To use simply load a completed/saved Pass or copy/paste the clipspace directly into the **Input Image**\n\n> Specifically SVDQuant models can not reproduce a generation even with exactly matching parameters (*non-deterministic*).<br>\nFor example locking all seeds in and tweaking only the ADetailer pass would result in all passes being rerun, with different results.<br>\n\u2192 The Hijack can circumvent that issue"
+        }
+    },
+    {
+        "id": 465,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## Positive Prompt (Wildcard-Support)\n\n- ways to prompt wildcards<br>\n  \u2022 { option a | option b | ... }<br>\n  \u2022 \\_\\_wildcard\\_\\_<br>\n  \u2022 \\_\\_Folder\\wildcard_in_folder\\_\\_<br>\n\n- wildcard file formats :<br>\n  \u2022 **.txt** files within a folder hierarchy<br>\n  \u2022 **.yaml** files for more complex structures<br>\n\n- default wildcard location *(Impact-Pack)* :<br>\n\"`ComfyUI\\custom_nodes\\ComfyUI-Impact-Pack\\custom_wildcards`\"<br>\n<br>\n\u2192 can be changed by editing variable **\"custom_wildcards\"** in<br> \n\"`ComfyUI\\custom_nodes\\ComfyUI-Impact-Pack\\impact-pack.ini`\""
+        }
+    },
+    {
+        "id": 466,
+        "name": "SplitImageWithAlpha"
+    },
+    {
+        "id": 467,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 468,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 469,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 470,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 471,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 472,
+        "name": "ImageCrop+"
+    },
+    {
+        "id": 473,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "input_image"
+        }
+    },
+    {
+        "id": 474,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 475,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 481,
+        "name": "PrimitiveInt"
+    },
+    {
+        "id": 486,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 487,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 488,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "(a+b)%2**50"
+        }
+    },
+    {
+        "id": 489,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 490,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 491,
+        "name": "Logic Boolean Primitive"
+    },
+    {
+        "id": 492,
+        "name": "Logic Boolean Primitive"
+    },
+    {
+        "id": 493,
+        "name": "Logic Boolean Primitive"
+    },
+    {
+        "id": 494,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 495,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 496,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 497,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 498,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 499,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 500,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 501,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 502,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 503,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 512,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 513,
+        "name": "Logic Boolean Primitive"
+    },
+    {
+        "id": 514,
+        "name": "PrimitiveInt"
+    },
+    {
+        "id": 516,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 517,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 522,
+        "name": "PrimitiveStringMultiline"
+    },
+    {
+        "id": 531,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 533,
+        "name": "CR String To Combo"
+    },
+    {
+        "id": 534,
+        "name": "RandomNoise //Inspire",
+        "prompts": {
+            "text": "incremental"
+        }
+    },
+    {
+        "id": 535,
+        "name": "Note"
+    },
+    {
+        "id": 536,
+        "name": "Note"
+    },
+    {
+        "id": 537,
+        "name": "Note"
+    },
+    {
+        "id": 541,
+        "name": "mxSlider2D"
+    },
+    {
+        "id": 542,
+        "name": "mxSlider"
+    },
+    {
+        "id": 543,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 548,
+        "name": "CFGGuider"
+    },
+    {
+        "id": 549,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 550,
+        "name": "Text Multiline (Code Compatible)"
+    },
+    {
+        "id": 551,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 552,
+        "name": "ImpactWildcardProcessor",
+        "prompts": {
+            "text": "Cinematic moviestill profile photo capturing the essence of skinny eastern european female, 21yo, with hazel eyes and full lips with a  elegant expression. She has wavy auburn  twin-buns hair  and emo makeup featuring shades of white and __char/makeup/prefix eyeshadow,  in combination with  a  lariat necklace. Set  in a romantic cafe with outdoor seating located next to a river , on a sunny  day in summer. With  hard  front-lighting, very aesthetic, bokeh",
+            "text_2": "Select the Wildcard to add to the text"
+        }
+    },
+    {
+        "id": 553,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 554,
+        "name": "Prompts Everywhere"
+    },
+    {
+        "id": 555,
+        "name": "Power Puter (rgthree)",
+        "prompts": {
+            "text": "global_seed = a\nmain_seed_offset = b\nvariation_seed_offset = c\n\n\n# Calculate offset and modulus-clamp to a valid range\nmain_seed = (global_seed + main_seed_offset) % 2**50\nvariation_seed = (global_seed + variation_seed_offset) % 2**50\n\n\nreturn (main_seed, variation_seed)"
+        }
+    },
+    {
+        "id": 557,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 561,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# Inpainting\n\n- **Grow Mask**<br>\n\u2013 expands the provided masks\n<br>\n\n- **Gaussian Blur**<br>\n\u2013 blurs the mask for smoother integration\n<br>\n\n- **Crop Factor**<br>\n\u2013 multiple of the bbox area to be considered as context<br>\n\u2192 usual range: 1.5 - 3.0\n<br>\n\n- **Feather**<br>\n\u2013 softens the crop's edges for a smooth result<br>\n\u2013 also functions as noise_mask_feather\n<br>\n\n- **Inpaint Size**<br>\n\u2013 temporary size of **Mask** area multiplied by **crop_factor** during generation<br>\n\u2192 control over level of detail<br>\n\u2192 disregarded when the masked area is larger already\n<br>\n\n- **Noise Mask**  \n  \u25a0 **enabled**  \n&#160;&#160; \u2192 context aware  \n&#160;&#160; \u2192 smooth, seamless result\n\n  \u25a0 **disabled**  \n&#160;&#160; \u2192 ignores context  \n&#160;&#160; \u2192 allows forcing out of context content  \n&#160;&#160; \u2192 requires further measures to blend in smoothly (_i.e. more inpainting_)  \n&#160;&#160; \u2192 denoise acts like opacity\n<br>\n<br>\n<br>\n\n### DetailerDebug (SEGS) \u2192 for live-preview only, do not tweak"
+        }
+    },
+    {
+        "id": 562,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "### Input Image\n> paste the image to be inpainted here\n\n### Mask\n> paste the same image here and mask the inpaint area via **MaskEditor**\n</div>\n&#160;\n\n\u25ba **MaskEditor (BETA)**<br>\nTo mask an area, right-click on **\"Mask\"** and select  **open in MaskEditor** from the context-menu<br>\n\n| \u25ba **Controls** ||\n| - | - |\n| alt + right-click-drag | brush size, brush hardness |\n| mousewheel             | zoom |\n| mousewheel-click       | pan image |\n\n</div>\n&#160;\n\n### Copy\n- to copy an image's clipspace, right-click any \"Preview Image\" node labeled *(Clipspace)* and select:<br>\n\u2192 **Copy (Clipspace)**\n\n### Paste\n- to paste, right-click on the \"Input Image\" node and select:<br>\n\u2192 **Paste (Clipspace)**\n\n<br>\n\n## Important\n> Do not copy the clipspace from the before/after compare nodes.\n<br>\n<br>\n\u2192 Pasted image clipspaces are temporary and might be gone next time ComfyUI is started or updated."
+        }
+    },
+    {
+        "id": 563,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 564,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 565,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 566,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 567,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 568,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 569,
+        "name": "ImpactConvertDataType"
+    },
+    {
+        "id": 570,
+        "name": "CR String To Combo"
+    },
+    {
+        "id": 571,
+        "name": "GrowMask"
+    },
+    {
+        "id": 572,
+        "name": "Mask Gaussian Region"
+    },
+    {
+        "id": 573,
+        "name": "MaskToSEGS"
+    },
+    {
+        "id": 574,
+        "name": "DetailerForEachDebug"
+    },
+    {
+        "id": 575,
+        "name": "mxSlider"
+    },
+    {
+        "id": 576,
+        "name": "mxSlider"
+    },
+    {
+        "id": 577,
+        "name": "Sampler Selector (Image Saver)"
+    },
+    {
+        "id": 578,
+        "name": "Scheduler Selector (Comfy) (Image Saver)"
+    },
+    {
+        "id": 579,
+        "name": "mxSlider"
+    },
+    {
+        "id": 580,
+        "name": "Text Multiline"
+    },
+    {
+        "id": 581,
+        "name": "Text Multiline"
+    },
+    {
+        "id": 582,
+        "name": "mxSlider"
+    },
+    {
+        "id": 583,
+        "name": "mxSlider"
+    },
+    {
+        "id": 584,
+        "name": "mxSlider"
+    },
+    {
+        "id": 585,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 586,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "(a+b)%2**50"
+        }
+    },
+    {
+        "id": 587,
+        "name": "mxSlider"
+    },
+    {
+        "id": 588,
+        "name": "mxSlider"
+    },
+    {
+        "id": 589,
+        "name": "CR String To Combo"
+    },
+    {
+        "id": 590,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 591,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 592,
+        "name": "PrimitiveInt"
+    },
+    {
+        "id": 594,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 595,
+        "name": "PrimitiveString"
+    },
+    {
+        "id": 607,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 608,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# 2nd Pass\n\n### Upscaling\n\n- **scale_by**  \n\u2013 defines upscale factor (1.0 = **no upscale**)\n<br>\n- **Use Upscale Model ?**  \n*(Ultimate Upscale always runs the selected model regardless)*  \n**true**  \u2192 uses selected upscale model  \n**false** \u2192 regular upscale\n  \n\n### Sampling\n\n- **PAG** (Perturbed Attention Guidance)<br>\n\u2192 similar to CFG; can enhance details greatly (0.0 = **off**)<br>\n- **daemon_detail_amount**  \n\u2192 positive values leave some noise to turn into detail<br>\n\u2192 negative values denoise more, creating cleaner results<br><br>\n\u2192 ***Detail Daemon Sampler** contains further settings for timing etc. to experiment with, but can generally be left alone.<br>\nHighlighted as a \u2666\ufe0fred node\u2666\ufe0f above the **SamplerCustomAdvanced***\n<br>\n\n### Tiled Sampling\n\n- **tile_size + tile_overlap**<br>\n\u2192 only applies when Tiled Diffusion or Ultimate Upscale is used<br>\n- **tile_batch_size**<br>\n\u2013 amount of tiles processed at once \u2192 reduce if low on VRAM\n<br>\n\n- **Use Tiled Diffusion ? + Use Ultimate Upscale ?**<br>\n\u2192 regular sampling if both are set to **false**<br>\n<br>\n**Tiled Diffusion**<br>\n\u2192 faster<br>\n\u2192 recommended denoise < 0.4<br>\n<br>\n**Ultimate SD Upscale**<br>\n\u2192 slower<br>\n\u2192 recommended denoise < 0.3<br>\n<br>\n\n### Color Correction\n\n> matches colors from previous pass\n\n- **strength**<br>\n\u2192 1.0 is usually good (0.0 = **off**)\n<br>\n\n### 2nd Pass \u2014 Tile ControlNet\n> helps keeping image composition intact when upscaling\n- **Note:** Union/Promax ControlNet does not work with SageAttention"
+        }
+    },
+    {
+        "id": 609,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 610,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "-EXAMPLE-CONTROLNET-UNION-.safetensors"
+        }
+    },
+    {
+        "id": 611,
+        "name": "SetUnionControlNetType"
+    },
+    {
+        "id": 612,
+        "name": "AIO_Preprocessor",
+        "prompts": {
+            "text": "TTPlanet_TileSimple_Preprocessor"
+        }
+    },
+    {
+        "id": 613,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 614,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 615,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 616,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 617,
+        "name": "CR String To Combo"
+    },
+    {
+        "id": 618,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 619,
+        "name": "DetailDaemonSamplerNode"
+    },
+    {
+        "id": 620,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 621,
+        "name": "TiledDiffusion",
+        "prompts": {
+            "text": "Mixture of Diffusers"
+        }
+    },
+    {
+        "id": 622,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 623,
+        "name": "CFGGuider"
+    },
+    {
+        "id": 624,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 625,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 626,
+        "name": "UltimateSDUpscaleCustomSample"
+    },
+    {
+        "id": 627,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 628,
+        "name": "ColorMatch"
+    },
+    {
+        "id": 629,
+        "name": "mxSlider"
+    },
+    {
+        "id": 630,
+        "name": "mxSlider"
+    },
+    {
+        "id": 631,
+        "name": "mxSlider"
+    },
+    {
+        "id": 632,
+        "name": "mxSlider"
+    },
+    {
+        "id": 633,
+        "name": "Scheduler Selector (Comfy) (Image Saver)"
+    },
+    {
+        "id": 634,
+        "name": "mxSlider"
+    },
+    {
+        "id": 635,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "-EXAMPLE-MODEL-.pth"
+        }
+    },
+    {
+        "id": 636,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 637,
+        "name": "mxSlider"
+    },
+    {
+        "id": 638,
+        "name": "mxSlider"
+    },
+    {
+        "id": 639,
+        "name": "mxSlider"
+    },
+    {
+        "id": 640,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 641,
+        "name": "mxSlider"
+    },
+    {
+        "id": 642,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 643,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 644,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 645,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 646,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 647,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# ADetailer\n\n### Detection \n\n- **bbox_detector** *(UltralyticsDetectorProvider)*<br>\n(e.g. \"face_yolov8m.pt\")<br>\n\u2013 detects bbox containing the part to be ADetailed\n<br>\n- **SAMLoader (Impact)**<br>\n(e.g. \"sam_vit_b_01ec64.pth\")<br>\n\u2013 segment-anything-model to crop the target part out of the bbox\n<br>\n- **segm_detector** *(UltralyticsDetectorProvider)*<br>\n(e.g. \"person_yolov8m-seg.pt\")<br>\n\u2013 detects the cropped out shape and masks correspondingly\n<br>\n- **BBOX Threshold**<br>\n\u2013 probability of the detected part to match the query\n  - faces : detected reliably \u2192 higher values work well ~ 0.7 - 0.8\n  - hands : more difficult to distinguish \u2192 lower values ~ 0.4 - 0.5\n<br>\n- **BBOX Dilation**<br>\n\u2013 expansion of the detected bboxes\n<br>\n- **Crop Factor**<br>\n\u2013 multiple of the bbox area to be considered as context\n<br>\n- **Drop Size**<br>\n\u2013 size in pixels below which a detection will be disregarded<br>\n\u2192 helps prevent after-detailing negligible background detections\n<br>\n\n### ADetailer \n\n- **Guide Size**<br>\n\u2013 size maximum for detections to be considered<br>\n\u2192 allows skipping areas that are large/detailed enough already<br>\n\u2192 disregarded when force_inpaint = **enabled**\n<br>\n- **Inpaint Size**<br>\n\u2013 temporary size the masked area is upscaled to during generation<br>\n\u2192 control over level of detail<br>\n\u2192 disregarded when the masked area is larger already\n<br>\n- **Feather**<br>\n\u2013 softens the crop's edges for a smooth result<br>\n\u2013 also functions as noise_mask_feather\n<br>\n- **Cycle**<br>\n\u2013 allows multiple iterative passes\n<br>\n- **Noise Mask**  \n  \u25a0 **enabled**  \n&#160;&#160; \u2192 context aware  \n&#160;&#160; \u2192 smooth, seamless result\n\n  \u25a0 **disabled**  \n&#160;&#160; \u2192 ignores context  \n&#160;&#160; \u2192 allows forcing out of context content  \n&#160;&#160; \u2192 requires further measures to blend in smoothly (_i.e. more inpainting_)  \n&#160;&#160; \u2192 denoise acts like opacity\n<br>\n- **Force Inpaint**<br>\n\u2013 bypasses threshold and size criteria when **enabled**"
+        }
+    },
+    {
+        "id": 648,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 649,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 650,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 651,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/person_yolov8m-seg.pt"
+        }
+    },
+    {
+        "id": 652,
+        "name": "ImpactConvertDataType"
+    },
+    {
+        "id": 653,
+        "name": "ImpactConvertDataType"
+    },
+    {
+        "id": 654,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 655,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 656,
+        "name": "ImpactSimpleDetectorSEGS"
+    },
+    {
+        "id": 657,
+        "name": "DetailerForEachDebug"
+    },
+    {
+        "id": 658,
+        "name": "mxSlider"
+    },
+    {
+        "id": 659,
+        "name": "mxSlider"
+    },
+    {
+        "id": 660,
+        "name": "Scheduler Selector (Comfy) (Image Saver)"
+    },
+    {
+        "id": 661,
+        "name": "mxSlider"
+    },
+    {
+        "id": 662,
+        "name": "mxSlider"
+    },
+    {
+        "id": 663,
+        "name": "mxSlider"
+    },
+    {
+        "id": 664,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 665,
+        "name": "mxSlider"
+    },
+    {
+        "id": 666,
+        "name": "mxSlider"
+    },
+    {
+        "id": 667,
+        "name": "mxSlider"
+    },
+    {
+        "id": 668,
+        "name": "mxSlider"
+    },
+    {
+        "id": 669,
+        "name": "mxSlider"
+    },
+    {
+        "id": 670,
+        "name": "mxSlider"
+    },
+    {
+        "id": 671,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 672,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 673,
+        "name": "ColorMatch"
+    },
+    {
+        "id": 674,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "(a+b)%2**50"
+        }
+    },
+    {
+        "id": 675,
+        "name": "Sampler Selector (Image Saver)"
+    },
+    {
+        "id": 676,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 677,
+        "name": "CR String To Combo"
+    },
+    {
+        "id": 678,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 679,
+        "name": "Text Multiline (Code Compatible)"
+    },
+    {
+        "id": 680,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 681,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 682,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 683,
+        "name": "PerturbedAttention"
+    },
+    {
+        "id": 684,
+        "name": "mxSlider"
+    },
+    {
+        "id": 685,
+        "name": "PrimitiveInt"
+    },
+    {
+        "id": 686,
+        "name": "PrimitiveInt"
+    },
+    {
+        "id": 687,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 688,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 689,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 690,
+        "name": "ImpactWildcardProcessor",
+        "prompts": {
+            "text": "Select the Wildcard to add to the text"
+        }
+    },
+    {
+        "id": 691,
+        "name": "PrimitiveStringMultiline"
+    },
+    {
+        "id": 692,
+        "name": "PrimitiveStringMultiline"
+    },
+    {
+        "id": 693,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 694,
+        "name": "PerturbedAttention"
+    },
+    {
+        "id": 695,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 696,
+        "name": "Power Puter (rgthree)",
+        "prompts": {
+            "text": "# Seed values\nglobal_seed = a\nmain_seed_offset = b\n\n# 1st_Pass\ninput_width = c.shape[2]\ninput_height = c.shape[1]\n\n# Upscale Factor\nupscale_factor = d\n\n# tile_size\ntile_size = e\n\n# tile_overlap\ntile_overlap = f\n\n\n# Calculate offset seed and modulus-clamp to a valid range\noffset_seed = (global_seed + main_seed_offset) % 2**50\n\n\n# UPSCALED DIMENSIONS\nupscaled_width = input_width * upscale_factor\nupscaled_height = input_height * upscale_factor\n\n\n# OPTIMAL TILE CALCULATION\nW = upscaled_width\nH = upscaled_height\n\n# UltimateSDUpscale\noptimal_tile_width_USDU = 8 * ceil(W / (8 * ceil(W / tile_size)))\noptimal_tile_height_USDU = 8 * ceil(H / (8 * ceil(H / tile_size)))\n\n# Tiled Diffusion\noptimal_tile_width_TD = optimal_tile_width_USDU + tile_overlap\noptimal_tile_height_TD = optimal_tile_height_USDU + tile_overlap\n\n\n\nreturn (offset_seed, upscaled_width, upscaled_height, optimal_tile_width_USDU, optimal_tile_height_USDU, optimal_tile_width_TD, optimal_tile_height_TD)"
+        }
+    },
+    {
+        "id": 697,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 698,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 699,
+        "name": "ImageScale"
+    },
+    {
+        "id": 700,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 701,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 702,
+        "name": "Context (rgthree)"
+    },
+    {
+        "id": 714,
+        "name": "Image Saver Simple",
+        "prompts": {
+            "text": "2nd_Pass_%time",
+            "text_2": "SDXL_Advanced"
+        }
+    },
+    {
+        "id": 715,
+        "name": "Image Saver Simple",
+        "prompts": {
+            "text": "AD_Pass_%time",
+            "text_2": "SDXL_Advanced"
+        }
+    },
+    {
+        "id": 716,
+        "name": "Image Saver Simple",
+        "prompts": {
+            "text": "Inpainted_%time",
+            "text_2": "SDXL_Advanced"
+        }
+    },
+    {
+        "id": 717,
+        "name": "Image Saver Simple",
+        "prompts": {
+            "text": "1st_Pass_%time",
+            "text_2": "SDXL_Advanced"
+        }
+    },
+    {
+        "id": 721,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# Save Menu\n> enabling groups **\u2160- \u2164** saves images of respective pass with metadata \n\n- **Defaults**\n  - **.webp** (lossless) \u2192 nth_Pass_timestamp\n  - **.json** with the workflow data saved alongside\n  - **save location** \u2192 \"`ComfyUI\\output\\SDXL_Advanced`\"\n<br>\n- \"Final Pass\" = last completed pass"
+        }
+    },
+    {
+        "id": 724,
+        "name": "Image Saver Simple",
+        "prompts": {
+            "text": "Final_Pass_%time",
+            "text_2": "SDXL_Advanced"
+        }
+    },
+    {
+        "id": 726,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 745,
+        "name": "Mute / Bypass Relay (rgthree)"
+    },
+    {
+        "id": 747,
+        "name": "WidgetToString"
+    },
+    {
+        "id": 749,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 750,
+        "name": "ImageBatch"
+    },
+    {
+        "id": 751,
+        "name": "IPAdapterNoise"
+    },
+    {
+        "id": 752,
+        "name": "IPAdapterUnifiedLoaderFaceID",
+        "prompts": {
+            "text": "FACEID PLUS V2"
+        }
+    },
+    {
+        "id": 753,
+        "name": "IPAdapterFaceID"
+    },
+    {
+        "id": 754,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "IPA \u2014 Control"
+        }
+    },
+    {
+        "id": 755,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 756,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# IPAdapter \u2014 FaceID\n> *Specialized IPAdapter for facial resemblance*\n \n###\n\n## Image Source\n\n- **IPA \u2014 Default Image Loader**<br>\n\u2192 Loads images from the ```ComfyUI\\input``` folder\n<br>\n\n- **IPA \u2014 Random Image Loader**<br>\n\u2192 Allows randomized image loading from a path of your choosing\n<br>\n \n## IPAdapter FaceID\n\n- input images should be square \u2192 cropped otherwise<br>\n\u2192 preparing closeup reference images is highly recommended\n<br>\n- **Random Transform**<br>\n\u2192 creates duplicates of the input with random rotations and hue-shifts, which helps the ClipVision pick up on features it may have missed otherwise"
+        }
+    },
+    {
+        "id": 757,
+        "name": "SplitImageWithAlpha"
+    },
+    {
+        "id": 758,
+        "name": "SplitImageWithAlpha"
+    },
+    {
+        "id": 759,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "iif(max(a.width, a.height)>=max(b.width, b.height), max(a.width, a.height), max(b.width, b.height))"
+        }
+    },
+    {
+        "id": 760,
+        "name": "ImageResizeKJv2"
+    },
+    {
+        "id": 761,
+        "name": "ImageResizeKJv2"
+    },
+    {
+        "id": 762,
+        "name": "ImageBatch"
+    },
+    {
+        "id": 763,
+        "name": "PrepImageForClipVision"
+    },
+    {
+        "id": 764,
+        "name": "ImageRandomTransform+"
+    },
+    {
+        "id": 765,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "# IPAdapter \u2014 General\n> *Utilizing the higher precision **IPAdapter ClipVision Enhancer***\n \n###\n\n## Image Source\n\n- **IPA \u2014 Default Image Loader**<br>\n\u2192 Loads images from the ```ComfyUI\\input``` folder\n<br>\n\n- **IPA \u2014 Random Image Loader**<br>\n\u2192 Allows randomized image loading from a path of your choosing\n<br>\n \n## IPAdapter ClipVision Enhancer\n\n> *This version of the IPAdapter is more accurate due to a tiling process, which analyzes images in multiple ClipVision passes to then funnel the embeds' values together into a more precise analysis result.*\n\n- input images should be square \u2192 cropped otherwise<br>\n\u2192 **Image Resize** setting **method : stretch** can be used to squish images into squares without cutoff\n<br>\n- **Tile Amount**<br>\n\u2013 specifies amount of 224x224px parts the input is analyzed in<br>\n\u2192 yields diminishing returns *(recommended value 3)*"
+        }
+    },
+    {
+        "id": 766,
+        "name": "ImpactConditionalBranch"
+    },
+    {
+        "id": 767,
+        "name": "IPAdapterUnifiedLoader",
+        "prompts": {
+            "text": "PLUS (high strength)"
+        }
+    },
+    {
+        "id": 768,
+        "name": "IPAdapterClipVisionEnhancer",
+        "prompts": {
+            "text": "style transfer"
+        }
+    },
+    {
+        "id": 769,
+        "name": "mxSlider"
+    },
+    {
+        "id": 770,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "IPA \u2014 Control"
+        }
+    },
+    {
+        "id": 771,
+        "name": "PrimitiveBoolean"
+    },
+    {
+        "id": 772,
+        "name": "ImageResizeKJv2"
+    },
+    {
+        "id": 773,
+        "name": "MathExpression|pysssss"
+    },
+    {
+        "id": 774,
+        "name": "SplitImageWithAlpha"
+    },
+    {
+        "id": 775,
+        "name": "SplitImageWithAlpha"
+    },
+    {
+        "id": 776,
+        "name": "ImageResizeKJv2"
+    },
+    {
+        "id": 777,
+        "name": "ImageBatch"
+    },
+    {
+        "id": 800,
+        "name": "Checkpoint Loader (Simple)",
+        "prompts": {
+            "text": "-EXAMPLE-MODEL-.safetensors"
+        }
+    },
+    {
+        "id": 802,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 805,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "sampler_name"
+        }
+    },
+    {
+        "id": 806,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "scheduler_name"
+        }
+    },
+    {
+        "id": 807,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 808,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 809,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 814,
+        "name": "RegexExtract",
+        "prompts": {
+            "text": "lora_\\d+: \\{'on': True, 'lora': '([^']*)', 'strength': ([\\d.]+)\\}"
+        }
+    },
+    {
+        "id": 815,
+        "name": "RegexExtract"
+    },
+    {
+        "id": 837,
+        "name": "ImpactConvertDataType"
+    },
+    {
+        "id": 839,
+        "name": "FloatRange //Inspire"
+    },
+    {
+        "id": 840,
+        "name": "WorklistToItemList //Inspire"
+    },
+    {
+        "id": 841,
+        "name": "ForeachListBegin //Inspire"
+    },
+    {
+        "id": 843,
+        "name": "ForeachListEnd //Inspire"
+    },
+    {
+        "id": 844,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "<lora:p_amateur_style_slider_v1.safetensors:2.1>\n<lora:p_Dramatic Lighting Slider.safetensors:1.6>\n<lora:p_vn_mlc_Christine.safetensors:1>\n"
+        }
+    },
+    {
+        "id": 848,
+        "name": "RegexExtract",
+        "prompts": {
+            "text": "lora_\\d+: \\{'on': True, 'lora': '([^']*)', 'strength': ([\\d.]+)\\}"
+        }
+    },
+    {
+        "id": 851,
+        "name": "Text Find and Replace"
+    },
+    {
+        "id": 855,
+        "name": "ImpactStringSelector"
+    },
+    {
+        "id": 856,
+        "name": "ImpactStringSelector"
+    },
+    {
+        "id": 859,
+        "name": "StringFunction|pysssss"
+    },
+    {
+        "id": 864,
+        "name": "StringFunction|pysssss"
+    },
+    {
+        "id": 866,
+        "name": "StringFunction|pysssss"
+    },
+    {
+        "id": 884,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 897,
+        "name": "PrimitiveString"
+    },
+    {
+        "id": 899,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 902,
+        "name": "StringFunction|pysssss"
+    },
+    {
+        "id": 903,
+        "name": "Image Saver Metadata"
+    },
+    {
+        "id": 904,
+        "name": "StringFunction|pysssss",
+        "prompts": {
+            "text": ".safetensors"
+        }
+    },
+    {
+        "id": 906,
+        "name": "Mute / Bypass Repeater (rgthree)"
+    },
+    {
+        "id": 907,
+        "name": "ImpactLatentInfo"
+    },
+    {
+        "id": 908,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 909,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 910,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## v10\n- Structural changes\n\n- Addition of \"Advanced Settings\" to expand on the model loading options and allow use of custom CLIP models\n\n- Addition of ***Variation Seed*** feature to 1st Pass\n\n- Addition of **Pass Input Hijack** section allowing loaded images to act as 1st/2nd Pass result\n\n- Rework of Metadata collection\n\n- Rework of **LoRA Settings** group\n\n- Custom node pack changes :\n  > **\\-** : *ComfyUI-List-Utils*<br>\n  > **\\+** : *ComfyUI-Inspire-Pack*"
+        }
+    },
+    {
+        "id": 911,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "## \u25bc Custom Node Packs\n\n- [**ComfyUI-Custom-Scripts**](https://github.com/pythongosssss/ComfyUI-Custom-Scripts)\n<br>\n- [**ComfyUI-Detail-Daemon**](https://github.com/Jonseed/ComfyUI-Detail-Daemon)\n<br>\n- [**ComfyUI-Image-Saver**](https://github.com/alexopus/ComfyUI-Image-Saver)\n<br>\n- [**ComfyUI-Impact-Pack**](https://github.com/ltdrdata/ComfyUI-Impact-Pack)\n<br>\n- [**ComfyUI-Impact-Subpack**](https://github.com/ltdrdata/ComfyUI-Impact-Subpack)\n<br>\n- [**ComfyUI-Inspire-Pack**](https://github.com/ltdrdata/ComfyUI-Inspire-Pack)\n<br>\n- [**ComfyUI-KJNodes**](https://github.com/kijai/ComfyUI-KJNodes)\n<br>\n- [**comfyui-mxtoolkit**](https://github.com/Smirnov75/comfyui-mxtoolkit)\n<br>\n- [**ComfyUI-TiledDiffusion**](https://github.com/shiimizu/ComfyUI-TiledDiffusion)\n<br>\n- [**ComfyUI_Comfyroll_CustomNodes**](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes)\n<br>\n- [**comfyui_controlnet_aux**](https://github.com/Fannovel16/comfyui_controlnet_aux)\n<br>\n- [**ComfyUI_essentials**](https://github.com/cubiq/ComfyUI_essentials)\n<br>\n- [**ComfyUI_IPAdapter_plus**](https://github.com/cubiq/ComfyUI_IPAdapter_plus)\n<br>\n- [**ComfyUI_UltimateSDUpscale**](https://github.com/ssitu/ComfyUI_UltimateSDUpscale)\n<br>\n- [**cg-use-everywhere**](https://github.com/chrisgoringe/cg-use-everywhere)\n<br>\n- [**rgthree-comfy**](https://github.com/rgthree/rgthree-comfy)\n<br>\n- [**sd-perturbed-attention**](https://github.com/pamparamm/sd-perturbed-attention)\n<br>\n- [**was-node-suite-comfyui**](https://github.com/WASasquatch/was-node-suite-comfyui)"
+        }
+    },
+    {
+        "id": 912,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "\u2014Hi, this is RedPinkRetro, welcome to **Advanced XL/15/P/IL !**\u2014\n\n\u25ba Built to provide a versatile and modular all-in-one workflow for SDXL/Pony/llustrious and SD15 streamlining the most useful features focused on efficiency and structure.\n\n\n### Features :\n\n- Full metadata; recognized by CivitAI \n- LoRA loaders\n- ControlNet support\n- IPAdapter + IPAdapter FaceID\n- Wildcard prompting\n- Installation and download guide for models and nodes\n- Multiple passes with optional upscales\n  > 1st Pass : Daemon Detail + Variation Seed<br>\n    2nd Pass : DD. + Tiled Diffusion / Ultimate Upscale<br>\n    ADetailer<br>\n    Inpainting\n\n<br>\n\nMore workflows like this can be found on my CivitAI page :\n\n   \u2014 [RedPinkRetro/models](https://civitai.com/user/redpinkretro/models)\n\n**Thank you for your support!**"
+        }
+    },
+    {
+        "id": 913,
+        "name": "MarkdownNote",
+        "prompts": {
+            "text": "- Collapsed, nameless, black nodes can and should be ignored\n<br>\n- Optional, functionally unimportant settings will be mentioned and the nodes highlighted as \u2666\ufe0fred node\u2666\ufe0f\n<br>\n- All ksamplers that are expanded only serve as a live-preview.<br>\n\u2192 potentially exposed settings on them should be left alone\n"
+        }
+    }
+]

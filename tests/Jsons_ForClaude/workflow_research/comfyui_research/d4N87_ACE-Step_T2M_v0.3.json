@@ -1,0 +1,727 @@
+{
+  "id": "88ac5dad-efd7-40bb-84fe-fbaefdee1fa9",
+  "revision": 0,
+  "last_node_id": 53,
+  "last_link_id": 118,
+  "nodes": [
+    {
+      "id": 40,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -32.91024398803711,
+        40.671348571777344
+      ],
+      "size": [
+        375,
+        98
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            111
+          ]
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            80
+          ]
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            83
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.32",
+        "Node name for S&R": "CheckpointLoaderSimple",
+        "models": [
+          {
+            "name": "ace_step_v1_3.5b.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/ACE-Step_ComfyUI_repackaged/resolve/main/all_in_one/ace_step_v1_3.5b.safetensors?download=true",
+            "directory": "checkpoints"
+          }
+        ]
+      },
+      "widgets_values": [
+        "ACE_Step\\ACE_Step_v1_3.5B.safetensors"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 48,
+      "type": "MarkdownNote",
+      "pos": [
+        383.8240051269531,
+        428.93035888671875
+      ],
+      "size": [
+        499.296875,
+        571.3455200195312
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "ACE-Step Prompt Guide",
+      "properties": {},
+      "widgets_values": [
+        "**ACE** attualmente utilizza due tipi di prompt: **tag** e **testi**.\n\n- **tag:** utilizzati principalmente per descrivere stili musicali, scene, ecc. Simili ai prompt che utilizziamo per altre generazioni, descrivono principalmente lo stile generale e i requisiti dell'audio, separati da virgole.\n- **testi:** utilizzati principalmente per descrivere i testi, supportano tag di struttura del testo come [strofa], [ritornello] e [bridge] per distinguere le diverse parti del testo. È anche possibile inserire i nomi degli strumenti per la musica puramente strumentale.\n\n---\n\n# **Tags (prompt)**\n\nQuelli riportati qui sotto sono alcuni esempi, che possono aiutare a creare un prompt più utile a ACE-Step\n\n## Mainstream Music Styles\n\nUtilizza combinazioni di tag brevi per generare stili musicali specifici:\n\n- electronic\n- rock\n- pop\n- funk\n-soul\n- cyberpunk\n- Acid jazz\n- electro\n- em (electronic music)\n- soft electric drums\n-melodic\n\n## Tipi di scena\n\nCombina scenari di utilizzo e atmosfere specifiche per generare musica che corrisponda al mood corrispondente:\n\n- background music for parties\n- radio broadcasts\n- workout playlists\n\n## Elementi strumentali\n\n- saxophone\n- jazz\n- piano, violin\n\n## Tipi vocali\n\n- female voice\n- male voice\n- clean vocals\n\n## Termini professionali\n\nUtilizza alcuni termini professionali comunemente usati in musica per controllare con precisione gli effetti musicali:\n\n- 110 bpm (beats per minute is 110)\n- fast tempo\n- slow tempo\n- loops\n- fills\n- acoustic guitar\n- electric bass\n\n# Testo (prompt)\n\n## Tag della struttura del testo\n\n- [outro]\n- [verse]\n- [chorus]\n- [bridge]\n\nAttualmente ACE-Step supporta 19 lingue, ma le seguenti dieci lingue sono supportate meglio:\n\n- English\n- Chinese: **[zh]**\n- Russian: **[ru]**\n- Spanish: **[es]**\n- Japanese: **[ja]**\n- German: **[de]**\n- French: **[fr]**\n- Portuguese: **[pt]**\n- Italian: **[it]**\n- Korean: **[ko]**"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 14,
+      "type": "TextEncodeAceStepAudio",
+      "pos": [
+        382.65728759765625,
+        38.21274948120117
+      ],
+      "size": [
+        500.4014892578125,
+        342.7154846191406
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 80
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            113
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.32",
+        "Node name for S&R": "TextEncodeAceStepAudio"
+      },
+      "widgets_values": [
+        "saxphone, jazz\t\n",
+        "[instrumental]\n[break down]\n[drum fill]\n[chopped samples]",
+        1.0000000000000002
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 50,
+      "type": "Reroute",
+      "pos": [
+        911.9754028320312,
+        42.268375396728516
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 113
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "CONDITIONING",
+          "links": [
+            114,
+            115
+          ]
+        }
+      ],
+      "title": "CONDITIONING",
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 17,
+      "type": "EmptyAceStepLatentAudio",
+      "pos": [
+        928.3483276367188,
+        232.70445251464844
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            23
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.32",
+        "Node name for S&R": "EmptyAceStepLatentAudio"
+      },
+      "widgets_values": [
+        30,
+        1
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 49,
+      "type": "Note",
+      "pos": [
+        -34.07992172241211,
+        182.300537109375
+      ],
+      "size": [
+        377.4296569824219,
+        88
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "Qui viene caricato il modello di ACE-Step"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 51,
+      "type": "Note",
+      "pos": [
+        929.6973876953125,
+        356.8305358886719
+      ],
+      "size": [
+        268.287109375,
+        88
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "Qui impostate i secondi totali e il numero di tracce che verranno elaborate insieme, una dopo l'altra."
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 44,
+      "type": "ConditioningZeroOut",
+      "pos": [
+        1011.843994140625,
+        120.27595520019531
+      ],
+      "size": [
+        197.712890625,
+        26
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 114
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            109
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.32",
+        "Node name for S&R": "ConditioningZeroOut"
+      },
+      "widgets_values": [],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 18,
+      "type": "VAEDecodeAudio",
+      "pos": [
+        1590.3944091796875,
+        38.482269287109375
+      ],
+      "size": [
+        150.93612670898438,
+        46
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 101
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 83
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            26
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.32",
+        "Node name for S&R": "VAEDecodeAudio"
+      },
+      "widgets_values": [],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 45,
+      "type": "ModelSamplingSD3",
+      "pos": [
+        591.497314453125,
+        -233.0057373046875
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 111
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            117
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.32",
+        "Node name for S&R": "ModelSamplingSD3"
+      },
+      "widgets_values": [
+        4.000000000000001
+      ],
+      "color": "#332922",
+      "bgcolor": "#593930"
+    },
+    {
+      "id": 52,
+      "type": "LatentOperationTonemapReinhard",
+      "pos": [
+        569.5072631835938,
+        -112.39873504638672
+      ],
+      "size": [
+        314.7124938964844,
+        58
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT_OPERATION",
+          "type": "LATENT_OPERATION",
+          "links": [
+            116
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.34",
+        "Node name for S&R": "LatentOperationTonemapReinhard"
+      },
+      "widgets_values": [
+        1
+      ],
+      "color": "#332922",
+      "bgcolor": "#593930"
+    },
+    {
+      "id": 53,
+      "type": "LatentApplyOperationCFG",
+      "pos": [
+        951.0606689453125,
+        -177.8311004638672
+      ],
+      "size": [
+        204.87850952148438,
+        46
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 117
+        },
+        {
+          "name": "operation",
+          "type": "LATENT_OPERATION",
+          "link": 116
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            118
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.34",
+        "Node name for S&R": "LatentApplyOperationCFG"
+      },
+      "widgets_values": [],
+      "color": "#332922",
+      "bgcolor": "#593930"
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [
+        1250.652587890625,
+        37.81626510620117
+      ],
+      "size": [
+        315,
+        262
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 118
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 115
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 109
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 23
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            101
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.32",
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        922761653023017,
+        "randomize",
+        50,
+        5,
+        "res_multistep",
+        "simple",
+        1
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 19,
+      "type": "SaveAudio",
+      "pos": [
+        1757.9371337890625,
+        39.78654861450195
+      ],
+      "size": [
+        375.57366943359375,
+        112
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 26
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.32",
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "audio/ACE_Step"
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    }
+  ],
+  "links": [
+    [
+      23,
+      17,
+      0,
+      3,
+      3,
+      "LATENT"
+    ],
+    [
+      26,
+      18,
+      0,
+      19,
+      0,
+      "AUDIO"
+    ],
+    [
+      80,
+      40,
+      1,
+      14,
+      0,
+      "CLIP"
+    ],
+    [
+      83,
+      40,
+      2,
+      18,
+      1,
+      "VAE"
+    ],
+    [
+      101,
+      3,
+      0,
+      18,
+      0,
+      "LATENT"
+    ],
+    [
+      109,
+      44,
+      0,
+      3,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      111,
+      40,
+      0,
+      45,
+      0,
+      "MODEL"
+    ],
+    [
+      113,
+      14,
+      0,
+      50,
+      0,
+      "*"
+    ],
+    [
+      114,
+      50,
+      0,
+      44,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      115,
+      50,
+      0,
+      3,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      116,
+      52,
+      0,
+      53,
+      1,
+      "LATENT_OPERATION"
+    ],
+    [
+      117,
+      45,
+      0,
+      53,
+      0,
+      "MODEL"
+    ],
+    [
+      118,
+      53,
+      0,
+      3,
+      0,
+      "MODEL"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Caricamento modello - d4N87",
+      "bounding": [
+        -42.417083740234375,
+        -37.09602737426758,
+        391.7662353515625,
+        317.6913146972656
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "Prompt - d4N87",
+      "bounding": [
+        372.65728759765625,
+        -32.58725357055664,
+        520.463623046875,
+        1042.8631591796875
+      ],
+      "color": "#8A8",
+      "font_size": 22,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Latent - d4N87",
+      "bounding": [
+        918.3483276367188,
+        161.90452575683594,
+        290,
+        292.92608642578125
+      ],
+      "color": "#A88",
+      "font_size": 22,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "Elaborazione - d4N87",
+      "bounding": [
+        1240.652587890625,
+        -32.983734130859375,
+        335,
+        342.8000183105469
+      ],
+      "color": "#88A",
+      "font_size": 22,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.989193925450629,
+      "offset": [
+        129.4748910055788,
+        432.5726873586082
+      ]
+    },
+    "frontendVersion": "1.19.9",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}

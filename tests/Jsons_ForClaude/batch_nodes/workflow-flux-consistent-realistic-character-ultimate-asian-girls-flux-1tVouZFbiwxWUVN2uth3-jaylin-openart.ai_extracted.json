@@ -1,0 +1,809 @@
+[
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 11,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "sd3/t5xxl_fp16.safetensors",
+            "text_2": "sd3/clip_l.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 16,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 17,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 22,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 25,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 61,
+        "name": "ControlNetApplySD3"
+    },
+    {
+        "id": 63,
+        "name": "VAELoader"
+    },
+    {
+        "id": 65,
+        "name": "easy positive",
+        "prompts": {
+            "text": "embedding:easynegative, embedding:ng_deepnegative_v1_75t, blurry, blurr, unsharp focus, depth of field, DoF, BokeH, easy negative, badhandv4, (worst quality, low quality, normal quality), bad-artist, blurry, ugly, ((bad anatomy)),((bad hands)),((bad proportions)),((duplicate limbs)),((fused limbs)),((interlocking fingers)),((poorly drawn face)),((bad embedding:bad-hands-5)),((text)), ((bad eyes)), ((ugly eyes))"
+        }
+    },
+    {
+        "id": 99,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 110,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "FLUX.1-dev-ControlNet-Union-Pro-Shakker-Labs.safetensors"
+        }
+    },
+    {
+        "id": 117,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "raw photo, (realistic:1.5), (portrait:1.27), ([canadian:japanese:0.63] man 58-years-old:1.5), (androgynous:0.39), (overweight, overweight body:0.61), (gazing into the distance pose:1.5), (brown eyes:1.25), (amused, amused expression:1.13), (shullet hairstyle:1.25), (gray hair:1.25), (garibaldi beard:1.35), (disheveled:0.91), natural skin, (skin details, skin texture:1.07), (skin pores:0.94), (skin imperfections:0.09), (freckles:0.49), (moles:0.48), eyes details, iris details, circular details, circular pupil, soft ambient light from front, (professional photo, balanced photo, balanced exposure:1.2)",
+            "text_2": "((masterpiece, photo, best quality)), award winning, 4k,8k,character sheet,in different poses and angles, including front view, side view, and back view,visible face, portrait,turnaround sheet,The image features a young woman positioned against a textured beige wall, partially in sunlight. She leans gently against a metallic railing with an elegant and relaxed posture. Her attire is a shimmering silver, floor-length gown that clings to her form, enhancing her slender figure. The fabric of the dress reflects light, creating a sparkling effect.\n\nHer hair is brown and styled in loose, flowing waves that cascade around her shoulders, adding a softness to her appearance. The woman's facial expression is serene with subtle, confident undertones, marked by her directly engaging gaze towards the camera. Her makeup is natural yet polished, with emphasis on her almond-shaped eyes, complemented by light eyeshadow and mascara, and her lips bear a soft peach tint.\n\nOverall, the ambiance of the photograph is a blend of casual sophistication and serene beauty, enhanced by the warmth of the sunlight and the simple yet chic backdrop. The image appears to be captured during a moment of quiet reflection, giving it a tranquil and inviting aura."
+        }
+    },
+    {
+        "id": 124,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "double letters, repeating letters, blurry, frame"
+        }
+    },
+    {
+        "id": 125,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "double letters, repeating letters, blurry, frame"
+        }
+    },
+    {
+        "id": 172,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 179,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 185,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "flux1-dev.sft"
+        }
+    },
+    {
+        "id": 192,
+        "name": "OpenposePreprocessor"
+    },
+    {
+        "id": 193,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 194,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "Flux\u6d17\u56fe\u795e\u5668.safetensors"
+        }
+    },
+    {
+        "id": 195,
+        "name": "LoraLoaderModelOnly",
+        "prompts": {
+            "text": "Flux\u624b\u90e8\u7a33\u5b9a\u5668.safetensors"
+        }
+    },
+    {
+        "id": 197,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a dark warrior, cartoon style, zbrush, artstation,character sheet, in different poses and angles, including front view, side view, and back view, turnaround sheet"
+        }
+    },
+    {
+        "id": 198,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 199,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 200,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 201,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 202,
+        "name": "GetNode"
+    },
+    {
+        "id": 203,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 205,
+        "name": "SetNode",
+        "prompts": {
+            "text": "flux_pro_condi"
+        }
+    },
+    {
+        "id": 206,
+        "name": "SetNode",
+        "prompts": {
+            "text": "flux_neg_condi"
+        }
+    },
+    {
+        "id": 207,
+        "name": "SetNode"
+    },
+    {
+        "id": 208,
+        "name": "SetNode",
+        "prompts": {
+            "text": "flux_guider"
+        }
+    },
+    {
+        "id": 209,
+        "name": "SetNode",
+        "prompts": {
+            "text": "flux_sampler"
+        }
+    },
+    {
+        "id": 210,
+        "name": "SetNode"
+    },
+    {
+        "id": 211,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 212,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 213,
+        "name": "GetNode"
+    },
+    {
+        "id": 214,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 215,
+        "name": "SplitSigmasDenoise"
+    },
+    {
+        "id": 216,
+        "name": "DisableNoise"
+    },
+    {
+        "id": 217,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 218,
+        "name": "GetNode"
+    },
+    {
+        "id": 220,
+        "name": "SetNode"
+    },
+    {
+        "id": 221,
+        "name": "SetNode"
+    },
+    {
+        "id": 222,
+        "name": "SetNode"
+    },
+    {
+        "id": 223,
+        "name": "SetNode"
+    },
+    {
+        "id": 224,
+        "name": "GetNode"
+    },
+    {
+        "id": 226,
+        "name": "SetNode",
+        "prompts": {
+            "text": "1st_lantent"
+        }
+    },
+    {
+        "id": 227,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 228,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 229,
+        "name": "GetNode"
+    },
+    {
+        "id": 230,
+        "name": "GetNode"
+    },
+    {
+        "id": 231,
+        "name": "ImageScaleToTotalPixels"
+    },
+    {
+        "id": 232,
+        "name": "TTP_Image_Tile_Batch"
+    },
+    {
+        "id": 233,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 234,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 235,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 236,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 237,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 238,
+        "name": "TTP_Tile_image_size"
+    },
+    {
+        "id": 239,
+        "name": "TTP_Image_Assy"
+    },
+    {
+        "id": 240,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 241,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_NMKD-Siax_200k.pth"
+        }
+    },
+    {
+        "id": 242,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 243,
+        "name": "easy imageBatchToImageList"
+    },
+    {
+        "id": 244,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 245,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 246,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 247,
+        "name": "GetNode"
+    },
+    {
+        "id": 248,
+        "name": "LayerFilter: FilmV2",
+        "prompts": {
+            "text": "filmgrainer"
+        }
+    },
+    {
+        "id": 249,
+        "name": "DepthAnythingPreprocessor",
+        "prompts": {
+            "text": "depth_anything_vitl14.pth"
+        }
+    },
+    {
+        "id": 250,
+        "name": "GetNode",
+        "prompts": {
+            "text": "flux_sampler"
+        }
+    },
+    {
+        "id": 251,
+        "name": "Reroute"
+    },
+    {
+        "id": 252,
+        "name": "SetNode",
+        "prompts": {
+            "text": "upscaled_img"
+        }
+    },
+    {
+        "id": 254,
+        "name": "GetNode"
+    },
+    {
+        "id": 255,
+        "name": "GetNode"
+    },
+    {
+        "id": 256,
+        "name": "SetNode"
+    },
+    {
+        "id": 257,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 258,
+        "name": "GetNode"
+    },
+    {
+        "id": 301,
+        "name": "FS: Crop Image Into Even Pieces"
+    },
+    {
+        "id": 302,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 303,
+        "name": "GetNode"
+    },
+    {
+        "id": 304,
+        "name": "SetNode"
+    },
+    {
+        "id": 305,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 331,
+        "name": "Reroute"
+    },
+    {
+        "id": 333,
+        "name": "easy imageSize",
+        "prompts": {
+            "text": "Width: 1536 , Height: 922"
+        }
+    },
+    {
+        "id": 334,
+        "name": "SetNode",
+        "prompts": {
+            "text": "input_width"
+        }
+    },
+    {
+        "id": 336,
+        "name": "SetNode",
+        "prompts": {
+            "text": "input_height"
+        }
+    },
+    {
+        "id": 337,
+        "name": "GetNode",
+        "prompts": {
+            "text": "input_height"
+        }
+    },
+    {
+        "id": 338,
+        "name": "GetNode",
+        "prompts": {
+            "text": "input_width"
+        }
+    },
+    {
+        "id": 346,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "\u56db\u8fde\u62cd\u52a8\u4f5c\u6a2a\u7248 (1).png"
+        }
+    },
+    {
+        "id": 347,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "face_view3x3_new.png"
+        }
+    },
+    {
+        "id": 350,
+        "name": "GetNode"
+    },
+    {
+        "id": 351,
+        "name": "SetNode"
+    },
+    {
+        "id": 352,
+        "name": "GetNode"
+    },
+    {
+        "id": 353,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 354,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 355,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 356,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 357,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 358,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 359,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 393,
+        "name": "GetNode"
+    },
+    {
+        "id": 394,
+        "name": "SetNode"
+    },
+    {
+        "id": 395,
+        "name": "GetNode"
+    },
+    {
+        "id": 396,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 397,
+        "name": "Reroute"
+    },
+    {
+        "id": 398,
+        "name": "GetNode"
+    },
+    {
+        "id": 399,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 401,
+        "name": "SetNode",
+        "prompts": {
+            "text": "1st_inpaint"
+        }
+    },
+    {
+        "id": 402,
+        "name": "GetNode",
+        "prompts": {
+            "text": "1st_inpaint"
+        }
+    },
+    {
+        "id": 404,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 423,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 424,
+        "name": "SAMDetectorCombined"
+    },
+    {
+        "id": 425,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 426,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 427,
+        "name": "DetailerForEach"
+    },
+    {
+        "id": 428,
+        "name": "ImpactSegsAndMask"
+    },
+    {
+        "id": 429,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 430,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 431,
+        "name": "GetNode"
+    },
+    {
+        "id": 433,
+        "name": "GetNode"
+    },
+    {
+        "id": 434,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a dark warrior, cartoon style, zbrush, artstation,character sheet, in different poses and angles, including front view, side view, and back view, turnaround sheet"
+        }
+    },
+    {
+        "id": 435,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 436,
+        "name": "SetNode",
+        "prompts": {
+            "text": "detailed_face"
+        }
+    },
+    {
+        "id": 437,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 438,
+        "name": "CoreMLDetailerHookProvider"
+    },
+    {
+        "id": 439,
+        "name": "GetNode",
+        "prompts": {
+            "text": "upscaled_img"
+        }
+    },
+    {
+        "id": 440,
+        "name": "easy cleanGpuUsed"
+    },
+    {
+        "id": 441,
+        "name": "GetNode"
+    },
+    {
+        "id": 442,
+        "name": "GetNode"
+    },
+    {
+        "id": 445,
+        "name": "Reroute"
+    },
+    {
+        "id": 446,
+        "name": "Reroute"
+    },
+    {
+        "id": 447,
+        "name": "SaveImage"
+    },
+    {
+        "id": 448,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "\u5fae\u4fe1\u56fe\u7247_20241114095636.png"
+        }
+    },
+    {
+        "id": 449,
+        "name": "RH_Captioner",
+        "prompts": {
+            "text": "Please provide a detailed description of this image. If any characters in the image are familiar to you, such as celebrities, movie characters, or animated figures, please directly use their names. The description should be as detailed as possible, but should not exceed 200 words."
+        }
+    },
+    {
+        "id": 450,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "The image features a young woman positioned against a textured beige wall, partially in sunlight. She leans gently against a metallic railing with an elegant and relaxed posture. Her attire is a shimmering silver, floor-length gown that clings to her form, enhancing her slender figure. The fabric of the dress reflects light, creating a sparkling effect.\n\nHer hair is brown and styled in loose, flowing waves that cascade around her shoulders, adding a softness to her appearance. The woman's facial expression is serene with subtle, confident undertones, marked by her directly engaging gaze towards the camera. Her makeup is natural yet polished, with emphasis on her almond-shaped eyes, complemented by light eyeshadow and mascara, and her lips bear a soft peach tint.\n\nOverall, the ambiance of the photograph is a blend of casual sophistication and serene beauty, enhanced by the warmth of the sunlight and the simple yet chic backdrop. The image appears to be captured during a moment of quiet reflection, giving it a tranquil and inviting aura."
+        }
+    },
+    {
+        "id": 451,
+        "name": "easy promptConcat"
+    },
+    {
+        "id": 453,
+        "name": "easy positive",
+        "prompts": {
+            "text": "((masterpiece, photo, best quality)), award winning, 4k,8k,character sheet,in different poses and angles, including front view, side view, and back view,visible face, portrait,turnaround sheet,"
+        }
+    },
+    {
+        "id": 455,
+        "name": "CR Text Replace",
+        "prompts": {
+            "text": "This image features "
+        }
+    },
+    {
+        "id": 462,
+        "name": "CR Upscale Image",
+        "prompts": {
+            "text": "4x_NMKD-Siax_200k.pth"
+        }
+    },
+    {
+        "id": 466,
+        "name": "ImageResizeKJ",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 467,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 468,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "\u516d\u8fde\u62cd\u52a8\u4f5c\u6a2a\u7248 (1).png"
+        }
+    },
+    {
+        "id": 469,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "\u4e5d\u8fde\u62cd\u52a8\u4f5c\u6a2a\u7248\u7f29\u5c0f\u7248.png"
+        }
+    },
+    {
+        "id": 470,
+        "name": "SetNode",
+        "prompts": {
+            "text": "upload_pose"
+        }
+    },
+    {
+        "id": 471,
+        "name": "GetNode",
+        "prompts": {
+            "text": "upload_pose"
+        }
+    },
+    {
+        "id": 473,
+        "name": "GetNode"
+    },
+    {
+        "id": 474,
+        "name": "Int"
+    },
+    {
+        "id": 475,
+        "name": "SetNode"
+    },
+    {
+        "id": 476,
+        "name": "GetNode"
+    },
+    {
+        "id": 477,
+        "name": "GetNode"
+    },
+    {
+        "id": 478,
+        "name": "ImpactSwitch"
+    },
+    {
+        "id": 479,
+        "name": "FS: Crop Image Into Even Pieces"
+    },
+    {
+        "id": 480,
+        "name": "GetNode"
+    },
+    {
+        "id": 482,
+        "name": "FS: Crop Image Into Even Pieces"
+    },
+    {
+        "id": 483,
+        "name": "GetNode"
+    },
+    {
+        "id": 484,
+        "name": "FS: Crop Image Into Even Pieces"
+    },
+    {
+        "id": 485,
+        "name": "GetNode"
+    },
+    {
+        "id": 488,
+        "name": "SetNode"
+    },
+    {
+        "id": 489,
+        "name": "GetNode"
+    },
+    {
+        "id": 490,
+        "name": "Note",
+        "prompts": {
+            "text": "\u4f5c\u8005vx:xdtr6688\nmail:15058643272@163.com"
+        }
+    },
+    {
+        "id": 491,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2191\u2191\u2191\u2191\u2191\u2191\n\u9009\u62e91-\u534a\u8eab\u7167\u4e5d\u8fde\u62cd choose1-upper body combo 9 photos\n\u9009\u62e92-\u5168\u8eab\u7167\u56db\u8fde\u62cd choose2-full body combo 4 photos\n\u9009\u62e93-\u5168\u8eab\u7167\u516d\u8fde\u62cd choose3-full body combo 6 photos\n\u9009\u62e94-\u5168\u8eab\u7167\u5341\u8fde\u62cd choose4-full body combo 10 photos"
+        }
+    },
+    {
+        "id": 492,
+        "name": "LoadImage"
+    },
+    {
+        "id": 493,
+        "name": "PlaySound|pysssss"
+    }
+]

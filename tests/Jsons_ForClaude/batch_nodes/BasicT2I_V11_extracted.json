@@ -1,0 +1,499 @@
+[
+    {
+        "id": 1,
+        "name": "Prompt"
+    },
+    {
+        "id": 2,
+        "name": "Sampler"
+    },
+    {
+        "id": 5,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "1boy, male focus, \n\ngorou, \n\namazing quality, high resolution, ultra-detailed, gloves, fang, solo, fingerless gloves, paw print, open mouth, black gloves, bangs, armor, looking at viewer, upper body, dog boy, smile, streaked hair, japanese clothes, japanese armor, hair between eye,\n\nmasterpiece, best quality, very aesthetic, absurdres"
+        }
+    },
+    {
+        "id": 7,
+        "name": "Hand ADetailer"
+    },
+    {
+        "id": 9,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 9,
+        "name": "Body ADetailer"
+    },
+    {
+        "id": 10,
+        "name": "Note"
+    },
+    {
+        "id": 10,
+        "name": "NSFW ADetailer"
+    },
+    {
+        "id": 11,
+        "name": "Note"
+    },
+    {
+        "id": 11,
+        "name": "Face ADetailer"
+    },
+    {
+        "id": 12,
+        "name": "Note",
+        "prompts": {
+            "text": "832x1216\n960x1280"
+        }
+    },
+    {
+        "id": 12,
+        "name": "Eyes ADetailer"
+    },
+    {
+        "id": 13,
+        "name": "Note"
+    },
+    {
+        "id": 13,
+        "name": "Upscaler"
+    },
+    {
+        "id": 14,
+        "name": "Color Match"
+    },
+    {
+        "id": 15,
+        "name": "Lora Loader Stack (rgthree)"
+    },
+    {
+        "id": 15,
+        "name": "Preview Images"
+    },
+    {
+        "id": 16,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 16,
+        "name": "Control Center"
+    },
+    {
+        "id": 17,
+        "name": "OpenPose"
+    },
+    {
+        "id": 18,
+        "name": "HiresFix"
+    },
+    {
+        "id": 20,
+        "name": "easy int"
+    },
+    {
+        "id": 21,
+        "name": "easy int"
+    },
+    {
+        "id": 22,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 27,
+        "name": "easy int"
+    },
+    {
+        "id": 38,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 57,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/yolo11m.pt"
+        }
+    },
+    {
+        "id": 58,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\nhand, fingers,"
+        }
+    },
+    {
+        "id": 62,
+        "name": "Reroute"
+    },
+    {
+        "id": 63,
+        "name": "Reroute"
+    },
+    {
+        "id": 66,
+        "name": "Reroute"
+    },
+    {
+        "id": 69,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\nbody,"
+        }
+    },
+    {
+        "id": 70,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 71,
+        "name": "Reroute"
+    },
+    {
+        "id": 93,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/ntd11_anime_nsfw_segm_v3_all.pt"
+        }
+    },
+    {
+        "id": 95,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\nnsfw,"
+        }
+    },
+    {
+        "id": 96,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 106,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 108,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\nface,"
+        }
+    },
+    {
+        "id": 109,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 110,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Eyeful_v2-Paired.pt"
+        }
+    },
+    {
+        "id": 112,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\neyes, detailed eyes"
+        }
+    },
+    {
+        "id": 113,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 127,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_foolhardy_Remacri.pth"
+        }
+    },
+    {
+        "id": 128,
+        "name": "easy float"
+    },
+    {
+        "id": 129,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "diffusers_xl_canny_full.safetensors"
+        }
+    },
+    {
+        "id": 130,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 131,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 132,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "min(1024*b,a)\n"
+        }
+    },
+    {
+        "id": 133,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "min(1024*b,a)\n\n"
+        }
+    },
+    {
+        "id": 134,
+        "name": "UltimateSDUpscale",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 137,
+        "name": "ImageColorMatchAdobe+"
+    },
+    {
+        "id": 138,
+        "name": "ImageColorMatchAdobe+"
+    },
+    {
+        "id": 140,
+        "name": "PrimitiveFloat"
+    },
+    {
+        "id": 142,
+        "name": "Reroute"
+    },
+    {
+        "id": 144,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 154,
+        "name": "Note",
+        "prompts": {
+            "text": "Adjusts the color palette of processed images to better match the colors of a reference image"
+        }
+    },
+    {
+        "id": 155,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 156,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 157,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 158,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 159,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 160,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 162,
+        "name": "Note",
+        "prompts": {
+            "text": "https://civitai.com/user/Legendaer"
+        }
+    },
+    {
+        "id": 164,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 166,
+        "name": "Canny"
+    },
+    {
+        "id": 169,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 170,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 173,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\n1girl, solo, looking at viewer,"
+        }
+    },
+    {
+        "id": 174,
+        "name": "Text Multiline",
+        "prompts": {
+            "text": "bad quality,worst quality,worst detail,sketch,censor, bad hand, bad anatomy, deformed, artist name, watermark, signature, username, twitter username, patreon,"
+        }
+    },
+    {
+        "id": 193,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8s.pt"
+        }
+    },
+    {
+        "id": 199,
+        "name": "OpenposePreprocessor"
+    },
+    {
+        "id": 200,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 202,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "_2025-03-23-143521_00002.png"
+        }
+    },
+    {
+        "id": 203,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "diffusion_xl_openpose.safetensors"
+        }
+    },
+    {
+        "id": 218,
+        "name": "Scheduler Selector"
+    },
+    {
+        "id": 219,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "fabricatedXL_v50.safetensors"
+        }
+    },
+    {
+        "id": 220,
+        "name": "easy ckptNames",
+        "prompts": {
+            "text": "fabricatedXL_v50.safetensors"
+        }
+    },
+    {
+        "id": 221,
+        "name": "Save Image w/Metadata",
+        "prompts": {
+            "text": "Img_%time_%seed",
+            "text_2": "fabricatedXL_v50.safetensors"
+        }
+    },
+    {
+        "id": 222,
+        "name": "Save Image w/Metadata",
+        "prompts": {
+            "text": "ImgUp_%time_%seed",
+            "text_2": "fabricatedXL_v50.safetensors"
+        }
+    },
+    {
+        "id": 223,
+        "name": "easy showAnything",
+        "prompts": {
+            "text": "fabricatedXL_v50.safetensors"
+        }
+    },
+    {
+        "id": 224,
+        "name": "easy hiresFix",
+        "prompts": {
+            "text": "4x_foolhardy_Remacri.pth",
+            "text_2": "by percentage"
+        }
+    },
+    {
+        "id": 227,
+        "name": "Sampler Selector",
+        "prompts": {
+            "text": "dpmpp_2m_sde"
+        }
+    },
+    {
+        "id": 228,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 229,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 230,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\nhand, fingers,"
+        }
+    },
+    {
+        "id": 231,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\nbody,"
+        }
+    },
+    {
+        "id": 232,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\nnsfw,"
+        }
+    },
+    {
+        "id": 233,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\nface,"
+        }
+    },
+    {
+        "id": 234,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "masterpiece, best quality, amazing quality, very aesthetic, high resolution, ultra-detailed, absurdres,\neyes, detailed eyes"
+        }
+    },
+    {
+        "id": 236,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 237,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "min(max(a,b),2048)\n"
+        }
+    }
+]

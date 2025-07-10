@@ -1,0 +1,210 @@
+[
+    {
+        "id": 3,
+        "name": "Image Filter Adjustments"
+    },
+    {
+        "id": 96,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 213,
+        "name": "KSampler Adv. (Efficient)",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 216,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "crystalClearXL_ccxl.safetensors"
+        }
+    },
+    {
+        "id": 220,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 221,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 244,
+        "name": "SDXLResolutionPresets",
+        "prompts": {
+            "text": "Photo (1216x832)"
+        }
+    },
+    {
+        "id": 342,
+        "name": "SDXLPromptStyler",
+        "prompts": {
+            "text": "papercraft-collage"
+        }
+    },
+    {
+        "id": 343,
+        "name": "Save Text File",
+        "prompts": {
+            "text": "C:\\Users\\mrlun\\Desktop\\New folder (3)/[time(%Y-%m-%d)]"
+        }
+    },
+    {
+        "id": 344,
+        "name": "Save Text File",
+        "prompts": {
+            "text": "C:\\Users\\mrlun\\Desktop\\New folder (3)/[time(%Y-%m-%d)]"
+        }
+    },
+    {
+        "id": 356,
+        "name": "SDXLPromptStyler",
+        "prompts": {
+            "text": "misc-stained glass"
+        }
+    },
+    {
+        "id": 357,
+        "name": "SDXLPromptStyler"
+    },
+    {
+        "id": 369,
+        "name": "BboxDetectorSEGS"
+    },
+    {
+        "id": 370,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 371,
+        "name": "Reroute"
+    },
+    {
+        "id": 372,
+        "name": "DetailerForEach",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu"
+        }
+    },
+    {
+        "id": 373,
+        "name": "FromBasicPipe"
+    },
+    {
+        "id": 374,
+        "name": "Reroute"
+    },
+    {
+        "id": 375,
+        "name": "SaveImage"
+    },
+    {
+        "id": 380,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 381,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 382,
+        "name": "Text box"
+    },
+    {
+        "id": 383,
+        "name": "Reroute"
+    },
+    {
+        "id": 385,
+        "name": "Text box",
+        "prompts": {
+            "text": ",(embedding:easynegative:1), (embedding:ng_deepnegative_v1_75t:1),"
+        }
+    },
+    {
+        "id": 403,
+        "name": "Reroute"
+    },
+    {
+        "id": 442,
+        "name": "FromBasicPipe_v2"
+    },
+    {
+        "id": 443,
+        "name": "DPMagicPrompt",
+        "prompts": {
+            "text": ",({a house|a person|an animal|an object|a car|flowers|time|dawn|night|food|a story|a superhero|an insec|a repptile|a zoomorph}:1.3),"
+        }
+    },
+    {
+        "id": 444,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 445,
+        "name": "UltimateSDUpscale",
+        "prompts": {
+            "text": "dpmpp_2m_sde_gpu"
+        }
+    },
+    {
+        "id": 446,
+        "name": "SaveImage"
+    },
+    {
+        "id": 447,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4xUltrasharp_4xUltrasharpV10.pth"
+        }
+    },
+    {
+        "id": 450,
+        "name": "Image Size to Number"
+    },
+    {
+        "id": 451,
+        "name": "Reroute"
+    },
+    {
+        "id": 453,
+        "name": "Reroute"
+    },
+    {
+        "id": 454,
+        "name": "Reroute"
+    },
+    {
+        "id": 455,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "misc-stained glass"
+        }
+    },
+    {
+        "id": 456,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 457,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "papercraft-collage"
+        }
+    },
+    {
+        "id": 459,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "Photo (1216x832)"
+        }
+    },
+    {
+        "id": 463,
+        "name": "PrimitiveNode"
+    }
+]

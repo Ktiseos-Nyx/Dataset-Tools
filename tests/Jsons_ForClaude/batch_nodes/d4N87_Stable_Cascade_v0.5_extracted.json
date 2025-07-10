@@ -1,0 +1,149 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Fallout-style post-apocalyptic photos of a chicken dressed like human, sipping tea in an English pub, he is very gently and looking at the camera smiling very proud"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "illutration, 3d, cg, digital art, low quality, watermark, bad hands, low res, bad dressing, bokeh, blurry"
+        }
+    },
+    {
+        "id": 33,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 34,
+        "name": "StableCascade_EmptyLatentImage"
+    },
+    {
+        "id": 36,
+        "name": "StableCascade_StageB_Conditioning"
+    },
+    {
+        "id": 41,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 43,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 44,
+        "name": "SaveImage"
+    },
+    {
+        "id": 47,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "Fallout-style post-apocalyptic photos of a chicken dressed like human, sipping tea in an English pub, he is very gently and looking at the camera smiling very proud"
+        }
+    },
+    {
+        "id": 48,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "illutration, 3d, cg, digital art, low quality, watermark, bad hands, low res, bad dressing, bokeh, blurry"
+        }
+    },
+    {
+        "id": 50,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 51,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 52,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui avviene l'upscaling, sotto a Load Upscale Model si sceglie il mdoello di upscaling.\nNon \u00e8 un processo come l'Hires.fix, qui viene semplicemente ingrandita l'immagine generata."
+        }
+    },
+    {
+        "id": 53,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui viene caricato il modello Stage C."
+        }
+    },
+    {
+        "id": 55,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui \u00e8 dove bisogna inserire il prompt positivo e quello negativo"
+        }
+    },
+    {
+        "id": 56,
+        "name": "Note",
+        "prompts": {
+            "text": "Il VAE fa da Stage A, dove upscala ulteriormente l'immagine e la converte in immagine."
+        }
+    },
+    {
+        "id": 57,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui viene visualizza l'anteprima e l'immagine upscalata salvata."
+        }
+    },
+    {
+        "id": 58,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui \u00e8 possibile impostare la risoluzione per la generazione. E' consigliato seguire i multipli di 256.\nIl numero scelto come compression \u00e8 da intendere come divisione della risoluzione, ovvero base e altezza verranno divisi per quel numero."
+        }
+    },
+    {
+        "id": 59,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui avviene la prima elaborazione con lo Stage C a bassa risoluzione."
+        }
+    },
+    {
+        "id": 60,
+        "name": "Note",
+        "prompts": {
+            "text": "Qui avviene la seconda elaborazione tramite lo Stage B, l'immagine passata dallo Stage C viene upscalata e rielaborata."
+        }
+    },
+    {
+        "id": 61,
+        "name": "Note"
+    },
+    {
+        "id": 63,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "Stable_Cascade_Stage_B_ComfyUI.safetensors"
+        }
+    },
+    {
+        "id": 64,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "Stable_Cascade_Stage_C_ComfyUI.safetensors"
+        }
+    }
+]

@@ -1,0 +1,1396 @@
+{
+  "last_node_id": 307,
+  "last_link_id": 563,
+  "nodes": [
+    {
+      "id": 282,
+      "type": "CLIPTextEncodeFlux",
+      "pos": [
+        282.47686767578125,
+        372.4378662109375
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 541
+        },
+        {
+          "name": "clip_l",
+          "type": "STRING",
+          "widget": {
+            "name": "clip_l"
+          },
+          "link": 538
+        },
+        {
+          "name": "t5xxl",
+          "type": "STRING",
+          "widget": {
+            "name": "t5xxl"
+          },
+          "link": 537
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            542,
+            543
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncodeFlux"
+      },
+      "widgets_values": [
+        "",
+        "",
+        3.5
+      ]
+    },
+    {
+      "id": 286,
+      "type": "ConditioningZeroOut",
+      "pos": [
+        268.67852783203125,
+        340.7016296386719
+      ],
+      "size": [
+        317.4000244140625,
+        26
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 543
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            544
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConditioningZeroOut"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 285,
+      "type": "VHS_LoadVideo",
+      "pos": [
+        293.5155334472656,
+        78.53435516357422
+      ],
+      "size": [
+        247.455078125,
+        310
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 0,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "shape": 7,
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "shape": 7,
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            539
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            540
+          ],
+          "slot_index": 2
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_LoadVideo"
+      },
+      "widgets_values": {
+        "video": "Standard_Mode_A_woman_looking_out_over_the_sea.mp4",
+        "force_rate": 0,
+        "custom_width": 0,
+        "custom_height": 0,
+        "frame_load_cap": 0,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "format": "AnimateDiff",
+        "choose video to upload": "image",
+        "videopreview": {
+          "hidden": true,
+          "paused": false,
+          "params": {
+            "filename": "Standard_Mode_A_woman_looking_out_over_the_sea.mp4",
+            "type": "input",
+            "format": "video/mp4",
+            "force_rate": 0,
+            "custom_width": 0,
+            "custom_height": 0,
+            "frame_load_cap": 0,
+            "skip_first_frames": 0,
+            "select_every_nth": 1
+          }
+        }
+      }
+    },
+    {
+      "id": 71,
+      "type": "VAEEncode",
+      "pos": [
+        265.2087097167969,
+        497.81427001953125
+      ],
+      "size": [
+        220,
+        50
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 556
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 141
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "shape": 3,
+          "links": [
+            132
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncode"
+      },
+      "widgets_values": [],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 302,
+      "type": "PrimitiveNode",
+      "pos": [
+        -1017.1671142578125,
+        538.6399536132812
+      ],
+      "size": [
+        261.05352783203125,
+        121.17808532714844
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            558
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Image Load Cap",
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        1,
+        "fixed"
+      ],
+      "color": "#211b4a",
+      "bgcolor": "#0d0736",
+      "shape": 1
+    },
+    {
+      "id": 297,
+      "type": "LoadImagesFromDir //Inspire",
+      "pos": [
+        -711.0894775390625,
+        584.401123046875
+      ],
+      "size": [
+        441,
+        170
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "start_index",
+          "type": "INT",
+          "shape": 7,
+          "widget": {
+            "name": "start_index"
+          },
+          "link": 559
+        },
+        {
+          "name": "image_load_cap",
+          "type": "INT",
+          "shape": 7,
+          "widget": {
+            "name": "image_load_cap"
+          },
+          "link": 558
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            555,
+            556,
+            557
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        },
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "title": "Load Images from directory",
+      "properties": {
+        "Node name for S&R": "LoadImagesFromDir //Inspire"
+      },
+      "widgets_values": [
+        "C:\\AI\\Comfy\\ComfyUI\\input\\Ny mapp\\",
+        1,
+        62,
+        true
+      ],
+      "color": "#211b4a",
+      "bgcolor": "#0d0736",
+      "shape": 1
+    },
+    {
+      "id": 303,
+      "type": "PrimitiveNode",
+      "pos": [
+        -1015.3477172851562,
+        707.9957885742188
+      ],
+      "size": [
+        265.1929931640625,
+        114.27896118164062
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            559
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Index",
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        62,
+        "increment"
+      ],
+      "color": "#211b4a",
+      "bgcolor": "#0d0736",
+      "shape": 1
+    },
+    {
+      "id": 50,
+      "type": "VAEDecode",
+      "pos": [
+        268.18719482421875,
+        -262.6181335449219
+      ],
+      "size": [
+        140,
+        50
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 130
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 72
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "shape": 3,
+          "links": [
+            561
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": [],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 292,
+      "type": "MarkdownNote",
+      "pos": [
+        -1049.5185546875,
+        -300.5910339355469
+      ],
+      "size": [
+        319.5188903808594,
+        217.95545959472656
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "TIPS 💡",
+      "properties": {},
+      "widgets_values": [
+        "### &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; DENOISE  \n>\n>Low denoise = more similar to original image  \n>\n>High denoise = less similar to original image\n>  \n>For large changes to an image, use denoise 1.0"
+      ],
+      "color": "#432",
+      "bgcolor": "#653",
+      "shape": 1
+    },
+    {
+      "id": 291,
+      "type": "MarkdownNote",
+      "pos": [
+        -1042.5272216796875,
+        -31.717851638793945
+      ],
+      "size": [
+        314.13421630859375,
+        218.42630004882812
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "PROMPT INFO 💡",
+      "properties": {},
+      "widgets_values": [
+        "## Gemini System Prompt  \nAt the bottom of the you can add a short general prompt that you want Gemini to focus on, besides the input image.  \n\n## L Prompt  \nThis can be treated as a normal SDXL prompt, more or less.\n\n"
+      ],
+      "color": "#232",
+      "bgcolor": "#353",
+      "shape": 1
+    },
+    {
+      "id": 5,
+      "type": "VAELoader",
+      "pos": [
+        -176.35629272460938,
+        -307.5841979980469
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "shape": 3,
+          "links": [
+            72,
+            141
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "VAE",
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "Shuttle\\diffusion_pytorch_model.safetensors"
+      ],
+      "color": "#722121",
+      "bgcolor": "#5e0d0d",
+      "shape": 1
+    },
+    {
+      "id": 290,
+      "type": "MarkdownNote",
+      "pos": [
+        -1036.6839599609375,
+        236.1156463623047
+      ],
+      "size": [
+        305.8424377441406,
+        198.06900024414062
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "GEMINI INFO 💡",
+      "properties": {},
+      "widgets_values": [
+        "## &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; GEMINI INFO\n>  \n>  \n>  \nFor instructions on how to install and use Gemini, visit the [Github](https://github.com/ShmuelRonen/ComfyUI-Gemini_Flash_2.0_Exp)  \n>  \n>  \n>"
+      ],
+      "color": "#bd582d",
+      "bgcolor": "#a94419",
+      "shape": 1
+    },
+    {
+      "id": 307,
+      "type": "MarkdownNote",
+      "pos": [
+        -704.3613891601562,
+        190.51663208007812
+      ],
+      "size": [
+        506.6799621582031,
+        247.1886749267578
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "LOAD FROM DIRECTORY INFO 💡",
+      "properties": {},
+      "widgets_values": [
+        "## &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; LOAD FROM DIRECTORY\n>  \n> Set path to your folder that contains the images to load in \"directory\"  \n>  \n> Leave \"Image Load Cap\" at value 1 and \"fixed\"  \n>  \n> Set Idex Value to 0 and \"increment\"  \n>  \n> Set your queue to the the number of images you want to generate  \n>  \n> If you have issues with loading the images, select all images in the folder using alt+a and then press F2 and change the names to something like \"1\". All images with change name to 1(1).png, 1(2).png, 1(3).png etc\n"
+      ],
+      "color": "#211b4a",
+      "bgcolor": "#0d0736",
+      "shape": 1
+    },
+    {
+      "id": 284,
+      "type": "Text Multiline",
+      "pos": [
+        -692.0684204101562,
+        -314.3772888183594
+      ],
+      "size": [
+        471.4222717285156,
+        167.10397338867188
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            538
+          ]
+        }
+      ],
+      "title": "L-CLIP PROMPT ✍️",
+      "properties": {
+        "Node name for S&R": "Text Multiline"
+      },
+      "widgets_values": [
+        "Amateur photography, captured with a Sony Alpha camera and a Zeiss lens, f/2.8 aperture, ISO 100, 1/125 shutter speed, color grading to enhance the realism of the textures, post-processing in Adobe Lightroom and Photoshop to refine the details and enhance the overall image quality. "
+      ],
+      "color": "#232",
+      "bgcolor": "#353",
+      "shape": 1
+    },
+    {
+      "id": 287,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -686.520263671875,
+        -103.75201416015625
+      ],
+      "size": [
+        464.0211181640625,
+        253.9351806640625
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 545
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "shape": 6,
+          "links": null
+        }
+      ],
+      "title": "T5-XXL PROMPT (AUTOMATIC) 🔄️",
+      "properties": {
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "",
+        "amateur photography, a captivating close-up shot of a young woman indoors, bathed in soft, natural light streaming through a large window overlooking a cityscape. She is seated on a plush bed, adorned in a delicate red corset with a subtle polka dot pattern, complemented by matching lingerie. Her dark hair frames her face, accentuating her striking purple eyes and fair skin. She wears a delicate silver necklace and small pearl earrings. The overall mood is intimate and alluring, with a focus on capturing her natural beauty and the serene atmosphere of the room. The background features blurred buildings, adding depth and context to the scene. The composition is carefully balanced, drawing the viewer's attention to the subject's gaze and the intricate details of her attire. The lighting creates soft shadows and highlights, enhancing the realism and dimensionality of the image. The photograph evokes a sense of quiet confidence and understated elegance."
+      ],
+      "color": "#232",
+      "bgcolor": "#353",
+      "shape": 1
+    },
+    {
+      "id": 266,
+      "type": "UNETLoader",
+      "pos": [
+        -175.47850036621094,
+        -191.1375732421875
+      ],
+      "size": [
+        315,
+        82
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "shape": 3,
+          "links": [
+            534
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "LOAD FLUX OR SHUTTLE",
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "Flux dev\\flux_dev.safetensors",
+        "default"
+      ],
+      "color": "#223",
+      "bgcolor": "#335",
+      "shape": 1
+    },
+    {
+      "id": 267,
+      "type": "DualCLIPLoader",
+      "pos": [
+        -171.28506469726562,
+        -46.73985290527344
+      ],
+      "size": [
+        315,
+        130
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "showAdvanced": true,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "shape": 3,
+          "links": [
+            541
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "L CLIP & T5-XXL CLIP 📎",
+      "properties": {
+        "Node name for S&R": "DualCLIPLoader"
+      },
+      "widgets_values": [
+        "L clip\\ViT-L-14-TEXT-detail-improved-hiT-GmP-HF.safetensors",
+        "t5-xxl\\t5xxl_fp16.safetensors",
+        "flux",
+        "cpu"
+      ],
+      "color": "#c4c714",
+      "bgcolor": "#b0b300",
+      "shape": 1
+    },
+    {
+      "id": 279,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -171.4328155517578,
+        145.42491149902344
+      ],
+      "size": [
+        322.58905029296875,
+        103.24930572509766
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 534
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            563
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "◁LORA▷",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "flux\\Hyper-FLUX.1-dev-8steps-lora.safetensors",
+        0.13
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159",
+      "shape": 1
+    },
+    {
+      "id": 289,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -167.3409881591797,
+        304.3317565917969
+      ],
+      "size": [
+        307.41094970703125,
+        98.69588470458984
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 563
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            549
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "◁LORA▷",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "flux\\lightning\\amateurphoto_v2.safetensors",
+        1
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159",
+      "shape": 1
+    },
+    {
+      "id": 72,
+      "type": "KSampler",
+      "pos": [
+        195.26097106933594,
+        -305.8744201660156
+      ],
+      "size": [
+        392.0103759765625,
+        262
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 549
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 542
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 544
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 132
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "shape": 3,
+          "links": [
+            130
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "KSAMPLER 👨‍🔧",
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        445959343608089,
+        "fixed",
+        20,
+        1,
+        "res_2m_sde",
+        "beta57",
+        1
+      ],
+      "color": "#223",
+      "bgcolor": "#335",
+      "shape": 1
+    },
+    {
+      "id": 281,
+      "type": "Text Multiline",
+      "pos": [
+        197.60772705078125,
+        63.08244323730469
+      ],
+      "size": [
+        415.0716857910156,
+        362.26629638671875
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            536
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "♊ SYSTEM PROMPT 💻",
+      "properties": {
+        "Node name for S&R": "Text Multiline"
+      },
+      "widgets_values": [
+        "You are an AI assistant specializing in crafting professional and efective prompts for the Flux model, suitable for the t5-xxl clip. You are specialized in creating prompts for generating realistic looking images based off another image. When an image is provided, you should generate a concise and descriptive prompt that will create a realistic looking image based of the traits of the image that is provided. Ignore any text in the original image. Ignore any imperfections in the original image. Ignore any facial tattoos. The prompt should be between 150-300 tokens and start with the words: \"amateur photography\". The output should only show the final prompt, without any additional comments or instructions. "
+      ],
+      "color": "#bd582d",
+      "bgcolor": "#a94419",
+      "shape": 1
+    },
+    {
+      "id": 280,
+      "type": "Gemini_Flash_200_Exp",
+      "pos": [
+        199.0078582763672,
+        459.6230773925781
+      ],
+      "size": [
+        404.5534362792969,
+        364
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "shape": 7,
+          "link": 555
+        },
+        {
+          "name": "video",
+          "type": "IMAGE",
+          "shape": 7,
+          "link": 539
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "shape": 7,
+          "link": 540
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 536
+        }
+      ],
+      "outputs": [
+        {
+          "name": "generated_content",
+          "type": "STRING",
+          "links": [
+            537,
+            545
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "♊ 2.0 FLASH 💫 SETTINGS",
+      "properties": {
+        "Node name for S&R": "Gemini_Flash_200_Exp"
+      },
+      "widgets_values": [
+        "",
+        "image",
+        false,
+        false,
+        "",
+        "",
+        "",
+        400,
+        0.4,
+        false
+      ],
+      "color": "#323",
+      "bgcolor": "#535",
+      "shape": 1
+    },
+    {
+      "id": 304,
+      "type": "Image Save",
+      "pos": [
+        636.1049194335938,
+        -351.909423828125
+      ],
+      "size": [
+        433.3048400878906,
+        1176.55712890625
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 561
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [],
+          "slot_index": 0
+        },
+        {
+          "name": "files",
+          "type": "STRING",
+          "links": [],
+          "slot_index": 1
+        }
+      ],
+      "title": "SAVE IMAGE 💾",
+      "properties": {
+        "Node name for S&R": "Image Save"
+      },
+      "widgets_values": [
+        "[time(%Y-%m-%d)]",
+        "IMG2IMG",
+        "_",
+        3,
+        "false",
+        "png",
+        300,
+        100,
+        "true",
+        "false",
+        "false",
+        "false",
+        "true",
+        "true",
+        "true"
+      ],
+      "color": "#222",
+      "bgcolor": "#000",
+      "shape": 1
+    },
+    {
+      "id": 299,
+      "type": "PreviewImage",
+      "pos": [
+        -187.56478881835938,
+        519.3582763671875
+      ],
+      "size": [
+        340.7788391113281,
+        307.816162109375
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 557
+        }
+      ],
+      "outputs": [],
+      "title": "CURRENT IMAGE 🎴",
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": [],
+      "color": "#211b4a",
+      "bgcolor": "#0d0736",
+      "shape": 1
+    }
+  ],
+  "links": [
+    [
+      72,
+      5,
+      0,
+      50,
+      1,
+      "VAE"
+    ],
+    [
+      130,
+      72,
+      0,
+      50,
+      0,
+      "LATENT"
+    ],
+    [
+      132,
+      71,
+      0,
+      72,
+      3,
+      "LATENT"
+    ],
+    [
+      141,
+      5,
+      0,
+      71,
+      1,
+      "VAE"
+    ],
+    [
+      534,
+      266,
+      0,
+      279,
+      0,
+      "MODEL"
+    ],
+    [
+      536,
+      281,
+      0,
+      280,
+      3,
+      "STRING"
+    ],
+    [
+      537,
+      280,
+      0,
+      282,
+      2,
+      "STRING"
+    ],
+    [
+      538,
+      284,
+      0,
+      282,
+      1,
+      "STRING"
+    ],
+    [
+      539,
+      285,
+      0,
+      280,
+      1,
+      "IMAGE"
+    ],
+    [
+      540,
+      285,
+      2,
+      280,
+      2,
+      "AUDIO"
+    ],
+    [
+      541,
+      267,
+      0,
+      282,
+      0,
+      "CLIP"
+    ],
+    [
+      542,
+      282,
+      0,
+      72,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      543,
+      282,
+      0,
+      286,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      544,
+      286,
+      0,
+      72,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      545,
+      280,
+      0,
+      287,
+      0,
+      "STRING"
+    ],
+    [
+      549,
+      289,
+      0,
+      72,
+      0,
+      "MODEL"
+    ],
+    [
+      555,
+      297,
+      0,
+      280,
+      0,
+      "IMAGE"
+    ],
+    [
+      556,
+      297,
+      0,
+      71,
+      0,
+      "IMAGE"
+    ],
+    [
+      557,
+      297,
+      0,
+      299,
+      0,
+      "IMAGE"
+    ],
+    [
+      558,
+      302,
+      0,
+      297,
+      1,
+      "INT"
+    ],
+    [
+      559,
+      303,
+      0,
+      297,
+      0,
+      "INT"
+    ],
+    [
+      561,
+      50,
+      0,
+      304,
+      0,
+      "IMAGE"
+    ],
+    [
+      563,
+      279,
+      0,
+      289,
+      0,
+      "MODEL"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 5,
+      "title": ".",
+      "bounding": [
+        -719.1914672851562,
+        -398.47479248046875,
+        1803.911865234375,
+        1242.534423828125
+      ],
+      "color": "#5a0606",
+      "font_size": 35,
+      "flags": {}
+    },
+    {
+      "id": 1,
+      "title": "CHECKPOINTS ETC. 🏁",
+      "bounding": [
+        -185.01058959960938,
+        -384.895751953125,
+        345.2015075683594,
+        828.2913818359375
+      ],
+      "color": "#8A8",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "♊ 2.0 FLASH 💫",
+      "bounding": [
+        185.8140106201172,
+        -13.133417129516602,
+        429.8343505859375,
+        848.4874267578125
+      ],
+      "color": "#A88",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "GENERATION 👨‍🔧",
+      "bounding": [
+        170.3587646484375,
+        -381.9441223144531,
+        433.0953369140625,
+        356.4073486328125
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "PROMPTS ✍️",
+      "bounding": [
+        -706.1790161132812,
+        -389.3570556640625,
+        503.3386535644531,
+        550.4578857421875
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 6,
+      "title": "FLUX  ♊ IMG2IMG Ver. 2.0",
+      "bounding": [
+        -466.3316650390625,
+        -518.744873046875,
+        1064.047607421875,
+        110.77715301513672
+      ],
+      "color": "#3f789e",
+      "font_size": 80,
+      "flags": {}
+    },
+    {
+      "id": 7,
+      "title": "LOAD FROM DIRECTORY 🗂️",
+      "bounding": [
+        -1048.215576171875,
+        452.4965515136719,
+        1223.9815673828125,
+        390.380859375
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 8,
+      "title": "TIPS 💡",
+      "bounding": [
+        -1053.9677734375,
+        -393.29315185546875,
+        338.50054931640625,
+        840.3075561523438
+      ],
+      "color": "#810909",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 9,
+      "title": ".",
+      "bounding": [
+        -1177.35302734375,
+        -637.1064453125,
+        2348.888916015625,
+        1528.888916015625
+      ],
+      "color": "#2a004d",
+      "font_size": 5,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.40909090909091295,
+      "offset": [
+        2321.8988775915154,
+        977.8440891949149
+      ]
+    },
+    "ue_links": [],
+    "workspace_info": {
+      "id": "_Rzz_jIQ2MXSqycjGQVgu"
+    },
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true,
+    "groupNodes": {}
+  },
+  "version": 0.4
+}

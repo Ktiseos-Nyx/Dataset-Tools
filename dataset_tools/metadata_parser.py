@@ -65,10 +65,13 @@ def parse_metadata(file_path_named: str) -> dict[str, Any]:
 
     try:
         # Create the metadata engine
+        nfo(f"[DT.metadata_parser]: Creating metadata engine with path: {PARSER_DEFINITIONS_PATH}")
         engine = create_metadata_engine(PARSER_DEFINITIONS_PATH)
+        nfo(f"[DT.metadata_parser]: Engine created successfully, calling get_parser_for_file")
 
         # Process the file
         result = engine.get_parser_for_file(file_path_named)
+        nfo(f"[DT.metadata_parser]: get_parser_for_file returned: {type(result)} - {bool(result)}")
 
         if result and isinstance(result, dict) and result:
             # Transform the engine result to UI format
@@ -140,7 +143,34 @@ def _transform_engine_result_to_ui_dict(result: dict[str, Any], ui_dict: dict[st
             "raw_metadata",
             "tool",
             "is_sdxl",
+            "tipo_enhancement",
+            "workflow_complexity",
+            "advanced_upscaling",
+            "multi_stage_conditioning",
+            "post_processing_effects",
+            "custom_node_ecosystems",
+            "workflow_techniques",
         ]:
             if "unclassified" not in ui_dict:
                 ui_dict["unclassified"] = {}
             ui_dict["unclassified"][key] = value
+
+    # --- Workflow Analysis ---
+    workflow_analysis_data = {}
+    if "tipo_enhancement" in result:
+        workflow_analysis_data["TIPO Enhancement"] = result["tipo_enhancement"]
+    if "workflow_complexity" in result:
+        workflow_analysis_data["Workflow Complexity"] = result["workflow_complexity"]
+    if "advanced_upscaling" in result:
+        workflow_analysis_data["Advanced Upscaling"] = result["advanced_upscaling"]
+    if "multi_stage_conditioning" in result:
+        workflow_analysis_data["Multi-Stage Conditioning"] = result["multi_stage_conditioning"]
+    if "post_processing_effects" in result:
+        workflow_analysis_data["Post-Processing Effects"] = result["post_processing_effects"]
+    if "custom_node_ecosystems" in result:
+        workflow_analysis_data["Custom Node Ecosystems"] = result["custom_node_ecosystems"]
+    if "workflow_techniques" in result:
+        workflow_analysis_data["Workflow Techniques"] = result["workflow_techniques"]
+
+    if workflow_analysis_data:
+        ui_dict[UpField.WORKFLOW_ANALYSIS.value] = workflow_analysis_data

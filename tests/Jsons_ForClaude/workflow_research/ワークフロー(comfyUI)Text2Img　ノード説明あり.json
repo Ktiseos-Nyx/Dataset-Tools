@@ -1,0 +1,2902 @@
+{
+  "extra": {
+    "ds": {
+      "scale": 0.5131581182307068,
+      "offset": [
+        738.8958885990484,
+        -30.76049516331083
+      ]
+    },
+    "ue_links": [],
+    "0246.VERSION": [
+      0,
+      0,
+      4
+    ],
+    "frontendVersion": "1.19.9",
+    "links_added_by_ue": []
+  },
+  "links": [
+    [
+      454,
+      197,
+      0,
+      154,
+      0,
+      "LATENT"
+    ],
+    [
+      486,
+      208,
+      0,
+      197,
+      0,
+      "MODEL"
+    ],
+    [
+      490,
+      208,
+      0,
+      199,
+      0,
+      "*"
+    ],
+    [
+      528,
+      199,
+      0,
+      209,
+      0,
+      "MODEL"
+    ],
+    [
+      529,
+      201,
+      0,
+      209,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      530,
+      200,
+      0,
+      209,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      531,
+      154,
+      0,
+      209,
+      3,
+      "LATENT"
+    ],
+    [
+      532,
+      209,
+      0,
+      155,
+      0,
+      "LATENT"
+    ],
+    [
+      744,
+      152,
+      0,
+      292,
+      1,
+      "CLIP"
+    ],
+    [
+      753,
+      295,
+      0,
+      197,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      754,
+      294,
+      0,
+      197,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      755,
+      295,
+      0,
+      200,
+      0,
+      "*"
+    ],
+    [
+      760,
+      292,
+      0,
+      296,
+      0,
+      "MODEL"
+    ],
+    [
+      761,
+      292,
+      1,
+      296,
+      1,
+      "CLIP"
+    ],
+    [
+      782,
+      318,
+      0,
+      319,
+      0,
+      "UPSCALE_MODEL"
+    ],
+    [
+      784,
+      155,
+      0,
+      319,
+      1,
+      "IMAGE"
+    ],
+    [
+      787,
+      333,
+      0,
+      334,
+      0,
+      "*"
+    ],
+    [
+      798,
+      294,
+      0,
+      201,
+      0,
+      "*"
+    ],
+    [
+      806,
+      339,
+      0,
+      338,
+      6,
+      "BBOX_DETECTOR"
+    ],
+    [
+      807,
+      340,
+      0,
+      338,
+      7,
+      "SAM_MODEL"
+    ],
+    [
+      809,
+      341,
+      0,
+      342,
+      0,
+      "MODEL"
+    ],
+    [
+      810,
+      342,
+      0,
+      292,
+      0,
+      "MODEL"
+    ],
+    [
+      811,
+      296,
+      0,
+      344,
+      0,
+      "MODEL"
+    ],
+    [
+      812,
+      296,
+      1,
+      344,
+      1,
+      "CLIP"
+    ],
+    [
+      813,
+      344,
+      0,
+      345,
+      0,
+      "MODEL"
+    ],
+    [
+      814,
+      344,
+      1,
+      345,
+      1,
+      "CLIP"
+    ],
+    [
+      821,
+      351,
+      0,
+      352,
+      0,
+      "*"
+    ],
+    [
+      822,
+      352,
+      0,
+      338,
+      2,
+      "CLIP"
+    ],
+    [
+      823,
+      334,
+      0,
+      338,
+      3,
+      "VAE"
+    ],
+    [
+      824,
+      201,
+      0,
+      338,
+      4,
+      "CONDITIONING"
+    ],
+    [
+      825,
+      200,
+      0,
+      338,
+      5,
+      "CONDITIONING"
+    ],
+    [
+      826,
+      199,
+      0,
+      338,
+      1,
+      "MODEL"
+    ],
+    [
+      828,
+      338,
+      0,
+      164,
+      0,
+      "IMAGE"
+    ],
+    [
+      829,
+      319,
+      0,
+      338,
+      0,
+      "IMAGE"
+    ],
+    [
+      830,
+      353,
+      0,
+      341,
+      0,
+      "MODEL"
+    ],
+    [
+      832,
+      354,
+      0,
+      353,
+      1,
+      "MODEL"
+    ],
+    [
+      835,
+      355,
+      0,
+      152,
+      0,
+      "CLIP"
+    ],
+    [
+      843,
+      334,
+      0,
+      155,
+      1,
+      "VAE"
+    ],
+    [
+      844,
+      345,
+      0,
+      360,
+      0,
+      "MODEL"
+    ],
+    [
+      845,
+      345,
+      1,
+      360,
+      1,
+      "CLIP"
+    ],
+    [
+      848,
+      360,
+      0,
+      208,
+      0,
+      "MODEL"
+    ],
+    [
+      849,
+      360,
+      1,
+      295,
+      0,
+      "CLIP"
+    ],
+    [
+      850,
+      360,
+      1,
+      294,
+      0,
+      "CLIP"
+    ],
+    [
+      851,
+      360,
+      1,
+      351,
+      0,
+      "*"
+    ],
+    [
+      859,
+      372,
+      0,
+      353,
+      0,
+      "MODEL"
+    ],
+    [
+      862,
+      372,
+      2,
+      333,
+      0,
+      "*"
+    ],
+    [
+      863,
+      158,
+      0,
+      197,
+      3,
+      "LATENT"
+    ],
+    [
+      864,
+      354,
+      1,
+      355,
+      0,
+      "*"
+    ]
+  ],
+  "nodes": [
+    {
+      "id": 333,
+      "pos": {
+        "0": -739.2603759765625,
+        "1": -112.51644134521484
+      },
+      "mode": 0,
+      "size": [
+        75,
+        26
+      ],
+      "type": "Reroute",
+      "flags": {},
+      "order": 31,
+      "inputs": [
+        {
+          "link": 862,
+          "name": "",
+          "type": "*",
+          "label": ""
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "VAE",
+          "label": "",
+          "links": [
+            787
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "horizontal": false,
+        "showOutputText": false,
+        "widget_ue_connectable": {}
+      }
+    },
+    {
+      "id": 318,
+      "pos": {
+        "0": 1308.51513671875,
+        "1": 43.06243896484375
+      },
+      "mode": 4,
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "type": "UpscaleModelLoader",
+      "flags": {},
+      "order": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "label": "UPSCALE_MODEL",
+          "links": [
+            782
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UpscaleModelLoader",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "4x-UltraSharp.pth"
+      ]
+    },
+    {
+      "id": 342,
+      "pos": {
+        "0": -1136.66943359375,
+        "1": 980.8636474609376
+      },
+      "mode": 4,
+      "size": {
+        "0": 291.8999328613281,
+        "1": 71.75
+      },
+      "type": "RescaleCFG",
+      "flags": {},
+      "order": 35,
+      "inputs": [
+        {
+          "link": 809,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            810
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RescaleCFG",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        0.7000000000000002
+      ]
+    },
+    {
+      "id": 341,
+      "pos": {
+        "0": -1140.0023193359375,
+        "1": 854.7938232421875
+      },
+      "mode": 4,
+      "size": {
+        "0": 300.3333435058594,
+        "1": 84.75
+      },
+      "type": "ModelSamplingDiscrete",
+      "flags": {},
+      "order": 33,
+      "inputs": [
+        {
+          "link": 830,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            809
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ModelSamplingDiscrete",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "v_prediction",
+        true
+      ]
+    },
+    {
+      "id": 201,
+      "pos": {
+        "0": 795.0762939453125,
+        "1": 34.64590835571289
+      },
+      "mode": 0,
+      "size": [
+        75,
+        26
+      ],
+      "type": "Reroute",
+      "flags": {},
+      "order": 48,
+      "inputs": [
+        {
+          "link": 798,
+          "name": "",
+          "type": "*",
+          "label": ""
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "CONDITIONING",
+          "label": "",
+          "links": [
+            529,
+            824
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "horizontal": false,
+        "showOutputText": false,
+        "widget_ue_connectable": {}
+      }
+    },
+    {
+      "id": 199,
+      "pos": {
+        "0": 761.6369018554688,
+        "1": 77.64590454101562
+      },
+      "mode": 0,
+      "size": [
+        75,
+        26
+      ],
+      "type": "Reroute",
+      "flags": {},
+      "order": 45,
+      "inputs": [
+        {
+          "link": 490,
+          "name": "",
+          "type": "*",
+          "label": ""
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "MODEL",
+          "label": "",
+          "links": [
+            528,
+            826
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "horizontal": false,
+        "showOutputText": false,
+        "widget_ue_connectable": {}
+      }
+    },
+    {
+      "id": 200,
+      "pos": {
+        "0": 758.7420654296875,
+        "1": 125.43563842773438
+      },
+      "mode": 0,
+      "size": [
+        75,
+        26
+      ],
+      "type": "Reroute",
+      "flags": {},
+      "order": 46,
+      "inputs": [
+        {
+          "link": 755,
+          "name": "",
+          "type": "*",
+          "label": ""
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "CONDITIONING",
+          "label": "",
+          "links": [
+            530,
+            825
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "horizontal": false,
+        "showOutputText": false,
+        "widget_ue_connectable": {}
+      }
+    },
+    {
+      "id": 352,
+      "pos": {
+        "0": 1537.2242431640625,
+        "1": 218.66461181640625
+      },
+      "mode": 0,
+      "size": [
+        75,
+        26
+      ],
+      "type": "Reroute",
+      "flags": {},
+      "order": 49,
+      "inputs": [
+        {
+          "link": 821,
+          "name": "",
+          "type": "*",
+          "label": ""
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "CLIP",
+          "label": "",
+          "links": [
+            822
+          ]
+        }
+      ],
+      "properties": {
+        "horizontal": false,
+        "showOutputText": false
+      }
+    },
+    {
+      "id": 319,
+      "pos": {
+        "0": 1383.3165283203125,
+        "1": 152.5371551513672
+      },
+      "mode": 4,
+      "size": {
+        "0": 241.79998779296875,
+        "1": 46
+      },
+      "type": "ImageUpscaleWithModel",
+      "flags": {},
+      "order": 53,
+      "inputs": [
+        {
+          "link": 782,
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "label": "upscale_model"
+        },
+        {
+          "link": 784,
+          "name": "image",
+          "type": "IMAGE",
+          "label": "image"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "label": "IMAGE",
+          "links": [
+            829
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageUpscaleWithModel",
+        "widget_ue_connectable": {}
+      }
+    },
+    {
+      "id": 334,
+      "pos": {
+        "0": 1112.73974609375,
+        "1": -121.35408782958984
+      },
+      "mode": 0,
+      "size": [
+        75,
+        26
+      ],
+      "type": "Reroute",
+      "flags": {},
+      "order": 34,
+      "title": "VAE",
+      "inputs": [
+        {
+          "link": 787,
+          "name": "",
+          "type": "*",
+          "label": ""
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "VAE",
+          "label": "",
+          "links": [
+            823,
+            843
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "horizontal": false,
+        "showOutputText": false,
+        "widget_ue_connectable": {}
+      }
+    },
+    {
+      "id": 324,
+      "pos": {
+        "0": 258.7398376464844,
+        "1": -66.35409545898438
+      },
+      "mode": 0,
+      "size": {
+        "0": 295.9951171875,
+        "1": 262.1068420410156
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {
+        "collapsed": false
+      },
+      "order": 1,
+      "shape": 1,
+      "title": "メモ　FreeU",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "Load CheckpointとKSamplerの間ならどこでもよい。\nなのでLoRAの前に繋げてることも可能で、反映の仕方が変わるため絵柄が若干変る。\nクオリティLoRAに近い機能。\n\nB1とB2は低いとイラスト寄り、高いとリアル寄り\nB2は低くすると描き込み増加系LoRAのような雰囲気\nS1は結構癖がある\nS2は低いとリアル寄り、高いとイラスト寄り\n\nb1: 1.5、b2: 1.6、s1: 0.9、s2: 0.2　推奨値\n\nIllustrious系はいらない。\n\n次、右KSamplerメモへ"
+      ]
+    },
+    {
+      "id": 152,
+      "pos": {
+        "0": -1122.26025390625,
+        "1": 1350.64599609375
+      },
+      "mode": 0,
+      "size": {
+        "0": 243,
+        "1": 58.16226959228515
+      },
+      "type": "CLIPSetLastLayer",
+      "flags": {
+        "collapsed": false
+      },
+      "order": 32,
+      "inputs": [
+        {
+          "link": 835,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [
+            744
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPSetLastLayer",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        -2
+      ]
+    },
+    {
+      "id": 347,
+      "pos": {
+        "0": -1127.26025390625,
+        "1": 1094.64599609375
+      },
+      "mode": 0,
+      "size": {
+        "0": 222.8628692626953,
+        "1": 80.34309387207031
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 2,
+      "shape": 1,
+      "title": "メモ",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "vPrdモデルやlcmを使用する場合、これを使う。\nそれ以外では使用しないため、中級者向け"
+      ]
+    },
+    {
+      "id": 354,
+      "pos": {
+        "0": -1156.26025390625,
+        "1": 378.64593505859375
+      },
+      "mode": 0,
+      "size": {
+        "0": 312.7373046875,
+        "1": 122
+      },
+      "type": "CheckpointLoaderSimple",
+      "color": "#2a363b",
+      "flags": {
+        "pinned": true
+      },
+      "order": 3,
+      "inputs": [],
+      "bgcolor": "#3f5159",
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            832
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [
+            864
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "label": "VAE",
+          "links": [],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "837787213065569702",
+        "Smooth Mix (NoobAI/Illustrious) - Illustrious v.2"
+      ]
+    },
+    {
+      "id": 353,
+      "pos": {
+        "0": -1149.26025390625,
+        "1": 547.6458740234375
+      },
+      "mode": 0,
+      "size": {
+        "0": 299.7556457519531,
+        "1": 78
+      },
+      "type": "ModelMergeSimple",
+      "flags": {
+        "pinned": true
+      },
+      "order": 30,
+      "inputs": [
+        {
+          "link": 859,
+          "name": "model1",
+          "type": "MODEL",
+          "label": "model1"
+        },
+        {
+          "link": 832,
+          "name": "model2",
+          "type": "MODEL",
+          "label": "model2"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            830
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ModelMergeSimple",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        0.5
+      ]
+    },
+    {
+      "id": 323,
+      "pos": {
+        "0": -313,
+        "1": -16
+      },
+      "mode": 0,
+      "size": {
+        "0": 521.9227294921875,
+        "1": 240.7473602294922
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {
+        "pinned": false,
+        "collapsed": false
+      },
+      "order": 4,
+      "shape": 1,
+      "title": "メモ　Prompt",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "この標準comflyUIのプロンプトノードではBREAK構文、AND構文は機能しない。\nStable Diffusionとは、強調(○○:1.2),の反映比率が違うため、同じプロンプトを入れても同じ絵は作れない。\n\nクオリティ系、キャラ系(LoRAトリガーワード)、髪、服(上着、腕、ズボン、靴の順番)、肌、ポーズ系、表情、背景や構図の順番がおすすめ。\nSDXLから大分綺麗になったのでクオリティ系を最後にし、ポーズ系、キャラ系を先にするのもあり。\n\nIllustriousはモデルにかなりのキャラが組み込まれているため、\nLoRAなしでキャラ名と作品名を入れるだけで呼び出せるキャラがいる。\n例 Hatsune miku \\(Vocaloid\\),　\nまた髪や服の特徴を入れれば少しマイナーなキャラも出てくる。\n簡単に出るキャラなら２人でポーズをとらせることも可能(混ざることはある。\n\n次、下Negativeメモへ\n"
+      ]
+    },
+    {
+      "id": 321,
+      "pos": {
+        "0": -1124,
+        "1": 1207
+      },
+      "mode": 0,
+      "size": {
+        "0": 251.1128692626953,
+        "1": 105.5930633544922
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 5,
+      "shape": 1,
+      "title": "メモ　Clip Skip",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "ここを変えるだけで絵に変化もたらす\n-2が推奨。\n基本いじることはない。\n\n次、右LoRAメモへ"
+      ]
+    },
+    {
+      "id": 49,
+      "pos": {
+        "0": 966,
+        "1": 143
+      },
+      "mode": 4,
+      "size": {
+        "0": 267.3368225097656,
+        "1": 71.11882781982422
+      },
+      "type": "VAELoader",
+      "flags": {},
+      "order": 6,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "label": "VAE",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "sdxl_vae.safetensors"
+      ]
+    },
+    {
+      "id": 325,
+      "pos": {
+        "0": -321,
+        "1": 998
+      },
+      "mode": 0,
+      "size": {
+        "0": 392.3221740722656,
+        "1": 291.5597229003906
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {
+        "pinned": false
+      },
+      "order": 7,
+      "shape": 1,
+      "title": "メモ　Negative",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "illustriousの場合\n(bad quality,worst quality:1.2),worst detail,low-res, jpeg artifacts, sketch,censor,\nだけでも十分かと思われる。\nai-generated,  まではお好み。それ以降は賢者、飛行用ネガティブなので違う物を作る場合はいらない。\n\nembeddingの使用の仕方\nembedding: 〇〇,　\nトリガーワードのようにネガティブに記入。\n下にコピペ用にいくつか載せました。\n\nPony系　score_5, score_4, score_3, source_cartoon, 推奨\n\nSDXLからは恩恵が感じずらいのでなくてもいいかと。\n使うとしても一番最後に入れての使用。\n\n右、サイズメモへ"
+      ]
+    },
+    {
+      "id": 313,
+      "pos": {
+        "0": -226.80409240722656,
+        "1": 1329.0172119140625
+      },
+      "mode": 0,
+      "size": {
+        "0": 294.8846740722656,
+        "1": 155.8162078857422
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 8,
+      "shape": 1,
+      "title": "embedding(SDXL,PONY用）",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "SDXL\nembedding: (negative_v2 Color_Balance_Calibration:0.8),\nembedding: SimplePositiveXLv2,\nembedding: DeepNegative_xl_v1,\n\nPony\nembedding: zPDXL3,\nembedding: zPDXL2,"
+      ]
+    },
+    {
+      "id": 372,
+      "pos": {
+        "0": -1156,
+        "1": 216
+      },
+      "mode": 0,
+      "size": {
+        "0": 315,
+        "1": 122
+      },
+      "type": "CheckpointLoaderSimple",
+      "color": "#2a363b",
+      "flags": {
+        "pinned": true
+      },
+      "order": 9,
+      "inputs": [],
+      "bgcolor": "#3f5159",
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            859
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "label": "VAE",
+          "links": [
+            862
+          ],
+          "shape": 3,
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "860853672081403449",
+        "WAI-NSFW-illustrious-SDXL - v14"
+      ]
+    },
+    {
+      "id": 360,
+      "pos": {
+        "0": -768,
+        "1": 1037
+      },
+      "mode": 0,
+      "size": {
+        "0": 381.3202819824219,
+        "1": 150
+      },
+      "type": "LoraLoader",
+      "flags": {
+        "pinned": true
+      },
+      "order": 40,
+      "inputs": [
+        {
+          "link": 844,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 845,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            848
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [
+            849,
+            850,
+            851
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "808168040555368367",
+        "🎨IL - Detail Enhancer  - V1",
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "id": 345,
+      "pos": {
+        "0": -772,
+        "1": 849
+      },
+      "mode": 0,
+      "size": {
+        "0": 372.6160583496094,
+        "1": 150
+      },
+      "type": "LoraLoader",
+      "flags": {
+        "pinned": true
+      },
+      "order": 39,
+      "inputs": [
+        {
+          "link": 813,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 814,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            844
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [
+            845
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "819666230647462336",
+        "Extra Detailer IL - v1",
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "id": 344,
+      "pos": {
+        "0": -784,
+        "1": 666
+      },
+      "mode": 0,
+      "size": {
+        "0": 386.2892150878906,
+        "1": 150
+      },
+      "type": "LoraLoader",
+      "flags": {
+        "pinned": true
+      },
+      "order": 38,
+      "inputs": [
+        {
+          "link": 811,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 812,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            813
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [
+            814
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "861487880910979275",
+        "Dynamic Poses slider PONYXL - IL",
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "id": 296,
+      "pos": {
+        "0": -778,
+        "1": 485
+      },
+      "mode": 0,
+      "size": {
+        "0": 388.9731750488281,
+        "1": 150
+      },
+      "type": "LoraLoader",
+      "flags": {
+        "pinned": true
+      },
+      "order": 37,
+      "inputs": [
+        {
+          "link": 760,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 761,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            811
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [
+            812
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "855684784167327500",
+        "Fly [SD1.5] [Pony] [SD IL] - IL V1.0",
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "id": 292,
+      "pos": {
+        "0": -782,
+        "1": 288
+      },
+      "mode": 0,
+      "size": {
+        "0": 404.0545654296875,
+        "1": 150
+      },
+      "type": "LoraLoader",
+      "flags": {
+        "pinned": true
+      },
+      "order": 36,
+      "inputs": [
+        {
+          "link": 810,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 744,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            760
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "label": "CLIP",
+          "links": [
+            761
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "858489634034837704",
+        "【Illustrious 】Sage（賢者） - Dragon Quest III(勇者斗恶龙) - V1",
+        0.7000000000000001,
+        0.7000000000000001
+      ]
+    },
+    {
+      "id": 209,
+      "pos": {
+        "0": 989,
+        "1": 380
+      },
+      "mode": 0,
+      "size": {
+        "0": 281.6091003417969,
+        "1": 358.6504211425781
+      },
+      "type": "KSamplerAdvanced",
+      "color": "#332922",
+      "flags": {
+        "pinned": true,
+        "collapsed": false
+      },
+      "order": 51,
+      "inputs": [
+        {
+          "link": 528,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 529,
+          "name": "positive",
+          "type": "CONDITIONING",
+          "label": "positive"
+        },
+        {
+          "link": 530,
+          "name": "negative",
+          "type": "CONDITIONING",
+          "label": "negative"
+        },
+        {
+          "link": 531,
+          "name": "latent_image",
+          "type": "LATENT",
+          "label": "latent_image"
+        }
+      ],
+      "bgcolor": "#593930",
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "label": "LATENT",
+          "links": [
+            532
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSamplerAdvanced",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "enable",
+        587492193106571,
+        "randomize",
+        25,
+        5.04,
+        "euler_ancestral",
+        "normal",
+        10,
+        10000,
+        "disable"
+      ]
+    },
+    {
+      "id": 154,
+      "pos": {
+        "0": 1006,
+        "1": 793
+      },
+      "mode": 0,
+      "size": {
+        "0": 263.4620666503906,
+        "1": 86.69023895263672
+      },
+      "type": "LatentUpscaleBy",
+      "color": "#332922",
+      "flags": {},
+      "order": 50,
+      "inputs": [
+        {
+          "link": 454,
+          "name": "samples",
+          "type": "LATENT",
+          "label": "samples"
+        }
+      ],
+      "bgcolor": "#593930",
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "label": "LATENT",
+          "links": [
+            531
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LatentUpscaleBy",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "bicubic",
+        1.25
+      ]
+    },
+    {
+      "id": 338,
+      "pos": {
+        "0": 1721,
+        "1": 315
+      },
+      "mode": 0,
+      "size": {
+        "0": 410,
+        "1": 960
+      },
+      "type": "FaceDetailer",
+      "flags": {
+        "pinned": true
+      },
+      "order": 54,
+      "inputs": [
+        {
+          "link": 829,
+          "name": "image",
+          "type": "IMAGE",
+          "label": "image"
+        },
+        {
+          "link": 826,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 822,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        },
+        {
+          "link": 823,
+          "name": "vae",
+          "type": "VAE",
+          "label": "vae"
+        },
+        {
+          "link": 824,
+          "name": "positive",
+          "type": "CONDITIONING",
+          "label": "positive"
+        },
+        {
+          "link": 825,
+          "name": "negative",
+          "type": "CONDITIONING",
+          "label": "negative"
+        },
+        {
+          "link": 806,
+          "name": "bbox_detector",
+          "type": "BBOX_DETECTOR",
+          "label": "bbox_detector"
+        },
+        {
+          "link": 807,
+          "name": "sam_model_opt",
+          "type": "SAM_MODEL",
+          "label": "sam_model_opt",
+          "shape": 7
+        },
+        {
+          "link": null,
+          "name": "segm_detector_opt",
+          "type": "SEGM_DETECTOR",
+          "label": "segm_detector_opt",
+          "shape": 7
+        },
+        {
+          "link": null,
+          "name": "detailer_hook",
+          "type": "DETAILER_HOOK",
+          "label": "detailer_hook",
+          "shape": 7
+        },
+        {
+          "link": null,
+          "name": "scheduler_func_opt",
+          "type": "SCHEDULER_FUNC",
+          "label": "scheduler_func_opt",
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "label": "image",
+          "links": [
+            828
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "cropped_refined",
+          "type": "IMAGE",
+          "label": "cropped_refined",
+          "links": null,
+          "shape": 6
+        },
+        {
+          "name": "cropped_enhanced_alpha",
+          "type": "IMAGE",
+          "label": "cropped_enhanced_alpha",
+          "links": null,
+          "shape": 6
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "label": "mask",
+          "links": null
+        },
+        {
+          "name": "detailer_pipe",
+          "type": "DETAILER_PIPE",
+          "label": "detailer_pipe",
+          "links": null
+        },
+        {
+          "name": "cnet_images",
+          "type": "IMAGE",
+          "label": "cnet_images",
+          "links": null,
+          "shape": 6
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FaceDetailer",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        384,
+        true,
+        1024,
+        851615432753767,
+        "randomize",
+        25,
+        5,
+        "euler_ancestral",
+        "normal",
+        0.5,
+        5,
+        true,
+        true,
+        0.5,
+        10,
+        3,
+        "center-1",
+        0,
+        0.93,
+        0,
+        0.7,
+        "False",
+        1,
+        "",
+        1,
+        false,
+        20,
+        false,
+        false
+      ]
+    },
+    {
+      "id": 331,
+      "pos": {
+        "0": 1292,
+        "1": -173
+      },
+      "mode": 0,
+      "size": {
+        "0": 263.2438659667969,
+        "1": 103.35572814941406
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 10,
+      "shape": 1,
+      "title": "メモ Upscaler",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "更に大きくしたい人向け\nスタミンさらに増えます。\nSDXLあたりならいらないかなと思います。\n\n次、下HiresFixへ"
+      ]
+    },
+    {
+      "id": 332,
+      "pos": {
+        "0": 955,
+        "1": -77
+      },
+      "mode": 0,
+      "size": {
+        "0": 272.67657470703125,
+        "1": 160.68983459472656
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 11,
+      "shape": 1,
+      "title": "メモ　VAE",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "現在は未使用状態です。\n\n使用したい場合はBypass解除し、Decodeのvaeに線を繋げてください。\n\nIllustrious系はモデルに組み込まれているのが多いので、どっちでもそんな変わらない。\n\n右、Upscalerへ"
+      ]
+    },
+    {
+      "id": 329,
+      "pos": {
+        "0": 1355,
+        "1": 545
+      },
+      "mode": 0,
+      "size": {
+        "0": 270.7544250488281,
+        "1": 357.4488830566406
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {
+        "collapsed": false
+      },
+      "order": 12,
+      "shape": 1,
+      "title": "HiresFix",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "中級アップスケール機能。\nstepsは１つ目(青)のKSamplerの半分ぐらい。\nstart_at_stepが始める数値。\nこれだとsteps25から10引いた15がここのsteps数。\n標準の物だとデノイズと呼ばれる部分。\n\n始めが大きく変えようとするので、スタートを遅らすことで変化を小さく微調整のような修正させることで綺麗に仕上がる。\n\nなので\nsteps15, start_at_step, 0　と\nsteps25, start_at_step, 10 \nとではステップ数は同じだが、仕上がりが違う。\n\nアップスケールなので、スタミナ消費が増えます。\n\n使いたくない場合HiresFixの文字右クリック、Bypass Group Nodesでまとめて停止できます。\n解除はSetGroup Nodes to Always。\n\n次、右上　ADetailerメモへ"
+      ]
+    },
+    {
+      "id": 208,
+      "pos": {
+        "0": 289,
+        "1": 233
+      },
+      "mode": 4,
+      "size": {
+        "0": 210.13621520996097,
+        "1": 130
+      },
+      "type": "FreeU_V2",
+      "flags": {},
+      "order": 41,
+      "inputs": [
+        {
+          "link": 848,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "label": "MODEL",
+          "links": [
+            486,
+            490
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FreeU_V2",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        1.5,
+        1.6,
+        0.9,
+        0.2
+      ]
+    },
+    {
+      "id": 322,
+      "pos": {
+        "0": -1151,
+        "1": -91
+      },
+      "mode": 0,
+      "size": {
+        "0": 418.0870361328125,
+        "1": 266.3124084472656
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {
+        "collapsed": false
+      },
+      "order": 13,
+      "shape": 1,
+      "title": "メモ　モデル",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "まずはここから\nCheckpoint モデルをここで選択する。\n紫色になっているノードは機能がBypass(停止状態)です。\nノード選択時右クリックBypassで使用、解除できる。\n(ショートカットctrl+B)\n\nタイトルのメモ左の〇をクリックでノードを小さくできる。\nノードの右下枠でサイズ変更。\n\nプロンプトノードはピン止めしているので、サイズ変更や動かしたいときは、右クリック、pinで解除してください。\nctrl+Rで再起動\nダウンロードしたファイルは貼り付けで読み込ませることができる。ワークフローで作った画像も同様に貼って読み込むことも可能\n\n次は下のClip Skipメモへ"
+      ]
+    },
+    {
+      "id": 351,
+      "pos": {
+        "0": -400,
+        "1": 104
+      },
+      "mode": 0,
+      "size": [
+        75,
+        26
+      ],
+      "type": "Reroute",
+      "flags": {},
+      "order": 44,
+      "inputs": [
+        {
+          "link": 851,
+          "name": "",
+          "type": "*",
+          "label": ""
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "CLIP",
+          "label": "",
+          "links": [
+            821
+          ]
+        }
+      ],
+      "properties": {
+        "horizontal": false,
+        "showOutputText": false
+      }
+    },
+    {
+      "id": 290,
+      "pos": {
+        "0": 657,
+        "1": 956
+      },
+      "mode": 0,
+      "size": {
+        "0": 244.84864807128903,
+        "1": 495.4327697753906
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 14,
+      "shape": 1,
+      "title": "サイズ比率",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "SUPPORTED RESOLUTIONS\n=====================\n\nratio  resolution\n-----------------\n0.5:   704×1408\n0.52:  704×1344\n0.57:  768×1344\n0.6:   768×1280\n0.68:  832×1216\n0.72:  832×1152\n0.78:  896×1152\n0.82:  896×1088\n0.88:  960×1088\n0.94:  960×1024\n1.0:  1024×1024\n1.07:  1024×960\n1.13:  1088×960\n1.21:  1088×896\n1.29:  1152×896\n1.38:  1152×832\n1.46:  1216×832\n1.67:  1280×768\n1.75:  1344×768\n1.91:  1344×704\n2.0:   1408×704\n2.09:  1472×704\n2.4:   1536×640\n2.5:   1600×640\n2.89:  1664×576\n3.0:   1728×576"
+      ]
+    },
+    {
+      "id": 149,
+      "pos": {
+        "0": 90,
+        "1": 1248
+      },
+      "mode": 0,
+      "size": {
+        "0": 377.5342102050781,
+        "1": 220.03195190429688
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {
+        "collapsed": false
+      },
+      "order": 15,
+      "shape": 1,
+      "title": "ネガティブembedding(SD1.5用)",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "embedding: easynegative, embedding: verybadimagenegative_v1.3, embedding: ng_deepnegative_v1_75t, embedding: SimpleNegativeV3, \nembedding: BY BAD ARTIST, embedding: BY BAD ARTIST -NEG, \nembedding: BadNegAnatomyV1, embedding: BadNegAnatomyV1-neg, \n\nembedding: negative_hand, embedding: negative_hand-neg,\nembedding: bad_prompt_version2, embedding: bad_prompt_version2-neg, \nembedding: badhandv4,\nembedding: myself-badhand-v49, embedding: myself-badhand, \nembedding: bhands-neg, embedding: bhands.\n\n\nembedding: NegfeetV2,\n\nembedding: light-negative, embedding: light-negative-neg,\n"
+      ]
+    },
+    {
+      "id": 330,
+      "pos": {
+        "0": 1128,
+        "1": 942
+      },
+      "mode": 0,
+      "size": {
+        "0": 214.21185302734375,
+        "1": 91.67488098144533
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 16,
+      "shape": 1,
+      "title": "Upscale Latent By",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "サイズの比率を変えます。\n一気に大きくするとおかしくなるので、1.5か２倍あたりが無難かと。"
+      ]
+    },
+    {
+      "id": 327,
+      "pos": {
+        "0": 599,
+        "1": 128
+      },
+      "mode": 0,
+      "size": {
+        "0": 305.0041809082031,
+        "1": 340.6155700683594
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {
+        "collapsed": false
+      },
+      "order": 17,
+      "shape": 1,
+      "title": "メモ　KSampler",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "ここで画像が作られる\nSDXL＆Pony系オススメ数値\nステップ　25～30\ncfg　6~8\nsampler　dpmpp2m or euler_ancestral\nscheduler　karras or normal or simple\n\nIllustrious系\nステップ　25～30\ncfg　4～7\nsampler　euler_ancestral or dpmpp_2m\nscheduler　normal or karras or simple\n\n同じ物を作りたい場合は\ncontol_after_generateをfixedに変更\n\nモデルによって推奨値があるので、\nモデルの詳細をよく確認してください。\n\n次、右VAEメモへ"
+      ]
+    },
+    {
+      "id": 158,
+      "pos": {
+        "0": 288,
+        "1": 489
+      },
+      "mode": 0,
+      "size": {
+        "0": 231.6320953369141,
+        "1": 106
+      },
+      "type": "EmptyLatentImage",
+      "color": "#222",
+      "flags": {
+        "pinned": true
+      },
+      "order": 18,
+      "title": "Empty Latent Image(横)",
+      "inputs": [],
+      "bgcolor": "#000",
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "label": "LATENT",
+          "links": [
+            863
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        1152,
+        832,
+        1
+      ]
+    },
+    {
+      "id": 157,
+      "pos": {
+        "0": 295,
+        "1": 781
+      },
+      "mode": 0,
+      "size": {
+        "0": 232.6371154785156,
+        "1": 106
+      },
+      "type": "EmptyLatentImage",
+      "color": "#222",
+      "flags": {
+        "pinned": true
+      },
+      "order": 19,
+      "title": "Empty Latent Image(縦)",
+      "inputs": [],
+      "bgcolor": "#000",
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "label": "LATENT",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        832,
+        1152,
+        1
+      ]
+    },
+    {
+      "id": 295,
+      "pos": {
+        "0": -314,
+        "1": 699
+      },
+      "mode": 0,
+      "size": {
+        "0": 533.0117797851562,
+        "1": 226.0567626953125
+      },
+      "type": "CLIPTextEncode",
+      "color": "#322",
+      "flags": {
+        "pinned": true,
+        "collapsed": false
+      },
+      "order": 42,
+      "title": "CLIP Text Encode (Negative)",
+      "inputs": [
+        {
+          "link": 849,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "bgcolor": "#533",
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "label": "CONDITIONING",
+          "links": [
+            753,
+            755
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "(worst quality, bad quality:1.2), low-res, jpeg artifacts, modern, recent, old, oldest, cartoon, graphic, text, painting, crayon, graphite, abstract, glitch, very displeasing, signature, watermark, username, signature, conjoined, ai-generated,  (2girls, negative space, Akira Toriyama Style, full body, overaccessorized, yellow trim, brown trim, gold trim, double gloves, multiple gloves, double boots, multiple boots, Belt pouch, bustline border, decorative trim, underbust strap, chest seam, layered clothing, bare hands, ), standing, sitting, facing front, static pose, arms crossed, body upright, profile view, (Hold with both hands, sunset, dual wielding, two staffs), Embedding:SmoothNoob_Negative"
+      ]
+    },
+    {
+      "id": 150,
+      "pos": {
+        "0": 289,
+        "1": 637
+      },
+      "mode": 0,
+      "size": {
+        "0": 236.72901916503903,
+        "1": 106
+      },
+      "type": "EmptyLatentImage",
+      "color": "#222",
+      "flags": {
+        "pinned": true
+      },
+      "order": 20,
+      "inputs": [],
+      "bgcolor": "#000",
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "label": "LATENT",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        1
+      ]
+    },
+    {
+      "id": 326,
+      "pos": {
+        "0": 313,
+        "1": 949
+      },
+      "mode": 0,
+      "size": {
+        "0": 210,
+        "1": 169.5730743408203
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 21,
+      "shape": 1,
+      "title": "メモ　サイズ",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "画像のサイズ指定する。\n\nサイズ変更したいならLATENTピンクの〇をクリックで線をKsamplerのlatent_imageに繋げてください。\nbatch_size　１回の創作で作る枚数。\n\n次、上FreeUメモへ"
+      ]
+    },
+    {
+      "id": 164,
+      "pos": {
+        "0": 2284.10009765625,
+        "1": 371.8461608886719
+      },
+      "mode": 0,
+      "size": {
+        "0": 516.52587890625,
+        "1": 780.6332397460938
+      },
+      "type": "SaveImage",
+      "color": "#2a363b",
+      "flags": {},
+      "order": 55,
+      "inputs": [
+        {
+          "link": 828,
+          "name": "images",
+          "type": "IMAGE",
+          "label": "images"
+        }
+      ],
+      "bgcolor": "#3f5159",
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "TensorArt"
+      ]
+    },
+    {
+      "id": 348,
+      "pos": {
+        "0": -451,
+        "1": 1335
+      },
+      "mode": 0,
+      "size": {
+        "0": 220.82077026367188,
+        "1": 143.40090942382812
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 22,
+      "shape": 1,
+      "title": "Embedding(illustrious用)",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "通常プロンプトの方に追加\nEmbedding:SmoothNoob_Quality, \nEmbedding:IllusP0s,\n以下ネガティブに追加\nEmbedding:SmoothNoob_Negative\nEmbedding:SmoothNegative_Hands,\nEmbedding:IllusN3g,"
+      ]
+    },
+    {
+      "id": 320,
+      "pos": {
+        "0": -787,
+        "1": 1235
+      },
+      "mode": 0,
+      "size": {
+        "0": 311.3628234863281,
+        "1": 161.34303283691406
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 23,
+      "shape": 1,
+      "title": "メモ　LoRAについて",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {
+        "text": "",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "LoRAは繋げれば複数使用可能。\nノードは選択時ctrl+cでコピー、ctrl+vでペーストで増やせる。\n5つまでの使用可能。\n上から、キャラ系、コンセプト系、詳細化系\nの順番が良いと思われる。\n\n強度　strength modelとclipは同じ数字に。\n次、上Promptメモへ"
+      ]
+    },
+    {
+      "id": 197,
+      "pos": {
+        "0": 601,
+        "1": 528
+      },
+      "mode": 0,
+      "size": {
+        "0": 281.49468994140625,
+        "1": 366.774658203125
+      },
+      "type": "KSamplerAdvanced",
+      "color": "#2a363b",
+      "flags": {},
+      "order": 47,
+      "inputs": [
+        {
+          "link": 486,
+          "name": "model",
+          "type": "MODEL",
+          "label": "model"
+        },
+        {
+          "link": 754,
+          "name": "positive",
+          "type": "CONDITIONING",
+          "label": "positive"
+        },
+        {
+          "link": 753,
+          "name": "negative",
+          "type": "CONDITIONING",
+          "label": "negative"
+        },
+        {
+          "link": 863,
+          "name": "latent_image",
+          "type": "LATENT",
+          "label": "latent_image"
+        }
+      ],
+      "bgcolor": "#3f5159",
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "label": "LATENT",
+          "links": [
+            454
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSamplerAdvanced",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "enable",
+        946265526930976,
+        "randomize",
+        27,
+        4.98,
+        "euler_ancestral",
+        "normal",
+        0,
+        10000,
+        "disable"
+      ]
+    },
+    {
+      "id": 359,
+      "pos": {
+        "0": 2027,
+        "1": 60
+      },
+      "mode": 0,
+      "size": {
+        "0": 238.2417907714844,
+        "1": 161.51885986328125
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 24,
+      "shape": 1,
+      "title": "メモ　ADetailer",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "UltralyticsDetectorProviderで\nfaceー顔の修正。\nhandー手の修正。\npersonーで体の修正。\n切り替え可能。\n\n基本、顔修正でよい。\n\n次、消費スタミナメモへ"
+      ]
+    },
+    {
+      "id": 340,
+      "pos": {
+        "0": 1699,
+        "1": 179
+      },
+      "mode": 0,
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "type": "SAMLoader",
+      "flags": {},
+      "order": 25,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SAM_MODEL",
+          "type": "SAM_MODEL",
+          "label": "SAM_MODEL",
+          "links": [
+            807
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SAMLoader",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "sam_vit_b_01ec64.pth",
+        "AUTO"
+      ]
+    },
+    {
+      "id": 339,
+      "pos": {
+        "0": 1714,
+        "1": 27
+      },
+      "mode": 0,
+      "size": {
+        "0": 290.32293701171875,
+        "1": 105.72721099853516
+      },
+      "type": "UltralyticsDetectorProvider",
+      "flags": {},
+      "order": 26,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "BBOX_DETECTOR",
+          "type": "BBOX_DETECTOR",
+          "label": "BBOX_DETECTOR",
+          "links": [
+            806
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "SEGM_DETECTOR",
+          "type": "SEGM_DETECTOR",
+          "label": "SEGM_DETECTOR",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UltralyticsDetectorProvider",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "bbox/face_yolov8m.pt",
+        5
+      ]
+    },
+    {
+      "id": 155,
+      "pos": {
+        "0": 1379,
+        "1": 304
+      },
+      "mode": 0,
+      "size": {
+        "0": 215.33338928222656,
+        "1": 150
+      },
+      "type": "VAEDecodeTiled",
+      "flags": {},
+      "order": 52,
+      "inputs": [
+        {
+          "link": 532,
+          "name": "samples",
+          "type": "LATENT",
+          "label": "samples"
+        },
+        {
+          "link": 843,
+          "name": "vae",
+          "type": "VAE",
+          "label": "vae"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "label": "IMAGE",
+          "links": [
+            784
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecodeTiled",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        512,
+        64,
+        64,
+        8
+      ]
+    },
+    {
+      "id": 294,
+      "pos": {
+        "0": -317,
+        "1": 339
+      },
+      "mode": 0,
+      "size": {
+        "0": 544.3597412109375,
+        "1": 288.6703796386719
+      },
+      "type": "CLIPTextEncode",
+      "color": "#232",
+      "flags": {
+        "pinned": true,
+        "collapsed": false
+      },
+      "order": 43,
+      "inputs": [
+        {
+          "link": 850,
+          "name": "clip",
+          "type": "CLIP",
+          "label": "clip"
+        }
+      ],
+      "bgcolor": "#353",
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "label": "CONDITIONING",
+          "links": [
+            754,
+            798
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "masterpiece, best quality, \n(flying, floating, high angle shot:1.3), (horizontal pose, body parallel to ground:1.2), clouds, sky, night, moon, starry sky, Above the Clouds, midair, landscape, (from side), floating hair, cowboy shot, dutch angle, \nsolo, 1girl,  dq3sage, blue hair, long hair, red eyes, circlet, white dress, strapless dress, seamless dress, short dress, aqua cape, yellow elbow gloves, medium breasts, cleavage, brown sash, smooth fabric, minimal accessories, \nexcited, smug,  closed mouth, \nmasterpiece, best quality, amazing quality, very aesthetic, highly detailed,  high quality, Embedding:SmoothNoob_Quality"
+      ]
+    },
+    {
+      "id": 355,
+      "pos": {
+        "0": -906,
+        "1": 721
+      },
+      "mode": 0,
+      "size": [
+        75,
+        26
+      ],
+      "type": "Reroute",
+      "flags": {},
+      "order": 29,
+      "inputs": [
+        {
+          "link": 864,
+          "name": "",
+          "type": "*",
+          "label": ""
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "CLIP",
+          "label": "",
+          "links": [
+            835
+          ]
+        }
+      ],
+      "properties": {
+        "horizontal": false,
+        "showOutputText": false
+      }
+    },
+    {
+      "id": 356,
+      "pos": {
+        "0": -1133,
+        "1": 668
+      },
+      "mode": 0,
+      "size": {
+        "0": 275.6882629394531,
+        "1": 108.1024169921875
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {},
+      "order": 27,
+      "shape": 1,
+      "title": "メモ　モデルマージ",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "モデルを混ぜることができる。\n1モデルがベースになり\n比率を1寄りにするとモデル1、\n0寄りにするとモデル２が強くなる。\n0.5で半分になる。\n"
+      ]
+    },
+    {
+      "id": 361,
+      "pos": {
+        "0": 2306,
+        "1": 94
+      },
+      "mode": 0,
+      "size": {
+        "0": 279.1416320800781,
+        "1": 117.57713317871094
+      },
+      "type": "Note",
+      "color": "#432",
+      "flags": {
+        "collapsed": false
+      },
+      "order": 28,
+      "shape": 1,
+      "title": "メモ　消費スタミナ",
+      "inputs": [],
+      "bgcolor": "#653",
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "履歴からゴミ箱マークの隣にある〇で\n消費したスタミナが確認できる。\n初期状態(通常Upscalerなし)で\n大体４～10\n\n初回生成時、ロボットではないクリック認証あるので\nお忘れなく。"
+      ]
+    }
+  ],
+  "config": {},
+  "groups": [
+    {
+      "color": "#88A",
+      "flags": {},
+      "title": "完成",
+      "locked": false,
+      "bounding": [
+        2261,
+        231,
+        556,
+        973
+      ],
+      "font_size": 50
+    },
+    {
+      "color": "#b58b2a",
+      "flags": {
+        "pinned": true
+      },
+      "title": "画像サイズ",
+      "locked": false,
+      "bounding": [
+        266,
+        392,
+        289,
+        500
+      ],
+      "font_size": 30
+    },
+    {
+      "color": "#3f789e",
+      "flags": {},
+      "title": "Group",
+      "locked": false,
+      "bounding": [
+        332,
+        109,
+        140,
+        80
+      ],
+      "font_size": 24
+    },
+    {
+      "color": "#8A8",
+      "flags": {
+        "pinned": true
+      },
+      "title": "テキスト",
+      "locked": false,
+      "bounding": [
+        -327,
+        239,
+        568,
+        699
+      ],
+      "font_size": 40
+    },
+    {
+      "color": "#3f789e",
+      "flags": {},
+      "title": "Use vPred Model",
+      "locked": false,
+      "bounding": [
+        -1135,
+        762,
+        325,
+        294
+      ],
+      "font_size": 40
+    },
+    {
+      "color": "#A88",
+      "flags": {
+        "pinned": true
+      },
+      "title": "LoRA",
+      "locked": false,
+      "bounding": [
+        -793,
+        195,
+        426,
+        993
+      ],
+      "font_size": 40
+    },
+    {
+      "color": "#a1309b",
+      "flags": {
+        "pinned": true
+      },
+      "title": "ADetailer",
+      "locked": false,
+      "bounding": [
+        1679,
+        -71,
+        524,
+        1363
+      ],
+      "font_size": 40
+    },
+    {
+      "color": "#3f789e",
+      "flags": {
+        "pinned": true
+      },
+      "title": "normal Upscaler",
+      "locked": false,
+      "bounding": [
+        1288,
+        -63,
+        352,
+        272
+      ],
+      "font_size": 40
+    },
+    {
+      "color": "#A88",
+      "flags": {
+        "pinned": true
+      },
+      "title": "HiresFix",
+      "locked": false,
+      "bounding": [
+        951,
+        258,
+        385,
+        629
+      ],
+      "font_size": 40
+    },
+    {
+      "color": "#8AA",
+      "flags": {},
+      "title": " Text2Img メモは左からみてください",
+      "locked": false,
+      "bounding": [
+        -1163,
+        -252,
+        3360,
+        1724
+      ],
+      "font_size": 40
+    }
+  ],
+  "version": 0.4,
+  "last_link_id": 864,
+  "last_node_id": 372
+}

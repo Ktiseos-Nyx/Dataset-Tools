@@ -1,0 +1,310 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "juggernautXL_juggernautX.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "ModelMerger/"
+        }
+    },
+    {
+        "id": 10,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,\n\nhigh quality, detailed, diffuse light",
+            "text_2": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,\n\nhigh quality, detailed, diffuse light"
+        }
+    },
+    {
+        "id": 11,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,\n\nhigh quality, detailed, diffuse light"
+        }
+    },
+    {
+        "id": 12,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "fake, text, watermark"
+        }
+    },
+    {
+        "id": 13,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "fake, text, watermark",
+            "text_2": "fake, text, watermark"
+        }
+    },
+    {
+        "id": 14,
+        "name": "Reroute"
+    },
+    {
+        "id": 15,
+        "name": "Reroute"
+    },
+    {
+        "id": 23,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "RealVisXL_V3.0.safetensors"
+        }
+    },
+    {
+        "id": 25,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 26,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 27,
+        "name": "Text Concatenate",
+        "prompts": {
+            "text": "ModelMerger/"
+        }
+    },
+    {
+        "id": 28,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "ModelMerger/"
+        }
+    },
+    {
+        "id": 29,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 30,
+        "name": "Reroute"
+    },
+    {
+        "id": 31,
+        "name": "Reroute"
+    },
+    {
+        "id": 35,
+        "name": "KSampler"
+    },
+    {
+        "id": 37,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 38,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "ModelMerger/"
+        }
+    },
+    {
+        "id": 40,
+        "name": "KSampler"
+    },
+    {
+        "id": 42,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 43,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "ModelMerger/"
+        }
+    },
+    {
+        "id": 44,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 45,
+        "name": "Text Concatenate",
+        "prompts": {
+            "text": "ModelMerger/"
+        }
+    },
+    {
+        "id": 46,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "ModelMerger/"
+        }
+    },
+    {
+        "id": 47,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 48,
+        "name": "Text Concatenate",
+        "prompts": {
+            "text": "ModelMerger/"
+        }
+    },
+    {
+        "id": 49,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "ModelMerger/"
+        }
+    },
+    {
+        "id": 50,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 51,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fixed.safetensors"
+        }
+    },
+    {
+        "id": 52,
+        "name": "ModelMergeBlockNumber"
+    },
+    {
+        "id": 53,
+        "name": "ModelMergeBlockNumber"
+    },
+    {
+        "id": 54,
+        "name": "Note",
+        "prompts": {
+            "text": "DJZ-checkpoint-merge-compare\n\n- merge-pack\n- merge checkpoints\n- examples for SDXL/SD1.5\n\n\n\nMore Graph presets\nhttps://github.com/hako-mikan/sd-webui-supermerger\nhttps://github.com/bbc-mc/sdweb-merge-block-weighted-gui?tab=readme-ov-file\n\n\nmore info here:\nhttps://rentry.org/BlockMergeExplained\nhttps://rentry.org/Merge_Block_Weight_-china-_v1_Beta/\n\nMy Article here:\nhttps://civitai.com/models/432863\n\nVideo:\nhttps://www.youtube.com/watch?v=JJgYp-fpGi4\n\n@fivebelowfiveuk\nwww.fivebelowfive.uk"
+        }
+    },
+    {
+        "id": 55,
+        "name": "ModelMergeBlockNumber"
+    },
+    {
+        "id": 56,
+        "name": "ModelMergeBlockNumber"
+    },
+    {
+        "id": 57,
+        "name": "ModelMergeBlockNumber"
+    },
+    {
+        "id": 58,
+        "name": "ModelMergeBlockNumber"
+    },
+    {
+        "id": 59,
+        "name": "ModelMergeBlockNumber"
+    },
+    {
+        "id": 60,
+        "name": "CheckpointSave",
+        "prompts": {
+            "text": "checkpoints/DJZmerger/mix"
+        }
+    },
+    {
+        "id": 63,
+        "name": "Reroute"
+    },
+    {
+        "id": 66,
+        "name": "ModelMergeSDXL"
+    },
+    {
+        "id": 67,
+        "name": "ModelMergeSDXL"
+    },
+    {
+        "id": 68,
+        "name": "ModelMergeSDXL"
+    },
+    {
+        "id": 69,
+        "name": "ModelMergeSDXL"
+    },
+    {
+        "id": 70,
+        "name": "ModelMergeSDXL"
+    },
+    {
+        "id": 71,
+        "name": "ModelMergeSDXL"
+    },
+    {
+        "id": 72,
+        "name": "ModelMergeSDXL"
+    },
+    {
+        "id": 74,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,\n\nhigh quality, detailed, diffuse light",
+            "text_2": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,\n\nhigh quality, detailed, diffuse light"
+        }
+    },
+    {
+        "id": 75,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "fake, text, watermark",
+            "text_2": "fake, text, watermark"
+        }
+    },
+    {
+        "id": 76,
+        "name": "Reroute"
+    },
+    {
+        "id": 77,
+        "name": "Reroute"
+    },
+    {
+        "id": 78,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,\n\nhigh quality, detailed, diffuse light",
+            "text_2": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,\n\nhigh quality, detailed, diffuse light"
+        }
+    },
+    {
+        "id": 79,
+        "name": "CLIPTextEncodeSDXL",
+        "prompts": {
+            "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,\n\nhigh quality, detailed, diffuse light",
+            "text_2": "fake, text, watermark"
+        }
+    },
+    {
+        "id": 80,
+        "name": "Reroute"
+    },
+    {
+        "id": 81,
+        "name": "Reroute"
+    },
+    {
+        "id": 84,
+        "name": "ModelMergeSDXL"
+    }
+]

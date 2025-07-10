@@ -1,0 +1,735 @@
+[
+    {
+        "id": -1,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": -1,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/99coins_anime_girl_face_box.pt"
+        }
+    },
+    {
+        "id": -1,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Eyes.pt"
+        }
+    },
+    {
+        "id": -1,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": -1,
+        "name": "StepsAndCfg"
+    },
+    {
+        "id": -1,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": -1,
+        "name": "Checkpoint Loader with Name (Image Saver)",
+        "prompts": {
+            "text": "waiNSFWIllustrious_v80.safetensors"
+        }
+    },
+    {
+        "id": -1,
+        "name": "Automatic CFG - Warp Drive"
+    },
+    {
+        "id": -1,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/99coins_anime_girl_face_box.pt"
+        }
+    },
+    {
+        "id": -1,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": -1,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/99coins_anime_girl_face_box.pt"
+        }
+    },
+    {
+        "id": -1,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": -1,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/99coins_anime_girl_face_box.pt"
+        }
+    },
+    {
+        "id": -1,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": -1,
+        "name": "VAEEncode"
+    },
+    {
+        "id": -1,
+        "name": "VAEDecode"
+    },
+    {
+        "id": -1,
+        "name": "VAEEncodeTiled"
+    },
+    {
+        "id": -1,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": -1,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 1,
+        "name": "Detailer"
+    },
+    {
+        "id": 3,
+        "name": "Negative Prompt & CLIP Text Encode (Prompt)"
+    },
+    {
+        "id": 4,
+        "name": "Don't change anything"
+    },
+    {
+        "id": 5,
+        "name": "Only Change Checkpoint Model & Lora"
+    },
+    {
+        "id": 6,
+        "name": "Detailer Models"
+    },
+    {
+        "id": 7,
+        "name": "Ksamplers"
+    },
+    {
+        "id": 8,
+        "name": "VAE Decode (Tiled)"
+    },
+    {
+        "id": 9,
+        "name": "Final Image Saver"
+    },
+    {
+        "id": 10,
+        "name": "Preview Images"
+    },
+    {
+        "id": 13,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 17,
+        "name": "CanvasCreatorAdvanced"
+    },
+    {
+        "id": 19,
+        "name": "Anime NSFW Detailers"
+    },
+    {
+        "id": 20,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 21,
+        "name": "Detailer Wildcards"
+    },
+    {
+        "id": 23,
+        "name": "Color Transfer"
+    },
+    {
+        "id": 24,
+        "name": "All In One NSFW Detailer"
+    },
+    {
+        "id": 27,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-AnimeSharp.pth"
+        }
+    },
+    {
+        "id": 28,
+        "name": "ImageColorTransferMira"
+    },
+    {
+        "id": 31,
+        "name": "Positive Prompts"
+    },
+    {
+        "id": 32,
+        "name": "TextBoxMira",
+        "prompts": {
+            "text": "eris_greyrat, 1girl, underwear, panties, long_hair, solo, red_hair, skirt_lift, clothes_lift, skirt, red_eyes, lifted_by_self, white_panties, blush, ahoge, looking_at_viewer, hairband, breasts, black_hairband, open_mouth"
+        }
+    },
+    {
+        "id": 32,
+        "name": "Detail Daemon"
+    },
+    {
+        "id": 33,
+        "name": "TextBoxMira",
+        "prompts": {
+            "text": "lowres, bad quality, sketch, worst quality, low quality, bad anatomy, bad hands, 4koma, comic, greyscale, censored, jpeg artifacts, 3d, hat, (censor), mosaic_censoring, patreon_name, watermark "
+        }
+    },
+    {
+        "id": 34,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 34,
+        "name": "Image To Image"
+    },
+    {
+        "id": 39,
+        "name": "Preview Images"
+    },
+    {
+        "id": 40,
+        "name": "Prompt & Styling"
+    },
+    {
+        "id": 41,
+        "name": "Group"
+    },
+    {
+        "id": 42,
+        "name": "CLIP Set Last Layer"
+    },
+    {
+        "id": 43,
+        "name": "Group"
+    },
+    {
+        "id": 45,
+        "name": "Group"
+    },
+    {
+        "id": 46,
+        "name": "Group"
+    },
+    {
+        "id": 47,
+        "name": "Group"
+    },
+    {
+        "id": 49,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 56,
+        "name": "workflow>Steps & Cfg & Empty Latent Image"
+    },
+    {
+        "id": 57,
+        "name": "workflow>Checkpoint Loader with Name (Image Saver) & Automatic CFG - Warp Drive",
+        "prompts": {
+            "text": "waiNSFWIllustrious_v11.safetensors"
+        }
+    },
+    {
+        "id": 62,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 67,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 68,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 79,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 115,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 130,
+        "name": "workflow>1234",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth",
+            "text_2": "bbox/99coins_anime_girl_face_box.pt"
+        }
+    },
+    {
+        "id": 139,
+        "name": "TextBoxMira",
+        "prompts": {
+            "text": "perfect_face "
+        }
+    },
+    {
+        "id": 140,
+        "name": "TextBoxMira",
+        "prompts": {
+            "text": "beautiful_eyes perfect_pupils"
+        }
+    },
+    {
+        "id": 142,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 143,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 144,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 148,
+        "name": "workflow>UltralyticsDetectorProvider & SAMLoader (Impact) 1",
+        "prompts": {
+            "text": "bbox/animeNSFWDetection_v20\\ntd11_anime_nsfw_segm_v2_all.pt",
+            "text_2": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 150,
+        "name": "workflow>UltralyticsDetectorProvider & SAMLoader (Impact) 2",
+        "prompts": {
+            "text": "bbox/animeNSFWDetection_v20\\ntd11_anime_nsfw_segm_v2_anus.pt",
+            "text_2": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 151,
+        "name": "workflow>UltralyticsDetectorProvider & SAMLoader (Impact) 3",
+        "prompts": {
+            "text": "bbox/animeNSFWDetection_v20\\ntd11_anime_nsfw_segm_v2_nipples.pt",
+            "text_2": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 152,
+        "name": "workflow>UltralyticsDetectorProvider & SAMLoader (Impact) 3",
+        "prompts": {
+            "text": "bbox/animeNSFWDetection_v20\\ntd11_anime_nsfw_segm_v2_penis.pt",
+            "text_2": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 154,
+        "name": "workflow>UltralyticsDetectorProvider & SAMLoader (Impact) 3",
+        "prompts": {
+            "text": "bbox/animeNSFWDetection_v20\\ntd11_anime_nsfw_segm_v2_pussy.pt",
+            "text_2": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 157,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 158,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 159,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 160,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 161,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 164,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 165,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 166,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 167,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 168,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 170,
+        "name": "TextBoxMira",
+        "prompts": {
+            "text": "beautiful_detailed_nipples"
+        }
+    },
+    {
+        "id": 171,
+        "name": "TextBoxMira",
+        "prompts": {
+            "text": "perfect_ass"
+        }
+    },
+    {
+        "id": 172,
+        "name": "TextBoxMira",
+        "prompts": {
+            "text": "perfect_pussy, detailed_pussy "
+        }
+    },
+    {
+        "id": 173,
+        "name": "TextBoxMira",
+        "prompts": {
+            "text": "beautiful_penis"
+        }
+    },
+    {
+        "id": 175,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 178,
+        "name": "TextBoxMira"
+    },
+    {
+        "id": 189,
+        "name": "UpscaleImageByModelThenResize"
+    },
+    {
+        "id": 204,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 206,
+        "name": "TextBoxMira",
+        "prompts": {
+            "text": "Enchanting Eyes,(anime coloring:0.8), ((anime screencap:0.6)), (masterpiece, best quality, newest, absurdres, highres),official art, official style, colorful, ultra-detailed, super detailed skin,"
+        }
+    },
+    {
+        "id": 207,
+        "name": "TextBoxMira",
+        "prompts": {
+            "text": "anime screencap, anime coloring, red hair, long hair, crossed bangs, ahoge, red eyes, black hairband"
+        }
+    },
+    {
+        "id": 208,
+        "name": "TextBoxMira",
+        "prompts": {
+            "text": "embedding:SuperQuality1, "
+        }
+    },
+    {
+        "id": 214,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 223,
+        "name": "DetailDaemonSamplerNode"
+    },
+    {
+        "id": 224,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 227,
+        "name": "Reroute"
+    },
+    {
+        "id": 241,
+        "name": "Illustrious \ud83d\udccb"
+    },
+    {
+        "id": 243,
+        "name": "ShowText|pysssss"
+    },
+    {
+        "id": 250,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "010_EG_s_10.webp"
+        }
+    },
+    {
+        "id": 251,
+        "name": "HintImageEnchance",
+        "prompts": {
+            "text": "Crop and Resize"
+        }
+    },
+    {
+        "id": 277,
+        "name": "Image Saver",
+        "prompts": {
+            "text": "%time_%basemodelname_%seed",
+            "text_2": "%Y-%m-%d-%H%M%S"
+        }
+    },
+    {
+        "id": 283,
+        "name": "TextCombinerSix"
+    },
+    {
+        "id": 285,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "anime artwork  anime screencap, anime coloring, red hair, long hair, crossed bangs, ahoge, red eyes, black hairbandEnchanting Eyes,(anime coloring:0.8), ((anime screencap:0.6)), (masterpiece, best quality, newest, absurdres, highres),official art, official style, colorful, ultra-detailed, super detailed skin,embedding:SuperQuality1, 1girl, eris_greyrat, underwear, panties, solo, long_hair, ass, red_hair, red_eyes, white_panties, smile, one_eye_closed, barefoot, black_hairband, blush, looking_at_viewer, hairband, skirt, soles, indoorsSelect the prefix add to the text    . anime style, key visual, vibrant, studio anime, highly detailed"
+        }
+    },
+    {
+        "id": 289,
+        "name": "Reroute"
+    },
+    {
+        "id": 293,
+        "name": "SDXLPromptStyler",
+        "prompts": {
+            "text": "masterpiece, best quality, extremely delicate and beautiful, highres, original, sharp lines, clean lines, soft lighting, 1girl, yellow bra and panties, sexy anime girl, large breasts, cum on tongue, open mouth, tongue out, cum, cum pool, cum on body, wakamezake (wariza:1.2), beautiful face, beautiful eyes, (black long ponytail:1.1), bedroom, nighttime",
+            "text_2": "((Censored)), ((teeth)), (((watermark, text))), ((((simple background)))), (worst quality, low quality, normal quality), bad-artist, blurry, ((ribs)), (deformed), (ugly), ((bad anatomy)), ((bad hands)), (((long hands))), ((long fingers)), ((bad proportions)), ((duplicate limbs)), ((fused limbs)),((interlocking fingers)), ((((extra fingers)))), ((missing fingers)), ((poorly drawn face)), "
+        }
+    },
+    {
+        "id": 295,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 296,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 297,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 298,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 299,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 300,
+        "name": "easy prompt",
+        "prompts": {
+            "text": "Select the prefix add to the text",
+            "text_2": "Select the prefix to add to the text"
+        }
+    },
+    {
+        "id": 301,
+        "name": "ComfyUIStyler",
+        "prompts": {
+            "text": "None - No specific camera angle applied.",
+            "text_2": "None (No specific style)"
+        }
+    },
+    {
+        "id": 302,
+        "name": "Reroute"
+    },
+    {
+        "id": 303,
+        "name": "Reroute"
+    },
+    {
+        "id": 304,
+        "name": "Reroute"
+    },
+    {
+        "id": 305,
+        "name": "Reroute"
+    },
+    {
+        "id": 306,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 307,
+        "name": "Reroute"
+    },
+    {
+        "id": 308,
+        "name": "Reroute"
+    },
+    {
+        "id": 309,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 311,
+        "name": "Reroute"
+    },
+    {
+        "id": 316,
+        "name": "workflow>VAE Decode (Tiled)"
+    },
+    {
+        "id": 317,
+        "name": "KSamplerSelect",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 318,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 319,
+        "name": "CFGGuider"
+    },
+    {
+        "id": 320,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 322,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "keep proportion"
+        }
+    },
+    {
+        "id": 326,
+        "name": "Reroute"
+    },
+    {
+        "id": 327,
+        "name": "Reroute"
+    },
+    {
+        "id": 328,
+        "name": "Reroute"
+    },
+    {
+        "id": 329,
+        "name": "Reroute"
+    },
+    {
+        "id": 345,
+        "name": "Reroute"
+    },
+    {
+        "id": 346,
+        "name": "Reroute"
+    },
+    {
+        "id": 347,
+        "name": "Reroute"
+    },
+    {
+        "id": 348,
+        "name": "Reroute"
+    },
+    {
+        "id": 349,
+        "name": "Reroute"
+    },
+    {
+        "id": 350,
+        "name": "Reroute"
+    },
+    {
+        "id": 351,
+        "name": "Reroute"
+    },
+    {
+        "id": 352,
+        "name": "Reroute"
+    },
+    {
+        "id": 353,
+        "name": "Reroute"
+    },
+    {
+        "id": 354,
+        "name": "Reroute"
+    },
+    {
+        "id": 355,
+        "name": "Reroute"
+    },
+    {
+        "id": 356,
+        "name": "Reroute"
+    },
+    {
+        "id": 357,
+        "name": "Reroute"
+    },
+    {
+        "id": 358,
+        "name": "Reroute"
+    }
+]

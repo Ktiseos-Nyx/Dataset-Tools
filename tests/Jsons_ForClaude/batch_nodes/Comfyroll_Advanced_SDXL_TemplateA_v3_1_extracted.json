@@ -1,0 +1,424 @@
+[
+    {
+        "id": 1,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "SDXL\\sd_xl_refiner_1.0.safetensors"
+        }
+    },
+    {
+        "id": 2,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 6,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 8,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 10,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 11,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_NMKD-Siax_200k.pth"
+        }
+    },
+    {
+        "id": 12,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 13,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 27,
+        "name": "Reroute"
+    },
+    {
+        "id": 37,
+        "name": "LoadImage"
+    },
+    {
+        "id": 40,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 43,
+        "name": "ImageInvert"
+    },
+    {
+        "id": 91,
+        "name": "Note",
+        "prompts": {
+            "text": "Comfyroll SDXL Workflow Templates\nhttps://civitai.com/models/118005/comfyroll-sdxl-workflow-templates\n\nThis template can be used with any SDXL model.\n\nRequires:\nWAS Custom Nodes\nhttps://civitai.com/models/20793/was-node-suite-comfyui\nComfyroll Custom Nodes\nhttps://civitai.com/models/87609/comfyroll-custom-nodes-for-comfyui\nSearge SDXL Nodes\nhttps://civitai.com/models/111463\nSDXL Prompt Styler\nhttps://github.com/twri/sdxl_prompt_styler\n\nAugust 2023\nAkatsuzi\n"
+        }
+    },
+    {
+        "id": 110,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 135,
+        "name": "Reroute"
+    },
+    {
+        "id": 139,
+        "name": "Reroute"
+    },
+    {
+        "id": 144,
+        "name": "Reroute"
+    },
+    {
+        "id": 145,
+        "name": "Reroute"
+    },
+    {
+        "id": 203,
+        "name": "Reroute"
+    },
+    {
+        "id": 299,
+        "name": "Note",
+        "prompts": {
+            "text": "Switch between:\n(1) normal\n(2) inverted\n(3) tinted\n"
+        }
+    },
+    {
+        "id": 304,
+        "name": "CR Load LoRA"
+    },
+    {
+        "id": 305,
+        "name": "CR Load LoRA",
+        "prompts": {
+            "text": "SDXL\\sd_xl_offset_example-lora_1.0.safetensors"
+        }
+    },
+    {
+        "id": 308,
+        "name": "Seed"
+    },
+    {
+        "id": 309,
+        "name": "CR Seed to Int"
+    },
+    {
+        "id": 328,
+        "name": "Note",
+        "prompts": {
+            "text": "%date:d-M-yy%/\n-%CheckpointLoader1.ckpt_name%\n_%Seed.seed%\n\n%date:d-M-yy%/%CheckpointLoader1.ckpt_name%_%Seed.seed%"
+        }
+    },
+    {
+        "id": 338,
+        "name": "Reroute"
+    },
+    {
+        "id": 339,
+        "name": "Reroute"
+    },
+    {
+        "id": 340,
+        "name": "Reroute"
+    },
+    {
+        "id": 341,
+        "name": "Reroute"
+    },
+    {
+        "id": 350,
+        "name": "Reroute"
+    },
+    {
+        "id": 351,
+        "name": "Reroute"
+    },
+    {
+        "id": 352,
+        "name": "Reroute"
+    },
+    {
+        "id": 354,
+        "name": "Reroute"
+    },
+    {
+        "id": 357,
+        "name": "CR Integer Multiple"
+    },
+    {
+        "id": 358,
+        "name": "CR Integer Multiple"
+    },
+    {
+        "id": 360,
+        "name": "Reroute"
+    },
+    {
+        "id": 401,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "SDXL\\sd_xl_base_1.0.safetensors"
+        }
+    },
+    {
+        "id": 402,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 403,
+        "name": "Reroute"
+    },
+    {
+        "id": 404,
+        "name": "Reroute"
+    },
+    {
+        "id": 439,
+        "name": "Reroute"
+    },
+    {
+        "id": 457,
+        "name": "CR Load LoRA"
+    },
+    {
+        "id": 461,
+        "name": "Reroute"
+    },
+    {
+        "id": 462,
+        "name": "Reroute"
+    },
+    {
+        "id": 467,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 470,
+        "name": "Reroute"
+    },
+    {
+        "id": 471,
+        "name": "Reroute"
+    },
+    {
+        "id": 475,
+        "name": "CR Color Tint"
+    },
+    {
+        "id": 476,
+        "name": "CR Image Input Switch (4 way)"
+    },
+    {
+        "id": 481,
+        "name": "Note",
+        "prompts": {
+            "text": "batch_size only works on Txt2Img"
+        }
+    },
+    {
+        "id": 482,
+        "name": "Load Image Batch",
+        "prompts": {
+            "text": "single_image",
+            "text_2": "E:\\Comfy Projects\\default batch"
+        }
+    },
+    {
+        "id": 483,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 500,
+        "name": "SeargeSDXLPromptEncoder",
+        "prompts": {
+            "text": "poorly lit polaroid photo, photograph, synthwave, led, nostalgic, film, professional, \n\n1980 polaroid of a hacker wearing sunglasses using a Commodore Amiga 500,\n\n",
+            "text_2": "poorly lit polaroid photo, photograph, synthwave, led, nostalgic, film, professional, \n\n1980 polaroid of a hacker wearing sunglasses using a Commodore Amiga 500,\n\n"
+        }
+    },
+    {
+        "id": 501,
+        "name": "Reroute"
+    },
+    {
+        "id": 502,
+        "name": "Image Levels Adjustment"
+    },
+    {
+        "id": 503,
+        "name": "Image Filter Adjustments"
+    },
+    {
+        "id": 504,
+        "name": "CR Image Output",
+        "prompts": {
+            "text": "ModularTemplate"
+        }
+    },
+    {
+        "id": 505,
+        "name": "CR Image Output",
+        "prompts": {
+            "text": "ModularTemplate"
+        }
+    },
+    {
+        "id": 507,
+        "name": "Image Style Filter"
+    },
+    {
+        "id": 508,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 510,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 511,
+        "name": "CR Image Output",
+        "prompts": {
+            "text": "ModularTemplate"
+        }
+    },
+    {
+        "id": 512,
+        "name": "Note",
+        "prompts": {
+            "text": "%date:d-M-yy%/\n-%CheckpointLoader1.ckpt_name%\n_%Seed.seed%\n\n%date:d-M-yy%/%CheckpointLoader1.ckpt_name%_%Seed.seed%"
+        }
+    },
+    {
+        "id": 513,
+        "name": "Note",
+        "prompts": {
+            "text": "output switch positions:\n1,1 = default image (from output 1)\n1,2 = enhanced image (from output 3)\n2,1 = styled image (from output 2)\n2,2 = styled enhanced images (from output 3)\n"
+        }
+    },
+    {
+        "id": 514,
+        "name": "Reroute"
+    },
+    {
+        "id": 515,
+        "name": "Reroute"
+    },
+    {
+        "id": 516,
+        "name": "Reroute"
+    },
+    {
+        "id": 517,
+        "name": "Reroute"
+    },
+    {
+        "id": 518,
+        "name": "Reroute"
+    },
+    {
+        "id": 519,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "SDXL\\SDXL10_"
+        }
+    },
+    {
+        "id": 520,
+        "name": "Reroute"
+    },
+    {
+        "id": 521,
+        "name": "CR Aspect Ratio SDXL",
+        "prompts": {
+            "text": "portrait 832x1216"
+        }
+    },
+    {
+        "id": 522,
+        "name": "Note",
+        "prompts": {
+            "text": "On first use:\n- select models and VAE\n- select a default LoRA in each Load LoRA node\n- select an upscale model\n- add an image in each of the Load Images nodes (purple nodes)\n- add a default image batch in the Load Image Batch node\n- select the batch_size in CR Aspect Ratio SDXL\n- set the filename_prefix in Save Image to your preferred sub-folder\n- save a copy to use as a template\n\nTips:\n- Notes can be opened by clicking on the dots (green nodes)\n- Each optional component can be bypassed using logic switches (red nodes)\n- The default setting for all logic switches is OFF (1)\n- Use Comfyroll Manager to find any missing custom nodes\n- Right-click on nodes and select Pin to pin/unpin the node\n"
+        }
+    },
+    {
+        "id": 523,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 524,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 525,
+        "name": "Image Padding"
+    },
+    {
+        "id": 526,
+        "name": "CR Image Input Switch"
+    },
+    {
+        "id": 527,
+        "name": "Note",
+        "prompts": {
+            "text": "switch between:\n(1) no padding\n(2) padding"
+        }
+    },
+    {
+        "id": 528,
+        "name": "Image Blending Mode"
+    },
+    {
+        "id": 529,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 530,
+        "name": "Reroute"
+    },
+    {
+        "id": 531,
+        "name": "Reroute"
+    },
+    {
+        "id": 534,
+        "name": "SeargeSamplerInputs",
+        "prompts": {
+            "text": "ddim_uniform"
+        }
+    },
+    {
+        "id": 535,
+        "name": "SeargeSDXLSampler"
+    },
+    {
+        "id": 536,
+        "name": "SDXLPromptStyler",
+        "prompts": {
+            "text": "poorly lit polaroid photo, photograph, synthwave, led, nostalgic, film, professional, \n\n1980 polaroid of a hacker wearing sunglasses using a Commodore Amiga 500,\n",
+            "text_2": "signature, text, watermark,\n\nbokeh, noisy, low contrast"
+        }
+    },
+    {
+        "id": 537,
+        "name": "CR Img2Img Process Switch"
+    }
+]

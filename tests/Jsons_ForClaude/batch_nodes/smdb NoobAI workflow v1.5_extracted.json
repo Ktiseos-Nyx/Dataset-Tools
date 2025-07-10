@@ -1,0 +1,480 @@
+[
+    {
+        "id": 1,
+        "name": "txt2img"
+    },
+    {
+        "id": 2,
+        "name": "Models"
+    },
+    {
+        "id": 3,
+        "name": "Prompt"
+    },
+    {
+        "id": 4,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 4,
+        "name": "Pixel Upscale"
+    },
+    {
+        "id": 5,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 6,
+        "name": "img2img Upscale"
+    },
+    {
+        "id": 7,
+        "name": "Upscale Settings"
+    },
+    {
+        "id": 9,
+        "name": "txt2img Settings"
+    },
+    {
+        "id": 16,
+        "name": "Post-Processing"
+    },
+    {
+        "id": 17,
+        "name": "Output"
+    },
+    {
+        "id": 20,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "span/4xNomosUni_span_multijpg.pth"
+        }
+    },
+    {
+        "id": 20,
+        "name": "Save Image"
+    },
+    {
+        "id": 22,
+        "name": "SimpleMathFloat+"
+    },
+    {
+        "id": 24,
+        "name": "SimpleMath+"
+    },
+    {
+        "id": 27,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 28,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 31,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 55,
+        "name": "SDXLEmptyLatentSizePicker+",
+        "prompts": {
+            "text": "832x1216 (0.68)"
+        }
+    },
+    {
+        "id": 59,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 70,
+        "name": "SimpleMath+"
+    },
+    {
+        "id": 76,
+        "name": "SimpleMathInt+"
+    },
+    {
+        "id": 78,
+        "name": "SimpleMathFloat+"
+    },
+    {
+        "id": 91,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 97,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 101,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 193,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 210,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "illustrious/vixonsNoobIllust_v8.safetensors"
+        }
+    },
+    {
+        "id": 294,
+        "name": "Image Saver",
+        "prompts": {
+            "text": "smdb-noobai",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 300,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "very awa,\nYOUR PROMPT HERE,\nmasterpiece, [best quality:0.15], newest, absurdres,\n"
+        }
+    },
+    {
+        "id": 313,
+        "name": "Checkpoint Loader with Name (Image Saver)",
+        "prompts": {
+            "text": "illustrious/noobaiXLNAIXL_vPred10Version.safetensors"
+        }
+    },
+    {
+        "id": 315,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "worst aesthetic, worst quality, low quality, lowres, \n[bad hands, mutated hands,\nsignature, username:0.15],\nmammal, anthro, furry, feral, semi-anthro,\n"
+        }
+    },
+    {
+        "id": 329,
+        "name": "SimpleMathInt+"
+    },
+    {
+        "id": 331,
+        "name": "SimpleMathFloat+"
+    },
+    {
+        "id": 334,
+        "name": "ApplyFBCacheOnModel",
+        "prompts": {
+            "text": "diffusion_model"
+        }
+    },
+    {
+        "id": 337,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 340,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 349,
+        "name": "PerturbedAttentionGuidance"
+    },
+    {
+        "id": 351,
+        "name": "PerturbedAttentionGuidance"
+    },
+    {
+        "id": 354,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 355,
+        "name": "SimpleMathInt+"
+    },
+    {
+        "id": 357,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 360,
+        "name": "Sampler Selector (Image Saver)",
+        "prompts": {
+            "text": "euler_cfg_pp"
+        }
+    },
+    {
+        "id": 361,
+        "name": "SimpleMathFloat+"
+    },
+    {
+        "id": 364,
+        "name": "ColorCorrect"
+    },
+    {
+        "id": 365,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 366,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 369,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 370,
+        "name": "LyingSigmaSampler"
+    },
+    {
+        "id": 371,
+        "name": "SamplerCustom"
+    },
+    {
+        "id": 372,
+        "name": "PatchModelAddDownscale"
+    },
+    {
+        "id": 374,
+        "name": "SimpleMathFloat+"
+    },
+    {
+        "id": 375,
+        "name": "BasicScheduler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 377,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 379,
+        "name": "SimpleMathFloat+"
+    },
+    {
+        "id": 382,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 387,
+        "name": "FilmGrain"
+    },
+    {
+        "id": 388,
+        "name": "ColorCorrect"
+    },
+    {
+        "id": 396,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 397,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 398,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 399,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 400,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 401,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 402,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 403,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 416,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "illustrious/noobaiCyberfixV2_10vpredCyberfixv2.safetensors"
+        }
+    },
+    {
+        "id": 417,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 418,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 422,
+        "name": "Any Switch (rgthree)"
+    },
+    {
+        "id": 423,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 427,
+        "name": "CR Switch Model and CLIP"
+    },
+    {
+        "id": 432,
+        "name": "Note",
+        "prompts": {
+            "text": "smdb NoobAI - vpred workflow\nUser guide: https://civitai.com/models/1150811.\n"
+        }
+    },
+    {
+        "id": 434,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 435,
+        "name": "Guidance Limiter"
+    },
+    {
+        "id": 438,
+        "name": "Fast Bypasser (rgthree)"
+    },
+    {
+        "id": 439,
+        "name": "RescaleCFGPost"
+    },
+    {
+        "id": 440,
+        "name": "SimpleMathFloat+"
+    },
+    {
+        "id": 445,
+        "name": "DisplayAny",
+        "prompts": {
+            "text": "tensor shape"
+        }
+    },
+    {
+        "id": 449,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 450,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 451,
+        "name": "SplitSigmas"
+    },
+    {
+        "id": 452,
+        "name": "BasicScheduler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 455,
+        "name": "DisableNoise"
+    },
+    {
+        "id": 456,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 498,
+        "name": "PCLazyLoraLoader"
+    },
+    {
+        "id": 501,
+        "name": "PCLazyTextEncode"
+    },
+    {
+        "id": 502,
+        "name": "PCLazyTextEncode",
+        "prompts": {
+            "text": "worst aesthetic, worst quality, low quality, lowres, \n[bad hands, mutated hands,\nsignature, username:0.15],\nmammal, anthro, furry, feral, semi-anthro,\n"
+        }
+    },
+    {
+        "id": 503,
+        "name": "PCLazyLoraLoader"
+    },
+    {
+        "id": 506,
+        "name": "PCLazyTextEncode"
+    },
+    {
+        "id": 507,
+        "name": "PCLazyTextEncode",
+        "prompts": {
+            "text": "worst aesthetic, worst quality, low quality, lowres, \n[bad hands, mutated hands,\nsignature, username:0.15],\nmammal, anthro, furry, feral, semi-anthro,\n"
+        }
+    },
+    {
+        "id": 508,
+        "name": "PCLazyLoraLoader"
+    },
+    {
+        "id": 511,
+        "name": "PCLazyTextEncode"
+    },
+    {
+        "id": 512,
+        "name": "PCLazyTextEncode",
+        "prompts": {
+            "text": "worst aesthetic, worst quality, low quality, lowres, \n[bad hands, mutated hands,\nsignature, username:0.15],\nmammal, anthro, furry, feral, semi-anthro,\n"
+        }
+    },
+    {
+        "id": 513,
+        "name": "Wildcard Processor",
+        "prompts": {
+            "text": "very awa,\nYOUR PROMPT HERE,\nmasterpiece, [best quality:0.15], newest, absurdres,\n"
+        }
+    },
+    {
+        "id": 514,
+        "name": "DisplayAny"
+    },
+    {
+        "id": 515,
+        "name": "CFGGuider"
+    },
+    {
+        "id": 516,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 517,
+        "name": "CFGGuider"
+    },
+    {
+        "id": 518,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 519,
+        "name": "BasicScheduler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 521,
+        "name": "SimpleMathInt+"
+    },
+    {
+        "id": 523,
+        "name": "SimpleMath+"
+    },
+    {
+        "id": 524,
+        "name": "SplitSigmas"
+    },
+    {
+        "id": 525,
+        "name": "SimpleMath+"
+    }
+]

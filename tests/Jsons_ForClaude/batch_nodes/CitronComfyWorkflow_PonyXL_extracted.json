@@ -1,0 +1,214 @@
+[
+    {
+        "id": 1,
+        "name": "KSampler"
+    },
+    {
+        "id": 3,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "((masterpiece,best quality)), absurdres, hex maniac (pokemon),   long hair, ahoge, purple hairband, purple eyes, @_@, long black dress,  smile, looking at viewer, cowboy shot,\nhead tilt, full moon, graveyard, open mouth,\nhands behind back,"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "thing, leg, negative_hand-neg, ng_deepnegative_v1_75t, verybadimagenegative_v1.3, EasyNegativeV2"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 12,
+        "name": "Reroute"
+    },
+    {
+        "id": 16,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 18,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 19,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 47,
+        "name": "Reroute"
+    },
+    {
+        "id": 51,
+        "name": "UltimateSDUpscale"
+    },
+    {
+        "id": 52,
+        "name": "Reroute"
+    },
+    {
+        "id": 54,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-AnimeSharp.pth"
+        }
+    },
+    {
+        "id": 56,
+        "name": "Constant Number"
+    },
+    {
+        "id": 57,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/face_yolov8m.pt"
+        }
+    },
+    {
+        "id": 58,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 59,
+        "name": "Reroute"
+    },
+    {
+        "id": 66,
+        "name": "JjkText",
+        "prompts": {
+            "text": "score_9, score_8_up, score_8, medium breasts, (curvy), cute, eyelashes,     \nBREAK,\ngloria (pokemon),\nBREAK,\n closed mouth, alternate costume, smile, looking at viewer, blush,  volleyball uniform, sleeveless, holding volleyball, arm band, black shorts, eyelashes, blurry background, beach, Dutch angle, volleyball net in background, \nembedding:zPDXL,\n\n<lora:princess_xl_v2:0.6>, \n<lora:Uncensored_PonyXL_cpt_v02.09:0.4>,\n<lora:Expressive_H-000001:0.4>,\n<lora:Gloria_Pokemon_P1:0.7>,\n<lora:Vivid:0.7>, "
+        }
+    },
+    {
+        "id": 67,
+        "name": "JjkText",
+        "prompts": {
+            "text": "score_6, score_5, score_4, busty, ugly face, mutated hands, low res, blurry face, black and white,"
+        }
+    },
+    {
+        "id": 69,
+        "name": "LoraTagLoader"
+    },
+    {
+        "id": 70,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 71,
+        "name": "Seed Generator"
+    },
+    {
+        "id": 72,
+        "name": "Sampler Selector",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 73,
+        "name": "Scheduler Selector"
+    },
+    {
+        "id": 82,
+        "name": "Reroute"
+    },
+    {
+        "id": 84,
+        "name": "Image Saver",
+        "prompts": {
+            "text": "%time_%basemodelname_%seed",
+            "text_2": "Lin_Bei_Fong_v2"
+        }
+    },
+    {
+        "id": 85,
+        "name": "Checkpoint Loader with Name (Image Saver)",
+        "prompts": {
+            "text": "XL\\ponyDiffusionV6XL.safetensors"
+        }
+    },
+    {
+        "id": 89,
+        "name": "Float Literal (Image Saver)"
+    },
+    {
+        "id": 94,
+        "name": "Float Literal (Image Saver)"
+    },
+    {
+        "id": 98,
+        "name": "JjkText",
+        "prompts": {
+            "text": "output_folder"
+        }
+    },
+    {
+        "id": 109,
+        "name": "workflow/Size"
+    },
+    {
+        "id": 111,
+        "name": "JjkText",
+        "prompts": {
+            "text": "detailed face"
+        }
+    },
+    {
+        "id": 112,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "((masterpiece,best quality)), absurdres, hex maniac (pokemon),   long hair, ahoge, purple hairband, purple eyes, @_@, long black dress,  smile, looking at viewer, cowboy shot,\nhead tilt, full moon, graveyard, open mouth,\nhands behind back,"
+        }
+    },
+    {
+        "id": 114,
+        "name": "FaceDetailer"
+    },
+    {
+        "id": 115,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Eyes.pt"
+        }
+    },
+    {
+        "id": 116,
+        "name": "JjkText"
+    },
+    {
+        "id": 117,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "((masterpiece,best quality)), absurdres, hex maniac (pokemon),   long hair, ahoge, purple hairband, purple eyes, @_@, long black dress,  smile, looking at viewer, cowboy shot,\nhead tilt, full moon, graveyard, open mouth,\nhands behind back,"
+        }
+    },
+    {
+        "id": 118,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "__CivitAI_Scan\\0 Mine\\__New\\test\\BCAT\\SolarCAT_Style.safetensors"
+        }
+    },
+    {
+        "id": 119,
+        "name": "Note",
+        "prompts": {
+            "text": "Help fuel my passion! Even $1 makes a difference. \u2615\nhttps://ko-fi.com/citronlegacy"
+        }
+    },
+    {
+        "id": 120,
+        "name": "Random Number"
+    },
+    {
+        "id": 125,
+        "name": "PreviewImage"
+    }
+]

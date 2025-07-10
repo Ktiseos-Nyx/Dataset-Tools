@@ -1,0 +1,213 @@
+[
+    {
+        "id": 42,
+        "name": "SamplerCustom"
+    },
+    {
+        "id": 44,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "hyvideo\\skyreels_hunyuan_i2v_fp8_e4m3fn.safetensors"
+        }
+    },
+    {
+        "id": 45,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "FPS-24, a yellow sports car racing on a tokyo highway at night, found footage"
+        }
+    },
+    {
+        "id": 47,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "llava_llama3_fp8_scaled.safetensors"
+        }
+    },
+    {
+        "id": 49,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "hunyuan_video_vae_bf16.safetensors"
+        }
+    },
+    {
+        "id": 50,
+        "name": "VHS_VideoCombine"
+    },
+    {
+        "id": 51,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 52,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 53,
+        "name": "EmptyHunyuanLatentVideo"
+    },
+    {
+        "id": 54,
+        "name": "ModelSamplingSD3"
+    },
+    {
+        "id": 57,
+        "name": "VAEDecodeTiled"
+    },
+    {
+        "id": 62,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 85,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "FPS-24, blurry bad quality video with bad composition, multiple cuts, fast and chaotic movement"
+        }
+    },
+    {
+        "id": 98,
+        "name": "SplitSigmas"
+    },
+    {
+        "id": 99,
+        "name": "SamplerCustom"
+    },
+    {
+        "id": 102,
+        "name": "FluxGuidance"
+    },
+    {
+        "id": 105,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "flixier-2025-01-31T23_23_17.571Z.png"
+        }
+    },
+    {
+        "id": 106,
+        "name": "ImageResize+",
+        "prompts": {
+            "text": "fill / crop"
+        }
+    },
+    {
+        "id": 107,
+        "name": "InstructPixToPixConditioning"
+    },
+    {
+        "id": 108,
+        "name": "ColorMatch"
+    },
+    {
+        "id": 110,
+        "name": "ImageNoiseAugmentation"
+    },
+    {
+        "id": 119,
+        "name": "TorchCompileModelHyVideo"
+    },
+    {
+        "id": 120,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "skyreels-hunyuan-I2V-Q8_0.gguf"
+        }
+    },
+    {
+        "id": 124,
+        "name": "PathchSageAttentionKJ"
+    },
+    {
+        "id": 126,
+        "name": "PatchModelPatcherOrder",
+        "prompts": {
+            "text": "weight_patch_first"
+        }
+    },
+    {
+        "id": 127,
+        "name": "Note",
+        "prompts": {
+            "text": "To allow compiling with LoRAs"
+        }
+    },
+    {
+        "id": 128,
+        "name": "Note",
+        "prompts": {
+            "text": "Optional optimizations, need Triton/sageattention to use"
+        }
+    },
+    {
+        "id": 130,
+        "name": "Note",
+        "prompts": {
+            "text": "Split the process to only do half the steps with cfg, as sampling without is twice as fast and doesn't have huge impact on the results."
+        }
+    },
+    {
+        "id": 132,
+        "name": "Reroute"
+    },
+    {
+        "id": 133,
+        "name": "Note",
+        "prompts": {
+            "text": "This node is used to add the image as extra conditioning"
+        }
+    },
+    {
+        "id": 134,
+        "name": "Note",
+        "prompts": {
+            "text": "No noise added here, only the seed on the first sampler matters"
+        }
+    },
+    {
+        "id": 135,
+        "name": "Note",
+        "prompts": {
+            "text": "!IMPORTANT!\n\nThis model is far from perfect, the results can be very random between seeds, if it seemingly doesn't work, do try simply changing seed couple of times.\n\nHighly recommend using the live preview feature of VHS nodes, it can be enabled from ComfyUI options -> VHS"
+        }
+    },
+    {
+        "id": 136,
+        "name": "Note",
+        "prompts": {
+            "text": "At this stage I have no idea what's a good negative prompt for the model, please experiment or leave it empty."
+        }
+    },
+    {
+        "id": 137,
+        "name": "Note",
+        "prompts": {
+            "text": "According to the original code, prompts should start with FPS-24"
+        }
+    },
+    {
+        "id": 138,
+        "name": "Note",
+        "prompts": {
+            "text": "Skyreels-i2v-Runpod-lines-v22\n\nVideo: https://www.youtube.com/@FiveBelowFiveUK\nWorkflow: https://civitai.com/user/driftjohnson\nhttps://www.fivebelowfive.uk\n\n\n\n- basic image2video\n- Native Skyreels\n- Video Combine (H264/mp4)\n- 640 x 640 Resolution (recommended)\n- Project Path Generator Node (DJZ-Nodes)\n\n- NAME YOUR PROJECT !!\n\n\n\n[discord early editions]\nhttps://discord.com/invite/uubQXhwzkj \n"
+        }
+    },
+    {
+        "id": 139,
+        "name": "ProjectFilePathNode"
+    },
+    {
+        "id": 140,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 141,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 142,
+        "name": "Label (rgthree)"
+    }
+]

@@ -1,0 +1,225 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "res_multistep"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "lumina_2.safetensors"
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "You are leonardo da vinci who has travelled back from the future. <Prompt Start> focused exterior view on a living room of a limestone rock regular blocks shaped villa with sliding windows and timber screens in Provence along the cliff facing the sea, with waterfalls from the roof to the pool, designed by Zaha Hadid, with rocky textures and form, made of regular giant rock blocks stacked each other with infinity edge pool in front of it, blends in with the surrounding nature. Regular rock blocks. Giant rock blocks shaping the space. The image to capture the infinity edge profile of the pool and the flow of water going down creating a waterfall effect. Adriatic Sea. The design is sustainable and semi prefab. The photo is shot on a canon 5D mark 4"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry ugly bad concept"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 13,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 15,
+        "name": "Note",
+        "prompts": {
+            "text": "The \"You are an assistant... <Prompt Start> \" text before the actual prompt is the one used in the official example.\n\nThe reason it is exposed to the user like this is because the model still works if you modify or remove it."
+        }
+    },
+    {
+        "id": 16,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": " <Prompt Start> "
+        }
+    },
+    {
+        "id": 17,
+        "name": "Text Concatenate",
+        "prompts": {
+            "text": "You are an assistant designed to generate superior images with the superior degree of image-text alignment based on textual prompts or user prompts. ",
+            "text_2": " <Prompt Start> "
+        }
+    },
+    {
+        "id": 19,
+        "name": "ZenkaiPromptV4",
+        "prompts": {
+            "text": "paradistro-IMG-exterior.txt"
+        }
+    },
+    {
+        "id": 20,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "You are an assistant designed to generate superior images with the superior degree of illustration-text alignment based on textual prompts or user prompts., <Prompt Start>, A convergence of brutalist industrial processes towers above the shell surface, where massive energy conduits intersect in geometric precision. The living metal structure pulses with internal light, its surface constantly shifting and repairing. Void-facing panels capture stellar radiation, creating a cascade of purple-blue illumination across the angular architecture. Construction drones move in coordinated swarms, their paths traced by streams of processed material flowing through translucent channels, showcasing the perpetual growth of the megastructure1. Brutalist arches of impossible scale curve through the void, their living metal surfaces reflecting distant starlight in geometric patterns. Massive industrial processing units, each the size of ancient cities, hang suspended between the arches, connected by pulsing energy conduits. Construction swarms move like schools of fish across the structure, their work illuminated by the cold blue glow of material conversion streams. The megastructure's true scale becomes apparent as a maintenance array, kilometers long, appears as merely a glinting thread against the vast industrial tapestry"
+        }
+    },
+    {
+        "id": 21,
+        "name": "ProjectFilePathNode",
+        "prompts": {
+            "text": "leviathanz-e8-luminar-anime"
+        }
+    },
+    {
+        "id": 23,
+        "name": "PromptSwap",
+        "prompts": {
+            "text": "image, painting, drawing, sketch",
+            "text_2": "photo, photo, photo, photo"
+        }
+    },
+    {
+        "id": 24,
+        "name": "PromptSwap",
+        "prompts": {
+            "text": "illustration"
+        }
+    },
+    {
+        "id": 25,
+        "name": "AspectSizeV2"
+    },
+    {
+        "id": 39,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 85,
+        "name": "ModelSamplingFlux"
+    },
+    {
+        "id": 87,
+        "name": "WidgetToString"
+    },
+    {
+        "id": 91,
+        "name": "CR Split String"
+    },
+    {
+        "id": 94,
+        "name": "DF_Text_Box",
+        "prompts": {
+            "text": "You are an assistant designed to generate superior images with the superior degree of image-text alignment based on textual prompts or user prompts. "
+        }
+    },
+    {
+        "id": 97,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 98,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 99,
+        "name": "Note",
+        "prompts": {
+            "text": "LUDA-Lumina-t2i-advanced-upscale-v15\n\n\nVideo: https://www.youtube.com/@FiveBelowFiveUK\nWorkflow: https://civitai.com/user/driftjohnson\nhttps://www.fivebelowfive.uk\n\n\n\n\n[discord early editions]\nhttps://discord.com/invite/uubQXhwzkj "
+        }
+    },
+    {
+        "id": 101,
+        "name": "Reroute"
+    },
+    {
+        "id": 103,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 105,
+        "name": "Upscale Model Loader",
+        "prompts": {
+            "text": "4xFaceUpSharpDAT.pth"
+        }
+    },
+    {
+        "id": 106,
+        "name": "ImageInterleavedUpscaler"
+    },
+    {
+        "id": 108,
+        "name": "ImageInterleavedUpscalerV2"
+    },
+    {
+        "id": 109,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 110,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 111,
+        "name": "Upscale Model Loader",
+        "prompts": {
+            "text": "1xDeJPG_OmniSR.pth"
+        }
+    },
+    {
+        "id": 113,
+        "name": "Reroute"
+    },
+    {
+        "id": 114,
+        "name": "ColorMatch"
+    },
+    {
+        "id": 115,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 116,
+        "name": "ImageApplyLUT+",
+        "prompts": {
+            "text": "FiLMiC_deLog_V3.CUBE"
+        }
+    },
+    {
+        "id": 117,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 118,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 119,
+        "name": "Note",
+        "prompts": {
+            "text": "use this in suffix:\n, (large font title at top reads \"HARD\":1)\n\nfor signs etc"
+        }
+    },
+    {
+        "id": 121,
+        "name": "SaveImage"
+    },
+    {
+        "id": 122,
+        "name": "ProjectFilePathNode",
+        "prompts": {
+            "text": "leviathanz-e8-luminar-anime"
+        }
+    }
+]

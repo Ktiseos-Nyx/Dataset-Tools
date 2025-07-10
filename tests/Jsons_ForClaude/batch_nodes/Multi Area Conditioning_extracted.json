@@ -1,0 +1,117 @@
+[
+    {
+        "id": 6,
+        "name": "MultiAreaConditioning"
+    },
+    {
+        "id": 7,
+        "name": "ttN pipeLoader",
+        "prompts": {
+            "text": "revAnimated_v122.safetensors",
+            "text_2": "vae-ft-mse-840000-ema-pruned.safetensors"
+        }
+    },
+    {
+        "id": 8,
+        "name": "ttN pipeKSampler"
+    },
+    {
+        "id": 9,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "inside a space station"
+        }
+    },
+    {
+        "id": 10,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "close-up photography of a beautiful woman standing in a space station"
+        }
+    },
+    {
+        "id": 11,
+        "name": "ImageSharpen"
+    },
+    {
+        "id": 12,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_ArtStation1000_Sharp.pth"
+        }
+    },
+    {
+        "id": 13,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 14,
+        "name": "ImageScale",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 15,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 16,
+        "name": "ttN pipeKSampler",
+        "prompts": {
+            "text": "add_detail.safetensors"
+        }
+    },
+    {
+        "id": 17,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "MultiAreaConditioning"
+        }
+    },
+    {
+        "id": 18,
+        "name": "ImageSharpen"
+    },
+    {
+        "id": 19,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control_v11f1e_sd15_tile.pth"
+        }
+    },
+    {
+        "id": 20,
+        "name": "ControlNetApply"
+    },
+    {
+        "id": 21,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a cat in a space station"
+        }
+    },
+    {
+        "id": 22,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 23,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 24,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 27,
+        "name": "MultiAreaConditioning"
+    },
+    {
+        "id": 31,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "epicrealism_pureEvolutionV5.safetensors"
+        }
+    }
+]

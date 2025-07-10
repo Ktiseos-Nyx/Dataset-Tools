@@ -1,0 +1,39 @@
+[
+    {
+        "id": 1,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 2,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd-v1-5-inpainting.ckpt"
+        }
+    },
+    {
+        "id": 3,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 4,
+        "name": "SaveImage"
+    },
+    {
+        "id": 5,
+        "name": "KSampler"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "sandy beach with sea waves at the background and montains on other side, a boat on the sea "
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text, watermark, peoples, crowdes"
+        }
+    }
+]

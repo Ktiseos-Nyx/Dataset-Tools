@@ -1,0 +1,106 @@
+[
+    {
+        "id": 1,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4xUltrasharp_4xUltrasharpV10.pth"
+        }
+    },
+    {
+        "id": 2,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 3,
+        "name": "LoraLoader|pysssss"
+    },
+    {
+        "id": 10,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 12,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 13,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "ComfyUI_00001_.safetensors"
+        }
+    },
+    {
+        "id": 22,
+        "name": "KSampler"
+    },
+    {
+        "id": 23,
+        "name": "UltimateSDUpscale"
+    },
+    {
+        "id": 24,
+        "name": "CascadeResolutions",
+        "prompts": {
+            "text": "1024x1024 (1:1) - Square Large"
+        }
+    },
+    {
+        "id": 25,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 27,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text, watermark"
+        }
+    },
+    {
+        "id": 28,
+        "name": "CR Prompt Text",
+        "prompts": {
+            "text": "nsfw, longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry, distorted, artifacts, overexposed, underexposed, grainy, unnatural lighting, low contrast, washed out, pixelated, unnatural proportions\n\n"
+        }
+    },
+    {
+        "id": 29,
+        "name": "SaveImage"
+    },
+    {
+        "id": 44,
+        "name": "Reroute"
+    },
+    {
+        "id": 48,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 53,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 56,
+        "name": "CR Prompt Text",
+        "prompts": {
+            "text": "You are Professor of creating a prompt for Stable Diffusion to generate an image. Write the phrases for art styles, art movements, artists names, best light ,colors and  depth effects for this \"image\". Make this prompt generate the best award master piece painting ever, only response with prompt itself in one paragraph.\""
+        }
+    },
+    {
+        "id": 59,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "master piece ,Highly detailed, award wining, intricate textures, dynamic lighting, vivid colors, balanced composition, color harmony, cinematic lighting, dramatic lighting, soft shadows, atmospheric perspective, hyper-realistic, fine art, professional artwork, exquisite craftsmanship, artistic brilliance"
+        }
+    },
+    {
+        "id": 64,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 65,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "TTPLANET_Controlnet_Tile_realistic_v2_rank256.safetensors"
+        }
+    }
+]

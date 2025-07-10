@@ -1,0 +1,361 @@
+[
+    {
+        "id": 1,
+        "name": "PixArtCheckpointLoader",
+        "prompts": {
+            "text": "pixart_sigma-FP16.safetensors",
+            "text_2": "PixArtMS_Sigma_XL_2"
+        }
+    },
+    {
+        "id": 39,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "photon_refiner-FP16.safetensors"
+        }
+    },
+    {
+        "id": 53,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 61,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "abominable/%date:yyyy-MM-dd%/%date:hhmmss%"
+        }
+    },
+    {
+        "id": 64,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 66,
+        "name": "Note",
+        "prompts": {
+            "text": "Abominable Workflows v3\n=======================\nhttps://civitai.com/models/420163/abominable-workflows\n\nREQUIRED FILES\n--------------\n To use these workflows, you need to install the following models in ComfyUI.\n Place them in the specified directories:\n\n <your_comfyui_dir> / models / checkpoints /\n   > pixart_sigma-FP16.safetensors\n   > photon_refiner-FP16.safetensors\n\n <your_comfyui_dir> / models / clip /\n   > t5_xxl_encoder-FP8.safetensors\n\n <your_comfyui_dir> / models / vae /\n   > pixart_vae.safetensors\n\n All four files can be downloaded from:\n   https://huggingface.co/martin-rizzo/AbominableWorkflows/tree/main\n\nREQUIRED NODES\n--------------\n Abominable workflows also requires the following custom nodes:\n\n   > ComfyUI_ExtraModels\n     https://github.com/city96/ComfyUI_ExtraModels\n\n   > ComfyUI-Crystools\n     https://github.com/crystian/ComfyUI-Crystools\n\n For detailed installation instructions for these nodes, please refer to the main page of Abominable Workflows.\n\nOUTPUT IMAGES\n-------------\n Generated images will be automatically saved in:\n    <your_comfyui_dir> / output / abominable /\n\nWORKFLOWS INCLUDED\n------------------\n This pack contains multiple workflows, each designed for a different image style:\n   > abominable_1GIRL_\n   > abominable_DARKFAN80_\n   > abominable_INK_\n   > abominable_MILO_\n   > abominable_PHOTO_\n   > abominable_PIXEL_\n  \nIMAGE SIZE\n----------\n Abominable uses PixArt-1024 beyond its recommended size.\n For optimal quality, consider using the values provided by PixArt's authors:\n\n    9:21 =  640 x 1536\n    9:16 =  768 x 1344\n    4:5  =  896 x 1152\n    2:3  =  832 x 1216\n    1:1  = 1024 x 1024\n    3:2  = 1216 x  832\n    5:4  =  896 x 1152\n   21:9  = 1536 x  640\n   16:9  = 1344 x  768"
+        }
+    },
+    {
+        "id": 68,
+        "name": "Reroute"
+    },
+    {
+        "id": 69,
+        "name": "Reroute"
+    },
+    {
+        "id": 71,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 76,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 79,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Poor quality iPhone photo of Kermit the Frog drinking tea, sitting in a coffee booth near the window, with a light rain outside. (144p photo:1.1) with JPEG artifacts."
+        }
+    },
+    {
+        "id": 80,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 83,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 84,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 92,
+        "name": "Primitive string multiline [Crystools]",
+        "prompts": {
+            "text": "Batman playing soccer on a muddy field, under a cloudy sky with a lightning bolt in the background, amidst intense rain, with the stadium stands packed with people in the distance"
+        }
+    },
+    {
+        "id": 95,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "Batman playing soccer on a muddy field, under a cloudy sky with a lightning bolt in the background, amidst intense rain, with the stadium stands packed with people in the distance"
+        }
+    },
+    {
+        "id": 97,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 103,
+        "name": "Switch any [Crystools]"
+    },
+    {
+        "id": 104,
+        "name": "Primitive integer [Crystools]"
+    },
+    {
+        "id": 105,
+        "name": "Primitive integer [Crystools]"
+    },
+    {
+        "id": 106,
+        "name": "Switch any [Crystools]"
+    },
+    {
+        "id": 107,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 109,
+        "name": "Reroute"
+    },
+    {
+        "id": 110,
+        "name": "Note",
+        "prompts": {
+            "text": " * Seed              : random\n * Guidance          : 4.0     [ 3.0 - 5.0 ]\n * Refiner intensity : 14      [ 12  - 18  ]\n * Refiner variation : 0       < different values create slight changes in small details\n * Refiner attention : empty   < add words to focus refinement on specific objects\n * Ref.ignores prompt: false   < if enabled, the refiner will completely ignore the prompt\n\nIncreasing 'Guidance' makes the pixel art look more old-school.\nLowering 'Guidance' creates more detailed pixel art with smoother color gradients.\n\nFor more information about Abominable Workflows:\nhttps://civitai.com/models/420163"
+        }
+    },
+    {
+        "id": 112,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Batman playing soccer on a muddy field, under a cloudy sky with a lightning bolt in the background, amidst intense rain, with the stadium stands packed with people in the distance"
+        }
+    },
+    {
+        "id": 115,
+        "name": "SamplerCustom"
+    },
+    {
+        "id": 116,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 118,
+        "name": "KSamplerAdvanced"
+    },
+    {
+        "id": 120,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 124,
+        "name": "Reroute"
+    },
+    {
+        "id": 125,
+        "name": "Reroute"
+    },
+    {
+        "id": 132,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 136,
+        "name": "List of strings [Crystools]"
+    },
+    {
+        "id": 137,
+        "name": "Primitive string multiline [Crystools]"
+    },
+    {
+        "id": 144,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 146,
+        "name": "Show any [Crystools]"
+    },
+    {
+        "id": 147,
+        "name": "List of strings [Crystools]"
+    },
+    {
+        "id": 149,
+        "name": "Primitive string multiline [Crystools]"
+    },
+    {
+        "id": 153,
+        "name": "Show any [Crystools]"
+    },
+    {
+        "id": 156,
+        "name": "Primitive string multiline [Crystools]",
+        "prompts": {
+            "text": "Batman playing soccer on a muddy field, under a cloudy sky with a lightning bolt in the background, amidst intense rain, with the stadium stands packed with people in the distance"
+        }
+    },
+    {
+        "id": 157,
+        "name": "Primitive string multiline [Crystools]",
+        "prompts": {
+            "text": "pixel-art, low-res, blocky"
+        }
+    },
+    {
+        "id": 158,
+        "name": "Primitive string multiline [Crystools]"
+    },
+    {
+        "id": 159,
+        "name": "Primitive string multiline [Crystools]",
+        "prompts": {
+            "text": "blurry, noisy, highly detailed, ultra textured, photo, realistic, macrophoto"
+        }
+    },
+    {
+        "id": 160,
+        "name": "List of strings [Crystools]"
+    },
+    {
+        "id": 161,
+        "name": "Show any [Crystools]"
+    },
+    {
+        "id": 162,
+        "name": "Primitive string multiline [Crystools]",
+        "prompts": {
+            "text": ". low-res, blocky, pixel art style, 8-bit graphics"
+        }
+    },
+    {
+        "id": 163,
+        "name": "Primitive string multiline [Crystools]",
+        "prompts": {
+            "text": "A pixel-art image of "
+        }
+    },
+    {
+        "id": 165,
+        "name": "Reroute"
+    },
+    {
+        "id": 168,
+        "name": "Reroute"
+    },
+    {
+        "id": 169,
+        "name": "SplitSigmas"
+    },
+    {
+        "id": 170,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 171,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 172,
+        "name": "SamplerCustom"
+    },
+    {
+        "id": 173,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 174,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(worst quality, low quality:1.8)"
+        }
+    },
+    {
+        "id": 175,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 176,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 177,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 178,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Poor quality iPhone photo of Kermit the Frog drinking tea, sitting in a coffee booth near the window, with a light rain outside. (144p photo:1.1) with JPEG artifacts."
+        }
+    },
+    {
+        "id": 179,
+        "name": "Reroute"
+    },
+    {
+        "id": 180,
+        "name": "Reroute"
+    },
+    {
+        "id": 181,
+        "name": "Reroute"
+    },
+    {
+        "id": 182,
+        "name": "Reroute"
+    },
+    {
+        "id": 183,
+        "name": "Reroute"
+    },
+    {
+        "id": 184,
+        "name": "Reroute"
+    },
+    {
+        "id": 186,
+        "name": "Reroute"
+    },
+    {
+        "id": 187,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 188,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 189,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 192,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 193,
+        "name": "Switch any [Crystools]"
+    },
+    {
+        "id": 194,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 195,
+        "name": "Switch string [Crystools]"
+    },
+    {
+        "id": 196,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 211,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "pixart_vae.safetensors"
+        }
+    },
+    {
+        "id": 212,
+        "name": "CLIPLoader",
+        "prompts": {
+            "text": "t5_xxl_encoder-FP8.safetensors"
+        }
+    }
+]

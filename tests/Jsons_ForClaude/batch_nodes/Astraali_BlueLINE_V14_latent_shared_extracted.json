@@ -1,0 +1,680 @@
+[
+    {
+        "id": 2,
+        "name": "MainX_SAVELR"
+    },
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 3,
+        "name": "Main1_Highres2"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "v1-5-pruned-emaonly-fp16.safetensors"
+        }
+    },
+    {
+        "id": 4,
+        "name": "Main4_D1_Face"
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 5,
+        "name": "Main4_D2_Other"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
+        }
+    },
+    {
+        "id": 6,
+        "name": "Main4_D3_Eyes"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text, watermark"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 8,
+        "name": "Main4_D6_Breasts"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 9,
+        "name": "Main4_D4_Hands"
+    },
+    {
+        "id": 11,
+        "name": "Power Lora Loader (rgthree)"
+    },
+    {
+        "id": 12,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 12,
+        "name": "INPAINTING"
+    },
+    {
+        "id": 13,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 14,
+        "name": "CR VAE Input Switch"
+    },
+    {
+        "id": 14,
+        "name": "Main2_Highres3"
+    },
+    {
+        "id": 15,
+        "name": "SetNode"
+    },
+    {
+        "id": 15,
+        "name": "MainX_SAVE_FINAL"
+    },
+    {
+        "id": 16,
+        "name": "SetNode"
+    },
+    {
+        "id": 17,
+        "name": "SetNode"
+    },
+    {
+        "id": 18,
+        "name": "ImpactWildcardProcessor",
+        "prompts": {
+            "text": "Select the Wildcard to add to the text"
+        }
+    },
+    {
+        "id": 19,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 20,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 21,
+        "name": "GetNode"
+    },
+    {
+        "id": 22,
+        "name": "CR SDXL Aspect Ratio"
+    },
+    {
+        "id": 23,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 24,
+        "name": "SetNode"
+    },
+    {
+        "id": 25,
+        "name": "SetNode"
+    },
+    {
+        "id": 32,
+        "name": "SetNode"
+    },
+    {
+        "id": 33,
+        "name": "SetNode"
+    },
+    {
+        "id": 36,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 37,
+        "name": "Reroute"
+    },
+    {
+        "id": 49,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 59,
+        "name": "Image Filter Adjustments"
+    },
+    {
+        "id": 61,
+        "name": "Note _O",
+        "prompts": {
+            "text": "Color adjust"
+        }
+    },
+    {
+        "id": 70,
+        "name": "GetNode"
+    },
+    {
+        "id": 71,
+        "name": "GetNode"
+    },
+    {
+        "id": 72,
+        "name": "GetNode"
+    },
+    {
+        "id": 73,
+        "name": "GetNode"
+    },
+    {
+        "id": 74,
+        "name": "GetNode"
+    },
+    {
+        "id": 75,
+        "name": "GetNode"
+    },
+    {
+        "id": 76,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral_cfg_pp",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 77,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 78,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Eyeful_v2-Paired.pt"
+        }
+    },
+    {
+        "id": 79,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/fdetailerAdetailerFor_v11.pt"
+        }
+    },
+    {
+        "id": 80,
+        "name": "SegmDetectorSEGS",
+        "prompts": {
+            "text": "pussy, anus, penis, "
+        }
+    },
+    {
+        "id": 81,
+        "name": "DetailerForEach",
+        "prompts": {
+            "text": "euler_ancestral_cfg_pp",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 83,
+        "name": "Reroute"
+    },
+    {
+        "id": 89,
+        "name": "DetailerForEach",
+        "prompts": {
+            "text": "euler_ancestral_cfg_pp",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 90,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "segm/fdetailerAdetailerFor_v11.pt"
+        }
+    },
+    {
+        "id": 91,
+        "name": "SegmDetectorSEGS"
+    },
+    {
+        "id": 92,
+        "name": "GetNode"
+    },
+    {
+        "id": 93,
+        "name": "GetNode"
+    },
+    {
+        "id": 94,
+        "name": "GetNode"
+    },
+    {
+        "id": 95,
+        "name": "GetNode"
+    },
+    {
+        "id": 96,
+        "name": "GetNode"
+    },
+    {
+        "id": 97,
+        "name": "GetNode"
+    },
+    {
+        "id": 99,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 103,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral_cfg_pp",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 104,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/hand_yolov8s.pt"
+        }
+    },
+    {
+        "id": 105,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 113,
+        "name": "Reroute"
+    },
+    {
+        "id": 126,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 127,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 128,
+        "name": "FaceDetailer",
+        "prompts": {
+            "text": "euler_ancestral_cfg_pp",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 129,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/female-breast-v4.7.pt"
+        }
+    },
+    {
+        "id": 130,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 133,
+        "name": "Note _O"
+    },
+    {
+        "id": 134,
+        "name": "Note _O",
+        "prompts": {
+            "text": "tiled cnet ksampler.\n\nIf you dont want to use it, remove it."
+        }
+    },
+    {
+        "id": 160,
+        "name": "Note _O",
+        "prompts": {
+            "text": "Face and Other use v11 detector.\n\nID's: for_v11\n\n0: face\n1: penis\n2: pussy\n3: anus\n4: sheath\n5: pawpads"
+        }
+    },
+    {
+        "id": 165,
+        "name": "easy imageSwitch"
+    },
+    {
+        "id": 172,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 176,
+        "name": "Reroute"
+    },
+    {
+        "id": 177,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 181,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "euler_ancestral_cfg_pp",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 184,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 185,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 188,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 189,
+        "name": "ToBasicPipe"
+    },
+    {
+        "id": 190,
+        "name": "GetNode"
+    },
+    {
+        "id": 192,
+        "name": "GetNode"
+    },
+    {
+        "id": 193,
+        "name": "GetNode"
+    },
+    {
+        "id": 194,
+        "name": "GetNode"
+    },
+    {
+        "id": 195,
+        "name": "MaskDetailerPipe",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 197,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 198,
+        "name": "Fast Groups Bypasser (rgthree)"
+    },
+    {
+        "id": 200,
+        "name": "GetNode"
+    },
+    {
+        "id": 203,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 204,
+        "name": "Switch conditioning [Crystools]"
+    },
+    {
+        "id": 205,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 213,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 215,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 221,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 222,
+        "name": "LatentUpscaleBy",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 223,
+        "name": "Reroute"
+    },
+    {
+        "id": 224,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "example.png"
+        }
+    },
+    {
+        "id": 225,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 226,
+        "name": "GetNode"
+    },
+    {
+        "id": 227,
+        "name": "ImageScale"
+    },
+    {
+        "id": 228,
+        "name": "SetNode"
+    },
+    {
+        "id": 229,
+        "name": "CR Latent Input Switch"
+    },
+    {
+        "id": 230,
+        "name": "GetNode"
+    },
+    {
+        "id": 231,
+        "name": "SetNode",
+        "prompts": {
+            "text": "latent_image"
+        }
+    },
+    {
+        "id": 232,
+        "name": "GetNode",
+        "prompts": {
+            "text": "latent_image"
+        }
+    },
+    {
+        "id": 233,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 234,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 235,
+        "name": "Checkpoint Loader (Simple)",
+        "prompts": {
+            "text": "ILLUS_ASTRAALI\\Astraali_UltraCore_V1.safetensors"
+        }
+    },
+    {
+        "id": 240,
+        "name": "SetNode",
+        "prompts": {
+            "text": "string_modelname"
+        }
+    },
+    {
+        "id": 260,
+        "name": "SetNode",
+        "prompts": {
+            "text": "string_negative"
+        }
+    },
+    {
+        "id": 261,
+        "name": "SetNode",
+        "prompts": {
+            "text": "string_positive"
+        }
+    },
+    {
+        "id": 262,
+        "name": "Text _O",
+        "prompts": {
+            "text": "bad quality, "
+        }
+    },
+    {
+        "id": 269,
+        "name": "SetNode"
+    },
+    {
+        "id": 306,
+        "name": "KSampler (Efficient)",
+        "prompts": {
+            "text": "euler_ancestral",
+            "text_2": "true (tiled)"
+        }
+    },
+    {
+        "id": 309,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 310,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "diffusion_pytorch_model.safetensors"
+        }
+    },
+    {
+        "id": 311,
+        "name": "TilePreprocessor"
+    },
+    {
+        "id": 315,
+        "name": "VAEEncodeTiled"
+    },
+    {
+        "id": 316,
+        "name": "Reroute"
+    },
+    {
+        "id": 317,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 318,
+        "name": "Reroute"
+    },
+    {
+        "id": 320,
+        "name": "SaveImage"
+    },
+    {
+        "id": 321,
+        "name": "Note _O",
+        "prompts": {
+            "text": "Save manually from Preview Image, or swap that node to a save image node."
+        }
+    },
+    {
+        "id": 322,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "LOW_RESOLUTION"
+        }
+    },
+    {
+        "id": 323,
+        "name": "Note _O",
+        "prompts": {
+            "text": "Disable everything to generate a low resolution image (if you want to save it, turn on \"MainX_SAVELR\").\n\nTo highresfix it: \nUse same seed and turn on both Main1 and Main2 Highresfix, and which ever detailers you need to generate highres image (if you want to save it, turn on \"MainX_SAVE_FINAL\").\n\nDetailers i normally use: face, eyes, hands"
+        }
+    },
+    {
+        "id": 324,
+        "name": "Note _O",
+        "prompts": {
+            "text": "To use the inpainting station, set the seed to fixed in the main area and turn off all highresfix and detailers, so you don't keep generating random images while running the inpainter.\n\nUpload image and rightclick to open in mask editor, save mask, you can use either your main prompt, or write a new one in the inpaint_conditioning, remember to switch which is used in the switch node."
+        }
+    },
+    {
+        "id": 325,
+        "name": "Note _O",
+        "prompts": {
+            "text": "If you do img2img, switch to 2 = Image from upload and remember to adjust the denoising strenght in the first ksampler (for example 0.4 - 0.7)"
+        }
+    },
+    {
+        "id": 326,
+        "name": "Note _O",
+        "prompts": {
+            "text": "You can add whatever upscale method you want and feed the image from this \"D1\" reroute."
+        }
+    },
+    {
+        "id": 327,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 328,
+        "name": "Note _O",
+        "prompts": {
+            "text": "Detects human/animal/furry faces, good for all around face detection. \n\nhttps://civitai.com/models/1228695/fdetailer-adetailer-for-furries\n\n--------------------------------------------------------------------------------------------------------\n\nFor eyes, the paired version.\n\nhttps://civitai.com/models/178518/eyeful-or-robust-eye-detection-for-adetailer-comfyui\n\n--------------------------------------------------------------------------------------------------------\n\nFor breasts, Not sure if this the best one, but it's the one that i have. I don't use often.\n\nhttps://civitai.com/models/138918/adetailer-after-detailer-female-breast-model\n\n--------------------------------------------------------------------------------------------------------\n\nControlnet model, this is what i use with illustrious.\n\nhttps://huggingface.co/brad-twinkl/controlnet-union-sdxl-1.0-promax/tree/main\n"
+        }
+    },
+    {
+        "id": 329,
+        "name": "Label (rgthree)"
+    }
+]

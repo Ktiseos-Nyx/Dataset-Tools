@@ -1,0 +1,64 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpm_2_ancestral"
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "masterpiece, highquality,1 girls,Nagusa, fox girl, white hair, cowboy shoot, black school uniform, walking, schale high school"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "(Low quality, worst quality:1.4), ugly, deformed, distorted, blurry, bad anatomy, bad hands, bad feet, mutated, poorly drawn, extra limbs, watermark, text, signature, jpeg artifacts, out of frame"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 29,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "koji_v21.safetensors"
+        }
+    },
+    {
+        "id": 35,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 38,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 40,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 45,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "RealESRGAN_x4plus.pth"
+        }
+    },
+    {
+        "id": 47,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 48,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "bluearchivefull1-000006.safetensors"
+        }
+    }
+]

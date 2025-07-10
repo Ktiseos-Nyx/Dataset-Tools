@@ -1,0 +1,246 @@
+[
+    {
+        "id": 1,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "xl\\juggernautXL_v9Rdphoto2Lightning.safetensors"
+        }
+    },
+    {
+        "id": 2,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "aqua short hair, blue eyes, futuristc technology armor, red and silver neon lights gold trim, \nphoto background, "
+        }
+    },
+    {
+        "id": 3,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry, night, dark, \nbig head, chibi, colored sclera, \n(open mouth:1.1), "
+        }
+    },
+    {
+        "id": 4,
+        "name": "KSampler (Efficient)"
+    },
+    {
+        "id": 5,
+        "name": "CR SDXL Aspect Ratio"
+    },
+    {
+        "id": 7,
+        "name": "Bus Node"
+    },
+    {
+        "id": 8,
+        "name": "Reroute"
+    },
+    {
+        "id": 9,
+        "name": "Reroute"
+    },
+    {
+        "id": 11,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 12,
+        "name": "Reroute"
+    },
+    {
+        "id": 13,
+        "name": "Reroute"
+    },
+    {
+        "id": 15,
+        "name": "UltimateSDUpscale"
+    },
+    {
+        "id": 17,
+        "name": "Image Save",
+        "prompts": {
+            "text": "[time(%Y-%m-%d)]_Lightning\\"
+        }
+    },
+    {
+        "id": 18,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_NMKD-Siax_200k.pth"
+        }
+    },
+    {
+        "id": 19,
+        "name": "Reroute"
+    },
+    {
+        "id": 20,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 21,
+        "name": "FaceDetailerPipe",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 22,
+        "name": "ToDetailerPipe",
+        "prompts": {
+            "text": "Select the LoRA to add to the text",
+            "text_2": "Select the Wildcard to add to the text"
+        }
+    },
+    {
+        "id": 23,
+        "name": "Bus Node"
+    },
+    {
+        "id": 24,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blue eyes, long eyelashes, "
+        }
+    },
+    {
+        "id": 25,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "colored sclera, \ndeformed, blurry, glitter, "
+        }
+    },
+    {
+        "id": 26,
+        "name": "UltralyticsDetectorProvider",
+        "prompts": {
+            "text": "bbox/Eyeful_v1.pt"
+        }
+    },
+    {
+        "id": 28,
+        "name": "SAMLoader",
+        "prompts": {
+            "text": "sam_vit_b_01ec64.pth"
+        }
+    },
+    {
+        "id": 29,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 30,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 31,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 35,
+        "name": "LoRA Stacker",
+        "prompts": {
+            "text": "xl\\add-detail-xl.safetensors",
+            "text_2": "xl\\aesthetic_anime_v1s_xl.safetensors"
+        }
+    },
+    {
+        "id": 36,
+        "name": "CR Apply LoRA Stack"
+    },
+    {
+        "id": 37,
+        "name": "Reroute"
+    },
+    {
+        "id": 39,
+        "name": "Bus Node"
+    },
+    {
+        "id": 40,
+        "name": "Reroute"
+    },
+    {
+        "id": 41,
+        "name": "Reroute"
+    },
+    {
+        "id": 42,
+        "name": "Reroute"
+    },
+    {
+        "id": 43,
+        "name": "Reroute"
+    },
+    {
+        "id": 44,
+        "name": "Bus Node"
+    },
+    {
+        "id": 45,
+        "name": "Bus Node"
+    },
+    {
+        "id": 46,
+        "name": "Image Save",
+        "prompts": {
+            "text": "[time(%Y-%m-%d)]_Lightning\\Upscale"
+        }
+    },
+    {
+        "id": 47,
+        "name": "ImageSharpen"
+    },
+    {
+        "id": 48,
+        "name": "ImageSharpen"
+    },
+    {
+        "id": 50,
+        "name": "MediaPipeFaceMeshDetectorProvider //Inspire"
+    },
+    {
+        "id": 51,
+        "name": "Bus Node"
+    },
+    {
+        "id": 52,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2191Enable this to save the first generation."
+        }
+    },
+    {
+        "id": 58,
+        "name": "workflow/Switch Detector"
+    },
+    {
+        "id": 59,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2190Select true for Human/Realistc faces and false for everything else.\nAnd on Ultralitics Provider you can choose Eyeful for eyes only or FacesV1 for nom human faces.\nWatch this tutorial for faceDetailer node \nhttps://www.youtube.com/watch?v=_uaO7VOv3FA"
+        }
+    },
+    {
+        "id": 60,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2191Enable this node to enable image sharpening"
+        }
+    },
+    {
+        "id": 61,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2191On this node you can change the sampler, scheduler, cfg and steps for fast generation or leave at euler_a for more details."
+        }
+    },
+    {
+        "id": 62,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2191Enable this node to enable image sharpening"
+        }
+    }
+]

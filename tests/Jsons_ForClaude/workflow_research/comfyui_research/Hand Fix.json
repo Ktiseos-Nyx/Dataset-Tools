@@ -1,0 +1,1014 @@
+{
+  "last_node_id": 125,
+  "last_link_id": 208,
+  "nodes": [
+    {
+      "id": 102,
+      "type": "Reroute",
+      "pos": [
+        670,
+        660
+      ],
+      "size": [
+        82,
+        26
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 198
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            176
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "showOutputText": true,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 12,
+      "type": "UltralyticsDetectorProvider",
+      "pos": [
+        400,
+        210
+      ],
+      "size": {
+        "0": 230,
+        "1": 80
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "BBOX_DETECTOR",
+          "type": "BBOX_DETECTOR",
+          "links": [
+            134,
+            182
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "SEGM_DETECTOR",
+          "type": "SEGM_DETECTOR",
+          "links": [],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UltralyticsDetectorProvider"
+      },
+      "widgets_values": [
+        "bbox/hand_yolov8s.pt"
+      ]
+    },
+    {
+      "id": 111,
+      "type": "ControlNetLoader",
+      "pos": [
+        530,
+        -30
+      ],
+      "size": {
+        "0": 390,
+        "1": 60
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "CONTROL_NET",
+          "type": "CONTROL_NET",
+          "links": [
+            180
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ControlNetLoader"
+      },
+      "widgets_values": [
+        "controlnet11Models_depth.safetensors"
+      ]
+    },
+    {
+      "id": 19,
+      "type": "LoadImage",
+      "pos": [
+        310,
+        340
+      ],
+      "size": [
+        320,
+        310
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            196,
+            197,
+            198
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "00290-2422217576-2.png",
+        "image"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 101,
+      "type": "SaveImage",
+      "pos": [
+        1550,
+        660
+      ],
+      "size": {
+        "0": 340,
+        "1": 290
+      },
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 174
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "Detailer/HandsFixed"
+      ]
+    },
+    {
+      "id": 104,
+      "type": "Note",
+      "pos": [
+        950,
+        1220
+      ],
+      "size": {
+        "0": 250,
+        "1": 60
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "If original hand is really distorted, set \"cycle = 2\"."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 124,
+      "type": "Reroute",
+      "pos": [
+        840,
+        720
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 203
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            204,
+            205,
+            206
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "showOutputText": true,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 105,
+      "type": "Note",
+      "pos": [
+        710,
+        800
+      ],
+      "size": {
+        "0": 210,
+        "1": 80
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "When needed, mention gestures, colored fingernails, claws or background in your prompt."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 100,
+      "type": "CLIPTextEncode",
+      "pos": [
+        950,
+        930
+      ],
+      "size": {
+        "0": 250,
+        "1": 90
+      },
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 205
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            171
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "title": "Negative",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "(embedding:bad-hands-5:0.8), deformed, blurry, unprofessional-bodies"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 125,
+      "type": "PrimitiveNode",
+      "pos": [
+        400,
+        80
+      ],
+      "size": {
+        "0": 210,
+        "1": 80
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            207,
+            208
+          ],
+          "slot_index": 0,
+          "widget": {
+            "name": "threshold"
+          }
+        }
+      ],
+      "title": "Detection Threshold",
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        0.38,
+        "fixed"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 99,
+      "type": "CLIPTextEncode",
+      "pos": [
+        950,
+        800
+      ],
+      "size": {
+        "0": 250,
+        "1": 80
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 204
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            170
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "title": "Prompt",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "female hand"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 98,
+      "type": "DetailerForEach",
+      "pos": [
+        1230,
+        660
+      ],
+      "size": {
+        "0": 290,
+        "1": 620
+      },
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 176
+        },
+        {
+          "name": "segs",
+          "type": "SEGS",
+          "link": 186
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 166
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 206
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 168
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 170
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 171
+        },
+        {
+          "name": "detailer_hook",
+          "type": "DETAILER_HOOK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            174
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DetailerForEach"
+      },
+      "widgets_values": [
+        384,
+        true,
+        1024,
+        362919069031086,
+        "randomize",
+        30,
+        5,
+        "dpmpp_2m",
+        "karras",
+        0.63,
+        5,
+        true,
+        true,
+        "",
+        1,
+        false,
+        10
+      ]
+    },
+    {
+      "id": 117,
+      "type": "SEGSPreviewCNet",
+      "pos": [
+        1230,
+        360
+      ],
+      "size": {
+        "0": 330,
+        "1": 250
+      },
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "segs",
+          "type": "SEGS",
+          "link": 189
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 6
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SEGSPreviewCNet"
+      }
+    },
+    {
+      "id": 110,
+      "type": "ImpactControlNetApplyAdvancedSEGS",
+      "pos": [
+        950,
+        360
+      ],
+      "size": {
+        "0": 252,
+        "1": 170
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "segs",
+          "type": "SEGS",
+          "link": 181
+        },
+        {
+          "name": "control_net",
+          "type": "CONTROL_NET",
+          "link": 180,
+          "slot_index": 1
+        },
+        {
+          "name": "segs_preprocessor",
+          "type": "SEGS_PREPROCESSOR",
+          "link": null
+        },
+        {
+          "name": "control_image",
+          "type": "IMAGE",
+          "link": 184
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SEGS",
+          "type": "SEGS",
+          "links": [
+            186,
+            189
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImpactControlNetApplyAdvancedSEGS"
+      },
+      "widgets_values": [
+        0.6300000000000001,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 82,
+      "type": "BboxDetectorSEGS",
+      "pos": [
+        710,
+        80
+      ],
+      "size": {
+        "0": 210,
+        "1": 210
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "bbox_detector",
+          "type": "BBOX_DETECTOR",
+          "link": 134
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 197
+        },
+        {
+          "name": "detailer_hook",
+          "type": "DETAILER_HOOK",
+          "link": null
+        },
+        {
+          "name": "threshold",
+          "type": "FLOAT",
+          "link": 207,
+          "widget": {
+            "name": "threshold"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SEGS",
+          "type": "SEGS",
+          "links": [
+            181,
+            188
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BboxDetectorSEGS"
+      },
+      "widgets_values": [
+        0.38,
+        40,
+        2.2,
+        15,
+        "all"
+      ]
+    },
+    {
+      "id": 27,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        310,
+        700
+      ],
+      "size": {
+        "0": 320,
+        "1": 100
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            166
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            203
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            168
+          ],
+          "shape": 3,
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "xenogasmNSFWSemiReal_v5.safetensors"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 121,
+      "type": "Note",
+      "pos": [
+        950,
+        580
+      ],
+      "size": [
+        250,
+        60
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "If depth maps look wrong, bypass \"ControlNetApplyAdvanced\" (Ctrl + B)"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 116,
+      "type": "SEGSPreview",
+      "pos": [
+        1230,
+        0
+      ],
+      "size": [
+        330,
+        310
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "segs",
+          "type": "SEGS",
+          "link": 188
+        },
+        {
+          "name": "fallback_image_opt",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 6
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SEGSPreview"
+      },
+      "widgets_values": [
+        true,
+        0.2
+      ]
+    },
+    {
+      "id": 113,
+      "type": "MeshGraphormer+ImpactDetector-DepthMapPreprocessor",
+      "pos": [
+        670,
+        360
+      ],
+      "size": [
+        250,
+        280
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 196
+        },
+        {
+          "name": "bbox_detector",
+          "type": "BBOX_DETECTOR",
+          "link": 182
+        },
+        {
+          "name": "bbox_threshold",
+          "type": "FLOAT",
+          "link": 208,
+          "widget": {
+            "name": "bbox_threshold"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            184
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "INPAINTING_MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "title": "MeshGraphormer Hand Refiner",
+      "properties": {
+        "Node name for S&R": "MeshGraphormer+ImpactDetector-DepthMapPreprocessor"
+      },
+      "widgets_values": [
+        0.38,
+        40,
+        2.2,
+        15,
+        30,
+        "based_on_depth",
+        8,
+        8362359,
+        512
+      ]
+    }
+  ],
+  "links": [
+    [
+      134,
+      12,
+      0,
+      82,
+      0,
+      "BBOX_DETECTOR"
+    ],
+    [
+      166,
+      27,
+      0,
+      98,
+      2,
+      "MODEL"
+    ],
+    [
+      168,
+      27,
+      2,
+      98,
+      4,
+      "VAE"
+    ],
+    [
+      170,
+      99,
+      0,
+      98,
+      5,
+      "CONDITIONING"
+    ],
+    [
+      171,
+      100,
+      0,
+      98,
+      6,
+      "CONDITIONING"
+    ],
+    [
+      174,
+      98,
+      0,
+      101,
+      0,
+      "IMAGE"
+    ],
+    [
+      176,
+      102,
+      0,
+      98,
+      0,
+      "IMAGE"
+    ],
+    [
+      180,
+      111,
+      0,
+      110,
+      1,
+      "CONTROL_NET"
+    ],
+    [
+      181,
+      82,
+      0,
+      110,
+      0,
+      "SEGS"
+    ],
+    [
+      182,
+      12,
+      0,
+      113,
+      1,
+      "BBOX_DETECTOR"
+    ],
+    [
+      184,
+      113,
+      0,
+      110,
+      3,
+      "IMAGE"
+    ],
+    [
+      186,
+      110,
+      0,
+      98,
+      1,
+      "SEGS"
+    ],
+    [
+      188,
+      82,
+      0,
+      116,
+      0,
+      "SEGS"
+    ],
+    [
+      189,
+      110,
+      0,
+      117,
+      0,
+      "SEGS"
+    ],
+    [
+      196,
+      19,
+      0,
+      113,
+      0,
+      "IMAGE"
+    ],
+    [
+      197,
+      19,
+      0,
+      82,
+      1,
+      "IMAGE"
+    ],
+    [
+      198,
+      19,
+      0,
+      102,
+      0,
+      "*"
+    ],
+    [
+      203,
+      27,
+      1,
+      124,
+      0,
+      "*"
+    ],
+    [
+      204,
+      124,
+      0,
+      99,
+      0,
+      "CLIP"
+    ],
+    [
+      205,
+      124,
+      0,
+      100,
+      0,
+      "CLIP"
+    ],
+    [
+      206,
+      124,
+      0,
+      98,
+      3,
+      "CLIP"
+    ],
+    [
+      207,
+      125,
+      0,
+      82,
+      3,
+      "FLOAT"
+    ],
+    [
+      208,
+      125,
+      0,
+      113,
+      2,
+      "FLOAT"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.7627768444385842,
+      "offset": [
+        698.4003984799498,
+        296.8248720120671
+      ]
+    }
+  },
+  "version": 0.4
+}

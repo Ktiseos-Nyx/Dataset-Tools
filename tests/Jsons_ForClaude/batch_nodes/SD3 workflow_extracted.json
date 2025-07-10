@@ -1,0 +1,154 @@
+[
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "The overall style of the artwork is a flat 2D anime style illustration reminiscent of fantasy or supernatural genres.\n\nThe background has fantasy architectures and is dominated by deep blues and purples, creating a mysterious and dramatic atmosphere.\n\nA full body image of a female character. The character is standing with her arms spread open.\n\nThe character has short silky light purple hair done up in tiny double hair buns, her hair appears ethereal and translucent.\n\nThe character's face is serene with a faint smile on her face. She has with light purple eyes, pale skin and striking features.\n\nThe character wears a violet military-style coat dress with golden decorum and epaulettes, the coat dress is extremely detailed with intricate patterns and has a side slit. She is also wearing black gloves, thigh boots with reflective purple trims and pantyhose, donning a feather boa draped around her upper arms.\n\nillustration, anime style,\n1girl, standing anime girl,\nmedium breasts,\n\nnewest,\nrurudo, (azuuru:1.1), (torino aqua:1.2), (azuuru:1.1), kedama milk, fuzichoco, ask \\(askzy\\), chen bin, atdan, hito, mignon,\nmasterpiece, best quality, safe,\nbeautiful art, ultra-detailed, (8k), (HDR), (sharp focus), (intricate),"
+        }
+    },
+    {
+        "id": 11,
+        "name": "TripleCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "clip_g.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "ModelSamplingSD3"
+    },
+    {
+        "id": 67,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 68,
+        "name": "ConditioningSetTimestepRange"
+    },
+    {
+        "id": 69,
+        "name": "ConditioningCombine"
+    },
+    {
+        "id": 70,
+        "name": "ConditioningSetTimestepRange"
+    },
+    {
+        "id": 71,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "bad quality, poor quality, doll, disfigured, jpg, toy, bad anatomy, missing limbs, missing fingers, 3d, cgi, realistic, photorealistic"
+        }
+    },
+    {
+        "id": 135,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 231,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 233,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 252,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd3_medium.safetensors"
+        }
+    },
+    {
+        "id": 266,
+        "name": "Note",
+        "prompts": {
+            "text": "Resolution should be around 1 megapixel and width/height must be multiple of 64"
+        }
+    },
+    {
+        "id": 272,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 274,
+        "name": "SaveImage"
+    },
+    {
+        "id": 283,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fp16_fix.safetensors"
+        }
+    },
+    {
+        "id": 285,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "The overall style of the artwork is a flat 2D anime style illustration reminiscent of fantasy or supernatural genres.\n\nThe background has fantasy architectures and is dominated by deep blues and purples, creating a mysterious and dramatic atmosphere.\n\nA full body image of a female character. The character is standing with her arms spread open.\n\nThe character has short silky light purple hair done up in tiny double hair buns, her hair appears ethereal and translucent.\n\nThe character's face is serene with a faint smile on her face. She has with light purple eyes, pale skin and striking features.\n\nThe character wears a violet military-style coat dress with golden decorum and epaulettes, the coat dress is extremely detailed with intricate patterns and has a side slit. She is also wearing black gloves, thigh boots with reflective purple trims and pantyhose, donning a feather boa draped around her upper arms.\n\nillustration, anime style,\n1girl, standing anime girl,\nmedium breasts,\n\nnewest,\nrurudo, (azuuru:1.1), (torino aqua:1.2), (azuuru:1.1), kedama milk, fuzichoco, ask \\(askzy\\), chen bin, atdan, hito, mignon,\nmasterpiece, best quality, safe,\nbeautiful art, ultra-detailed, (8k), (HDR), (sharp focus), (intricate),"
+        }
+    },
+    {
+        "id": 287,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "bad quality, poor quality, doll, disfigured, jpg, toy, bad anatomy, missing limbs, missing fingers, 3d, cgi, realistic, photorealistic"
+        }
+    },
+    {
+        "id": 288,
+        "name": "BNK_NoisyLatentImage"
+    },
+    {
+        "id": 292,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "kohaku-xl-epsilon-rev3.safetensors"
+        }
+    },
+    {
+        "id": 296,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 297,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 298,
+        "name": "KSamplerAdvanced",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 299,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00052_.png"
+        }
+    },
+    {
+        "id": 300,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 302,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sd3VAE_v10.safetensors"
+        }
+    },
+    {
+        "id": 303,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 304,
+        "name": "SaveImage"
+    }
+]

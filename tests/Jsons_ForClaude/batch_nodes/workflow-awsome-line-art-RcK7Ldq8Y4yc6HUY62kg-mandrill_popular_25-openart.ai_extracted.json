@@ -1,0 +1,247 @@
+[
+    {
+        "id": 1,
+        "name": "KSampler"
+    },
+    {
+        "id": 6,
+        "name": "Seed (rgthree)"
+    },
+    {
+        "id": 7,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 11,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "sdxl/diffusers_xl_canny_full.safetensors"
+        }
+    },
+    {
+        "id": 12,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_temp_rgvuv_00007_.png"
+        }
+    },
+    {
+        "id": 14,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 15,
+        "name": "BiRefNet_ModelLoader_Zho",
+        "prompts": {
+            "text": "BiRefNet-DIS_ep580.pth"
+        }
+    },
+    {
+        "id": 16,
+        "name": "BiRefNet_Zho"
+    },
+    {
+        "id": 17,
+        "name": "Get resolution [Crystools]"
+    },
+    {
+        "id": 18,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 19,
+        "name": "CR Color Gradient"
+    },
+    {
+        "id": 21,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 22,
+        "name": "LayerUtility: ImageBlendAdvance V2"
+    },
+    {
+        "id": 23,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 28,
+        "name": "Get resolution [Crystools]"
+    },
+    {
+        "id": 32,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 34,
+        "name": "WD14Tagger|pysssss",
+        "prompts": {
+            "text": "wd-v1-4-vit-tagger-v2",
+            "text_2": "realistic,greyscale"
+        }
+    },
+    {
+        "id": 37,
+        "name": "IPAdapterAdvanced",
+        "prompts": {
+            "text": "style transfer precise"
+        }
+    },
+    {
+        "id": 38,
+        "name": "IPAdapterUnifiedLoader",
+        "prompts": {
+            "text": "PLUS (high strength)"
+        }
+    },
+    {
+        "id": 39,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "0bfd6d1f-9390-4a09-8ed0-c829992812c3.jpg"
+        }
+    },
+    {
+        "id": 40,
+        "name": "CR Text Concatenate",
+        "prompts": {
+            "text": "lineart, monochrome"
+        }
+    },
+    {
+        "id": 41,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "lineart, monochrome"
+        }
+    },
+    {
+        "id": 42,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "abstract-woman-face-one-line-drawing-minimalistic-woman-with-leaves-portaits-continuous-linier-simple-free-vector.jpg"
+        }
+    },
+    {
+        "id": 45,
+        "name": "ImageBatchMultiple+",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 46,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "minimalist-flower-one-line-drawing-simple-line-drawing-continuous-line-drawing-illustration-for-wall-art-printable-decoration-vector.jpg"
+        }
+    },
+    {
+        "id": 48,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "8ded535c-4de1-4c00-ad5f-0068331a4581.jpg"
+        }
+    },
+    {
+        "id": 49,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 50,
+        "name": "CM_NearestSDXLResolution"
+    },
+    {
+        "id": 51,
+        "name": "ImageResizeKJ"
+    },
+    {
+        "id": 52,
+        "name": "Get resolution [Crystools]"
+    },
+    {
+        "id": 53,
+        "name": "SetNode",
+        "prompts": {
+            "text": "resized image"
+        }
+    },
+    {
+        "id": 55,
+        "name": "GetNode",
+        "prompts": {
+            "text": "resized image"
+        }
+    },
+    {
+        "id": 59,
+        "name": "CannyEdgePreprocessor"
+    },
+    {
+        "id": 62,
+        "name": "Efficient Loader",
+        "prompts": {
+            "text": "aamXLAnimeMix_v10.safetensors",
+            "text_2": "CLIP_POSITIVE"
+        }
+    },
+    {
+        "id": 64,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 65,
+        "name": "Control Net Stacker"
+    },
+    {
+        "id": 67,
+        "name": "GetNode",
+        "prompts": {
+            "text": "resized image"
+        }
+    },
+    {
+        "id": 68,
+        "name": "ImpactMinMax"
+    },
+    {
+        "id": 70,
+        "name": "GetImageSizeAndCount"
+    },
+    {
+        "id": 71,
+        "name": "Note",
+        "prompts": {
+            "text": "strength: 0.6~0.7"
+        }
+    },
+    {
+        "id": 76,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "1girl, solo, long_hair, looking_at_viewer, simple_background, white_background, dress, bare_shoulders, jewelry, monochrome, upper_body, short_sleeves, earrings, off_shoulder, lips"
+        }
+    },
+    {
+        "id": 77,
+        "name": "Note",
+        "prompts": {
+            "text": "download model:\n\nhttps://civitai.com/models/269232?modelVersionId=303526"
+        }
+    },
+    {
+        "id": 86,
+        "name": "LayerColor: AutoAdjustV2"
+    },
+    {
+        "id": 87,
+        "name": "LayerColor: AutoAdjustV2"
+    },
+    {
+        "id": 93,
+        "name": "Note",
+        "prompts": {
+            "text": "some reference images for ipadpater\uff1a\n\nhttps://static.vecteezy.com/system/resources/previews/002/225/059/original/minimalist-flower-one-line-drawing-simple-line-drawing-continuous-line-drawing-illustration-for-wall-art-printable-decoration-vector.jpg\n\nhttps://static.vecteezy.com/system/resources/previews/013/762/378/original/abstract-woman-face-one-line-drawing-minimalistic-woman-with-leaves-portaits-continuous-linier-simple-free-vector.jpg\n\nhttps://imgcdn.stablediffusionweb.com/2024/5/17/0bfd6d1f-9390-4a09-8ed0-c829992812c3.jpg\n\nhttps://imgcdn.stablediffusionweb.com/2024/3/4/8ded535c-4de1-4c00-ad5f-0068331a4581.jpg"
+        }
+    }
+]

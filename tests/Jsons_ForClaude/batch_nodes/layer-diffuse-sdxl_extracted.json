@@ -1,0 +1,54 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "juggernautXL_v7Rundiffusion.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a beautiful woman with messy hair"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "disfigured, deformed, ugly"
+        }
+    },
+    {
+        "id": 13,
+        "name": "LayeredDiffusionApply",
+        "prompts": {
+            "text": "SDXL, Attention Injection"
+        }
+    },
+    {
+        "id": 14,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 20,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 27,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 36,
+        "name": "LayeredDiffusionDecodeRGBA"
+    }
+]

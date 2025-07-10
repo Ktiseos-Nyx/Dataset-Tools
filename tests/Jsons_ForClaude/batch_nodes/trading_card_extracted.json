@@ -1,0 +1,625 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2m_sde_gpu"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd15/dreamshaper_8.safetensors"
+        }
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "climbing plant, entangled, leaves, branches, framing, growing around on all sides\n\nhigh quality illustration, (intricate, highly detailed:1.2), 4k"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry, low quality, horror, photograph, text"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 11,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "clipspace/clipspace-mask-5131672.png [input]"
+        }
+    },
+    {
+        "id": 12,
+        "name": "SetLatentNoiseMask"
+    },
+    {
+        "id": 13,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 14,
+        "name": "IPAdapterApply"
+    },
+    {
+        "id": 15,
+        "name": "IPAdapterModelLoader",
+        "prompts": {
+            "text": "ip-adapter_sd15.safetensors"
+        }
+    },
+    {
+        "id": 16,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "IPAdapter_image_encoder_sd15.safetensors"
+        }
+    },
+    {
+        "id": 17,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "tree_green.jpg"
+        }
+    },
+    {
+        "id": 18,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_foolhardy_Remacri.pth"
+        }
+    },
+    {
+        "id": 19,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 20,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 21,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 22,
+        "name": "KSampler"
+    },
+    {
+        "id": 23,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 24,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 28,
+        "name": "GroundingDinoSAMSegment (segment anything)",
+        "prompts": {
+            "text": "black background"
+        }
+    },
+    {
+        "id": 29,
+        "name": "SAMModelLoader (segment anything)",
+        "prompts": {
+            "text": "sam_vit_h (2.56GB)"
+        }
+    },
+    {
+        "id": 30,
+        "name": "GroundingDinoModelLoader (segment anything)",
+        "prompts": {
+            "text": "GroundingDINO_SwinB (938MB)"
+        }
+    },
+    {
+        "id": 32,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 33,
+        "name": "Reroute"
+    },
+    {
+        "id": 34,
+        "name": "Reroute"
+    },
+    {
+        "id": 35,
+        "name": "Reroute"
+    },
+    {
+        "id": 36,
+        "name": "Reroute"
+    },
+    {
+        "id": 37,
+        "name": "Reroute"
+    },
+    {
+        "id": 38,
+        "name": "Reroute"
+    },
+    {
+        "id": 39,
+        "name": "Reroute"
+    },
+    {
+        "id": 40,
+        "name": "Reroute"
+    },
+    {
+        "id": 41,
+        "name": "GrowMask"
+    },
+    {
+        "id": 42,
+        "name": "MaskBlur+"
+    },
+    {
+        "id": 45,
+        "name": "Reroute"
+    },
+    {
+        "id": 46,
+        "name": "Reroute"
+    },
+    {
+        "id": 49,
+        "name": "Reroute"
+    },
+    {
+        "id": 50,
+        "name": "Reroute"
+    },
+    {
+        "id": 52,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2m_sde_gpu"
+        }
+    },
+    {
+        "id": 53,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "fantasy illustration closeup of an Her Majesty Lady of the Autumn, African, queen, leaves, moss, red orange autumn, mystical, (magical:1.1), (sorceress:1.2), (orange aura:1.1), (rosario dawson:0.9)\n\ndetailed, high quality"
+        }
+    },
+    {
+        "id": 54,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 55,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry, low quality, horror, photograph, text, author, signature, watermark"
+        }
+    },
+    {
+        "id": 56,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 58,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 59,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 60,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 61,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 62,
+        "name": "KSampler"
+    },
+    {
+        "id": 63,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 64,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 67,
+        "name": "Reroute"
+    },
+    {
+        "id": 68,
+        "name": "Reroute"
+    },
+    {
+        "id": 69,
+        "name": "Reroute"
+    },
+    {
+        "id": 70,
+        "name": "Reroute"
+    },
+    {
+        "id": 71,
+        "name": "Reroute"
+    },
+    {
+        "id": 72,
+        "name": "Reroute"
+    },
+    {
+        "id": 83,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2m_sde_gpu"
+        }
+    },
+    {
+        "id": 84,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "illustration of an old parchment paper, stains, weathered, top view, black background\n\nhigh quality illustration, highly detailed, 4k"
+        }
+    },
+    {
+        "id": 85,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 86,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry, low quality, horror, photograph, text"
+        }
+    },
+    {
+        "id": 87,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 88,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 89,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "text_background.png"
+        }
+    },
+    {
+        "id": 90,
+        "name": "Canny"
+    },
+    {
+        "id": 91,
+        "name": "ControlNetApply"
+    },
+    {
+        "id": 92,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control_v11p_sd15_canny_fp16.safetensors"
+        }
+    },
+    {
+        "id": 94,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 95,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 96,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 97,
+        "name": "KSampler"
+    },
+    {
+        "id": 98,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 99,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 100,
+        "name": "GroundingDinoSAMSegment (segment anything)"
+    },
+    {
+        "id": 101,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 102,
+        "name": "GrowMask"
+    },
+    {
+        "id": 103,
+        "name": "MaskBlur+"
+    },
+    {
+        "id": 105,
+        "name": "EmptyImage"
+    },
+    {
+        "id": 107,
+        "name": "ImageCompositeMasked"
+    },
+    {
+        "id": 108,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 110,
+        "name": "Reroute"
+    },
+    {
+        "id": 111,
+        "name": "Reroute"
+    },
+    {
+        "id": 112,
+        "name": "Reroute"
+    },
+    {
+        "id": 113,
+        "name": "Reroute"
+    },
+    {
+        "id": 114,
+        "name": "Reroute"
+    },
+    {
+        "id": 115,
+        "name": "Reroute"
+    },
+    {
+        "id": 116,
+        "name": "Reroute"
+    },
+    {
+        "id": 117,
+        "name": "Reroute"
+    },
+    {
+        "id": 118,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2m_sde_gpu"
+        }
+    },
+    {
+        "id": 119,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "round shield with a (plant:1.2) symbol, icon, ground, tree, leaf, fantasy, autumn, vibrant colors. Solid background\n\nhigh quality illustration, detailed"
+        }
+    },
+    {
+        "id": 120,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 121,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry, low quality, horror, photograph, text"
+        }
+    },
+    {
+        "id": 122,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 124,
+        "name": "LoadImage"
+    },
+    {
+        "id": 125,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 126,
+        "name": "IPAdapterApply"
+    },
+    {
+        "id": 127,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "yellow_icon.png"
+        }
+    },
+    {
+        "id": 135,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_2m_sde_gpu"
+        }
+    },
+    {
+        "id": 136,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 137,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 141,
+        "name": "GroundingDinoSAMSegment (segment anything)"
+    },
+    {
+        "id": 142,
+        "name": "MaskPreview+"
+    },
+    {
+        "id": 144,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 145,
+        "name": "GrowMask"
+    },
+    {
+        "id": 146,
+        "name": "EmptyImage"
+    },
+    {
+        "id": 149,
+        "name": "ImageCompositeMasked"
+    },
+    {
+        "id": 150,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 151,
+        "name": "Reroute"
+    },
+    {
+        "id": 152,
+        "name": "Reroute"
+    },
+    {
+        "id": 153,
+        "name": "Reroute"
+    },
+    {
+        "id": 154,
+        "name": "Reroute"
+    },
+    {
+        "id": 155,
+        "name": "Reroute"
+    },
+    {
+        "id": 156,
+        "name": "Reroute"
+    },
+    {
+        "id": 157,
+        "name": "Reroute"
+    },
+    {
+        "id": 158,
+        "name": "ImageCompositeMasked"
+    },
+    {
+        "id": 159,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 160,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 161,
+        "name": "SimpleMath+"
+    },
+    {
+        "id": 162,
+        "name": "GetImageSize+"
+    },
+    {
+        "id": 163,
+        "name": "ImageCompositeMasked"
+    },
+    {
+        "id": 164,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 165,
+        "name": "MaskBlur+"
+    },
+    {
+        "id": 166,
+        "name": "ImageCompositeMasked"
+    },
+    {
+        "id": 167,
+        "name": "EmptyImage"
+    },
+    {
+        "id": 168,
+        "name": "ImageCompositeMasked"
+    },
+    {
+        "id": 169,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 177,
+        "name": "KSampler"
+    },
+    {
+        "id": 178,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 179,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 180,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 182,
+        "name": "DrawText+",
+        "prompts": {
+            "text": "Autumn Queen",
+            "text_2": "Seagram tfb.ttf"
+        }
+    },
+    {
+        "id": 184,
+        "name": "ImageCompositeMasked"
+    },
+    {
+        "id": 186,
+        "name": "DrawText+",
+        "prompts": {
+            "text": "Made by Matteo for the\nLatent.Vision channel",
+            "text_2": "Aller_It.ttf"
+        }
+    },
+    {
+        "id": 187,
+        "name": "ImageCompositeMasked"
+    },
+    {
+        "id": 188,
+        "name": "SaveImage"
+    },
+    {
+        "id": 189,
+        "name": "ImageCASharpening+"
+    }
+]

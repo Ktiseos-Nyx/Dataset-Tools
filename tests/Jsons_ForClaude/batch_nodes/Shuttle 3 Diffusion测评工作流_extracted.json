@@ -1,0 +1,1244 @@
+[
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 27,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 30,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "shuttle-3-diffusion-fp8.safetensors"
+        }
+    },
+    {
+        "id": 31,
+        "name": "KSampler"
+    },
+    {
+        "id": 33,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 37,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 38,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 40,
+        "name": "SaveImage"
+    },
+    {
+        "id": 42,
+        "name": "KSampler"
+    },
+    {
+        "id": 46,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 47,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 48,
+        "name": "MZ_Flux1PartialLoad_Patch"
+    },
+    {
+        "id": 49,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 50,
+        "name": "MZ_Flux1PartialLoad_Patch"
+    },
+    {
+        "id": 52,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 61,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 62,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 63,
+        "name": "SaveImage"
+    },
+    {
+        "id": 64,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 65,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "shuttle-3-diffusion-fp8.safetensors"
+        }
+    },
+    {
+        "id": 66,
+        "name": "KSampler"
+    },
+    {
+        "id": 67,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 68,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 69,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 70,
+        "name": "SaveImage"
+    },
+    {
+        "id": 71,
+        "name": "KSampler"
+    },
+    {
+        "id": 72,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 73,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 74,
+        "name": "MZ_Flux1PartialLoad_Patch"
+    },
+    {
+        "id": 75,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 76,
+        "name": "MZ_Flux1PartialLoad_Patch"
+    },
+    {
+        "id": 78,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 80,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_temp_fpxyh_00001_.png"
+        }
+    },
+    {
+        "id": 82,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "Please provide a precise and detailed description of all the content and details of the image"
+        }
+    },
+    {
+        "id": 83,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 84,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 85,
+        "name": "SaveImage"
+    },
+    {
+        "id": 86,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 87,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "shuttle-3-diffusion-fp8.safetensors"
+        }
+    },
+    {
+        "id": 88,
+        "name": "KSampler"
+    },
+    {
+        "id": 89,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 90,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 91,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 92,
+        "name": "SaveImage"
+    },
+    {
+        "id": 93,
+        "name": "KSampler"
+    },
+    {
+        "id": 94,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 95,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 96,
+        "name": "MZ_Flux1PartialLoad_Patch"
+    },
+    {
+        "id": 97,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 98,
+        "name": "MZ_Flux1PartialLoad_Patch"
+    },
+    {
+        "id": 99,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 100,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 101,
+        "name": "LoadImage"
+    },
+    {
+        "id": 102,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "Please provide a precise and detailed description of all the content and details of the image"
+        }
+    },
+    {
+        "id": 103,
+        "name": "Note",
+        "prompts": {
+            "text": "\u4e00\u4e2a\u74f6\u5b50\uff0c\u91cc\u9762\u6709\u4e00\u4e2a\u7f8e\u4e3d\u7684\u5f69\u8679\u661f\u7cfb\uff0c\u653e\u5728\u73b0\u4ee3\u53a8\u623f\u4e2d\u95f4\u7684\u4e00\u5f20\u6728\u684c\u4e0a\uff0c\u65c1\u8fb9\u653e\u7740\u4e00\u76d8\u852c\u83dc\u548c\u8611\u83c7\uff0c\u8fd8\u6709\u4e00\u4e2a\u88c5\u7740\u5730\u7403\u7684\u9152\u676f\uff0c\u76d8\u5b50\u91cc\u653e\u7740\u5403\u4e86\u4e00\u534a\u7684\u82f9\u679c\u6d3e"
+        }
+    },
+    {
+        "id": 104,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 105,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 106,
+        "name": "SaveImage"
+    },
+    {
+        "id": 107,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 108,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "shuttle-3-diffusion-fp8.safetensors"
+        }
+    },
+    {
+        "id": 109,
+        "name": "KSampler"
+    },
+    {
+        "id": 110,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 111,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 112,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 115,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 120,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 121,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 122,
+        "name": "LoadImage"
+    },
+    {
+        "id": 123,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "Please provide a precise and detailed description of all the content and details of the image"
+        }
+    },
+    {
+        "id": 124,
+        "name": "TorchCompileModel"
+    },
+    {
+        "id": 125,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 126,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 127,
+        "name": "SaveImage"
+    },
+    {
+        "id": 128,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 129,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "shuttle-3-diffusion-fp8.safetensors"
+        }
+    },
+    {
+        "id": 130,
+        "name": "KSampler"
+    },
+    {
+        "id": 131,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 132,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 133,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 136,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 137,
+        "name": "LoadImage"
+    },
+    {
+        "id": 138,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "Please provide a precise and detailed description of all the content and details of the image"
+        }
+    },
+    {
+        "id": 140,
+        "name": "Automatic CFG"
+    },
+    {
+        "id": 142,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_00730_.png"
+        }
+    },
+    {
+        "id": 143,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 144,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 145,
+        "name": "BasicScheduler"
+    },
+    {
+        "id": 146,
+        "name": "RandomNoise"
+    },
+    {
+        "id": 147,
+        "name": "PulidFluxModelLoader",
+        "prompts": {
+            "text": "pulid_flux_v0.9.0.safetensors"
+        }
+    },
+    {
+        "id": 148,
+        "name": "BasicGuider"
+    },
+    {
+        "id": 149,
+        "name": "SamplerCustomAdvanced"
+    },
+    {
+        "id": 150,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 151,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 152,
+        "name": "PulidFluxEvaClipLoader"
+    },
+    {
+        "id": 153,
+        "name": "PulidFluxInsightFaceLoader"
+    },
+    {
+        "id": 154,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "gaoheng.jpg"
+        }
+    },
+    {
+        "id": 155,
+        "name": "ApplyPulidFlux"
+    },
+    {
+        "id": 157,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 158,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "best quality,",
+            "text_2": "img_1024.cr2,1 girl is having a coffee in the tea room,This is a high-quality photograph of a young woman with a serene expression. She has a fair skin tone and long, straight dark brown hair that falls around her"
+        }
+    },
+    {
+        "id": 159,
+        "name": "CLIPTextEncodeFlux",
+        "prompts": {
+            "text": "Realistic,1 girl is having a coffee in the tea room,This is a photograph of a young Asian woman with a calm and serene expression."
+        }
+    },
+    {
+        "id": 160,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 161,
+        "name": "BizyAirJoyCaption"
+    },
+    {
+        "id": 162,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "img_1024.cr2,1 girl is having a coffee in the tea room,"
+        }
+    },
+    {
+        "id": 163,
+        "name": "MZ_Flux1PartialLoad_Patch"
+    },
+    {
+        "id": 164,
+        "name": "LayerUtility: PurgeVRAM"
+    },
+    {
+        "id": 165,
+        "name": "TextCombinerTwo",
+        "prompts": {
+            "text": "img_1024.cr2,1 girl is having a coffee in the tea room,"
+        }
+    },
+    {
+        "id": 166,
+        "name": "LayerUtility: CropByMask V2",
+        "prompts": {
+            "text": "min_bounding_rect"
+        }
+    },
+    {
+        "id": 167,
+        "name": "LayerUtility: ImageScaleRestore"
+    },
+    {
+        "id": 168,
+        "name": "ImageMaskSwitch"
+    },
+    {
+        "id": 169,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 170,
+        "name": "LayerMask: SegmentAnythingUltra V2",
+        "prompts": {
+            "text": "sam_vit_h (2.56GB)",
+            "text_2": "GroundingDINO_SwinT_OGC (694MB)"
+        }
+    },
+    {
+        "id": 171,
+        "name": "LayerMask: PersonMaskUltra V2"
+    },
+    {
+        "id": 172,
+        "name": "LayerUtility: CropByMask V2"
+    },
+    {
+        "id": 177,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "shuttle-3-diffusion-fp8.safetensors"
+        }
+    },
+    {
+        "id": 178,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "shuttle-3-diffusion-fp8.safetensors"
+        }
+    },
+    {
+        "id": 181,
+        "name": "KSampler"
+    },
+    {
+        "id": 182,
+        "name": "ControlNetInpaintingAliMamaApply"
+    },
+    {
+        "id": 183,
+        "name": "InpaintCrop",
+        "prompts": {
+            "text": "ranged size"
+        }
+    },
+    {
+        "id": 184,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 185,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "clipspace/clipspace-mask-817689.1.png [input]"
+        }
+    },
+    {
+        "id": 186,
+        "name": "InpaintResize",
+        "prompts": {
+            "text": "ensure minimum size"
+        }
+    },
+    {
+        "id": 187,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "t5xxl_fp16.safetensors",
+            "text_2": "ViT-L-14-TEXT-detail-improved-hiT-GmP-HF.safetensors"
+        }
+    },
+    {
+        "id": 188,
+        "name": "CLIPTextEncodeFlux"
+    },
+    {
+        "id": 189,
+        "name": "ConditioningZeroOut"
+    },
+    {
+        "id": 190,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 191,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 192,
+        "name": "InpaintStitch"
+    },
+    {
+        "id": 193,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 194,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "flux-alimama-inpainting-beta.safetensors"
+        }
+    },
+    {
+        "id": 195,
+        "name": "ArgosTranslateTextNode"
+    },
+    {
+        "id": 196,
+        "name": "LayerUtility: PurgeVRAM"
+    },
+    {
+        "id": 197,
+        "name": "SetLatentNoiseMask"
+    },
+    {
+        "id": 198,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 199,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 200,
+        "name": "GrowMaskWithBlur"
+    },
+    {
+        "id": 203,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 204,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 205,
+        "name": "SaveImage"
+    },
+    {
+        "id": 206,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 208,
+        "name": "KSampler"
+    },
+    {
+        "id": 209,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 210,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 211,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 212,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 213,
+        "name": "LoadImage"
+    },
+    {
+        "id": 214,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "Please provide a precise and detailed description of all the content and details of the image"
+        }
+    },
+    {
+        "id": 215,
+        "name": "Automatic CFG"
+    },
+    {
+        "id": 217,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "shuttle-3-diffusion-Q8_0.gguf"
+        }
+    },
+    {
+        "id": 218,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 219,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 220,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 221,
+        "name": "SaveImage"
+    },
+    {
+        "id": 222,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 223,
+        "name": "KSampler"
+    },
+    {
+        "id": 224,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 225,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 226,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 227,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 228,
+        "name": "LoadImage"
+    },
+    {
+        "id": 229,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "Please provide a precise and detailed description of all the content and details of the image"
+        }
+    },
+    {
+        "id": 230,
+        "name": "Automatic CFG"
+    },
+    {
+        "id": 231,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "shuttle-3-diffusion-BF16.gguf"
+        }
+    },
+    {
+        "id": 232,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 233,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 234,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 235,
+        "name": "SaveImage"
+    },
+    {
+        "id": 236,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 237,
+        "name": "KSampler"
+    },
+    {
+        "id": 238,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 239,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 240,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "shuttle-3-diffusion.safetensors"
+        }
+    },
+    {
+        "id": 241,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 242,
+        "name": "LoadImage"
+    },
+    {
+        "id": 243,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "Please provide a precise and detailed description of all the content and details of the image"
+        }
+    },
+    {
+        "id": 244,
+        "name": "Automatic CFG"
+    },
+    {
+        "id": 246,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 248,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 249,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 250,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 251,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 252,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 254,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 255,
+        "name": "SaveImage"
+    },
+    {
+        "id": 256,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 257,
+        "name": "KSampler"
+    },
+    {
+        "id": 258,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 259,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 260,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 261,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 264,
+        "name": "Automatic CFG"
+    },
+    {
+        "id": 265,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "shuttle-3-diffusion-Q8_0.gguf"
+        }
+    },
+    {
+        "id": 266,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 267,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 268,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 269,
+        "name": "SaveImage"
+    },
+    {
+        "id": 270,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 271,
+        "name": "KSampler"
+    },
+    {
+        "id": 272,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 273,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 274,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 275,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 278,
+        "name": "Automatic CFG"
+    },
+    {
+        "id": 279,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "shuttle-3-diffusion-Q8_0.gguf"
+        }
+    },
+    {
+        "id": 280,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 281,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_temp_fpxyh_00001_.png"
+        }
+    },
+    {
+        "id": 282,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "Please provide a precise and detailed description of all the content and details of the image"
+        }
+    },
+    {
+        "id": 283,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 284,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 285,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 286,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 287,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 288,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 289,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 290,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 291,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 292,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 293,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 294,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 295,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a bottle with a beautiful rainbow galaxy inside it on top of a wooden table in the middle of a modern kitchen beside a plate of vegetables and mushrooms and a wine glasse that contains a planet earth with a plate with a half eaten apple pie on it"
+        }
+    },
+    {
+        "id": 296,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 297,
+        "name": "SaveImage"
+    },
+    {
+        "id": 298,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 299,
+        "name": "KSampler"
+    },
+    {
+        "id": 300,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 301,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "flux_ae.sft"
+        }
+    },
+    {
+        "id": 302,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "flux1-dev-fp8.safetensors"
+        }
+    },
+    {
+        "id": 303,
+        "name": "PurgeVRAM"
+    },
+    {
+        "id": 304,
+        "name": "Automatic CFG"
+    },
+    {
+        "id": 305,
+        "name": "UnetLoaderGGUF",
+        "prompts": {
+            "text": "shuttle-3-diffusion-Q8_0.gguf"
+        }
+    },
+    {
+        "id": 306,
+        "name": "DualCLIPLoader",
+        "prompts": {
+            "text": "clip_l.safetensors",
+            "text_2": "t5xxl_fp16.safetensors"
+        }
+    },
+    {
+        "id": 307,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "ComfyUI_temp_fpxyh_00001_.png"
+        }
+    },
+    {
+        "id": 308,
+        "name": "BizyAirJoyCaption2",
+        "prompts": {
+            "text": "Descriptive",
+            "text_2": "Please provide a precise and detailed description of all the content and details of the image"
+        }
+    },
+    {
+        "id": 309,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 313,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "<div class=\"hoverContainer\">\n\n        <div class=\"header\">\n          <span class=\"header_discrip\">\u8fdb\u963679</span>\n\n        </div>\n    <div style=\"border-radius:16px;position: relative; width: 100%; overflow: hidden; padding-top: 48%;\">\n    \n    \n    \n<iframe title=\"Bilibili video player\" src=\"https://player.bilibili.com/player.html?isOutside=true&amp;aid=113476810838293&amp;bvid=BV1ShUMYeED1&amp;cid=26747013952&amp;p=1&amp;autoplay=0\"></iframe>\n    </div>\n</div>\n",
+            "text_2": "body { height: 50px; width: 50px; }\r\n* { font-family: arial; }\r\ndiv { height: 200%; }\r\n.hoverContainer { height: 640px; width: 1040px; }\r\niframe { position: absolute; top: 0; left: 0; right: 0; height: 100%; border: none; }\r\n.hoverContainer {\r\n    background: black;\r\n    border-radius: 28px;\r\n    padding: 18px;\r\n    display: flex;\r\n    flex-direction: column;\r\n    position: relative;\r\n    margin-bottom: 12px;\r\n    left: 100%;\r\n    top: 100%;\r\n    transform: translate(-50%, -50%);\r\n}\r\n.header_discrip { font-size: 21px; font-weight: 300; color: #6f6f6f; width: fit-content; }\r\n.header {\r\n    padding-bottom: 12px;\r\n    width: 100%;\r\n    height: 36px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: space-between;\r\n    flex-direction: row;\r\n}\r\n\r\n\r\n<div class=\"startPage\">\r\n  <div class=\"hoverContainer\">\r\n    <a href=\"https://aix.studio\">\r\n      <span class=\"size-smallButton style-input\">\ud83d\uddc3\ufe0f AIX\u5b98\u7f51</span>\r\n    </a>\r\n    <a href=\"https://t.zsxq.com/7F90A\">\r\n      <span class=\"size-smallButton style-input\">\ud83e\udeb2 \u77e5\u8bc6\u661f\u7403</span>\r\n    </a>\r\n    <a href=\"https://space.bilibili.com/385085361\">\r\n      <span class=\"size-smallButton style-input\">\u2615 B\u7ad9\u9996\u9875</span>\r\n    </a>\r\n  </div>\r\n</div>"
+        }
+    },
+    {
+        "id": 314,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "<div class=\"startPage\">\n  <div class=\"hoverContainer\">\n    <a href=\"https://aix.studio\">\n      <span class=\"size-smallButton style-input\">\ud83d\uddc3\ufe0f AIX\u5b98\u7f51</span>\n    </a>\n    <a href=\"https://t.zsxq.com/7F90A\">\n      <span class=\"size-smallButton style-input\">\ud83e\udeb2 \u77e5\u8bc6\u661f\u7403</span>\n    </a>\n    <a href=\"https://space.bilibili.com/385085361\">\n      <span class=\"size-smallButton style-input\">\u2615 B\u7ad9\u9996\u9875</span>\n    </a>\n  </div>\n</div>",
+            "text_2": "\r\n\r\n* {\r\n    font-family: Arial;\r\n  }\r\n\r\n\r\n  .startPage {\r\n    position: absolute;\r\n    width:auto;\r\n    z-index: 0;\r\n    transition: transform 0.3s ease;\r\n  }\r\n\r\n  .startPage:hover {\r\n    transform: translateY(-1%);\r\n  }\r\n\r\n  .hoverContainer {\r\n    background: black;\r\n    border-radius: 27px;\r\n    padding: 50px;\r\n    display: flex;\r\n    flex-direction: row;\r\n    margin: 12px auto;\r\n    position: relative;\r\n  }\r\n\r\n  .header {\r\n    padding-bottom: 24px;\r\n    margin-bottom: 24px;\r\n    border-bottom: 1px solid #3e3e3e;\r\n    width: 200%;\r\n    height: 72px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: space-between;\r\n  }\r\n\r\n  .header_discrip {\r\n    font-size: 21px;\r\n    font-weight: 200;\r\n    color: #6f6f6f;\r\n  }\r\n\r\n  .size-smallButton {\r\n    font-size: 21px;\r\n    border-radius: 12px;\r\n    height: 48px;\r\n    min-width: 48px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    width: 100%;\r\n    cursor: pointer;\r\n  }\r\n\r\n  .style-input {\r\n    background: #2a2a2b;\r\n    padding: 12px;\r\n    transition: background 0.3s;\r\n  }\r\n\r\n  .style-input:hover {\r\n    background: #3b3b3c;\r\n  }\r\na:not(:first-child) {\r\n      margin-left:8px;}\r\n  a {\r\n    color: #b6b6b7;\r\n  }\r\n\r\n  a:hover,\r\n  a:hover .header_discrip {\r\n    color: #dddddd !important;\r\n  }"
+        }
+    },
+    {
+        "id": 315,
+        "name": "Note",
+        "prompts": {
+            "text": "Flux hyper\u52a0\u901f\u6a21\u578b\u5b9e\u6d4b\uff01\u8be6\u7ec6\u6559\u7a0b\u89c6\u9891\u8bf4\u660e\u8bf7\u770bB\u7ad9up\u4e3b\uff1aT8star.Aix\n\n\u5236\u4f5c\uff1aAIX  T8.star\n\n\u5982\u9700\u6444\u5f71\u5de5\u4f5c\u6d41\u8054\u7cfbWX\uff1aaix0069\n\nAIX\u81ea\u5a92\u4f53\u8d26\u53f7\uff0c\u5982\u679c\u89c9\u5f97\u5de5\u4f5c\u6d41\u5bf9\u4f60\u6709\u5e2e\u52a9\uff0c\u8bf7\u52a8\u52a8\u4f60\u7684\u5c0f\u624b\uff0c\u5173\u6ce8\u4e0b\u4ee5\u4e0b\u4f60\u611f\u5174\u8da3\u7684\u8d26\u53f7\u54e6\uff0c\u8c22\u8c22\n\n\u5c0f\u7ea2\u4e66\u8d26\u53f7\uff1aAI\u6444\u5f71X\u5148\u751f\n\u94fe\u63a5\uff1ahttps://www.xiaohongshu.com/user/profile/5a2515574eacab2344828180\nB\u7ad9\u8d26\u53f7\uff1aAIX\u4f69\u683c\u62c9\n\u94fe\u63a5\uff1ahttps://space.bilibili.com/294246604?spm_id_from=333.337.search-card.all.click\n\u6296\u97f3\u53f7\uff1aAIX\u6444\u5f71\n\nAIX\u77e5\u8bc6\u661f\u7403\u53f7\uff1a96920057\nAIX\u77e5\u8bc6\u661f\u7403\u4e2d\u6587\u540d\uff1aAIX\u827e\u514b\u65af\n\u5982\u9700\u52a0\u5165\u661f\u7403\uff0c\u8bf7\u4e0b\u8f7d'\u77e5\u8bc6\u661f\u7403'APP\uff0c\u6211\u4eec\u5c06\u4e0d\u5fd8\u521d\u5fc3\uff0c\u4e0e\u5927\u5bb6\u643a\u624b\u540c\u884c\uff0c\u8ba9\u77e5\u8bc6\u6ca1\u6709\u95e8\u69db\u3002\n\u8fd9\u91cc\u5c06\u6c38\u4e45\u514d\u8d39\u5206\u4eabAI\u77e5\u8bc6\u3001\u5de5\u4f5c\u6d41\u3001\u53d8\u73b0\u65b9\u5f0f\u7b49\uff0c\u5982\u679c\u4f60\u80fd\u611f\u53d7\u5230\u6211\u4eec\u7684\u771f\u8bda\uff0c\u671f\u5f85\u4f60\u5206\u4eab\u7ed9\u6240\u6709\u9700\u8981\u8fd9\u4efd\u77e5\u8bc6\u7684\u4eba\uff0c\u613f\u6211\u4eec\u5728\u8fd9\u91cc\u76f8\u9047\u76f8\u77e5\u3002\n\n\u613fAI\u60e0\u53ca\u6bcf\u4e00\u4e2a\u4eba\uff0c\u5de5\u4f5c\u6d41\u548c\u77e5\u8bc6\u8bb2\u89e3\u5141\u8bb8\u514d\u8d39\u5206\u4eab\u53ca\u4e8c\u521b\uff0c\u4f46\u8bf7\u4fdd\u7559\u51fa\u5904\uff0c\u611f\u8c22\u6bcf\u4e00\u4e2a\u6709\u5f00\u6e90\u548c\u5206\u4eab\u7cbe\u795e\u7684\u4eba--T8.star\n"
+        }
+    }
+]

@@ -1,0 +1,333 @@
+[
+    {
+        "id": 10,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "auraflow_v02.safetensors"
+        }
+    },
+    {
+        "id": 13,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 17,
+        "name": "SDXL Empty Latent Image (rgthree)",
+        "prompts": {
+            "text": " 896 x 1152  (portrait)"
+        }
+    },
+    {
+        "id": 19,
+        "name": "Anything Everywhere",
+        "prompts": {
+            "text": "Latent shape torch.Size([1, 4, 144, 112])"
+        }
+    },
+    {
+        "id": 23,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "analog photo with three-quarter view depicting a goth girl necromancer in golden ribcage-armor adorned with occult symbols and skull-shaped pauldrons. Her white hair is styled into twin-buns with long bangs framing her face. She is wearing articulated golden gauntlets and holding a large scythe with intricate details and a serrated blade with attached chains. Her head is tilted and turned to the side looking at the camera with menacingly glowing infernal eyes. Her lips are expressive and painted in black lipstick as she smiles oddly, evoking the impression of an unnatural and ethereal beauty. The background contains blurred crypts, tombstones and eerie red-pink lighting, which serves as a rimlight for the character, backlighting, trees, forest, reflections, chiaroscuro, highly detailed, 4k"
+        }
+    },
+    {
+        "id": 24,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "oversatured, overexposed, high contrast, ugly, faulty anatomy"
+        }
+    },
+    {
+        "id": 32,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "Tensor shape torch.Size([1, 1152, 896, 3])"
+        }
+    },
+    {
+        "id": 33,
+        "name": "Anything Everywhere3"
+    },
+    {
+        "id": 34,
+        "name": "Prompts Everywhere"
+    },
+    {
+        "id": 51,
+        "name": "AuraSR.AuraSRUpscaler",
+        "prompts": {
+            "text": "Aura-SR-v2.safetensors",
+            "text_2": "4x_overlapped_checkboard"
+        }
+    },
+    {
+        "id": 52,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 53,
+        "name": "easy imageSize",
+        "prompts": {
+            "text": "Width: 1792 , Height: 2304"
+        }
+    },
+    {
+        "id": 77,
+        "name": "ImageScaleBy"
+    },
+    {
+        "id": 99,
+        "name": "ModelSamplingAuraFlow"
+    },
+    {
+        "id": 114,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_efficient.safetensors"
+        }
+    },
+    {
+        "id": 115,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2014Hello and thanks for downloading this workflow!\u2014\n\n\n\u25ba Built to test the new AuraFlow model, which has amazing prompt adherence and a lot of potential to make use of it.\nThe 0.2 version of AuraFlow was just released and this workflow showcases multiple 2-Pass approaches to get started, featuring :\n\n   \u2022 Aura-SR (super-resolution) upscale\n   \u2022 Tiled Diffusion\n   \u2022 Ultimate SD Upscale\n\n\n"
+        }
+    },
+    {
+        "id": 116,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2022 To test everything in this workflow the following custom node packs are required : \n\n\u2666 AuraSR-ComfyUI\n   \u2014 https://github.com/GreenLandisaLie/AuraSR-ComfyUI\n\n\u2666 ComfyUI-Custom-Scripts\n   \u2014 https://github.com/pythongosssss/ComfyUI-Custom-Scripts\n\n\u2666 ComfyUI-Easy-Use\n   \u2014 https://github.com/yolain/ComfyUI-Easy-Use\n\n\u2666 ComfyUI-Impact-Pack\n   \u2014 https://github.com/ltdrdata/ComfyUI-Impact-Pack\n\n\u2666 ComfyUI-TiledDiffusion\n   \u2014 https://github.com/shiimizu/ComfyUI-TiledDiffusion\n\n\u2666 ComfyUi_NNLatentUpscale\n   \u2014 https://github.com/Ttl/ComfyUi_NNLatentUpscale\n\n\u2666 ComfyUI_UltimateSDUpscale\n   \u2014 https://github.com/ssitu/ComfyUI_UltimateSDUpscale\n\n\u2666 cg-use-everywhere\n   \u2014 https://github.com/chrisgoringe/cg-use-everywhere\n\n\u2666 rgthree-comfy\n   \u2014 https://github.com/rgthree/rgthree-comfy\n\n\u2666 was-node-suite-comfyui\n   \u2014 https://github.com/WASasquatch/was-node-suite-comfyui\n\n\n"
+        }
+    },
+    {
+        "id": 117,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2666 AuroFlow model (get the civitai one, if you post generations on there and want the metadata to link):\n   \u2014 https://civitai.com/models/573326/auraflow\n   \u2014 https://huggingface.co/fal/AuraFlow-v0.2/tree/main\n\n\u2192 ComfyUI\\models\\checkpoints\n\n\n\u2666 Aura-SR v2 :\nHuggingface main page :\n   \u2014 https://huggingface.co/fal/AuraSR-v2\n\nDirect download links  (rename both files to \"Aura-SR-v2\" for distinction) :\n   \u2014 https://huggingface.co/fal/AuraSR-v2/blob/main/model.safetensors\n   \u2014 https://huggingface.co/fal/AuraSR-v2/blob/main/config.json\n\u2192 ComfyUI\\models\\Aura-SR\n\n\n\u2666 \"Efficient SDXL VAE\" :\n   \u2014 https://huggingface.co/madebyollin/sdxl-vae-fp16-fix\n\u2192 ComfyUI\\models\\vae"
+        }
+    },
+    {
+        "id": 119,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2022 'ModelSamplingAuraFlow' is the only node required to run AuraFlow models and is part of ComfyUI's built-in default nodes\n   \u2192 The <shift> setting is at 1.73 by default and changing that value does alter the image slightly and slowly ruins it when diverging too far. Values I tested ranged from 0.00-8.00 and nothing mind-blowing was to be found there. Stylization sometimes got more cartoony, sometimes a little less so.\nI recommend leaving at default.\n\n\u2022 SDXL VAEs work for it as well and I used a specific version here that is supposed to be very resource efficient, which is more than welcome\n"
+        }
+    },
+    {
+        "id": 123,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "1st_Pass_Lat",
+            "text_2": "Latent shape torch.Size([1, 4, 144, 112])"
+        }
+    },
+    {
+        "id": 124,
+        "name": "NNLatentUpscale"
+    },
+    {
+        "id": 127,
+        "name": "TiledDiffusion",
+        "prompts": {
+            "text": "Mixture of Diffusers"
+        }
+    },
+    {
+        "id": 128,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "ceil (a.width / ceil (a.width / b) / 8) * 8 + c"
+        }
+    },
+    {
+        "id": 131,
+        "name": "Display Int (rgthree)"
+    },
+    {
+        "id": 132,
+        "name": "MathExpression|pysssss",
+        "prompts": {
+            "text": "ceil (a.height / ceil (a.height / b) / 8) * 8 + c"
+        }
+    },
+    {
+        "id": 133,
+        "name": "Display Int (rgthree)"
+    },
+    {
+        "id": 139,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 141,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "2nd_Pass_TD"
+        }
+    },
+    {
+        "id": 146,
+        "name": "workflow/KSampler + VAE Decode"
+    },
+    {
+        "id": 147,
+        "name": "workflow/KSampler + VAE Decode"
+    },
+    {
+        "id": 148,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "upscale_factor"
+        }
+    },
+    {
+        "id": 149,
+        "name": "ImpactFloat"
+    },
+    {
+        "id": 150,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 151,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 152,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "2nd_Pass_Ult"
+        }
+    },
+    {
+        "id": 153,
+        "name": "UltimateSDUpscale"
+    },
+    {
+        "id": 154,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x_foolhardy_Remacri.pth"
+        }
+    },
+    {
+        "id": 155,
+        "name": "easy imageSize",
+        "prompts": {
+            "text": "Width: 1344 , Height: 1728"
+        }
+    },
+    {
+        "id": 156,
+        "name": "easy imageSize",
+        "prompts": {
+            "text": "Width: 1344 , Height: 1728"
+        }
+    },
+    {
+        "id": 157,
+        "name": "easy imageSize",
+        "prompts": {
+            "text": "Width: 896 , Height: 1152"
+        }
+    },
+    {
+        "id": 158,
+        "name": "Image Comparer (rgthree)"
+    },
+    {
+        "id": 159,
+        "name": "workflow/Tile Settings"
+    },
+    {
+        "id": 160,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 164,
+        "name": "Image Save",
+        "prompts": {
+            "text": "[time(%Y-%m-%d)]"
+        }
+    },
+    {
+        "id": 165,
+        "name": "Image Save",
+        "prompts": {
+            "text": "[time(%Y-%m-%d)]"
+        }
+    },
+    {
+        "id": 167,
+        "name": "Fast Muter (rgthree)"
+    },
+    {
+        "id": 169,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2022 'Ultimate SD Upscale' is a safe bet for slow and steady upscales with low denoise values and results in sharp images without much change\n\n\u2192 takes forever though"
+        }
+    },
+    {
+        "id": 172,
+        "name": "Note",
+        "prompts": {
+            "text": "Working configurations for reference:\n\n\u2014 uni_pc normal; steps 25; cfg 3-3.5\n\n\u2014 euler normal; steps 25-45; cfg 2.5-4.0\n\n\u2014 dpmpp_2m sgm_uniform; steps 30; cfg 3.0\n\n\u2014 ddim ddim_uniform; steps 30; cfg 3.0\n\n\u2014 deis beta; steps 30; cfg 3.5\n"
+        }
+    },
+    {
+        "id": 179,
+        "name": "Note",
+        "prompts": {
+            "text": "\u25ba Here are a few findings from my very short time testing this model :\n\n   \u2192 colors are very precisely followed\n  \n   \u2192 emphasis weights like (beautiful:1.4) do not work as of yet\n\n   \u2192 complex compositions often generate accurately\n\n   \u2192 landscapes turn out beautifully detailed and creative\n\n   \u2192 stylized settings work easily\n\n   \u2192 hands and anatomical details struggle a bit, as well as some other anatomical aspects. Yes, nsfw is a foreign concept.\nThe showcase gallery also shows a heavy focus on animals, vibrant colors and stylization. \n\nGallery link :\nhttps://cloneofsimo.github.io/compare_aura_sd3/\n\n\n\u25ba Keep in mind that this is only version 0.2 of AuraFlow at the time of me building this workflow. So there is a lot more to come and each and every contribution in the form of shared insights, settings, optimizations, ideas, etc. help the model become better and better. \n\nSupporting the true open source nature of the project and the philosophy behind it, AuraFlow really deserves to reach its potential and, with the community's help, even surpass it."
+        }
+    },
+    {
+        "id": 184,
+        "name": "Anything Everywhere?",
+        "prompts": {
+            "text": "2nd_Pass_AuraSR"
+        }
+    },
+    {
+        "id": 185,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 186,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2022 This pass is technically not even a pass, but still my recommended choice in place of a 2nd pass.\n\n\u2022 AuraFlow does take some time to generate, even in the initial generation, and further passes with upscales like I usually suggest are not recommended as of now, in my opinion.\n\n\u2022 The Aura-SR upscaler however works really fast and reliable. Upscaling by 4x and adding sharpness as well as grain to the image like an analog-photography texture.\n\n\n\n"
+        }
+    },
+    {
+        "id": 187,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2022 'Tiled Diffusion' is great when guided through a ControlNet that helps keep the image in one piece when using denoise values higher than 0.30.\n\n\u2022 Not having that option yet means opting for lower denoise values, which in turn usually results in blurry images. \n\n\u2022 Feel free to share settings leading to satisfying results, if you manage to find any"
+        }
+    },
+    {
+        "id": 262,
+        "name": "Note",
+        "prompts": {
+            "text": "v1 \u2014 initial release"
+        }
+    },
+    {
+        "id": 263,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2022 The 'Fast Muter' node's *yes/no* switch allows convenient saving of any group's output\n\n\u2022 By default all save nodes are set up for lossless webp files with the <filename_prefix> *AuraFlow* \n\nfound in :\n\n\"ComfyUI\\output\\DATE\""
+        }
+    },
+    {
+        "id": 264,
+        "name": "Note",
+        "prompts": {
+            "text": "\u2022 All 2nd Pass options are mutually exclusive and this node is setup to only allow one group to be active at a time"
+        }
+    }
+]

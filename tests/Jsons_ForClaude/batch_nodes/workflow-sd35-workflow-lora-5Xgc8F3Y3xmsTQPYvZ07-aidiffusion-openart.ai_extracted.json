@@ -1,0 +1,53 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "sd35_large_fp8.safetensors"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 16,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "jxkc, high details, grey background, gradient background, no humans, glowing, robot, mecha, science fiction, cable, non-humanoid robot"
+        }
+    },
+    {
+        "id": 40,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 53,
+        "name": "EmptySD3LatentImage"
+    },
+    {
+        "id": 54,
+        "name": "Lora Loader Stack (rgthree)",
+        "prompts": {
+            "text": "mecha_insects.safetensors"
+        }
+    },
+    {
+        "id": 55,
+        "name": "Note",
+        "prompts": {
+            "text": "1. \u9019\u500blora\u52a0\u8f09\u53ef\u4ee5\u4e32\u9023\u591a\u500blora\u6a21\u578b\n2. \u5982\u679c\u4e0d\u60f3\u8b93\u67d0\u4e00\u500blora\u8d77\u4f5c\u7528\uff0c\u5c31\u628a\u5b83\u7684\u201c\u5f37\u5ea6\u201d\u8a2d\u7f6e\u70ba0\u5c31\u884c\u4e86"
+        }
+    }
+]

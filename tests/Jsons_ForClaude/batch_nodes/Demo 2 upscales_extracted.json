@@ -1,0 +1,103 @@
+[
+    {
+        "id": "71b9b20f-7d32-4b26-9d04-c544a10bd78c",
+        "name": "Demo 2 upscales"
+    },
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "analogMadnessSDXL_sdxlV10.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text, watermark"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 10,
+        "name": "LatentUpscaleBy",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 11,
+        "name": "KSampler"
+    },
+    {
+        "id": 12,
+        "name": "Reroute"
+    },
+    {
+        "id": 13,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 14,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae_fp16fix.safetensors"
+        }
+    },
+    {
+        "id": 15,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 18,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 19,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 20,
+        "name": "Image scale by ratio",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 21,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 22,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 23,
+        "name": "SaveImage"
+    }
+]

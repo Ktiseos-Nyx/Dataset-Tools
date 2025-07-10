@@ -1,0 +1,96 @@
+[
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "score_9, score_8_up, score_7_up, cinematic photograph of an astronaut riding a horse in space"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "text, watermark"
+        }
+    },
+    {
+        "id": 20,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "pyxl-oppkllll-gor-v60.safetensors"
+        }
+    },
+    {
+        "id": 27,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "%date:yyMMdd%/%date:yyMMdd-hhmmss%_T2I-BAS_PYXL_LDM_%ksampler.seed%"
+        }
+    },
+    {
+        "id": 33,
+        "name": "KSampler",
+        "prompts": {
+            "text": "euler_ancestral"
+        }
+    },
+    {
+        "id": 35,
+        "name": "Note",
+        "prompts": {
+            "text": "txt2img-basic-pyxl-ldm\n==========================================================\nPYXL : Pony XL\nLDM  : Latent Diffusion Model\nCXL  : Clip Standard\nID   : T2I-BAS_PYXL_LDM"
+        }
+    },
+    {
+        "id": 41,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 42,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 43,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 44,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 45,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 49,
+        "name": "PerturbedAttentionGuidance"
+    },
+    {
+        "id": 50,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 57,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 58,
+        "name": "Anything Everywhere3"
+    },
+    {
+        "id": 59,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 63,
+        "name": "Bookmark (rgthree)"
+    },
+    {
+        "id": 64,
+        "name": "Power Lora Loader (rgthree)"
+    }
+]

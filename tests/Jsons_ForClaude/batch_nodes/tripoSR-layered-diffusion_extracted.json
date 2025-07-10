@@ -1,0 +1,142 @@
+[
+    {
+        "id": 14,
+        "name": "[Comfy3D] Save 3D Mesh",
+        "prompts": {
+            "text": "TripoSR_Test/Robot12.obj"
+        }
+    },
+    {
+        "id": 15,
+        "name": "[Comfy3D] Preview 3DMesh"
+    },
+    {
+        "id": 20,
+        "name": "[Comfy3D] TripoSR"
+    },
+    {
+        "id": 21,
+        "name": "[Comfy3D] Load TripoSR Model"
+    },
+    {
+        "id": 25,
+        "name": "[Comfy3D] Switch Mesh Axis"
+    },
+    {
+        "id": 26,
+        "name": "KSampler"
+    },
+    {
+        "id": 27,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "juggernautXL_v8Rundiffusion.safetensors"
+        }
+    },
+    {
+        "id": 28,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 29,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "3D robot chibi character, green robot, "
+        }
+    },
+    {
+        "id": 30,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "Unreal, Airbrushed, Digital"
+        }
+    },
+    {
+        "id": 31,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 32,
+        "name": "LayeredDiffusionApply",
+        "prompts": {
+            "text": "Attention Injection"
+        }
+    },
+    {
+        "id": 33,
+        "name": "LayeredDiffusionDecode"
+    },
+    {
+        "id": 34,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 35,
+        "name": "Convert Masks to Images"
+    },
+    {
+        "id": 36,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 37,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 39,
+        "name": "JoinImageWithAlpha"
+    },
+    {
+        "id": 40,
+        "name": "SplitImageWithAlpha"
+    },
+    {
+        "id": 44,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 49,
+        "name": "Number to Text"
+    },
+    {
+        "id": 52,
+        "name": "Text Concatenate",
+        "prompts": {
+            "text": "TripoSR_Test/"
+        }
+    },
+    {
+        "id": 56,
+        "name": "ShowText|pysssss",
+        "prompts": {
+            "text": "TripoSR_Test/object10.obj"
+        }
+    },
+    {
+        "id": 57,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "TripoSR_Test/"
+        }
+    },
+    {
+        "id": 58,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 63,
+        "name": "Text Concatenate"
+    },
+    {
+        "id": 66,
+        "name": "PrimitiveNode"
+    },
+    {
+        "id": 67,
+        "name": "Seed"
+    },
+    {
+        "id": 68,
+        "name": "MaskPreview+"
+    }
+]

@@ -1,0 +1,62 @@
+[
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "playground-v2.5-1024px-aesthetic.fp16.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "photo , pinup of   cyberpunk girl, comic book style"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 10,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "TCD/TCD_SDXL_LoRA.safetensors"
+        }
+    },
+    {
+        "id": 37,
+        "name": "CLIPSetLastLayer"
+    },
+    {
+        "id": 39,
+        "name": "SamplerCustom"
+    },
+    {
+        "id": 40,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 41,
+        "name": "SaveImage"
+    },
+    {
+        "id": 51,
+        "name": "TCDScheduler"
+    },
+    {
+        "id": 53,
+        "name": "ModelSamplingContinuousEDM",
+        "prompts": {
+            "text": "edm_playground_v2.5"
+        }
+    },
+    {
+        "id": 54,
+        "name": "SamplerDPMPP_2M_SDE"
+    }
+]

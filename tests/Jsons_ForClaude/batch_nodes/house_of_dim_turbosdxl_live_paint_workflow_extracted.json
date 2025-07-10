@@ -1,0 +1,53 @@
+[
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 13,
+        "name": "SamplerCustom"
+    },
+    {
+        "id": 14,
+        "name": "KSamplerSelect"
+    },
+    {
+        "id": 20,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "TurboXL\\sd_xl_turbo_1.0_fp16.safetensors"
+        }
+    },
+    {
+        "id": 22,
+        "name": "SDTurboScheduler"
+    },
+    {
+        "id": 25,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 27,
+        "name": "SaveImage"
+    },
+    {
+        "id": 35,
+        "name": "Canvas_Tab"
+    },
+    {
+        "id": 36,
+        "name": "VAEEncode"
+    }
+]

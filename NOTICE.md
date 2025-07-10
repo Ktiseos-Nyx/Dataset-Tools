@@ -68,3 +68,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Notices for ComfyUI Workflows & Image Research
+
+### ComfyUI Workflows
+
+99% of the comfyUI workflows do not come with a lisc, and we don't have the URLS FOR MOST OF THEM.
+We don't own these, these are ONLY for research into how to traverse these. Please do NOT use these without finding who made them.
+Except that one stupid Flux one from TensorARt that loads our own Flux loras.
+Go for gold.
+
+### ComfyUI or Other Image Data
+
+Workflow images, or images otherwise kept for testing for now are advanced UI resources. They're not ours, and we do not own them.
+Thank you to Quadmoon, Tatersbarn and a few others for actually GIVING US some.
+If you or someone else you know MADE an image from this pile of gold - please let us know.
+Your efforts are a goldmine of information and give us insight into modern UI/UX for AI generation.

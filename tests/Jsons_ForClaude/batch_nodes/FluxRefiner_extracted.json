@@ -1,0 +1,81 @@
+[
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "0-Flux\\ArtFusionFlux_v12.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "closeup photo of a beautiful girl from a dream"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 17,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 38,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "Refiner\\FluxRefiner.safetensors"
+        }
+    },
+    {
+        "id": 42,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "closeup photo of a beautiful girl from a dream"
+        }
+    },
+    {
+        "id": 43,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 46,
+        "name": "PrimitiveNode",
+        "prompts": {
+            "text": "closeup photo of a beautiful girl from a dream"
+        }
+    },
+    {
+        "id": 51,
+        "name": "SetNode"
+    },
+    {
+        "id": 53,
+        "name": "SaveImageWithMetaData"
+    },
+    {
+        "id": 54,
+        "name": "KSamplerAdvanced"
+    },
+    {
+        "id": 55,
+        "name": "KSamplerAdvanced"
+    },
+    {
+        "id": 56,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 57,
+        "name": "VAEEncode"
+    }
+]

@@ -1,0 +1,84 @@
+[
+    {
+        "id": 1,
+        "name": "PixArtCheckpointLoader",
+        "prompts": {
+            "text": "PixartFinetunes/extraMODE.safetensors",
+            "text_2": "PixArtMS_Sigma_XL_2"
+        }
+    },
+    {
+        "id": 2,
+        "name": "PixArtResolutionSelect",
+        "prompts": {
+            "text": "PixArtMS_Sigma_XL_2"
+        }
+    },
+    {
+        "id": 3,
+        "name": "PixArtT5TextEncode",
+        "prompts": {
+            "text": "Anime woman eating biscuits in a biscuit shop, big boobs, tank top with the words \"Eat Cookies\" on it."
+        }
+    },
+    {
+        "id": 4,
+        "name": "T5v11Loader",
+        "prompts": {
+            "text": "t5-v1_1-xxl-encoder-bf16/model.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "PixArtT5TextEncode"
+    },
+    {
+        "id": 7,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 50,
+        "name": "DF_DynamicPrompts_Text_Box"
+    },
+    {
+        "id": 73,
+        "name": "SamplerCustom"
+    },
+    {
+        "id": 83,
+        "name": "KSamplerSelect",
+        "prompts": {
+            "text": "dpmpp_sde_gpu"
+        }
+    },
+    {
+        "id": 95,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 96,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "sdxl_vae.safetensors"
+        }
+    },
+    {
+        "id": 97,
+        "name": "SaveImage",
+        "prompts": {
+            "text": "PixArt2/pixart"
+        }
+    },
+    {
+        "id": 129,
+        "name": "KarrasScheduler"
+    },
+    {
+        "id": 130,
+        "name": "Output min/max sigmas"
+    },
+    {
+        "id": 140,
+        "name": "Automatic CFG"
+    }
+]

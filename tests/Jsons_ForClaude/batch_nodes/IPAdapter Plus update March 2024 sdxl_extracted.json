@@ -1,0 +1,157 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler"
+    },
+    {
+        "id": 4,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "dreamshaperXL_lightningDPMSDE.safetensors"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "closeup of skeleton warrior, full armor at the end of a battle cherry blossoms\n\nhigh quality, detailed"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry, noisy, messy, lowres, jpeg, artifacts, ill, distorted, malformed"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 12,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "Skeleton scythe 2.png"
+        }
+    },
+    {
+        "id": 14,
+        "name": "IPAdapterAdvanced"
+    },
+    {
+        "id": 15,
+        "name": "IPAdapterModelLoader",
+        "prompts": {
+            "text": "ipAdapterModelsForSDXL_ipadapterPlusSDXLVit.bin"
+        }
+    },
+    {
+        "id": 16,
+        "name": "CLIPVisionLoader",
+        "prompts": {
+            "text": "SD1.5/CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors"
+        }
+    },
+    {
+        "id": 18,
+        "name": "KSampler"
+    },
+    {
+        "id": 19,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 20,
+        "name": "SaveImage"
+    },
+    {
+        "id": 21,
+        "name": "IPAdapterAdvanced"
+    },
+    {
+        "id": 22,
+        "name": "KSampler"
+    },
+    {
+        "id": 23,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 24,
+        "name": "SaveImage"
+    },
+    {
+        "id": 25,
+        "name": "IPAdapterAdvanced"
+    },
+    {
+        "id": 26,
+        "name": "KSampler"
+    },
+    {
+        "id": 27,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 28,
+        "name": "SaveImage"
+    },
+    {
+        "id": 29,
+        "name": "IPAdapterAdvanced",
+        "prompts": {
+            "text": "ease in-out"
+        }
+    },
+    {
+        "id": 30,
+        "name": "KSampler"
+    },
+    {
+        "id": 31,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 32,
+        "name": "SaveImage"
+    },
+    {
+        "id": 33,
+        "name": "IPAdapterAdvanced",
+        "prompts": {
+            "text": "reverse in-out"
+        }
+    },
+    {
+        "id": 38,
+        "name": "ImageScaleBy",
+        "prompts": {
+            "text": "nearest-exact"
+        }
+    },
+    {
+        "id": 40,
+        "name": "Anything Everywhere3"
+    },
+    {
+        "id": 41,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 42,
+        "name": "Prompts Everywhere"
+    },
+    {
+        "id": 43,
+        "name": "Anything Everywhere"
+    }
+]

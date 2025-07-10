@@ -1,0 +1,543 @@
+{
+  "parser_name": "SD 1.5 Classic Parser (Unfudged)",
+  "priority": 85,
+  "version": "1.0",
+  "maintainer": "unfudging_team",
+  "description": "The bread and butter - handles classic SD 1.5 workflows that built the entire ecosystem",
+  "status": "rock_solid_production",
+
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+
+  "platform_info": {
+    "description": "SD 1.5 - the foundation of the AI art revolution",
+    "why_still_important": ["massive_model_ecosystem", "tons_of_loras", "reliable_results", "low_vram", "community_standard"],
+    "native_resolution": "512x512",
+    "architecture": "U-Net",
+    "text_encoder": "single_clip",
+    "community_status": "legendary"
+  },
+
+  "detection_rules": [
+    {
+      "comment": "Classic SD 1.5 resolution patterns",
+      "method": "detect_sd15_by_resolution",
+      "priority": 1,
+      "confidence": "high",
+
+      "resolution_indicators": [
+        {
+          "width": 512,
+          "height": 512,
+          "confidence_boost": "definitive_sd15"
+        },
+        {
+          "width": 512,
+          "height": 768,
+          "confidence_boost": "likely_sd15"
+        },
+        {
+          "width": 768,
+          "height": 512,
+          "confidence_boost": "likely_sd15"
+        },
+        {
+          "width": 576,
+          "height": 576,
+          "confidence_boost": "likely_sd15"
+        },
+        {
+          "width": 448,
+          "height": 448,
+          "confidence_boost": "possible_sd15"
+        }
+      ]
+    },
+
+    {
+      "comment": "Classic SD 1.5 model name patterns",
+      "method": "detect_sd15_by_model_name",
+      "priority": 2,
+      "confidence": "high",
+
+      "model_name_patterns": [
+        {
+          "patterns": [
+            "v1[._-]5",
+            "sd1[._-]5",
+            "stable.*diffusion.*1[._-]5"
+          ],
+          "confidence": "definitive_sd15"
+        },
+        {
+          "patterns": [
+            "dreamshaper(?!.*xl)",
+            "realistic.*vision(?!.*xl)",
+            "deliberate(?!.*xl)",
+            "epicrealism(?!.*xl)",
+            "absolute.*reality(?!.*xl)",
+            "photon(?!.*xl)",
+            "chillout.*mix(?!.*xl)"
+          ],
+          "confidence": "very_likely_sd15"
+        },
+        {
+          "patterns": [
+            "checkpoint(?!.*xl)",
+            "model(?!.*xl)",
+            "anime(?!.*xl)",
+            "waifu(?!.*xl)",
+            "anything(?!.*xl)"
+          ],
+          "confidence": "likely_sd15"
+        }
+      ]
+    },
+
+    {
+      "comment": "SD 1.5 workflow structure detection",
+      "method": "detect_sd15_workflow_structure",
+      "priority": 3,
+      "confidence": "medium",
+
+      "workflow_indicators": [
+        {
+          "node_type": "CheckpointLoaderSimple",
+          "connected_to": "single_clip_encode",
+          "not_connected_to": ["TripleCLIPLoader", "DualCLIPLoader"],
+          "confidence_boost": "classic_sd15_structure"
+        },
+        {
+          "node_type": "CLIPTextEncode",
+          "count": "single_or_dual",
+          "not_type": "CLIPTextEncodeSD3",
+          "confidence_boost": "standard_clip_encoding"
+        },
+        {
+          "node_type": "KSampler",
+          "not_type": "SamplerCustomNoise",
+          "confidence_boost": "standard_sampling"
+        }
+      ]
+    },
+
+    {
+      "comment": "Exclude SDXL/SD3 specific indicators",
+      "method": "detect_not_advanced_architecture",
+      "priority": 4,
+      "confidence": "exclusion_boost",
+
+      "exclusion_patterns": [
+        {
+          "no_nodes": ["TripleCLIPLoader", "CLIPTextEncodeSD3", "EmptySD3LatentImage"],
+          "confidence_boost": "not_sd3"
+        },
+        {
+          "no_style_prompts": true,
+          "no_refiner": true,
+          "confidence_boost": "not_sdxl"
+        },
+        {
+          "latent_channels": 4,
+          "not_channels": 16,
+          "confidence_boost": "standard_latents"
+        }
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_strategy": {
+      "comment": "Extract from standard ComfyUI workflow JSON",
+      "data_source": "comfyui_workflow_json",
+      "approach": "classic_node_traversal"
+    },
+
+    "extraction_rules": [
+      {
+        "section": "model_identification",
+        "rules": [
+          {
+            "target_key": "model",
+            "method": "find_node_widget_value",
+            "node_type": "CheckpointLoaderSimple",
+            "widget_key": "ckpt_name",
+            "value_type": "string",
+            "fallback": "Unknown SD 1.5 Model"
+          },
+          {
+            "target_key": "model_hash",
+            "method": "extract_model_hash",
+            "source": "model_filename",
+            "value_type": "string",
+            "optional": true
+          }
+        ]
+      },
+
+      {
+        "section": "prompt_extraction",
+        "rules": [
+          {
+            "target_key": "prompt",
+            "method": "trace_conditioning_path",
+            "from_node": "KSampler",
+            "input_name": "positive",
+            "target_node": "CLIPTextEncode",
+            "extract_field": "text",
+            "value_type": "string",
+            "fallback": ""
+          },
+          {
+            "target_key": "negative_prompt",
+            "method": "trace_conditioning_path",
+            "from_node": "KSampler",
+            "input_name": "negative",
+            "target_node": "CLIPTextEncode",
+            "extract_field": "text",
+            "value_type": "string",
+            "fallback": ""
+          }
+        ]
+      },
+
+      {
+        "section": "lora_extraction",
+        "rules": [
+          {
+            "target_key": "loras",
+            "method": "extract_all_loras",
+            "node_type": "LoraLoader",
+            "extract_fields": ["lora_name", "strength_model", "strength_clip"],
+            "value_type": "array",
+            "format": "standard_lora_array",
+            "optional": true
+          }
+        ]
+      },
+
+      {
+        "section": "sampling_parameters",
+        "rules": [
+          {
+            "target_key": "steps",
+            "method": "find_node_widget_value",
+            "node_type": "KSampler",
+            "widget_key": "steps",
+            "value_type": "integer",
+            "fallback": 20
+          },
+          {
+            "target_key": "cfg_scale",
+            "method": "find_node_widget_value",
+            "node_type": "KSampler",
+            "widget_key": "cfg",
+            "value_type": "float",
+            "fallback": 7.0
+          },
+          {
+            "target_key": "seed",
+            "method": "find_node_widget_value",
+            "node_type": "KSampler",
+            "widget_key": "seed",
+            "value_type": "integer",
+            "fallback": -1
+          },
+          {
+            "target_key": "sampler_name",
+            "method": "find_node_widget_value",
+            "node_type": "KSampler",
+            "widget_key": "sampler_name",
+            "value_type": "string",
+            "fallback": "euler"
+          },
+          {
+            "target_key": "scheduler",
+            "method": "find_node_widget_value",
+            "node_type": "KSampler",
+            "widget_key": "scheduler",
+            "value_type": "string",
+            "fallback": "normal"
+          },
+          {
+            "target_key": "denoise",
+            "method": "find_node_widget_value",
+            "node_type": "KSampler",
+            "widget_key": "denoise",
+            "value_type": "float",
+            "fallback": 1.0
+          }
+        ]
+      },
+
+      {
+        "section": "image_dimensions",
+        "rules": [
+          {
+            "target_key": "width",
+            "method": "find_node_widget_value",
+            "node_type": "EmptyLatentImage",
+            "widget_key": "width",
+            "value_type": "integer",
+            "fallback": 512
+          },
+          {
+            "target_key": "height",
+            "method": "find_node_widget_value",
+            "node_type": "EmptyLatentImage",
+            "widget_key": "height",
+            "value_type": "integer",
+            "fallback": 512
+          },
+          {
+            "target_key": "batch_size",
+            "method": "find_node_widget_value",
+            "node_type": "EmptyLatentImage",
+            "widget_key": "batch_size",
+            "value_type": "integer",
+            "fallback": 1
+          }
+        ]
+      },
+
+      {
+        "section": "vae_configuration",
+        "rules": [
+          {
+            "target_key": "vae",
+            "method": "find_node_widget_value",
+            "node_type": "VAELoader",
+            "widget_key": "vae_name",
+            "value_type": "string",
+            "optional": true,
+            "fallback": "baked_into_checkpoint"
+          }
+        ]
+      },
+
+      {
+        "section": "upscaling_detection",
+        "rules": [
+          {
+            "target_key": "upscale_model",
+            "method": "find_node_widget_value",
+            "node_type": "UpscaleModelLoader",
+            "widget_key": "model_name",
+            "value_type": "string",
+            "optional": true
+          },
+          {
+            "target_key": "upscale_factor",
+            "method": "detect_upscale_factor",
+            "node_type": "ImageUpscaleWithModel",
+            "value_type": "float",
+            "optional": true
+          }
+        ]
+      }
+    ]
+  },
+
+  "output_format": {
+    "tool": "ComfyUI",
+    "parser_version": "unfudged_v1",
+    "workflow_type": "sd15_classic",
+    "architecture": "SD 1.5",
+    "confidence": "{confidence_score}",
+
+    "prompt": "{prompt}",
+    "negative_prompt": "{negative_prompt}",
+
+    "parameters": {
+      "core": {
+        "model": "{model}",
+        "steps": "{steps}",
+        "cfg_scale": "{cfg_scale}",
+        "seed": "{seed}",
+        "sampler_name": "{sampler_name}",
+        "scheduler": "{scheduler}",
+        "width": "{width}",
+        "height": "{height}",
+        "denoise": "{denoise}",
+        "batch_size": "{batch_size}"
+      },
+
+      "sd15_specific": {
+        "architecture": "U-Net",
+        "text_encoder": "single_clip",
+        "latent_channels": 4,
+        "native_resolution": "512x512",
+        "vae": "{vae}",
+        "model_hash": "{model_hash}"
+      },
+
+      "loras": "{loras_array}",
+
+      "upscaling": {
+        "upscale_model": "{upscale_model}",
+        "upscale_factor": "{upscale_factor}"
+      }
+    },
+
+    "workflow_analysis": {
+      "complexity": "{simple|moderate|complex}",
+      "node_count": "{total_nodes}",
+      "lora_count": "{lora_count}",
+      "has_upscaling": "{upscaling_detected}",
+      "has_refiner": false,
+      "architecture_confidence": "{confidence_reasoning}"
+    },
+
+    "raw_workflow": "{original_comfyui_workflow_json}"
+  },
+
+  "sd15_model_database": {
+    "realistic_models": [
+      "dreamshaper", "realistic_vision", "deliberate", "epicrealism", 
+      "absolute_reality", "photon", "chillout_mix", "realistic_stock_photo"
+    ],
+
+    "anime_models": [
+      "anything", "waifu_diffusion", "nai", "novelai", "abyss_orange_mix",
+      "pastel_mix", "counterfeit", "seven_th_anime"
+    ],
+
+    "artistic_models": [
+      "stable_diffusion_v1_5", "runwayml", "artistic", "oil_painting",
+      "watercolor", "sketch", "comic_book"
+    ],
+
+    "specialized_models": [
+      "inpainting", "depth", "openpose", "canny", "lineart", "softedge"
+    ]
+  },
+
+  "common_sd15_patterns": {
+    "typical_resolutions": {
+      "square": ["512x512", "576x576", "448x448"],
+      "portrait": ["512x768", "512x832", "448x640"],
+      "landscape": ["768x512", "832x512", "640x448"]
+    },
+
+    "popular_samplers": {
+      "quality": ["dpm_2", "dpm_2_ancestral", "heun", "lms"],
+      "speed": ["euler", "euler_ancestral", "dpmpp_2m", "ddim"],
+      "specialty": ["uni_pc", "dpm_adaptive", "dpm_fast"]
+    },
+
+    "common_cfg_ranges": {
+      "realistic": "6.0-8.0",
+      "anime": "7.0-12.0", 
+      "artistic": "5.0-10.0",
+      "experimental": "1.0-15.0+"
+    },
+
+    "typical_step_counts": {
+      "speed": "15-25",
+      "quality": "25-40",
+      "overkill": "50+",
+      "minimum": "10-15"
+    }
+  },
+
+  "confidence_scoring": {
+    "definitive_sd15": {
+      "score": 0.9,
+      "criteria": "512x512 + classic model name",
+      "examples": ["dreamshaper_v7.safetensors at 512x512"]
+    },
+    "very_likely_sd15": {
+      "score": 0.8,
+      "criteria": "Strong model name indicators",
+      "examples": ["realistic_vision_v5.1.safetensors"]
+    },
+    "likely_sd15": {
+      "score": 0.7,
+      "criteria": "SD 1.5 typical resolution",
+      "examples": ["512x768 or 768x512 aspect ratios"]
+    },
+    "possible_sd15": {
+      "score": 0.6,
+      "criteria": "Some SD 1.5 indicators",
+      "examples": ["Standard workflow structure"]
+    },
+    "fallback": {
+      "score": 0.3,
+      "criteria": "No other architecture detected",
+      "action": "default_to_sd15_if_nothing_else_matches"
+    }
+  },
+
+  "special_sd15_features": {
+    "lora_ecosystem": {
+      "description": "SD 1.5 has the largest LoRA ecosystem",
+      "types": ["character", "style", "concept", "clothing", "pose"],
+      "format": "standard_a1111_lora_format",
+      "typical_strength": "0.5-1.0"
+    },
+
+    "controlnet_support": {
+      "description": "Extensive ControlNet ecosystem",
+      "types": ["canny", "depth", "openpose", "lineart", "softedge", "scribble"],
+      "detection": "look_for_controlnet_nodes"
+    },
+
+    "vae_variants": {
+      "common_vaes": ["vae-ft-ema-560000-ema-pruned", "orangemix", "kl-f8-anime2"],
+      "purpose": "improve_color_and_detail"
+    }
+  },
+
+  "implementation_notes": {
+    "why_sd15_still_matters": [
+      "Massive model ecosystem - thousands of checkpoints",
+      "Extensive LoRA library - character/style/concept LoRAs",
+      "Lower VRAM requirements - runs on 4GB cards",
+      "Battle-tested workflows - years of optimization",
+      "Community knowledge base - tons of tutorials"
+    ],
+
+    "parsing_priorities": [
+      "Rock-solid reliability over fancy features",
+      "Handle the 80% case perfectly",
+      "Extensive LoRA extraction",
+      "Classic workflow pattern recognition"
+    ],
+
+    "common_challenges": [
+      "Distinguishing from SD 2.x (look for 768x768)",
+      "Handling custom resolutions",
+      "LoRA strength variations", 
+      "VAE configuration detection"
+    ]
+  },
+
+  "examples": {
+    "simple_txt2img": {
+      "nodes": ["CheckpointLoaderSimple", "CLIPTextEncode", "KSampler", "VAEDecode"],
+      "model": "dreamshaper_v7.safetensors",
+      "resolution": "512x512",
+      "confidence": 0.9
+    },
+
+    "lora_workflow": {
+      "nodes": ["CheckpointLoaderSimple", "LoraLoader", "CLIPTextEncode", "KSampler"],
+      "loras": ["character_lora.safetensors:0.8"],
+      "resolution": "512x768",
+      "confidence": 0.8
+    },
+
+    "upscale_workflow": {
+      "nodes": ["KSampler", "VAEDecode", "UpscaleModelLoader", "ImageUpscaleWithModel"],
+      "upscale": "4x-UltraSharp.pth",
+      "confidence": 0.7
+    }
+  },
+
+  "legacy_support": {
+    "a1111_compatibility": "parse_a1111_style_lora_strings",
+    "old_node_versions": "handle_legacy_comfyui_nodes",
+    "model_naming": "flexible_model_name_detection"
+  },
+
+  "status": "battle_tested_production_ready"
+}

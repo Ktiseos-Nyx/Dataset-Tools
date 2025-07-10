@@ -1,0 +1,517 @@
+[
+    {
+        "id": 74,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 85,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control_v11p_sd15_scribble_fp16.safetensors"
+        }
+    },
+    {
+        "id": 126,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "epicrealism_pureEvolutionV5-inpainting.safetensors"
+        }
+    },
+    {
+        "id": 285,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control_v11p_sd15_inpaint_fp16.safetensors"
+        }
+    },
+    {
+        "id": 289,
+        "name": "ACN_AdvancedControlNetApply"
+    },
+    {
+        "id": 290,
+        "name": "InpaintPreprocessor"
+    },
+    {
+        "id": 295,
+        "name": "ScaledSoftControlNetWeights"
+    },
+    {
+        "id": 524,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 528,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 530,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 755,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 777,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 779,
+        "name": "KSampler"
+    },
+    {
+        "id": 780,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 782,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 802,
+        "name": "ControlNetLoader",
+        "prompts": {
+            "text": "control_v11p_sd15_lineart_fp16.safetensors"
+        }
+    },
+    {
+        "id": 804,
+        "name": "ControlNetApplyAdvanced"
+    },
+    {
+        "id": 806,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 1017,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 1019,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 1021,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 1023,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 1025,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 1027,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 1067,
+        "name": "AIO_Preprocessor",
+        "prompts": {
+            "text": "LineArtPreprocessor"
+        }
+    },
+    {
+        "id": 1074,
+        "name": "CheckpointLoaderSimple",
+        "prompts": {
+            "text": "epicrealism_naturalSinRC1VAE.safetensors"
+        }
+    },
+    {
+        "id": 1078,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1079,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1080,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1081,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1200,
+        "name": "DifferentialDiffusion"
+    },
+    {
+        "id": 1251,
+        "name": "InpaintModelConditioning"
+    },
+    {
+        "id": 1268,
+        "name": "VAEEncode"
+    },
+    {
+        "id": 1269,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 1270,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 1272,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 1273,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 1274,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 1275,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 1276,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 1278,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 1279,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 1281,
+        "name": "VAEEncodeForInpaint"
+    },
+    {
+        "id": 1282,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 1283,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 1284,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 1290,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 1292,
+        "name": "Fast Groups Muter (rgthree)"
+    },
+    {
+        "id": 1308,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 1391,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "add_detail.safetensors"
+        }
+    },
+    {
+        "id": 1392,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "lcm\\SD1.5\\pytorch_lora_weights.safetensors"
+        }
+    },
+    {
+        "id": 1420,
+        "name": "ImageUpscaleWithModel"
+    },
+    {
+        "id": 1421,
+        "name": "UpscaleModelLoader",
+        "prompts": {
+            "text": "4x-UltraSharp.pth"
+        }
+    },
+    {
+        "id": 1459,
+        "name": "AIO_Preprocessor",
+        "prompts": {
+            "text": "Scribble_XDoG_Preprocessor"
+        }
+    },
+    {
+        "id": 1627,
+        "name": "GrowMask"
+    },
+    {
+        "id": 1662,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "    <div class=\"startPage\">\n      <div class=\"hoverContainer\">\n       <a href=\"https://openart.ai\">\n        <div class=\"header\">\n          <span class=\"header_discrip\">Sponsored by</span>\n\n          <img style=\"height: 28px\" src=\"https://cdn.openart.ai/assets/home/openart_logo_20240529.svg\"></div></a>\n    \n        <a href=\"https://openart.ai/workflows/lreWarJbqiYPcDXnD8hh\"> <span class=\"size-smallButton style-input\">\ud83d\uddc3\ufe0f Requied Files</span></a>\n            \n        <a href=\"https://github.com/NimaNzrii/comfyui-photoshop/issues/new\"> <span class=\"size-smallButton style-input\">\ud83e\udeb2 Report Bug</span></a>\n        \n                <a href=\"https://buymeacoffee.com/nimanzri\"> <span class=\"size-smallButton style-input\">\u2615 Buy Me a Coffee</span></a>\n      </div>\n    </div>",
+            "text_2": "*{font-family:arial}  img {\r\n    transform: scale(0.75) translate(24px, 0);\r\n    opacity: 80%;\r\n  }.startPage{position:absolute;width:360px;height:375px;z-index:0;transition:transform 0.3s ease}.startPage:hover{transform:translateY(-1%)}.classnew{display:flex;align-items:center;justify-content:center;flex-direction:column;margin-top:24px;margin-bottom:24px}.hoverContainer :last-child{margin-bottom:0}.hoverContainer{background:black;border-radius:27px;padding:18px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;align-self:stretch;flex-shrink:0;height:fit-content;max-width:336px;position:relative;margin-bottom:12px;left:50%;height:min-content;top:50%;transform:translate(-50%,-50%)}.header_discrip{font-size:21px;font-weight:200;color:#6f6f6f;width:fit-content}.h1{font-size:37.5px;margin:12px 0;font-weight:700;text-align:center}.size-smallButton{font-size:21px;border-radius:12px;height:48px;min-width:48px;display:flex;align-items:center;width:93%;margin-top:12px;justify-content:center;cursor:pointer}.style-input{background:#2a2a2b;border-radius:12px;padding:12px}.style-input:hover{background:#3b3b3c}.header{padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid #3e3e3e;width:100%;height:36px;display:flex;align-items:center;justify-content:space-between;flex-direction:row}a{width:100%;color:#B6B6B7}a:hover,a:hover .header_discrip{color:#DDDDDD!important}\r\n"
+        }
+    },
+    {
+        "id": 1663,
+        "name": "Note Plus (mtb)",
+        "prompts": {
+            "text": "\n<div class=\"hoverContainer\">\n\n        <div class=\"header\">\n          <span class=\"header_discrip\">How to install Requierments</span>\n\n        </div>\n    <div style=\"border-radius:16px;position: relative; width: 100%; overflow: hidden; padding-top: 48%;\">\n    \n    \n    \n<iframe title=\"YouTube video player\" src=\"https://www.youtube.com/embed/dChOlGzeiMs?si=WZoJQJG_l9dX9AQS\"></iframe>\n    </div>\n</div>",
+            "text_2": "body { height: 50px; width: 50px; }\r\n* { font-family: arial; }\r\ndiv { height: 100%; }\r\n.hoverContainer { height: 320px; width: 520px; }\r\niframe { position: absolute; top: 0; left: 0; right: 0; height: 100%; border: none; }\r\n.hoverContainer {\r\n    background: black;\r\n    border-radius: 28px;\r\n    padding: 18px;\r\n    display: flex;\r\n    flex-direction: column;\r\n    position: relative;\r\n    margin-bottom: 12px;\r\n    left: 50%;\r\n    top: 50%;\r\n    transform: translate(-50%, -50%);\r\n}\r\n.header_discrip { font-size: 21px; font-weight: 300; color: #6f6f6f; width: fit-content; }\r\n.header {\r\n    padding-bottom: 12px;\r\n    width: 100%;\r\n    height: 36px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: space-between;\r\n    flex-direction: row;\r\n}\r\n"
+        }
+    },
+    {
+        "id": 1849,
+        "name": "\ud83d\udd39Photoshop ComfyUI Plugin"
+    },
+    {
+        "id": 1895,
+        "name": "\ud83d\udd39Photoshop ComfyUI Plugin"
+    },
+    {
+        "id": 1896,
+        "name": "\ud83d\udd39Photoshop ComfyUI Plugin"
+    },
+    {
+        "id": 1898,
+        "name": "SimpleMath+"
+    },
+    {
+        "id": 1899,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 1903,
+        "name": "\ud83d\udd39Photoshop ComfyUI Plugin"
+    },
+    {
+        "id": 1905,
+        "name": "\ud83d\udd39Photoshop ComfyUI Plugin"
+    },
+    {
+        "id": 1910,
+        "name": "\ud83d\udd39Photoshop ComfyUI Plugin"
+    },
+    {
+        "id": 1912,
+        "name": "\ud83d\udd39Photoshop ComfyUI Plugin"
+    },
+    {
+        "id": 1914,
+        "name": "PreviewImage"
+    },
+    {
+        "id": 1919,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 1920,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 1927,
+        "name": "Label (rgthree)"
+    },
+    {
+        "id": 1931,
+        "name": "\ud83d\udd39SendTo Photoshop Plugin"
+    },
+    {
+        "id": 1935,
+        "name": "\ud83d\udd39SendTo Photoshop Plugin"
+    },
+    {
+        "id": 1936,
+        "name": "\ud83d\udd39SendTo Photoshop Plugin"
+    },
+    {
+        "id": 1937,
+        "name": "\ud83d\udd39SendTo Photoshop Plugin"
+    },
+    {
+        "id": 1938,
+        "name": "\ud83d\udd39SendTo Photoshop Plugin"
+    },
+    {
+        "id": 1939,
+        "name": "\ud83d\udd39SendTo Photoshop Plugin"
+    },
+    {
+        "id": 1940,
+        "name": "\ud83d\udd39SendTo Photoshop Plugin"
+    },
+    {
+        "id": 1942,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1944,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1945,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1946,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1947,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1948,
+        "name": "Reroute (rgthree)"
+    },
+    {
+        "id": 1960,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 1961,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 1973,
+        "name": "workflow/Ksampler Config",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 1974,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1975,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1976,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1977,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1978,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "add_detail.safetensors"
+        }
+    },
+    {
+        "id": 1979,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "lcm\\SD1.5\\pytorch_lora_weights.safetensors"
+        }
+    },
+    {
+        "id": 1980,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 1981,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 1982,
+        "name": "workflow/Ksampler Config",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 1983,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1984,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1985,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1986,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1987,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "add_detail.safetensors"
+        }
+    },
+    {
+        "id": 1989,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 1990,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 1991,
+        "name": "workflow/Ksampler Config"
+    },
+    {
+        "id": 1992,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1993,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1994,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1995,
+        "name": "Anything Everywhere?"
+    },
+    {
+        "id": 1996,
+        "name": "LoraLoader",
+        "prompts": {
+            "text": "add_detail.safetensors"
+        }
+    },
+    {
+        "id": 1997,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 1998,
+        "name": "Anything Everywhere"
+    },
+    {
+        "id": 1999,
+        "name": "workflow/Ksampler Config"
+    }
+]

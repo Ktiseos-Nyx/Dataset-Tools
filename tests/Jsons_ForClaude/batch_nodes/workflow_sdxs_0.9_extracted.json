@@ -1,0 +1,54 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "sgm_uniform"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "beautiful photograph of a waterfall"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode"
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 10,
+        "name": "UNETLoader",
+        "prompts": {
+            "text": "sdxs_512_0.9_diffusers.safetensors"
+        }
+    },
+    {
+        "id": 11,
+        "name": "VAELoader",
+        "prompts": {
+            "text": "vae-ft-mse-840000-ema-pruned.safetensors"
+        }
+    },
+    {
+        "id": 12,
+        "name": "CLIPLoader",
+        "prompts": {
+            "text": "clip_h.safetensors",
+            "text_2": "stable_diffusion"
+        }
+    },
+    {
+        "id": 14,
+        "name": "SaveImage"
+    }
+]

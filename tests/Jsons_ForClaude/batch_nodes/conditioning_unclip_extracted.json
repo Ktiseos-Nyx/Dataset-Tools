@@ -1,0 +1,58 @@
+[
+    {
+        "id": 3,
+        "name": "KSampler",
+        "prompts": {
+            "text": "dpmpp_3m_sde_gpu",
+            "text_2": "sgm_uniform"
+        }
+    },
+    {
+        "id": 5,
+        "name": "EmptyLatentImage"
+    },
+    {
+        "id": 6,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "a beautiful photograph of an old European city"
+        }
+    },
+    {
+        "id": 7,
+        "name": "CLIPTextEncode",
+        "prompts": {
+            "text": "blurry, illustration"
+        }
+    },
+    {
+        "id": 8,
+        "name": "VAEDecode"
+    },
+    {
+        "id": 9,
+        "name": "SaveImage"
+    },
+    {
+        "id": 12,
+        "name": "unCLIPCheckpointLoader",
+        "prompts": {
+            "text": "sd21-unclip-h.ckpt"
+        }
+    },
+    {
+        "id": 13,
+        "name": "CLIPVisionEncode"
+    },
+    {
+        "id": 14,
+        "name": "unCLIPConditioning"
+    },
+    {
+        "id": 15,
+        "name": "LoadImage",
+        "prompts": {
+            "text": "cwf_budapest.jpg"
+        }
+    }
+]
