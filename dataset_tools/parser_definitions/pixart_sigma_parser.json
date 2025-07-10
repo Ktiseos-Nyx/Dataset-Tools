@@ -1,40 +1,69 @@
 {
   "parser_name": "PixArt_Sigma_ComfyUI",
-  "priority": 97,
+  "priority": 107,
   "description": "Parses ComfyUI workflows using the PixArt Sigma architecture. Aligned with current engine capabilities.",
   "version": "1.0-engine-aligned",
   "maintainer": "Ktiseos Nyx & AI Co-pilot",
-  "target_file_types": ["PNG", "JPEG", "WEBP"],
-
+  "target_file_types": [
+    "PNG",
+    "JPEG",
+    "WEBP"
+  ],
   "detection_rules": [
     {
       "comment": "Rule 1: Must be a valid ComfyUI workflow JSON in 'prompt' or 'workflow' keys.",
       "condition": "OR",
       "rules": [
-        { "source_type": "pil_info_key", "source_key": "workflow", "operator": "is_valid_json" },
-        { "source_type": "pil_info_key", "source_key": "prompt", "operator": "is_valid_json" }
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        }
       ]
     },
     {
       "comment": "Rule 2: The workflow MUST contain the definitive PixArt checkpoint loader node.",
       "condition": "OR",
       "rules": [
-        { "source_type": "pil_info_key_content", "source_key": "workflow", "operator": "contains_text", "text": "PixArtCheckpointLoader" },
-        { "source_type": "pil_info_key_content", "source_key": "prompt", "operator": "contains_text", "text": "PixArtCheckpointLoader" }
+        {
+          "source_type": "pil_info_key_content",
+          "source_key": "workflow",
+          "operator": "contains_text",
+          "text": "PixArtCheckpointLoader"
+        },
+        {
+          "source_type": "pil_info_key_content",
+          "source_key": "prompt",
+          "operator": "contains_text",
+          "text": "PixArtCheckpointLoader"
+        }
       ]
     }
   ],
-
   "parsing_instructions": {
     "input_data": {
       "comment": "Engine will try to find a workflow JSON in 'workflow' first, then 'prompt'.",
       "source_options": [
-        { "source_type": "pil_info_key", "source_key": "workflow" },
-        { "source_type": "pil_info_key", "source_key": "prompt" }
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
       ],
-      "transformations": [{ "type": "json_decode_string_itself" }]
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
     },
-
     "fields": [
       {
         "comment": "ENGINE LIMITATION NOTE: The current engine cannot reliably parse ComfyUI graphs. The following are BEST-EFFORT extractions. The most reliable method is to extract the entire workflow as a string.",
@@ -57,9 +86,43 @@
         "regex_pattern": "\"widget_name\": \"seed\".*?\"value\": (\\d+)",
         "value_type": "integer",
         "fallback": -1
+      },
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis",
+        "target_key": "workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "multi_stage_conditioning",
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
       }
     ],
-
     "output_template": {
       "tool": "ComfyUI",
       "workflow_type": "PixArt Sigma",
@@ -76,10 +139,11 @@
       "raw_workflow_json": "$raw_workflow_json"
     }
   },
-
   "notes": [
     "This version has been aligned with the capabilities of the current engine.py.",
     "It uses simple string searching and regex instead of graph traversal.",
     "Full, reliable parsing requires new methods in the Python engine code."
-  ]
+  ],
+  "enhanced_with_node_discovery": true,
+  "enhancement_date": "2025-07-08"
 }

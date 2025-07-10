@@ -1,0 +1,148 @@
+/* Final Fantasy 6 Classic Blue Theme */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #202080, stop: 1 #000040);
+    color: #FFFFFF;
+}
+
+/* FF6-style windows/frames */
+QFrame {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #202080, stop: 1 #000040);
+    border: 2px solid #4040A0;
+    border-top-color: #8080C0;
+    border-left-color: #8080C0;
+    border-right-color: #000020;
+    border-bottom-color: #000020;
+}
+
+/* FF6 Menu Buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8080C0, stop: 1 #6060A0);
+    border: 2px solid;
+    border-top-color: #C0C0FF;
+    border-left-color: #C0C0FF;
+    border-right-color: #202060;
+    border-bottom-color: #202060;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 11pt;
+    padding: 6px 16px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A0A0E0, stop: 1 #8080C0);
+    color: #FFFF80;
+}
+
+QPushButton:pressed {
+    border-top-color: #202060;
+    border-left-color: #202060;
+    border-right-color: #C0C0FF;
+    border-bottom-color: #C0C0FF;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #6060A0, stop: 1 #4040A0);
+}
+
+/* FF6 List Selection */
+QListWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000040, stop: 1 #000020);
+    border: 2px inset #4040A0;
+    color: #FFFFFF;
+    font-size: 10pt;
+}
+
+QListWidget::item {
+    padding: 4px;
+    border-bottom: 1px solid #202060;
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8080FF, stop: 1 #4040A0);
+    border: 1px solid #FFFFFF;
+    color: #FFFFFF;
+}
+
+QListWidget::item:hover {
+    background-color: #404080;
+    color: #FFFF80;
+}
+
+/* Text Areas */
+QTextEdit, QPlainTextEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000040, stop: 1 #000020);
+    border: 2px inset #4040A0;
+    color: #FFFFFF;
+    selection-background-color: #8080FF;
+    selection-color: #000000;
+}
+
+/* Menu Bar */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8080C0, stop: 1 #6060A0);
+    border-bottom: 2px solid #202060;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 6px 12px;
+}
+
+QMenuBar::item:selected {
+    background: #8080FF;
+    color: #FFFF80;
+}
+
+QMenu {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #202080, stop: 1 #000040);
+    border: 2px solid #4040A0;
+    color: #FFFFFF;
+}
+
+QMenu::item {
+    padding: 4px 20px;
+}
+
+QMenu::item:selected {
+    background: #8080FF;
+    color: #FFFF80;
+}
+
+/* Status Bar */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #6060A0, stop: 1 #4040A0);
+    border-top: 2px solid #8080C0;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #404080, stop: 1 #202060);
+    width: 16px;
+    border: 1px solid #4040A0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8080C0, stop: 1 #6060A0);
+    border: 1px solid #C0C0FF;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #A0A0E0, stop: 1 #8080C0);
+}

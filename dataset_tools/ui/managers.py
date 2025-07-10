@@ -17,12 +17,14 @@ from typing import Any
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
 from PyQt6.QtCore import QSettings
+from PyQt6.QtGui import QTextOption
 from PyQt6.QtWidgets import QApplication
 
 from ..correct_types import EmptyField
 from ..display_formatter import format_metadata_for_display
 from ..logger import info_monitor as nfo
 from .components import EnhancedImageLabel, EnhancedLeftPanelWidget
+from .font_manager import get_monospace_font, get_reading_font
 
 # Import icon manager
 try:
@@ -296,7 +298,10 @@ class MenuManager:
         themes_menu = Qw.QMenu("&Themes", self.main_window)
         view_menu.addMenu(themes_menu)
 
-        if self.theme_manager:
+        # Use enhanced theme manager if available, fallback to standard
+        if hasattr(self.main_window, 'enhanced_theme_manager'):
+            self.main_window.enhanced_theme_manager.create_theme_menus(themes_menu)
+        elif self.theme_manager:
             self.theme_manager.create_theme_actions(themes_menu)
 
     def _setup_help_menu(self, menu_bar: Qw.QMenuBar) -> None:
@@ -311,6 +316,13 @@ class MenuManager:
             about_action.triggered.connect(self.main_window.show_about_dialog)
 
         help_menu.addAction(about_action)
+        
+        # Add theme report action
+        if hasattr(self.main_window, "show_theme_report"):
+            theme_report_action = QtGui.QAction("&Theme Report...", self.main_window)
+            theme_report_action.setToolTip("Show available themes and system report")
+            theme_report_action.triggered.connect(self.main_window.show_theme_report)
+            help_menu.addAction(theme_report_action)
 
 
 # ============================================================================
@@ -417,6 +429,18 @@ class LayoutManager:
             text_box = Qw.QTextEdit()
             text_box.setReadOnly(True)
             text_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
+            
+            # Enable word wrap for proper text display
+            text_box.setWordWrapMode(QTextOption.WrapMode.WordWrap)
+            text_box.setLineWrapMode(Qw.QTextEdit.LineWrapMode.WidgetWidth)
+            
+            # Set appropriate font based on content type
+            if box_name == "generation_data":
+                # Use monospace font for technical metadata
+                text_box.setFont(get_monospace_font(size=9))
+            else:
+                # Use reading font for prompts
+                text_box.setFont(get_reading_font(size=10))
 
             box_attr = f"{box_name}_box"
             setattr(self.main_window, box_attr, text_box)

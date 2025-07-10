@@ -16,6 +16,7 @@ from typing import Any
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
 from PyQt6.QtCore import QSettings, QTimer
+from PyQt6.QtGui import QFont
 
 # from PyQt6.QtWidgets import QApplication
 from ..correct_types import EmptyField  # pylint: disable=relative-beyond-top-level
@@ -34,6 +35,13 @@ from ..widgets import (
 from .dialogs import (
     AboutDialog,  # pylint: disable=relative-beyond-top-level
     SettingsDialog,
+)
+from .font_manager import (
+    apply_fonts_to_app,  # pylint: disable=relative-beyond-top-level
+    get_font_manager,  # pylint: disable=relative-beyond-top-level
+)
+from .enhanced_theme_manager import (
+    get_enhanced_theme_manager,  # pylint: disable=relative-beyond-top-level
 )
 from .managers import (
     LayoutManager,  # pylint: disable=relative-beyond-top-level
@@ -104,7 +112,12 @@ class MainWindow(Qw.QMainWindow):
 
     def _initialize_managers(self) -> None:
         """Initialize UI and functionality managers."""
+        # Use enhanced theme manager for multiple theme systems
+        self.enhanced_theme_manager = get_enhanced_theme_manager(self, self.settings)
+        
+        # Keep original theme manager for backward compatibility if needed
         self.theme_manager = ThemeManager(self, self.settings)
+        
         self.menu_manager = MenuManager(self)
         self.layout_manager = LayoutManager(self, self.settings)
         self.metadata_display = MetadataDisplayManager(self)
@@ -131,8 +144,12 @@ class MainWindow(Qw.QMainWindow):
         # Setup menus first
         self.menu_manager.setup_menus()
 
-        # Apply saved theme
-        self.theme_manager.apply_saved_theme()
+        # Apply optimal fonts
+        apply_fonts_to_app()
+        nfo("Applied optimal fonts to application")
+
+        # Apply saved theme using enhanced theme manager
+        self.enhanced_theme_manager.apply_saved_theme()
 
         # Setup layout
         self.layout_manager.setup_layout()
@@ -310,9 +327,9 @@ class MainWindow(Qw.QMainWindow):
 
     def _populate_file_list(self, result: FileLoadResult) -> None:
         """Populate the file list with loaded files."""
-        # Combine and sort all files
+        # Combine and sort all files case-insensitively
         all_files = result.images + result.texts + result.models
-        self.current_files_in_list = sorted(list(set(all_files)))
+        self.current_files_in_list = sorted(list(set(all_files)), key=str.lower)
 
         # Update UI
         self.left_panel.clear_file_list_display()
@@ -383,8 +400,8 @@ class MainWindow(Qw.QMainWindow):
         current_item = list_widget.currentItem()
         current_selection = current_item.text() if current_item else None
 
-        # Sort and repopulate
-        self.current_files_in_list.sort()
+        # Sort and repopulate case-insensitively
+        self.current_files_in_list.sort(key=str.lower)
         self.left_panel.clear_file_list_display()
         self.left_panel.add_items_to_file_list(self.current_files_in_list)
 
@@ -653,14 +670,42 @@ class MainWindow(Qw.QMainWindow):
 
     def open_settings_dialog(self) -> None:
         """Open the application settings dialog."""
-        current_theme = self.settings.value("theme", "dark_teal.xml")
-        dialog = SettingsDialog(self, current_theme_xml=current_theme)
+        dialog = SettingsDialog(self)
+        # Re-apply the current theme to the application to ensure the dialog is styled
+        if hasattr(self, 'enhanced_theme_manager'):
+            self.enhanced_theme_manager.apply_theme(self.enhanced_theme_manager.current_theme)
         dialog.exec()
+
+    def apply_global_font(self) -> None:
+        """Apply the global font settings and refresh the theme."""
+        app = Qw.QApplication.instance()
+        if not app:
+            return
+
+        font_family = self.settings.value("fontFamily", "Roboto", type=str)
+        font_size = self.settings.value("fontSize", 10, type=int)
+        
+        font = QFont(font_family, font_size)
+        app.setFont(font)
+        nfo(f"Set global font to: {font_family} {font_size}pt")
+
+        # Re-apply the current theme to ensure all widgets update
+        if hasattr(self, 'enhanced_theme_manager'):
+            self.enhanced_theme_manager.apply_theme(self.enhanced_theme_manager.current_theme)
 
     def show_about_dialog(self) -> None:
         """Show the about dialog."""
         dialog = AboutDialog(self)
         dialog.exec()
+
+    def show_font_report(self) -> None:
+        """Show font availability report in console."""
+        font_manager = get_font_manager()
+        font_manager.print_font_report()
+
+    def show_theme_report(self) -> None:
+        """Show enhanced theme system report in console."""
+        self.enhanced_theme_manager.print_theme_report()
 
     # ========================================================================
     # DRAG & DROP SUPPORT

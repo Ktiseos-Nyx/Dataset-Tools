@@ -10,32 +10,22 @@ including settings configuration and about information dialogs.
 """
 
 from PyQt6.QtCore import QSettings
+from PyQt6.QtGui import QFont, QFontDatabase
 from PyQt6.QtWidgets import (
     QComboBox,
     QDialog,
     QDialogButtonBox,
+    QFontComboBox,
+    QFormLayout,
     QLabel,
     QMessageBox,
+    QSpinBox,
+    QTabWidget,
     QVBoxLayout,
     QWidget,
 )
 
 from ..logger import info_monitor as nfo
-
-# Import theme functionality with fallback
-try:
-    from qt_material import apply_stylesheet, list_themes
-
-    QT_MATERIAL_AVAILABLE = True
-except ImportError:
-    QT_MATERIAL_AVAILABLE = False
-
-    def list_themes():
-        return ["default_light.xml", "default_dark.xml"]
-
-    def apply_stylesheet(app, theme, invert_secondary=False):
-        pass
-
 
 # ============================================================================
 # SETTINGS DIALOG
@@ -43,83 +33,106 @@ except ImportError:
 
 
 class SettingsDialog(QDialog):
-    """Application settings configuration dialog.
+    """Application settings configuration dialog with a tabbed interface."""
 
-    Allows users to configure application preferences including:
-    - Display theme selection
-    - Window size preferences
-    - Other application settings
-    """
-
-    def __init__(self, parent: QWidget | None = None, current_theme_xml: str = ""):
+    def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
-
-        # Store references
         self.parent_window = parent
-        self.current_theme_on_open = current_theme_xml
         self.settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
 
-        # Setup dialog
         self._setup_dialog()
-        self._create_theme_section()
-        self._create_window_size_section()
+        self._create_tabs()
         self._create_button_box()
         self._load_current_settings()
 
     def _setup_dialog(self) -> None:
         """Setup basic dialog properties."""
         self.setWindowTitle("Application Settings")
-        self.setMinimumWidth(400)
+        self.setMinimumWidth(500)
         self.setModal(True)
-
-        # Main layout
         self.layout = QVBoxLayout(self)
-        self.layout.setSpacing(20)
 
-    def _create_theme_section(self) -> None:
-        """Create the theme selection section."""
-        # Theme label
+    def _create_tabs(self) -> None:
+        """Create the tab widget and populate it."""
+        self.tab_widget = QTabWidget()
+        self.layout.addWidget(self.tab_widget)
+
+        # Create tabs
+        self._create_theme_tab()
+        self._create_appearance_tab()
+        self._create_font_tab()
+
+    def _create_theme_tab(self) -> None:
+        """Create the Themes tab."""
+        theme_widget = QWidget()
+        layout = QVBoxLayout(theme_widget)
+        layout.setSpacing(20)
+
+        # Theme Section
         theme_label = QLabel("<b>Display Theme:</b>")
-        self.layout.addWidget(theme_label)
-
-        # Theme combo box
         self.theme_combo = QComboBox()
         self._populate_theme_combo()
-        self.layout.addWidget(self.theme_combo)
+        layout.addWidget(theme_label)
+        layout.addWidget(self.theme_combo)
 
-    def _populate_theme_combo(self) -> None:
-        """Populate the theme combo box with available themes."""
-        if QT_MATERIAL_AVAILABLE:
-            self.available_themes_xml = list_themes()
+        layout.addStretch(1)
+        self.tab_widget.addTab(theme_widget, "Themes")
 
-            for theme_xml_name in self.available_themes_xml:
-                display_name = self._format_theme_display_name(theme_xml_name)
-                self.theme_combo.addItem(display_name, theme_xml_name)
-        else:
-            self.theme_combo.addItem("Default (qt-material not found)")
-            self.theme_combo.setEnabled(False)
-            self.available_themes_xml = []
+    def _create_appearance_tab(self) -> None:
+        """Create the Appearance tab with window size options."""
+        appearance_widget = QWidget()
+        layout = QVBoxLayout(appearance_widget)
+        layout.setSpacing(20)
 
-    def _format_theme_display_name(self, theme_xml_name: str) -> str:
-        """Convert theme XML name to display format."""
-        return theme_xml_name.replace(".xml", "").replace("_", " ").title()
-
-    def _create_window_size_section(self) -> None:
-        """Create the window size configuration section."""
-        # Add spacing
-        self.layout.addSpacing(15)
-
-        # Size label
+        # Window Size Section
         size_label = QLabel("<b>Window Size:</b>")
-        self.layout.addWidget(size_label)
-
-        # Size combo box
         self.size_combo = QComboBox()
         self._populate_size_combo()
-        self.layout.addWidget(self.size_combo)
+        layout.addWidget(size_label)
+        layout.addWidget(self.size_combo)
+
+        layout.addStretch(1)
+        self.tab_widget.addTab(appearance_widget, "Appearance")
+
+    def _create_font_tab(self) -> None:
+        """Create the Font tab with font family and size options."""
+        font_widget = QWidget()
+        layout = QFormLayout(font_widget)
+        layout.setSpacing(15)
+
+        # Font Family
+        self.font_combo = QFontComboBox()
+        self.font_combo.setEditable(False)
+        self._populate_font_combo()
+        layout.addRow("Font Family:", self.font_combo)
+
+        # Font Size
+        self.font_size_spinbox = QSpinBox()
+        self.font_size_spinbox.setRange(8, 24)
+        self.font_size_spinbox.setSuffix(" pt")
+        layout.addRow("Font Size:", self.font_size_spinbox)
+
+        self.tab_widget.addTab(font_widget, "Fonts")
+
+    def _populate_theme_combo(self) -> None:
+        """Populate the theme combo box."""
+        if hasattr(self.parent_window, 'enhanced_theme_manager'):
+            enhanced_manager = self.parent_window.enhanced_theme_manager
+            available_themes = enhanced_manager.get_available_themes()
+            for category, themes in available_themes.items():
+                if not themes:
+                    continue
+                category_name = enhanced_manager.THEME_CATEGORIES.get(category, category.title())
+                for theme_name in themes:
+                    theme_id = f"{category}:{theme_name}"
+                    display_name = f"{category_name} - {theme_name.replace('_', ' ').replace('.xml', '').title()}"
+                    self.theme_combo.addItem(display_name, theme_id)
+        else:
+            self.theme_combo.addItem("No themes available")
+            self.theme_combo.setEnabled(False)
 
     def _populate_size_combo(self) -> None:
-        """Populate the size combo box with available presets."""
+        """Populate the size combo box."""
         self.size_presets: dict[str, tuple[int, int] | None] = {
             "Remember Last Size": None,
             "Default (1024x768)": (1024, 768),
@@ -127,165 +140,108 @@ class SettingsDialog(QDialog):
             "Medium (1280x900)": (1280, 900),
             "Large (1600x900)": (1600, 900),
         }
-
         for display_name in self.size_presets:
             self.size_combo.addItem(display_name)
 
+    def _populate_font_combo(self) -> None:
+        """Prepend application-specific fonts to the font combo box."""
+        # Get all application-specific font families
+        app_font_families = []
+        for font_id in QFontDatabase.applicationFontFamilies(QFontDatabase.addApplicationFont(":/")):
+            app_font_families.extend(QFontDatabase.applicationFontFamilies(font_id))
+        
+        # Add a separator and then the application fonts
+        if app_font_families:
+            self.font_combo.insertItem(0, "--- Application Fonts ---")
+            self.font_combo.model().item(0).setEnabled(False) # Make separator unselectable
+            for i, family in enumerate(sorted(list(set(app_font_families)))):
+                self.font_combo.insertItem(i + 1, family)
+
     def _create_button_box(self) -> None:
         """Create the dialog button box."""
-        # Add stretch before buttons
-        self.layout.addStretch(1)
-
-        # Button box
         self.button_box = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok
             | QDialogButtonBox.StandardButton.Cancel
             | QDialogButtonBox.StandardButton.Apply
         )
-
-        # Connect button signals
         self.button_box.accepted.connect(self.accept_settings)
-        self.button_box.rejected.connect(self.reject_settings)
-        self.button_box.button(
-            QDialogButtonBox.StandardButton.Apply
-        ).clicked.connect(self.apply_all_settings)
-
+        self.button_box.rejected.connect(self.reject)
+        self.button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.apply_all_settings)
         self.layout.addWidget(self.button_box)
 
     def _load_current_settings(self) -> None:
-        """Load and display current settings."""
+        """Load and display current settings for all tabs."""
         self._load_theme_setting()
         self._load_window_size_setting()
+        self._load_font_setting()
 
     def _load_theme_setting(self) -> None:
         """Load and set current theme setting."""
-        if not QT_MATERIAL_AVAILABLE or not self.current_theme_on_open:
-            return
-
-        # Find and select current theme
-        display_name = self._format_theme_display_name(self.current_theme_on_open)
-        index = self.theme_combo.findText(display_name)
-
-        if index >= 0:
-            self.theme_combo.setCurrentIndex(index)
-        elif self.available_themes_xml:
-            self.theme_combo.setCurrentIndex(0)
+        if hasattr(self.parent_window, 'enhanced_theme_manager'):
+            current_theme = self.parent_window.enhanced_theme_manager.current_theme
+            for i in range(self.theme_combo.count()):
+                if self.theme_combo.itemData(i) == current_theme:
+                    self.theme_combo.setCurrentIndex(i)
+                    return
 
     def _load_window_size_setting(self) -> None:
         """Load and set current window size setting."""
-        remember_geometry = self.settings.value("rememberGeometry", True, type=bool)
-
-        if remember_geometry:
+        remember = self.settings.value("rememberGeometry", True, type=bool)
+        if remember:
             self.size_combo.setCurrentText("Remember Last Size")
         else:
-            saved_preset = self.settings.value("windowSizePreset", "Default (1024x768)")
-            if self.size_combo.findText(saved_preset) != -1:
-                self.size_combo.setCurrentText(saved_preset)
-            else:
-                self.size_combo.setCurrentText("Default (1024x768)")
+            preset = self.settings.value("windowSizePreset", "Default (1024x768)")
+            self.size_combo.setCurrentText(preset)
 
-    # ========================================================================
-    # SETTINGS APPLICATION METHODS
-    # ========================================================================
+    def _load_font_setting(self) -> None:
+        """Load and set current font family and size."""
+        font_family = self.settings.value("fontFamily", "Roboto", type=str)
+        font_size = self.settings.value("fontSize", 10, type=int)
+        self.font_combo.setCurrentFont(QFont(font_family))
+        self.font_size_spinbox.setValue(font_size)
 
-    def apply_theme_settings(self) -> None:
-        """Apply the selected theme settings."""
-        if not QT_MATERIAL_AVAILABLE:
-            nfo("Cannot apply theme: qt-material not available")
-            return
+    def apply_all_settings(self) -> None:
+        """Apply all settings without closing the dialog."""
+        self._apply_theme_settings()
+        self._apply_window_settings()
+        self._apply_font_settings()
+        nfo("All settings applied.")
 
-        selected_theme_xml = self.theme_combo.currentData()
-        nfo(f"Attempting to apply theme: {selected_theme_xml}")
-        if selected_theme_xml and self.parent_window and hasattr(self.parent_window, "apply_theme"):
-            result = self.parent_window.apply_theme(selected_theme_xml, initial_load=False)
-            nfo(f"Theme application result: {result}")
-        else:
-            nfo(
-                f"Cannot apply theme - conditions not met. Theme: {selected_theme_xml}, "
-                f"Parent: {self.parent_window}, Has apply_theme: "
-                f"{hasattr(self.parent_window, 'apply_theme') if self.parent_window else False}"
-            )
+    def _apply_theme_settings(self) -> None:
+        """Apply the selected theme."""
+        selected_theme_id = self.theme_combo.currentData()
+        if selected_theme_id and hasattr(self.parent_window, 'enhanced_theme_manager'):
+            self.parent_window.enhanced_theme_manager.apply_theme(selected_theme_id)
 
-    def apply_window_settings(self) -> None:
+    def _apply_window_settings(self) -> None:
         """Apply the selected window size settings."""
         selected_size_text = self.size_combo.currentText()
         size_tuple = self.size_presets.get(selected_size_text)
-
         if selected_size_text == "Remember Last Size":
-            self._apply_remember_geometry_setting()
-        elif size_tuple and self._can_resize_parent():
-            self._apply_size_preset_setting(selected_size_text, size_tuple)
+            self.settings.setValue("rememberGeometry", True)
+        elif size_tuple and hasattr(self.parent_window, "resize_window"):
+            self.settings.setValue("rememberGeometry", False)
+            self.settings.setValue("windowSizePreset", selected_size_text)
+            self.parent_window.resize_window(*size_tuple)
 
-    def _apply_remember_geometry_setting(self) -> None:
-        """Apply the 'remember geometry' setting."""
-        self.settings.setValue("rememberGeometry", True)
+    def _apply_font_settings(self) -> None:
+        """Apply the selected font family and size globally."""
+        font_family = self.font_combo.currentFont().family()
+        font_size = self.font_size_spinbox.value()
+        
+        # Save settings
+        self.settings.setValue("fontFamily", font_family)
+        self.settings.setValue("fontSize", font_size)
 
-        # Save current geometry if parent supports it
-        if self.parent_window and hasattr(self.parent_window, "saveGeometry"):
-            geometry = self.parent_window.saveGeometry()
-            self.settings.setValue("geometry", geometry)
-
-    def _can_resize_parent(self) -> bool:
-        """Check if parent window can be resized."""
-        return self.parent_window and hasattr(self.parent_window, "resize_window")
-
-    def _apply_size_preset_setting(self, preset_name: str, size_tuple: tuple[int, int]) -> None:
-        """Apply a specific size preset."""
-        self.settings.setValue("rememberGeometry", False)
-        self.settings.setValue("windowSizePreset", preset_name)
-
-        # Resize parent window
-        if self._can_resize_parent():
-            self.parent_window.resize_window(size_tuple[0], size_tuple[1])
-
-        # Remove saved geometry
-        self.settings.remove("geometry")
-
-    def apply_all_settings(self) -> None:
-        """Apply all settings without closing dialog."""
-        self.apply_theme_settings()
-        self.apply_window_settings()
-        nfo("Settings applied successfully")
-
-    # ========================================================================
-    # DIALOG RESULT METHODS
-    # ========================================================================
+        # Apply globally
+        if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
+            self.parent_window.apply_global_font()
+            nfo(f"Applied global font: {font_family}, {font_size}pt")
 
     def accept_settings(self) -> None:
-        """Accept and apply all settings, then close dialog."""
+        """Apply all settings and close the dialog."""
         self.apply_all_settings()
-        self.current_theme_on_open = self.theme_combo.currentData()
         self.accept()
-        nfo("Settings accepted and dialog closed")
-
-    def reject_settings(self) -> None:
-        """Reject settings and revert theme if changed."""
-        if self._should_revert_theme():
-            self._revert_theme()
-
-        self.reject()
-        nfo("Settings rejected, dialog closed")
-
-    def _should_revert_theme(self) -> bool:
-        """Check if theme should be reverted on cancel."""
-        return (
-            QT_MATERIAL_AVAILABLE
-            and self.parent_window
-            and hasattr(self.parent_window, "apply_theme")
-            and self.current_theme_on_open
-            and self._theme_has_changed()
-        )
-
-    def _theme_has_changed(self) -> bool:
-        """Check if the theme has changed from the original."""
-        current_selection = self.theme_combo.currentData()
-        return current_selection != self.current_theme_on_open
-
-    def _revert_theme(self) -> None:
-        """Revert to the original theme."""
-        if self.parent_window and hasattr(self.parent_window, "apply_theme"):
-            self.parent_window.apply_theme(self.current_theme_on_open, initial_load=False)
-            nfo("Theme reverted to: %s", self.current_theme_on_open)
 
 
 # ============================================================================

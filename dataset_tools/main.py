@@ -111,8 +111,23 @@ def main(cli_args_list=None):
     qt_app_args = sys.argv  # Keep original sys.argv for Qt if needed
     app = QtWidgets.QApplication(qt_app_args)
 
+    # Load all custom fonts from the 'fonts' directory
+    from PyQt6.QtGui import QFontDatabase
+    import os
+    fonts_dir = os.path.join(os.path.dirname(__file__), 'fonts')
+    if os.path.isdir(fonts_dir):
+        for font_file in os.listdir(fonts_dir):
+            if font_file.lower().endswith(('.ttf', '.otf')):
+                font_path = os.path.join(fonts_dir, font_file)
+                font_id = QFontDatabase.addApplicationFont(font_path)
+                if font_id != -1:
+                    family = QFontDatabase.applicationFontFamilies(font_id)[0]
+                    app_logger.info_monitor(f"Successfully loaded font: '{family}' from {font_file}")
+                else:
+                    app_logger.info_monitor(f"Failed to load font: {font_file}")
+
     window = MainWindow()  # Initialize our main window.
-    # If MainWindow needs access to parsed args: window = MainWindow(args=args)
+    window.apply_global_font() # Apply saved font settings on startup
     window.show()
     sys.exit(app.exec())
 

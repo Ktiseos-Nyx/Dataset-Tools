@@ -1,0 +1,89 @@
+/* Modern Windows Theme (Windows 10/11 inspired) */
+
+QMainWindow {
+    background-color: #F0F0F0; /* Light gray background */
+    color: #000000;
+}
+
+QWidget {
+    background-color: #FFFFFF; /* White content areas */
+    color: #000000;
+}
+
+/* Window Title Bar / Menu Bar */
+QMenuBar {
+    background-color: #F0F0F0; /* Light gray */
+    color: #000000;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background-color: #E0E0E0;
+    color: #000000;
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #0078D7; /* Accent blue */
+    border: none;
+    border-radius: 2px;
+    padding: 8px 16px;
+    color: #FFFFFF;
+}
+
+QPushButton:hover {
+    background-color: #005BA1;
+}
+
+QPushButton:pressed {
+    background-color: #003F6B;
+}
+
+/* Text Inputs */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    padding: 5px;
+    color: #000000;
+}
+
+/* List Widgets */
+QListWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background-color: #E0E0E0;
+    color: #000000;
+}
+
+/* Status Bar */
+QStatusBar {
+    background-color: #F0F0F0;
+    color: #000000;
+    border-top: 1px solid #E0E0E0;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    background-color: #F0F0F0;
+    width: 12px;
+    border: none;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #CCCCCC;
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #A0A0A0;
+}

@@ -35,7 +35,7 @@ def _register_vendored_parsers():
     register_parser_class("DrawThings", DrawThings)
     register_parser_class("NovelAI", NovelAI)
     register_parser_class("A1111", A1111)
-    register_parser_class("ComfyUI", ComfyUI)
+    # register_parser_class("ComfyUI", ComfyUI)  # Disabled: Use modern extraction system via parser definitions
     register_parser_class("CivitaiFormat", CivitaiFormat)
     register_parser_class("EasyDiffusion", EasyDiffusion)
     register_parser_class("Fooocus", Fooocus)
