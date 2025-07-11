@@ -7,15 +7,14 @@
 
 import os
 from pathlib import Path
-from typing import NamedTuple  # Removed List as TypingList, Optional if progress bar gone
+from typing import \
+    NamedTuple  # Removed List as TypingList, Optional if progress bar gone
 
 from PyQt6 import QtCore
 
 from dataset_tools.correct_types import ExtensionType as Ext
-from dataset_tools.logger import (
-    debug_message,  # Import debug_message
-    debug_monitor,
-)
+from dataset_tools.logger import debug_message  # Import debug_message
+from dataset_tools.logger import debug_monitor
 from dataset_tools.logger import info_monitor as nfo
 
 

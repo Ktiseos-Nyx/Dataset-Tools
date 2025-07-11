@@ -11,7 +11,8 @@ import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any  # Changed from typing.Any to typing.Dict for explicit Dict type hint
+from typing import \
+    Any  # Changed from typing.Any to typing.Dict for explicit Dict type hint
 
 from ..constants import PARAMETER_PLACEHOLDER
 from ..logger import get_logger

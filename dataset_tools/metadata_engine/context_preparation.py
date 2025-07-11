@@ -369,7 +369,8 @@ class ContextDataPreparer:
         try:
             # Import here to avoid dependency issues if not available
             try:
-                from ..model_parsers.gguf_parser import GGUFParser, ModelParserStatus
+                from ..model_parsers.gguf_parser import (GGUFParser,
+                                                         ModelParserStatus)
             except ImportError:
                 self.logger.error("GGUFParser module not found. Skipping GGUF parsing.")
                 return context

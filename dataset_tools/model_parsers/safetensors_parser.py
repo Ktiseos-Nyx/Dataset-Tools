@@ -1,7 +1,8 @@
 # dataset_tools/model_parsers/safetensors_parser.py
 import json
 import struct
-from pathlib import Path  # Used for Path object, not strictly necessary for current logic but good practice
+from pathlib import \
+    Path  # Used for Path object, not strictly necessary for current logic but good practice
 
 from .base_model_parser import BaseModelParser, ModelParserStatus
 

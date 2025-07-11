@@ -1,7 +1,6 @@
 # In dataset_tools/rule_evaluator.py
 
 import json
-
 # import os
 import re
 

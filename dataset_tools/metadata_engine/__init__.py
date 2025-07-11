@@ -29,22 +29,15 @@ Advanced Usage:
 # Main engine components
 # Core processing components
 from .context_preparation import ContextDataPreparer, prepare_context_data
-from .engine import (
-    MetadataEngine,
-    MetadataEngineBuilder,
-    MetadataEngineManager,
-    create_metadata_engine,
-    parse_file_metadata,
-)
-from .field_extraction import A1111ParameterExtractor, ComfyUIWorkflowExtractor, FieldExtractor, create_field_extractor
-from .template_system import (
-    OutputFormatter,
-    StandardTemplates,
-    TemplateBuilder,
-    TemplateProcessor,
-    format_template_output,
-    process_template,
-)
+from .engine import (MetadataEngine, MetadataEngineBuilder,
+                     MetadataEngineManager, create_metadata_engine,
+                     parse_file_metadata)
+from .field_extraction import (A1111ParameterExtractor,
+                               ComfyUIWorkflowExtractor, FieldExtractor,
+                               create_field_extractor)
+from .template_system import (OutputFormatter, StandardTemplates,
+                              TemplateBuilder, TemplateProcessor,
+                              format_template_output, process_template)
 
 # Rule evaluation (if you want to expose it)
 try:
