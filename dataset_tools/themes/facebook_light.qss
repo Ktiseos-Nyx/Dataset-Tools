@@ -1,0 +1,91 @@
+/* Funky Facebook Light Theme */
+
+QMainWindow {
+    background-color: #F0F2F5; /* Light background */
+    color: #050505; /* Dark text */
+}
+
+QWidget {
+    background-color: #FFFFFF; /* White content areas */
+    color: #050505;
+}
+
+/* Window Title Bar / Menu Bar */
+QMenuBar {
+    background-color: #FFFFFF;
+    color: #050505;
+    border-bottom: 1px solid #DADDE1;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background-color: #F0F2F5;
+    color: #050505;
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #2D88FF; /* Facebook Blue */
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    color: #FFFFFF;
+}
+
+QPushButton:hover {
+    background-color: #2672D6;
+}
+
+QPushButton:pressed {
+    background-color: #1F5AA8;
+}
+
+/* Text Inputs */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #CED0D4;
+    border-radius: 6px;
+    padding: 5px;
+    color: #050505;
+}
+
+/* List Widgets */
+QListWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #CED0D4;
+    border-radius: 6px;
+    color: #050505;
+}
+
+QListWidget::item:selected {
+    background-color: #F0F2F5;
+    color: #050505;
+}
+
+/* Status Bar */
+QStatusBar {
+    background-color: #FFFFFF;
+    color: #050505;
+    border-top: 1px solid #DADDE1;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    background-color: #F0F2F5;
+    width: 12px;
+    border: none;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #CED0D4;
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #A0A2A5;
+}

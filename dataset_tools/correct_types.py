@@ -61,12 +61,19 @@ class UpField(Enum):
     PROMPT = "prompt_data_section"
     TAGS = "tags_and_keywords_section"
     TEXT_DATA = "text_file_content_section"
+    WORKFLOW_ANALYSIS = "workflow_analysis_section"
     # DATA = "generic_data_block_section" # Keep if used
 
     @classmethod
     def get_ordered_labels(cls) -> list["UpField"]:
         """Return a list of UpField members for UI iteration."""
-        return [cls.PROMPT, cls.TAGS, cls.METADATA, cls.TEXT_DATA]
+        return [
+            cls.PROMPT,
+            cls.TAGS,
+            cls.METADATA,
+            cls.TEXT_DATA,
+            cls.WORKFLOW_ANALYSIS,
+        ]
 
 
 class DownField(Enum):

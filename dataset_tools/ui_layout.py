@@ -4,6 +4,7 @@ import logging
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets as Qw
 
+from .ui.font_manager import get_monospace_font, get_reading_font
 # Import your custom widgets. These must be defined in widgets.py first.
 from .widgets import ImageLabel, LeftPanelWidget
 
@@ -55,6 +56,9 @@ def setup_ui_layout(main_window: Qw.QMainWindow):
     main_window.positive_prompt_box = Qw.QTextEdit()
     main_window.positive_prompt_box.setReadOnly(True)
     main_window.positive_prompt_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
+    main_window.positive_prompt_box.setWordWrapMode(Qw.QTextOption.WrapMode.WordWrap)
+    main_window.positive_prompt_box.setLineWrapMode(Qw.QTextEdit.LineWrapMode.WidgetWidth)
+    main_window.positive_prompt_box.setFont(get_reading_font(size=10))
     metadata_layout.addWidget(main_window.positive_prompt_box)
 
     main_window.negative_prompt_label = Qw.QLabel("Negative Prompt")
@@ -62,6 +66,9 @@ def setup_ui_layout(main_window: Qw.QMainWindow):
     main_window.negative_prompt_box = Qw.QTextEdit()
     main_window.negative_prompt_box.setReadOnly(True)
     main_window.negative_prompt_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
+    main_window.negative_prompt_box.setWordWrapMode(Qw.QTextOption.WrapMode.WordWrap)
+    main_window.negative_prompt_box.setLineWrapMode(Qw.QTextEdit.LineWrapMode.WidgetWidth)
+    main_window.negative_prompt_box.setFont(get_reading_font(size=10))
     metadata_layout.addWidget(main_window.negative_prompt_box)
 
     main_window.generation_data_label = Qw.QLabel("Generation Details & Metadata")
@@ -69,6 +76,9 @@ def setup_ui_layout(main_window: Qw.QMainWindow):
     main_window.generation_data_box = Qw.QTextEdit()
     main_window.generation_data_box.setReadOnly(True)
     main_window.generation_data_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
+    main_window.generation_data_box.setWordWrapMode(Qw.QTextOption.WrapMode.WordWrap)
+    main_window.generation_data_box.setLineWrapMode(Qw.QTextEdit.LineWrapMode.WidgetWidth)
+    main_window.generation_data_box.setFont(get_monospace_font(size=9))
     metadata_layout.addWidget(main_window.generation_data_box)
     metadata_layout.addStretch(1)
 

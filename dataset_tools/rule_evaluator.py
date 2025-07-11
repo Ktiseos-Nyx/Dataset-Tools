@@ -1,7 +1,6 @@
 # In dataset_tools/rule_evaluator.py
 
 import json
-
 # import os
 import re
 
@@ -71,29 +70,7 @@ class RuleEvaluator:
         if not file_path:
             return None
 
-        try:
-            # First try exiftool if available
-            import subprocess
-
-            result = subprocess.run(
-                ["exiftool", "-UserComment", "-b", str(file_path)],
-                capture_output=True,
-                text=True,
-                timeout=5,
-                check=False,
-            )
-
-            if result.returncode == 0 and result.stdout.strip():
-                user_comment = result.stdout.strip()
-                if "Steps:" in user_comment:
-                    self.logger.debug(
-                        f"Detection: Enhanced EXIF extracted {len(user_comment)} chars with A1111 patterns"
-                    )
-                    return user_comment
-        except Exception as e:
-            self.logger.debug(f"Detection: Enhanced EXIF extraction failed: {e}")
-
-        # Fallback: Manual Unicode decoding
+        # Use PIL-based extraction only - no ExifTool dependency in production
         try:
             from PIL import Image
 

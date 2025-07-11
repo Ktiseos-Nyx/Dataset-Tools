@@ -13,7 +13,6 @@ from ..logger import get_logger
 from .extractors.a1111_extractors import A1111Extractor
 from .extractors.civitai_extractors import CivitaiExtractor
 from .extractors.comfyui_extractors import ComfyUIExtractor
-
 # Import extraction modules
 from .extractors.direct_extractors import DirectValueExtractor
 from .extractors.json_extractors import JSONExtractor
@@ -160,6 +159,7 @@ class FieldExtractor:
                 "float": lambda v: float(str(v)),
                 "string": lambda v: str(v),
                 "boolean": lambda v: (v if isinstance(v, bool) else str(v).lower() in ("true", "1", "yes", "on")),
+                "array": lambda v: v if isinstance(v, list) else [v],
             }
 
             converter = converters.get(value_type)

@@ -1,11 +1,13 @@
 {
   "parser_name": "ComfyUI_JPEG_EXIF",
-  "priority": 114,
+  "priority": 124,
   "description": "Handles ComfyUI workflows stored in JPEG EXIF UserComment - your JPEG workflow rescuer! ⚔️",
   "version": "1.0",
   "maintainer": "Ktiseos Nyx",
-  "target_file_types": ["JPEG", "JPG"],
-
+  "target_file_types": [
+    "JPEG",
+    "JPG"
+  ],
   "detection_rules": [
     {
       "comment": "Rule 1: EXIF UserComment must exist and be valid JSON",
@@ -25,7 +27,6 @@
       "value": "\"extra\":{\"extraMetadata\""
     }
   ],
-
   "parsing_instructions": {
     "input_data": {
       "source_type": "exif_user_comment",
@@ -38,7 +39,6 @@
         }
       ]
     },
-
     "fields": [
       {
         "target_key": "prompt",
@@ -66,7 +66,6 @@
         ],
         "fallback": "Could not extract prompt"
       },
-
       {
         "target_key": "negative_prompt",
         "method": "comfy_find_text_from_main_sampler_input",
@@ -93,7 +92,6 @@
         ],
         "fallback": ""
       },
-
       {
         "target_key": "parameters.steps",
         "method": "comfy_find_input_of_main_sampler",
@@ -111,7 +109,6 @@
         "data_type": "integer",
         "fallback": 20
       },
-
       {
         "target_key": "parameters.cfg_scale",
         "method": "comfy_find_input_of_main_sampler",
@@ -129,7 +126,6 @@
         "data_type": "float",
         "fallback": 7.0
       },
-
       {
         "target_key": "parameters.seed",
         "method": "comfy_find_input_of_main_sampler",
@@ -147,7 +143,6 @@
         "data_type": "integer",
         "fallback": -1
       },
-
       {
         "target_key": "parameters.sampler_name",
         "method": "comfy_find_input_of_main_sampler",
@@ -165,7 +160,6 @@
         "data_type": "string",
         "fallback": "euler"
       },
-
       {
         "target_key": "parameters.scheduler",
         "method": "comfy_find_input_of_main_sampler",
@@ -183,7 +177,6 @@
         "data_type": "string",
         "fallback": "normal"
       },
-
       {
         "target_key": "parameters.model",
         "method": "comfy_find_input_of_node_type",
@@ -201,7 +194,6 @@
         "data_type": "string",
         "fallback": "Unknown Model"
       },
-
       {
         "target_key": "parameters.width",
         "method": "comfy_find_input_of_node_type",
@@ -217,7 +209,6 @@
         "data_type": "integer",
         "fallback": 512
       },
-
       {
         "target_key": "parameters.height",
         "method": "comfy_find_input_of_node_type",
@@ -233,7 +224,6 @@
         "data_type": "integer",
         "fallback": 512
       },
-
       {
         "target_key": "parameters.loras",
         "method": "comfy_find_all_lora_nodes",
@@ -243,10 +233,13 @@
           "LoraTagLoader",
           "Power Lora Loader (rgthree)"
         ],
-        "extract_fields": ["lora_name", "strength_model", "strength_clip"],
+        "extract_fields": [
+          "lora_name",
+          "strength_model",
+          "strength_clip"
+        ],
         "fallback": []
       },
-
       {
         "target_key": "parameters.vae_model",
         "method": "comfy_find_input_of_node_type",
@@ -256,9 +249,43 @@
         "input_field": "vae_name",
         "data_type": "string",
         "fallback": "Unknown VAE"
+      },
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis",
+        "target_key": "workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "multi_stage_conditioning",
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
       }
     ],
-
     "output_template": {
       "parser_name_from_engine": "ComfyUI_JPEG_EXIF",
       "tool": "ComfyUI (JPEG)",
@@ -284,13 +311,11 @@
       }
     }
   },
-
   "error_handling": {
     "on_parse_failure": "return_partial_data",
     "log_errors": true,
     "validation_level": "strict"
   },
-
   "notes": [
     "Specifically designed to handle ComfyUI workflows stored in JPEG EXIF UserComment fields",
     "Priority 115 puts it between A1111 JPEG parsers (110) and ComfyUI PNG parsers (120)",
@@ -300,19 +325,32 @@
     "Supports advanced samplers, custom nodes, and complex workflows",
     "Falls back gracefully with partial data if some fields can't be extracted"
   ],
-
   "test_cases": [
     {
       "description": "Basic KSampler workflow in JPEG EXIF",
-      "expected_fields": ["prompt", "parameters.steps", "parameters.seed"]
+      "expected_fields": [
+        "prompt",
+        "parameters.steps",
+        "parameters.seed"
+      ]
     },
     {
       "description": "Advanced workflow with custom samplers",
-      "expected_fields": ["prompt", "negative_prompt", "parameters.sampler_name"]
+      "expected_fields": [
+        "prompt",
+        "negative_prompt",
+        "parameters.sampler_name"
+      ]
     },
     {
       "description": "Flux/GGUF workflow with specialized loaders",
-      "expected_fields": ["parameters.model", "parameters.width", "parameters.height"]
+      "expected_fields": [
+        "parameters.model",
+        "parameters.width",
+        "parameters.height"
+      ]
     }
-  ]
+  ],
+  "enhanced_with_node_discovery": true,
+  "enhancement_date": "2025-07-08"
 }

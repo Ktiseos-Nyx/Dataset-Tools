@@ -1,0 +1,187 @@
+/* GEOCITIES DEUX - Starfield Edition */
+
+/* Main window with starfield background */
+QMainWindow {
+    background-image: url("https://raw.githubusercontent.com/Ktiseos-Nyx/qss_themes/master/themes/assets/ss036.png");
+    background-repeat: repeat;
+    background-position: center;
+}
+
+/* General widget styling - semi-transparent to show starfield */
+QWidget {
+    background-color: rgba(0, 0, 64, 0.2);
+    color: #FFD700;
+    font-size: 12pt;
+}
+
+/* Sassy 90s buttons with starfield showing through */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 rgba(255, 100, 150, 0.8), 
+                                stop: 0.5 rgba(255, 255, 100, 0.8), 
+                                stop: 1 rgba(100, 255, 150, 0.8));
+    border: 3px outset #C0C0C0;
+    border-radius: 2px;
+    padding: 6px 16px;
+    font-weight: bold;
+    font-size: 13pt;
+    color: #1a0033;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 rgba(100, 255, 150, 0.9), 
+                                stop: 0.5 rgba(255, 255, 100, 0.9), 
+                                stop: 1 rgba(255, 100, 150, 0.9));
+    border: 3px inset #C0C0C0;
+    color: #0d1a33;
+}
+
+QPushButton:pressed {
+    background-color: rgba(255, 100, 255, 0.7);
+    border: 3px inset #808080;
+    color: #0d1a33;
+}
+
+/* Text areas - readable with starfield visible */
+QTextEdit, QPlainTextEdit {
+    background-color: rgba(240, 240, 240, 0.85);
+    color: #2d1b4d;
+    border: 2px inset #C0C0C0;
+    font-size: 11pt;
+    selection-background-color: rgba(100, 150, 255, 0.7);
+    selection-color: #FFFFFF;
+}
+
+/* List widgets with starfield backdrop */
+QListWidget {
+    background-color: rgba(255, 255, 255, 0.75);
+    color: #2d1b4d;
+    border: 2px inset #C0C0C0;
+    alternate-background-color: rgba(230, 230, 230, 0.6);
+    font-size: 11pt;
+}
+
+QListWidget::item {
+    padding: 4px;
+    border-bottom: 1px solid rgba(200, 200, 200, 0.5);
+}
+
+QListWidget::item:selected {
+    background-color: rgba(100, 150, 255, 0.8);
+    color: #FFFFFF;
+}
+
+QListWidget::item:hover {
+    background-color: rgba(150, 200, 255, 0.6);
+    color: #1a0033;
+}
+
+/* Menu bar with starfield showing */
+QMenuBar {
+    background-color: rgba(200, 200, 200, 0.8);
+    color: #2d1b4d;
+    border-bottom: 2px outset #C0C0C0;
+    font-weight: bold;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 6px 12px;
+}
+
+QMenuBar::item:selected {
+    background-color: rgba(100, 150, 255, 0.8);
+    color: #FFFFFF;
+}
+
+QMenu {
+    background-color: rgba(240, 240, 240, 0.9);
+    color: #2d1b4d;
+    border: 2px outset #C0C0C0;
+}
+
+QMenu::item {
+    padding: 4px 20px;
+}
+
+QMenu::item:selected {
+    background-color: rgba(100, 150, 255, 0.8);
+    color: #FFFFFF;
+}
+
+/* Status bar */
+QStatusBar {
+    background-color: rgba(200, 200, 200, 0.8);
+    color: #2d1b4d;
+    border-top: 2px outset #C0C0C0;
+    font-weight: bold;
+}
+
+/* Scrollbars with starfield backdrop */
+QScrollBar:vertical {
+    background-color: rgba(200, 200, 200, 0.7);
+    width: 18px;
+    border: 2px outset #C0C0C0;
+}
+
+QScrollBar::handle:vertical {
+    background-color: rgba(150, 150, 150, 0.8);
+    border: 2px outset #C0C0C0;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: rgba(100, 150, 255, 0.8);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background-color: rgba(200, 200, 200, 0.7);
+    border: 2px outset #C0C0C0;
+    height: 18px;
+}
+
+/* Input fields */
+QLineEdit {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #2d1b4d;
+    border: 2px inset #C0C0C0;
+    padding: 4px;
+    font-size: 11pt;
+    selection-background-color: rgba(100, 150, 255, 0.7);
+    selection-color: #FFFFFF;
+}
+
+QLineEdit:focus {
+    border: 2px solid rgba(100, 150, 255, 0.8);
+}
+
+/* Combo boxes */
+QComboBox {
+    background-color: rgba(240, 240, 240, 0.9);
+    color: #2d1b4d;
+    border: 2px outset #C0C0C0;
+    padding: 4px;
+    font-size: 11pt;
+}
+
+QComboBox:hover {
+    background-color: rgba(100, 150, 255, 0.2);
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 20px;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border: 1px solid #2d1b4d;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #2d1b4d;
+}

@@ -3,7 +3,8 @@ import struct
 from enum import Enum
 from typing import Any
 
-from ..logger import info_monitor  # Assuming info_monitor is correctly imported
+from ..logger import \
+    info_monitor  # Assuming info_monitor is correctly imported
 from .base_model_parser import BaseModelParser, ModelParserStatus
 
 

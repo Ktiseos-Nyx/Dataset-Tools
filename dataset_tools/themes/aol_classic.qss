@@ -1,0 +1,89 @@
+/* Old School AOL Aesthetic Theme */
+
+QMainWindow {
+    background-color: #CCCCCC; /* AOL Grey */
+    color: #000000;
+}
+
+QWidget {
+    background-color: #E0E0E0; /* Lighter grey for content */
+    color: #000000;
+}
+
+/* Window Title Bar / Menu Bar */
+QMenuBar {
+    background-color: #000080; /* AOL Blue */
+    color: #FFFFFF;
+    border-bottom: 1px solid #000040;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background-color: #0000FF;
+    color: #FFFF00; /* AOL Yellow */
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #BBBBBB;
+    border: 2px outset #FFFFFF;
+    padding: 4px 10px;
+    color: #000000;
+}
+
+QPushButton:hover {
+    background-color: #AAAAAA;
+}
+
+QPushButton:pressed {
+    background-color: #888888;
+    border: 2px inset #FFFFFF;
+}
+
+/* Text Inputs */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #808080;
+    padding: 2px;
+    color: #000000;
+}
+
+/* List Widgets */
+QListWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #808080;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background-color: #0000FF;
+    color: #FFFF00; /* AOL Yellow */
+}
+
+/* Status Bar */
+QStatusBar {
+    background-color: #000080; /* AOL Blue */
+    color: #FFFFFF;
+    border-top: 1px solid #000040;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    background-color: #BBBBBB;
+    width: 16px;
+    border: 1px solid #808080;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #999999;
+    border: 1px solid #808080;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #777777;
+}

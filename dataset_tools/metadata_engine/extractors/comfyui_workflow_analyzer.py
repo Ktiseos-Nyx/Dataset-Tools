@@ -83,7 +83,7 @@ class ComfyUIWorkflowAnalyzer:
 
             # Group related information
             analysis["model_info"] = self._extract_model_info(nodes)
-            analysis["prompt_info"] = self._extract_prompt_info(nodes)
+            analysis["prompt_info"] = self._extract_prompt_info(nodes, links)
             analysis["sampling_info"] = self._extract_sampling_info(nodes)
 
             # Analyze workflow structure
@@ -288,150 +288,197 @@ class ComfyUIWorkflowAnalyzer:
 
         return model_info
 
-    def _extract_prompt_info(self, nodes: dict[str, NodeData]) -> dict[str, Any]:
-        """Extract prompt-related information."""
+    def _extract_prompt_info(self, nodes: dict[str, NodeData], links: list[Any]) -> dict[str, Any]:
+        """Extract prompt-related information by tracing KSampler inputs."""
         prompt_info = {
             "positive_prompt": None,
             "negative_prompt": None,
             "guidance_scale": None,
         }
 
-        positive_found = False
+        # Find KSampler (or similar) nodes
+        sampler_nodes = [
+            node
+            for node in nodes.values()
+            if node.get("type")
+            in [
+                "KSampler",
+                "KSamplerAdvanced",
+                "SamplerCustom",
+                "SamplerCustomAdvanced",
+            ]
+            or node.get("class_type")
+            in [
+                "KSampler",
+                "KSamplerAdvanced",
+                "SamplerCustom",
+                "SamplerCustomAdvanced",
+            ]
+        ]
 
-        # Extract prompts from various text encoding nodes
-        for node in nodes.values():
-            node_type = node.get("type") or node.get("class_type")
+        for sampler_node in sampler_nodes:
+            sampler_inputs = sampler_node.get("inputs", {})
 
-            if node_type == "String Literal":
-                widgets = node.get("widgets_values", [])
-                if widgets and widgets[0]:
-                    # Assume first non-empty string is positive prompt
+            # Trace positive conditioning
+            positive_link = sampler_inputs.get("positive")
+            if positive_link and isinstance(positive_link, list) and len(positive_link) >= 2:
+                source_node_id = str(positive_link[0])
+                positive_prompt_text = self._trace_conditioning_source(nodes, links, source_node_id)
+                if positive_prompt_text:
+                    self.logger.debug(f"Traced positive prompt: {positive_prompt_text}")
                     if not prompt_info["positive_prompt"]:
-                        prompt_info["positive_prompt"] = widgets[0]
-                        positive_found = True
-                    elif not prompt_info["negative_prompt"]:
-                        prompt_info["negative_prompt"] = widgets[0]
+                        prompt_info["positive_prompt"] = positive_prompt_text
 
-            elif node_type in ["BNK_CLIPTextEncodeAdvanced", "CLIPTextEncode"]:
-                # Extract text from inputs or widgets
-                text = None
-                if "inputs" in node and "text" in node["inputs"]:
-                    text = node["inputs"]["text"]
-                elif node.get("widgets_values"):
-                    text = node["widgets_values"][0]
+            # Trace negative conditioning
+            negative_link = sampler_inputs.get("negative")
+            if negative_link and isinstance(negative_link, list) and len(negative_link) >= 2:
+                source_node_id = str(negative_link[0])
+                negative_prompt_text = self._trace_conditioning_source(nodes, links, source_node_id)
+                if negative_prompt_text:
+                    self.logger.debug(f"Traced negative prompt: {negative_prompt_text}")
+                    if not prompt_info["negative_prompt"]:
+                        prompt_info["negative_prompt"] = negative_prompt_text
 
-                if text:
-                    # Heuristic: shorter texts or those with negative keywords are likely negative prompts
-                    is_negative = (
-                        any(
-                            neg_word in text.lower()
-                            for neg_word in [
-                                "nsfw",
-                                "bare",
-                                "nipple",
-                                "breast",
-                                "bad",
-                                "worst",
-                                "ugly",
-                                "deformed",
-                            ]
-                        )
-                        or len(text) < 100
-                    )
+            # Extract guidance scale if available (e.g., from FluxGuidance)
+            # This part remains similar to previous logic, but can be refined with tracing if needed
+            if "cfg" in sampler_inputs:
+                prompt_info["guidance_scale"] = sampler_inputs["cfg"]
+            elif "widgets_values" in sampler_node and len(sampler_node["widgets_values"]) > 2:
+                # KSampler widgets: seed, steps, cfg, sampler_name, scheduler, denoise
+                try:
+                    prompt_info["guidance_scale"] = float(sampler_node["widgets_values"][2])
+                except (ValueError, TypeError):
+                    pass
 
-                    if is_negative and not prompt_info["negative_prompt"]:
-                        prompt_info["negative_prompt"] = text
-                    elif not is_negative and not prompt_info["positive_prompt"]:
-                        prompt_info["positive_prompt"] = text
-                        positive_found = True
+            # Break after finding prompts from the first sampler, or continue if multiple samplers are relevant
+            if prompt_info["positive_prompt"] and prompt_info["negative_prompt"]:
+                break
 
-            elif node_type == "ImpactWildcardEncode":
-                widgets = node.get("widgets_values", [])
-                if widgets and widgets[0] and not prompt_info["positive_prompt"]:
-                    prompt_info["positive_prompt"] = widgets[0]
-                    positive_found = True
-
-            elif node_type == "FluxGuidance":
-                widgets = node.get("widgets_values", [])
-                if widgets:
-                    prompt_info["guidance_scale"] = widgets[0]
+        # Fallback for FluxGuidance if not connected directly to KSampler
+        if not prompt_info["guidance_scale"]:
+            for node in nodes.values():
+                node_type = node.get("type") or node.get("class_type")
+                if node_type == "FluxGuidance":
+                    widgets = node.get("widgets_values", [])
+                    if widgets:
+                        prompt_info["guidance_scale"] = widgets[0]
+                    break
 
         return prompt_info
 
-    def _extract_sampling_info(self, nodes: dict[str, NodeData]) -> dict[str, Any]:
-        """Extract sampling-related information."""
-        sampling_info = {
-            "sampler": None,
-            "scheduler": None,
-            "steps": None,
-            "cfg_scale": None,
-            "seed": None,
-            "width": None,
-            "height": None,
-        }
+    def _trace_conditioning_source(
+        self,
+        nodes: dict[str, NodeData],
+        links: list[Any],
+        start_node_id: str,
+        depth: int = 0,
+    ) -> str | None:
+        """Recursively traces back the conditioning source to find the prompt text."""
+        if depth > 10:  # Prevent infinite loops in complex workflows
+            self.logger.debug(f"Max tracing depth reached for node {start_node_id}")
+            return None
 
-        for node in nodes.values():
-            node_type = node.get("type") or node.get("class_type")
-            widgets = node.get("widgets_values", [])
-            inputs = node.get("inputs", {})
+        current_node = nodes.get(start_node_id)
+        if not current_node:
+            return None
 
-            if node_type == "KSamplerSelect" and widgets:
-                sampling_info["sampler"] = widgets[0]
+        class_type = current_node.get("type") or current_node.get("class_type")
+        inputs = current_node.get("inputs", {})
+        widgets = current_node.get("widgets_values", [])
 
-            elif node_type == "BasicScheduler" and len(widgets) >= 2:
-                sampling_info["scheduler"] = widgets[0]
-                sampling_info["steps"] = widgets[1]
+        # Direct text sources
+        if class_type == "String Literal":
+            if widgets:
+                return str(widgets[0])
+        elif class_type == "CLIPTextEncode":
+            # Prioritize linked 'text' input over widget values if available
+            if "text" in inputs and isinstance(inputs["text"], list) and len(inputs["text"]) >= 2:
+                source_node_id = str(inputs["text"][0])
+                traced_text = self._trace_conditioning_source(nodes, links, source_node_id, depth + 1)
+                if traced_text:
+                    self.logger.debug(f"CLIPTextEncode (linked input) found text: {traced_text}")
+                    return traced_text
+            elif "text" in inputs:  # Direct text input
+                self.logger.debug(f"CLIPTextEncode (direct input) found text: {inputs['text']}")
+                return str(inputs["text"])
+            elif widgets:
+                self.logger.debug(f"CLIPTextEncode (widgets) found text: {widgets[0]}")
+                return str(widgets[0])
+        elif class_type == "CLIPTextEncodeSDXL":
+            # For SDXL, we need to know if it's positive or negative branch
+            # This method is called from positive/negative links, so we assume the role
+            if "text_g" in inputs:  # Assuming text_g is for positive, text_l for negative
+                return str(inputs["text_g"])
+            if "text_l" in inputs:
+                return str(inputs["text_l"])
+        elif class_type == "T5TextEncode":
+            if "text" in inputs:
+                return str(inputs["text"])
+        elif class_type == "MZ_ChatGLM3_V2":  # New: ChatGLM3 text encoder
+            if widgets and widgets[0]:
+                return str(widgets[0])
+        elif class_type == "DPRandomGenerator":  # Dynamic Prompts
+            # DPRandomGenerator outputs a string, which is the template itself
+            if "text" in inputs:
+                return str(inputs["text"])
+            if widgets and widgets[0]:
+                return str(widgets[0])
+        elif class_type == "ConcatStringSingle":  # ConcatStringSingle
+            # Recursively trace all string inputs and concatenate them
+            concatenated_text = []
+            for input_name, input_value in inputs.items():
+                if input_name.startswith("string"):
+                    if isinstance(input_value, list) and len(input_value) >= 2:
+                        source_node_id = str(input_value[0])
+                        traced_text = self._trace_conditioning_source(nodes, links, source_node_id, depth + 1)
+                        if traced_text:
+                            concatenated_text.append(traced_text)
+                    elif isinstance(input_value, str):
+                        concatenated_text.append(input_value)
+            return " ".join(concatenated_text).strip()
 
-            elif node_type == "RandomNoise" and widgets:
-                sampling_info["seed"] = widgets[0]
+        # Traverse through passthrough/reroute nodes or conditioning manipulators
+        if class_type in [
+            "Reroute",
+            "ConditioningCombine",
+            "ConditioningConcat",
+            "ConditioningSetArea",
+            "ConditioningSetTimestepRange",
+            "ConditioningAverage",
+            "ConditioningZeroOut",
+            "ConditioningSetAreaPercentage",
+            "ConditioningAlign",
+            "ConditioningSetAreaLite",
+            "ConditioningSetAreaByMask",
+            "ConditioningSetAreaByBoundingBox",
+            "ConditioningSetAreaByImage",
+            "ConditioningSetAreaByImageSize",
+            "ConditioningSetAreaByImageSizeRatio",
+            "ConditioningSetAreaByImageSizeRatioPercentage",
+            "ConditioningSetAreaByImageSizeRatioPercentageByMask",
+            "ConditioningSetAreaByImageSizeRatioPercentageByBoundingBox",
+            "ConditioningSetAreaByImageSizeRatioPercentageByImage",
+            "ConditioningSetAreaByImageSizeRatioPercentageByImageSizeRatio",
+            "ConditioningSetAreaByImageSizeRatioPercentageByImageSizeRatioPercentage",
+            "ConditioningSubtract",
+            "ConditioningAddConDelta",
+        ]:
+            # Find the incoming link for the conditioning
+            for input_name, input_value in inputs.items():
+                if isinstance(input_value, list) and len(input_value) >= 2:
+                    # This is a connection to another node
+                    source_node_id = str(input_value[0])
+                    # Recursively trace back
+                    result = self._trace_conditioning_source(nodes, links, source_node_id, depth + 1)
+                    if result:
+                        return result
 
-            elif node_type == "EmptyLatentImage":
-                if len(widgets) >= 2:
-                    sampling_info["width"] = widgets[0]
-                    sampling_info["height"] = widgets[1]
-                elif inputs:
-                    sampling_info["width"] = inputs.get("width")
-                    sampling_info["height"] = inputs.get("height")
+        # Handle nodes that might pass through conditioning without direct text input
+        # e.g., LoraLoader, CheckpointLoaderSimple (if they output conditioning directly)
+        # This part might need more specific logic based on how these nodes are used
+        # in relation to conditioning in complex workflows.
 
-            elif node_type == "KSampler_A1111" and inputs:
-                sampling_info["sampler"] = inputs.get("sampler_name")
-                sampling_info["scheduler"] = inputs.get("scheduler")
-                sampling_info["steps"] = inputs.get("steps")
-                sampling_info["cfg_scale"] = inputs.get("cfg")
-                sampling_info["seed"] = inputs.get("seed")
-
-            elif node_type == "Int Literal" and widgets:
-                # Try to determine if this is width or height based on title
-                title = node.get("title", "").lower()
-                if "width" in title:
-                    sampling_info["width"] = widgets[0]
-                elif "height" in title:
-                    sampling_info["height"] = widgets[0]
-
-        return sampling_info
-
-    def _analyze_workflow_chains(self, nodes: dict[str, NodeData], links: list[Any]) -> dict[str, list[str]]:
-        """Analyze the workflow connection chains."""
-        chains = {
-            "model_chain": [],
-            "conditioning_chain": [],
-            "sampling_chain": [],
-            "output_chain": [],
-        }
-
-        # Identify chains based on common patterns
-        common_chains = self.node_dictionary.get("common_connections", {})
-
-        for chain_name, expected_types in common_chains.items():
-            found_types = []
-            for node in nodes.values():
-                node_type = node.get("type") or node.get("class_type")
-                if node_type in expected_types:
-                    found_types.append(node_type)
-
-            chains[chain_name] = found_types
-
-        return chains
+        return None
 
 
 # Convenience function for easy access

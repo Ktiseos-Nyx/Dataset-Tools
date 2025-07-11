@@ -1,0 +1,194 @@
+/* hide (Pink Spider) Visual Kei Theme */
+
+/* Main window - Dark with pink accents */
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1C1C1C, stop: 1 #000000);
+    color: #FFFFFF;
+    
+}
+
+/* Pink Spider Buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF1493, stop: 1 #C71585);
+    border: 2px solid #FF69B4;
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 11pt;
+    padding: 8px 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF69B4, stop: 1 #FF1493);
+    border: 2px solid #FF00FF;
+    color: #000000;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B0000, stop: 1 #FF1493);
+    border: 2px solid #FFFFFF;
+}
+
+/* Visual Kei Frames */
+QFrame {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2F2F2F, stop: 1 #000000);
+    border: 2px solid #FF1493;
+    border-radius: 10px;
+}
+
+/* Text areas with neon glow effect */
+QTextEdit, QPlainTextEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 1 #1C1C1C);
+    border: 2px solid #FF1493;
+    border-radius: 8px;
+    color: #FFDDEE;
+    
+    font-size: 10pt;
+    selection-background-color: #FF69B4;
+    selection-color: #000000;
+}
+
+/* List widgets - Visual Kei style */
+QListWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1C1C1C, stop: 1 #000000);
+    border: 2px solid #FF1493;
+    border-radius: 8px;
+    color: #FFFFFF;
+    
+    font-weight: bold;
+    alternate-background-color: #2F2F2F;
+}
+
+QListWidget::item {
+    padding: 6px;
+    border-bottom: 1px solid #444444;
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #FF1493, stop: 1 #8B0000);
+    color: #FFFFFF;
+    border: 1px solid #FF69B4;
+    border-radius: 4px;
+}
+
+QListWidget::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #4B0082, stop: 1 #FF1493);
+    color: #FFDDEE;
+}
+
+/* Menu bar - Rock star style */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2F2F2F, stop: 1 #1C1C1C);
+    border-bottom: 3px solid #FF1493;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 11pt;
+    
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF1493, stop: 1 #C71585);
+    color: #FFFFFF;
+    border-radius: 4px;
+}
+
+/* Menus */
+QMenu {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1C1C1C, stop: 1 #000000);
+    border: 2px solid #FF1493;
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-weight: bold;
+    
+}
+
+QMenu::item {
+    padding: 6px 20px;
+}
+
+QMenu::item:selected {
+    background: #FF1493;
+    color: #FFFFFF;
+    border-radius: 4px;
+}
+
+/* Status bar - Stage lighting effect */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #FF1493, stop: 0.5 #1C1C1C, stop: 1 #FF1493);
+    border-top: 2px solid #FF69B4;
+    color: #FFFFFF;
+    font-weight: bold;
+    
+}
+
+/* Scrollbars - Pink spider web style */
+QScrollBar:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #1C1C1C, stop: 1 #000000);
+    width: 18px;
+    border: 1px solid #FF1493;
+    border-radius: 9px;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #FF1493, stop: 1 #C71585);
+    border: 1px solid #FF69B4;
+    border-radius: 8px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #FF69B4, stop: 1 #FF1493);
+    border: 1px solid #FF00FF;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: #1C1C1C;
+    border: 1px solid #FF1493;
+    height: 18px;
+    border-radius: 9px;
+}
+
+/* Labels with neon glow effect */
+QLabel {
+    color: #FFFFFF;
+    font-weight: bold;
+    
+}
+
+QLabel[accessibleName="title"] {
+    color: #FF1493;
+    font-size: 18pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+QLabel[accessibleName="subtitle"] {
+    color: #FFDDEE;
+    font-size: 12pt;
+    font-style: italic;
+}

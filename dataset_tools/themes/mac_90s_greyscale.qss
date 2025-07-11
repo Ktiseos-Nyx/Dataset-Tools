@@ -1,0 +1,88 @@
+/* Classic 90s Greyscale Mac Theme */
+
+QMainWindow {
+    background-color: #CCCCCC; /* Light grey background */
+    color: #000000;
+}
+
+QWidget {
+    background-color: #CCCCCC; /* Light grey content areas */
+    color: #000000;
+}
+
+/* Window Title Bar / Menu Bar */
+QMenuBar {
+    background-color: #999999; /* Medium grey */
+    color: #000000;
+    border-bottom: 1px solid #666666;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background-color: #000000;
+    color: #FFFFFF;
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #BBBBBB;
+    border: 1px solid #666666;
+    padding: 4px 8px;
+    color: #000000;
+}
+
+QPushButton:hover {
+    background-color: #AAAAAA;
+}
+
+QPushButton:pressed {
+    background-color: #888888;
+}
+
+/* Text Inputs */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #000000;
+    padding: 2px;
+    color: #000000;
+}
+
+/* List Widgets */
+QListWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #000000;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background-color: #000000;
+    color: #FFFFFF;
+}
+
+/* Status Bar */
+QStatusBar {
+    background-color: #999999;
+    color: #000000;
+    border-top: 1px solid #666666;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    background-color: #BBBBBB;
+    width: 12px;
+    border: 1px solid #666666;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #888888;
+    border: 1px solid #666666;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #777777;
+}

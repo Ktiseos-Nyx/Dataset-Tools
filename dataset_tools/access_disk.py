@@ -11,8 +11,9 @@ from pathlib import Path
 import pyexiv2  # Assuming pyexiv2 is a required dependency
 import toml
 
-from .correct_types import DownField, EmptyField, UpField
+from .correct_types import DownField, EmptyField
 from .correct_types import ExtensionType as Ext
+from .correct_types import UpField
 from .logger import debug_monitor
 from .logger import info_monitor as nfo
 

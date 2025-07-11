@@ -1,0 +1,256 @@
+{
+  "parser_name": "FLUX Workflow",
+  "priority": 140,
+  "description": "Detects FLUX model workflows with proper positive/negative prompt identification",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be a valid ComfyUI workflow",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain FLUX-specific nodes",
+      "source_type": "pil_info_key_json_path_query",
+      "source_key_options": [
+        "workflow",
+        "prompt"
+      ],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "FluxGuidance",
+        "ModelSamplingFlux",
+        "DualCLIPLoader"
+      ]
+    },
+    {
+      "comment": "Rule 3: Must contain UNETLoader or model loading",
+      "source_type": "pil_info_key_json_path_query",
+      "source_key_options": [
+        "workflow",
+        "prompt"
+      ],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "UNETLoader",
+        "CheckpointLoaderSimple"
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfyui_extract_flux_positive_prompt"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_extract_flux_negative_prompt"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "UNETLoader",
+          "CheckpointLoaderSimple"
+        ],
+        "input_field": "unet_name",
+        "data_type": "string",
+        "fallback": "Unknown FLUX Model"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "BasicScheduler"
+        ],
+        "input_field": "steps",
+        "data_type": "integer",
+        "fallback": 20
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "FluxGuidance"
+        ],
+        "input_field": "guidance",
+        "data_type": "float",
+        "fallback": 3.5
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "KSamplerSelect"
+        ],
+        "input_field": "sampler_name",
+        "data_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "BasicScheduler"
+        ],
+        "input_field": "scheduler",
+        "data_type": "string",
+        "fallback": "simple"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "ModelSamplingFlux"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "ModelSamplingFlux"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "loras",
+        "method": "comfyui_extract_lora_stack_info"
+      },
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis",
+        "target_key": "workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "multi_stage_conditioning",
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "FLUX Workflow",
+      "tool": "ComfyUI (FLUX)",
+      "format": "FLUX Model Workflow",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "loras": "$loras",
+      "architecture_info": {
+        "detected_as": "FLUX architecture",
+        "text_encoder": "T5 + CLIP-L",
+        "model_type": "Diffusion Transformer",
+        "guidance_system": "FluxGuidance",
+        "sampling_method": "Custom Advanced"
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 140,
+        "confidence": "high",
+        "flux_workflow": true,
+        "advanced_sampling": true
+      }
+    }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Specifically designed for FLUX model workflows",
+    "Uses proper conditioning chain analysis to identify positive/negative prompts",
+    "Follows FluxGuidance and ControlNet connections for accurate prompt extraction",
+    "Priority 140 puts it above general ComfyUI parsers to catch FLUX workflows",
+    "Handles FLUX-specific parameter extraction from specialized nodes",
+    "Includes comprehensive advanced metadata extraction"
+  ],
+  "test_cases": [
+    {
+      "description": "FLUX workflow with FluxGuidance and ControlNet",
+      "expected_fields": [
+        "prompt",
+        "negative_prompt",
+        "parameters.steps",
+        "parameters.cfg_scale",
+        "workflow_complexity"
+      ]
+    }
+  ],
+  "enhanced_with_node_discovery": true,
+  "enhancement_date": "2025-07-08"
+}
