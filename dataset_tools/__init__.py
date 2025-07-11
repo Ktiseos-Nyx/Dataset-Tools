@@ -26,7 +26,7 @@ if "pytest" in sys.modules:
 
 # --- Version ---
 try:
-    __version__ = metadata.version("dataset-tools")
+    __version__ = metadata.version("kn-dataset-tools")
 except metadata.PackageNotFoundError:
     # Fallback version if not installed (e.g., running from source directly)
     __version__ = "0.0.0-dev"
