@@ -61,11 +61,11 @@ def _format_prompts(metadata_dict: dict[str, Any]) -> tuple[str, str]:
     if isinstance(prompt_section, dict):
         positive = str(prompt_section.get("Positive", "")).strip()
         negative = str(prompt_section.get("Negative", "")).strip()
-        
+
         # If we found prompts in the structured section, return them
         if positive or negative:
             return positive, negative
-    
+
     # Fallback: check root level for direct prompt fields (e.g., Drawthings JSON parser)
     positive = str(metadata_dict.get("prompt", "")).strip()
     negative = str(metadata_dict.get("negative_prompt", "")).strip()

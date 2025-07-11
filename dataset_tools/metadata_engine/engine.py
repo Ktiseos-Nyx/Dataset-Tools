@@ -158,24 +158,26 @@ class MetadataEngine:
             display_name = getattr(file_input, "name", str(file_input))
             print(f"[DEBUG] display_name: {display_name}")
             self.logger.info(f"MetadataEngine: Starting metadata parsing for: {display_name}")
-            print(f"[DEBUG] Logger info call completed")
+            print("[DEBUG] Logger info call completed")
         except Exception as e:
             print(f"[DEBUG] Exception in get_parser_for_file start: {e}")
             self.logger.error(f"MetadataEngine: Exception at very start: {e}")
             return None
 
         # Prepare context data
-        print(f"[DEBUG] About to call context_preparer.prepare_context")
+        print("[DEBUG] About to call context_preparer.prepare_context")
         context_data = self.context_preparer.prepare_context(file_input)
         print(f"[DEBUG] prepare_context returned: {type(context_data)} - {bool(context_data)}")
         if not context_data:
-            print(f"[DEBUG] Context data is None/empty, returning None")
+            print("[DEBUG] Context data is None/empty, returning None")
             self.logger.warning(f"Failed to prepare context data for {display_name}")
             return None
-        
-        print(f"[DEBUG] Context data looks good, continuing to find matching parser")
+
+        print("[DEBUG] Context data looks good, continuing to find matching parser")
         print(f"[DEBUG] Context data keys: {list(context_data.keys())}")
-        print(f"[DEBUG] raw_user_comment_str: {context_data.get('raw_user_comment_str', 'NOT_FOUND')[:100] if context_data.get('raw_user_comment_str') else 'EMPTY'}")
+        print(
+            f"[DEBUG] raw_user_comment_str: {context_data.get('raw_user_comment_str', 'NOT_FOUND')[:100] if context_data.get('raw_user_comment_str') else 'EMPTY'}"
+        )
 
         # Find matching parser definition
         chosen_parser_def = self._find_matching_parser(context_data)

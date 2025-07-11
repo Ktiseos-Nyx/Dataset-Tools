@@ -36,7 +36,6 @@ def handle_file_selection(main_window: "MainWindow", current_item: Qw.QListWidge
         # ...it's better to just call the method on MainWindow. Your original
         # code was correct.
 
-
         formatted_data = format_metadata_for_display(
             {main_window.EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}}
         )

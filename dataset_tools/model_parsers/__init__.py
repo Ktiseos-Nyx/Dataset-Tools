@@ -39,7 +39,8 @@ except Exception as e_base_other:  # Keep broad for bootstrap phase
 # --- Attempt to import SafetensorsParser ---
 if BaseModelParser and ModelParserStatus:
     try:
-        from .safetensors_parser import SafetensorsParser as _SafetensorsParser_temp
+        from .safetensors_parser import \
+            SafetensorsParser as _SafetensorsParser_temp
 
         SafetensorsParser = _SafetensorsParser_temp
         print(

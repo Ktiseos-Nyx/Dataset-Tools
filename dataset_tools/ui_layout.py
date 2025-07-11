@@ -3,11 +3,10 @@ import logging
 
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets as Qw
-from PyQt6.QtGui import QTextOption
 
+from .ui.font_manager import get_monospace_font, get_reading_font
 # Import your custom widgets. These must be defined in widgets.py first.
 from .widgets import ImageLabel, LeftPanelWidget
-from .ui.font_manager import get_monospace_font, get_reading_font
 
 log = logging.getLogger(__name__)
 

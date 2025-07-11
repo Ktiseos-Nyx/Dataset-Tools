@@ -23,7 +23,8 @@ from ..logger import debug_monitor, get_logger
 from ..logger import info_monitor as nfo
 from .image_metadata_reader import ImageMetadataExtractor, ImageMetadataReader
 from .schema_file_reader import SchemaFileReader, StructuredDataAnalyzer
-from .text_file_reader import PromptFileReader, TextContentAnalyzer, TextFileReader
+from .text_file_reader import (PromptFileReader, TextContentAnalyzer,
+                               TextFileReader)
 
 
 class FileReaderFactory:

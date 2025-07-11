@@ -65,12 +65,17 @@ class ContextDataPreparer:
         except (FileNotFoundError, UnidentifiedImageError, OSError) as e:
             # If it fails, it's either not an image or the file is inaccessible
             # Proceed to process as a non-image file type (JSON, TXT, etc.)
-            self.logger.info(f"[CONTEXT_PREP] Failed as image ({e}), trying as non-image: {context.get('file_path_original')}")
+            self.logger.info(
+                f"[CONTEXT_PREP] Failed as image ({e}), trying as non-image: {context.get('file_path_original')}"
+            )
             result = self._process_as_non_image(file_input, context)
             self.logger.info(f"[CONTEXT_PREP] Successfully processed as non-image: {context.get('file_path_original')}")
             return result
         except Exception as e:
-            self.logger.error(f"[CONTEXT_PREP] Unhandled error preparing context for {context.get('file_path_original')}: {e}", exc_info=True)
+            self.logger.error(
+                f"[CONTEXT_PREP] Unhandled error preparing context for {context.get('file_path_original')}: {e}",
+                exc_info=True,
+            )
             return None
         finally:
             gc.collect()  # Good practice to force GC after any file processing
@@ -106,19 +111,23 @@ class ContextDataPreparer:
     def _process_as_image(self, file_input: FileInput, context: ContextData) -> ContextData:
         """Process the input as an image file with a clear, single-pass logic."""
         self.logger.info(f"[CONTEXT_PREP] Processing as image: {context['file_path_original']}")
-        
+
         with Image.open(file_input) as img:
             # --- STRENGTHENING: Centralize basic info extraction ---
-            context.update({
-                "pil_info": img.info.copy() if img.info else {},
-                "width": img.width,
-                "height": img.height,
-                "file_format": img.format.upper() if img.format else "",
-            })
+            context.update(
+                {
+                    "pil_info": img.info.copy() if img.info else {},
+                    "width": img.width,
+                    "height": img.height,
+                    "file_format": img.format.upper() if img.format else "",
+                }
+            )
 
             # Handle extremely large images by stopping early
             if img.width * img.height > MAX_IMAGE_PIXELS:
-                self.logger.warning(f"Large image ({img.width}x{img.height}) detected. Performing minimal metadata extraction.")
+                self.logger.warning(
+                    f"Large image ({img.width}x{img.height}) detected. Performing minimal metadata extraction."
+                )
                 self._extract_minimal_metadata(context)
                 return context
 
@@ -127,7 +136,7 @@ class ContextDataPreparer:
             self._extract_exif_data(context)
             self._extract_xmp_data(context)
             self._extract_png_chunks(context)
-            
+
             # --- STRENGTHENING: Centralized JSON parsing logic ---
             # After all text fields are populated, try to parse the most likely one.
             self._find_and_parse_comfyui_json(context)
@@ -147,7 +156,7 @@ class ContextDataPreparer:
         if not exif_bytes:
             self.logger.info(f"[CONTEXT_PREP] No EXIF data found in PIL info for: {context.get('file_path_original')}")
             return
-        
+
         self.logger.info(f"[CONTEXT_PREP] Found EXIF data, processing: {context.get('file_path_original')}")
 
         try:
@@ -168,7 +177,9 @@ class ContextDataPreparer:
                     user_comment = piexif.helper.UserComment.load(uc_bytes)
                     if user_comment and user_comment.strip():
                         context["raw_user_comment_str"] = user_comment.strip()
-                        self.logger.info(f"Successfully decoded UserComment: {len(user_comment)} chars - starts with: {user_comment[:100]}")
+                        self.logger.info(
+                            f"Successfully decoded UserComment: {len(user_comment)} chars - starts with: {user_comment[:100]}"
+                        )
                     else:
                         self.logger.debug("UserComment decoded but empty")
                 except Exception as e:
@@ -193,14 +204,14 @@ class ContextDataPreparer:
         # The first 8 bytes often define the encoding.
         codec_header = data[:8]
         comment_bytes = data[8:]
-        
+
         try:
             if codec_header == b"ASCII\x00\x00\x00":
-                return comment_bytes.decode("ascii").strip('\x00')
+                return comment_bytes.decode("ascii").strip("\x00")
             if codec_header == b"UNICODE\x00":  # A common variation for UTF-16
-                return comment_bytes.decode("utf-16le").strip('\x00')
+                return comment_bytes.decode("utf-16le").strip("\x00")
             if codec_header == b"UTF-8\x00\x00\x00":
-                return comment_bytes.decode("utf-8").strip('\x00')
+                return comment_bytes.decode("utf-8").strip("\x00")
         except Exception:
             pass  # Fall through to other strategies
 
@@ -209,36 +220,35 @@ class ContextDataPreparer:
             try:
                 # Try with header skipped first (EXIF UserComment often has 8-byte header)
                 if len(data) > 8:
-                    decoded = data[8:].decode(encoding).strip('\x00').strip()
+                    decoded = data[8:].decode(encoding).strip("\x00").strip()
                     if decoded and len(decoded) > 10:  # Reasonable length
                         return decoded
-                
+
                 # Try full data
-                decoded = data.decode(encoding).strip('\x00').strip()
+                decoded = data.decode(encoding).strip("\x00").strip()
                 if decoded and len(decoded) > 10:  # Reasonable length
                     return decoded
-                    
+
             except UnicodeDecodeError:
                 continue
 
         # Final Fallback: Decode with replacement characters to salvage what we can
-        return data.decode("utf-8", errors="replace").strip().strip('\x00')
+        return data.decode("utf-8", errors="replace").strip().strip("\x00")
 
     def _find_and_parse_comfyui_json(self, context: ContextData) -> None:
-        """
-        After all metadata is extracted, find the most likely source of ComfyUI
+        """After all metadata is extracted, find the most likely source of ComfyUI
         workflow JSON and parse it.
         """
         # --- STRENGTHENING: Prioritized search for the workflow string ---
         potential_sources = [
-            context.get("raw_user_comment_str"),           # Highest priority
-            context["png_chunks"].get("workflow"),          # ComfyUI's native PNG chunk
-            context["png_chunks"].get("prompt"),            # Also used by ComfyUI
-            context["png_chunks"].get("parameters"),        # A1111 format, sometimes adopted
+            context.get("raw_user_comment_str"),  # Highest priority
+            context["png_chunks"].get("workflow"),  # ComfyUI's native PNG chunk
+            context["png_chunks"].get("prompt"),  # Also used by ComfyUI
+            context["png_chunks"].get("parameters"),  # A1111 format, sometimes adopted
         ]
 
         for source_str in potential_sources:
-            if isinstance(source_str, str) and source_str.strip().startswith('{'):
+            if isinstance(source_str, str) and source_str.strip().startswith("{"):
                 try:
                     # Found a potential JSON, try to parse it
                     parsed_json = json.loads(source_str)
@@ -342,6 +352,7 @@ class ContextDataPreparer:
         """Process a SafeTensors model file."""
         try:
             from ..model_parsers.safetensors_parser import SafetensorsParser
+
             parser = SafetensorsParser(context["file_path_original"])
             if parser.parse():
                 context["safetensors_metadata"] = parser.metadata_header
@@ -358,7 +369,8 @@ class ContextDataPreparer:
         try:
             # Import here to avoid dependency issues if not available
             try:
-                from ..model_parsers.gguf_parser import GGUFParser, ModelParserStatus
+                from ..model_parsers.gguf_parser import (GGUFParser,
+                                                         ModelParserStatus)
             except ImportError:
                 self.logger.error("GGUFParser module not found. Skipping GGUF parsing.")
                 return context

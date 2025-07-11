@@ -54,6 +54,7 @@ class ComfyUITraversalExtractor:
 
         Returns:
             A tuple of (source_node_id, output_slot_name) or None if not found.
+
         """
         node = self.get_node_by_id(nodes, node_id)
         if not node:
@@ -96,6 +97,7 @@ class ComfyUITraversalExtractor:
 
         Returns:
             A tuple of (node_id, output_slot_name) or None if not found.
+
         """
         if isinstance(nodes, dict):
             node_items = nodes.items()
@@ -126,6 +128,7 @@ class ComfyUITraversalExtractor:
 
         Returns:
             The traced text content or an empty string if not found.
+
         """
         nodes = self.get_nodes_from_data(data)
         visited = set()
@@ -149,11 +152,18 @@ class ComfyUITraversalExtractor:
                 return text_content
 
             # Handle text encoder nodes
-            if any(encoder_type in node_type for encoder_type in [
-                "CLIPTextEncode", "T5TextEncode", "ImpactWildcardEncode",
-                "BNK_CLIPTextEncodeAdvanced", "CLIPTextEncodeAdvanced",
-                "PixArtT5TextEncode", "DPRandomGenerator"
-            ]):
+            if any(
+                encoder_type in node_type
+                for encoder_type in [
+                    "CLIPTextEncode",
+                    "T5TextEncode",
+                    "ImpactWildcardEncode",
+                    "BNK_CLIPTextEncodeAdvanced",
+                    "CLIPTextEncodeAdvanced",
+                    "PixArtT5TextEncode",
+                    "DPRandomGenerator",
+                ]
+            ):
                 widgets = node.get("widgets_values", [])
                 if widgets and isinstance(widgets[0], str):
                     text_content = widgets[0]
@@ -166,11 +176,15 @@ class ComfyUITraversalExtractor:
                 if isinstance(inputs, dict):
                     populated_text = inputs.get("populated_text", "")
                     if isinstance(populated_text, str) and populated_text.strip():
-                        self.logger.debug(f"[TRAVERSAL] Found ImpactWildcardProcessor populated_text: {populated_text[:50]}...")
+                        self.logger.debug(
+                            f"[TRAVERSAL] Found ImpactWildcardProcessor populated_text: {populated_text[:50]}..."
+                        )
                         return populated_text
                     wildcard_text = inputs.get("wildcard_text", "")
                     if isinstance(wildcard_text, str) and wildcard_text.strip():
-                        self.logger.debug(f"[TRAVERSAL] Found ImpactWildcardProcessor wildcard_text: {wildcard_text[:50]}...")
+                        self.logger.debug(
+                            f"[TRAVERSAL] Found ImpactWildcardProcessor wildcard_text: {wildcard_text[:50]}..."
+                        )
                         return wildcard_text
 
             if "AutoNegativePrompt" in node_type:
@@ -178,7 +192,9 @@ class ComfyUITraversalExtractor:
                 if isinstance(inputs, dict):
                     base_negative = inputs.get("base_negative", "")
                     if isinstance(base_negative, str) and base_negative.strip():
-                        self.logger.debug(f"[TRAVERSAL] Found AutoNegativePrompt base_negative: {base_negative[:50]}...")
+                        self.logger.debug(
+                            f"[TRAVERSAL] Found AutoNegativePrompt base_negative: {base_negative[:50]}..."
+                        )
                         return base_negative
 
             # Handle ConcatStringSingle nodes
@@ -190,25 +206,56 @@ class ComfyUITraversalExtractor:
                         source_node_id, _ = link_info
                         traced_part = trace_recursive(source_node_id, depth + 1)
                         concatenated_text += traced_part
-                self.logger.debug(f"[TRAVERSAL] Found ConcatStringSingle concatenated_text: {concatenated_text[:50]}...")
+                self.logger.debug(
+                    f"[TRAVERSAL] Found ConcatStringSingle concatenated_text: {concatenated_text[:50]}..."
+                )
                 return concatenated_text
 
             # Handle intermediate nodes that pass through data
-            elif node_type in [
-                "ConditioningConcat", "ConditioningCombine", "ConditioningAverage",
-                "ConditioningSetArea", "ConditioningSetMask", "ConditioningMultiply",
-                "ConditioningSubtract", "ConditioningAddConDelta", "CFGlessNegativePrompt",
-                "Reroute", "LoraLoader", "CheckpointLoaderSimple", "UNETLoader", "VAELoader",
-                "ModelSamplingFlux", "BasicGuider", "SamplerCustomAdvanced", "FluxGuidance",
-                "ConditioningRecastFP64", "ImpactConcatConditionings", "ImpactCombineConditionings",
-                "ControlNetApplyAdvanced", "ControlNetApply", "ControlNetApplySD3"
+            if node_type in [
+                "ConditioningConcat",
+                "ConditioningCombine",
+                "ConditioningAverage",
+                "ConditioningSetArea",
+                "ConditioningSetMask",
+                "ConditioningMultiply",
+                "ConditioningSubtract",
+                "ConditioningAddConDelta",
+                "CFGlessNegativePrompt",
+                "Reroute",
+                "LoraLoader",
+                "CheckpointLoaderSimple",
+                "UNETLoader",
+                "VAELoader",
+                "ModelSamplingFlux",
+                "BasicGuider",
+                "SamplerCustomAdvanced",
+                "FluxGuidance",
+                "ConditioningRecastFP64",
+                "ImpactConcatConditionings",
+                "ImpactCombineConditionings",
+                "ControlNetApplyAdvanced",
+                "ControlNetApply",
+                "ControlNetApplySD3",
             ]:
-                self.logger.debug(f"[TRAVERSAL] Encountered intermediate node type: {node_type}. Attempting to follow inputs.")
-                for input_name_candidate in ["conditioning", "model", "clip", "samples", "latent_image", "string_a", "string_b"]:
+                self.logger.debug(
+                    f"[TRAVERSAL] Encountered intermediate node type: {node_type}. Attempting to follow inputs."
+                )
+                for input_name_candidate in [
+                    "conditioning",
+                    "model",
+                    "clip",
+                    "samples",
+                    "latent_image",
+                    "string_a",
+                    "string_b",
+                ]:
                     link_info = self.follow_input_link(nodes, node_id, input_name_candidate)
                     if link_info:
                         source_node_id, _ = link_info
-                        self.logger.debug(f"[TRAVERSAL] Following input '{input_name_candidate}' from {node_id} to {source_node_id}")
+                        self.logger.debug(
+                            f"[TRAVERSAL] Following input '{input_name_candidate}' from {node_id} to {source_node_id}"
+                        )
                         traced_text = trace_recursive(source_node_id, depth + 1)
                         if traced_text:
                             return traced_text
@@ -221,7 +268,9 @@ class ComfyUITraversalExtractor:
                             if input_link_id:
                                 source_node_id = self._find_source_node_for_link(data, input_link_id)
                                 if source_node_id:
-                                    self.logger.debug(f"[TRAVERSAL] Following generic input link {input_link_id} from {node_id} to {source_node_id}")
+                                    self.logger.debug(
+                                        f"[TRAVERSAL] Following generic input link {input_link_id} from {node_id} to {source_node_id}"
+                                    )
                                     traced_text = trace_recursive(source_node_id, depth + 1)
                                     if traced_text:
                                         return traced_text
@@ -266,6 +315,7 @@ class ComfyUITraversalExtractor:
 
         Returns:
             A list of connected node IDs.
+
         """
         connected = []
         start_node = self.get_node_by_id(nodes, start_node_id)

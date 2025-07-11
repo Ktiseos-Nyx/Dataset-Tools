@@ -299,7 +299,7 @@ class MenuManager:
         view_menu.addMenu(themes_menu)
 
         # Use enhanced theme manager if available, fallback to standard
-        if hasattr(self.main_window, 'enhanced_theme_manager'):
+        if hasattr(self.main_window, "enhanced_theme_manager"):
             self.main_window.enhanced_theme_manager.create_theme_menus(themes_menu)
         elif self.theme_manager:
             self.theme_manager.create_theme_actions(themes_menu)
@@ -316,7 +316,7 @@ class MenuManager:
             about_action.triggered.connect(self.main_window.show_about_dialog)
 
         help_menu.addAction(about_action)
-        
+
         # Add theme report action
         if hasattr(self.main_window, "show_theme_report"):
             theme_report_action = QtGui.QAction("&Theme Report...", self.main_window)
@@ -429,11 +429,11 @@ class LayoutManager:
             text_box = Qw.QTextEdit()
             text_box.setReadOnly(True)
             text_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
-            
+
             # Enable word wrap for proper text display
             text_box.setWordWrapMode(QTextOption.WrapMode.WordWrap)
             text_box.setLineWrapMode(Qw.QTextEdit.LineWrapMode.WidgetWidth)
-            
+
             # Set appropriate font based on content type
             if box_name == "generation_data":
                 # Use monospace font for technical metadata
@@ -472,15 +472,26 @@ class LayoutManager:
 
         # Button configurations
         button_configs = [
-            ("copy_metadata_button", "Copy All Metadata", "copy_metadata_to_clipboard",
-             "<b>Copy All Metadata</b><br/>Copy all metadata from the current file to "
-             "clipboard<br/><i>Shortcut: Ctrl+C</i>"),
-            ("settings_button", "Settings", "open_settings_dialog",
-             "<b>Settings</b><br/>Open application settings to configure themes, window size, "
-             "and other preferences<br/><i>Shortcut: Ctrl+S</i>"),
-            ("exit_button", "Exit Application", "close",
-             "<b>Exit Application</b><br/>Close the Dataset Tools application<br/>"
-             "<i>Shortcut: Ctrl+Q</i>"),
+            (
+                "copy_metadata_button",
+                "Copy All Metadata",
+                "copy_metadata_to_clipboard",
+                "<b>Copy All Metadata</b><br/>Copy all metadata from the current file to "
+                "clipboard<br/><i>Shortcut: Ctrl+C</i>",
+            ),
+            (
+                "settings_button",
+                "Settings",
+                "open_settings_dialog",
+                "<b>Settings</b><br/>Open application settings to configure themes, window size, "
+                "and other preferences<br/><i>Shortcut: Ctrl+S</i>",
+            ),
+            (
+                "exit_button",
+                "Exit Application",
+                "close",
+                "<b>Exit Application</b><br/>Close the Dataset Tools application<br/><i>Shortcut: Ctrl+Q</i>",
+            ),
         ]
 
         for attr_name, text, slot_name, tooltip in button_configs:
@@ -656,9 +667,7 @@ class MetadataDisplayManager:
         separator = "\n\n" + "═" * 20 + "\n\n"
         return separator.join(text_parts)
 
-    def _get_box_content_with_label(
-        self, box_attr: str, label_attr: str, default_label: str
-    ) -> str | None:
+    def _get_box_content_with_label(self, box_attr: str, label_attr: str, default_label: str) -> str | None:
         """Get formatted content from a text box with its label."""
         if not hasattr(self.main_window, box_attr):
             return None
@@ -711,9 +720,7 @@ class MetadataDisplayManager:
             for key, value in sorted(data.items()):
                 if value is not None:
                     if isinstance(value, dict):
-                        nested_parts = [
-                            f"  {k}: {v}" for k, v in sorted(value.items()) if v is not None
-                        ]
+                        nested_parts = [f"  {k}: {v}" for k, v in sorted(value.items()) if v is not None]
                         if nested_parts:
                             parts.append(f"{key}:")
                             parts.extend(nested_parts)

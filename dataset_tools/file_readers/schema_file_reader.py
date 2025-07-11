@@ -177,6 +177,7 @@ class SchemaFileReader:
         except Exception as e:
             self.logger.error(f"Error reading YAML file {file_path}: {e}")
             return None
+
     def _read_xml_file(self, file_path: str) -> dict[str, Any] | None:
         """Read and parse an XML file securely (prevents XXE attacks)."""
         if not XML_AVAILABLE:

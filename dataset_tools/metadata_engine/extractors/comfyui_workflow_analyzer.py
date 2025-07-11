@@ -298,9 +298,22 @@ class ComfyUIWorkflowAnalyzer:
 
         # Find KSampler (or similar) nodes
         sampler_nodes = [
-            node for node in nodes.values()
-            if node.get("type") in ["KSampler", "KSamplerAdvanced", "SamplerCustom", "SamplerCustomAdvanced"]
-            or node.get("class_type") in ["KSampler", "KSamplerAdvanced", "SamplerCustom", "SamplerCustomAdvanced"]
+            node
+            for node in nodes.values()
+            if node.get("type")
+            in [
+                "KSampler",
+                "KSamplerAdvanced",
+                "SamplerCustom",
+                "SamplerCustomAdvanced",
+            ]
+            or node.get("class_type")
+            in [
+                "KSampler",
+                "KSamplerAdvanced",
+                "SamplerCustom",
+                "SamplerCustomAdvanced",
+            ]
         ]
 
         for sampler_node in sampler_nodes:
@@ -353,7 +366,13 @@ class ComfyUIWorkflowAnalyzer:
 
         return prompt_info
 
-    def _trace_conditioning_source(self, nodes: dict[str, NodeData], links: list[Any], start_node_id: str, depth: int = 0) -> str | None:
+    def _trace_conditioning_source(
+        self,
+        nodes: dict[str, NodeData],
+        links: list[Any],
+        start_node_id: str,
+        depth: int = 0,
+    ) -> str | None:
         """Recursively traces back the conditioning source to find the prompt text."""
         if depth > 10:  # Prevent infinite loops in complex workflows
             self.logger.debug(f"Max tracing depth reached for node {start_node_id}")
@@ -379,7 +398,7 @@ class ComfyUIWorkflowAnalyzer:
                 if traced_text:
                     self.logger.debug(f"CLIPTextEncode (linked input) found text: {traced_text}")
                     return traced_text
-            elif "text" in inputs: # Direct text input
+            elif "text" in inputs:  # Direct text input
                 self.logger.debug(f"CLIPTextEncode (direct input) found text: {inputs['text']}")
                 return str(inputs["text"])
             elif widgets:
@@ -388,23 +407,23 @@ class ComfyUIWorkflowAnalyzer:
         elif class_type == "CLIPTextEncodeSDXL":
             # For SDXL, we need to know if it's positive or negative branch
             # This method is called from positive/negative links, so we assume the role
-            if "text_g" in inputs: # Assuming text_g is for positive, text_l for negative
+            if "text_g" in inputs:  # Assuming text_g is for positive, text_l for negative
                 return str(inputs["text_g"])
-            elif "text_l" in inputs:
+            if "text_l" in inputs:
                 return str(inputs["text_l"])
         elif class_type == "T5TextEncode":
             if "text" in inputs:
                 return str(inputs["text"])
-        elif class_type == "MZ_ChatGLM3_V2": # New: ChatGLM3 text encoder
+        elif class_type == "MZ_ChatGLM3_V2":  # New: ChatGLM3 text encoder
             if widgets and widgets[0]:
                 return str(widgets[0])
-        elif class_type == "DPRandomGenerator": # Dynamic Prompts
+        elif class_type == "DPRandomGenerator":  # Dynamic Prompts
             # DPRandomGenerator outputs a string, which is the template itself
             if "text" in inputs:
                 return str(inputs["text"])
-            elif widgets and widgets[0]:
+            if widgets and widgets[0]:
                 return str(widgets[0])
-        elif class_type == "ConcatStringSingle": # ConcatStringSingle
+        elif class_type == "ConcatStringSingle":  # ConcatStringSingle
             # Recursively trace all string inputs and concatenate them
             concatenated_text = []
             for input_name, input_value in inputs.items():
@@ -419,7 +438,31 @@ class ComfyUIWorkflowAnalyzer:
             return " ".join(concatenated_text).strip()
 
         # Traverse through passthrough/reroute nodes or conditioning manipulators
-        if class_type in ["Reroute", "ConditioningCombine", "ConditioningConcat", "ConditioningSetArea", "ConditioningSetTimestepRange", "ConditioningAverage", "ConditioningZeroOut", "ConditioningSetAreaPercentage", "ConditioningAlign", "ConditioningSetAreaLite", "ConditioningSetAreaByMask", "ConditioningSetAreaByBoundingBox", "ConditioningSetAreaByImage", "ConditioningSetAreaByImageSize", "ConditioningSetAreaByImageSizeRatio", "ConditioningSetAreaByImageSizeRatioPercentage", "ConditioningSetAreaByImageSizeRatioPercentageByMask", "ConditioningSetAreaByImageSizeRatioPercentageByBoundingBox", "ConditioningSetAreaByImageSizeRatioPercentageByImage", "ConditioningSetAreaByImageSizeRatioPercentageByImageSizeRatio", "ConditioningSetAreaByImageSizeRatioPercentageByImageSizeRatioPercentage", "ConditioningSubtract", "ConditioningAddConDelta"]:
+        if class_type in [
+            "Reroute",
+            "ConditioningCombine",
+            "ConditioningConcat",
+            "ConditioningSetArea",
+            "ConditioningSetTimestepRange",
+            "ConditioningAverage",
+            "ConditioningZeroOut",
+            "ConditioningSetAreaPercentage",
+            "ConditioningAlign",
+            "ConditioningSetAreaLite",
+            "ConditioningSetAreaByMask",
+            "ConditioningSetAreaByBoundingBox",
+            "ConditioningSetAreaByImage",
+            "ConditioningSetAreaByImageSize",
+            "ConditioningSetAreaByImageSizeRatio",
+            "ConditioningSetAreaByImageSizeRatioPercentage",
+            "ConditioningSetAreaByImageSizeRatioPercentageByMask",
+            "ConditioningSetAreaByImageSizeRatioPercentageByBoundingBox",
+            "ConditioningSetAreaByImageSizeRatioPercentageByImage",
+            "ConditioningSetAreaByImageSizeRatioPercentageByImageSizeRatio",
+            "ConditioningSetAreaByImageSizeRatioPercentageByImageSizeRatioPercentage",
+            "ConditioningSubtract",
+            "ConditioningAddConDelta",
+        ]:
             # Find the incoming link for the conditioning
             for input_name, input_value in inputs.items():
                 if isinstance(input_value, list) and len(input_value) >= 2:

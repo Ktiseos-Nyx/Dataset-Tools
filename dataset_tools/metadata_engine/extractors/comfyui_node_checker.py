@@ -19,37 +19,91 @@ class ComfyUINodeChecker:
 
     # --- SUGGESTION 2: Use class constants for indicators for better readability and maintenance.
     _TEXT_INDICATORS = [
-        "text", "prompt", "wildcard", "string", "cliptextencode",
-        "dprandomgenerator", "randomgenerator", "impactwildcard"
+        "text",
+        "prompt",
+        "wildcard",
+        "string",
+        "cliptextencode",
+        "dprandomgenerator",
+        "randomgenerator",
+        "impactwildcard",
     ]
     _SAMPLER_INDICATORS = [
-        "sampler", "ksampler", "sample", "generate", "euler", "dpm",
-        "ddim", "plms", "unipc", "dpmsolver"
+        "sampler",
+        "ksampler",
+        "sample",
+        "generate",
+        "euler",
+        "dpm",
+        "ddim",
+        "plms",
+        "unipc",
+        "dpmsolver",
     ]
     _MODEL_LOADER_INDICATORS = [
-        "checkpointloader", "modelloader", "diffusersloader",
-        "unclipcheckpointloader"
+        "checkpointloader",
+        "modelloader",
+        "diffusersloader",
+        "unclipcheckpointloader",
     ]
     _LORA_INDICATORS = ["lora", "loraloader"]
     _VAE_INDICATORS = ["vae", "vaeloader", "vaedecode", "vaeencode"]
     _CONDITIONING_INDICATORS = [
-        "conditioning", "clip", "cliptextencode", "controlnet",
-        "t2iadapter", "ipadapter"
+        "conditioning",
+        "clip",
+        "cliptextencode",
+        "controlnet",
+        "t2iadapter",
+        "ipadapter",
     ]
     _CUSTOM_NODE_PREFIXES = [
-        "impact", "efficiency", "was", "comfyui-", "rgthree",
-        "inspire", "animatediff", "controlnet", "ipadapter",
-        "segment", "face", "ultimate", "advanced", "custom",
-        "dp", "dynamicprompt", "wildcard"
+        "impact",
+        "efficiency",
+        "was",
+        "comfyui-",
+        "rgthree",
+        "inspire",
+        "animatediff",
+        "controlnet",
+        "ipadapter",
+        "segment",
+        "face",
+        "ultimate",
+        "advanced",
+        "custom",
+        "dp",
+        "dynamicprompt",
+        "wildcard",
     ]
     _NEGATIVE_PROMPT_INDICATORS = [
-        "worst quality", "low quality", "normal quality", "lowres",
-        "bad anatomy", "bad hands", "text", "error", "missing fingers",
-        "extra digit", "fewer digits", "cropped", "jpeg artifacts",
-        "signature", "watermark", "username", "blurry", "bad feet",
-        "poorly drawn", "extra limbs", "disfigured", "deformed",
-        "body out of frame", "bad proportions", "duplicate", "morbid",
-        "mutilated", "mutation"
+        "worst quality",
+        "low quality",
+        "normal quality",
+        "lowres",
+        "bad anatomy",
+        "bad hands",
+        "text",
+        "error",
+        "missing fingers",
+        "extra digit",
+        "fewer digits",
+        "cropped",
+        "jpeg artifacts",
+        "signature",
+        "watermark",
+        "username",
+        "blurry",
+        "bad feet",
+        "poorly drawn",
+        "extra limbs",
+        "disfigured",
+        "deformed",
+        "body out of frame",
+        "bad proportions",
+        "duplicate",
+        "morbid",
+        "mutilated",
+        "mutation",
     ]
     _ECOSYSTEMS_MAP = {
         "impact": ["impact", "impactwildcard"],
@@ -64,8 +118,14 @@ class ComfyUINodeChecker:
         "advanced": ["advanced", "advancedcontrolnet"],
         "segment": ["segment", "sam", "segs"],
         "face": ["face", "facedetailer", "faceswap"],
-        "dynamicprompts": ["dp", "dynamicprompt", "wildcard", "randomgenerator", "combinatorial"],
-        "core": ["cliptextencode", "ksampler", "checkpointloader", "vae"]
+        "dynamicprompts": [
+            "dp",
+            "dynamicprompt",
+            "wildcard",
+            "randomgenerator",
+            "combinatorial",
+        ],
+        "core": ["cliptextencode", "ksampler", "checkpointloader", "vae"],
     }
 
     def __init__(self, logger: logging.Logger) -> None:
@@ -170,10 +230,9 @@ class ComfyUINodeChecker:
 
         if total_complexity <= 3:
             return "simple"
-        elif total_complexity <= 8:
+        if total_complexity <= 8:
             return "medium"
-        else:
-            return "complex"
+        return "complex"
 
     def validate_node_structure(self, node: dict) -> dict[str, Any]:
         """Validate a node's structure and return a summary.
@@ -183,6 +242,7 @@ class ComfyUINodeChecker:
 
         Returns:
             A dictionary containing validation results.
+
         """
         if not isinstance(node, dict):
             return {"valid": False, "errors": ["Node is not a dictionary"]}
@@ -210,7 +270,7 @@ class ComfyUINodeChecker:
             "errors": errors,
             "warnings": warnings,
             "complexity": self.get_node_complexity(node),
-            "ecosystem": self.get_node_ecosystem(node)
+            "ecosystem": self.get_node_ecosystem(node),
         }
 
     def looks_like_negative_prompt(self, text: str) -> bool:
@@ -242,7 +302,7 @@ class ComfyUINodeChecker:
             "is_vae": self.is_vae_node(node),
             "is_conditioning": self.is_conditioning_node(node),
             "is_custom": self.is_custom_node(node),
-            "properties": node.get("properties", {})
+            "properties": node.get("properties", {}),
         }
 
     def get_methods(self) -> dict[str, callable]:

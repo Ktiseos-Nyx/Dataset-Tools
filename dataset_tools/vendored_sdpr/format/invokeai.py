@@ -7,7 +7,6 @@ __copyright__ = "Copyright 2023, Receyuki"
 __email__ = "receyuki@gmail.com"
 
 import json
-
 # import logging # Not needed for type hinting if self._logger from BaseFormat
 import re
 

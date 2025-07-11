@@ -51,9 +51,12 @@ class ComfyUISeargeExtractor:
 
         # Look for Searge generation parameter nodes
         searge_gen_nodes = [
-            "SeargeGenerationParameters", "SeargeParameterProcessor",
-            "SeargeSDXLParameters", "SeargeSDXLBaseParameters",
-            "SeargeSDXLRefinerParameters", "SeargeAdvancedParameters"
+            "SeargeGenerationParameters",
+            "SeargeParameterProcessor",
+            "SeargeSDXLParameters",
+            "SeargeSDXLBaseParameters",
+            "SeargeSDXLRefinerParameters",
+            "SeargeAdvancedParameters",
         ]
 
         for node_id, node_data in prompt_data.items():
@@ -68,7 +71,7 @@ class ComfyUISeargeExtractor:
                     generation_params[class_type] = {
                         "node_id": node_id,
                         "widgets": widgets,
-                        "type": class_type
+                        "type": class_type,
                     }
 
                     # Parse common parameters
@@ -95,11 +98,19 @@ class ComfyUISeargeExtractor:
 
         # Look for Searge style prompt nodes
         searge_style_nodes = [
-            "SeargeStylePreprocessor", "SeargePromptProcessor",
-            "SeargePromptCombiner", "SeargePromptAdapterV2",
-            "SeargeStylePrompts", "SeargePromptText",
-            "SeargeInput1", "SeargeInput2", "SeargeInput3",
-            "SeargeInput4", "SeargeInput5", "SeargeInput6", "SeargeInput7"
+            "SeargeStylePreprocessor",
+            "SeargePromptProcessor",
+            "SeargePromptCombiner",
+            "SeargePromptAdapterV2",
+            "SeargeStylePrompts",
+            "SeargePromptText",
+            "SeargeInput1",
+            "SeargeInput2",
+            "SeargeInput3",
+            "SeargeInput4",
+            "SeargeInput5",
+            "SeargeInput6",
+            "SeargeInput7",
         ]
 
         for node_id, node_data in prompt_data.items():
@@ -114,7 +125,7 @@ class ComfyUISeargeExtractor:
                     style_prompts[class_type] = {
                         "node_id": node_id,
                         "widgets": widgets,
-                        "type": class_type
+                        "type": class_type,
                     }
 
                     # Extract text content
@@ -143,10 +154,14 @@ class ComfyUISeargeExtractor:
 
         # Look for Searge model parameter nodes
         searge_model_nodes = [
-            "SeargeCheckpointLoader", "SeargeModelSelector",
-            "SeargeVAELoader", "SeargeUpscaleModelLoader",
-            "SeargeLoraLoader", "SeargeEmbeddingLoader",
-            "SeargeRefinerModelLoader", "SeargeCustomModelLoader"
+            "SeargeCheckpointLoader",
+            "SeargeModelSelector",
+            "SeargeVAELoader",
+            "SeargeUpscaleModelLoader",
+            "SeargeLoraLoader",
+            "SeargeEmbeddingLoader",
+            "SeargeRefinerModelLoader",
+            "SeargeCustomModelLoader",
         ]
 
         for node_id, node_data in prompt_data.items():
@@ -161,7 +176,7 @@ class ComfyUISeargeExtractor:
                     model_params[class_type] = {
                         "node_id": node_id,
                         "widgets": widgets,
-                        "type": class_type
+                        "type": class_type,
                     }
 
                     # Parse model names
@@ -188,10 +203,14 @@ class ComfyUISeargeExtractor:
 
         # Look for Searge sampler nodes
         searge_sampler_nodes = [
-            "SeargeSDXLSampler", "SeargeSDXLSampler2",
-            "SeargeAdvancedSampler", "SeargeSamplerInputs",
-            "SeargeCustomSampler", "SeargeHiResFix",
-            "SeargeUpscaler", "SeargeDetailer"
+            "SeargeSDXLSampler",
+            "SeargeSDXLSampler2",
+            "SeargeAdvancedSampler",
+            "SeargeSamplerInputs",
+            "SeargeCustomSampler",
+            "SeargeHiResFix",
+            "SeargeUpscaler",
+            "SeargeDetailer",
         ]
 
         for node_id, node_data in prompt_data.items():
@@ -206,7 +225,7 @@ class ComfyUISeargeExtractor:
                     sampler_params[class_type] = {
                         "node_id": node_id,
                         "widgets": widgets,
-                        "type": class_type
+                        "type": class_type,
                     }
 
                     # Parse sampler parameters
@@ -233,11 +252,19 @@ class ComfyUISeargeExtractor:
 
         # Look for Searge image parameter nodes
         searge_image_nodes = [
-            "SeargeImageSaving", "SeargeImageProcessor",
-            "SeargeOutput1", "SeargeOutput2", "SeargeOutput3",
-            "SeargeOutput4", "SeargeOutput5", "SeargeOutput6", "SeargeOutput7",
-            "SeargePreview", "SeargeImageAdapter",
-            "SeargeImageInput", "SeargeImageOutput"
+            "SeargeImageSaving",
+            "SeargeImageProcessor",
+            "SeargeOutput1",
+            "SeargeOutput2",
+            "SeargeOutput3",
+            "SeargeOutput4",
+            "SeargeOutput5",
+            "SeargeOutput6",
+            "SeargeOutput7",
+            "SeargePreview",
+            "SeargeImageAdapter",
+            "SeargeImageInput",
+            "SeargeImageOutput",
         ]
 
         for node_id, node_data in prompt_data.items():
@@ -252,7 +279,7 @@ class ComfyUISeargeExtractor:
                     image_params[class_type] = {
                         "node_id": node_id,
                         "widgets": widgets,
-                        "type": class_type
+                        "type": class_type,
                     }
 
         return image_params
@@ -272,10 +299,19 @@ class ComfyUISeargeExtractor:
 
         # Look for Searge indicators
         searge_indicators = [
-            "Searge", "SeargeSDXL", "SeargeInput", "SeargeOutput",
-            "SeargeGeneration", "SeargeStyle", "SeargePrompt",
-            "SeargeModel", "SeargeSampler", "SeargeImage",
-            "SeargeParameter", "SeargeCustom", "SeargeAdvanced"
+            "Searge",
+            "SeargeSDXL",
+            "SeargeInput",
+            "SeargeOutput",
+            "SeargeGeneration",
+            "SeargeStyle",
+            "SeargePrompt",
+            "SeargeModel",
+            "SeargeSampler",
+            "SeargeImage",
+            "SeargeParameter",
+            "SeargeCustom",
+            "SeargeAdvanced",
         ]
 
         for node_data in prompt_data.values():
@@ -319,7 +355,7 @@ class ComfyUISeargeExtractor:
             7: "height",
             8: "batch_size",
             9: "refiner_switch",
-            10: "refiner_denoise"
+            10: "refiner_denoise",
         }
 
         for i, param_name in param_mapping.items():
@@ -344,7 +380,7 @@ class ComfyUISeargeExtractor:
             4: "scheduler",
             5: "base_denoise",
             6: "refiner_denoise",
-            7: "refiner_switch"
+            7: "refiner_switch",
         }
 
         for i, param_name in param_mapping.items():
@@ -388,7 +424,7 @@ class ComfyUISeargeExtractor:
                     "type": class_type,
                     "widgets": node_data.get("widgets_values", []),
                     "inputs": node_data.get("inputs", {}),
-                    "outputs": node_data.get("outputs", [])
+                    "outputs": node_data.get("outputs", []),
                 }
 
         return searge_nodes
@@ -396,13 +432,28 @@ class ComfyUISeargeExtractor:
     def _is_searge_node(self, class_type: str) -> bool:
         """Check if a class type is a Searge node."""
         searge_indicators = [
-            "Searge", "SeargeSDXL", "SeargeInput", "SeargeOutput",
-            "SeargeGeneration", "SeargeStyle", "SeargePrompt",
-            "SeargeModel", "SeargeSampler", "SeargeImage",
-            "SeargeParameter", "SeargeCustom", "SeargeAdvanced",
-            "SeargeCheckpoint", "SeargeVAE", "SeargeUpscale",
-            "SeargePreview", "SeargeProcessor", "SeargeAdapter",
-            "SeargeHiResFix", "SeargeDetailer", "SeargeRefiner"
+            "Searge",
+            "SeargeSDXL",
+            "SeargeInput",
+            "SeargeOutput",
+            "SeargeGeneration",
+            "SeargeStyle",
+            "SeargePrompt",
+            "SeargeModel",
+            "SeargeSampler",
+            "SeargeImage",
+            "SeargeParameter",
+            "SeargeCustom",
+            "SeargeAdvanced",
+            "SeargeCheckpoint",
+            "SeargeVAE",
+            "SeargeUpscale",
+            "SeargePreview",
+            "SeargeProcessor",
+            "SeargeAdapter",
+            "SeargeHiResFix",
+            "SeargeDetailer",
+            "SeargeRefiner",
         ]
 
         return any(indicator in class_type for indicator in searge_indicators)
@@ -454,7 +505,7 @@ class ComfyUISeargeExtractor:
                 node_info = {
                     "node_id": node_id,
                     "type": class_type,
-                    "category": self._get_searge_node_category(class_type)
+                    "category": self._get_searge_node_category(class_type),
                 }
 
                 if "Input" in class_type:
@@ -479,17 +530,16 @@ class ComfyUISeargeExtractor:
         """Get the category of a Searge node."""
         if "Input" in class_type:
             return "input"
-        elif "Output" in class_type:
+        if "Output" in class_type:
             return "output"
-        elif "Generation" in class_type or "Parameter" in class_type:
+        if "Generation" in class_type or "Parameter" in class_type:
             return "generation"
-        elif "Style" in class_type or "Prompt" in class_type:
+        if "Style" in class_type or "Prompt" in class_type:
             return "prompt"
-        elif "Model" in class_type or "Checkpoint" in class_type:
+        if "Model" in class_type or "Checkpoint" in class_type:
             return "model"
-        elif "Sampler" in class_type:
+        if "Sampler" in class_type:
             return "sampler"
-        elif "Image" in class_type:
+        if "Image" in class_type:
             return "image"
-        else:
-            return "processing"
+        return "processing"

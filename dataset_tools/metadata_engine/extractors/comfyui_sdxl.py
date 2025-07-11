@@ -43,30 +43,30 @@ class ComfyUISDXLExtractor:
     ) -> str:
         """Extract positive prompt from SDXL workflows."""
         self.logger.debug("[SDXL] Extracting positive prompt")
-        
+
         if not isinstance(data, dict):
             return ""
 
         prompt_data = data.get("prompt", data)
-        
+
         # Strategy 1: Find CLIPTextEncodeSDXL nodes (base, not refiner)
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if "CLIPTextEncodeSDXL" in class_type and "Refiner" not in class_type:
                 # Check for primitive node connections or widget values
                 text = self._get_text_from_sdxl_node(node_data, prompt_data)
                 if text and not self._looks_like_negative_prompt(text):
                     return text
-        
+
         # Strategy 2: Look for PrimitiveNode connections
         primitive_positive = self._find_primitive_positive_prompt(prompt_data)
         if primitive_positive:
             return primitive_positive
-        
+
         # Strategy 3: Standard CLIPTextEncode fallback
         return self._extract_standard_clip_prompt(prompt_data, positive=True)
 
@@ -79,29 +79,29 @@ class ComfyUISDXLExtractor:
     ) -> str:
         """Extract negative prompt from SDXL workflows."""
         self.logger.debug("[SDXL] Extracting negative prompt")
-        
+
         if not isinstance(data, dict):
             return ""
 
         prompt_data = data.get("prompt", data)
-        
+
         # Strategy 1: Find CLIPTextEncodeSDXL nodes for negative conditioning
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if "CLIPTextEncodeSDXL" in class_type and "Refiner" not in class_type:
                 text = self._get_text_from_sdxl_node(node_data, prompt_data)
                 if text and self._looks_like_negative_prompt(text):
                     return text
-        
+
         # Strategy 2: Look for dedicated negative prompt nodes
         primitive_negative = self._find_primitive_negative_prompt(prompt_data)
         if primitive_negative:
             return primitive_negative
-        
+
         # Strategy 3: Standard CLIPTextEncode fallback
         return self._extract_standard_clip_prompt(prompt_data, positive=False)
 
@@ -114,24 +114,24 @@ class ComfyUISDXLExtractor:
     ) -> str:
         """Extract CLIP-G (OpenCLIP) prompt from SDXL workflows."""
         self.logger.debug("[SDXL] Extracting CLIP-G prompt")
-        
+
         if not isinstance(data, dict):
             return ""
 
         prompt_data = data.get("prompt", data)
-        
+
         # Look for CLIPTextEncodeSDXL nodes and extract text_g input
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if "CLIPTextEncodeSDXL" in class_type:
                 text_g = self._get_sdxl_text_input(node_data, prompt_data, "text_g")
                 if text_g:
                     return text_g
-        
+
         return ""
 
     def _extract_clip_l_prompt(
@@ -143,24 +143,24 @@ class ComfyUISDXLExtractor:
     ) -> str:
         """Extract CLIP-L prompt from SDXL workflows."""
         self.logger.debug("[SDXL] Extracting CLIP-L prompt")
-        
+
         if not isinstance(data, dict):
             return ""
 
         prompt_data = data.get("prompt", data)
-        
+
         # Look for CLIPTextEncodeSDXL nodes and extract text_l input
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if "CLIPTextEncodeSDXL" in class_type:
                 text_l = self._get_sdxl_text_input(node_data, prompt_data, "text_l")
                 if text_l:
                     return text_l
-        
+
         return ""
 
     def _extract_model_info(
@@ -172,20 +172,20 @@ class ComfyUISDXLExtractor:
     ) -> dict[str, Any]:
         """Extract SDXL model information."""
         self.logger.debug("[SDXL] Extracting model info")
-        
+
         if not isinstance(data, dict):
             return {}
 
         prompt_data = data.get("prompt", data)
         model_info = {}
-        
+
         # Look for SDXL checkpoint loaders
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if "CheckpointLoaderSimple" in class_type or "CheckpointLoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
@@ -193,12 +193,12 @@ class ComfyUISDXLExtractor:
                     # Check if it's an SDXL model
                     if "sdxl" in model_name.lower() or "xl" in model_name.lower():
                         model_info["base_model"] = model_name
-            
+
             elif "SDXLCheckpointLoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     model_info["base_model"] = widgets[0] if isinstance(widgets[0], str) else ""
-        
+
         return model_info
 
     def _extract_refiner_info(
@@ -210,27 +210,24 @@ class ComfyUISDXLExtractor:
     ) -> dict[str, Any]:
         """Extract SDXL refiner information."""
         self.logger.debug("[SDXL] Extracting refiner info")
-        
+
         if not isinstance(data, dict):
             return {}
 
         prompt_data = data.get("prompt", data)
         refiner_info = {}
-        
+
         # Look for refiner-related nodes
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if "Refiner" in class_type:
                 widgets = node_data.get("widgets_values", [])
-                refiner_info[class_type] = {
-                    "node_id": node_id,
-                    "widgets": widgets
-                }
-        
+                refiner_info[class_type] = {"node_id": node_id, "widgets": widgets}
+
         return refiner_info
 
     def _extract_primitive_prompts(
@@ -242,15 +239,15 @@ class ComfyUISDXLExtractor:
     ) -> dict[str, str]:
         """Extract prompts from PrimitiveNode connections."""
         self.logger.debug("[SDXL] Extracting primitive prompts")
-        
+
         if not isinstance(data, dict):
             return {}
 
         prompt_data = data.get("prompt", data)
-        
+
         return {
             "positive": self._find_primitive_positive_prompt(prompt_data),
-            "negative": self._find_primitive_negative_prompt(prompt_data)
+            "negative": self._find_primitive_negative_prompt(prompt_data),
         }
 
     def _detect_sdxl_workflow(
@@ -265,26 +262,29 @@ class ComfyUISDXLExtractor:
             return False
 
         prompt_data = data.get("prompt", data)
-        
+
         # Look for SDXL-specific node types
         sdxl_indicators = [
-            "CLIPTextEncodeSDXL", "SDXLCheckpointLoader", 
-            "SDXLPromptStyler", "SDXLRefiner", "SDXLSampler"
+            "CLIPTextEncodeSDXL",
+            "SDXLCheckpointLoader",
+            "SDXLPromptStyler",
+            "SDXLRefiner",
+            "SDXLSampler",
         ]
-        
+
         for node_data in prompt_data.values():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
             if any(indicator in class_type for indicator in sdxl_indicators):
                 return True
-        
+
         # Also check for models with SDXL in the name
         for node_data in prompt_data.values():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
             if "CheckpointLoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
@@ -292,7 +292,7 @@ class ComfyUISDXLExtractor:
                     model_name = widgets[0].lower()
                     if "sdxl" in model_name or "xl" in model_name:
                         return True
-        
+
         return False
 
     def _get_text_from_sdxl_node(self, node_data: dict, prompt_data: dict) -> str:
@@ -303,7 +303,7 @@ class ComfyUISDXLExtractor:
             for widget in widgets:
                 if isinstance(widget, str) and len(widget.strip()) > 0:
                     return widget.strip()
-        
+
         # Then check for PrimitiveNode connections
         inputs = node_data.get("inputs", {})
         if isinstance(inputs, dict):
@@ -319,7 +319,7 @@ class ComfyUISDXLExtractor:
                                 primitive_widgets = primitive_node.get("widgets_values", [])
                                 if primitive_widgets and isinstance(primitive_widgets[0], str):
                                     return primitive_widgets[0].strip()
-        
+
         return ""
 
     def _get_sdxl_text_input(self, node_data: dict, prompt_data: dict, input_name: str) -> str:
@@ -335,7 +335,7 @@ class ComfyUISDXLExtractor:
                         widgets = source_node.get("widgets_values", [])
                         if widgets and isinstance(widgets[0], str):
                             return widgets[0].strip()
-        
+
         return ""
 
     def _find_primitive_positive_prompt(self, prompt_data: dict) -> str:
@@ -344,16 +344,16 @@ class ComfyUISDXLExtractor:
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if "PrimitiveNode" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets and isinstance(widgets[0], str):
                     text = widgets[0].strip()
                     if text and not self._looks_like_negative_prompt(text):
                         return text
-        
+
         return ""
 
     def _find_primitive_negative_prompt(self, prompt_data: dict) -> str:
@@ -362,16 +362,16 @@ class ComfyUISDXLExtractor:
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if "PrimitiveNode" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets and isinstance(widgets[0], str):
                     text = widgets[0].strip()
                     if text and self._looks_like_negative_prompt(text):
                         return text
-        
+
         return ""
 
     def _extract_standard_clip_prompt(self, prompt_data: dict, positive: bool = True) -> str:
@@ -379,40 +379,60 @@ class ComfyUISDXLExtractor:
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if class_type == "CLIPTextEncode":
                 widgets = node_data.get("widgets_values", [])
                 if widgets and isinstance(widgets[0], str):
                     text = widgets[0].strip()
                     if text:
                         is_negative = self._looks_like_negative_prompt(text)
-                        if positive and not is_negative:
+                        if (positive and not is_negative) or (not positive and is_negative):
                             return text
-                        elif not positive and is_negative:
-                            return text
-        
+
         return ""
 
     def _looks_like_negative_prompt(self, text: str) -> bool:
         """Check if text looks like a negative prompt."""
         if not isinstance(text, str):
             return False
-            
+
         negative_indicators = [
-            "worst quality", "low quality", "normal quality", "lowres",
-            "bad anatomy", "bad hands", "text", "error", "missing fingers",
-            "extra digit", "fewer digits", "cropped", "jpeg artifacts",
-            "signature", "watermark", "username", "blurry", "bad feet",
-            "poorly drawn", "extra limbs", "disfigured", "deformed",
-            "body out of frame", "bad proportions", "duplicate", "morbid",
-            "mutilated", "mutation", "blurry"
+            "worst quality",
+            "low quality",
+            "normal quality",
+            "lowres",
+            "bad anatomy",
+            "bad hands",
+            "text",
+            "error",
+            "missing fingers",
+            "extra digit",
+            "fewer digits",
+            "cropped",
+            "jpeg artifacts",
+            "signature",
+            "watermark",
+            "username",
+            "blurry",
+            "bad feet",
+            "poorly drawn",
+            "extra limbs",
+            "disfigured",
+            "deformed",
+            "body out of frame",
+            "bad proportions",
+            "duplicate",
+            "morbid",
+            "mutilated",
+            "mutation",
+            "blurry",
         ]
-        
+
         text_lower = text.lower()
         negative_count = sum(1 for indicator in negative_indicators if indicator in text_lower)
-        
+
         return negative_count >= 2
 
     def extract_sdxl_workflow_summary(self, data: dict) -> dict[str, Any]:
@@ -430,5 +450,5 @@ class ComfyUISDXLExtractor:
             "refiner_info": self._extract_refiner_info(data, {}, {}, {}),
             "primitive_prompts": self._extract_primitive_prompts(data, {}, {}, {}),
         }
-        
+
         return summary
