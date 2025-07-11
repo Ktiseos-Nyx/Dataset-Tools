@@ -15,7 +15,6 @@ from .metadata_engine.engine import create_metadata_engine
 from .metadata_engine.parser_registry import register_parser_class
 from .vendored_sdpr.format.a1111 import A1111
 from .vendored_sdpr.format.civitai import CivitaiFormat
-from .vendored_sdpr.format.comfyui import ComfyUI
 
 # Import vendored parser classes for registration
 from .vendored_sdpr.format.drawthings import DrawThings
@@ -67,7 +66,7 @@ def parse_metadata(file_path_named: str) -> dict[str, Any]:
         # Create the metadata engine
         nfo(f"[DT.metadata_parser]: Creating metadata engine with path: {PARSER_DEFINITIONS_PATH}")
         engine = create_metadata_engine(PARSER_DEFINITIONS_PATH)
-        nfo(f"[DT.metadata_parser]: Engine created successfully, calling get_parser_for_file")
+        nfo("[DT.metadata_parser]: Engine created successfully, calling get_parser_for_file")
 
         # Process the file
         result = engine.get_parser_for_file(file_path_named)

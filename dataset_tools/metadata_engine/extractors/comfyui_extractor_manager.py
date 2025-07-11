@@ -7,31 +7,33 @@ to all extraction methods and automatic workflow detection.
 """
 
 import logging
-from typing import Any, Dict, List, Optional, Callable
-import json # Import json at the top level
+from collections.abc import Callable
+from typing import Any
+
+from .comfyui_animatediff import ComfyUIAnimateDiffExtractor
+from .comfyui_complexity import ComfyUIComplexityExtractor
+from .comfyui_controlnet import ComfyUIControlNetExtractor
+from .comfyui_dynamicprompts import ComfyUIDynamicPromptsExtractor
+from .comfyui_efficiency import ComfyUIEfficiencyExtractor
+from .comfyui_flux import ComfyUIFluxExtractor
+from .comfyui_impact import ComfyUIImpactExtractor
+from .comfyui_inspire import ComfyUIInspireExtractor
+from .comfyui_node_checker import ComfyUINodeChecker
+from .comfyui_pixart import ComfyUIPixArtExtractor
+from .comfyui_rgthree import ComfyUIRGthreeExtractor
+from .comfyui_sdxl import ComfyUISDXLExtractor
+
+# --- FIX: Corrected typo from "Searche" to "Searge" ---
+from .comfyui_searge import ComfyUISeargeExtractor
 
 # Import all the specialized extractors
 from .comfyui_traversal import ComfyUITraversalExtractor
-from .comfyui_node_checker import ComfyUINodeChecker
-from .comfyui_complexity import ComfyUIComplexityExtractor
-from .comfyui_flux import ComfyUIFluxExtractor
-from .comfyui_sdxl import ComfyUISDXLExtractor
-from .comfyui_impact import ComfyUIImpactExtractor
-from .comfyui_efficiency import ComfyUIEfficiencyExtractor
 from .comfyui_was import ComfyUIWASExtractor
-from .comfyui_pixart import ComfyUIPixArtExtractor
-from .comfyui_animatediff import ComfyUIAnimateDiffExtractor
-from .comfyui_controlnet import ComfyUIControlNetExtractor
-# --- FIX: Corrected typo from "Searche" to "Searge" ---
-from .comfyui_searge import ComfyUISeargeExtractor
-from .comfyui_rgthree import ComfyUIRGthreeExtractor
-from .comfyui_inspire import ComfyUIInspireExtractor
-from .comfyui_dynamicprompts import ComfyUIDynamicPromptsExtractor
 
 # Type aliases
-ContextData = Dict[str, Any]
-ExtractedFields = Dict[str, Any]
-MethodDefinition = Dict[str, Any]
+ContextData = dict[str, Any]
+ExtractedFields = dict[str, Any]
+MethodDefinition = dict[str, Any]
 
 
 class ComfyUIExtractorManager:
@@ -60,15 +62,15 @@ class ComfyUIExtractorManager:
         self.dynamicprompts = ComfyUIDynamicPromptsExtractor(logger)
 
         # Cache for detected workflow types
-        self._workflow_type_cache: Dict[str, List[str]] = {}
+        self._workflow_type_cache: dict[str, list[str]] = {}
 
-    def get_methods(self) -> Dict[str, Callable]:
+    def get_methods(self) -> dict[str, Callable]:
         """Return unified dictionary of all extraction methods."""
         methods = {}
 
         # Add methods from all extractors
-        methods.update(self.traversal.get_methods() if hasattr(self.traversal, 'get_methods') else {})
-        methods.update(self.node_checker.get_methods() if hasattr(self.node_checker, 'get_methods') else {})
+        methods.update(self.traversal.get_methods() if hasattr(self.traversal, "get_methods") else {})
+        methods.update(self.node_checker.get_methods() if hasattr(self.node_checker, "get_methods") else {})
         methods.update(self.complexity.get_methods())
         methods.update(self.flux.get_methods())
         methods.update(self.sdxl.get_methods())
@@ -84,21 +86,23 @@ class ComfyUIExtractorManager:
         methods.update(self.dynamicprompts.get_methods())
 
         # Add manager-specific methods
-        methods.update({
-            "comfy_auto_detect_workflow": self._auto_detect_workflow,
-            "comfy_extract_comprehensive_summary": self._extract_comprehensive_summary,
-            "comfy_get_workflow_metadata": self._get_workflow_metadata,
-            "comfy_extract_smart_prompt": self._extract_smart_prompt,
-            "comfy_extract_all_ecosystems": self._extract_all_ecosystems,
-            # Missing methods that parsers are looking for
-            "comfyui_detect_tipo_enhancement": self._detect_tipo_enhancement,
-            "comfyui_calculate_workflow_complexity": self._calculate_workflow_complexity,
-            "comfyui_detect_advanced_upscaling": self._detect_advanced_upscaling,
-            "comfyui_detect_multi_stage_conditioning": self._detect_multi_stage_conditioning,
-            "comfyui_detect_post_processing_effects": self._detect_post_processing_effects,
-            "comfyui_detect_custom_node_ecosystems": self._detect_custom_node_ecosystems,
-            "comfyui_extract_workflow_techniques": self._extract_workflow_techniques,
-        })
+        methods.update(
+            {
+                "comfy_auto_detect_workflow": self._auto_detect_workflow,
+                "comfy_extract_comprehensive_summary": self._extract_comprehensive_summary,
+                "comfy_get_workflow_metadata": self._get_workflow_metadata,
+                "comfy_extract_smart_prompt": self._extract_smart_prompt,
+                "comfy_extract_all_ecosystems": self._extract_all_ecosystems,
+                # Missing methods that parsers are looking for
+                "comfyui_detect_tipo_enhancement": self._detect_tipo_enhancement,
+                "comfyui_calculate_workflow_complexity": self._calculate_workflow_complexity,
+                "comfyui_detect_advanced_upscaling": self._detect_advanced_upscaling,
+                "comfyui_detect_multi_stage_conditioning": self._detect_multi_stage_conditioning,
+                "comfyui_detect_post_processing_effects": self._detect_post_processing_effects,
+                "comfyui_detect_custom_node_ecosystems": self._detect_custom_node_ecosystems,
+                "comfyui_extract_workflow_techniques": self._extract_workflow_techniques,
+            }
+        )
 
         return methods
 
@@ -108,7 +112,7 @@ class ComfyUIExtractorManager:
         method_def: MethodDefinition,
         context: ContextData,
         fields: ExtractedFields,
-    ) -> List[str]:
+    ) -> list[str]:
         """Automatically detect workflow types and ecosystems."""
         if not isinstance(data, dict):
             return []
@@ -169,7 +173,7 @@ class ComfyUIExtractorManager:
         method_def: MethodDefinition,
         context: ContextData,
         fields: ExtractedFields,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Extract comprehensive summary using all appropriate extractors."""
         if not isinstance(data, dict):
             return {}
@@ -220,7 +224,9 @@ class ComfyUIExtractorManager:
             summary["ecosystem_summaries"]["inspire"] = self.inspire.extract_inspire_workflow_summary(data)
 
         if "dynamicprompts" in workflow_types:
-            summary["ecosystem_summaries"]["dynamicprompts"] = self.dynamicprompts.extract_dynamicprompts_workflow_summary(data)
+            summary["ecosystem_summaries"]["dynamicprompts"] = (
+                self.dynamicprompts.extract_dynamicprompts_workflow_summary(data)
+            )
 
         # Node analysis
         nodes = self.traversal.get_nodes_from_data(data)
@@ -238,7 +244,7 @@ class ComfyUIExtractorManager:
         method_def: MethodDefinition,
         context: ContextData,
         fields: ExtractedFields,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Extract workflow metadata using node checker."""
         if not isinstance(data, dict):
             return {}
@@ -257,7 +263,7 @@ class ComfyUIExtractorManager:
 
         # Analyze node ecosystems
         ecosystem_counts = {}
-        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
                 ecosystem = self.node_checker.get_node_ecosystem(node_data)
                 ecosystem_counts[ecosystem] = ecosystem_counts.get(ecosystem, 0) + 1
@@ -274,6 +280,7 @@ class ComfyUIExtractorManager:
         if isinstance(data, str):
             try:
                 import json
+
                 return json.loads(data)
             except (json.JSONDecodeError, ValueError):
                 self.logger.warning("[MANAGER] Failed to parse workflow JSON string.")
@@ -288,7 +295,7 @@ class ComfyUIExtractorManager:
         fields: ExtractedFields,
     ) -> str:
         """Intelligently extract the most relevant prompt using workflow detection."""
-        data = self._parse_json_data(data) # PARSE DATA HERE
+        data = self._parse_json_data(data)  # PARSE DATA HERE
         if not isinstance(data, dict):
             return ""
 
@@ -334,7 +341,7 @@ class ComfyUIExtractorManager:
         nodes = self.traversal.get_nodes_from_data(data)
         if nodes:
             # Find the first text node and trace its flow
-            for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+            for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
                 if isinstance(node_data, dict) and self.node_checker.is_text_node(node_data):
                     traced_text = self.traversal.trace_text_flow(nodes, str(node_id))
                     if traced_text:
@@ -348,7 +355,7 @@ class ComfyUIExtractorManager:
         method_def: MethodDefinition,
         context: ContextData,
         fields: ExtractedFields,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Extract information from all detected ecosystems."""
         if not isinstance(data, dict):
             return {}
@@ -379,7 +386,7 @@ class ComfyUIExtractorManager:
 
         return ecosystems
 
-    def _get_node_type_distribution(self, nodes: Any) -> Dict[str, int]:
+    def _get_node_type_distribution(self, nodes: Any) -> dict[str, int]:
         """Get distribution of node types in the workflow."""
         if not nodes:
             return {}
@@ -394,7 +401,7 @@ class ComfyUIExtractorManager:
 
         return type_counts
 
-    def _get_custom_node_info(self, nodes: Any) -> Dict[str, Any]:
+    def _get_custom_node_info(self, nodes: Any) -> dict[str, Any]:
         """Get information about custom nodes in the workflow."""
         if not nodes:
             return {}
@@ -423,49 +430,70 @@ class ComfyUIExtractorManager:
 
         return custom_info
 
-    def get_extractor_for_workflow(self, data: Dict[str, Any]) -> Optional[Any]:
+    def get_extractor_for_workflow(self, data: dict[str, Any]) -> Any | None:
         """Get the most appropriate extractor for a workflow."""
         workflow_types = self._auto_detect_workflow(data, {}, {}, {})
 
         # Return the most specific extractor
         if "flux" in workflow_types:
             return self.flux
-        elif "sdxl" in workflow_types:
+        if "sdxl" in workflow_types:
             return self.sdxl
-        elif "pixart" in workflow_types:
+        if "pixart" in workflow_types:
             return self.pixart
-        elif "impact" in workflow_types:
+        if "impact" in workflow_types:
             return self.impact
-        elif "efficiency" in workflow_types:
+        if "efficiency" in workflow_types:
             return self.efficiency
-        elif "was" in workflow_types:
+        if "was" in workflow_types:
             return self.was
-        elif "animatediff" in workflow_types:
+        if "animatediff" in workflow_types:
             return self.animatediff
-        elif "controlnet" in workflow_types:
+        if "controlnet" in workflow_types:
             return self.controlnet
-        else:
-            return self.complexity  # Default to complexity extractor
+        return self.complexity  # Default to complexity extractor
 
     def clear_cache(self) -> None:
         """Clear the workflow type detection cache."""
         self._workflow_type_cache.clear()
 
-    def get_available_extractors(self) -> List[str]:
+    def get_available_extractors(self) -> list[str]:
         """Get list of available extractor names."""
         return [
-            "traversal", "node_checker", "complexity", "flux", "sdxl",
-            "impact", "efficiency", "was", "pixart", "animatediff", "controlnet",
-            "searge", "rgthree", "inspire", "dynamicprompts"
+            "traversal",
+            "node_checker",
+            "complexity",
+            "flux",
+            "sdxl",
+            "impact",
+            "efficiency",
+            "was",
+            "pixart",
+            "animatediff",
+            "controlnet",
+            "searge",
+            "rgthree",
+            "inspire",
+            "dynamicprompts",
         ]
 
-    def get_extractor_stats(self) -> Dict[str, Any]:
+    def get_extractor_stats(self) -> dict[str, Any]:
         """Get statistics about available extractors."""
         stats = {
             "total_extractors": len(self.get_available_extractors()),
             "total_methods": len(self.get_methods()),
             "architecture_extractors": ["flux", "sdxl", "pixart"],
-            "ecosystem_extractors": ["impact", "efficiency", "was", "animatediff", "controlnet", "searge", "rgthree", "inspire", "dynamicprompts"],
+            "ecosystem_extractors": [
+                "impact",
+                "efficiency",
+                "was",
+                "animatediff",
+                "controlnet",
+                "searge",
+                "rgthree",
+                "inspire",
+                "dynamicprompts",
+            ],
             "utility_extractors": ["traversal", "node_checker", "complexity"],
         }
 
@@ -488,18 +516,24 @@ class ComfyUIExtractorManager:
 
         # Look for TIPO nodes specifically
         tipo_indicators = [
-            "TIPO", "Tags Input", "Ban Tags", "NL input",
-            "Base Prompt", "2D_aesthetic", "animetune"
+            "TIPO",
+            "Tags Input",
+            "Ban Tags",
+            "NL input",
+            "Base Prompt",
+            "2D_aesthetic",
+            "animetune",
         ]
 
-        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
                 node_name = node_data.get("name", "")
 
                 # Check both class type and node name for TIPO indicators
-                if any(indicator in class_type for indicator in tipo_indicators) or \
-                   any(indicator in node_name for indicator in tipo_indicators):
+                if any(indicator in class_type for indicator in tipo_indicators) or any(
+                    indicator in node_name for indicator in tipo_indicators
+                ):
                     return True
 
         return False
@@ -529,13 +563,24 @@ class ComfyUIExtractorManager:
 
         # Look for upscaling indicators
         upscaling_indicators = [
-            "Upscale", "ImageUpscale", "UpscaleModel", "ESRGAN", "RealESRGAN",
-            "Ultimate", "UltimateSDUpscale", "TileUpscale", "IterativeUpscale",
-            "ImageSharpen", "ProPostFilmGrain", "ImageScaleBy", "2x-", "4x-"
+            "Upscale",
+            "ImageUpscale",
+            "UpscaleModel",
+            "ESRGAN",
+            "RealESRGAN",
+            "Ultimate",
+            "UltimateSDUpscale",
+            "TileUpscale",
+            "IterativeUpscale",
+            "ImageSharpen",
+            "ProPostFilmGrain",
+            "ImageScaleBy",
+            "2x-",
+            "4x-",
         ]
 
         upscaling_count = 0
-        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
 
@@ -545,7 +590,9 @@ class ComfyUIExtractorManager:
                 # Check widget values for upscaling models
                 widgets = node_data.get("widgets_values", [])
                 for widget in widgets:
-                    if isinstance(widget, str) and any(indicator in widget for indicator in ["2x-", "4x-", "upscale", "ESRGAN"]):
+                    if isinstance(widget, str) and any(
+                        indicator in widget for indicator in ["2x-", "4x-", "upscale", "ESRGAN"]
+                    ):
                         upscaling_count += 1
 
         return upscaling_count > 0
@@ -565,13 +612,20 @@ class ComfyUIExtractorManager:
 
         # Look for multi-stage conditioning indicators
         conditioning_indicators = [
-            "ConditioningConcat", "ConditioningCombine", "ConditioningAverage",
-            "ConditioningSetArea", "ConditioningSetMask", "ConditioningMultiply",
-            "CLIPTextEncode", "CLIPTextEncodeSDXL", "DualCLIP", "MultiConditioning"
+            "ConditioningConcat",
+            "ConditioningCombine",
+            "ConditioningAverage",
+            "ConditioningSetArea",
+            "ConditioningSetMask",
+            "ConditioningMultiply",
+            "CLIPTextEncode",
+            "CLIPTextEncodeSDXL",
+            "DualCLIP",
+            "MultiConditioning",
         ]
 
         conditioning_count = 0
-        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
 
@@ -596,13 +650,24 @@ class ComfyUIExtractorManager:
 
         # Look for post-processing indicators
         post_processing_indicators = [
-            "ImageSharpen", "ImageBlur", "ImageFilter", "ColorCorrect",
-            "ProPostFilmGrain", "ImageEnhance", "ImageAdjust", "ImageFX",
-            "PostProcess", "FilmGrain", "ColorGrading", "Denoise",
-            "FreeU", "ImageNormalize", "ImageContrast"
+            "ImageSharpen",
+            "ImageBlur",
+            "ImageFilter",
+            "ColorCorrect",
+            "ProPostFilmGrain",
+            "ImageEnhance",
+            "ImageAdjust",
+            "ImageFX",
+            "PostProcess",
+            "FilmGrain",
+            "ColorGrading",
+            "Denoise",
+            "FreeU",
+            "ImageNormalize",
+            "ImageContrast",
         ]
 
-        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
 
@@ -662,7 +727,7 @@ class ComfyUIExtractorManager:
         if not nodes:
             return {}
 
-        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict) and self.node_checker.is_sampler_node(node_data):
                 inputs = node_data.get("inputs", {})
                 if isinstance(inputs, dict):

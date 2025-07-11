@@ -7,9 +7,7 @@
 
 import os
 from pathlib import Path
-from typing import (
-    NamedTuple,
-)  # Removed List as TypingList, Optional if progress bar gone
+from typing import NamedTuple  # Removed List as TypingList, Optional if progress bar gone
 
 from PyQt6 import QtCore
 

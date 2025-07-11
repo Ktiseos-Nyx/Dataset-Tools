@@ -7,7 +7,7 @@ style prompting, and generation parameters.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 # Type aliases
 ContextData = dict[str, Any]
@@ -33,7 +33,7 @@ class ComfyUISeargeExtractor:
             "searge_detect_workflow": self._detect_searge_workflow,
             "searge_extract_summary": self.extract_searge_workflow_summary,
         }
-    
+
     def _get_nodes(self, data: dict) -> dict:
         """Helper to robustly get the nodes dictionary from workflow or API data."""
         if not isinstance(data, dict):
@@ -62,17 +62,19 @@ class ComfyUISeargeExtractor:
 
         generation_params = {}
         searge_gen_nodes = [
-            "SeargeGenerationParameters", "SeargeParameterProcessor",
-            "SeargeSDXLParameters", "SeargeSDXLBaseParameters",
+            "SeargeGenerationParameters",
+            "SeargeParameterProcessor",
+            "SeargeSDXLParameters",
+            "SeargeSDXLBaseParameters",
         ]
-        
+
         for node_id, node_data in nodes.items():
             class_type = node_data.get("class_type", "")
             if any(gen_node in class_type for gen_node in searge_gen_nodes):
                 widgets = node_data.get("widgets_values", [])
                 if "SeargeGenerationParameters" in class_type:
                     generation_params = self._parse_generation_params(widgets)
-        
+
         return generation_params
 
     def _extract_style_prompts(
@@ -89,18 +91,18 @@ class ComfyUISeargeExtractor:
             return {}
 
         style_prompts = {}
-        
+
         for node_id, node_data in nodes.items():
             class_type = node_data.get("class_type", "")
             widgets = node_data.get("widgets_values", [])
-            
+
             if "SeargeStylePrompts" in class_type and widgets:
                 style_prompts["style_prompt"] = widgets[0] if isinstance(widgets[0], str) else ""
             elif "SeargePromptText" in class_type and widgets:
                 style_prompts["prompt_text"] = widgets[0] if isinstance(widgets[0], str) else ""
             elif "SeargePromptCombiner" in class_type and widgets:
                 style_prompts["combined_prompt"] = widgets[0] if isinstance(widgets[0], str) else ""
-        
+
         return style_prompts
 
     def _extract_model_params(
@@ -117,23 +119,25 @@ class ComfyUISeargeExtractor:
             return {}
 
         model_params = {}
-        
+
         for node_id, node_data in nodes.items():
             class_type = node_data.get("class_type", "")
             widgets = node_data.get("widgets_values", [])
-            
+
             if "SeargeCheckpointLoader" in class_type and widgets:
                 model_params["checkpoint"] = widgets[0] if isinstance(widgets[0], str) else ""
             elif "SeargeLoraLoader" in class_type and widgets:
                 if "loras" not in model_params:
                     model_params["loras"] = []
-                model_params["loras"].append({
-                    "name": widgets[0] if isinstance(widgets[0], str) else "",
-                    "strength": widgets[1] if len(widgets) > 1 else 1.0,
-                })
+                model_params["loras"].append(
+                    {
+                        "name": widgets[0] if isinstance(widgets[0], str) else "",
+                        "strength": widgets[1] if len(widgets) > 1 else 1.0,
+                    }
+                )
             elif "SeargeVAELoader" in class_type and widgets:
                 model_params["vae"] = widgets[0] if isinstance(widgets[0], str) else ""
-        
+
         return model_params
 
     def _extract_sampler_params(
@@ -150,14 +154,14 @@ class ComfyUISeargeExtractor:
             return {}
 
         sampler_params = {}
-        
+
         for node_id, node_data in nodes.items():
             class_type = node_data.get("class_type", "")
             widgets = node_data.get("widgets_values", [])
-            
+
             if any(sampler_node in class_type for sampler_node in ["SeargeSamplerInputs", "SeargeAdvancedParameters"]):
                 sampler_params.update(self._parse_sampler_params(widgets))
-        
+
         return sampler_params
 
     def _extract_image_params(
@@ -174,14 +178,14 @@ class ComfyUISeargeExtractor:
             return {}
 
         image_params = {}
-        
+
         for node_id, node_data in nodes.items():
             class_type = node_data.get("class_type", "")
             widgets = node_data.get("widgets_values", [])
-            
+
             if "SeargeImageInputs" in class_type and widgets:
                 image_params = self._parse_image_params(widgets)
-        
+
         return image_params
 
     def _detect_searge_workflow(
@@ -197,63 +201,80 @@ class ComfyUISeargeExtractor:
             return False
 
         searge_indicators = ["Searge", "SeargeSDXL"]
-        
+
         for node_data in nodes.values():
             class_type = node_data.get("class_type", "")
             if any(indicator in class_type for indicator in searge_indicators):
                 return True
-        
+
         return False
 
     def _parse_generation_params(self, widgets: list) -> dict[str, Any]:
         """Parse generation parameters from widgets."""
         if not isinstance(widgets, list) or len(widgets) == 0:
             return {}
-        
+
         params = {}
         param_mapping = {
-            0: "seed", 1: "steps", 2: "cfg_scale", 3: "sampler_name",
-            4: "scheduler", 5: "denoise", 6: "width", 7: "height",
-            8: "batch_size", 9: "refiner_switch", 10: "refiner_denoise"
+            0: "seed",
+            1: "steps",
+            2: "cfg_scale",
+            3: "sampler_name",
+            4: "scheduler",
+            5: "denoise",
+            6: "width",
+            7: "height",
+            8: "batch_size",
+            9: "refiner_switch",
+            10: "refiner_denoise",
         }
-        
+
         for i, param_name in param_mapping.items():
             if i < len(widgets):  # Check to prevent IndexError
                 params[param_name] = widgets[i]
-        
+
         return params
 
     def _parse_sampler_params(self, widgets: list) -> dict[str, Any]:
         """Parse sampler parameters from widgets."""
         if not isinstance(widgets, list) or len(widgets) == 0:
             return {}
-        
+
         params = {}
         param_mapping = {
-            0: "base_steps", 1: "refiner_steps", 2: "cfg_scale", 3: "sampler_name",
-            4: "scheduler", 5: "base_denoise", 6: "refiner_denoise", 7: "refiner_switch"
+            0: "base_steps",
+            1: "refiner_steps",
+            2: "cfg_scale",
+            3: "sampler_name",
+            4: "scheduler",
+            5: "base_denoise",
+            6: "refiner_denoise",
+            7: "refiner_switch",
         }
-        
+
         for i, param_name in param_mapping.items():
             if i < len(widgets):
                 params[param_name] = widgets[i]
-        
+
         return params
 
     def _parse_image_params(self, widgets: list) -> dict[str, Any]:
         """Parse image parameters from widgets."""
         if not isinstance(widgets, list) or len(widgets) == 0:
             return {}
-        
+
         params = {}
         param_mapping = {
-            0: "width", 1: "height", 2: "upscale_factor", 3: "interpolation_mode"
+            0: "width",
+            1: "height",
+            2: "upscale_factor",
+            3: "interpolation_mode",
         }
-        
+
         for i, param_name in param_mapping.items():
             if i < len(widgets):
                 params[param_name] = widgets[i]
-        
+
         return params
 
     def extract_searge_workflow_summary(self, data: dict, *args, **kwargs) -> dict[str, Any]:
@@ -287,9 +308,11 @@ class ComfyUISeargeExtractor:
             elif class_type == "SeargeCheckpointLoader":
                 summary["model"] = widgets[0] if isinstance(widgets[0], str) else ""
             elif class_type == "SeargeLoraLoader":
-                summary["loras"].append({
-                    "name": widgets[0] if isinstance(widgets[0], str) else "",
-                    "strength": widgets[1] if len(widgets) > 1 else 1.0,
-                })
-        
+                summary["loras"].append(
+                    {
+                        "name": widgets[0] if isinstance(widgets[0], str) else "",
+                        "strength": widgets[1] if len(widgets) > 1 else 1.0,
+                    }
+                )
+
         return summary

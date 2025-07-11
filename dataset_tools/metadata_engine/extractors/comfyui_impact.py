@@ -2,7 +2,7 @@
 
 """ComfyUI Impact Pack ecosystem extractor.
 
-Handles Impact Pack nodes including ImpactWildcardProcessor, 
+Handles Impact Pack nodes including ImpactWildcardProcessor,
 FaceDetailer, and other Impact-specific functionality.
 """
 
@@ -41,19 +41,19 @@ class ComfyUIImpactExtractor:
     ) -> str:
         """Extract processed prompt from ImpactWildcardProcessor."""
         self.logger.debug("[Impact] Extracting wildcard prompt")
-        
+
         if not isinstance(data, dict):
             return ""
 
         prompt_data = data.get("prompt", data)
-        
+
         # Look for ImpactWildcardProcessor nodes
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if "ImpactWildcardProcessor" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
@@ -63,17 +63,17 @@ class ComfyUIImpactExtractor:
                     # [2] = mode (reproduce/randomize)
                     # [3] = seed
                     # [4] = etc.
-                    
+
                     # Return the processed text (usually index 1)
                     if len(widgets) > 1 and isinstance(widgets[1], str):
                         processed_text = widgets[1].strip()
                         if processed_text and processed_text != widgets[0]:
                             return processed_text
-                    
+
                     # Fallback to input text if processed text is empty
                     if len(widgets) > 0 and isinstance(widgets[0], str):
                         return widgets[0].strip()
-        
+
         return ""
 
     def _extract_face_detailer_params(
@@ -85,39 +85,48 @@ class ComfyUIImpactExtractor:
     ) -> dict[str, Any]:
         """Extract FaceDetailer parameters."""
         self.logger.debug("[Impact] Extracting FaceDetailer params")
-        
+
         if not isinstance(data, dict):
             return {}
 
         prompt_data = data.get("prompt", data)
         face_detailer_params = {}
-        
+
         # Look for FaceDetailer nodes
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if "FaceDetailer" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     # FaceDetailer typically has parameters like:
                     # guide_size, guide_size_for, max_size, seed, steps, cfg, etc.
-                    
+
                     param_names = [
-                        "guide_size", "guide_size_for", "max_size", "seed", 
-                        "steps", "cfg", "sampler_name", "scheduler", 
-                        "denoise", "feather", "crop_factor", "drop_size"
+                        "guide_size",
+                        "guide_size_for",
+                        "max_size",
+                        "seed",
+                        "steps",
+                        "cfg",
+                        "sampler_name",
+                        "scheduler",
+                        "denoise",
+                        "feather",
+                        "crop_factor",
+                        "drop_size",
                     ]
-                    
+
                     for i, param_name in enumerate(param_names):
                         if i < len(widgets):
                             face_detailer_params[param_name] = widgets[i]
-                    
+
                     face_detailer_params["node_type"] = class_type
                     break
-        
+
         return face_detailer_params
 
     def _extract_segs_info(
@@ -129,33 +138,37 @@ class ComfyUIImpactExtractor:
     ) -> dict[str, Any]:
         """Extract SEGS (segmentation) information."""
         self.logger.debug("[Impact] Extracting SEGS info")
-        
+
         if not isinstance(data, dict):
             return {}
 
         prompt_data = data.get("prompt", data)
         segs_info = {}
-        
+
         # Look for SEGS-related nodes
         segs_nodes = [
-            "SEGSDetailer", "SEGSPreview", "SEGSToImageList",
-            "SEGSUpscaler", "SEGSPaste", "SEGSControlNetProvider"
+            "SEGSDetailer",
+            "SEGSPreview",
+            "SEGSToImageList",
+            "SEGSUpscaler",
+            "SEGSPaste",
+            "SEGSControlNetProvider",
         ]
-        
+
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if any(segs_node in class_type for segs_node in segs_nodes):
                 widgets = node_data.get("widgets_values", [])
                 segs_info[class_type] = {
                     "node_id": node_id,
                     "widgets": widgets,
-                    "type": class_type
+                    "type": class_type,
                 }
-        
+
         return segs_info
 
     def _extract_detailer_pipe(
@@ -167,28 +180,28 @@ class ComfyUIImpactExtractor:
     ) -> dict[str, Any]:
         """Extract DetailerPipe information."""
         self.logger.debug("[Impact] Extracting DetailerPipe")
-        
+
         if not isinstance(data, dict):
             return {}
 
         prompt_data = data.get("prompt", data)
         detailer_pipe = {}
-        
+
         # Look for DetailerPipe nodes
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             if "DetailerPipe" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 detailer_pipe[class_type] = {
                     "node_id": node_id,
                     "widgets": widgets,
-                    "type": class_type
+                    "type": class_type,
                 }
-        
+
         return detailer_pipe
 
     def _detect_impact_workflow(
@@ -203,33 +216,40 @@ class ComfyUIImpactExtractor:
             return False
 
         prompt_data = data.get("prompt", data)
-        
+
         # Look for Impact Pack node indicators
         impact_indicators = [
-            "Impact", "ImpactWildcardProcessor", "FaceDetailer",
-            "SEGSDetailer", "DetailerPipe", "SEGS", "UltralyticsDetectorProvider",
-            "SAMDetectorProvider", "BboxDetectorProvider", "SegmDetectorProvider"
+            "Impact",
+            "ImpactWildcardProcessor",
+            "FaceDetailer",
+            "SEGSDetailer",
+            "DetailerPipe",
+            "SEGS",
+            "UltralyticsDetectorProvider",
+            "SAMDetectorProvider",
+            "BboxDetectorProvider",
+            "SegmDetectorProvider",
         ]
-        
+
         for node_data in prompt_data.values():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
             if any(indicator in class_type for indicator in impact_indicators):
                 return True
-        
+
         # Also check properties for Impact Pack cnr_id
         for node_data in prompt_data.values():
             if not isinstance(node_data, dict):
                 continue
-                
+
             properties = node_data.get("properties", {})
             if isinstance(properties, dict):
                 cnr_id = properties.get("cnr_id", "")
                 if "impact" in cnr_id.lower():
                     return True
-        
+
         return False
 
     def extract_impact_workflow_summary(self, data: dict) -> dict[str, Any]:
@@ -244,7 +264,7 @@ class ComfyUIImpactExtractor:
             "segs_info": self._extract_segs_info(data, {}, {}, {}),
             "detailer_pipe": self._extract_detailer_pipe(data, {}, {}, {}),
         }
-        
+
         return summary
 
     def get_impact_nodes(self, data: dict) -> dict[str, dict]:
@@ -254,37 +274,53 @@ class ComfyUIImpactExtractor:
 
         prompt_data = data.get("prompt", data)
         impact_nodes = {}
-        
+
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             # Check if it's an Impact node
             if "Impact" in class_type or self._is_impact_node(class_type):
                 impact_nodes[node_id] = {
                     "type": class_type,
                     "widgets": node_data.get("widgets_values", []),
                     "inputs": node_data.get("inputs", {}),
-                    "outputs": node_data.get("outputs", [])
+                    "outputs": node_data.get("outputs", []),
                 }
-        
+
         return impact_nodes
 
     def _is_impact_node(self, class_type: str) -> bool:
         """Check if a class type is an Impact Pack node."""
         impact_node_types = [
-            "FaceDetailer", "SEGSDetailer", "DetailerPipe", "SEGS",
-            "UltralyticsDetectorProvider", "SAMDetectorProvider",
-            "BboxDetectorProvider", "SegmDetectorProvider",
-            "ImpactWildcardProcessor", "ImpactImageBatchToImageList",
-            "ImpactImageInfo", "ImpactInt", "ImpactFloat", "ImpactString",
-            "ImpactConditionalBranch", "ImpactControlNetApply",
-            "ImpactDecomposeSEGS", "ImpactDilateErode", "ImpactGaussianBlur",
-            "ImpactMakeTileSEGS", "ImpactSEGSClassify", "ImpactSEGSConcat",
-            "ImpactSEGSOrderedFilter", "ImpactSEGSRangeFilter",
-            "ImpactSEGSToMaskList", "ImpactSimpleDetectorProvider"
+            "FaceDetailer",
+            "SEGSDetailer",
+            "DetailerPipe",
+            "SEGS",
+            "UltralyticsDetectorProvider",
+            "SAMDetectorProvider",
+            "BboxDetectorProvider",
+            "SegmDetectorProvider",
+            "ImpactWildcardProcessor",
+            "ImpactImageBatchToImageList",
+            "ImpactImageInfo",
+            "ImpactInt",
+            "ImpactFloat",
+            "ImpactString",
+            "ImpactConditionalBranch",
+            "ImpactControlNetApply",
+            "ImpactDecomposeSEGS",
+            "ImpactDilateErode",
+            "ImpactGaussianBlur",
+            "ImpactMakeTileSEGS",
+            "ImpactSEGSClassify",
+            "ImpactSEGSConcat",
+            "ImpactSEGSOrderedFilter",
+            "ImpactSEGSRangeFilter",
+            "ImpactSEGSToMaskList",
+            "ImpactSimpleDetectorProvider",
         ]
-        
+
         return any(impact_type in class_type for impact_type in impact_node_types)

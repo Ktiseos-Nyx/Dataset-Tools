@@ -116,7 +116,7 @@ class SettingsDialog(QDialog):
 
     def _populate_theme_combo(self) -> None:
         """Populate the theme combo box."""
-        if hasattr(self.parent_window, 'enhanced_theme_manager'):
+        if hasattr(self.parent_window, "enhanced_theme_manager"):
             enhanced_manager = self.parent_window.enhanced_theme_manager
             available_themes = enhanced_manager.get_available_themes()
             for category, themes in available_themes.items():
@@ -149,11 +149,11 @@ class SettingsDialog(QDialog):
         app_font_families = []
         for font_id in QFontDatabase.applicationFontFamilies(QFontDatabase.addApplicationFont(":/")):
             app_font_families.extend(QFontDatabase.applicationFontFamilies(font_id))
-        
+
         # Add a separator and then the application fonts
         if app_font_families:
             self.font_combo.insertItem(0, "--- Application Fonts ---")
-            self.font_combo.model().item(0).setEnabled(False) # Make separator unselectable
+            self.font_combo.model().item(0).setEnabled(False)  # Make separator unselectable
             for i, family in enumerate(sorted(list(set(app_font_families)))):
                 self.font_combo.insertItem(i + 1, family)
 
@@ -177,7 +177,7 @@ class SettingsDialog(QDialog):
 
     def _load_theme_setting(self) -> None:
         """Load and set current theme setting."""
-        if hasattr(self.parent_window, 'enhanced_theme_manager'):
+        if hasattr(self.parent_window, "enhanced_theme_manager"):
             current_theme = self.parent_window.enhanced_theme_manager.current_theme
             for i in range(self.theme_combo.count()):
                 if self.theme_combo.itemData(i) == current_theme:
@@ -210,7 +210,7 @@ class SettingsDialog(QDialog):
     def _apply_theme_settings(self) -> None:
         """Apply the selected theme."""
         selected_theme_id = self.theme_combo.currentData()
-        if selected_theme_id and hasattr(self.parent_window, 'enhanced_theme_manager'):
+        if selected_theme_id and hasattr(self.parent_window, "enhanced_theme_manager"):
             self.parent_window.enhanced_theme_manager.apply_theme(selected_theme_id)
 
     def _apply_window_settings(self) -> None:
@@ -228,7 +228,7 @@ class SettingsDialog(QDialog):
         """Apply the selected font family and size globally."""
         font_family = self.font_combo.currentFont().family()
         font_size = self.font_size_spinbox.value()
-        
+
         # Save settings
         self.settings.setValue("fontFamily", font_family)
         self.settings.setValue("fontSize", font_size)
