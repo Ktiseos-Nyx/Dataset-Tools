@@ -529,8 +529,8 @@ class ComfyUIExtractor:
                             connection_info = inputs[target_input_name]
                             if isinstance(connection_info, list) and len(connection_info) >= 1:
                                 target_connection = connection_info[0]  # Node ID
-                                print(
-                                    f"[DEBUG] Found Civitai-style connection: {target_input_name} -> {target_connection}"
+                                self.logger.debug(
+                                    f"Found Civitai-style connection: {target_input_name} -> {target_connection}"
                                 )
                     else:
                         # Standard ComfyUI format: [{"name": "positive", "link": 123}, ...]
