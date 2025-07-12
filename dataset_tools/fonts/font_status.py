@@ -4,7 +4,7 @@
 from pathlib import Path
 
 
-def show_font_status():
+def show_font_status() -> None:
     """Show current bundled font status."""
     fonts_dir = Path(__file__).parent
 

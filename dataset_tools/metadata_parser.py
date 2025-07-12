@@ -15,6 +15,7 @@ from .metadata_engine.engine import create_metadata_engine
 from .metadata_engine.parser_registry import register_parser_class
 from .vendored_sdpr.format.a1111 import A1111
 from .vendored_sdpr.format.civitai import CivitaiFormat
+
 # Import vendored parser classes for registration
 from .vendored_sdpr.format.drawthings import DrawThings
 from .vendored_sdpr.format.easydiffusion import EasyDiffusion

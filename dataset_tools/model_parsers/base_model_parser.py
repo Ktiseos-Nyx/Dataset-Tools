@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 from enum import Enum
 
 from ..correct_types import DownField, EmptyField, UpField
+
 # Corrected: Import the modified info_monitor directly
-from ..logger import \
-    info_monitor  # Assuming info_monitor is the new name for nfo
+from ..logger import info_monitor  # Assuming info_monitor is the new name for nfo
 
 
 class ModelParserStatus(Enum):

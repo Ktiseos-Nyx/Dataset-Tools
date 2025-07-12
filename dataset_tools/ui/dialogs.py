@@ -11,9 +11,19 @@ including settings configuration and about information dialogs.
 
 from PyQt6.QtCore import QSettings
 from PyQt6.QtGui import QFont, QFontDatabase
-from PyQt6.QtWidgets import (QComboBox, QDialog, QDialogButtonBox,
-                             QFontComboBox, QFormLayout, QLabel, QMessageBox,
-                             QSpinBox, QTabWidget, QVBoxLayout, QWidget)
+from PyQt6.QtWidgets import (
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QFontComboBox,
+    QFormLayout,
+    QLabel,
+    QMessageBox,
+    QSpinBox,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
 from ..logger import info_monitor as nfo
 

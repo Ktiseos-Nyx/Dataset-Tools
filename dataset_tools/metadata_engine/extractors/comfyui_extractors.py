@@ -432,42 +432,88 @@ class ComfyUIExtractor:
 
                     # Find the target input connection
                     target_connection = None
-                    for inp in inputs:
-                        if isinstance(inp, dict) and inp.get("name") == target_input_name:
-                            target_connection = inp.get("link")
-                            break
+
+                    # Handle both input formats: dict format (Civitai) and list format (standard ComfyUI)
+                    if isinstance(inputs, dict):
+                        # Civitai format: {"positive": ["6", 0], "negative": ["7", 0]}
+                        if target_input_name in inputs:
+                            connection_info = inputs[target_input_name]
+                            if isinstance(connection_info, list) and len(connection_info) >= 1:
+                                target_connection = connection_info[0]  # Node ID
+                                print(
+                                    f"[DEBUG] Found Civitai-style connection: {target_input_name} -> {target_connection}"
+                                )
+                    else:
+                        # Standard ComfyUI format: [{"name": "positive", "link": 123}, ...]
+                        for inp in inputs:
+                            if isinstance(inp, dict) and inp.get("name") == target_input_name:
+                                target_connection = inp.get("link")
+                                break
 
                     # FLUX fallback: SamplerCustomAdvanced uses "guider" instead of positive/negative
                     if target_connection is None and class_type == "SamplerCustomAdvanced":
-                        for inp in inputs:
-                            if isinstance(inp, dict) and inp.get("name") == "guider":
-                                target_connection = inp.get("link")
-                                print(f"[DEBUG] FLUX: Using guider connection for {target_input_name}")
-                                break
+                        if isinstance(inputs, dict):
+                            # Civitai format: check for "guider" key
+                            if "guider" in inputs:
+                                connection_info = inputs["guider"]
+                                if isinstance(connection_info, list) and len(connection_info) >= 1:
+                                    target_connection = connection_info[0]
+                                    print(
+                                        f"[DEBUG] FLUX: Using Civitai-style guider connection for {target_input_name}"
+                                    )
+                        else:
+                            # Standard ComfyUI format
+                            for inp in inputs:
+                                if isinstance(inp, dict) and inp.get("name") == "guider":
+                                    target_connection = inp.get("link")
+                                    print(f"[DEBUG] FLUX: Using guider connection for {target_input_name}")
+                                    break
 
                     print(f"[DEBUG] Target connection for {target_input_name}: {target_connection}")
 
                     if target_connection is not None:
-                        # Look through links to find where this connection comes from
-                        links = data.get("links", [])
-                        for link in links:
-                            if isinstance(link, list) and len(link) >= 6 and link[0] == target_connection:
-                                source_node_id = str(link[1])  # Source node ID
-                                print(f"[DEBUG] Following link {target_connection} to source node: {source_node_id}")
+                        # For Civitai format, target_connection is directly the node ID
+                        # For standard ComfyUI, we need to look through links
+                        if isinstance(inputs, dict):
+                            # Civitai format: target_connection is the node ID directly
+                            source_node_id = str(target_connection)
+                            print(f"[DEBUG] Civitai direct connection to node: {source_node_id}")
 
-                                if source_node_id in node_lookup:
-                                    # Recursively traverse to find text encoders
-                                    found_text = self._traverse_for_text(
-                                        source_node_id,
-                                        node_lookup,
-                                        data,
-                                        text_encoder_types,
-                                        visited=set(),
+                            if source_node_id in node_lookup:
+                                # Recursively traverse to find text encoders
+                                found_text = self._traverse_for_text(
+                                    source_node_id,
+                                    node_lookup,
+                                    data,
+                                    text_encoder_types,
+                                    visited=set(),
+                                )
+                                if found_text:
+                                    print(f"[DEBUG] Found text through Civitai traversal: {str(found_text)[:100]}")
+                                    return found_text
+                        else:
+                            # Standard ComfyUI format: look through links to find where this connection comes from
+                            links = data.get("links", [])
+                            for link in links:
+                                if isinstance(link, list) and len(link) >= 6 and link[0] == target_connection:
+                                    source_node_id = str(link[1])  # Source node ID
+                                    print(
+                                        f"[DEBUG] Following link {target_connection} to source node: {source_node_id}"
                                     )
-                                    if found_text:
-                                        print(f"[DEBUG] Found text through traversal: {str(found_text)[:100]}")
-                                        return found_text
-                                break
+
+                                    if source_node_id in node_lookup:
+                                        # Recursively traverse to find text encoders
+                                        found_text = self._traverse_for_text(
+                                            source_node_id,
+                                            node_lookup,
+                                            data,
+                                            text_encoder_types,
+                                            visited=set(),
+                                        )
+                                        if found_text:
+                                            print(f"[DEBUG] Found text through traversal: {str(found_text)[:100]}")
+                                            return found_text
+                                    break
 
         print("[DEBUG] No text found, returning fallback")
         return method_def.get("fallback", "")
@@ -500,11 +546,23 @@ class ComfyUIExtractor:
 
         if any(encoder in class_type for encoder in text_encoder_types):
             # Found a text encoder, extract text
+            print(f"[DEBUG] Found text encoder {class_type}, extracting text...")
+
+            # First try widget_values (standard ComfyUI format)
             widget_values = node.get("widgets_values", [])
+            print(f"[DEBUG] Widget values: {widget_values}")
             if widget_values and len(widget_values) > 0:
                 text_value = widget_values[0]
                 print(f"[DEBUG] Found text encoder with text: {str(text_value)[:50]}")
                 return str(text_value)
+
+            # Then try inputs.text (Civitai smZ CLIPTextEncode format)
+            inputs = node.get("inputs", {})
+            text_from_inputs = inputs.get("text", "")
+            print(f"[DEBUG] Text from inputs: {str(text_from_inputs)[:50]}")
+            if text_from_inputs and isinstance(text_from_inputs, str) and len(text_from_inputs.strip()) > 0:
+                print(f"[DEBUG] Found text in inputs.text: {str(text_from_inputs)[:50]}")
+                return str(text_from_inputs)
 
         # Check for "String Literal" nodes (common in efficiency workflows)
         if "String" in class_type and "Literal" in class_type:

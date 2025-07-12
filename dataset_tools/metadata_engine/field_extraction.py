@@ -13,6 +13,7 @@ from ..logger import get_logger
 from .extractors.a1111_extractors import A1111Extractor
 from .extractors.civitai_extractors import CivitaiExtractor
 from .extractors.comfyui_extractors import ComfyUIExtractor
+
 # Import extraction modules
 from .extractors.direct_extractors import DirectValueExtractor
 from .extractors.json_extractors import JSONExtractor

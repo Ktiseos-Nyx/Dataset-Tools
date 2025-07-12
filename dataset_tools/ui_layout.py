@@ -5,6 +5,7 @@ from PyQt6 import QtCore
 from PyQt6 import QtWidgets as Qw
 
 from .ui.font_manager import get_monospace_font, get_reading_font
+
 # Import your custom widgets. These must be defined in widgets.py first.
 from .widgets import ImageLabel, LeftPanelWidget
 

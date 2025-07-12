@@ -22,8 +22,10 @@ from .comfyui_node_checker import ComfyUINodeChecker
 from .comfyui_pixart import ComfyUIPixArtExtractor
 from .comfyui_rgthree import ComfyUIRGthreeExtractor
 from .comfyui_sdxl import ComfyUISDXLExtractor
+
 # --- FIX: Corrected typo from "Searche" to "Searge" ---
 from .comfyui_searge import ComfyUISeargeExtractor
+
 # Import all the specialized extractors
 from .comfyui_traversal import ComfyUITraversalExtractor
 from .comfyui_was import ComfyUIWASExtractor

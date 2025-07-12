@@ -7,6 +7,7 @@ __copyright__ = "Copyright 2023, Receyuki"
 __email__ = "receyuki@gmail.com"
 
 import json
+
 # import logging # No longer needed for type hinting if self._logger from BaseFormat is used
 from pathlib import PurePosixPath, PureWindowsPath
 from typing import Any

@@ -7,13 +7,13 @@ __email__ = "receyuki@gmail.com; your_email@example.com"
 
 
 from .a1111 import A1111
+
 # Core and original SDPR exports
 from .base_format import BaseFormat
+
 # Your new/modified parsers
-from .civitai import \
-    CivitaiFormat  # <<< CORRECTED: Using the combined CivitaiFormat
-from .comfyui import \
-    ComfyUI  # Assuming you named the file comfyui.py for ComfyUI parser
+from .civitai import CivitaiFormat  # <<< CORRECTED: Using the combined CivitaiFormat
+from .comfyui import ComfyUI  # Assuming you named the file comfyui.py for ComfyUI parser
 from .drawthings import DrawThings
 from .easydiffusion import EasyDiffusion
 from .fooocus import Fooocus

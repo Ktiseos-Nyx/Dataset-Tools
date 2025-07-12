@@ -5,18 +5,21 @@
 """Launch and exit the application"""
 
 import argparse  # Import argparse for command-line argument processing
-import sys
 import os
+import sys
 
-from PyQt6.QtGui import QFontDatabase
 from PyQt6 import QtWidgets
+from PyQt6.QtGui import QFontDatabase
 
+# For version display
 # Import from your package's __init__.py
-from dataset_tools import __version__  # type: ignore
 # For version display
-from dataset_tools import set_package_log_level  # type: ignore
-# For version display
+from dataset_tools import (
+    __version__,  # type: ignore
+    set_package_log_level,  # type: ignore
+)
 from dataset_tools import logger as app_logger  # type: ignore
+
 # Import your logger module
 # Import your UI and logger
 from dataset_tools.ui import MainWindow
@@ -25,9 +28,7 @@ from dataset_tools.ui import MainWindow
 def main(cli_args_list=None):
     """Launch application"""
     parser = argparse.ArgumentParser(
-        description=(
-            f"Dataset Tools v{__version__} - Metadata Viewer and Editor."
-        ),
+        description=(f"Dataset Tools v{__version__} - Metadata Viewer and Editor."),
     )
     levels_map_cli = {
         "d": "DEBUG",
@@ -40,12 +41,8 @@ def main(cli_args_list=None):
     # Using 'level_val' instead of 'l'
     valid_log_level_choices = (
         list(levels_map_cli.keys())
-        + list(
-            level_val.upper() for level_val in levels_map_cli.values()
-        )  # Line 30
-        + list(
-            level_val.lower() for level_val in levels_map_cli.values()
-        )  # Line 31
+        + list(level_val.upper() for level_val in levels_map_cli.values())  # Line 30
+        + list(level_val.lower() for level_val in levels_map_cli.values())  # Line 31
     )
 
     parser.add_argument(
@@ -74,9 +71,7 @@ def main(cli_args_list=None):
     chosen_log_level_name = args.log_level.upper()
     # If user gave a short form (e.g., "d"), convert to full name ("DEBUG")
     if chosen_log_level_name.lower() in levels_map_cli:
-        chosen_log_level_name = levels_map_cli[
-            chosen_log_level_name.lower()
-        ].upper()
+        chosen_log_level_name = levels_map_cli[chosen_log_level_name.lower()].upper()
     # At this point, chosen_log_level_name should be one of "DEBUG",
     # "INFO", etc.
 
@@ -120,9 +115,7 @@ def main(cli_args_list=None):
 
     # Now use your logger (it should reflect the new level if reconfigured)
     app_logger.info_monitor(f"Dataset Tools v{__version__} launching...")
-    app_logger.info_monitor(
-        f"Application log level set to: {chosen_log_level_name}"
-    )
+    app_logger.info_monitor(f"Application log level set to: {chosen_log_level_name}")
     # Example debug message
     app_logger.debug_message(f"Arguments parsed: {args}")
 
@@ -144,14 +137,9 @@ def main(cli_args_list=None):
                 font_id = QFontDatabase.addApplicationFont(font_path)
                 if font_id != -1:
                     family = QFontDatabase.applicationFontFamilies(font_id)[0]
-                    app_logger.info_monitor(
-                        f"Successfully loaded font: '{family}' from "
-                        f"{font_file}"
-                    )
+                    app_logger.info_monitor(f"Successfully loaded font: '{family}' from {font_file}")
                 else:
-                    app_logger.info_monitor(
-                        f"Failed to load font: {font_file}"
-                    )
+                    app_logger.info_monitor(f"Failed to load font: {font_file}")
 
     window = MainWindow()  # Initialize our main window.
     window.apply_global_font()  # Apply saved font settings on startup

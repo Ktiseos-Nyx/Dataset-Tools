@@ -6,10 +6,12 @@ This module contains all the custom UI widgets used in the application.
 Each widget has a specific purpose and clean interface
 """
 
+import sys
 from pathlib import Path
 
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
+from PyQt6.QtWidgets import QApplication, QMainWindow, QSplitter
 
 from .logger import get_logger
 
@@ -654,10 +656,6 @@ class LeftPanelWidget(Qw.QWidget):
 
 def test_ui_widgets():
     """Test the UI widgets."""
-    import sys
-
-    from PyQt6.QtWidgets import QApplication, QMainWindow, QSplitter
-
     app = QApplication(sys.argv)
 
     # Create main window for testing

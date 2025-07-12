@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from PyQt6 import QtWidgets as Qw
 
+from .correct_types import ExtensionType as Ext
 from .display_formatter import format_metadata_for_display
 
 # --- This is the fix for circular import type hints ---
@@ -82,8 +83,6 @@ def _update_status_for_selection(main_window: "MainWindow", file_name: str):
 
 def _process_image_preview(main_window: "MainWindow", full_file_path: str, file_name: str):
     """Checks if a file is an image and calls the display function if it is."""
-    from .correct_types import ExtensionType as Ext
-
     file_suffix_lower = Path(full_file_path).suffix.lower()
 
     # Create a single set of all valid image extensions for a fast check

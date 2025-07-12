@@ -10,10 +10,8 @@ import json
 import logging  # For type hinting
 from typing import Any  # Use Dict
 
-from .base_format import \
-    BaseFormat  # Assuming BaseFormat is in the same package level
-from .utility import \
-    merge_dict  # Assuming utility.py is in the same package level
+from .base_format import BaseFormat  # Assuming BaseFormat is in the same package level
+from .utility import merge_dict  # Assuming utility.py is in the same package level
 
 # Mapping of common keys found in ComfyUI KSampler nodes to standard parameter names
 COMFY_FLOW_TO_PARAM_MAP: dict[str, str | list[str]] = {

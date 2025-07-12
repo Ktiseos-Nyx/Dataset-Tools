@@ -7,10 +7,13 @@ the UI responsive. Think of it as your retainer doing tasks while you
 continue adventuring! 🎒⚡
 """
 
+import os
+import sys
 from collections.abc import Callable
 from typing import Any
 
 from PyQt6 import QtCore
+from PyQt6.QtWidgets import QApplication
 
 from .file_operations import FileOperations
 from .logger import get_logger
@@ -470,10 +473,6 @@ def load_metadata_in_background(
 
 def test_background_operations():
     """Test the background operations system."""
-    import sys
-
-    from PyQt6.QtWidgets import QApplication
-
     app = QApplication(sys.argv)
     logger = get_logger("BackgroundOperationsTest")
 
@@ -498,8 +497,6 @@ def test_background_operations():
         app.quit()
 
     # Test with current directory
-    import os
-
     test_path = os.getcwd()
 
     task = load_files_in_background(

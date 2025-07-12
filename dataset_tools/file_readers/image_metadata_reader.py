@@ -32,7 +32,7 @@ class ImageMetadataReader:
     using pyexiv2 as the primary method with Pillow as a fallback.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the image metadata reader."""
         self.logger = get_logger(f"{__name__}.ImageMetadataReader")
 
@@ -516,7 +516,7 @@ def get_image_info(file_path: str) -> dict[str, Any]:
 # ============================================================================
 
 
-def test_image_metadata_reader():
+def test_image_metadata_reader() -> None:
     """Test the image metadata reader with sample files."""
     logger = get_logger("ImageMetadataReaderTest")
 
