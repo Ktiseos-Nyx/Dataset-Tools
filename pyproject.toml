@@ -138,6 +138,7 @@ ignore = [
     "D213", # Incompatible with D212 (multi-line summary on first line)
     # ANN101, ANN102 were removed by Ruff as deprecated/handled differently
     "COM812", # Add this to ignore the formatter conflict with trailing commas
+    "S101",   # Temporarily ignore assert statements
 ]
 # fix = true # If you want `ruff check` to also attempt fixes without --fix flag
 
@@ -199,7 +200,7 @@ ignore = [
 "dataset_tools/model_parsers/__init__.py" = ["T201", "BLE001", "PLE0605"]  # Bootstrap debugging
 "dataset_tools/main.py" = ["T201", "D400", "D415", "ANN201", "ANN001"]  # CLI debugging
 "dataset_tools/test_comfyui_analyzer.py" = ["T201", "E501", "ANN201"]  # Test file
-"dataset_tools/ui_widgets.py" = ["T201", "ANN204", "ANN001", "D400", "D401", "D415", "ARG002", "BLE001", "N802", "ANN201", "ANN202"]  # Test UI file
+"dataset_tools/ui_widgets.py" = ["T201", "ANN204", "ANN001", "D400", "D401", "D415", "ARG002", "BLE001", "N802", "ANN201", "ANN202", "PLC0415"]  # Test UI file
 "dataset_tools/vendored_sdpr/format/novelai.py" = ["T201", "PLR0911", "D401", "PLR2004", "UP038", "E501"]  # Vendored code
 
 # For your tests, you might want to ignore missing docstrings for test methods,
@@ -222,17 +223,18 @@ ignore = [
     "PTH118", # Allow errors with pathlib because i'm a dumbass dum!
     "PGH003", # Use specific rule codes when ignoring type issues
 ]
-"dataset_tools/file_readers/__init__.py" = ["PLR0911", "TID252", "UP035", "F401", "BLE001", "PTH123", "SLF001", "PLW0603", "D401", "D205", "ANN201", "ANN204", "SIM118"]
+"dataset_tools/file_readers/__init__.py" = ["PLR0911", "TID252", "UP035", "F401", "BLE001", "PTH123", "SLF001", "PLW0603", "D401", "D205", "ANN201", "ANN204", "SIM118", "PLC0415"]
 "dataset_tools/file_readers/schema_file_reader.py" = ["C901", "PLR0911", "BLE001", "PTH123", "RUF015", "ARG002", "ANN401", "UP038", "N817", "TID252", "ANN204", "D401", "D205", "F821"]
-"dataset_tools/metadata_engine/context_preparation.py" = ["C901", "BLE001", "E501", "UP007", "ANN204", "PLR2004", "UP038", "S110", "E722", "ARG002", "ANN401", "TID252", "PGH003"]
-"dataset_tools/metadata_engine/engine.py" = ["C901", "PLR0911", "PLR0912", "PLR0915", "BLE001", "E501", "UP007", "ANN201", "ANN204", "ANN001", "ANN002", "ANN003", "ARG002", "ANN401", "S318", "N806", "PTH123", "TID252", "PYI056", "D400", "D415"]
-"dataset_tools/metadata_engine/extractors/comfyui_extractors.py" = ["C901", "PLR0911", "PLR0912", "PLR0915", "B007", "PLR2004", "SIM102", "ARG002", "ANN401", "D205", "D401", "E722", "S110"]
+"dataset_tools/metadata_engine/context_preparation.py" = ["C901", "BLE001", "E501", "UP007", "ANN204", "PLR2004", "UP038", "S110", "E722", "ARG002", "ANN401", "TID252", "PGH003", "PLC0415"]
+"dataset_tools/metadata_engine/engine.py" = ["C901", "PLR0911", "PLR0912", "PLR0915", "BLE001", "E501", "UP007", "ANN201", "ANN204", "ANN001", "ANN002", "ANN003", "ARG002", "ANN401", "S318", "N806", "PTH123", "TID252", "PYI056", "D400", "D415", "PLC0415"]
+"dataset_tools/metadata_engine/extractors/comfyui_extractors.py" = ["C901", "PLR0911", "PLR0912", "PLR0915", "B007", "PLR2004", "SIM102", "ARG002", "ANN401", "D205", "D401", "E722", "S110", "PLC0415"]
+"dataset_tools/metadata_engine/extractors/comfyui_traversal.py" = ["PLR0912"]
 "dataset_tools/metadata_engine/extractors/json_extractors.py" = ["PLR0911", "BLE001", "ARG002", "ANN401", "TID252", "ANN204"]
 "dataset_tools/metadata_engine/rule_engine.py" = ["C901", "PLR0911", "PLR0912", "PLR0915", "BLE001", "UP038", "ARG002", "ANN401", "ANN204", "ANN001", "RUF013", "SIM110", "PLR1714"]
 "dataset_tools/metadata_engine/utils.py" = ["C901", "PLR0911"]
 "dataset_tools/model_parsers/gguf_parser.py" = ["C901", "PLR2004", "ANN401", "B904", "E501", "PTH123", "ANN204", "TID252"]
 "dataset_tools/model_parsers/safetensors_parser.py" = ["C901", "PLR2004", "E501", "PTH123", "N806", "SLF001", "ANN204"]
-"dataset_tools/rule_evaluator.py" = ["C901", "PLR0911", "PLR0912", "PLR0915", "S603", "S607", "E722", "S110", "E501", "SIM102"]
+"dataset_tools/rule_evaluator.py" = ["C901", "PLR0911", "PLR0912", "PLR0915", "S603", "S607", "E722", "S110", "E501", "SIM102", "PLC0415"]
 "dataset_tools/ui/widgets_old.py" = ["C901", "PLR2004", "BLE001", "PTH208", "PTH118", "ANN201", "ANN204", "ANN001", "ARG002", "N802", "PGH003", "D205", "D401", "D400", "D415"]
 "dataset_tools/ui_layout.py" = ["PLR0915", "ANN201", "D205", "D401"]
 "dataset_tools/vendored_sdpr/format/drawthings.py" = ["PLR0911", "D401", "D205"]
@@ -244,25 +246,31 @@ ignore = [
 "dataset_tools/vendored_sdpr/format/tensorart.py" = ["D400", "D415", "D205", "PLR2004", "SIM103", "RUF015"]
 "dataset_tools/vendored_sdpr/format/utility.py" = ["D401", "D205"]
 "dataset_tools/vendored_sdpr/format/yodayo.py" = ["RUF012", "D205", "D401", "E501", "PLW2901"]
-"dataset_tools/access_disk.py" = ["D400", "D415", "ANN204", "BLE001", "E501", "PTH123", "PGH003", "PLR0911"]
+"dataset_tools/access_disk.py" = ["D400", "D415", "ANN204", "BLE001", "E501", "PTH123", "PGH003", "PLR0911", "PLC0415"]
 "dataset_tools/analysis/features.py" = ["SIM102", "D205"]
-"dataset_tools/background_operations.py" = ["ANN204", "ANN001", "ANN401", "BLE001", "F821", "ARG002", "D401", "ANN201", "ANN202", "PTH109"]
+"dataset_tools/background_operations.py" = ["ANN204", "ANN001", "ANN401", "BLE001", "F821", "ARG002", "D401", "ANN201", "ANN202", "PTH109", "PLC0415"]
 "dataset_tools/correct_types.py" = ["PLR2004"]
 "dataset_tools/display_formatter.py" = ["D205", "D401", "ANN202"]
-"dataset_tools/event_handlers.py" = ["ANN201", "PTH118", "ANN202", "D401", "ARG002"]
+"dataset_tools/event_handlers.py" = ["ANN201", "PTH118", "ANN202", "D401", "ARG002", "PLC0415"]
 "dataset_tools/file_operations.py" = ["ANN204", "BLE001", "PLR2004", "PTH208", "PTH118", "ARG002", "D401", "ANN201"]
 "dataset_tools/file_readers/text_file_reader.py" = ["TID252", "ANN204", "BLE001", "PTH123", "PLR0911", "PLR2004", "PLW2901", "D401", "D205", "ANN201", "E501"]
 "dataset_tools/logger.py" = ["ANN201", "PLW0603", "ANN001", "ANN202", "ANN002", "ANN003", "D205", "D401", "RUF013"]
-"dataset_tools/metadata_engine/__init__.py" = ["RUF022", "PYI056", "ANN202", "ANN001", "D401"]
+"dataset_tools/metadata_engine/__init__.py" = ["RUF022", "PYI056", "ANN202", "ANN001", "D401", "PLC0415"]
 "dataset_tools/metadata_engine/extractors/a1111_extractors.py" = ["ANN204", "ANN401", "ARG002", "TID252"]
 "dataset_tools/metadata_engine/extractors/civitai_extractors.py" = ["ANN204", "N802", "ARG002", "ANN401", "TID252"]
 "dataset_tools/metadata_engine/extractors/direct_extractors.py" = ["ANN204", "ANN401", "ARG002", "TID252"]
 "dataset_tools/metadata_engine/extractors/regex_extractors.py" = ["ANN204", "ANN401", "ARG002", "SIM108", "TID252"]
 "dataset_tools/metadata_engine/field_extraction.py" = ["ANN204", "ANN202", "ANN401", "ARG002", "ANN201", "TID252"]
 "dataset_tools/metadata_engine/parser_registry.py" = ["TID252"]
-"dataset_tools/metadata_engine/template_system.py" = ["TID252", "UP007", "ANN204", "ANN401", "ANN003", "D401", "D205", "SIM103"]
+"dataset_tools/metadata_engine/template_system.py" = ["TID252", "UP007", "ANN204", "ANN401", "ANN003", "D401", "D205", "SIM103", "PLC0415"]
 "dataset_tools/metadata_parser.py" = ["D404", "ANN202", "D401", "BLE001", "F841"]
 "dataset_tools/model_parsers/base_model_parser.py" = ["TID252", "ANN204", "E501"]
+"dataset_tools/metadata_engine/extractors/comfyui_extractor_manager.py" = ["PLC0415"]
+"dataset_tools/metadata_engine/extractors/comfyui_workflow_analyzer.py" = ["PLC0415"]
+"dataset_tools/ui/dialogs.py" = ["PLC0415"]
+"dataset_tools/ui/enhanced_theme_manager.py" = ["PLC0415"]
+"dataset_tools/ui/main_window.py" = ["PLC0415"]
+"dataset_tools/ui/managers.py" = ["PLC0415"]
 
 
 [tool.ruff.format] # Formatter specific settings
@@ -277,7 +285,7 @@ ignore-overlong-task-comments = true
 
 [tool.ruff.lint.pylint]
 max-args = 8        # Increased from 7
-max-branches = 18
+max-branches = 30   # Increased to silence ComfyUI warnings
 max-statements = 70
 max-locals = 20
 

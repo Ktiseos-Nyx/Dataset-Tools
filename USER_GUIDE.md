@@ -1,6 +1,6 @@
 # Dataset Tools User Guide
 
-Welcome to Dataset Tools! This comprehensive guide will walk you through everything you need to know to use the application effectively.
+Welcome to Dataset Tools! This guide will walk you through everything you need to know about the application.
 
 ## Table of Contents
 - [Getting Started](#getting-started)
@@ -14,7 +14,7 @@ Welcome to Dataset Tools! This comprehensive guide will walk you through everyth
 - [Keyboard Shortcuts](#keyboard-shortcuts)
 - [Getting Help and Reporting Issues](#getting-help-and-reporting-issues)
 - [Community and Support](#community-and-support)
-- [Important Notice: PyQt6 Branch Status](#important-notice-pyqt6-branch-status)
+- [Important Notice: PyQt6 Status](#important-notice-pyqt6-branch-status)
 
 ---
 
@@ -22,6 +22,7 @@ Welcome to Dataset Tools! This comprehensive guide will walk you through everyth
 
 ### First Launch
 When you first open Dataset Tools, you'll see the main interface with:
+
 - A file list panel on the left (initially empty)
 - An image preview area on the right
 - Metadata display areas below the preview
@@ -199,7 +200,7 @@ For bugs, feature requests, and technical issues:
 
 #### What to Include in Bug Reports
 - **Dataset Tools Version**: Found in Help → About (when available)
-- **Operating System**: Windows 10/11, macOS version, Linux distribution
+- **Operating System**: Windows, macOS, or Linux
 - **Python Version**: Run `python --version`
 - **Steps to Reproduce**: Detailed steps that led to the issue
 - **Expected vs Actual Behavior**: What should happen vs what actually happens
@@ -209,7 +210,7 @@ For bugs, feature requests, and technical issues:
 
 ### Community Discussions
 For general discussion, tips, and community support:
-- **GitHub Discussions**: [Dataset Tools Discussions](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions)
+- **GitHub Discussions**: [Join the conversation](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions)
 
 ## Community and Support
 
@@ -230,7 +231,7 @@ Join our active Discord server for:
 
 ### Support the Project
 If Dataset Tools helps your workflow:
-- ⭐ **Star the Repository**: [GitHub Repository](https://github.com/Ktiseos-Nyx/Dataset-Tools)
+- ⭐ **Star the Repo**: [GitHub](https://github.com/Ktiseos-Nyx/Dataset-Tools)
 - ☕ **Support Development**: [Ko-fi](https://ko-fi.com/duskfallcrew)
 - 📺 **Follow Development**: [Twitch](https://twitch.tv/duskfallcrew)
 
@@ -303,6 +304,8 @@ If you encounter issues not covered here:
 
 ---
 
-**Thank you for using Dataset Tools!** 🎨✨
+**Thank you for using Dataset Tools!**
 
-*This guide is updated regularly. For the latest version, visit our [GitHub repository](https://github.com/Ktiseos-Nyx/Dataset-Tools).*
+🎨✨
+
+*For the latest version of this guide, visit our [GitHub](https://github.com/Ktiseos-Nyx/Dataset-Tools).*

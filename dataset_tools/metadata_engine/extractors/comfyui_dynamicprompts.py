@@ -41,7 +41,7 @@ class ComfyUIDynamicPromptsExtractor:
     def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
-            "dynamicprompts_detect_workflow": self._detect_dynamicprompts_workflow,
+            "dynamicprompts_detect_workflow": self.detect_dynamicprompts_workflow,
             "dynamicprompts_extract_generators": self._extract_generators,
             "dynamicprompts_extract_wildcards": self._extract_wildcards,
             "dynamicprompts_extract_templates": self._extract_templates,
@@ -65,7 +65,7 @@ class ComfyUIDynamicPromptsExtractor:
             return data
         return {}
 
-    def _detect_dynamicprompts_workflow(
+    def detect_dynamicprompts_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -289,7 +289,7 @@ class ComfyUIDynamicPromptsExtractor:
         self, data: dict, *args, **kwargs
     ) -> dict[str, Any]:
         """Extract comprehensive DynamicPrompts workflow summary."""
-        if not self._detect_dynamicprompts_workflow(data, {}, {}, {}):
+        if not self.detect_dynamicprompts_workflow(data, {}, {}, {}):
             return {"is_dynamicprompts_workflow": False}
 
         nodes = self._get_nodes(data)

@@ -1,6 +1,8 @@
 # Font Collection for Dataset Tools
 
-This directory contains a comprehensive collection of high-quality open source fonts bundled with Dataset Tools to provide users with exceptional typography choices while maintaining excellent readability and visual appeal.
+This directory contains a collection of high-quality open source fonts
+bundled with Dataset Tools to provide users with exceptional typography
+choices while maintaining excellent readability and visual appeal.
 
 ## Font Philosophy
 
@@ -119,13 +121,16 @@ Massive gratitude to **Google Fonts** for making virtually all of these amazing 
 **Google Fonts Collection Includes:**
 - **Professional**: Open Sans, Inter, DM Sans, Work Sans, Roboto, Nunito, PT Sans, IBM Plex Sans
 - **Monospace**: JetBrains Mono, Syne Mono, VT323, Silkscreen  
-- **Display**: Orbitron, Jura, Turret Road, Pixelify Sans, Dongle, Tsukimi Rounded, Doppio One, Kosugi Maru, Mandali
+- **Display**: Orbitron, Jura, Turret Road, Pixelify Sans, Dongle,
+  Tsukimi Rounded, Doppio One, Kosugi Maru, Mandali
 - **Government**: Radio Canada (via Google Fonts)
 
 **Sources:**
-- **Primary**: [Google Fonts](https://fonts.google.com) - The world's largest free font library
+- **Primary**: [Google Fonts](https://fonts.google.com) - The world's largest free
+  font library
 - **JetBrains**: [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) (also available on Google Fonts)
-- **Special thanks** to all the individual font designers who contributed their work to Google Fonts
+- **Special thanks** to the font designers who contributed their work to Google
+  Fonts
 
 ---
 

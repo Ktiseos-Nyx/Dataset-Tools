@@ -30,7 +30,7 @@ class ComfyUISeargeExtractor:
             "searge_extract_model_params": self._extract_model_params,
             "searge_extract_sampler_params": self._extract_sampler_params,
             "searge_extract_image_params": self._extract_image_params,
-            "searge_detect_workflow": self._detect_searge_workflow,
+            "searge_detect_workflow": self.detect_searge_workflow,
             "searge_extract_summary": self.extract_searge_workflow_summary,
         }
 
@@ -201,7 +201,7 @@ class ComfyUISeargeExtractor:
 
         return image_params
 
-    def _detect_searge_workflow(
+    def detect_searge_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -294,7 +294,7 @@ class ComfyUISeargeExtractor:
         self, data: dict, *args, **kwargs
     ) -> dict[str, Any]:
         """Extract comprehensive Searge workflow summary."""
-        if not self._detect_searge_workflow(data, {}, {}, {}):
+        if not self.detect_searge_workflow(data, {}, {}, {}):
             return {"is_searge_workflow": False}
 
         # Simplified extraction logic

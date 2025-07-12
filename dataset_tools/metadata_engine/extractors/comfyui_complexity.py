@@ -25,15 +25,15 @@ class ComfyUIComplexityExtractor:
     def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
-            "comfy_extract_dynamic_prompt": self._extract_dynamic_prompt_from_workflow,
+            "comfy_extract_dynamic_prompt": self.extract_dynamic_prompt_from_workflow,
             "comfy_trace_active_prompt_path": self._trace_active_prompt_path,
             "comfy_extract_multi_step_workflow": self._extract_multi_step_workflow,
-            "comfy_analyze_workflow_complexity": self._analyze_workflow_complexity,
+            "comfy_analyze_workflow_complexity": self.analyze_workflow_complexity,
             "comfy_extract_conditional_prompts": self._extract_conditional_prompts,
             "comfy_resolve_parameter_chains": self._resolve_parameter_chains,
         }
 
-    def _extract_dynamic_prompt_from_workflow(
+    def extract_dynamic_prompt_from_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -297,7 +297,7 @@ class ComfyUIComplexityExtractor:
             return ""
 
         # Use the dynamic extraction method for now
-        return self._extract_dynamic_prompt_from_workflow(
+        return self.extract_dynamic_prompt_from_workflow(
             data, method_def, context, fields
         )
 
@@ -357,7 +357,7 @@ class ComfyUIComplexityExtractor:
 
         return None
 
-    def _analyze_workflow_complexity(
+    def analyze_workflow_complexity(
         self,
         data: Any,
         method_def: MethodDefinition,

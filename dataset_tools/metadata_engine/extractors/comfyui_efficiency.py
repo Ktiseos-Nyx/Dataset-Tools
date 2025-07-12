@@ -29,7 +29,7 @@ class ComfyUIEfficiencyExtractor:
             "efficiency_extract_sampler_params": self._extract_sampler_params,
             "efficiency_extract_ksampler_params": self._extract_ksampler_params,
             "efficiency_extract_script_params": self._extract_script_params,
-            "efficiency_detect_workflow": self._detect_efficiency_workflow,
+            "efficiency_detect_workflow": self.detect_efficiency_workflow,
         }
 
     def _extract_loader_params(
@@ -249,7 +249,7 @@ class ComfyUIEfficiencyExtractor:
 
         return script_params
 
-    def _detect_efficiency_workflow(
+    def detect_efficiency_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -308,7 +308,7 @@ class ComfyUIEfficiencyExtractor:
             return {}
 
         summary = {
-            "is_efficiency_workflow": self._detect_efficiency_workflow(
+            "is_efficiency_workflow": self.detect_efficiency_workflow(
                 data, {}, {}, {}
             ),
             "loader_params": self._extract_loader_params(data, {}, {}, {}),

@@ -30,7 +30,7 @@ class ComfyUIRGthreeExtractor:
             "rgthree_extract_reroute_nodes": self._extract_reroute_nodes,
             "rgthree_extract_utility_nodes": self._extract_utility_nodes,
             "rgthree_extract_workflow_nodes": self._extract_workflow_nodes,
-            "rgthree_detect_workflow": self._detect_rgthree_workflow,
+            "rgthree_detect_workflow": self.detect_rgthree_workflow,
         }
 
     def _extract_context_nodes(
@@ -310,7 +310,7 @@ class ComfyUIRGthreeExtractor:
 
         return workflow_nodes
 
-    def _detect_rgthree_workflow(
+    def detect_rgthree_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -404,7 +404,7 @@ class ComfyUIRGthreeExtractor:
             return {}
 
         summary = {
-            "is_rgthree_workflow": self._detect_rgthree_workflow(data, {}, {}, {}),
+            "is_rgthree_workflow": self.detect_rgthree_workflow(data, {}, {}, {}),
             "context_nodes": self._extract_context_nodes(data, {}, {}, {}),
             "power_prompts": self._extract_power_prompts(data, {}, {}, {}),
             "reroute_nodes": self._extract_reroute_nodes(data, {}, {}, {}),

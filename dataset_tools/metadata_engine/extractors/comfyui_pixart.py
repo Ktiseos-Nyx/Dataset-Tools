@@ -24,14 +24,14 @@ class ComfyUIPixArtExtractor:
     def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
-            "pixart_extract_t5_prompt": self._extract_t5_prompt,
+            "pixart_extract_t5_prompt": self.extract_t5_prompt,
             "pixart_extract_model_info": self._extract_model_info,
             "pixart_extract_sampler_params": self._extract_sampler_params,
             "pixart_extract_conditioning_params": self._extract_conditioning_params,
-            "pixart_detect_workflow": self._detect_pixart_workflow,
+            "pixart_detect_workflow": self.detect_pixart_workflow,
         }
 
-    def _extract_t5_prompt(
+    def extract_t5_prompt(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -207,7 +207,7 @@ class ComfyUIPixArtExtractor:
 
         return conditioning_params
 
-    def _detect_pixart_workflow(
+    def detect_pixart_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -285,8 +285,8 @@ class ComfyUIPixArtExtractor:
             return {}
 
         summary = {
-            "is_pixart_workflow": self._detect_pixart_workflow(data, {}, {}, {}),
-            "t5_prompt": self._extract_t5_prompt(data, {}, {}, {}),
+            "is_pixart_workflow": self.detect_pixart_workflow(data, {}, {}, {}),
+            "t5_prompt": self.extract_t5_prompt(data, {}, {}, {}),
             "model_info": self._extract_model_info(data, {}, {}, {}),
             "sampler_params": self._extract_sampler_params(data, {}, {}, {}),
             "conditioning_params": self._extract_conditioning_params(data, {}, {}, {}),

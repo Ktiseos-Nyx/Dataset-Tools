@@ -28,7 +28,7 @@ class ComfyUIControlNetExtractor:
             "controlnet_extract_preprocessors": self._extract_preprocessors,
             "controlnet_extract_apply_params": self._extract_apply_params,
             "controlnet_extract_advanced_params": self._extract_advanced_params,
-            "controlnet_detect_workflow": self._detect_controlnet_workflow,
+            "controlnet_detect_workflow": self.detect_controlnet_workflow,
         }
 
     def _extract_controlnet_models(
@@ -248,7 +248,7 @@ class ComfyUIControlNetExtractor:
 
         return advanced_params
 
-    def _detect_controlnet_workflow(
+    def detect_controlnet_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -303,7 +303,7 @@ class ComfyUIControlNetExtractor:
             return {}
 
         summary = {
-            "is_controlnet_workflow": self._detect_controlnet_workflow(
+            "is_controlnet_workflow": self.detect_controlnet_workflow(
                 data, {}, {}, {}
             ),
             "models": self._extract_controlnet_models(data, {}, {}, {}),

@@ -514,7 +514,7 @@ def read_json_file(file_path: str) -> dict | list | None:
 
     """
     reader = SchemaFileReader()
-    result = reader._read_json_file(file_path)
+    result = reader.read_file(file_path)
     return result
 
 

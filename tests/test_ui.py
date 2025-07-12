@@ -28,8 +28,8 @@ def test_main_window_creation(qtbot):
     window.show()
 
     # Assert that the window is created and visible
-    assert window is not None
-    assert window.isVisible()
+    assert window is not None  # noqa: S101
+    assert window.isVisible()  # noqa: S101
 
     # Assert the window title is set correctly
-    assert window.windowTitle() == "Dataset Viewer"
+    assert window.windowTitle() == "Dataset Viewer"  # noqa: S101

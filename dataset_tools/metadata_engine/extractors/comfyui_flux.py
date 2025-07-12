@@ -24,15 +24,15 @@ class ComfyUIFluxExtractor:
     def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
-            "flux_extract_t5_prompt": self._extract_t5_prompt,
-            "flux_extract_clip_prompt": self._extract_clip_prompt,
+            "flux_extract_t5_prompt": self.extract_t5_prompt,
+            "flux_extract_clip_prompt": self.extract_clip_prompt,
             "flux_extract_model_info": self._extract_flux_model_info,
             "flux_extract_guidance_scale": self._extract_guidance_scale,
             "flux_extract_scheduler_params": self._extract_scheduler_params,
-            "flux_detect_workflow": self._detect_flux_workflow,
+            "flux_detect_workflow": self.detect_flux_workflow,
         }
 
-    def _extract_t5_prompt(
+    def extract_t5_prompt(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -59,7 +59,7 @@ class ComfyUIFluxExtractor:
 
         return ""
 
-    def _extract_clip_prompt(
+    def extract_clip_prompt(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -240,7 +240,7 @@ class ComfyUIFluxExtractor:
 
         return scheduler_params
 
-    def _detect_flux_workflow(
+    def detect_flux_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -334,9 +334,9 @@ class ComfyUIFluxExtractor:
         prompt_data = data.get("prompt", data)
 
         summary = {
-            "is_flux_workflow": self._detect_flux_workflow(data, {}, {}, {}),
-            "t5_prompt": self._extract_t5_prompt(data, {}, {}, {}),
-            "clip_prompt": self._extract_clip_prompt(data, {}, {}, {}),
+            "is_flux_workflow": self.detect_flux_workflow(data, {}, {}, {}),
+            "t5_prompt": self.extract_t5_prompt(data, {}, {}, {}),
+            "clip_prompt": self.extract_clip_prompt(data, {}, {}, {}),
             "model_info": self._extract_flux_model_info(data, {}, {}, {}),
             "guidance_scale": self._extract_guidance_scale(data, {}, {}, {}),
             "scheduler_params": self._extract_scheduler_params(data, {}, {}, {}),

@@ -86,7 +86,7 @@ class FileExtensionCategories:
         try:
             return {ext for ext_set in getattr(Ext, "IMAGE", []) for ext in ext_set}
         except Exception as e:
-            self.logger.warning(f"Error loading image extensions: {e}")
+            self.logger.warning("Error loading image extensions: %s", e)
             return {
                 ".jpg",
                 ".jpeg",
@@ -108,7 +108,7 @@ class FileExtensionCategories:
                 for ext_set in Ext.PLAIN_TEXT_LIKE:
                     text_exts.update(ext_set)
             except Exception as e:
-                self.logger.warning(f"Error loading PLAIN_TEXT_LIKE extensions: {e}")
+                self.logger.warning("Error loading PLAIN_TEXT_LIKE extensions: %s", e)
 
         # Load schema file extensions
         if hasattr(Ext, "SCHEMA_FILES"):
@@ -116,7 +116,7 @@ class FileExtensionCategories:
                 schema_exts = {ext for ext_set in Ext.SCHEMA_FILES for ext in ext_set}
                 text_exts.update(schema_exts)
             except Exception as e:
-                self.logger.warning(f"Error loading SCHEMA_FILES extensions: {e}")
+                self.logger.warning("Error loading SCHEMA_FILES extensions: %s", e)
 
         # Fallback if nothing loaded
         if not text_exts:
@@ -139,7 +139,7 @@ class FileExtensionCategories:
                 ".bin",
             }  # Fallback
         except Exception as e:
-            self.logger.warning(f"Error loading model extensions: {e}")
+            self.logger.warning("Error loading model extensions: %s", e)
             return {".ckpt", ".safetensors", ".pt", ".pth", ".gguf", ".bin"}  # Fallback
 
     def _load_ignore_list(self) -> list[str]:
@@ -151,7 +151,7 @@ class FileExtensionCategories:
                 return []
             return ignore_list
         except Exception as e:
-            self.logger.warning(f"Error loading ignore list: {e}")
+            self.logger.warning("Error loading ignore list: %s", e)
             return []
 
     def categorize_file(self, file_path: str) -> str | None:
@@ -182,13 +182,13 @@ class FileExtensionCategories:
             return None
 
         except Exception as e:
-            self.logger.debug(f"Error categorizing file '{file_path}': {e}")
+            self.logger.debug("Error categorizing file '%s': %s", file_path, e)
             return None
 
     def _debug_extension_types(self) -> None:
         """Debug output for extension type inspection."""
         self.logger.debug("--- DEBUG WIDGETS: Inspecting Ext (ExtensionType) ---")
-        self.logger.debug(f"Type of Ext: {type(Ext)}")
+        self.logger.debug("Type of Ext: %s", type(Ext))
 
         expected_attrs = [
             "IMAGE",
@@ -204,7 +204,7 @@ class FileExtensionCategories:
             val_display = val_str[:70] + "..." if len(val_str) > 70 else val_str
 
             self.logger.debug(
-                f"Ext.{attr_name}? {has_attr}. Value (first 70 chars): {val_display}"
+                "Ext.%s? %s. Value (first 70 chars): %s", attr_name, has_attr, val_display
             )
 
         self.logger.debug("--- END DEBUG WIDGETS ---")
@@ -238,7 +238,7 @@ class DirectoryScanner:
             FileScanResult with categorized files
 
         """
-        self.logger.info(f"Starting directory scan: {folder_path}")
+        self.logger.info("Starting directory scan: %s", folder_path)
 
         try:
             # Get all items in the directory
@@ -260,7 +260,8 @@ class DirectoryScanner:
             )
 
             self.logger.info(
-                f"Scan completed for {folder_path}: {len(images)} images, {len(texts)} texts, {len(models)} models"
+                "Scan completed for %s: %d images, %d texts, %d models",
+                folder_path, len(images), len(texts), len(models)
             )
 
             return FileScanResult(
@@ -300,17 +301,17 @@ class DirectoryScanner:
         try:
             items_in_folder = os.listdir(folder_path)
             full_paths = [os.path.join(folder_path, item) for item in items_in_folder]
-            self.logger.debug(f"Found {len(full_paths)} items in directory")
+            self.logger.debug("Found %d items in directory", len(full_paths))
             return full_paths
 
         except FileNotFoundError:
-            self.logger.warning(f"Directory not found: {folder_path}")
+            self.logger.warning("Directory not found: %s", folder_path)
             return None
         except PermissionError:
-            self.logger.warning(f"Permission denied accessing directory: {folder_path}")
+            self.logger.warning("Permission denied accessing directory: %s", folder_path)
             return None
         except OSError as e:
-            self.logger.warning(f"OS error accessing directory '{folder_path}': {e}")
+            self.logger.warning("OS error accessing directory '%s': %s", folder_path, e)
             return None
 
     def _categorize_files(
@@ -354,10 +355,10 @@ class DirectoryScanner:
                 # Files that don't match any category are ignored
 
             except (OSError, ValueError, TypeError, AttributeError) as e:
-                self.logger.debug(f"Error processing item '{item_path}': {e}")
+                self.logger.debug("Error processing item '%s': %s", item_path, e)
             except Exception as e:
                 self.logger.warning(
-                    f"Unexpected error processing item '{item_path}': {e}"
+                    "Unexpected error processing item '%s': %s", item_path, e
                 )
 
         return images, texts, models, total_files
@@ -497,7 +498,7 @@ def test_file_operations():
 
     for test_file in test_files:
         category = categorizer.categorize_file(test_file)
-        logger.info(f"{test_file}: {category or 'UNCATEGORIZED'}")
+        logger.info("%s: %s", test_file, category or 'UNCATEGORIZED')
 
     # Test supported extensions
     logger.info("Supported extensions:")
@@ -505,7 +506,7 @@ def test_file_operations():
     extensions = operations.get_supported_extensions()
 
     for category, exts in extensions.items():
-        logger.info(f"{category.upper()}: {sorted(list(exts))}")
+        logger.info("%s: %s", category.upper(), sorted(list(exts)))
 
     logger.info("File operations test completed!")
 

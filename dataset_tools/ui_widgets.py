@@ -101,7 +101,7 @@ class FileListWidget(Qw.QWidget):
         """
         self._current_files = files.copy()
         self._apply_filter_and_sort()
-        self.logger.debug(f"Set {len(files)} files in list")
+        self.logger.debug("Set %d files in list", len(files))
 
     def add_files(self, files: list[str]) -> None:
         """Add files to the current list.
@@ -112,7 +112,7 @@ class FileListWidget(Qw.QWidget):
         """
         self._current_files.extend(files)
         self._apply_filter_and_sort()
-        self.logger.debug(f"Added {len(files)} files to list")
+        self.logger.debug("Added %d files to list", len(files))
 
     def clear_files(self) -> None:
         """Clear all files from the list."""
@@ -145,10 +145,10 @@ class FileListWidget(Qw.QWidget):
             item = self.list_widget.item(i)
             if item and item.text() == filename:
                 self.list_widget.setCurrentItem(item)
-                self.logger.debug(f"Selected file: {filename}")
+                self.logger.debug("Selected file: %s", filename)
                 return True
 
-        self.logger.debug(f"File not found for selection: {filename}")
+        self.logger.debug("File not found for selection: %s", filename)
         return False
 
     def get_file_count(self) -> int:
@@ -230,18 +230,18 @@ class FileListWidget(Qw.QWidget):
         if current:
             filename = current.text()
             self.file_selected.emit(filename)
-            self.logger.debug(f"File selection changed to: {filename}")
+            self.logger.debug("File selection changed to: %s", filename)
 
     def _on_sort_changed(self, sort_option: str) -> None:
         """Handle sort option change."""
         self._apply_filter_and_sort()
         self.sort_changed.emit(sort_option)
-        self.logger.debug(f"Sort changed to: {sort_option}")
+        self.logger.debug("Sort changed to: %s", sort_option)
 
     def _on_filter_changed(self, filter_text: str) -> None:
         """Handle filter text change."""
         self._apply_filter_and_sort()
-        self.logger.debug(f"Filter changed to: '{filter_text}'")
+        self.logger.debug("Filter changed to: '%s'", filter_text)
 
     def _clear_filter(self) -> None:
         """Clear the filter."""
@@ -326,7 +326,7 @@ class FolderControlWidget(Qw.QWidget):
         self.up_button.setEnabled(can_go_up)
         self.refresh_button.setEnabled(bool(folder_path))
 
-        self.logger.debug(f"Folder path set to: {folder_path}")
+        self.logger.debug("Folder path set to: %s", folder_path)
 
     def get_folder_path(self) -> str:
         """Get the current folder path."""
@@ -340,13 +340,13 @@ class FolderControlWidget(Qw.QWidget):
         parent_path = str(Path(self._current_folder).parent)
         if parent_path != self._current_folder:  # Prevent infinite loop at root
             self.folder_path_changed.emit(parent_path)
-            self.logger.debug(f"Navigating up to: {parent_path}")
+            self.logger.debug("Navigating up to: %s", parent_path)
 
     def _refresh_folder(self) -> None:
         """Refresh the current folder."""
         if self._current_folder:
             self.folder_path_changed.emit(self._current_folder)
-            self.logger.debug(f"Refreshing folder: {self._current_folder}")
+            self.logger.debug("Refreshing folder: %s", self._current_folder)
 
 
 # ============================================================================
@@ -397,7 +397,7 @@ class ImagePreviewWidget(Qw.QLabel):
             pixmap = self._create_safe_thumbnail(image_path, max_size)
 
             if pixmap.isNull():
-                self.logger.warning(f"Failed to load image: {image_path}")
+                self.logger.warning("Failed to load image: %s", image_path)
                 self.set_error_text("Could not load image")
                 return False
 
@@ -406,12 +406,13 @@ class ImagePreviewWidget(Qw.QLabel):
             self._update_scaled_pixmap()
 
             self.logger.debug(
-                f"Loaded image: {Path(image_path).name} ({pixmap.width()}x{pixmap.height()})"
+                "Loaded image: %s (%sx%s)",
+                Path(image_path).name, pixmap.width(), pixmap.height()
             )
             return True
 
         except Exception as e:
-            self.logger.error(f"Error loading image '{image_path}': {e}")
+            self.logger.error("Error loading image '%s': %s", image_path, e)
             self.set_error_text(f"Error loading image: {e!s}")
             return False
 
@@ -442,7 +443,7 @@ class ImagePreviewWidget(Qw.QLabel):
                 return self._pil_to_qpixmap(img)
 
         except Exception as e:
-            self.logger.error(f"Error creating thumbnail for '{image_path}': {e}")
+            self.logger.error("Error creating thumbnail for '%s': %s", image_path, e)
             # Return empty pixmap on error
             return QtGui.QPixmap()
 
@@ -480,7 +481,7 @@ class ImagePreviewWidget(Qw.QLabel):
             return QtGui.QPixmap.fromImage(qimage)
 
         except Exception as e:
-            self.logger.error(f"Error converting PIL to QPixmap: {e}")
+            self.logger.error("Error converting PIL to QPixmap: %s", e)
             return QtGui.QPixmap()
 
     def set_pixmap_direct(self, pixmap: QtGui.QPixmap) -> None:
@@ -625,7 +626,7 @@ class StatusInfoWidget(Qw.QWidget):
 
         """
         self.status_label.setText(text)
-        self.logger.debug(f"Status text set to: {text}")
+        self.logger.debug("Status text set to: %s", text)
 
     def set_file_counts(self, images: int = 0, texts: int = 0, models: int = 0) -> None:
         """Set the file count displays.
@@ -644,7 +645,8 @@ class StatusInfoWidget(Qw.QWidget):
         self.total_label.setText(str(total))
 
         self.logger.debug(
-            f"File counts updated: {images}i, {texts}t, {models}m = {total} total"
+            "File counts updated: %si, %st, %sm = %s total",
+            images, texts, models, total
         )
 
     def clear_counts(self) -> None:

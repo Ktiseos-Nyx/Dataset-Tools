@@ -237,7 +237,7 @@ class ContextDataPreparer:
                     return comment_bytes.decode("utf-16le").strip("\x00")
                 if codec_header.startswith(b"UTF-8\x00"):
                     return comment_bytes.decode("utf-8").strip("\x00")
-            except Exception:
+            except UnicodeDecodeError:
                 pass  # Fall through to other strategies
 
         # Strategy 2: Try different encodings to decode properly

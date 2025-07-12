@@ -30,7 +30,7 @@ class ComfyUIInspireExtractor:
             "inspire_extract_utility_nodes": self._extract_utility_nodes,
             "inspire_extract_sampler_nodes": self._extract_sampler_nodes,
             "inspire_extract_conditioning_nodes": self._extract_conditioning_nodes,
-            "inspire_detect_workflow": self._detect_inspire_workflow,
+            "inspire_detect_workflow": self.detect_inspire_workflow,
         }
 
     def _extract_regional_prompts(
@@ -320,7 +320,7 @@ class ComfyUIInspireExtractor:
 
         return conditioning_nodes
 
-    def _detect_inspire_workflow(
+    def detect_inspire_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -395,7 +395,7 @@ class ComfyUIInspireExtractor:
             return {}
 
         summary = {
-            "is_inspire_workflow": self._detect_inspire_workflow(data, {}, {}, {}),
+            "is_inspire_workflow": self.detect_inspire_workflow(data, {}, {}, {}),
             "regional_prompts": self._extract_regional_prompts(data, {}, {}, {}),
             "batch_nodes": self._extract_batch_nodes(data, {}, {}, {}),
             "utility_nodes": self._extract_utility_nodes(data, {}, {}, {}),

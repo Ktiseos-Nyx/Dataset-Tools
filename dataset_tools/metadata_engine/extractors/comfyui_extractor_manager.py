@@ -133,41 +133,41 @@ class ComfyUIExtractorManager:
         workflow_types = []
 
         # Check architecture types
-        if self.flux._detect_flux_workflow(data, {}, {}, {}):
+        if self.flux.detect_flux_workflow(data, {}, {}, {}):
             workflow_types.append("flux")
 
-        if self.sdxl._detect_sdxl_workflow(data, {}, {}, {}):
+        if self.sdxl.detect_sdxl_workflow(data, {}, {}, {}):
             workflow_types.append("sdxl")
 
-        if self.pixart._detect_pixart_workflow(data, {}, {}, {}):
+        if self.pixart.detect_pixart_workflow(data, {}, {}, {}):
             workflow_types.append("pixart")
 
         # Check ecosystem types
-        if self.impact._detect_impact_workflow(data, {}, {}, {}):
+        if self.impact.detect_impact_workflow(data, {}, {}, {}):
             workflow_types.append("impact")
 
-        if self.efficiency._detect_efficiency_workflow(data, {}, {}, {}):
+        if self.efficiency.detect_efficiency_workflow(data, {}, {}, {}):
             workflow_types.append("efficiency")
 
-        if self.was._detect_was_workflow(data, {}, {}, {}):
+        if self.was.detect_was_workflow(data, {}, {}, {}):
             workflow_types.append("was")
 
-        if self.animatediff._detect_animatediff_workflow(data, {}, {}, {}):
+        if self.animatediff.detect_animatediff_workflow(data, {}, {}, {}):
             workflow_types.append("animatediff")
 
-        if self.controlnet._detect_controlnet_workflow(data, {}, {}, {}):
+        if self.controlnet.detect_controlnet_workflow(data, {}, {}, {}):
             workflow_types.append("controlnet")
 
-        if self.searge._detect_searge_workflow(data, {}, {}, {}):
+        if self.searge.detect_searge_workflow(data, {}, {}, {}):
             workflow_types.append("searge")
 
-        if self.rgthree._detect_rgthree_workflow(data, {}, {}, {}):
+        if self.rgthree.detect_rgthree_workflow(data, {}, {}, {}):
             workflow_types.append("rgthree")
 
-        if self.inspire._detect_inspire_workflow(data, {}, {}, {}):
+        if self.inspire.detect_inspire_workflow(data, {}, {}, {}):
             workflow_types.append("inspire")
 
-        if self.dynamicprompts._detect_dynamicprompts_workflow(data, {}, {}, {}):
+        if self.dynamicprompts.detect_dynamicprompts_workflow(data, {}, {}, {}):
             workflow_types.append("dynamicprompts")
 
         # Cache the result
@@ -190,7 +190,7 @@ class ComfyUIExtractorManager:
             "workflow_types": self._auto_detect_workflow(
                 data, method_def, context, fields
             ),
-            "complexity_analysis": self.complexity._analyze_workflow_complexity(
+            "complexity_analysis": self.complexity.analyze_workflow_complexity(
                 data, method_def, context, fields
             ),
             "architecture_summaries": {},
@@ -307,7 +307,7 @@ class ComfyUIExtractorManager:
         metadata["node_ecosystems"] = ecosystem_counts
 
         # Complexity metrics
-        metadata["complexity_metrics"] = self.complexity._analyze_workflow_complexity(
+        metadata["complexity_metrics"] = self.complexity.analyze_workflow_complexity(
             data, method_def, context, fields
         )
 
@@ -342,12 +342,12 @@ class ComfyUIExtractorManager:
         # Try architecture-specific extraction first
         if "flux" in workflow_types:
             # For FLUX, prefer T5 prompt
-            t5_prompt = self.flux._extract_t5_prompt(data, method_def, context, fields)
+            t5_prompt = self.flux.extract_t5_prompt(data, method_def, context, fields)
             if t5_prompt:
                 return t5_prompt
 
             # Fallback to CLIP prompt
-            clip_prompt = self.flux._extract_clip_prompt(
+            clip_prompt = self.flux.extract_clip_prompt(
                 data, method_def, context, fields
             )
             if clip_prompt:
@@ -355,7 +355,7 @@ class ComfyUIExtractorManager:
 
         if "sdxl" in workflow_types:
             # For SDXL, try positive prompt extraction
-            positive_prompt = self.sdxl._extract_positive_prompt(
+            positive_prompt = self.sdxl.extract_positive_prompt(
                 data, method_def, context, fields
             )
             if positive_prompt:
@@ -363,7 +363,7 @@ class ComfyUIExtractorManager:
 
         if "pixart" in workflow_types:
             # For PixArt, try T5 prompt
-            t5_prompt = self.pixart._extract_t5_prompt(
+            t5_prompt = self.pixart.extract_t5_prompt(
                 data, method_def, context, fields
             )
             if t5_prompt:
@@ -372,14 +372,14 @@ class ComfyUIExtractorManager:
         # Try ecosystem-specific extraction
         if "impact" in workflow_types:
             # For Impact workflows, try wildcard prompt
-            wildcard_prompt = self.impact._extract_wildcard_prompt(
+            wildcard_prompt = self.impact.extract_wildcard_prompt(
                 data, method_def, context, fields
             )
             if wildcard_prompt:
                 return wildcard_prompt
 
         # Try complexity-based extraction
-        dynamic_prompt = self.complexity._extract_dynamic_prompt_from_workflow(
+        dynamic_prompt = self.complexity.extract_dynamic_prompt_from_workflow(
             data, method_def, context, fields
         )
         if dynamic_prompt:
@@ -430,7 +430,7 @@ class ComfyUIExtractorManager:
         for ecosystem_name, extractor in extractors:
             # Check if this ecosystem is present
             detect_method = getattr(
-                extractor, f"_detect_{ecosystem_name}_workflow", None
+                extractor, f"detect_{ecosystem_name}_workflow", None
             )
             if detect_method and detect_method(data, {}, {}, {}):
                 # Extract ecosystem-specific information
@@ -610,7 +610,7 @@ class ComfyUIExtractorManager:
         fields: ExtractedFields,
     ) -> dict[str, Any]:
         """Calculate workflow complexity metrics."""
-        return self.complexity._analyze_workflow_complexity(
+        return self.complexity.analyze_workflow_complexity(
             data, method_def, context, fields
         )
 

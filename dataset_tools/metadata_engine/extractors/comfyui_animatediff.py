@@ -29,7 +29,7 @@ class ComfyUIAnimateDiffExtractor:
             "animatediff_extract_animation_params": self._extract_animation_params,
             "animatediff_extract_context_options": self._extract_context_options,
             "animatediff_extract_controlnet_params": self._extract_controlnet_params,
-            "animatediff_detect_workflow": self._detect_animatediff_workflow,
+            "animatediff_detect_workflow": self.detect_animatediff_workflow,
         }
 
     def _extract_motion_module(
@@ -265,7 +265,7 @@ class ComfyUIAnimateDiffExtractor:
 
         return controlnet_params
 
-    def _detect_animatediff_workflow(
+    def detect_animatediff_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -318,7 +318,7 @@ class ComfyUIAnimateDiffExtractor:
             return {}
 
         summary = {
-            "is_animatediff_workflow": self._detect_animatediff_workflow(
+            "is_animatediff_workflow": self.detect_animatediff_workflow(
                 data, {}, {}, {}
             ),
             "motion_module": self._extract_motion_module(data, {}, {}, {}),

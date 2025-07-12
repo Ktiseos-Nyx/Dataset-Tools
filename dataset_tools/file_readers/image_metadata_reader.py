@@ -64,7 +64,7 @@ class ImageMetadataReader:
 
         """
         if not self.can_read_file(file_path):
-            self.logger.warning(f"Unsupported image format: {file_path}")
+            self.logger.warning("Unsupported image format: %s", file_path)
             return None
 
         file_suffix = Path(file_path).suffix.lower()
@@ -83,7 +83,7 @@ class ImageMetadataReader:
     @debug_monitor
     def _read_jpg_metadata(self, file_path: str) -> dict[str, Any] | None:
         """Read metadata from a JPG/JPEG file."""
-        nfo(f"[ImageReader] Reading JPG metadata: {Path(file_path).name}")
+        nfo("[ImageReader] Reading JPG metadata: %s", Path(file_path).name)
 
         try:
             # Try pyexiv2 first
@@ -96,13 +96,13 @@ class ImageMetadataReader:
             return self._fallback_to_pillow(file_path, "JPG")
 
         except Exception as e:
-            self.logger.error(f"Error reading JPG metadata from {file_path}: {e}")
+            self.logger.error("Error reading JPG metadata from %s: %s", file_path, e)
             return self._fallback_to_pillow(file_path, "JPG (after error)")
 
     @debug_monitor
     def _read_png_metadata(self, file_path: str) -> dict[str, Any] | None:
         """Read metadata from a PNG file."""
-        nfo(f"[ImageReader] Reading PNG metadata: {Path(file_path).name}")
+        nfo("[ImageReader] Reading PNG metadata: %s", Path(file_path).name)
 
         try:
             # Try pyexiv2 first

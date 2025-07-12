@@ -24,17 +24,17 @@ class ComfyUISDXLExtractor:
     def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
-            "sdxl_extract_positive_prompt": self._extract_positive_prompt,
+            "sdxl_extract_positive_prompt": self.extract_positive_prompt,
             "sdxl_extract_negative_prompt": self._extract_negative_prompt,
             "sdxl_extract_clip_g_prompt": self._extract_clip_g_prompt,
             "sdxl_extract_clip_l_prompt": self._extract_clip_l_prompt,
             "sdxl_extract_model_info": self._extract_model_info,
             "sdxl_extract_refiner_info": self._extract_refiner_info,
             "sdxl_extract_primitive_prompts": self._extract_primitive_prompts,
-            "sdxl_detect_workflow": self._detect_sdxl_workflow,
+            "sdxl_detect_workflow": self.detect_sdxl_workflow,
         }
 
-    def _extract_positive_prompt(
+    def extract_positive_prompt(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -255,7 +255,7 @@ class ComfyUISDXLExtractor:
             "negative": self._find_primitive_negative_prompt(prompt_data),
         }
 
-    def _detect_sdxl_workflow(
+    def detect_sdxl_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -458,8 +458,8 @@ class ComfyUISDXLExtractor:
             return {}
 
         summary = {
-            "is_sdxl_workflow": self._detect_sdxl_workflow(data, {}, {}, {}),
-            "positive_prompt": self._extract_positive_prompt(data, {}, {}, {}),
+            "is_sdxl_workflow": self.detect_sdxl_workflow(data, {}, {}, {}),
+            "positive_prompt": self.extract_positive_prompt(data, {}, {}, {}),
             "negative_prompt": self._extract_negative_prompt(data, {}, {}, {}),
             "clip_g_prompt": self._extract_clip_g_prompt(data, {}, {}, {}),
             "clip_l_prompt": self._extract_clip_l_prompt(data, {}, {}, {}),

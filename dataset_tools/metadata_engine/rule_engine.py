@@ -1054,7 +1054,7 @@ class RuleValidator:
         ):  # Check operator existence on instance
             self.errors.append(f"Unknown operator: '{operator}'")
             self.logger.error(
-                f"RuleValidator: Operator '{operator}' not found in RuleOperators."
+                "RuleValidator: Operator '%s' not found in RuleOperators.", operator
             )
             return False
 

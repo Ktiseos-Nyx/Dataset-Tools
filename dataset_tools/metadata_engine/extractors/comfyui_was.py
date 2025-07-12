@@ -29,7 +29,7 @@ class ComfyUIWASExtractor:
             "was_extract_image_operations": self._extract_image_operations,
             "was_extract_utility_nodes": self._extract_utility_nodes,
             "was_extract_conditioning_nodes": self._extract_conditioning_nodes,
-            "was_detect_workflow": self._detect_was_workflow,
+            "was_detect_workflow": self.detect_was_workflow,
         }
 
     def _extract_text_processing(
@@ -262,7 +262,7 @@ class ComfyUIWASExtractor:
 
         return conditioning_nodes
 
-    def _detect_was_workflow(
+    def detect_was_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -323,7 +323,7 @@ class ComfyUIWASExtractor:
             return {}
 
         summary = {
-            "is_was_workflow": self._detect_was_workflow(data, {}, {}, {}),
+            "is_was_workflow": self.detect_was_workflow(data, {}, {}, {}),
             "text_processing": self._extract_text_processing(data, {}, {}, {}),
             "image_operations": self._extract_image_operations(data, {}, {}, {}),
             "utility_nodes": self._extract_utility_nodes(data, {}, {}, {}),
