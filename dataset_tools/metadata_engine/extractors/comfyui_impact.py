@@ -25,14 +25,14 @@ class ComfyUIImpactExtractor:
     def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
-            "impact_extract_wildcard_prompt": self._extract_wildcard_prompt,
+            "impact_extract_wildcard_prompt": self.extract_wildcard_prompt,
             "impact_extract_face_detailer_params": self._extract_face_detailer_params,
             "impact_extract_segs_info": self._extract_segs_info,
             "impact_extract_detailer_pipe": self._extract_detailer_pipe,
-            "impact_detect_workflow": self._detect_impact_workflow,
+            "impact_detect_workflow": self.detect_impact_workflow,
         }
 
-    def _extract_wildcard_prompt(
+    def extract_wildcard_prompt(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -204,7 +204,7 @@ class ComfyUIImpactExtractor:
 
         return detailer_pipe
 
-    def _detect_impact_workflow(
+    def detect_impact_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -258,9 +258,11 @@ class ComfyUIImpactExtractor:
             return {}
 
         summary = {
-            "is_impact_workflow": self._detect_impact_workflow(data, {}, {}, {}),
-            "wildcard_prompt": self._extract_wildcard_prompt(data, {}, {}, {}),
-            "face_detailer_params": self._extract_face_detailer_params(data, {}, {}, {}),
+            "is_impact_workflow": self.detect_impact_workflow(data, {}, {}, {}),
+            "wildcard_prompt": self.extract_wildcard_prompt(data, {}, {}, {}),
+            "face_detailer_params": self._extract_face_detailer_params(
+                data, {}, {}, {}
+            ),
             "segs_info": self._extract_segs_info(data, {}, {}, {}),
             "detailer_pipe": self._extract_detailer_pipe(data, {}, {}, {}),
         }

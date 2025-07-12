@@ -24,14 +24,14 @@ class ComfyUIPixArtExtractor:
     def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
-            "pixart_extract_t5_prompt": self._extract_t5_prompt,
+            "pixart_extract_t5_prompt": self.extract_t5_prompt,
             "pixart_extract_model_info": self._extract_model_info,
             "pixart_extract_sampler_params": self._extract_sampler_params,
             "pixart_extract_conditioning_params": self._extract_conditioning_params,
-            "pixart_detect_workflow": self._detect_pixart_workflow,
+            "pixart_detect_workflow": self.detect_pixart_workflow,
         }
 
-    def _extract_t5_prompt(
+    def extract_t5_prompt(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -87,22 +87,30 @@ class ComfyUIPixArtExtractor:
             if "PixArtCheckpointLoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["checkpoint"] = widgets[0] if isinstance(widgets[0], str) else ""
+                    model_info["checkpoint"] = (
+                        widgets[0] if isinstance(widgets[0], str) else ""
+                    )
 
             elif "PixArtModelLoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["model"] = widgets[0] if isinstance(widgets[0], str) else ""
+                    model_info["model"] = (
+                        widgets[0] if isinstance(widgets[0], str) else ""
+                    )
 
             elif "PixArtVAELoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["vae"] = widgets[0] if isinstance(widgets[0], str) else ""
+                    model_info["vae"] = (
+                        widgets[0] if isinstance(widgets[0], str) else ""
+                    )
 
             elif "PixArtT5Loader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["t5_model"] = widgets[0] if isinstance(widgets[0], str) else ""
+                    model_info["t5_model"] = (
+                        widgets[0] if isinstance(widgets[0], str) else ""
+                    )
 
         return model_info
 
@@ -180,7 +188,11 @@ class ComfyUIPixArtExtractor:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     conditioning_params["t5_conditioning"] = {
-                        "text": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], str) else ""),
+                        "text": (
+                            widgets[0]
+                            if len(widgets) > 0 and isinstance(widgets[0], str)
+                            else ""
+                        ),
                         "max_length": widgets[1] if len(widgets) > 1 else 256,
                         "guidance_scale": widgets[2] if len(widgets) > 2 else 7.5,
                         "node_type": class_type,
@@ -195,7 +207,7 @@ class ComfyUIPixArtExtractor:
 
         return conditioning_params
 
-    def _detect_pixart_workflow(
+    def detect_pixart_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -273,8 +285,8 @@ class ComfyUIPixArtExtractor:
             return {}
 
         summary = {
-            "is_pixart_workflow": self._detect_pixart_workflow(data, {}, {}, {}),
-            "t5_prompt": self._extract_t5_prompt(data, {}, {}, {}),
+            "is_pixart_workflow": self.detect_pixart_workflow(data, {}, {}, {}),
+            "t5_prompt": self.extract_t5_prompt(data, {}, {}, {}),
             "model_info": self._extract_model_info(data, {}, {}, {}),
             "sampler_params": self._extract_sampler_params(data, {}, {}, {}),
             "conditioning_params": self._extract_conditioning_params(data, {}, {}, {}),

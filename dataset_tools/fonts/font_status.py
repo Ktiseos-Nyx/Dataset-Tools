@@ -35,7 +35,11 @@ def show_font_status() -> None:
     print("  • No permissions required (app-level loading)")
     print("  • Works offline")
 
-    total_size = sum((fonts_dir / font).stat().st_size for font in bundled_fonts if (fonts_dir / font).exists())
+    total_size = sum(
+        (fonts_dir / font).stat().st_size
+        for font in bundled_fonts
+        if (fonts_dir / font).exists()
+    )
     print(f"\nTOTAL BUNDLE SIZE: {total_size // 1024} KB")
 
 

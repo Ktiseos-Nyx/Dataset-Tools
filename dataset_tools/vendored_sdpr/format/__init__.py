@@ -13,7 +13,13 @@ from .base_format import BaseFormat
 
 # Your new/modified parsers
 from .civitai import CivitaiFormat  # <<< CORRECTED: Using the combined CivitaiFormat
+<<<<<<< HEAD
 from .comfyui import ComfyUI  # Assuming you named the file comfyui.py for ComfyUI parser
+=======
+from .comfyui import (
+    ComfyUI,
+)  # Assuming you named the file comfyui.py for ComfyUI parser
+>>>>>>> origin/main
 from .drawthings import DrawThings
 from .easydiffusion import EasyDiffusion
 from .fooocus import Fooocus

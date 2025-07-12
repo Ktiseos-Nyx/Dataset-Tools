@@ -29,7 +29,7 @@ class ComfyUIAnimateDiffExtractor:
             "animatediff_extract_animation_params": self._extract_animation_params,
             "animatediff_extract_context_options": self._extract_context_options,
             "animatediff_extract_controlnet_params": self._extract_controlnet_params,
-            "animatediff_detect_workflow": self._detect_animatediff_workflow,
+            "animatediff_detect_workflow": self.detect_animatediff_workflow,
         }
 
     def _extract_motion_module(
@@ -59,10 +59,20 @@ class ComfyUIAnimateDiffExtractor:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     motion_module = {
-                        "model_name": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], str) else ""),
-                        "beta_schedule": (widgets[1] if len(widgets) > 1 and isinstance(widgets[1], str) else ""),
+                        "model_name": (
+                            widgets[0]
+                            if len(widgets) > 0 and isinstance(widgets[0], str)
+                            else ""
+                        ),
+                        "beta_schedule": (
+                            widgets[1]
+                            if len(widgets) > 1 and isinstance(widgets[1], str)
+                            else ""
+                        ),
                         "motion_scale": (
-                            widgets[2] if len(widgets) > 2 and isinstance(widgets[2], (int, float)) else 1.0
+                            widgets[2]
+                            if len(widgets) > 2 and isinstance(widgets[2], (int, float))
+                            else 1.0
                         ),
                         "node_type": class_type,
                         "node_id": node_id,
@@ -73,7 +83,11 @@ class ComfyUIAnimateDiffExtractor:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     motion_module = {
-                        "model_name": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], str) else ""),
+                        "model_name": (
+                            widgets[0]
+                            if len(widgets) > 0 and isinstance(widgets[0], str)
+                            else ""
+                        ),
                         "node_type": class_type,
                         "node_id": node_id,
                     }
@@ -108,9 +122,21 @@ class ComfyUIAnimateDiffExtractor:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     animation_params = {
-                        "frame_count": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], int) else 16),
-                        "fps": (widgets[1] if len(widgets) > 1 and isinstance(widgets[1], (int, float)) else 8.0),
-                        "loop_count": (widgets[2] if len(widgets) > 2 and isinstance(widgets[2], int) else 0),
+                        "frame_count": (
+                            widgets[0]
+                            if len(widgets) > 0 and isinstance(widgets[0], int)
+                            else 16
+                        ),
+                        "fps": (
+                            widgets[1]
+                            if len(widgets) > 1 and isinstance(widgets[1], (int, float))
+                            else 8.0
+                        ),
+                        "loop_count": (
+                            widgets[2]
+                            if len(widgets) > 2 and isinstance(widgets[2], int)
+                            else 0
+                        ),
                         "node_type": class_type,
                         "node_id": node_id,
                     }
@@ -120,12 +146,36 @@ class ComfyUIAnimateDiffExtractor:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     animation_params = {
-                        "seed": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], int) else 0),
-                        "steps": (widgets[1] if len(widgets) > 1 and isinstance(widgets[1], int) else 20),
-                        "cfg": (widgets[2] if len(widgets) > 2 and isinstance(widgets[2], (int, float)) else 7.5),
-                        "sampler_name": (widgets[3] if len(widgets) > 3 and isinstance(widgets[3], str) else ""),
-                        "scheduler": (widgets[4] if len(widgets) > 4 and isinstance(widgets[4], str) else ""),
-                        "denoise": (widgets[5] if len(widgets) > 5 and isinstance(widgets[5], (int, float)) else 1.0),
+                        "seed": (
+                            widgets[0]
+                            if len(widgets) > 0 and isinstance(widgets[0], int)
+                            else 0
+                        ),
+                        "steps": (
+                            widgets[1]
+                            if len(widgets) > 1 and isinstance(widgets[1], int)
+                            else 20
+                        ),
+                        "cfg": (
+                            widgets[2]
+                            if len(widgets) > 2 and isinstance(widgets[2], (int, float))
+                            else 7.5
+                        ),
+                        "sampler_name": (
+                            widgets[3]
+                            if len(widgets) > 3 and isinstance(widgets[3], str)
+                            else ""
+                        ),
+                        "scheduler": (
+                            widgets[4]
+                            if len(widgets) > 4 and isinstance(widgets[4], str)
+                            else ""
+                        ),
+                        "denoise": (
+                            widgets[5]
+                            if len(widgets) > 5 and isinstance(widgets[5], (int, float))
+                            else 1.0
+                        ),
                         "node_type": class_type,
                         "node_id": node_id,
                     }
@@ -202,7 +252,10 @@ class ComfyUIAnimateDiffExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if any(controlnet_type in class_type for controlnet_type in controlnet_node_types):
+            if any(
+                controlnet_type in class_type
+                for controlnet_type in controlnet_node_types
+            ):
                 widgets = node_data.get("widgets_values", [])
                 controlnet_params[class_type] = {
                     "widgets": widgets,
@@ -212,7 +265,7 @@ class ComfyUIAnimateDiffExtractor:
 
         return controlnet_params
 
-    def _detect_animatediff_workflow(
+    def detect_animatediff_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -265,7 +318,9 @@ class ComfyUIAnimateDiffExtractor:
             return {}
 
         summary = {
-            "is_animatediff_workflow": self._detect_animatediff_workflow(data, {}, {}, {}),
+            "is_animatediff_workflow": self.detect_animatediff_workflow(
+                data, {}, {}, {}
+            ),
             "motion_module": self._extract_motion_module(data, {}, {}, {}),
             "animation_params": self._extract_animation_params(data, {}, {}, {}),
             "context_options": self._extract_context_options(data, {}, {}, {}),
@@ -346,7 +401,11 @@ class ComfyUIAnimateDiffExtractor:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     video_info["save_options"] = {
-                        "filename": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], str) else ""),
+                        "filename": (
+                            widgets[0]
+                            if len(widgets) > 0 and isinstance(widgets[0], str)
+                            else ""
+                        ),
                         "fps": widgets[1] if len(widgets) > 1 else 8,
                         "node_type": class_type,
                     }

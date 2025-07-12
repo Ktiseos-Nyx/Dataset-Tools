@@ -1,0 +1,188 @@
+{
+  "parser_name": "SafeTensors LoRA Training Metadata",
+  "priority": 200,
+  "target_file_types": [
+    "SAFETENSORS"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have safetensors metadata in context",
+      "source_type": "direct_context_key",
+      "source_key": "safetensors_metadata",
+      "operator": "exists_and_is_dictionary"
+    },
+    {
+      "comment": "Rule 2: Must be a LoRA (has network dimension field)",
+      "source_type": "direct_context_key",
+      "source_key": "safetensors_metadata",
+      "operator": "json_contains_any_key",
+      "expected_keys": ["ss_network_dim", "ss_network_alpha", "ss_network_module"]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "direct_context_key",
+          "source_key": "safetensors_metadata"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "model_name",
+        "method": "direct_json_path",
+        "json_path": "modelspec.title",
+        "value_type": "string",
+        "fallback": "Unknown LoRA"
+      },
+      {
+        "target_key": "model_architecture",
+        "method": "direct_json_path", 
+        "json_path": "modelspec.architecture",
+        "value_type": "string",
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "base_model",
+        "method": "direct_json_path",
+        "json_path": "ss_sd_model_name",
+        "value_type": "string",
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "training_epochs",
+        "method": "direct_json_path",
+        "json_path": "ss_num_epochs", 
+        "value_type": "integer",
+        "fallback": 0
+      },
+      {
+        "target_key": "training_steps",
+        "method": "direct_json_path",
+        "json_path": "ss_steps",
+        "value_type": "integer", 
+        "fallback": 0
+      },
+      {
+        "target_key": "learning_rate",
+        "method": "direct_json_path",
+        "json_path": "ss_learning_rate",
+        "value_type": "float",
+        "fallback": 0.0
+      },
+      {
+        "target_key": "network_dim",
+        "method": "direct_json_path",
+        "json_path": "ss_network_dim",
+        "value_type": "integer",
+        "fallback": 0
+      },
+      {
+        "target_key": "network_alpha",
+        "method": "direct_json_path", 
+        "json_path": "ss_network_alpha",
+        "value_type": "integer",
+        "fallback": 0
+      },
+      {
+        "target_key": "num_train_images",
+        "method": "direct_json_path",
+        "json_path": "ss_num_train_images", 
+        "value_type": "integer",
+        "fallback": 0
+      },
+      {
+        "target_key": "training_resolution",
+        "method": "direct_json_path",
+        "json_path": "modelspec.resolution",
+        "value_type": "string",
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "optimizer",
+        "method": "direct_json_path",
+        "json_path": "ss_optimizer",
+        "value_type": "string", 
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "mixed_precision",
+        "method": "direct_json_path",
+        "json_path": "ss_mixed_precision",
+        "value_type": "string",
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "clip_skip",
+        "method": "direct_json_path",
+        "json_path": "ss_clip_skip",
+        "value_type": "integer",
+        "fallback": 1
+      },
+      {
+        "target_key": "seed",
+        "method": "direct_json_path",
+        "json_path": "ss_seed", 
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "training_date",
+        "method": "direct_json_path",
+        "json_path": "modelspec.date",
+        "value_type": "string",
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "tag_frequency",
+        "method": "direct_json_path",
+        "json_path": "ss_tag_frequency",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "datasets_info", 
+        "method": "direct_json_path",
+        "json_path": "ss_datasets",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "activation_text",
+        "method": "direct_json_path",
+        "json_path": "ss_activation_text",
+        "value_type": "string",
+        "fallback": ""
+      }
+    ],
+    "output_template": {
+      "tool": "SafeTensors LoRA Parser",
+      "format": "LoRA Training Metadata",
+      "prompt": "LoRA: $model_name (Trained on: $base_model) $activation_text\nTool: SafeTensors LoRA Parser\nbase_model: $base_model\nclip_skip: $clip_skip\nepochs: $training_epochs\nlearning_rate: $learning_rate\nmixed_precision: $mixed_precision\nnetwork_alpha: $network_alpha\nnetwork_dim: $network_dim\nnum_images: $num_train_images\noptimizer: $optimizer\nseed: $seed\nsteps: $training_steps",
+      "negative_prompt": "",
+      "parameters": {
+        "model_name": "$model_name",
+        "architecture": "$model_architecture", 
+        "base_model": "$base_model",
+        "epochs": "$training_epochs",
+        "steps": "$training_steps",
+        "learning_rate": "$learning_rate",
+        "network_dim": "$network_dim",
+        "network_alpha": "$network_alpha",
+        "num_images": "$num_train_images",
+        "resolution": "$training_resolution",
+        "optimizer": "$optimizer",
+        "mixed_precision": "$mixed_precision",
+        "clip_skip": "$clip_skip",
+        "seed": "$seed",
+        "training_date": "$training_date",
+        "activation_text": "$activation_text"
+      },
+      "training_metadata": {
+        "tag_frequency": "$tag_frequency",
+        "datasets_info": "$datasets_info" 
+      }
+    }
+  }
+}

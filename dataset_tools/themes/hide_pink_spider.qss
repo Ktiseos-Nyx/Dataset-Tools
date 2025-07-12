@@ -16,7 +16,6 @@ QPushButton {
     border-radius: 8px;
     color: #FFFFFF;
     font-weight: bold;
-    font-size: 11pt;
     padding: 8px 16px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -50,8 +49,6 @@ QTextEdit, QPlainTextEdit {
     border: 2px solid #FF1493;
     border-radius: 8px;
     color: #FFDDEE;
-    
-    font-size: 10pt;
     selection-background-color: #FF69B4;
     selection-color: #000000;
 }
@@ -63,7 +60,6 @@ QListWidget {
     border: 2px solid #FF1493;
     border-radius: 8px;
     color: #FFFFFF;
-    
     font-weight: bold;
     alternate-background-color: #2F2F2F;
 }
@@ -94,8 +90,6 @@ QMenuBar {
     border-bottom: 3px solid #FF1493;
     color: #FFFFFF;
     font-weight: bold;
-    font-size: 11pt;
-    
 }
 
 QMenuBar::item {
@@ -119,7 +113,6 @@ QMenu {
     border-radius: 8px;
     color: #FFFFFF;
     font-weight: bold;
-    
 }
 
 QMenu::item {
@@ -139,7 +132,6 @@ QStatusBar {
     border-top: 2px solid #FF69B4;
     color: #FFFFFF;
     font-weight: bold;
-    
 }
 
 /* Scrollbars - Pink spider web style */
@@ -176,12 +168,10 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 QLabel {
     color: #FFFFFF;
     font-weight: bold;
-    
 }
 
 QLabel[accessibleName="title"] {
     color: #FF1493;
-    font-size: 18pt;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -189,6 +179,96 @@ QLabel[accessibleName="title"] {
 
 QLabel[accessibleName="subtitle"] {
     color: #FFDDEE;
-    font-size: 12pt;
     font-style: italic;
+}
+
+/* Dialog styling for readability */
+QDialog {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2F2F2F, stop: 1 #1C1C1C);
+    color: #FFFFFF;
+    border: 2px solid #FF1493;
+    border-radius: 10px;
+}
+
+QDialog QLabel {
+    color: #FFFFFF;
+    font-weight: bold;
+    background: transparent;
+}
+
+QDialog QComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3F3F3F, stop: 1 #2F2F2F);
+    border: 2px solid #FF1493;
+    border-radius: 6px;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 4px 8px;
+    min-height: 20px;
+}
+
+QDialog QComboBox:hover {
+    border: 2px solid #FF69B4;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4F4F4F, stop: 1 #3F3F3F);
+}
+
+QDialog QComboBox::drop-down {
+    border: none;
+    width: 20px;
+}
+
+QDialog QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #FF1493;
+    width: 0;
+    height: 0;
+}
+
+QDialog QSpinBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3F3F3F, stop: 1 #2F2F2F);
+    border: 2px solid #FF1493;
+    border-radius: 6px;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 4px 8px;
+    min-height: 20px;
+}
+
+QDialog QSpinBox:hover {
+    border: 2px solid #FF69B4;
+}
+
+/* Tab Widget styling */
+QTabWidget::pane {
+    border: 2px solid #FF1493;
+    border-radius: 8px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2F2F2F, stop: 1 #1C1C1C);
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3F3F3F, stop: 1 #2F2F2F);
+    border: 2px solid #FF1493;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 8px 16px;
+    margin-right: 2px;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF1493, stop: 1 #C71585);
+    color: #FFFFFF;
+}
+
+QTabBar::tab:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4F4F4F, stop: 1 #3F3F3F);
+    border: 2px solid #FF69B4;
 }

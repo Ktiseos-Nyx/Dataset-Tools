@@ -44,7 +44,7 @@ class BackgroundTask(QtCore.QThread):
 
     def cancel(self) -> None:
         """Request cancellation of the task."""
-        self.logger.info(f"Cancellation requested for {self._task_name}")
+        self.logger.info("Cancellation requested for %s", self._task_name)
         self._should_cancel = True
 
     @property
@@ -71,7 +71,7 @@ class BackgroundTask(QtCore.QThread):
             message: Status message
 
         """
-        self.logger.debug(f"{self._task_name}: {message}")
+        self.logger.debug("%s: %s", self._task_name, message)
         self.status_updated.emit(message)
 
     def emit_error(self, error_message: str) -> None:
@@ -81,7 +81,7 @@ class BackgroundTask(QtCore.QThread):
             error_message: Error description
 
         """
-        self.logger.error(f"{self._task_name} error: {error_message}")
+        self.logger.error("%s error: %s", self._task_name, error_message)
         self.error_occurred.emit(error_message)
 
     def emit_result(self, result: Any) -> None:
@@ -91,7 +91,7 @@ class BackgroundTask(QtCore.QThread):
             result: Task result
 
         """
-        self.logger.info(f"{self._task_name} completed successfully")
+        self.logger.info("%s completed successfully", self._task_name)
         self.task_completed.emit(result)
 
 
@@ -103,7 +103,9 @@ class FileLoaderTask(BackgroundTask):
     basic gathering class to a specialist! 📦⚡
     """
 
-    def __init__(self, folder_path: str, file_to_select: str | None = None, parent=None):
+    def __init__(
+        self, folder_path: str, file_to_select: str | None = None, parent=None
+    ):
         """Initialize the file loader task.
 
         Args:
@@ -121,7 +123,7 @@ class FileLoaderTask(BackgroundTask):
     def run(self) -> None:
         """Run the file loading task."""
         try:
-            self.emit_status(f"Starting scan of directory: {self.folder_path}")
+            self.emit_status("Starting scan of directory: %s" % self.folder_path)
             self.emit_progress(0, "Preparing to scan...")
 
             # Check if we should cancel before starting
@@ -141,7 +143,7 @@ class FileLoaderTask(BackgroundTask):
 
             if not result.scan_success:
                 error_msg = result.error_message or "Unknown scan error"
-                self.emit_error(f"Scan failed: {error_msg}")
+                self.emit_error("Scan failed: %s" % error_msg)
                 return
 
             self.emit_progress(90, "Finalizing results...")
@@ -161,7 +163,7 @@ class FileLoaderTask(BackgroundTask):
             self.emit_result(final_result)
 
         except Exception as e:
-            self.emit_error(f"Unexpected error during file loading: {e!s}")
+            self.emit_error("Unexpected error during file loading: %s" % e)
 
 
 class FileLoaderResult:
@@ -228,7 +230,9 @@ class MetadataLoaderTask(BackgroundTask):
     do other things! 📜⚡
     """
 
-    def __init__(self, file_paths: list[str], metadata_loader: Callable[[str], Any], parent=None):
+    def __init__(
+        self, file_paths: list[str], metadata_loader: Callable[[str], Any], parent=None
+    ):
         """Initialize the metadata loader task.
 
         Args:
@@ -250,7 +254,7 @@ class MetadataLoaderTask(BackgroundTask):
                 self.emit_result({})
                 return
 
-            self.emit_status(f"Loading metadata for {total_files} files...")
+            self.emit_status("Loading metadata for %d files..." % total_files)
             results = {}
 
             for i, file_path in enumerate(self.file_paths):
@@ -260,23 +264,24 @@ class MetadataLoaderTask(BackgroundTask):
 
                 try:
                     progress = int((i / total_files) * 100)
+                    from pathlib import Path
                     self.emit_progress(
                         progress,
-                        f"Processing {i + 1}/{total_files}: {Path(file_path).name}",
+                        "Processing %d/%d: %s" % (i + 1, total_files, Path(file_path).name),
                     )
 
                     metadata = self.metadata_loader(file_path)
                     results[file_path] = metadata
 
                 except Exception as e:
-                    self.logger.warning(f"Error loading metadata for {file_path}: {e}")
+                    self.logger.warning("Error loading metadata for %s: %s", file_path, e)
                     results[file_path] = {"error": str(e)}
 
             self.emit_progress(100, "Metadata loading completed!")
             self.emit_result(results)
 
         except Exception as e:
-            self.emit_error(f"Unexpected error during metadata loading: {e!s}")
+            self.emit_error("Unexpected error during metadata loading: %s" % e)
 
 
 class TaskManager(QtCore.QObject):
@@ -314,7 +319,9 @@ class TaskManager(QtCore.QObject):
             task_id = f"task_{self._task_counter}"
 
         # Connect task signals
-        task.task_completed.connect(lambda result: self._on_task_completed(task_id, result))
+        task.task_completed.connect(
+            lambda result: self._on_task_completed(task_id, result)
+        )
         task.error_occurred.connect(lambda error: self._on_task_error(task_id, error))
         task.finished.connect(lambda: self._cleanup_task(task_id))
 
@@ -322,7 +329,7 @@ class TaskManager(QtCore.QObject):
         self.active_tasks[task_id] = task
         task.start()
 
-        self.logger.info(f"Started task {task_id}: {task.__class__.__name__}")
+        self.logger.info("Started task %s: %s", task_id, task.__class__.__name__)
         self.task_count_changed.emit(len(self.active_tasks))
 
         return task_id
@@ -340,7 +347,7 @@ class TaskManager(QtCore.QObject):
         task = self.active_tasks.get(task_id)
         if task:
             task.cancel()
-            self.logger.info(f"Cancelled task {task_id}")
+            self.logger.info("Cancelled task %s", task_id)
             return True
         return False
 
@@ -348,7 +355,7 @@ class TaskManager(QtCore.QObject):
         """Cancel all active tasks."""
         for task_id, task in self.active_tasks.items():
             task.cancel()
-            self.logger.info(f"Cancelled task {task_id}")
+            self.logger.info("Cancelled task %s", task_id)
 
     def get_active_task_count(self) -> int:
         """Get the number of active tasks."""
@@ -360,19 +367,19 @@ class TaskManager(QtCore.QObject):
 
     def _on_task_completed(self, task_id: str, result: Any) -> None:
         """Handle task completion."""
-        self.logger.info(f"Task {task_id} completed successfully")
+        self.logger.info("Task %s completed successfully", task_id)
         # The task will be cleaned up when finished signal is emitted
 
     def _on_task_error(self, task_id: str, error: str) -> None:
         """Handle task error."""
-        self.logger.error(f"Task {task_id} failed with error: {error}")
+        self.logger.error("Task %s failed with error: %s", task_id, error)
         # The task will be cleaned up when finished signal is emitted
 
     def _cleanup_task(self, task_id: str) -> None:
         """Clean up a finished task."""
         if task_id in self.active_tasks:
             del self.active_tasks[task_id]
-            self.logger.debug(f"Cleaned up task {task_id}")
+            self.logger.debug("Cleaned up task %s", task_id)
 
             self.task_count_changed.emit(len(self.active_tasks))
 
@@ -483,17 +490,17 @@ def test_background_operations():
 
     def on_progress(percentage: int, message: str):
         if percentage >= 0:
-            logger.info(f"Progress: {percentage}% - {message}")
+            logger.info("Progress: %s%% - %s", percentage, message)
         else:
-            logger.info(f"Status: {message}")
+            logger.info("Status: %s", message)
 
     def on_completion(result: FileLoaderResult):
-        logger.info(f"Completed! Found {len(result.all_files)} files")
-        logger.info(f"Counts: {result.file_counts}")
+        logger.info("Completed! Found %d files", len(result.all_files))
+        logger.info("Counts: %s", result.file_counts)
         app.quit()
 
     def on_error(error: str):
-        logger.error(f"Error: {error}")
+        logger.error("Error: %s", error)
         app.quit()
 
     # Test with current directory
@@ -507,7 +514,7 @@ def test_background_operations():
     )
 
     task_id = manager.start_task(task, "test_file_load")
-    logger.info(f"Started test task: {task_id}")
+    logger.info("Started test task: %s", task_id)
 
     # Run for a bit to see results
     QtCore.QTimer.singleShot(10000, app.quit)  # Auto-quit after 10 seconds

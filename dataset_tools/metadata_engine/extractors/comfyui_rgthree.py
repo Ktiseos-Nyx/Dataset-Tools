@@ -30,7 +30,7 @@ class ComfyUIRGthreeExtractor:
             "rgthree_extract_reroute_nodes": self._extract_reroute_nodes,
             "rgthree_extract_utility_nodes": self._extract_utility_nodes,
             "rgthree_extract_workflow_nodes": self._extract_workflow_nodes,
-            "rgthree_detect_workflow": self._detect_rgthree_workflow,
+            "rgthree_detect_workflow": self.detect_rgthree_workflow,
         }
 
     def _extract_context_nodes(
@@ -70,7 +70,9 @@ class ComfyUIRGthreeExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if any(context_node in class_type for context_node in rgthree_context_nodes):
+            if any(
+                context_node in class_type for context_node in rgthree_context_nodes
+            ):
                 widgets = node_data.get("widgets_values", [])
                 context_nodes[node_id] = {
                     "type": class_type,
@@ -80,7 +82,9 @@ class ComfyUIRGthreeExtractor:
 
                 # Parse context parameters
                 if "Context" in class_type:
-                    context_nodes[f"{node_id}_parsed"] = self._parse_context_params(widgets)
+                    context_nodes[f"{node_id}_parsed"] = self._parse_context_params(
+                        widgets
+                    )
 
         return context_nodes
 
@@ -178,7 +182,9 @@ class ComfyUIRGthreeExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if any(reroute_node in class_type for reroute_node in rgthree_reroute_nodes):
+            if any(
+                reroute_node in class_type for reroute_node in rgthree_reroute_nodes
+            ):
                 widgets = node_data.get("widgets_values", [])
                 reroute_nodes[node_id] = {
                     "type": class_type,
@@ -236,7 +242,9 @@ class ComfyUIRGthreeExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if any(utility_node in class_type for utility_node in rgthree_utility_nodes):
+            if any(
+                utility_node in class_type for utility_node in rgthree_utility_nodes
+            ):
                 widgets = node_data.get("widgets_values", [])
                 utility_nodes[node_id] = {
                     "type": class_type,
@@ -290,7 +298,9 @@ class ComfyUIRGthreeExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if any(workflow_node in class_type for workflow_node in rgthree_workflow_nodes):
+            if any(
+                workflow_node in class_type for workflow_node in rgthree_workflow_nodes
+            ):
                 widgets = node_data.get("widgets_values", [])
                 workflow_nodes[node_id] = {
                     "type": class_type,
@@ -300,7 +310,7 @@ class ComfyUIRGthreeExtractor:
 
         return workflow_nodes
 
-    def _detect_rgthree_workflow(
+    def detect_rgthree_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -394,7 +404,7 @@ class ComfyUIRGthreeExtractor:
             return {}
 
         summary = {
-            "is_rgthree_workflow": self._detect_rgthree_workflow(data, {}, {}, {}),
+            "is_rgthree_workflow": self.detect_rgthree_workflow(data, {}, {}, {}),
             "context_nodes": self._extract_context_nodes(data, {}, {}, {}),
             "power_prompts": self._extract_power_prompts(data, {}, {}, {}),
             "reroute_nodes": self._extract_reroute_nodes(data, {}, {}, {}),
@@ -518,7 +528,9 @@ class ComfyUIRGthreeExtractor:
 
         # Calculate workflow efficiency
         total_optimization_nodes = (
-            optimization_info["context_nodes"] + optimization_info["reroute_nodes"] + optimization_info["switch_nodes"]
+            optimization_info["context_nodes"]
+            + optimization_info["reroute_nodes"]
+            + optimization_info["switch_nodes"]
         )
 
         if total_optimization_nodes > 5:

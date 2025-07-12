@@ -11,7 +11,13 @@ import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
+<<<<<<< HEAD
 from typing import Any  # Changed from typing.Any to typing.Dict for explicit Dict type hint
+=======
+from typing import (
+    Any,
+)  # Changed from typing.Any to typing.Dict for explicit Dict type hint
+>>>>>>> origin/main
 
 from ..constants import PARAMETER_PLACEHOLDER
 from ..logger import get_logger
@@ -102,12 +108,18 @@ class BaseFormat:
         self._raw: str = str(raw)
 
         try:  # Robust width/height conversion
-            self._width: str = str(int(width)) if width and str(width).strip().isdigit() and int(width) > 0 else "0"
+            self._width: str = (
+                str(int(width))
+                if width and str(width).strip().isdigit() and int(width) > 0
+                else "0"
+            )
         except (ValueError, TypeError):
             self._width: str = "0"
         try:
             self._height: str = (
-                str(int(height)) if height and str(height).strip().isdigit() and int(height) > 0 else "0"
+                str(int(height))
+                if height and str(height).strip().isdigit() and int(height) > 0
+                else "0"
             )
         except (ValueError, TypeError):
             self._height: str = "0"
@@ -138,7 +150,9 @@ class BaseFormat:
         # Initialize _parameter dictionary using PARAMETER_KEY
         # Access PARAMETER_KEY via self.__class__ to get it from the actual subclass
         param_keys_to_init = getattr(self.__class__, "PARAMETER_KEY", [])
-        self._parameter: dict[str, Any] = {key: self.DEFAULT_PARAMETER_PLACEHOLDER for key in param_keys_to_init}
+        self._parameter: dict[str, Any] = {
+            key: self.DEFAULT_PARAMETER_PLACEHOLDER for key in param_keys_to_init
+        }
 
         # Populate width, height, size in parameters if they are defined keys
         if "width" in self._parameter:
@@ -186,8 +200,12 @@ class BaseFormat:
                         "%s: _process completed but no meaningful data extracted. Setting to FORMAT_DETECTION_ERROR.",
                         self.tool,
                     )
-                    self.status = self.Status.FORMAT_DETECTION_ERROR  # More appropriate than FORMAT_ERROR
-                    self._error = f"{self.tool}: No usable data extracted after parsing."
+                    self.status = (
+                        self.Status.FORMAT_DETECTION_ERROR
+                    )  # More appropriate than FORMAT_ERROR
+                    self._error = (
+                        f"{self.tool}: No usable data extracted after parsing."
+                    )
                 else:
                     # Some data was extracted, or _process implies success by not failing
                     self.status = self.Status.READ_SUCCESS
@@ -196,14 +214,22 @@ class BaseFormat:
                         self.tool,
                     )
             elif self.status == self.Status.READ_SUCCESS:
-                self._logger.info("%s: Data parsed successfully (status set by _process).", self.tool)
+                self._logger.info(
+                    "%s: Data parsed successfully (status set by _process).", self.tool
+                )
 
-        except self.NotApplicableError as e_na:  # Custom exception from BaseModelParser or here
+        except (
+            self.NotApplicableError
+        ) as e_na:  # Custom exception from BaseModelParser or here
             self._status = self.Status.FORMAT_DETECTION_ERROR
-            self._error = str(e_na) or f"{self.tool}: Parser not applicable for this data."
+            self._error = (
+                str(e_na) or f"{self.tool}: Parser not applicable for this data."
+            )
             self._logger.debug("%s: %s", self.tool, self._error)
         except ValueError as val_err:  # Includes GGUFReadError etc. if they inherit
-            self._logger.error("ValueError during %s parsing: %s", self.tool, val_err, exc_info=True)
+            self._logger.error(
+                "ValueError during %s parsing: %s", self.tool, val_err, exc_info=True
+            )
             self._status = self.Status.FORMAT_ERROR
             self._error = str(val_err)
         except Exception as general_err:
@@ -226,7 +252,9 @@ class BaseFormat:
         # Default to FORMAT_DETECTION_ERROR if not implemented, so ImageDataReader tries next.
         self.status = self.Status.FORMAT_DETECTION_ERROR
         self._error = f"{self.tool} parser's _process method not implemented."
-        raise NotImplementedError(f"{self.__class__.__name__} must implement _process method.")
+        raise NotImplementedError(
+            f"{self.__class__.__name__} must implement _process method."
+        )
 
     def _parameter_has_data(self) -> bool:
         if not self._parameter:
@@ -246,7 +274,9 @@ class BaseFormat:
             return False  # Do not populate None
 
         target_keys = (
-            [target_param_key_or_list] if isinstance(target_param_key_or_list, str) else target_param_key_or_list
+            [target_param_key_or_list]
+            if isinstance(target_param_key_or_list, str)
+            else target_param_key_or_list
         )
         value_str = str(value)  # Ensure value is string for storage in _parameter
         populated_any = False
@@ -283,8 +313,12 @@ class BaseFormat:
         for source_key, target_param_keys in parameter_map.items():
             if source_key in data_dict:
                 raw_value = data_dict[source_key]
-                processed_value = value_processor(raw_value) if value_processor else raw_value
-                if self._populate_parameter(target_param_keys, processed_value, source_key_for_debug=source_key):
+                processed_value = (
+                    value_processor(raw_value) if value_processor else raw_value
+                )
+                if self._populate_parameter(
+                    target_param_keys, processed_value, source_key_for_debug=source_key
+                ):
                     handled_keys_set.add(source_key)
 
     def _extract_and_set_dimensions(
@@ -324,7 +358,9 @@ class BaseFormat:
         self,
         size_str: str,
         source_key_for_debug: str,
-        data_dict_for_handled_keys: (dict[str, Any] | None) = None,  # Unused here, but for consistency
+        data_dict_for_handled_keys: (
+            dict[str, Any] | None
+        ) = None,  # Unused here, but for consistency
         handled_keys_set: set[str] | None = None,
     ):
         if handled_keys_set is None:
@@ -342,11 +378,19 @@ class BaseFormat:
                 if w_int > 0 and h_int > 0:
                     self._width = w_str
                     self._height = h_str
-                    self._populate_parameter("width", w_str, f"{source_key_for_debug} (width part)")
-                    self._populate_parameter("height", h_str, f"{source_key_for_debug} (height part)")
+                    self._populate_parameter(
+                        "width", w_str, f"{source_key_for_debug} (width part)"
+                    )
+                    self._populate_parameter(
+                        "height", h_str, f"{source_key_for_debug} (height part)"
+                    )
                     if "size" in self._parameter:
-                        self._parameter["size"] = size_str  # Use original valid size string
-                    handled_keys_set.add(source_key_for_debug)  # Mark original "Size" key as handled
+                        self._parameter["size"] = (
+                            size_str  # Use original valid size string
+                        )
+                    handled_keys_set.add(
+                        source_key_for_debug
+                    )  # Mark original "Size" key as handled
                     return
         self._logger.debug(
             "Could not parse valid width/height from size string '%s' for key '%s'",
@@ -391,7 +435,9 @@ class BaseFormat:
                     # Skip width/height/size if they are handled separately or part of "Size"
                     if (
                         key in ["width", "height"]
-                        and self._parameter.get("size", self.DEFAULT_PARAMETER_PLACEHOLDER)
+                        and self._parameter.get(
+                            "size", self.DEFAULT_PARAMETER_PLACEHOLDER
+                        )
                         != self.DEFAULT_PARAMETER_PLACEHOLDER
                     ):
                         continue
@@ -399,32 +445,46 @@ class BaseFormat:
                         self._width != "0" and self._height != "0"
                     ):  # Already handled by width/height if they are primary
                         display_key = self._format_key_for_display(key)
-                        setting_parts.append(f"{display_key}{kv_separator}{self._remove_quotes_from_string(value)}")
+                        setting_parts.append(
+                            f"{display_key}{kv_separator}{self._remove_quotes_from_string(value)}"
+                        )
                         continue  # Ensure size is added if it has a value
 
                     display_key = self._format_key_for_display(key)
-                    setting_parts.append(f"{display_key}{kv_separator}{self._remove_quotes_from_string(value)}")
+                    setting_parts.append(
+                        f"{display_key}{kv_separator}{self._remove_quotes_from_string(value)}"
+                    )
 
         if custom_settings_dict:
             items_to_sort = list(custom_settings_dict.items())
             if sort_parts:
                 items_to_sort.sort()
             for key, value in items_to_sort:
-                setting_parts.append(f"{key}{kv_separator}{self._remove_quotes_from_string(value)}")
+                setting_parts.append(
+                    f"{key}{kv_separator}{self._remove_quotes_from_string(value)}"
+                )
 
         # Handle remaining_config_obj as primary for remaining data
         current_remaining_config = remaining_config_obj
-        if not current_remaining_config and remaining_data_dict:  # Fallback to individual args
+        if (
+            not current_remaining_config and remaining_data_dict
+        ):  # Fallback to individual args
             current_remaining_config = RemainingDataConfig(
                 data_dict=remaining_data_dict,
                 handled_keys=remaining_handled_keys,
                 key_formatter=remaining_key_formatter or self._format_key_for_display,
-                value_processor=remaining_value_processor or self._remove_quotes_from_string,
+                value_processor=remaining_value_processor
+                or self._remove_quotes_from_string,
             )
 
         if current_remaining_config and current_remaining_config.data_dict:
-            key_formatter = current_remaining_config.key_formatter or self._format_key_for_display
-            value_processor = current_remaining_config.value_processor or self._remove_quotes_from_string
+            key_formatter = (
+                current_remaining_config.key_formatter or self._format_key_for_display
+            )
+            value_processor = (
+                current_remaining_config.value_processor
+                or self._remove_quotes_from_string
+            )
             r_handled_keys = current_remaining_config.handled_keys or set()
 
             items_to_sort_remaining = []
@@ -432,7 +492,9 @@ class BaseFormat:
                 if key not in r_handled_keys:
                     if value is None or (isinstance(value, str) and not value.strip()):
                         continue
-                    items_to_sort_remaining.append((key_formatter(key), value_processor(value)))
+                    items_to_sort_remaining.append(
+                        (key_formatter(key), value_processor(value))
+                    )
 
             if sort_parts:
                 items_to_sort_remaining.sort()
@@ -440,7 +502,9 @@ class BaseFormat:
                 setting_parts.append(f"{disp_key}{kv_separator}{proc_val}")
 
         # Filter out any empty parts that might have resulted from processing
-        final_parts = [part for part in setting_parts if part.split(kv_separator, 1)[1].strip()]
+        final_parts = [
+            part for part in setting_parts if part.split(kv_separator, 1)[1].strip()
+        ]
         return pair_separator.join(final_parts)
 
     def _set_raw_from_info_if_empty(self):
@@ -452,11 +516,14 @@ class BaseFormat:
                 self._logger.warning(
                     "Could not serialize self._info to JSON for tool %s. Using str(self._info) as fallback for raw data.",
                     self.tool,
-                    exc_info=self._logger.level <= logging.DEBUG,  # More detail on debug
+                    exc_info=self._logger.level
+                    <= logging.DEBUG,  # More detail on debug
                 )
                 self._raw = str(self._info)  # Fallback to string representation
 
-    class NotApplicableError(Exception):  # Moved from BaseModelParser, if this is the true base
+    class NotApplicableError(
+        Exception
+    ):  # Moved from BaseModelParser, if this is the true base
         """Custom exception to indicate a parser is not suitable for a given file."""
 
         pass
@@ -468,7 +535,9 @@ class BaseFormat:
         param_h = self._parameter.get("height", self.DEFAULT_PARAMETER_PLACEHOLDER)
         if param_h != self.DEFAULT_PARAMETER_PLACEHOLDER and param_h != "0":
             return param_h
-        return self._height if self._height != "0" else self.DEFAULT_PARAMETER_PLACEHOLDER
+        return (
+            self._height if self._height != "0" else self.DEFAULT_PARAMETER_PLACEHOLDER
+        )
 
     @property
     def width(self) -> str:
@@ -522,7 +591,9 @@ class BaseFormat:
         if isinstance(value, self.Status):
             self._status = value
         else:
-            self._logger.warning("Invalid status type: %s. Expected BaseFormat.Status.", type(value))
+            self._logger.warning(
+                "Invalid status type: %s. Expected BaseFormat.Status.", type(value)
+            )
 
     @property
     def error(self) -> str:
@@ -538,8 +609,12 @@ class BaseFormat:
             "is_sdxl": self.is_sdxl,
             "setting_string": self.setting,
             "tool_detected": self.tool,
-            "raw_metadata_preview": (self.raw[:500] + "..." if len(self.raw) > 500 else self.raw),
-            "status": (self.status.name if hasattr(self.status, "name") else str(self.status)),
+            "raw_metadata_preview": (
+                self.raw[:500] + "..." if len(self.raw) > 500 else self.raw
+            ),
+            "status": (
+                self.status.name if hasattr(self.status, "name") else str(self.status)
+            ),
             "error_message": self.error,
         }
         # Add parameters, excluding placeholders AND empty dicts/lists
@@ -565,16 +640,27 @@ class BaseFormat:
                 or prop_height == "0"
                 or prop_height == self.DEFAULT_PARAMETER_PLACEHOLDER
             ):
-                if properties["size"] == self.DEFAULT_PARAMETER_PLACEHOLDER or properties["size"] == "0x0":
-                    del properties["size"]  # Remove if redundant and width/height are zero/placeholder
-            elif properties["size"] == self.DEFAULT_PARAMETER_PLACEHOLDER or properties["size"] == "0x0":
-                properties["size"] = f"{prop_width}x{prop_height}"  # Reconstruct if valid w/h available
+                if (
+                    properties["size"] == self.DEFAULT_PARAMETER_PLACEHOLDER
+                    or properties["size"] == "0x0"
+                ):
+                    del properties[
+                        "size"
+                    ]  # Remove if redundant and width/height are zero/placeholder
+            elif (
+                properties["size"] == self.DEFAULT_PARAMETER_PLACEHOLDER
+                or properties["size"] == "0x0"
+            ):
+                properties["size"] = (
+                    f"{prop_width}x{prop_height}"  # Reconstruct if valid w/h available
+                )
 
         # Final cleanup of placeholders for serialization
         final_props_to_serialize = {
             k: v
             for k, v in properties.items()
-            if v != self.DEFAULT_PARAMETER_PLACEHOLDER and not (isinstance(v, (dict, list)) and not v)
+            if v != self.DEFAULT_PARAMETER_PLACEHOLDER
+            and not (isinstance(v, (dict, list)) and not v)
         }
         # Remove width/height if they are "0" after all processing
         if final_props_to_serialize.get("width") == "0":

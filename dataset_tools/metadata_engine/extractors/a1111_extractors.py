@@ -112,7 +112,9 @@ class A1111Extractor:
         )
 
         key_pattern = re.escape(key_name)
-        match = re.search(rf"{key_pattern}:\s*(.*?)(?={lookahead_pattern})", kv_block, re.IGNORECASE)
+        match = re.search(
+            rf"{key_pattern}:\s*(.*?)(?={lookahead_pattern})", kv_block, re.IGNORECASE
+        )
 
         return match.group(1).strip() if match else None
 

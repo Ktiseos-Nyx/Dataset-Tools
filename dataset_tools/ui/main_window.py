@@ -13,26 +13,45 @@ import os
 from pathlib import Path
 from typing import Any
 
+from PIL import Image, ImageOps
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
-from PyQt6.QtCore import QSettings, QTimer
+from PyQt6.QtCore import QObject, QSettings, QThread, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
 
 # from PyQt6.QtWidgets import QApplication
 from ..correct_types import EmptyField  # pylint: disable=relative-beyond-top-level
+<<<<<<< HEAD
 from ..correct_types import ExtensionType as Ext  # pylint: disable=relative-beyond-top-level
 from ..logger import debug_monitor  # pylint: disable=relative-beyond-top-level
 from ..logger import info_monitor as nfo  # pylint: disable=relative-beyond-top-level
 from ..metadata_parser import parse_metadata  # pylint: disable=relative-beyond-top-level
+=======
+from ..correct_types import (
+    ExtensionType as Ext,
+)  # pylint: disable=relative-beyond-top-level
+from ..logger import debug_monitor  # pylint: disable=relative-beyond-top-level
+from ..logger import info_monitor as nfo  # pylint: disable=relative-beyond-top-level
+from ..metadata_parser import (
+    parse_metadata,
+)  # pylint: disable=relative-beyond-top-level
+>>>>>>> origin/main
 from ..widgets import (
     FileLoader,  # pylint: disable=relative-beyond-top-level
     FileLoadResult,
 )
+<<<<<<< HEAD
 from .dialogs import (
     AboutDialog,  # pylint: disable=relative-beyond-top-level
     SettingsDialog,
 )
 from .enhanced_theme_manager import get_enhanced_theme_manager  # pylint: disable=relative-beyond-top-level
+=======
+from .dialogs import SettingsDialog
+from .enhanced_theme_manager import (
+    get_enhanced_theme_manager,
+)  # pylint: disable=relative-beyond-top-level
+>>>>>>> origin/main
 from .font_manager import (
     apply_fonts_to_app,  # pylint: disable=relative-beyond-top-level
     get_font_manager,  # pylint: disable=relative-beyond-top-level
@@ -54,6 +73,96 @@ DATETIME_UPDATE_INTERVAL = 1000
 
 ORGANIZATION_NAME = "EarthAndDuskMedia"
 APPLICATION_NAME = "DatasetViewer"
+
+
+# ============================================================================
+# THREADED IMAGE LOADER
+# ============================================================================
+
+
+class ImageLoaderWorker(QObject):
+    """Worker class for loading images in background thread."""
+
+    # Signals for communication with main thread
+    image_loaded = pyqtSignal(str, QtGui.QPixmap)  # file_path, pixmap
+    loading_failed = pyqtSignal(str, str)  # file_path, error_message
+    loading_started = pyqtSignal(str)  # file_path
+    load_requested = pyqtSignal(str, int)  # file_path, max_size - for triggering work
+
+    def __init__(self):
+        super().__init__()
+        self._current_task = None
+        # Connect the signal to the slot
+        self.load_requested.connect(self.load_image_thumbnail)
+
+    def load_image_thumbnail(self, image_path: str, max_size: int = 1024):
+        """Load and process image thumbnail in background thread.
+
+        Args:
+            image_path: Path to the image file
+            max_size: Maximum dimension for the thumbnail
+
+        """
+        self._current_task = image_path
+        self.loading_started.emit(image_path)
+
+        try:
+            # Create memory-efficient thumbnail using our safe method
+            pixmap = self._create_safe_thumbnail(image_path, max_size)
+
+            # Check if task was cancelled (new file selected)
+            if self._current_task != image_path:
+                return
+
+            if pixmap.isNull():
+                self.loading_failed.emit(image_path, "Failed to create thumbnail")
+            else:
+                self.image_loaded.emit(image_path, pixmap)
+
+        except Exception as e:
+            if self._current_task == image_path:  # Only emit if not cancelled
+                self.loading_failed.emit(image_path, str(e))
+
+    def cancel_current_task(self):
+        """Cancel the current loading task."""
+        self._current_task = None
+
+    def _create_safe_thumbnail(self, image_path: str, max_size: int) -> QtGui.QPixmap:
+        """Create a memory-efficient thumbnail avoiding Lanczos artifacts."""
+        try:
+            with Image.open(image_path) as img:
+                img = ImageOps.exif_transpose(img)
+                img.thumbnail((max_size, max_size), Image.Resampling.BILINEAR)
+                return self._pil_to_qpixmap(img)
+        except Exception:
+            return QtGui.QPixmap()
+
+    def _pil_to_qpixmap(self, pil_image: Image.Image) -> QtGui.QPixmap:
+        """Convert PIL Image to QPixmap with proper color handling."""
+        try:
+            # Ensure we have RGB format for consistency
+            if pil_image.mode != "RGB":
+                pil_image = pil_image.convert("RGB")
+
+            width, height = pil_image.size
+
+            # Convert to bytes with proper format for Qt
+            image_data = pil_image.tobytes("raw", "RGB")
+            bytes_per_line = width * 3  # 3 bytes per pixel for RGB
+
+            # Create QImage with proper byte alignment
+            qimage = QtGui.QImage(
+                image_data,
+                width,
+                height,
+                bytes_per_line,
+                QtGui.QImage.Format.Format_RGB888,
+            )
+
+            return QtGui.QPixmap.fromImage(qimage)
+
+        except Exception:
+            return QtGui.QPixmap()
 
 
 # ============================================================================
@@ -95,7 +204,9 @@ class MainWindow(Qw.QMainWindow):
         self.setAcceptDrops(True)
 
         # File management
-        self.file_loader: FileLoader | None = None  # Ensure file_loader is always defined
+        self.file_loader: FileLoader | None = (
+            None  # Ensure file_loader is always defined
+        )
         self.current_files_in_list: list[str] = []
         self.current_folder: str = ""
 
@@ -103,6 +214,13 @@ class MainWindow(Qw.QMainWindow):
         self.main_status_bar = self.statusBar()
         self.datetime_label = Qw.QLabel()
         self.status_timer: QTimer | None = None
+        self.progress_bar = Qw.QProgressBar()
+        self.progress_bar.setVisible(False)  # Hidden by default
+
+        # Threaded image loading
+        self.image_loader_thread: QThread | None = None
+        self.image_loader_worker: ImageLoaderWorker | None = None
+        self._setup_image_loading_thread()
 
     def _initialize_managers(self) -> None:
         """Initialize UI and functionality managers."""
@@ -124,6 +242,13 @@ class MainWindow(Qw.QMainWindow):
     def _setup_status_bar(self) -> None:
         """Configure the status bar."""
         self.main_status_bar.showMessage("Ready", STATUS_MESSAGE_TIMEOUT)
+
+        # Add progress bar (initially hidden)
+        self.progress_bar.setMaximumWidth(200)
+        self.progress_bar.setTextVisible(False)
+        self.main_status_bar.addPermanentWidget(self.progress_bar)
+
+        # Add datetime label
         self.main_status_bar.addPermanentWidget(self.datetime_label)
 
     def _setup_datetime_timer(self) -> None:
@@ -138,15 +263,15 @@ class MainWindow(Qw.QMainWindow):
         # Setup menus first
         self.menu_manager.setup_menus()
 
-        # Apply optimal fonts
-        apply_fonts_to_app()
-        nfo("Applied optimal fonts to application")
-
         # Apply saved theme using enhanced theme manager
         self.enhanced_theme_manager.apply_saved_theme()
 
-        # Setup layout
+        # Setup layout (creates all widgets including text boxes)
         self.layout_manager.setup_layout()
+
+        # Apply optimal fonts AFTER layout is created
+        apply_fonts_to_app()
+        nfo("Applied optimal fonts to application")
 
         # Connect signals
         self._connect_ui_signals()
@@ -180,6 +305,76 @@ class MainWindow(Qw.QMainWindow):
             self.left_panel.set_message_text("Please select folder.")
         self.clear_selection()
 
+    def _setup_image_loading_thread(self) -> None:
+        """Initialize the background image loading thread."""
+        try:
+            # Create thread and worker
+            self.image_loader_thread = QThread()
+            self.image_loader_worker = ImageLoaderWorker()
+
+            # Move worker to thread
+            self.image_loader_worker.moveToThread(self.image_loader_thread)
+
+            # Connect signals
+            self.image_loader_worker.image_loaded.connect(self._on_image_loaded)
+            self.image_loader_worker.loading_failed.connect(
+                self._on_image_loading_failed
+            )
+            self.image_loader_worker.loading_started.connect(
+                self._on_image_loading_started
+            )
+
+            # Start the thread
+            self.image_loader_thread.start()
+
+            nfo("[UI] Image loading thread initialized successfully")
+
+        except Exception as e:
+            nfo("[UI] Failed to initialize image loading thread: %s", e)
+            # Fallback to synchronous loading
+            self.image_loader_thread = None
+            self.image_loader_worker = None
+
+    def _on_image_loading_started(self, file_path: str) -> None:
+        """Handle when image loading starts."""
+        # Show loading indicator in status bar
+        self.show_status_message(f"Loading image: {Path(file_path).name}...")
+
+        # Show indeterminate progress bar
+        self.progress_bar.setRange(0, 0)  # Indeterminate progress
+        self.progress_bar.setVisible(True)
+
+    def _on_image_loaded(self, file_path: str, pixmap: QtGui.QPixmap) -> None:
+        """Handle when image is successfully loaded in background thread."""
+        try:
+            # Hide progress bar
+            self.progress_bar.setVisible(False)
+
+            # Update the image preview with the loaded pixmap
+            if hasattr(self, "image_preview") and self.image_preview:
+                self.image_preview.setPixmap(pixmap)
+
+            # Update status
+            self.show_status_message(
+                f"Image loaded: {pixmap.width()}x{pixmap.height()}"
+            )
+            nfo(
+                "[UI] Image loaded successfully: %dx%d", pixmap.width(), pixmap.height()
+            )
+
+        except Exception as e:
+            nfo("[UI] Error setting loaded image: %s", e)
+            # Hide progress bar on error too
+            self.progress_bar.setVisible(False)
+
+    def _on_image_loading_failed(self, file_path: str, error_message: str) -> None:
+        """Handle when image loading fails."""
+        # Hide progress bar
+        self.progress_bar.setVisible(False)
+
+        nfo("[UI] Failed to load image '%s': %s", file_path, error_message)
+        self.show_status_message(f"Failed to load image: {error_message}")
+
     # ========================================================================
     # DATETIME AND STATUS MANAGEMENT
     # ========================================================================
@@ -190,7 +385,9 @@ class MainWindow(Qw.QMainWindow):
         time_string = current_time.toString(QtCore.Qt.DateFormat.RFC2822Date)
         self.datetime_label.setText(time_string)
 
-    def show_status_message(self, message: str, timeout: int = STATUS_MESSAGE_TIMEOUT) -> None:
+    def show_status_message(
+        self, message: str, timeout: int = STATUS_MESSAGE_TIMEOUT
+    ) -> None:
         """Show a message in the status bar."""
         self.main_status_bar.showMessage(message, timeout)
         nfo("[UI] Status: %s", message)
@@ -205,7 +402,9 @@ class MainWindow(Qw.QMainWindow):
         nfo("[UI] 'Open Folder' action triggered.")
 
         start_dir = self._get_start_directory()
-        folder_path = Qw.QFileDialog.getExistingDirectory(self, "Select Folder to Load", start_dir)
+        folder_path = Qw.QFileDialog.getExistingDirectory(
+            self, "Select Folder to Load", start_dir
+        )
 
         if folder_path:
             nfo("[UI] Folder selected via dialog: %s", folder_path)
@@ -218,7 +417,7 @@ class MainWindow(Qw.QMainWindow):
         """Get the starting directory for folder selection dialog."""
         if self.current_folder and Path(self.current_folder).is_dir():
             return self.current_folder
-        return self.settings.value("lastFolderPath", os.path.expanduser("~"))
+        return self.settings.value("lastFolderPath", str(Path.home()))
 
     def _handle_folder_selection_cancelled(self) -> None:
         """Handle when user cancels folder selection."""
@@ -230,7 +429,9 @@ class MainWindow(Qw.QMainWindow):
         self.show_status_message(message)
 
     @debug_monitor
-    def load_files(self, folder_path: str, file_to_select_after_load: str | None = None) -> None:
+    def load_files(
+        self, folder_path: str, file_to_select_after_load: str | None = None
+    ) -> None:
         """Load files from a folder in a background thread.
 
         Args:
@@ -263,7 +464,9 @@ class MainWindow(Qw.QMainWindow):
 
         if hasattr(self, "left_panel"):
             folder_name = Path(self.current_folder).name
-            self.left_panel.set_current_folder_text(f"Current Folder: {self.current_folder}")
+            self.left_panel.set_current_folder_text(
+                f"Current Folder: {self.current_folder}"
+            )
             self.left_panel.set_message_text(f"Loading files from {folder_name}...")
             self.left_panel.set_buttons_enabled(False)
 
@@ -332,7 +535,9 @@ class MainWindow(Qw.QMainWindow):
         # Set status message
         folder_name = Path(result.folder_path).name
         file_count = len(self.current_files_in_list)
-        self.left_panel.set_message_text(f"Loaded {file_count} file(s) from {folder_name}.")
+        self.left_panel.set_message_text(
+            f"Loaded {file_count} file(s) from {folder_name}."
+        )
 
         # Auto-select file
         self._auto_select_file(result)
@@ -426,7 +631,9 @@ class MainWindow(Qw.QMainWindow):
 
         if hasattr(self, "left_panel"):
             self.left_panel.clear_file_list_display()
-            self.left_panel.set_message_text("Select a folder or drop files/folder here.")
+            self.left_panel.set_message_text(
+                "Select a folder or drop files/folder here."
+            )
 
         self.current_files_in_list = []
         self.clear_selection()
@@ -485,7 +692,11 @@ class MainWindow(Qw.QMainWindow):
         """Update UI to reflect current file selection."""
         if hasattr(self, "left_panel"):
             count = len(self.current_files_in_list)
-            folder_name = Path(self.current_folder).name if self.current_folder else "Unknown Folder"
+            folder_name = (
+                Path(self.current_folder).name
+                if self.current_folder
+                else "Unknown Folder"
+            )
             self.left_panel.set_message_text(f"{count} file(s) in {folder_name}")
 
         self.show_status_message(f"Selected: {file_name}", 4000)
@@ -495,7 +706,9 @@ class MainWindow(Qw.QMainWindow):
         """Validate that we have proper file context."""
         if not self.current_folder or not file_name:
             nfo("[UI] Folder/file context missing.")
-            error_data = {EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}}
+            error_data = {
+                EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}
+            }
             self.metadata_display.display_metadata(error_data)
             return False
         return True
@@ -525,7 +738,10 @@ class MainWindow(Qw.QMainWindow):
         # Check against image format sets
         if hasattr(Ext, "IMAGE") and isinstance(Ext.IMAGE, list):
             for image_format_set in Ext.IMAGE:
-                if isinstance(image_format_set, set) and file_suffix in image_format_set:
+                if (
+                    isinstance(image_format_set, set)
+                    and file_suffix in image_format_set
+                ):
                     nfo("[UI] File matches image format: '%s'", file_suffix)
                     return True
 
@@ -571,7 +787,11 @@ class MainWindow(Qw.QMainWindow):
         """
         if not self.current_folder or not file_name:
             nfo("[UI] Cannot load metadata: folder/file name missing.")
-            return {EmptyField.PLACEHOLDER.value: {"Error": "Cannot load metadata, folder/file name missing."}}
+            return {
+                EmptyField.PLACEHOLDER.value: {
+                    "Error": "Cannot load metadata, folder/file name missing."
+                }
+            }
 
         full_file_path = os.path.join(self.current_folder, file_name)
         nfo("[UI] Loading metadata from: %s", full_file_path)
@@ -587,32 +807,50 @@ class MainWindow(Qw.QMainWindow):
     # ========================================================================
 
     def display_image_of(self, image_file_path: str) -> None:
-        """Display an image in the preview panel.
+        """Display an image in the preview panel using background thread.
 
         Args:
             image_file_path: Path to the image file
 
         """
-        nfo("[UI] Loading image for preview: '%s'", image_file_path)
+        nfo("[UI] Requesting image load for preview: '%s'", image_file_path)
 
         try:
-            # Clear previous pixmap to free memory
+            # Clear previous pixmap immediately for responsiveness
             if hasattr(self, "image_preview"):
                 self.image_preview.setPixmap(None)
-            pixmap = QtGui.QPixmap(image_file_path)
+
+            # Use threaded loading if available, otherwise fallback to sync
+            if self.image_loader_worker and self.image_loader_thread:
+                # Cancel any ongoing loading task
+                self.image_loader_worker.cancel_current_task()
+
+                # Start loading in background thread using signal
+                self.image_loader_worker.load_requested.emit(image_file_path, 1024)
+            else:
+                # Fallback to synchronous loading
+                nfo("[UI] Thread not available, using synchronous loading")
+                self._load_image_synchronously(image_file_path)
+
+        except Exception as e:
+            nfo(
+                "[UI] Exception requesting image load '%s': %s",
+                image_file_path,
+                e,
+                exc_info=True,
+            )
+
+    def _load_image_synchronously(self, image_file_path: str) -> None:
+        """Fallback synchronous image loading when threading is not available."""
+        try:
+            # Memory-efficient thumbnail generation using Pillow
+            max_preview_size = 1024
+            pixmap = self._create_safe_thumbnail(image_file_path, max_preview_size)
 
             if pixmap.isNull():
                 nfo("[UI] Failed to load image: '%s'", image_file_path)
+                self.show_status_message("Failed to load image")
             else:
-                # Scale down large images to save memory
-                max_preview_size = 1024
-                if pixmap.width() > max_preview_size or pixmap.height() > max_preview_size:
-                    pixmap = pixmap.scaled(
-                        max_preview_size,
-                        max_preview_size,
-                        QtCore.Qt.AspectRatioMode.KeepAspectRatio,
-                        QtCore.Qt.TransformationMode.SmoothTransformation,
-                    )
                 nfo(
                     "[UI] Image loaded successfully: %dx%d",
                     pixmap.width(),
@@ -620,14 +858,13 @@ class MainWindow(Qw.QMainWindow):
                 )
                 if hasattr(self, "image_preview"):
                     self.image_preview.setPixmap(pixmap)
+                self.show_status_message(
+                    f"Image loaded: {pixmap.width()}x{pixmap.height()}"
+                )
 
         except Exception as e:
-            nfo(
-                "[UI] Exception loading image '%s': %s",
-                image_file_path,
-                e,
-                exc_info=True,
-            )
+            nfo("[UI] Exception in synchronous image loading: %s", e)
+            self.show_status_message("Error loading image")
         finally:
             # Force garbage collection after image operations
             import gc
@@ -661,10 +898,77 @@ class MainWindow(Qw.QMainWindow):
     def open_settings_dialog(self) -> None:
         """Open the application settings dialog."""
         dialog = SettingsDialog(self)
-        # Re-apply the current theme to the application to ensure the dialog is styled
-        if hasattr(self, "enhanced_theme_manager"):
-            self.enhanced_theme_manager.apply_theme(self.enhanced_theme_manager.current_theme)
         dialog.exec()
+        # Re-apply fonts after dialog closes to ensure they stick
+        self.apply_global_font()
+
+    def _create_safe_thumbnail(self, image_path: str, max_size: int) -> QtGui.QPixmap:
+        """Create a memory-efficient thumbnail avoiding Lanczos artifacts.
+
+        Args:
+            image_path: Path to the source image
+            max_size: Maximum dimension for the thumbnail
+
+        Returns:
+            QPixmap containing the thumbnail, or null pixmap on error
+
+        """
+        try:
+            # Use 'with' to ensure immediate cleanup of full-resolution image
+            with Image.open(image_path) as img:
+                # Fix rotation issues BEFORE doing anything else
+                img = ImageOps.exif_transpose(img)
+
+                # Use thumbnail() instead of resize() - it's memory efficient and safer
+                # thumbnail() modifies in-place and uses a good resampling filter
+                img.thumbnail(
+                    (max_size, max_size), Image.Resampling.BILINEAR
+                )  # Safer than LANCZOS
+
+                # Convert to Qt format with proper color channel handling
+                return self._pil_to_qpixmap(img)
+
+        except Exception as e:
+            nfo("[UI] Error creating thumbnail for '%s': %s", image_path, e)
+            # Return empty pixmap on error
+            return QtGui.QPixmap()
+
+    def _pil_to_qpixmap(self, pil_image: Image.Image) -> QtGui.QPixmap:
+        """Convert PIL Image to QPixmap with proper color handling.
+
+        Args:
+            pil_image: PIL Image to convert
+
+        Returns:
+            QPixmap or null pixmap on error
+
+        """
+        try:
+            # Convert to RGB if needed (handles various modes safely)
+            if pil_image.mode not in ("RGB", "RGBA"):
+                pil_image = pil_image.convert("RGB")
+
+            # Get image data
+            width, height = pil_image.size
+
+            if pil_image.mode == "RGBA":
+                # Handle transparency
+                image_data = pil_image.tobytes("raw", "RGBA")
+                qimage = QtGui.QImage(
+                    image_data, width, height, QtGui.QImage.Format.Format_RGBA8888
+                )
+            else:
+                # RGB mode
+                image_data = pil_image.tobytes("raw", "RGB")
+                qimage = QtGui.QImage(
+                    image_data, width, height, QtGui.QImage.Format.Format_RGB888
+                )
+
+            return QtGui.QPixmap.fromImage(qimage)
+
+        except Exception as e:
+            nfo("[UI] Error converting PIL to QPixmap: %s", e)
+            return QtGui.QPixmap()
 
     def apply_global_font(self) -> None:
         """Apply the global font settings and refresh the theme."""
@@ -672,21 +976,55 @@ class MainWindow(Qw.QMainWindow):
         if not app:
             return
 
-        font_family = self.settings.value("fontFamily", "Roboto", type=str)
+        # Use Open Sans as default if no font preference is saved
+        font_family = self.settings.value("fontFamily", "Open Sans", type=str)
         font_size = self.settings.value("fontSize", 10, type=int)
 
+        # Create font with bundled Open Sans as fallback
         font = QFont(font_family, font_size)
-        app.setFont(font)
-        nfo(f"Set global font to: {font_family} {font_size}pt")
+        nfo(f"Using font: {font_family} {font_size}pt")
 
-        # Re-apply the current theme to ensure all widgets update
-        if hasattr(self, "enhanced_theme_manager"):
-            self.enhanced_theme_manager.apply_theme(self.enhanced_theme_manager.current_theme)
+        # Set application-wide font
+        app.setFont(font)
+
+        # Apply font to specific text boxes to ensure they inherit user's choice
+        text_boxes = [
+            "positive_prompt_box",
+            "negative_prompt_box",
+            "generation_data_box",
+        ]
+
+        for box_name in text_boxes:
+            if hasattr(self, box_name):
+                text_box = getattr(self, box_name)
+                text_box.setFont(font)
+                # Force update the widget to ensure font change takes effect
+                text_box.update()
+                # Verify the font was applied
+                current_font = text_box.font()
+                nfo(
+                    f"[FONT] Applied to {box_name}: {current_font.family()} {current_font.pointSize()}pt"
+                )
+            else:
+                nfo(f"[FONT] WARNING: {box_name} not found on main window")
+
+        # Force a repaint of the entire window to ensure all widgets get the new font
+        self.update()
 
     def show_about_dialog(self) -> None:
         """Show the about dialog."""
-        dialog = AboutDialog(self)
-        dialog.exec()
+        from dataset_tools import __version__
+
+        about_text = (
+            f"<b>Dataset Viewer v{__version__}</b><br><br>"
+            f"An ultralight metadata viewer for AI-generated content.<br><br>"
+            f"<b>Copyright © 2025 KTISEOS NYX / EARTH & DUSK MEDIA</b><br>"
+            f"Licensed under GPL-3.0<br><br>"
+            f"Built with PyQt6 and Pillow for robust metadata extraction."
+        )
+
+        # Use QMessageBox.about for proper theme inheritance
+        Qw.QMessageBox.about(self, "About Dataset Viewer", about_text)
 
     def show_font_report(self) -> None:
         """Show font availability report in console."""
@@ -799,7 +1137,27 @@ class MainWindow(Qw.QMainWindow):
         else:
             self.settings.remove("geometry")
 
+        # Clean up image loading thread
+        self._cleanup_image_loading_thread()
+
         super().closeEvent(event)
+
+    def _cleanup_image_loading_thread(self) -> None:
+        """Clean up the image loading thread on application close."""
+        try:
+            if self.image_loader_worker:
+                self.image_loader_worker.cancel_current_task()
+
+            if self.image_loader_thread and self.image_loader_thread.isRunning():
+                self.image_loader_thread.quit()
+                if not self.image_loader_thread.wait(3000):  # Wait up to 3 seconds
+                    self.image_loader_thread.terminate()
+                    self.image_loader_thread.wait()  # Wait for termination
+
+            nfo("[UI] Image loading thread cleaned up successfully")
+
+        except Exception as e:
+            nfo("[UI] Error cleaning up image loading thread: %s", e)
 
     def resize_window(self, width: int, height: int) -> None:
         """Resize the window to specified dimensions.

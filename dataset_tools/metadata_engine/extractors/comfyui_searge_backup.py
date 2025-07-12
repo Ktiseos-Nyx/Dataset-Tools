@@ -76,7 +76,9 @@ class ComfyUISeargeExtractor:
 
                     # Parse common parameters
                     if "SeargeGenerationParameters" in class_type:
-                        generation_params["parsed_params"] = self._parse_generation_params(widgets)
+                        generation_params["parsed_params"] = (
+                            self._parse_generation_params(widgets)
+                        )
 
         return generation_params
 
@@ -230,7 +232,9 @@ class ComfyUISeargeExtractor:
 
                     # Parse sampler parameters
                     if "SeargeSDXLSampler" in class_type:
-                        sampler_params["parsed_sampler"] = self._parse_sampler_params(widgets)
+                        sampler_params["parsed_sampler"] = self._parse_sampler_params(
+                            widgets
+                        )
 
         return sampler_params
 
@@ -472,7 +476,9 @@ class ComfyUISeargeExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if self._is_searge_node(class_type) and ("Input" in class_type or "Prompt" in class_type):
+            if self._is_searge_node(class_type) and (
+                "Input" in class_type or "Prompt" in class_type
+            ):
                 widgets = node_data.get("widgets_values", [])
                 for i, widget in enumerate(widgets):
                     if isinstance(widget, str) and len(widget.strip()) > 0:

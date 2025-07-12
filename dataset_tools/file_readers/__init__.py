@@ -68,14 +68,14 @@ class FileReaderFactory:
         file_path_obj = Path(file_path)
 
         if not file_path_obj.exists():
-            self.logger.warning(f"File does not exist: {file_path}")
+            self.logger.warning("File does not exist: %s", file_path)
             return self._create_error_result(f"File not found: {file_path_obj.name}")
 
         if not file_path_obj.is_file():
-            self.logger.warning(f"Path is not a file: {file_path}")
+            self.logger.warning("Path is not a file: %s", file_path)
             return self._create_error_result(f"Not a file: {file_path_obj.name}")
 
-        nfo(f"[FileReaderFactory] Reading file: {file_path_obj.name}")
+        nfo("[FileReaderFactory] Reading file: %s", file_path_obj.name)
 
         # Determine file type and dispatch to appropriate reader
         reader_type = self._determine_reader_type(file_path)
@@ -91,10 +91,12 @@ class FileReaderFactory:
                 return self._read_schema_file(file_path)
             if reader_type == "model":
                 return self._read_model_file(file_path)
-            return self._create_error_result(f"Unsupported file type: {file_path_obj.suffix}")
+            return self._create_error_result(
+                f"Unsupported file type: {file_path_obj.suffix}"
+            )
 
         except Exception as e:
-            self.logger.error(f"Error reading file {file_path}: {e}", exc_info=True)
+            self.logger.error("Error reading file %s: %s", file_path, e)
             return self._create_error_result(f"Error reading file: {e!s}")
 
     def _determine_reader_type(self, file_path: str) -> str:
@@ -155,7 +157,7 @@ class FileReaderFactory:
             return extension in group
 
         except Exception as e:
-            self.logger.debug(f"Error checking extension group {group_name}: {e}")
+            self.logger.debug("Error checking extension group %s: %s", group_name, e)
             return False
 
     def _might_be_prompt_file(self, file_path: str) -> bool:
@@ -190,7 +192,7 @@ class FileReaderFactory:
 
     def _read_image_file(self, file_path: str) -> dict[str, Any] | None:
         """Read an image file."""
-        nfo(f"[FileReaderFactory] Using image reader for: {Path(file_path).name}")
+        nfo("[FileReaderFactory] Using image reader for: %s", Path(file_path).name)
 
         result = self.image_reader.read_metadata(file_path)
         if result is None:
@@ -213,7 +215,7 @@ class FileReaderFactory:
 
     def _read_text_file(self, file_path: str) -> dict[str, Any] | None:
         """Read a text file."""
-        nfo(f"[FileReaderFactory] Using text reader for: {Path(file_path).name}")
+        nfo("[FileReaderFactory] Using text reader for: %s", Path(file_path).name)
 
         result = self.text_reader.read_file(file_path)
         if result is None:
@@ -224,7 +226,7 @@ class FileReaderFactory:
 
     def _read_prompt_file(self, file_path: str) -> dict[str, Any] | None:
         """Read a prompt file."""
-        nfo(f"[FileReaderFactory] Using prompt reader for: {Path(file_path).name}")
+        nfo("[FileReaderFactory] Using prompt reader for: %s", Path(file_path).name)
 
         result = self.prompt_reader.read_prompt_file(file_path)
         if result is None:
@@ -235,7 +237,7 @@ class FileReaderFactory:
 
     def _read_schema_file(self, file_path: str) -> dict[str, Any] | None:
         """Read a schema file."""
-        nfo(f"[FileReaderFactory] Using schema reader for: {Path(file_path).name}")
+        nfo("[FileReaderFactory] Using schema reader for: %s", Path(file_path).name)
 
         result = self.schema_reader.read_file(file_path)
         if result is None:
@@ -250,7 +252,9 @@ class FileReaderFactory:
                     break
 
             if workflow_data:
-                workflow_analysis = self.data_analyzer.analyze_comfyui_workflow(workflow_data)
+                workflow_analysis = self.data_analyzer.analyze_comfyui_workflow(
+                    workflow_data
+                )
                 result["workflow_analysis"] = workflow_analysis
 
         result["reader_type"] = "schema"
@@ -258,7 +262,9 @@ class FileReaderFactory:
 
     def _read_model_file(self, file_path: str) -> dict[str, Any] | None:
         """Read a model file."""
-        nfo(f"[FileReaderFactory] Attempting to read model file: {Path(file_path).name}")
+        nfo(
+            "[FileReaderFactory] Attempting to read model file: %s", Path(file_path).name
+        )
 
         # Try to import and use ModelTool
         try:
@@ -276,7 +282,7 @@ class FileReaderFactory:
             self.logger.warning("ModelTool not available for model file reading")
             return self._create_error_result("ModelTool not available")
         except Exception as e:
-            self.logger.error(f"Error using ModelTool: {e}")
+            self.logger.error("Error using ModelTool: %s", e)
             return self._create_error_result(f"ModelTool error: {e!s}")
 
     def _create_error_result(self, error_message: str) -> dict[str, Any]:
@@ -336,7 +342,9 @@ class FileReaderManager:
         self._cache: dict[str, dict[str, Any]] = {}
         self._cache_max_size = 50
 
-    def read_file(self, file_path: str, use_cache: bool = True) -> dict[str, Any] | None:
+    def read_file(
+        self, file_path: str, use_cache: bool = True
+    ) -> dict[str, Any] | None:
         """Read a file with optional caching.
 
         Args:
@@ -349,7 +357,7 @@ class FileReaderManager:
         """
         # Check cache first
         if use_cache and file_path in self._cache:
-            self.logger.debug(f"Returning cached result for: {Path(file_path).name}")
+            self.logger.debug("Returning cached result for: %s", Path(file_path).name)
             return self._cache[file_path]
 
         # Read the file
@@ -361,7 +369,9 @@ class FileReaderManager:
 
         return result
 
-    def read_multiple_files(self, file_paths: list[str], use_cache: bool = True) -> dict[str, dict[str, Any] | None]:
+    def read_multiple_files(
+        self, file_paths: list[str], use_cache: bool = True
+    ) -> dict[str, dict[str, Any] | None]:
         """Read multiple files.
 
         Args:
@@ -379,12 +389,14 @@ class FileReaderManager:
                 result = self.read_file(file_path, use_cache)
                 results[file_path] = result
             except Exception as e:
-                self.logger.error(f"Error reading {file_path}: {e}")
+                self.logger.error("Error reading %s: %s", file_path, e)
                 results[file_path] = self.factory._create_error_result(str(e))
 
         return results
 
-    def filter_by_reader_type(self, results: dict[str, dict[str, Any]], reader_type: str) -> dict[str, dict[str, Any]]:
+    def filter_by_reader_type(
+        self, results: dict[str, dict[str, Any]], reader_type: str
+    ) -> dict[str, dict[str, Any]]:
         """Filter results by reader type.
 
         Args:
@@ -395,7 +407,11 @@ class FileReaderManager:
             Filtered results dictionary
 
         """
-        return {path: result for path, result in results.items() if result and result.get("reader_type") == reader_type}
+        return {
+            path: result
+            for path, result in results.items()
+            if result and result.get("reader_type") == reader_type
+        }
 
     def get_reading_summary(self, results: dict[str, dict[str, Any]]) -> dict[str, Any]:
         """Get a summary of reading results.
@@ -425,12 +441,16 @@ class FileReaderManager:
 
                 # Count by reader type
                 reader_type = result.get("reader_type", "unknown")
-                summary["reader_type_counts"][reader_type] = summary["reader_type_counts"].get(reader_type, 0) + 1
+                summary["reader_type_counts"][reader_type] = (
+                    summary["reader_type_counts"].get(reader_type, 0) + 1
+                )
             else:
                 summary["failed_reads"] += 1
 
                 # Count error types
-                error = result.get(EmptyField.PLACEHOLDER.value, {}).get("Error", "Unknown error")
+                error = result.get(EmptyField.PLACEHOLDER.value, {}).get(
+                    "Error", "Unknown error"
+                )
                 summary["error_types"][error] = summary["error_types"].get(error, 0) + 1
 
         return summary
@@ -540,7 +560,7 @@ def test_file_reader_factory():
     formats = factory.get_supported_formats()
     logger.info("Supported formats:")
     for reader_type, extensions in formats.items():
-        logger.info(f"  {reader_type}: {extensions}")
+        logger.info("  %s: %s", reader_type, extensions)
 
     # Test with sample files (if they exist)
     test_files = [
@@ -555,41 +575,41 @@ def test_file_reader_factory():
     existing_files = [f for f in test_files if Path(f).exists()]
 
     if existing_files:
-        logger.info(f"\nTesting with existing files: {existing_files}")
+        logger.info("Testing with existing files: %s", existing_files)
 
         # Test single file reading
         for file_path in existing_files:
-            logger.info(f"\nReading: {file_path}")
+            logger.info("Reading: %s", file_path)
             result = factory.read_file(file_path)
 
             if result:
-                logger.info(f"  Reader type: {result.get('reader_type')}")
-                logger.info(f"  Success: {result.get('reading_success', True)}")
+                logger.info("  Reader type: %s", result.get('reader_type'))
+                logger.info("  Success: %s", result.get('reading_success', True))
 
                 if "basic_info" in result:
                     info = result["basic_info"]
-                    logger.info(f"  File size: {info.get('file_size')} bytes")
+                    logger.info("  File size: %s bytes", info.get('file_size'))
                     if "image_size" in info:
-                        logger.info(f"  Image size: {info['image_size']}")
+                        logger.info("  Image size: %s", info['image_size'])
             else:
                 logger.info("  Reading failed")
 
         # Test batch reading
-        logger.info(f"\nTesting batch reading of {len(existing_files)} files...")
+        logger.info("\nTesting batch reading of %d files...", len(existing_files))
         batch_results = manager.read_multiple_files(existing_files)
         summary = manager.get_reading_summary(batch_results)
 
-        logger.info(f"Batch reading summary: {summary}")
+        logger.info("Batch reading summary: %s", summary)
 
         # Test cache
         cache_info = manager.get_cache_info()
-        logger.info(f"Cache info: {cache_info}")
+        logger.info("Cache info: %s", cache_info)
 
     else:
         logger.info("No test files found - skipping file reading tests")
         logger.info("Create test files to run full tests:")
         for test_file in test_files:
-            logger.info(f"  {test_file}")
+            logger.info("  %s", test_file)
 
     logger.info("FileReaderFactory test completed!")
 

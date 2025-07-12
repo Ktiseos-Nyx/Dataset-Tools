@@ -1,7 +1,13 @@
 # dataset_tools/model_parsers/safetensors_parser.py
 import json
 import struct
+<<<<<<< HEAD
 from pathlib import Path  # Used for Path object, not strictly necessary for current logic but good practice
+=======
+from pathlib import (
+    Path,
+)  # Used for Path object, not strictly necessary for current logic but good practice
+>>>>>>> origin/main
 
 from .base_model_parser import BaseModelParser, ModelParserStatus
 
@@ -20,7 +26,9 @@ class SafetensorsParser(BaseModelParser):
         # Check file extension first for early exit via NotApplicableError
         file_path_obj = Path(self.file_path)
         if not file_path_obj.suffix.lower() == ".safetensors":
-            raise self.NotApplicableError("File is not a .safetensors file (wrong extension).")
+            raise self.NotApplicableError(
+                "File is not a .safetensors file (wrong extension)."
+            )
 
         try:
             with open(self.file_path, "rb") as f:
@@ -29,7 +37,9 @@ class SafetensorsParser(BaseModelParser):
                 if len(header_len_bytes) < 8:
                     # This indicates it's not a valid safetensor file or is severely truncated.
                     # Raise NotApplicable because it doesn't even have the header length.
-                    raise self.NotApplicableError("File too small to contain safetensors header length.")
+                    raise self.NotApplicableError(
+                        "File too small to contain safetensors header length."
+                    )
 
                 length_of_header = struct.unpack("<Q", header_len_bytes)[0]
 
@@ -50,16 +60,22 @@ class SafetensorsParser(BaseModelParser):
                     )
 
                 header_json_str = header_json_bytes.decode("utf-8", errors="strict")
-                header_data = json.loads(header_json_str)  # Don't strip, spec implies no leading/trailing whitespace
+                header_data = json.loads(
+                    header_json_str
+                )  # Don't strip, spec implies no leading/trailing whitespace
 
             # Successfully parsed header JSON
             if "__metadata__" in header_data:
                 self.metadata_header = header_data.pop("__metadata__")
                 # Refine tool_name based on metadata if present
                 if "ss_sd_model_name" in self.metadata_header:  # Kohya SS specific key
-                    self.tool_name = f"Safetensors ({self.metadata_header['ss_sd_model_name']})"
+                    self.tool_name = (
+                        f"Safetensors ({self.metadata_header['ss_sd_model_name']})"
+                    )
                 elif "format" in self.metadata_header:  # Generic format key
-                    self.tool_name = f"Safetensors (format: {self.metadata_header['format']})"
+                    self.tool_name = (
+                        f"Safetensors (format: {self.metadata_header['format']})"
+                    )
                 elif self.metadata_header:  # Has some metadata
                     self.tool_name = "Safetensors (with metadata)"
                 else:  # __metadata__ was present but empty
@@ -73,17 +89,21 @@ class SafetensorsParser(BaseModelParser):
 
         except struct.error as e_struct:
             # This typically means the first 8 bytes weren't a valid u64, so not safetensors.
-            self._error_message = (
-                f"Safetensors struct error (likely not safetensors or corrupted header length): {e_struct}"
-            )
+            self._error_message = f"Safetensors struct error (likely not safetensors or corrupted header length): {e_struct}"
             raise self.NotApplicableError(self._error_message) from e_struct
         except (json.JSONDecodeError, UnicodeDecodeError) as e_decode:
             # This means it looked like safetensors (header length read), but header content was bad.
-            self._error_message = f"Safetensors header content error (JSON or UTF-8 invalid): {e_decode}"
+            self._error_message = (
+                f"Safetensors header content error (JSON or UTF-8 invalid): {e_decode}"
+            )
             # This is a FAILURE of a safetensors file, not "Not Applicable".
-            self.status = ModelParserStatus.FAILURE  # Set status before raising ValueError
+            self.status = (
+                ModelParserStatus.FAILURE
+            )  # Set status before raising ValueError
             raise ValueError(self._error_message) from e_decode
-        except ValueError as e_val:  # Catches our "large header", "zero header", "corrupted header"
+        except (
+            ValueError
+        ) as e_val:  # Catches our "large header", "zero header", "corrupted header"
             self._error_message = f"Safetensors format validation error: {e_val}"
             self.status = ModelParserStatus.FAILURE
             raise ValueError(self._error_message) from e_val

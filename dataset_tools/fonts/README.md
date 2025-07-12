@@ -1,54 +1,137 @@
-# Bundled Fonts for Dataset Tools
+# Font Collection for Dataset Tools
 
-This directory contains a minimal set of essential fonts bundled with Dataset Tools to ensure excellent code readability while maintaining a small distribution size.
+This directory contains a collection of high-quality open source fonts
+bundled with Dataset Tools to provide users with exceptional typography
+choices while maintaining excellent readability and visual appeal.
 
 ## Font Philosophy
 
-**Minimal Bundle Strategy:**
-- Bundle only essential fonts that significantly improve user experience
-- Prioritize system fonts for UI elements (respects user preferences)
-- Include specialized fonts only where they provide clear value
-- Keep total bundle size under 1MB
+**Complete Typography Experience:**
+- Provide a curated selection of the best open source fonts
+- Cover all use cases from professional UI to creative themes
+- Include specialized fonts for retro, pixel, and themed experiences
+- Respect font licensing and provide proper attribution
+- No system font dependencies - complete self-contained typography
 
-## Bundled Fonts
+## Font Categories
 
-### JetBrains Mono (Monospace Font)
-- **License**: SIL Open Font License 1.1
-- **Source**: https://github.com/JetBrains/JetBrainsMono
-- **Usage**: Code/technical metadata display in generation details
-- **Files**: `JetBrainsMono-Regular.ttf` (263 KB), `JetBrainsMono-Bold.ttf` (267 KB)
-- **Why bundled**: Excellent code readability with perfect alignment and ligatures
+### 📝 Professional Fonts (UI & Reading)
+Perfect for daily use, business presentations, and professional interfaces:
 
-**Total Bundle Size: 531 KB**
+- **Open Sans** - Our primary UI font (Google Fonts)
+- **Inter** - Modern geometric sans-serif designed for UI
+- **DM Sans** - Professional sans-serif with excellent readability
+- **Work Sans** - Clean and versatile, great for interfaces  
+- **Roboto** - Google's flagship font family
+- **IBM Plex Sans** - Technical but friendly, IBM's corporate font
+- **Nunito** - Rounded and approachable sans-serif
+- **PT Sans** - Comprehensive font family with excellent language support
+- **Radio Canada** - Official font of the Government of Canada
+
+### ⌨️ Monospace Fonts (Code & Technical)
+Essential for displaying metadata, code, and technical content:
+
+- **JetBrains Mono** - Premium code font with ligatures
+- **Syne Mono** - Modern artistic monospace
+- **VT323** - Authentic terminal/VT100 recreation
+- **Silkscreen** - Pixel-perfect bitmap-style monospace
+
+### 🎮 Display & Theme Fonts
+For special themes, creative projects, and visual flair:
+
+- **Orbitron** - Futuristic geometric sans-serif
+- **Jura** - Sci-fi inspired display font
+- **Turret Road** - Bold military/stencil style (6 weights)
+- **Pixelify Sans** - Perfect pixel art recreation (5 weights)
+- **Dongle** - Korean-inspired quirky display font (3 weights)
+- **Tsukimi Rounded** - Soft Japanese-style rounded font (5 weights)
+- **Doppio One** - Unique display font with character
+- **Kosugi Maru** - Japanese rounded sans-serif
+- **Mandali** - Clean geometric sans-serif
+
+## Font Statistics
+
+- **Total Font Families**: 22
+- **Total Font Files**: 52+ individual TTF files
+- **License**: All fonts are SIL Open Font License 1.1 or equivalent
+- **Languages Supported**: Latin, Cyrillic, Japanese, Korean, and more
+- **Estimated Bundle Size**: ~15-20MB (providing immense value)
 
 ## Font Loading Strategy
 
-1. **JetBrains Mono**: Loaded from bundle for technical metadata
-2. **UI Elements**: Use system-ui font (respects user's OS preferences)
-3. **Text Content**: Use system fonts with graceful fallbacks
-4. **Fallback Chain**: bundled → system → generic
+1. **All fonts loaded at startup**: Complete collection available immediately
+2. **User choice priority**: Font selection in settings shows only bundled fonts
+3. **Theme integration**: Themes use bundled fonts exclusively
+4. **No system dependencies**: Consistent appearance across all platforms
+5. **Fallback hierarchy**: Intelligent font stacks for each category
 
-## Font Loading
+## Licensing & Attribution
 
-Fonts are automatically loaded at application startup via `FontManager._load_bundled_fonts()`. No user action required.
+All fonts included are open source with compatible licenses:
 
-## Fallback Behavior
+- **Primary License**: SIL Open Font License 1.1 (OFL)
+- **Attribution**: See `LICENSE.txt` and `OFL.txt` for complete licensing information
+- **Commercial Use**: ✅ All fonts are free for commercial use
+- **Modification**: ✅ Fonts can be modified under OFL terms
+- **Redistribution**: ✅ Can be bundled and redistributed
 
-If bundled fonts fail to load, the application gracefully falls back to system fonts:
-- **UI**: system-ui → sans-serif
-- **Monospace**: JetBrains Mono → system monospace
-- **Reading**: system-ui → serif
+## Font Management
+
+The `FontManager` class (`font_manager.py`) handles:
+- Automatic font loading at application startup
+- Font family organization and categorization  
+- Intelligent font stacks for different use cases
+- Graceful fallback handling
+- Font information reporting and debugging
+
+## Usage in Themes
+
+Theme creators can confidently use any bundled font:
+
+```css
+/* Professional themes */
+QWidget { font-family: "Open Sans", "Inter", "DM Sans"; }
+
+/* Retro/Gaming themes */  
+QWidget { font-family: "VT323", "Pixelify Sans", "Silkscreen"; }
+
+/* Futuristic themes */
+QWidget { font-family: "Orbitron", "Jura", "Turret Road"; }
+
+/* Code/Technical themes */
+QWidget { font-family: "JetBrains Mono", "Syne Mono"; }
+```
 
 ## Font Updates
 
-To update JetBrains Mono:
-1. Download latest release from https://github.com/JetBrains/JetBrainsMono/releases
-2. Replace TTF files in this directory
-3. Keep only Regular and Bold weights to minimize size
+To update the font collection:
 
-## Design Decisions
+1. Download latest versions from [Google Fonts](https://fonts.google.com)
+2. All Google Fonts are OFL licensed and compatible ✅
+3. Update `BUNDLED_FONTS` dictionary in `font_manager.py`
+4. Test font loading with `FontManager.print_font_report()`
+5. Update this README with any new additions
 
-- **No UI font bundling**: System fonts work great for UI and respect user preferences
-- **No reading font bundling**: System fonts are optimized for reading on each platform
-- **JetBrains Mono only**: The one font where bundling provides clear value for code display
-- **Minimal weights**: Only Regular and Bold to keep size reasonable
+**Pro tip**: Google Fonts provides the highest quality, most up-to-date versions of these fonts with perfect licensing!
+
+## Special Thanks
+
+Massive gratitude to **Google Fonts** for making virtually all of these amazing fonts freely available! 🎉
+
+**Google Fonts Collection Includes:**
+- **Professional**: Open Sans, Inter, DM Sans, Work Sans, Roboto, Nunito, PT Sans, IBM Plex Sans
+- **Monospace**: JetBrains Mono, Syne Mono, VT323, Silkscreen  
+- **Display**: Orbitron, Jura, Turret Road, Pixelify Sans, Dongle,
+  Tsukimi Rounded, Doppio One, Kosugi Maru, Mandali
+- **Government**: Radio Canada (via Google Fonts)
+
+**Sources:**
+- **Primary**: [Google Fonts](https://fonts.google.com) - The world's largest free
+  font library
+- **JetBrains**: [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) (also available on Google Fonts)
+- **Special thanks** to the font designers who contributed their work to Google
+  Fonts
+
+---
+
+*Dataset Tools - Making beautiful typography accessible to everyone* ✨

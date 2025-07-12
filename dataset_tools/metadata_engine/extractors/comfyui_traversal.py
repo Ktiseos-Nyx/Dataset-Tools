@@ -44,7 +44,9 @@ class ComfyUITraversalExtractor:
             return data
         return {}
 
-    def follow_input_link(self, nodes: dict | list, node_id: str, input_name: str) -> tuple[str, str] | None:
+    def follow_input_link(
+        self, nodes: dict | list, node_id: str, input_name: str
+    ) -> tuple[str, str] | None:
         """Follow an input link to find the source node and output slot.
 
         Args:
@@ -65,7 +67,10 @@ class ComfyUITraversalExtractor:
         if isinstance(inputs, list):
             # Workflow format: inputs is a list of dicts
             for input_info in inputs:
-                if isinstance(input_info, dict) and input_info.get("name") == input_name:
+                if (
+                    isinstance(input_info, dict)
+                    and input_info.get("name") == input_name
+                ):
                     link_id = input_info.get("link")
                     if link_id is not None:
                         # Find the source node that has this link in its outputs
@@ -82,13 +87,19 @@ class ComfyUITraversalExtractor:
                     if source_node:
                         # Get the output slot name by index
                         outputs = source_node.get("outputs", [])
-                        if isinstance(outputs, list) and output_slot_index < len(outputs):
-                            output_slot_name = outputs[output_slot_index].get("name", "")
+                        if isinstance(outputs, list) and output_slot_index < len(
+                            outputs
+                        ):
+                            output_slot_name = outputs[output_slot_index].get(
+                                "name", ""
+                            )
                             return (source_node_id, output_slot_name)
 
         return None
 
-    def find_node_by_output_link(self, nodes: dict | list, link_id: int) -> tuple[str, str] | None:
+    def find_node_by_output_link(
+        self, nodes: dict | list, link_id: int
+    ) -> tuple[str, str] | None:
         """Find a node that has the specified link_id in its outputs.
 
         Args:
@@ -148,7 +159,9 @@ class ComfyUITraversalExtractor:
             # Base Case: If this node is a primitive string holder, return its value.
             if "Primitive" in node_type and node.get("widgets_values"):
                 text_content = node["widgets_values"][0]
-                self.logger.debug(f"[TRAVERSAL] Found Primitive text: {text_content[:50]}...")
+                self.logger.debug(
+                    f"[TRAVERSAL] Found Primitive text: {text_content[:50]}..."
+                )
                 return text_content
 
             # Handle text encoder nodes
@@ -167,7 +180,9 @@ class ComfyUITraversalExtractor:
                 widgets = node.get("widgets_values", [])
                 if widgets and isinstance(widgets[0], str):
                     text_content = widgets[0]
-                    self.logger.debug(f"[TRAVERSAL] Found Text Encoder text: {text_content[:50]}...")
+                    self.logger.debug(
+                        f"[TRAVERSAL] Found Text Encoder text: {text_content[:50]}..."
+                    )
                     return text_content
 
             # Handle modern wildcard and prompt processing nodes
@@ -250,7 +265,9 @@ class ComfyUITraversalExtractor:
                     "string_a",
                     "string_b",
                 ]:
-                    link_info = self.follow_input_link(nodes, node_id, input_name_candidate)
+                    link_info = self.follow_input_link(
+                        nodes, node_id, input_name_candidate
+                    )
                     if link_info:
                         source_node_id, _ = link_info
                         self.logger.debug(
@@ -266,12 +283,16 @@ class ComfyUITraversalExtractor:
                         if isinstance(input_item, dict):
                             input_link_id = input_item.get("link")
                             if input_link_id:
-                                source_node_id = self._find_source_node_for_link(data, input_link_id)
+                                source_node_id = self._find_source_node_for_link(
+                                    data, input_link_id
+                                )
                                 if source_node_id:
                                     self.logger.debug(
                                         f"[TRAVERSAL] Following generic input link {input_link_id} from {node_id} to {source_node_id}"
                                     )
-                                    traced_text = trace_recursive(source_node_id, depth + 1)
+                                    traced_text = trace_recursive(
+                                        source_node_id, depth + 1
+                                    )
                                     if traced_text:
                                         return traced_text
 
@@ -280,16 +301,22 @@ class ComfyUITraversalExtractor:
             if isinstance(inputs, dict) and "text" in inputs:
                 text_value = inputs["text"]
                 if isinstance(text_value, str):
-                    self.logger.debug(f"[TRAVERSAL] Found direct 'text' input: {text_value[:50]}...")
+                    self.logger.debug(
+                        f"[TRAVERSAL] Found direct 'text' input: {text_value[:50]}..."
+                    )
                     return text_value
 
             widgets = node.get("widgets_values", [])
             if widgets and isinstance(widgets[0], str):
                 text_content = widgets[0]
-                self.logger.debug(f"[TRAVERSAL] Found widget value: {text_content[:50]}...")
+                self.logger.debug(
+                    f"[TRAVERSAL] Found widget value: {text_content[:50]}..."
+                )
                 return text_content
 
-            self.logger.debug(f"[TRAVERSAL] No text found in node {node_id} after checking all methods.")
+            self.logger.debug(
+                f"[TRAVERSAL] No text found in node {node_id} after checking all methods."
+            )
             return ""
 
         return trace_recursive(start_node_id)
@@ -305,7 +332,9 @@ class ComfyUITraversalExtractor:
                     return str(link[1])  # Return source node ID
         return None
 
-    def find_connected_nodes(self, nodes: dict | list, start_node_id: str, connection_type: str = "input") -> list[str]:
+    def find_connected_nodes(
+        self, nodes: dict | list, start_node_id: str, connection_type: str = "input"
+    ) -> list[str]:
         """Find all nodes connected to a given node.
 
         Args:
@@ -346,7 +375,9 @@ class ComfyUITraversalExtractor:
                         if isinstance(links, list):
                             for link_id in links:
                                 # Find nodes that have this link in their inputs
-                                target_nodes = self.find_nodes_with_input_link(nodes, link_id)
+                                target_nodes = self.find_nodes_with_input_link(
+                                    nodes, link_id
+                                )
                                 connected.extend(target_nodes)
 
         return connected
@@ -367,7 +398,10 @@ class ComfyUITraversalExtractor:
             inputs = node_data.get("inputs", [])
             if isinstance(inputs, list):
                 for input_info in inputs:
-                    if isinstance(input_info, dict) and input_info.get("link") == link_id:
+                    if (
+                        isinstance(input_info, dict)
+                        and input_info.get("link") == link_id
+                    ):
                         result.append(str(node_id))
 
         return result

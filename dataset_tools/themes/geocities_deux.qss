@@ -1,4 +1,5 @@
-/* GEOCITIES DEUX - Starfield Edition */
+/* GEOCITIES DEUX - MAXIMUM OVERDRIVE RAINBOW EDITION */
+/* Warning: May cause temporary blindness and extreme nostalgia */
 
 /* Main window with starfield background */
 QMainWindow {
@@ -7,61 +8,90 @@ QMainWindow {
     background-position: center;
 }
 
-/* General widget styling - semi-transparent to show starfield */
+/* General widget styling - RAINBOW EXPLOSION */
 QWidget {
-    background-color: rgba(0, 0, 64, 0.2);
-    color: #FFD700;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                               stop: 0 rgba(255, 0, 255, 0.3), 
+                               stop: 0.2 rgba(0, 255, 255, 0.3), 
+                               stop: 0.4 rgba(255, 255, 0, 0.3), 
+                               stop: 0.6 rgba(255, 0, 128, 0.3), 
+                               stop: 0.8 rgba(128, 255, 0, 0.3), 
+                               stop: 1 rgba(255, 128, 255, 0.3));
+    color: #FF69B4;
     font-size: 12pt;
+    font-weight: bold;
 }
 
-/* Sassy 90s buttons with starfield showing through */
+/* ULTIMATE 90s RAINBOW BUTTONS */
 QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
-                                stop: 0 rgba(255, 100, 150, 0.8), 
-                                stop: 0.5 rgba(255, 255, 100, 0.8), 
-                                stop: 1 rgba(100, 255, 150, 0.8));
-    border: 3px outset #C0C0C0;
-    border-radius: 2px;
-    padding: 6px 16px;
+                                stop: 0 #FF1493, 
+                                stop: 0.15 #FF4500, 
+                                stop: 0.3 #FFD700, 
+                                stop: 0.45 #00FF7F, 
+                                stop: 0.6 #00BFFF, 
+                                stop: 0.75 #8A2BE2, 
+                                stop: 1 #FF69B4);
+    border: 4px ridge #FFD700;
+    border-radius: 8px;
+    padding: 8px 20px;
     font-weight: bold;
-    font-size: 13pt;
-    color: #1a0033;
+    font-size: 14pt;
+    color: #000000;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px #FFFFFF;
 }
 
 QPushButton:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
-                                stop: 0 rgba(100, 255, 150, 0.9), 
-                                stop: 0.5 rgba(255, 255, 100, 0.9), 
-                                stop: 1 rgba(255, 100, 150, 0.9));
-    border: 3px inset #C0C0C0;
-    color: #0d1a33;
+                                stop: 0 #FF69B4, 
+                                stop: 0.15 #8A2BE2, 
+                                stop: 0.3 #00BFFF, 
+                                stop: 0.45 #00FF7F, 
+                                stop: 0.6 #FFD700, 
+                                stop: 0.75 #FF4500, 
+                                stop: 1 #FF1493);
+    border: 4px groove #FF00FF;
+    color: #FFFFFF;
+    text-shadow: 3px 3px 6px #000000;
 }
 
 QPushButton:pressed {
-    background-color: rgba(255, 100, 255, 0.7);
-    border: 3px inset #808080;
-    color: #0d1a33;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF0000, 
+                                stop: 0.5 #FFFF00, 
+                                stop: 1 #00FF00);
+    border: 4px inset #00FFFF;
+    color: #000000;
+    text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-/* Text areas - readable with starfield visible */
+/* PSYCHEDELIC TEXT AREAS */
 QTextEdit, QPlainTextEdit {
-    background-color: rgba(240, 240, 240, 0.85);
-    color: #2d1b4d;
-    border: 2px inset #C0C0C0;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                               stop: 0 rgba(255, 240, 245, 0.9), 
+                               stop: 0.5 rgba(230, 230, 255, 0.9), 
+                               stop: 1 rgba(255, 250, 240, 0.9));
+    color: #4B0082;
+    border: 3px ridge #FF1493;
     font-size: 11pt;
-    selection-background-color: rgba(100, 150, 255, 0.7);
+    font-weight: bold;
+    selection-background-color: #FF69B4;
     selection-color: #FFFFFF;
 }
 
-/* List widgets with starfield backdrop */
+/* RAINBOW LIST WIDGETS */
 QListWidget {
-    background-color: rgba(255, 255, 255, 0.75);
-    color: #2d1b4d;
-    border: 2px inset #C0C0C0;
-    alternate-background-color: rgba(230, 230, 230, 0.6);
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                               stop: 0 rgba(255, 182, 193, 0.8), 
+                               stop: 0.5 rgba(221, 160, 221, 0.8), 
+                               stop: 1 rgba(176, 196, 222, 0.8));
+    color: #8B008B;
+    border: 3px groove #FF1493;
+    alternate-background-color: rgba(255, 105, 180, 0.4);
     font-size: 11pt;
+    font-weight: bold;
 }
 
 QListWidget::item {
@@ -70,21 +100,34 @@ QListWidget::item {
 }
 
 QListWidget::item:selected {
-    background-color: rgba(100, 150, 255, 0.8);
-    color: #FFFFFF;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                               stop: 0 #FF1493, stop: 0.5 #00BFFF, stop: 1 #FFD700);
+    color: #000000;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #FFFFFF;
 }
 
 QListWidget::item:hover {
-    background-color: rgba(150, 200, 255, 0.6);
-    color: #1a0033;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                               stop: 0 #FFD700, stop: 0.5 #FF69B4, stop: 1 #00FF7F);
+    color: #4B0082;
+    font-weight: bold;
 }
 
-/* Menu bar with starfield showing */
+/* EPIC RAINBOW MENU BAR */
 QMenuBar {
-    background-color: rgba(200, 200, 200, 0.8);
-    color: #2d1b4d;
-    border-bottom: 2px outset #C0C0C0;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                               stop: 0 #FF1493, 
+                               stop: 0.2 #FF4500, 
+                               stop: 0.4 #FFD700, 
+                               stop: 0.6 #00FF7F, 
+                               stop: 0.8 #00BFFF, 
+                               stop: 1 #8A2BE2);
+    color: #FFFFFF;
+    border-bottom: 4px ridge #FFD700;
     font-weight: bold;
+    font-size: 12pt;
+    text-shadow: 2px 2px 4px #000000;
 }
 
 QMenuBar::item {
@@ -93,8 +136,11 @@ QMenuBar::item {
 }
 
 QMenuBar::item:selected {
-    background-color: rgba(100, 150, 255, 0.8);
-    color: #FFFFFF;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                               stop: 0 #FFFF00, stop: 1 #FF00FF);
+    color: #000000;
+    text-shadow: 1px 1px 2px #FFFFFF;
+    border-radius: 4px;
 }
 
 QMenu {
@@ -112,29 +158,39 @@ QMenu::item:selected {
     color: #FFFFFF;
 }
 
-/* Status bar */
+/* WILD STATUS BAR */
 QStatusBar {
-    background-color: rgba(200, 200, 200, 0.8);
-    color: #2d1b4d;
-    border-top: 2px outset #C0C0C0;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                               stop: 0 #8A2BE2, 
+                               stop: 0.5 #FF1493, 
+                               stop: 1 #00BFFF);
+    color: #FFFFFF;
+    border-top: 4px ridge #FFD700;
     font-weight: bold;
+    font-size: 11pt;
+    text-shadow: 2px 2px 4px #000000;
 }
 
-/* Scrollbars with starfield backdrop */
+/* COSMIC SCROLLBARS */
 QScrollBar:vertical {
-    background-color: rgba(200, 200, 200, 0.7);
-    width: 18px;
-    border: 2px outset #C0C0C0;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                               stop: 0 #FF69B4, stop: 0.5 #00BFFF, stop: 1 #FFD700);
+    width: 20px;
+    border: 3px ridge #FF1493;
 }
 
 QScrollBar::handle:vertical {
-    background-color: rgba(150, 150, 150, 0.8);
-    border: 2px outset #C0C0C0;
-    min-height: 20px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                               stop: 0 #FF1493, stop: 0.5 #8A2BE2, stop: 1 #00FF7F);
+    border: 2px ridge #FFD700;
+    min-height: 25px;
+    border-radius: 4px;
 }
 
 QScrollBar::handle:vertical:hover {
-    background-color: rgba(100, 150, 255, 0.8);
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                               stop: 0 #FFD700, stop: 0.5 #FF69B4, stop: 1 #00BFFF);
+    border: 2px solid #FFFFFF;
 }
 
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
@@ -143,32 +199,46 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
     height: 18px;
 }
 
-/* Input fields */
+/* RAINBOW INPUT FIELDS */
 QLineEdit {
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #2d1b4d;
-    border: 2px inset #C0C0C0;
-    padding: 4px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                               stop: 0 rgba(255, 240, 245, 0.95), 
+                               stop: 0.5 rgba(240, 248, 255, 0.95), 
+                               stop: 1 rgba(255, 250, 240, 0.95));
+    color: #8B008B;
+    border: 3px ridge #FF1493;
+    padding: 6px;
     font-size: 11pt;
-    selection-background-color: rgba(100, 150, 255, 0.7);
+    font-weight: bold;
+    selection-background-color: #FF69B4;
     selection-color: #FFFFFF;
+    border-radius: 4px;
 }
 
 QLineEdit:focus {
-    border: 2px solid rgba(100, 150, 255, 0.8);
+    border: 4px solid #FFD700;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                               stop: 0 #FFE4E1, stop: 0.5 #E6E6FA, stop: 1 #FFF8DC);
 }
 
-/* Combo boxes */
+/* WILD COMBO BOXES */
 QComboBox {
-    background-color: rgba(240, 240, 240, 0.9);
-    color: #2d1b4d;
-    border: 2px outset #C0C0C0;
-    padding: 4px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                               stop: 0 rgba(255, 182, 193, 0.9), 
+                               stop: 0.5 rgba(221, 160, 221, 0.9), 
+                               stop: 1 rgba(176, 196, 222, 0.9));
+    color: #4B0082;
+    border: 3px ridge #FF1493;
+    padding: 6px;
     font-size: 11pt;
+    font-weight: bold;
+    border-radius: 4px;
 }
 
 QComboBox:hover {
-    background-color: rgba(100, 150, 255, 0.2);
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                               stop: 0 #FFD700, stop: 0.5 #FF69B4, stop: 1 #00BFFF);
+    border: 3px solid #FFFFFF;
 }
 
 QComboBox::drop-down {

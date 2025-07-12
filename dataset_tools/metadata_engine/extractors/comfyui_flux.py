@@ -24,15 +24,15 @@ class ComfyUIFluxExtractor:
     def get_methods(self) -> dict[str, callable]:
         """Return dictionary of method name -> method function."""
         return {
-            "flux_extract_t5_prompt": self._extract_t5_prompt,
-            "flux_extract_clip_prompt": self._extract_clip_prompt,
+            "flux_extract_t5_prompt": self.extract_t5_prompt,
+            "flux_extract_clip_prompt": self.extract_clip_prompt,
             "flux_extract_model_info": self._extract_flux_model_info,
             "flux_extract_guidance_scale": self._extract_guidance_scale,
             "flux_extract_scheduler_params": self._extract_scheduler_params,
-            "flux_detect_workflow": self._detect_flux_workflow,
+            "flux_detect_workflow": self.detect_flux_workflow,
         }
 
-    def _extract_t5_prompt(
+    def extract_t5_prompt(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -59,7 +59,7 @@ class ComfyUIFluxExtractor:
 
         return ""
 
-    def _extract_clip_prompt(
+    def extract_clip_prompt(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -111,19 +111,25 @@ class ComfyUIFluxExtractor:
             if "FluxCheckpointLoader" in class_type or "DiffusionModel" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["checkpoint"] = widgets[0] if isinstance(widgets[0], str) else ""
+                    model_info["checkpoint"] = (
+                        widgets[0] if isinstance(widgets[0], str) else ""
+                    )
 
             # FLUX UNET loaders
             elif "FluxUNETLoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["unet"] = widgets[0] if isinstance(widgets[0], str) else ""
+                    model_info["unet"] = (
+                        widgets[0] if isinstance(widgets[0], str) else ""
+                    )
 
             # FLUX VAE loaders
             elif "FluxVAELoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["vae"] = widgets[0] if isinstance(widgets[0], str) else ""
+                    model_info["vae"] = (
+                        widgets[0] if isinstance(widgets[0], str) else ""
+                    )
 
         return model_info
 
@@ -180,15 +186,26 @@ class ComfyUIFluxExtractor:
             class_type = node_data.get("class_type", "")
 
             # FLUX schedulers
-            if "FluxScheduler" in class_type or "FlowMatchEulerDiscreteScheduler" in class_type:
+            if (
+                "FluxScheduler" in class_type
+                or "FlowMatchEulerDiscreteScheduler" in class_type
+            ):
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     scheduler_params.update(
                         {
                             "scheduler_type": class_type,
-                            "steps": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], (int, float)) else 20),
+                            "steps": (
+                                widgets[0]
+                                if len(widgets) > 0
+                                and isinstance(widgets[0], (int, float))
+                                else 20
+                            ),
                             "denoise": (
-                                widgets[1] if len(widgets) > 1 and isinstance(widgets[1], (int, float)) else 1.0
+                                widgets[1]
+                                if len(widgets) > 1
+                                and isinstance(widgets[1], (int, float))
+                                else 1.0
                             ),
                         }
                     )
@@ -200,19 +217,30 @@ class ComfyUIFluxExtractor:
                     scheduler_params.update(
                         {
                             "sampler_type": class_type,
-                            "steps": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], (int, float)) else 20),
+                            "steps": (
+                                widgets[0]
+                                if len(widgets) > 0
+                                and isinstance(widgets[0], (int, float))
+                                else 20
+                            ),
                             "max_shift": (
-                                widgets[1] if len(widgets) > 1 and isinstance(widgets[1], (int, float)) else 1.15
+                                widgets[1]
+                                if len(widgets) > 1
+                                and isinstance(widgets[1], (int, float))
+                                else 1.15
                             ),
                             "base_shift": (
-                                widgets[2] if len(widgets) > 2 and isinstance(widgets[2], (int, float)) else 0.5
+                                widgets[2]
+                                if len(widgets) > 2
+                                and isinstance(widgets[2], (int, float))
+                                else 0.5
                             ),
                         }
                     )
 
         return scheduler_params
 
-    def _detect_flux_workflow(
+    def detect_flux_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -306,9 +334,9 @@ class ComfyUIFluxExtractor:
         prompt_data = data.get("prompt", data)
 
         summary = {
-            "is_flux_workflow": self._detect_flux_workflow(data, {}, {}, {}),
-            "t5_prompt": self._extract_t5_prompt(data, {}, {}, {}),
-            "clip_prompt": self._extract_clip_prompt(data, {}, {}, {}),
+            "is_flux_workflow": self.detect_flux_workflow(data, {}, {}, {}),
+            "t5_prompt": self.extract_t5_prompt(data, {}, {}, {}),
+            "clip_prompt": self.extract_clip_prompt(data, {}, {}, {}),
             "model_info": self._extract_flux_model_info(data, {}, {}, {}),
             "guidance_scale": self._extract_guidance_scale(data, {}, {}, {}),
             "scheduler_params": self._extract_scheduler_params(data, {}, {}, {}),

@@ -69,8 +69,16 @@ class ComfyUIExtractorManager:
         methods = {}
 
         # Add methods from all extractors
-        methods.update(self.traversal.get_methods() if hasattr(self.traversal, "get_methods") else {})
-        methods.update(self.node_checker.get_methods() if hasattr(self.node_checker, "get_methods") else {})
+        methods.update(
+            self.traversal.get_methods()
+            if hasattr(self.traversal, "get_methods")
+            else {}
+        )
+        methods.update(
+            self.node_checker.get_methods()
+            if hasattr(self.node_checker, "get_methods")
+            else {}
+        )
         methods.update(self.complexity.get_methods())
         methods.update(self.flux.get_methods())
         methods.update(self.sdxl.get_methods())
@@ -125,41 +133,41 @@ class ComfyUIExtractorManager:
         workflow_types = []
 
         # Check architecture types
-        if self.flux._detect_flux_workflow(data, {}, {}, {}):
+        if self.flux.detect_flux_workflow(data, {}, {}, {}):
             workflow_types.append("flux")
 
-        if self.sdxl._detect_sdxl_workflow(data, {}, {}, {}):
+        if self.sdxl.detect_sdxl_workflow(data, {}, {}, {}):
             workflow_types.append("sdxl")
 
-        if self.pixart._detect_pixart_workflow(data, {}, {}, {}):
+        if self.pixart.detect_pixart_workflow(data, {}, {}, {}):
             workflow_types.append("pixart")
 
         # Check ecosystem types
-        if self.impact._detect_impact_workflow(data, {}, {}, {}):
+        if self.impact.detect_impact_workflow(data, {}, {}, {}):
             workflow_types.append("impact")
 
-        if self.efficiency._detect_efficiency_workflow(data, {}, {}, {}):
+        if self.efficiency.detect_efficiency_workflow(data, {}, {}, {}):
             workflow_types.append("efficiency")
 
-        if self.was._detect_was_workflow(data, {}, {}, {}):
+        if self.was.detect_was_workflow(data, {}, {}, {}):
             workflow_types.append("was")
 
-        if self.animatediff._detect_animatediff_workflow(data, {}, {}, {}):
+        if self.animatediff.detect_animatediff_workflow(data, {}, {}, {}):
             workflow_types.append("animatediff")
 
-        if self.controlnet._detect_controlnet_workflow(data, {}, {}, {}):
+        if self.controlnet.detect_controlnet_workflow(data, {}, {}, {}):
             workflow_types.append("controlnet")
 
-        if self.searge._detect_searge_workflow(data, {}, {}, {}):
+        if self.searge.detect_searge_workflow(data, {}, {}, {}):
             workflow_types.append("searge")
 
-        if self.rgthree._detect_rgthree_workflow(data, {}, {}, {}):
+        if self.rgthree.detect_rgthree_workflow(data, {}, {}, {}):
             workflow_types.append("rgthree")
 
-        if self.inspire._detect_inspire_workflow(data, {}, {}, {}):
+        if self.inspire.detect_inspire_workflow(data, {}, {}, {}):
             workflow_types.append("inspire")
 
-        if self.dynamicprompts._detect_dynamicprompts_workflow(data, {}, {}, {}):
+        if self.dynamicprompts.detect_dynamicprompts_workflow(data, {}, {}, {}):
             workflow_types.append("dynamicprompts")
 
         # Cache the result
@@ -179,8 +187,12 @@ class ComfyUIExtractorManager:
             return {}
 
         summary = {
-            "workflow_types": self._auto_detect_workflow(data, method_def, context, fields),
-            "complexity_analysis": self.complexity._analyze_workflow_complexity(data, method_def, context, fields),
+            "workflow_types": self._auto_detect_workflow(
+                data, method_def, context, fields
+            ),
+            "complexity_analysis": self.complexity.analyze_workflow_complexity(
+                data, method_def, context, fields
+            ),
             "architecture_summaries": {},
             "ecosystem_summaries": {},
             "node_analysis": {},
@@ -190,38 +202,60 @@ class ComfyUIExtractorManager:
         workflow_types = summary["workflow_types"]
 
         if "flux" in workflow_types:
-            summary["architecture_summaries"]["flux"] = self.flux.extract_flux_workflow_summary(data)
+            summary["architecture_summaries"]["flux"] = (
+                self.flux.extract_flux_workflow_summary(data)
+            )
 
         if "sdxl" in workflow_types:
-            summary["architecture_summaries"]["sdxl"] = self.sdxl.extract_sdxl_workflow_summary(data)
+            summary["architecture_summaries"]["sdxl"] = (
+                self.sdxl.extract_sdxl_workflow_summary(data)
+            )
 
         if "pixart" in workflow_types:
-            summary["architecture_summaries"]["pixart"] = self.pixart.extract_pixart_workflow_summary(data)
+            summary["architecture_summaries"]["pixart"] = (
+                self.pixart.extract_pixart_workflow_summary(data)
+            )
 
         # Extract ecosystem-specific summaries
         if "impact" in workflow_types:
-            summary["ecosystem_summaries"]["impact"] = self.impact.extract_impact_workflow_summary(data)
+            summary["ecosystem_summaries"]["impact"] = (
+                self.impact.extract_impact_workflow_summary(data)
+            )
 
         if "efficiency" in workflow_types:
-            summary["ecosystem_summaries"]["efficiency"] = self.efficiency.extract_efficiency_workflow_summary(data)
+            summary["ecosystem_summaries"]["efficiency"] = (
+                self.efficiency.extract_efficiency_workflow_summary(data)
+            )
 
         if "was" in workflow_types:
-            summary["ecosystem_summaries"]["was"] = self.was.extract_was_workflow_summary(data)
+            summary["ecosystem_summaries"]["was"] = (
+                self.was.extract_was_workflow_summary(data)
+            )
 
         if "animatediff" in workflow_types:
-            summary["ecosystem_summaries"]["animatediff"] = self.animatediff.extract_animatediff_workflow_summary(data)
+            summary["ecosystem_summaries"]["animatediff"] = (
+                self.animatediff.extract_animatediff_workflow_summary(data)
+            )
 
         if "controlnet" in workflow_types:
-            summary["ecosystem_summaries"]["controlnet"] = self.controlnet.extract_controlnet_workflow_summary(data)
+            summary["ecosystem_summaries"]["controlnet"] = (
+                self.controlnet.extract_controlnet_workflow_summary(data)
+            )
 
         if "searge" in workflow_types:
-            summary["ecosystem_summaries"]["searge"] = self.searge.extract_searge_workflow_summary(data)
+            summary["ecosystem_summaries"]["searge"] = (
+                self.searge.extract_searge_workflow_summary(data)
+            )
 
         if "rgthree" in workflow_types:
-            summary["ecosystem_summaries"]["rgthree"] = self.rgthree.extract_rgthree_workflow_summary(data)
+            summary["ecosystem_summaries"]["rgthree"] = (
+                self.rgthree.extract_rgthree_workflow_summary(data)
+            )
 
         if "inspire" in workflow_types:
-            summary["ecosystem_summaries"]["inspire"] = self.inspire.extract_inspire_workflow_summary(data)
+            summary["ecosystem_summaries"]["inspire"] = (
+                self.inspire.extract_inspire_workflow_summary(data)
+            )
 
         if "dynamicprompts" in workflow_types:
             summary["ecosystem_summaries"]["dynamicprompts"] = (
@@ -263,7 +297,9 @@ class ComfyUIExtractorManager:
 
         # Analyze node ecosystems
         ecosystem_counts = {}
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (
+            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
+        ):
             if isinstance(node_data, dict):
                 ecosystem = self.node_checker.get_node_ecosystem(node_data)
                 ecosystem_counts[ecosystem] = ecosystem_counts.get(ecosystem, 0) + 1
@@ -271,7 +307,9 @@ class ComfyUIExtractorManager:
         metadata["node_ecosystems"] = ecosystem_counts
 
         # Complexity metrics
-        metadata["complexity_metrics"] = self.complexity._analyze_workflow_complexity(data, method_def, context, fields)
+        metadata["complexity_metrics"] = self.complexity.analyze_workflow_complexity(
+            data, method_def, context, fields
+        )
 
         return metadata
 
@@ -304,36 +342,46 @@ class ComfyUIExtractorManager:
         # Try architecture-specific extraction first
         if "flux" in workflow_types:
             # For FLUX, prefer T5 prompt
-            t5_prompt = self.flux._extract_t5_prompt(data, method_def, context, fields)
+            t5_prompt = self.flux.extract_t5_prompt(data, method_def, context, fields)
             if t5_prompt:
                 return t5_prompt
 
             # Fallback to CLIP prompt
-            clip_prompt = self.flux._extract_clip_prompt(data, method_def, context, fields)
+            clip_prompt = self.flux.extract_clip_prompt(
+                data, method_def, context, fields
+            )
             if clip_prompt:
                 return clip_prompt
 
         if "sdxl" in workflow_types:
             # For SDXL, try positive prompt extraction
-            positive_prompt = self.sdxl._extract_positive_prompt(data, method_def, context, fields)
+            positive_prompt = self.sdxl.extract_positive_prompt(
+                data, method_def, context, fields
+            )
             if positive_prompt:
                 return positive_prompt
 
         if "pixart" in workflow_types:
             # For PixArt, try T5 prompt
-            t5_prompt = self.pixart._extract_t5_prompt(data, method_def, context, fields)
+            t5_prompt = self.pixart.extract_t5_prompt(
+                data, method_def, context, fields
+            )
             if t5_prompt:
                 return t5_prompt
 
         # Try ecosystem-specific extraction
         if "impact" in workflow_types:
             # For Impact workflows, try wildcard prompt
-            wildcard_prompt = self.impact._extract_wildcard_prompt(data, method_def, context, fields)
+            wildcard_prompt = self.impact.extract_wildcard_prompt(
+                data, method_def, context, fields
+            )
             if wildcard_prompt:
                 return wildcard_prompt
 
         # Try complexity-based extraction
-        dynamic_prompt = self.complexity._extract_dynamic_prompt_from_workflow(data, method_def, context, fields)
+        dynamic_prompt = self.complexity.extract_dynamic_prompt_from_workflow(
+            data, method_def, context, fields
+        )
         if dynamic_prompt:
             return dynamic_prompt
 
@@ -341,8 +389,12 @@ class ComfyUIExtractorManager:
         nodes = self.traversal.get_nodes_from_data(data)
         if nodes:
             # Find the first text node and trace its flow
-            for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
-                if isinstance(node_data, dict) and self.node_checker.is_text_node(node_data):
+            for node_id, node_data in (
+                nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
+            ):
+                if isinstance(node_data, dict) and self.node_checker.is_text_node(
+                    node_data
+                ):
                     traced_text = self.traversal.trace_text_flow(nodes, str(node_id))
                     if traced_text:
                         return traced_text
@@ -377,10 +429,14 @@ class ComfyUIExtractorManager:
 
         for ecosystem_name, extractor in extractors:
             # Check if this ecosystem is present
-            detect_method = getattr(extractor, f"_detect_{ecosystem_name}_workflow", None)
+            detect_method = getattr(
+                extractor, f"detect_{ecosystem_name}_workflow", None
+            )
             if detect_method and detect_method(data, {}, {}, {}):
                 # Extract ecosystem-specific information
-                summary_method = getattr(extractor, f"extract_{ecosystem_name}_workflow_summary", None)
+                summary_method = getattr(
+                    extractor, f"extract_{ecosystem_name}_workflow_summary", None
+                )
                 if summary_method:
                     ecosystems[ecosystem_name] = summary_method(data)
 
@@ -396,7 +452,9 @@ class ComfyUIExtractorManager:
 
         for node_id, node_data in node_items:
             if isinstance(node_data, dict):
-                node_type = node_data.get("class_type", node_data.get("type", "unknown"))
+                node_type = node_data.get(
+                    "class_type", node_data.get("type", "unknown")
+                )
                 type_counts[node_type] = type_counts.get(node_type, 0) + 1
 
         return type_counts
@@ -420,9 +478,13 @@ class ComfyUIExtractorManager:
                     custom_info["total_custom_nodes"] += 1
 
                     ecosystem = self.node_checker.get_node_ecosystem(node_data)
-                    custom_info["ecosystems"][ecosystem] = custom_info["ecosystems"].get(ecosystem, 0) + 1
+                    custom_info["ecosystems"][ecosystem] = (
+                        custom_info["ecosystems"].get(ecosystem, 0) + 1
+                    )
 
-                    node_type = node_data.get("class_type", node_data.get("type", "unknown"))
+                    node_type = node_data.get(
+                        "class_type", node_data.get("type", "unknown")
+                    )
                     custom_info["custom_node_types"].add(node_type)
 
         # Convert set to list for JSON serialization
@@ -525,7 +587,9 @@ class ComfyUIExtractorManager:
             "animetune",
         ]
 
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (
+            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
+        ):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
                 node_name = node_data.get("name", "")
@@ -546,7 +610,9 @@ class ComfyUIExtractorManager:
         fields: ExtractedFields,
     ) -> dict[str, Any]:
         """Calculate workflow complexity metrics."""
-        return self.complexity._analyze_workflow_complexity(data, method_def, context, fields)
+        return self.complexity.analyze_workflow_complexity(
+            data, method_def, context, fields
+        )
 
     def _detect_advanced_upscaling(
         self,
@@ -580,7 +646,9 @@ class ComfyUIExtractorManager:
         ]
 
         upscaling_count = 0
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (
+            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
+        ):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
 
@@ -591,7 +659,8 @@ class ComfyUIExtractorManager:
                 widgets = node_data.get("widgets_values", [])
                 for widget in widgets:
                     if isinstance(widget, str) and any(
-                        indicator in widget for indicator in ["2x-", "4x-", "upscale", "ESRGAN"]
+                        indicator in widget
+                        for indicator in ["2x-", "4x-", "upscale", "ESRGAN"]
                     ):
                         upscaling_count += 1
 
@@ -625,11 +694,15 @@ class ComfyUIExtractorManager:
         ]
 
         conditioning_count = 0
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (
+            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
+        ):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
 
-                if any(indicator in class_type for indicator in conditioning_indicators):
+                if any(
+                    indicator in class_type for indicator in conditioning_indicators
+                ):
                     conditioning_count += 1
 
         # Multi-stage if more than 2 conditioning nodes
@@ -667,11 +740,15 @@ class ComfyUIExtractorManager:
             "ImageContrast",
         ]
 
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (
+            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
+        ):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
 
-                if any(indicator in class_type for indicator in post_processing_indicators):
+                if any(
+                    indicator in class_type for indicator in post_processing_indicators
+                ):
                     return True
 
         return False
@@ -727,8 +804,12 @@ class ComfyUIExtractorManager:
         if not nodes:
             return {}
 
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
-            if isinstance(node_data, dict) and self.node_checker.is_sampler_node(node_data):
+        for node_id, node_data in (
+            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
+        ):
+            if isinstance(node_data, dict) and self.node_checker.is_sampler_node(
+                node_data
+            ):
                 inputs = node_data.get("inputs", {})
                 if isinstance(inputs, dict):
                     return {

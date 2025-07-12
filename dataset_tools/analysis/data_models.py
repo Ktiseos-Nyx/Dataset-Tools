@@ -15,9 +15,15 @@ class FeatureAnalysisResult(BaseModel):
 
     # Using Field() allows us to add descriptions, which is great for documentation.
     is_flux: bool = Field(..., description="True if the generation used a FLUX model.")
-    is_ponyx: bool = Field(..., description="True if the generation used a PonyXL finetune.")
-    is_illustriousxl: bool = Field(..., description="True if the generation used an IllustriousXL finetune.")
-    has_lora: bool = Field(..., description="True if a LoRA was detected in the generation.")
+    is_ponyx: bool = Field(
+        ..., description="True if the generation used a PonyXL finetune."
+    )
+    is_illustriousxl: bool = Field(
+        ..., description="True if the generation used an IllustriousXL finetune."
+    )
+    has_lora: bool = Field(
+        ..., description="True if a LoRA was detected in the generation."
+    )
 
     # Using Literal forces the value to be one of these specific strings.
     # This prevents typos and guarantees the architecture is a known value.

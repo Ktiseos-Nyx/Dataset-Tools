@@ -10,12 +10,18 @@ including settings configuration and about information dialogs.
 """
 
 from PyQt6.QtCore import QSettings
+<<<<<<< HEAD
 from PyQt6.QtGui import QFont, QFontDatabase
+=======
+>>>>>>> origin/main
 from PyQt6.QtWidgets import (
     QComboBox,
     QDialog,
     QDialogButtonBox,
+<<<<<<< HEAD
     QFontComboBox,
+=======
+>>>>>>> origin/main
     QFormLayout,
     QLabel,
     QMessageBox,
@@ -100,8 +106,8 @@ class SettingsDialog(QDialog):
         layout = QFormLayout(font_widget)
         layout.setSpacing(15)
 
-        # Font Family
-        self.font_combo = QFontComboBox()
+        # Font Family - Only bundled fonts
+        self.font_combo = QComboBox()
         self.font_combo.setEditable(False)
         self._populate_font_combo()
         layout.addRow("Font Family:", self.font_combo)
@@ -122,7 +128,9 @@ class SettingsDialog(QDialog):
             for category, themes in available_themes.items():
                 if not themes:
                     continue
-                category_name = enhanced_manager.THEME_CATEGORIES.get(category, category.title())
+                category_name = enhanced_manager.THEME_CATEGORIES.get(
+                    category, category.title()
+                )
                 for theme_name in themes:
                     theme_id = f"{category}:{theme_name}"
                     display_name = f"{category_name} - {theme_name.replace('_', ' ').replace('.xml', '').title()}"
@@ -144,18 +152,28 @@ class SettingsDialog(QDialog):
             self.size_combo.addItem(display_name)
 
     def _populate_font_combo(self) -> None:
-        """Prepend application-specific fonts to the font combo box."""
-        # Get all application-specific font families
-        app_font_families = []
-        for font_id in QFontDatabase.applicationFontFamilies(QFontDatabase.addApplicationFont(":/")):
-            app_font_families.extend(QFontDatabase.applicationFontFamilies(font_id))
+        """Populate combo box with ONLY bundled fonts."""
+        try:
+            from ..ui.font_manager import get_font_manager
 
-        # Add a separator and then the application fonts
-        if app_font_families:
-            self.font_combo.insertItem(0, "--- Application Fonts ---")
-            self.font_combo.model().item(0).setEnabled(False)  # Make separator unselectable
-            for i, family in enumerate(sorted(list(set(app_font_families)))):
-                self.font_combo.insertItem(i + 1, family)
+            font_manager = get_font_manager()
+            bundled_font_names = list(font_manager.BUNDLED_FONTS.keys())
+
+            if bundled_font_names:
+                # Add only bundled fonts - no system fonts at all
+                for family in sorted(bundled_font_names):
+                    self.font_combo.addItem(family)
+
+                nfo(
+                    f"Added {len(bundled_font_names)} bundled fonts to combo box (no system fonts)"
+                )
+            else:
+                nfo("No bundled fonts found - adding fallback option")
+                self.font_combo.addItem("Open Sans")  # Fallback
+
+        except Exception as e:
+            nfo(f"Could not load bundled fonts for combo: {e}")
+            self.font_combo.addItem("Open Sans")  # Fallback
 
     def _create_button_box(self) -> None:
         """Create the dialog button box."""
@@ -166,7 +184,9 @@ class SettingsDialog(QDialog):
         )
         self.button_box.accepted.connect(self.accept_settings)
         self.button_box.rejected.connect(self.reject)
-        self.button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.apply_all_settings)
+        self.button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(
+            self.apply_all_settings
+        )
         self.layout.addWidget(self.button_box)
 
     def _load_current_settings(self) -> None:
@@ -195,9 +215,17 @@ class SettingsDialog(QDialog):
 
     def _load_font_setting(self) -> None:
         """Load and set current font family and size."""
-        font_family = self.settings.value("fontFamily", "Roboto", type=str)
+        font_family = self.settings.value("fontFamily", "Open Sans", type=str)
         font_size = self.settings.value("fontSize", 10, type=int)
-        self.font_combo.setCurrentFont(QFont(font_family))
+
+        # Find and select the font in our bundled fonts combo
+        index = self.font_combo.findText(font_family)
+        if index >= 0:
+            self.font_combo.setCurrentIndex(index)
+        else:
+            # Default to first item (usually Open Sans) if not found
+            self.font_combo.setCurrentIndex(0)
+
         self.font_size_spinbox.setValue(font_size)
 
     def apply_all_settings(self) -> None:
@@ -205,6 +233,9 @@ class SettingsDialog(QDialog):
         self._apply_theme_settings()
         self._apply_window_settings()
         self._apply_font_settings()
+        # Re-apply fonts after theme to ensure they override any theme font settings
+        if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
+            self.parent_window.apply_global_font()
         nfo("All settings applied.")
 
     def _apply_theme_settings(self) -> None:
@@ -226,7 +257,7 @@ class SettingsDialog(QDialog):
 
     def _apply_font_settings(self) -> None:
         """Apply the selected font family and size globally."""
-        font_family = self.font_combo.currentFont().family()
+        font_family = self.font_combo.currentText()
         font_size = self.font_size_spinbox.value()
 
         # Save settings
@@ -306,7 +337,9 @@ class AboutDialog(QDialog):
 
     def _get_contributors_text(self) -> str:
         """Get formatted contributors text."""
-        contributors = ["KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA (Lead Developer)"]
+        contributors = [
+            "KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA (Lead Developer)"
+        ]
 
         contributor_lines = [f"- {contributor}" for contributor in contributors]
         return "Contributors:<br>" + "<br>".join(contributor_lines)
@@ -399,7 +432,9 @@ class DialogFactory:
     """
 
     @staticmethod
-    def create_settings_dialog(parent: QWidget, current_theme: str = "") -> SettingsDialog:
+    def create_settings_dialog(
+        parent: QWidget, current_theme: str = ""
+    ) -> SettingsDialog:
         """Create a settings dialog.
 
         Args:
@@ -410,7 +445,7 @@ class DialogFactory:
             Configured SettingsDialog instance
 
         """
-        return SettingsDialog(parent, current_theme)
+        return SettingsDialog(parent)
 
     @staticmethod
     def create_about_dialog(parent: QWidget) -> AboutDialog:

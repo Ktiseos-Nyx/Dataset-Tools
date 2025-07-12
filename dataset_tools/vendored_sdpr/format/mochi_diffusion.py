@@ -5,7 +5,9 @@ from .base_format import BaseFormat
 
 
 class MochiDiffusionFormat(BaseFormat):
-    tool = "Mochi Diffusion"  # Default, will be updated by "Generator" field from metadata
+    tool = (
+        "Mochi Diffusion"  # Default, will be updated by "Generator" field from metadata
+    )
 
     # Mapping Mochi's IPTC keys (from Metadata.swift) to our standard parameter names
     MOCHI_IPTC_KEY_TO_PARAM_MAP = {
@@ -34,7 +36,9 @@ class MochiDiffusionFormat(BaseFormat):
         # For example: self._info["iptc_originating_program"]
         #              self._info["iptc_caption_abstract"] (this would be self._raw)
 
-        originating_program = str(self._info.get("iptc_originating_program", "")).strip()
+        originating_program = str(
+            self._info.get("iptc_originating_program", "")
+        ).strip()
         if "Mochi Diffusion" not in originating_program:
             # If OriginatingProgram is missing or doesn't say Mochi,
             # we can still try to parse self._raw if it looks like Mochi's format,
@@ -58,7 +62,9 @@ class MochiDiffusionFormat(BaseFormat):
                 return
 
         if not self._raw:  # self._raw should be the IPTC:Caption-Abstract string
-            self._logger.warning("%s: Raw data (IPTC Caption-Abstract string) is empty.", self.tool)
+            self._logger.warning(
+                "%s: Raw data (IPTC Caption-Abstract string) is empty.", self.tool
+            )
             self.status = self.Status.MISSING_INFO
             self._error = "IPTC Caption-Abstract data empty for Mochi Diffusion."
             return
@@ -96,10 +102,14 @@ class MochiDiffusionFormat(BaseFormat):
                     if key and value:  # Ensure both key and value are non-empty
                         metadata_dict[key] = value
                 else:
-                    self._logger.debug("%s: Malformed part in IPTC string: '%s'", self.tool, part)
+                    self._logger.debug(
+                        "%s: Malformed part in IPTC string: '%s'", self.tool, part
+                    )
 
             if not metadata_dict:
-                self._logger.warning("%s: Failed to parse key-value pairs from IPTC string.", self.tool)
+                self._logger.warning(
+                    "%s: Failed to parse key-value pairs from IPTC string.", self.tool
+                )
                 self.status = self.Status.FORMAT_ERROR
                 self._error = "Could not parse Mochi Diffusion IPTC metadata string."
                 return
@@ -112,7 +122,9 @@ class MochiDiffusionFormat(BaseFormat):
             generator_full_value = metadata_dict.get("Generator", "")
             if generator_full_value:
                 self.tool = generator_full_value  # e.g., "Mochi Diffusion 3.0.1"
-            elif originating_program:  # Fallback to originating program if Generator key is missing
+            elif (
+                originating_program
+            ):  # Fallback to originating program if Generator key is missing
                 self.tool = originating_program
 
             # Keys handled by direct assignment or special parsing
@@ -132,7 +144,9 @@ class MochiDiffusionFormat(BaseFormat):
             # Handle "Size" -> width, height
             size_str = metadata_dict.get("Size")
             if size_str:
-                self._extract_and_set_dimensions_from_string(size_str, "Size", metadata_dict, handled_keys)
+                self._extract_and_set_dimensions_from_string(
+                    size_str, "Size", metadata_dict, handled_keys
+                )
             # If "Size" is not present, self.width and self.height (from image dimensions) will be used.
 
             # The raw settings string (self._setting) could be a reconstruction of unhandled key-values,

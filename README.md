@@ -1,8 +1,8 @@
  # Dataset Tools: An AI Metadata Viewer
- 
+
 <div align="center">
 
-   
+
 
 [![Dependency review](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/dependency-review.yml) [![CodeQL](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/github-code-scanning/codeql) ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 
@@ -21,7 +21,7 @@ This project is inspired by tools within the AI art community, notably [stable-d
 
 <hr>
 
-[![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx/Dataset-Tools) [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/5t2kYxt7An) [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew) <a href="https://ko-fi.com/duskfallcrew" target="_blank"><img src="https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi" alt="Support us on Ko-fi"></a>
+[![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx/Dataset-Tools) [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/HhBSvM9gBY) [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew) <a href="https://ko-fi.com/duskfallcrew" target="_blank"><img src="https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi" alt="Support us on Ko-fi"></a>
 
 </div>
 
@@ -32,7 +32,6 @@ This project is inspired by tools within the AI art community, notably [stable-d
 [Supported Formats](#supported-formats) •
 [Installation](#installation) •
 [Usage](#usage) •
-[Example Images](#Example_Images)  •
 [Future Ideas (TODO)](#future-ideas-todo) •
 [Contributing](#contributing) •
 [License](#license) •
@@ -41,6 +40,11 @@ This project is inspired by tools within the AI art community, notably [stable-d
 ---
 
 ## Features
+
+## Known Issues
+
+*   **Material Theme Compatibility:** The integrated `qt-material` themes, while visually appealing, are not 100% compatible with all PyQt6/Qt6 elements. While the application remains functional, some minor visual inconsistencies may be present. We are actively exploring alternatives and plan to migrate to Tkinter in the near future to address these and other compatibility challenges.
+
 
 * **Lightweight & Fast:** Designed for quick loading and efficient metadata display.
 * **Cross-Platform:** Built with Python and PyQt6 (compatible with Windows, macOS, Linux).
@@ -74,15 +78,15 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 * **ComfyUI:**
   * Standard PNGs (embedded workflow JSON in "prompt" chunk).
   * Civitai-generated JPEGs/PNGs (UserComment JSON with "extraMetadata").
-  * T5/FLux and advanced models are currently 50/50 due to workflow discrepancies - We're getting there! provide your data or workflows to speed it up!
+  * **Advanced ComfyUI Workflows:** While many workflows are supported, some complex or custom ComfyUI workflows may not be fully parsed yet. We are continuously working to improve compatibility. Please provide examples of unparsed workflows to help us improve!
 * **NovelAI:** PNG (Legacy "Software" tag & "Comment" JSON; Stealth LSB in alpha channel).
 * **Midjourney** Popularity rules! This is the old. gold standard of the old discord way (Shh I wrote this at 1 am)
-* **InvokeAI:** PNG (parsing "invokeai_metadata", "sd-metadata", or "Dream" chunks).
+* **InvokeAI:** (Currently undergoing refactoring, may not parse correctly in this version. Fixes planned for next major push.)
 * **Easy Diffusion:** PNG, JPEG, WEBP (embedded JSON metadata).
 * **Fooocus:** PNG ("Comment" chunk JSON), JPEG (JFIF comment JSON).
 * **Midjourney** YAY
 * **RuinedFooocus:** JPEG (UserComment JSON).
-* **Draw Things:** PNG (XMP metadata containing JSON).
+* **Draw Things:** (Currently undergoing refactoring, may not parse correctly in this version. Fixes planned for next major push.)
 * **StableSwarmUI:** PNG, JPEG (EXIF or "sui_image_params" in PNG/UserComment).
 * *(Support for other formats may be on the way, please see issues and/or discussions for details)*
 
@@ -100,52 +104,84 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 
 ## Installation
 
-**Prerequisites:**
+### 🚀 Quick Install (Recommended)
 
-* Python 3.11 (as this was the version used during development and for dependency resolution). Other Python 3.9+ versions might work but are not extensively tested.
-* `pip` (Python package installer).
-* `git` (for cloning the repository).
+**One command and you're done:**
 
-**Steps:**
+```bash
+pip install kn-dataset-tools
+dataset-tools
+```
 
-1. **Clone the repository:**
+**Requirements:** Python 3.10 or newer
 
-    ```bash
-    git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
-    cd Dataset-Tools
-    ```
+That's it! The tool will launch with a GUI interface for viewing AI metadata.
 
-2. **Create and activate a Python virtual environment (recommended):**
+---
 
-    ```bash
-    python3.11 -m venv .venv
-    # Or: python -m venv .venv
+### 📦 Install from Source
 
-    # Activate:
-    # Windows: .venv\Scripts\activate
-    # macOS/Linux (bash/zsh): source .venv/bin/activate
-    # macOS/Linux (fish): source .venv/bin/activate.fish
-    ```
+If you want the latest development version:
 
-3. **Install the package and its dependencies:**
-    The project uses `pyproject.toml` and can be installed using pip.
+```bash
+git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
+cd Dataset-Tools
+pip install .
+dataset-tools
+```
 
-    ```bash
-    # For users (standard install):
-    pip install .
+---
 
-    # For developers (editable install, recommended for contributing):
-    pip install -e .
-    ```
+### 🔧 Advanced Installation (Optional)
 
-    This command will read `pyproject.toml` and install `Dataset-Tools` along with all libraries listed as dependencies (e.g., `PyQt6`, `Pillow`, `qt-material`, `piexif`, `pyexiv2`, `toml`, `rich`, `pydantic`).
+For developers or users who prefer isolated environments:
 
-4. **Optional Installation**
-  You're now able to use PYPI packages to install Dataset Tools.
+<details>
+<summary>Click to expand advanced options</summary>
 
-   ```bash
-     pip install kn-dataset-tools
-   ```
+**Using virtual environments:**
+
+```bash
+# Create virtual environment
+python -m venv dataset-tools-env
+
+# Activate it
+# Windows: dataset-tools-env\Scripts\activate
+# macOS/Linux: source dataset-tools-env/bin/activate
+
+# Install
+pip install kn-dataset-tools
+```
+
+**Using uv (fastest):**
+
+```bash
+uv pip install kn-dataset-tools
+```
+
+**For contributors:**
+
+```bash
+git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
+cd Dataset-Tools
+pip install -e .  # Editable install for development
+```
+
+</details>
+
+---
+
+### 🆚 vs SD Prompt Reader
+
+Unlike SD Prompt Reader which focuses on basic prompt viewing, Dataset Tools provides:
+
+* Advanced ComfyUI workflow analysis
+* LoRA training metadata extraction
+* 25+ specialized AI format parsers
+* Model file support (SafeTensors, GGUF)
+* Comprehensive metadata engine
+
+**Both tools are great!** Use whichever fits your workflow better.
 
 ## Usage
 
@@ -205,14 +241,6 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
    * Settings & Themes:
          Access application settings (e.g., display theme, window size preferences) via the "Settings..." button at the bottom or the View > Themes menu for quick theme changes.
 
-## Example Images
-
-| Screenshot 1: Light Green Theme | Screenshot 2: Options Display (Light Green) | Screenshot 3: Theme (Dark Teal) Choosing |
-| :-----------------------------: | :------------------------------: | :--------------------------: |
-| <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.44.11.png" alt="Light Green Theme" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.39.png" alt="Options Display (Light Green)" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.31.png" alt="Theme (Dark Teal) Choosing" width="250"> |
-| Screenshot 4: Screen Sizes | Screenshot 5: Civitai Metadata | |
-| <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.21.png" alt="Screen Sizes" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.10.png" alt="Civitai Metadata" width="250"> |
-
 ### Future Development Roadmap
 
 **Core Features:**
@@ -225,7 +253,7 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 
 **User Experience:**
 
-* [ ] **Enhanced UI/UX:** Improved prompt display, better text file viewing with syntax highlighting.
+* [ ] **Enhanced UI/UX:** Improved prompt display, better text file viewing with syntax highlighting. (Planned migration to Tkinter for improved cross-platform compatibility and UI consistency.)
 * [ ] **Theme System Expansion:** Additional themes and customization options.
 * [ ] **Keyboard Shortcuts:** Comprehensive hotkey support for power users.
 
@@ -284,7 +312,7 @@ Please see the LICENSE file in the repository root for the full license text.
 
 If you find Dataset Tools useful, please consider supporting the creators!
 
-<a href="https://discord.gg/5t2kYxt7An" target="_blank"><img src="https://img.shields.io/badge/Join%20us%20on-Discord-5865F2?style=for-the-badge&logo=discord" alt="Join us on Discord"></a>
+<a href="https://discord.gg/HhBSvM9gBY" target="_blank"><img src="https://img.shields.io/badge/Join%20us%20on-Discord-5865F2?style=for-the-badge&logo=discord" alt="Join us on Discord"></a>
 <a href="https://ko-fi.com/duskfallcrew" target="_blank"><img src="https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi" alt="Support us on Ko-fi"></a>
 <a href="https://twitch.tv/duskfallcrew" target="_blank"><img src="https://img.shields.io/badge/Follow%20us%20on-Twitch-9146FF?style=for-the-badge&logo=twitch" alt="Follow us on Twitch"></a>
 

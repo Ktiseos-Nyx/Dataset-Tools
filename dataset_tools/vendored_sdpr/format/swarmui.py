@@ -70,11 +70,17 @@ class SwarmUI(BaseFormat):
 
         if self._info and isinstance(self._info, dict):
             # Prefer 'sui_image_params' if it exists and is a dict
-            if "sui_image_params" in self._info and isinstance(self._info["sui_image_params"], dict):
-                self._logger.debug("Using 'sui_image_params' from self._info for %s.", self.tool)
+            if "sui_image_params" in self._info and isinstance(
+                self._info["sui_image_params"], dict
+            ):
+                self._logger.debug(
+                    "Using 'sui_image_params' from self._info for %s.", self.tool
+                )
                 return self._info["sui_image_params"]
             # Otherwise, self._info itself might be the data (e.g., if parsed from raw in __init__)
-            self._logger.debug("Using self._info directly as data source for %s.", self.tool)
+            self._logger.debug(
+                "Using self._info directly as data source for %s.", self.tool
+            )
             return self._info
 
         # If self._info wasn't useful, try self._raw (if it wasn't already parsed into self._info by __init__)
@@ -82,13 +88,17 @@ class SwarmUI(BaseFormat):
             json_source_material = self._raw
             source_description = "self._raw string"
         else:  # No self._info dict and no self._raw
-            self._logger.warning("%s: No data source (self._info or self._raw) available.", self.tool)
+            self._logger.warning(
+                "%s: No data source (self._info or self._raw) available.", self.tool
+            )
             self.status = self.Status.FORMAT_ERROR
             self._error = "SwarmUI metadata source is missing."
             return None
 
         # If we are here, json_source_material is from self._raw
-        self._logger.debug("Attempting to parse JSON from %s for %s.", source_description, self.tool)
+        self._logger.debug(
+            "Attempting to parse JSON from %s for %s.", source_description, self.tool
+        )
         try:
             data_json = json.loads(json_source_material)
             if not isinstance(data_json, dict):
@@ -98,10 +108,14 @@ class SwarmUI(BaseFormat):
                     source_description,
                 )
                 self.status = self.Status.FORMAT_ERROR
-                self._error = f"Invalid JSON structure (not a dict) from {source_description}."
+                self._error = (
+                    f"Invalid JSON structure (not a dict) from {source_description}."
+                )
                 return None
             # If 'sui_image_params' is in this newly parsed JSON, use that
-            if "sui_image_params" in data_json and isinstance(data_json["sui_image_params"], dict):
+            if "sui_image_params" in data_json and isinstance(
+                data_json["sui_image_params"], dict
+            ):
                 self._logger.debug(
                     "Using nested 'sui_image_params' from parsed %s.",
                     source_description,
@@ -117,7 +131,9 @@ class SwarmUI(BaseFormat):
                 exc_info=True,
             )
             self.status = self.Status.FORMAT_ERROR
-            self._error = f"Invalid JSON for SwarmUI from {source_description}: {json_decode_err}"
+            self._error = (
+                f"Invalid JSON for SwarmUI from {source_description}: {json_decode_err}"
+            )
             return None
 
     def _extract_prompts(self, data_json: dict[str, Any], handled_keys_set: set[str]):
@@ -127,7 +143,9 @@ class SwarmUI(BaseFormat):
         handled_keys_set.add("prompt")
         handled_keys_set.add("negativeprompt")
 
-    def _extract_sampler_info(self, data_json: dict[str, Any], handled_keys_set: set[str]):
+    def _extract_sampler_info(
+        self, data_json: dict[str, Any], handled_keys_set: set[str]
+    ):
         """Extracts sampler information."""
         comfy_sampler = data_json.get("comfyuisampler")
         auto_sampler = data_json.get("autowebuisampler")
@@ -135,7 +153,9 @@ class SwarmUI(BaseFormat):
         sampler_to_use = comfy_sampler if comfy_sampler is not None else auto_sampler
 
         if sampler_to_use is not None:  # Ensure it's not None before populating
-            self._populate_parameter("sampler_name", sampler_to_use, "comfyuisampler/autowebuisampler")
+            self._populate_parameter(
+                "sampler_name", sampler_to_use, "comfyuisampler/autowebuisampler"
+            )
 
         # Add to handled keys regardless of whether they had a value, if the key itself exists
         if "comfyuisampler" in data_json:
@@ -172,9 +192,7 @@ class SwarmUI(BaseFormat):
                         self._info["software_tag"],
                     )
                     self.status = self.Status.FORMAT_DETECTION_ERROR
-                    self._error = (
-                        f"Non-SwarmUI software detected ('{self._info['software_tag']}') - not SwarmUI format."
-                    )
+                    self._error = f"Non-SwarmUI software detected ('{self._info['software_tag']}') - not SwarmUI format."
                     return
 
         data_json = self._get_data_json_for_processing()
@@ -187,7 +205,9 @@ class SwarmUI(BaseFormat):
 
             self._extract_prompts(data_json, handled_keys_for_settings)
 
-            self._populate_parameters_from_map(data_json, SWARM_PARAM_MAP, handled_keys_for_settings)
+            self._populate_parameters_from_map(
+                data_json, SWARM_PARAM_MAP, handled_keys_for_settings
+            )
 
             self._extract_sampler_info(data_json, handled_keys_for_settings)
 
@@ -212,7 +232,9 @@ class SwarmUI(BaseFormat):
                     "%s: Parsing completed but no key data (prompt/params) extracted.",
                     self.tool,
                 )
-                if self.status != self.Status.FORMAT_ERROR:  # Don't overwrite more specific error
+                if (
+                    self.status != self.Status.FORMAT_ERROR
+                ):  # Don't overwrite more specific error
                     self.status = self.Status.FORMAT_ERROR
                     self._error = f"{self.tool}: Key fields (prompt, parameters) not found after parsing."
 

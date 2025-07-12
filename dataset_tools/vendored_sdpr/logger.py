@@ -27,7 +27,9 @@ def _get_log_level_value(level_name: str | None) -> int:
 
 def _configure_logger_instance(logger: logging.Logger, add_basic_handler: bool = False):
     if add_basic_handler and not logger.handlers:
-        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
         stream_handler = logging.StreamHandler()
         stream_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
@@ -45,9 +47,13 @@ def get_logger(
         cached_logger = _loggers_cache[name]
         if level:
             log_level_value = _get_log_level_value(level)
-            if cached_logger.level == 0 or cached_logger.level != log_level_value:  # Check if not set (0) or different
+            if (
+                cached_logger.level == 0 or cached_logger.level != log_level_value
+            ):  # Check if not set (0) or different
                 cached_logger.setLevel(log_level_value)
-        if force_basic_handler and not cached_logger.handlers:  # Only configure if no handlers
+        if (
+            force_basic_handler and not cached_logger.handlers
+        ):  # Only configure if no handlers
             _configure_logger_instance(cached_logger, add_basic_handler=True)
         return cached_logger
 
@@ -72,7 +78,9 @@ def configure_global_sdpr_root_logger(level: str = "INFO"):
     """Configures the root logger. Use with caution in larger applications."""
     # This function is generally for standalone testing of this package.
     # The main application should handle overall logging configuration.
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
     level_value = _get_log_level_value(level)
     root_logger = logging.getLogger()  # Get the root logger
 
@@ -92,9 +100,15 @@ if __name__ == "__main__":
     # This allows seeing output without the main app's Rich setup.
     # configure_global_sdpr_root_logger("DEBUG") # Optionally configure root for all other loggers
 
-    logger1 = get_logger("DSVendored_SDPR.Module1", level="DEBUG", force_basic_handler=True)
-    logger2 = get_logger("DSVendored_SDPR.Module2", level="INFO", force_basic_handler=True)
-    logger1_cached = get_logger("DSVendored_SDPR.Module1")  # Should get cached, level already set
+    logger1 = get_logger(
+        "DSVendored_SDPR.Module1", level="DEBUG", force_basic_handler=True
+    )
+    logger2 = get_logger(
+        "DSVendored_SDPR.Module2", level="INFO", force_basic_handler=True
+    )
+    logger1_cached = get_logger(
+        "DSVendored_SDPR.Module1"
+    )  # Should get cached, level already set
 
     logger1.debug("Debug message from Module1")
     logger2.info("Info message from Module2")
@@ -105,11 +119,15 @@ if __name__ == "__main__":
     # Or, if force_basic_handler was used on DSVendored_SDPR, it would handle it.
     # If DSVendored_SDPR.Module1 had propagate=False (due to its own basic handler),
     # this submodule's message would only be seen if it also had a handler.
-    sub_logger = get_logger("DSVendored_SDPR.Module1.Submodule", force_basic_handler=True)
+    sub_logger = get_logger(
+        "DSVendored_SDPR.Module1.Submodule", force_basic_handler=True
+    )
     sub_logger.error(
         "Error from submodule, should be handled by its own basic handler now."  # Corrected long line
     )
 
     # Test logger without forcing handler, assuming main app (or configure_global_sdpr_root_logger) handles it
     logger_no_force = get_logger("DSVendored_SDPR.NoForce", level="DEBUG")
-    logger_no_force.debug("This message relies on external or root logger configuration for DSVendored_SDPR tree.")
+    logger_no_force.debug(
+        "This message relies on external or root logger configuration for DSVendored_SDPR tree."
+    )

@@ -30,7 +30,7 @@ class ComfyUISeargeExtractor:
             "searge_extract_model_params": self._extract_model_params,
             "searge_extract_sampler_params": self._extract_sampler_params,
             "searge_extract_image_params": self._extract_image_params,
-            "searge_detect_workflow": self._detect_searge_workflow,
+            "searge_detect_workflow": self.detect_searge_workflow,
             "searge_extract_summary": self.extract_searge_workflow_summary,
         }
 
@@ -40,7 +40,9 @@ class ComfyUISeargeExtractor:
             return {}
         # This handles both {"prompt": {"1": ...}} and {"nodes": [...]} formats
         if "nodes" in data and isinstance(data["nodes"], list):
-            return {str(node.get("id", i)): node for i, node in enumerate(data["nodes"])}
+            return {
+                str(node.get("id", i)): node for i, node in enumerate(data["nodes"])
+            }
         if "prompt" in data and isinstance(data["prompt"], dict):
             return data["prompt"]
         if all(isinstance(v, dict) and "class_type" in v for v in data.values()):
@@ -97,11 +99,17 @@ class ComfyUISeargeExtractor:
             widgets = node_data.get("widgets_values", [])
 
             if "SeargeStylePrompts" in class_type and widgets:
-                style_prompts["style_prompt"] = widgets[0] if isinstance(widgets[0], str) else ""
+                style_prompts["style_prompt"] = (
+                    widgets[0] if isinstance(widgets[0], str) else ""
+                )
             elif "SeargePromptText" in class_type and widgets:
-                style_prompts["prompt_text"] = widgets[0] if isinstance(widgets[0], str) else ""
+                style_prompts["prompt_text"] = (
+                    widgets[0] if isinstance(widgets[0], str) else ""
+                )
             elif "SeargePromptCombiner" in class_type and widgets:
-                style_prompts["combined_prompt"] = widgets[0] if isinstance(widgets[0], str) else ""
+                style_prompts["combined_prompt"] = (
+                    widgets[0] if isinstance(widgets[0], str) else ""
+                )
 
         return style_prompts
 
@@ -125,7 +133,9 @@ class ComfyUISeargeExtractor:
             widgets = node_data.get("widgets_values", [])
 
             if "SeargeCheckpointLoader" in class_type and widgets:
-                model_params["checkpoint"] = widgets[0] if isinstance(widgets[0], str) else ""
+                model_params["checkpoint"] = (
+                    widgets[0] if isinstance(widgets[0], str) else ""
+                )
             elif "SeargeLoraLoader" in class_type and widgets:
                 if "loras" not in model_params:
                     model_params["loras"] = []
@@ -159,7 +169,10 @@ class ComfyUISeargeExtractor:
             class_type = node_data.get("class_type", "")
             widgets = node_data.get("widgets_values", [])
 
-            if any(sampler_node in class_type for sampler_node in ["SeargeSamplerInputs", "SeargeAdvancedParameters"]):
+            if any(
+                sampler_node in class_type
+                for sampler_node in ["SeargeSamplerInputs", "SeargeAdvancedParameters"]
+            ):
                 sampler_params.update(self._parse_sampler_params(widgets))
 
         return sampler_params
@@ -188,7 +201,7 @@ class ComfyUISeargeExtractor:
 
         return image_params
 
-    def _detect_searge_workflow(
+    def detect_searge_workflow(
         self,
         data: Any,
         method_def: MethodDefinition,
@@ -277,9 +290,11 @@ class ComfyUISeargeExtractor:
 
         return params
 
-    def extract_searge_workflow_summary(self, data: dict, *args, **kwargs) -> dict[str, Any]:
+    def extract_searge_workflow_summary(
+        self, data: dict, *args, **kwargs
+    ) -> dict[str, Any]:
         """Extract comprehensive Searge workflow summary."""
-        if not self._detect_searge_workflow(data, {}, {}, {}):
+        if not self.detect_searge_workflow(data, {}, {}, {}):
             return {"is_searge_workflow": False}
 
         # Simplified extraction logic
@@ -300,9 +315,13 @@ class ComfyUISeargeExtractor:
                 continue
 
             if class_type == "SeargePromptText" and not summary["main_prompt"]:
-                summary["main_prompt"] = widgets[0] if isinstance(widgets[0], str) else ""
+                summary["main_prompt"] = (
+                    widgets[0] if isinstance(widgets[0], str) else ""
+                )
             elif class_type == "SeargeStylePrompts" and not summary["style_prompt"]:
-                summary["style_prompt"] = widgets[0] if isinstance(widgets[0], str) else ""
+                summary["style_prompt"] = (
+                    widgets[0] if isinstance(widgets[0], str) else ""
+                )
             elif class_type == "SeargeGenerationParameters":
                 summary["parameters"] = self._parse_generation_params(widgets)
             elif class_type == "SeargeCheckpointLoader":

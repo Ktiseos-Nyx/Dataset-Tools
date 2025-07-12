@@ -82,7 +82,9 @@ class A1111(BaseFormat):
             logger_obj=logger_obj,
             **kwargs,
         )
-        self._extra: str = ""  # Stores 'postprocessing' string if separate from main params
+        self._extra: str = (
+            ""  # Stores 'postprocessing' string if separate from main params
+        )
 
     def _extract_raw_data_from_info(self) -> str:
         """Consolidates raw parameter string from self._info, checking 'parameters',
@@ -94,7 +96,9 @@ class A1111(BaseFormat):
 
         if self._info:
             parameters_chunk_str = str(self._info.get("parameters", ""))
-            user_comment_raw = self._info.get("UserComment", "")  # Could be bytes or str
+            user_comment_raw = self._info.get(
+                "UserComment", ""
+            )  # Could be bytes or str
 
             if isinstance(user_comment_raw, bytes):
                 # Try decoding with common encodings for UserComment
@@ -102,9 +106,13 @@ class A1111(BaseFormat):
                     user_comment_str = user_comment_raw.decode("utf-8", errors="ignore")
                 except UnicodeDecodeError:
                     try:
-                        user_comment_str = user_comment_raw.decode("latin-1", errors="ignore")
+                        user_comment_str = user_comment_raw.decode(
+                            "latin-1", errors="ignore"
+                        )
                     except UnicodeDecodeError:
-                        user_comment_str = str(user_comment_raw, errors="ignore")  # Fallback
+                        user_comment_str = str(
+                            user_comment_raw, errors="ignore"
+                        )  # Fallback
             elif isinstance(user_comment_raw, str):
                 user_comment_str = user_comment_raw
 
@@ -130,18 +138,24 @@ class A1111(BaseFormat):
             # Handle 'postprocessing' data, append if relevant
             self._extra = str(self._info.get("postprocessing", ""))
             if self._extra:
-                self._logger.debug("Found 'postprocessing' data. Length: %s", len(self._extra))
+                self._logger.debug(
+                    "Found 'postprocessing' data. Length: %s", len(self._extra)
+                )
                 if consolidated_raw:
                     # Avoid appending if _extra is already part of consolidated_raw (e.g. if params and postproc were same)
                     if self._extra not in consolidated_raw:
-                        consolidated_raw = concat_strings(consolidated_raw, self._extra, "\n")
+                        consolidated_raw = concat_strings(
+                            consolidated_raw, self._extra, "\n"
+                        )
                 else:  # If no main parameters found, postprocessing might be the only source
                     consolidated_raw = self._extra
 
         return consolidated_raw.strip()
 
     def _process(self) -> None:
-        self._logger.debug("Attempting to parse as A1111-style text (tool: %s).", self.tool)
+        self._logger.debug(
+            "Attempting to parse as A1111-style text (tool: %s).", self.tool
+        )
 
         # If self._raw was not provided directly (e.g., ImageDataReader gave UserComment as raw for JPEG),
         # try to extract and consolidate from self._info (for PNG parameters/postprocessing).
@@ -151,7 +165,9 @@ class A1111(BaseFormat):
         elif self._info and "postprocessing" in self._info:
             self._extra = str(self._info.get("postprocessing", ""))
             if self._extra and self._extra not in self._raw:  # Avoid duplication
-                self._logger.debug("Appending 'postprocessing' from info to existing self._raw.")
+                self._logger.debug(
+                    "Appending 'postprocessing' from info to existing self._raw."
+                )
                 self._raw = concat_strings(self._raw, self._extra, "\n")
 
         if not self._raw:
@@ -179,8 +195,14 @@ class A1111(BaseFormat):
                 self._positive
                 or self._negative
                 or self._parameter_has_data()
-                or (self._width != "0" and self._width != self.DEFAULT_PARAMETER_PLACEHOLDER)
-                or (self._height != "0" and self._height != self.DEFAULT_PARAMETER_PLACEHOLDER)
+                or (
+                    self._width != "0"
+                    and self._width != self.DEFAULT_PARAMETER_PLACEHOLDER
+                )
+                or (
+                    self._height != "0"
+                    and self._height != self.DEFAULT_PARAMETER_PLACEHOLDER
+                )
                 or self._setting
             ):
                 self._logger.info("[%s] Data parsed successfully.", self.tool)
@@ -190,7 +212,9 @@ class A1111(BaseFormat):
                     "[%s] Parsing logic completed, but no meaningful data (prompts, parameters, size, settings) was extracted from the text.",
                     self.tool,
                 )
-                self.status = self.Status.FORMAT_ERROR  # Or FORMAT_DETECTION_ERROR if it implies wrong format
+                self.status = (
+                    self.Status.FORMAT_ERROR
+                )  # Or FORMAT_DETECTION_ERROR if it implies wrong format
                 self._error = f"[{self.tool}] Failed to extract any meaningful data from the parameter string."
 
     def _parse_prompt_blocks(self, raw_data: str) -> tuple[str, str, str]:  # Use Tuple
@@ -213,10 +237,14 @@ class A1111(BaseFormat):
         if settings_match_for_prompt_isolation:
             # Ensure index is relative to original raw_data if \n was prepended for search only
             actual_match_start_in_raw = settings_match_for_prompt_isolation.start()
-            if not raw_data.startswith("\n") and settings_match_for_prompt_isolation.group(0).startswith("\n"):
+            if not raw_data.startswith(
+                "\n"
+            ) and settings_match_for_prompt_isolation.group(0).startswith("\n"):
                 # if original raw_data didn't start with \n, but pattern matched on prepended \n
                 pass  # Match start is already relative to original raw_data as regex included \n
-            elif raw_data.startswith("\n") and settings_match_for_prompt_isolation.group(0).startswith("\n"):
+            elif raw_data.startswith(
+                "\n"
+            ) and settings_match_for_prompt_isolation.group(0).startswith("\n"):
                 pass  # Match start is fine
 
             prompt_candidate_area = raw_data[:actual_match_start_in_raw].strip()
@@ -260,11 +288,18 @@ class A1111(BaseFormat):
         for key, value in matches:
             key = key.strip()
             value = value.strip(" ,")
-            if key and key not in parsed_settings:  # First one wins if duplicate keys (unlikely)
+            if (
+                key and key not in parsed_settings
+            ):  # First one wins if duplicate keys (unlikely)
                 parsed_settings[key] = value
 
         # Fallback for very simple "Key: Value" string if the main regex yields nothing.
-        if not parsed_settings and ":" in settings_str and "," not in settings_str and "\n" not in settings_str:
+        if (
+            not parsed_settings
+            and ":" in settings_str
+            and "," not in settings_str
+            and "\n" not in settings_str
+        ):
             parts = settings_str.split(":", 1)
             if len(parts) == 2:
                 key, val = parts[0].strip(), parts[1].strip()
@@ -286,8 +321,12 @@ class A1111(BaseFormat):
             self.status = self.Status.MISSING_INFO  # Should be caught by _process
             return
 
-        self._positive, self._negative, settings_block_str = self._parse_prompt_blocks(self._raw)
-        self._setting = settings_block_str.strip()  # This is the raw settings block string
+        self._positive, self._negative, settings_block_str = self._parse_prompt_blocks(
+            self._raw
+        )
+        self._setting = (
+            settings_block_str.strip()
+        )  # This is the raw settings block string
 
         if not (self._positive or self._negative or self._setting):
             # If raw data was present but _parse_prompt_blocks couldn't split it meaningfully
@@ -304,14 +343,18 @@ class A1111(BaseFormat):
         settings_dict: dict[str, str] = {}
         if self._setting:
             settings_dict = self._parse_settings_string_to_dict(self._setting)
-            if not settings_dict and self._setting.strip():  # Parsing failed but there was content
+            if (
+                not settings_dict and self._setting.strip()
+            ):  # Parsing failed but there was content
                 self._logger.warning(
                     "[%s] Failed to parse settings string into dictionary: '%s'",
                     self.tool,
                     self._setting[:100],
                 )
 
-        handled_keys_for_params = set()  # To track which keys from settings_dict are processed
+        handled_keys_for_params = (
+            set()
+        )  # To track which keys from settings_dict are processed
 
         # Populate parameters using the class's A1111_KEY_ALIAS_TO_CANONICAL_MAP
         # This handles common A1111 keys and maps them to canonical names in self._parameter
@@ -349,7 +392,10 @@ class A1111(BaseFormat):
 
         if self._width != "0" and self._height != "0" and "size" in self._parameter:
             self._parameter["size"] = f"{self._width}x{self._height}"
-        elif "size" in self._parameter and self._parameter.get("size") == self.DEFAULT_PARAMETER_PLACEHOLDER:
+        elif (
+            "size" in self._parameter
+            and self._parameter.get("size") == self.DEFAULT_PARAMETER_PLACEHOLDER
+        ):
             # If size is still placeholder, but width/height are now known, set size parameter
             if self._width != "0" and self._height != "0":
                 self._parameter["size"] = f"{self._width}x{self._height}"
@@ -370,7 +416,10 @@ class A1111(BaseFormat):
         current_height = self.height
         if current_width != "0" and current_width != self.DEFAULT_PARAMETER_PLACEHOLDER:
             line_parts.append(f"--width {current_width}")
-        if current_height != "0" and current_height != self.DEFAULT_PARAMETER_PLACEHOLDER:
+        if (
+            current_height != "0"
+            and current_height != self.DEFAULT_PARAMETER_PLACEHOLDER
+        ):
             line_parts.append(f"--height {current_height}")
 
         # More generic CLI arg mapping based on common A1111 CLI arguments
@@ -409,7 +458,9 @@ class A1111(BaseFormat):
                 processed_value = str(value)
                 # Convert our snake_case param_key to kebab-case for typical CLI args if needed,
                 # but cli_arg_name from map is better.
-                line_parts.append(f"--{cli_arg_name} {add_quotes(processed_value) if is_string else processed_value}")
+                line_parts.append(
+                    f"--{cli_arg_name} {add_quotes(processed_value) if is_string else processed_value}"
+                )
 
         # Note: This prompt_to_line is a basic representation.
         # Not all parameters in self._parameter will have a direct CLI equivalent,

@@ -21,34 +21,126 @@ class FontManager:
     """Manages application fonts with open source alternatives."""
 
     # Bundled fonts (loaded from fonts/ directory)
-    # Only include fonts we actually bundle with the app
-    BUNDLED_FONTS = {"JetBrains Mono": ["JetBrainsMono-Regular.ttf", "JetBrainsMono-Bold.ttf"]}
+    # Complete collection of all fonts in the fonts folder
+    BUNDLED_FONTS = {
+        # Professional fonts
+        "Open Sans": [
+            "OpenSans-VariableFont_wdth,wght.ttf",
+            "OpenSans-Italic-VariableFont_wdth,wght.ttf",
+        ],
+        "Inter": [
+            "Inter-VariableFont_opsz,wght.ttf",
+            "Inter-Italic-VariableFont_opsz,wght.ttf",
+        ],
+        "DM Sans": [
+            "DMSans-VariableFont_opsz,wght.ttf",
+            "DMSans-Italic-VariableFont_opsz,wght.ttf",
+        ],
+        "Work Sans": [
+            "WorkSans-VariableFont_wght.ttf",
+            "WorkSans-Italic-VariableFont_wght.ttf",
+        ],
+        "Roboto": [
+            "Roboto-VariableFont_wdth,wght.ttf",
+            "Roboto-Italic-VariableFont_wdth,wght.ttf",
+        ],
+        "IBM Plex Sans": [
+            "IBMPlexSans-VariableFont_wdth,wght.ttf",
+            "IBMPlexSans-Italic-VariableFont_wdth,wght.ttf",
+        ],
+        "Nunito": [
+            "Nunito-VariableFont_wght.ttf",
+            "Nunito-Italic-VariableFont_wght.ttf",
+        ],
+        "PT Sans": [
+            "PTSans-Regular.ttf",
+            "PTSans-Bold.ttf",
+            "PTSans-Italic.ttf",
+            "PTSans-BoldItalic.ttf",
+        ],
+        "Radio Canada": [
+            "RadioCanada-VariableFont_wdth,wght.ttf",
+            "RadioCanada-Italic-VariableFont_wdth,wght.ttf",
+        ],
+        # Monospace fonts
+        "JetBrains Mono": ["JetBrainsMono-Regular.ttf", "JetBrainsMono-Bold.ttf"],
+        "Syne Mono": ["SyneMono-Regular.ttf"],
+        "VT323": ["VT323-Regular.ttf"],
+        # Display and decorative fonts
+        "Orbitron": ["Orbitron-VariableFont_wght.ttf"],
+        "Jura": ["Jura-VariableFont_wght.ttf"],
+        "Turret Road": [
+            "TurretRoad-Regular.ttf",
+            "TurretRoad-Light.ttf",
+            "TurretRoad-Medium.ttf",
+            "TurretRoad-Bold.ttf",
+            "TurretRoad-ExtraLight.ttf",
+            "TurretRoad-ExtraBold.ttf",
+        ],
+        # Pixel and retro fonts
+        "Pixelify Sans": [
+            "PixelifySans-Regular.ttf",
+            "PixelifySans-Medium.ttf",
+            "PixelifySans-SemiBold.ttf",
+            "PixelifySans-Bold.ttf",
+            "PixelifySans-VariableFont_wght.ttf",
+        ],
+        "Silkscreen": ["Silkscreen-Regular.ttf", "Silkscreen-Bold.ttf"],
+        # Unique and specialty fonts
+        "Dongle": ["Dongle-Regular.ttf", "Dongle-Light.ttf", "Dongle-Bold.ttf"],
+        "Doppio One": ["DoppioOne-Regular.ttf"],
+        "Kosugi Maru": ["KosugiMaru-Regular.ttf"],
+        "Mandali": ["Mandali-Regular.ttf"],
+        "Tsukimi Rounded": [
+            "TsukimiRounded-Regular.ttf",
+            "TsukimiRounded-Light.ttf",
+            "TsukimiRounded-Medium.ttf",
+            "TsukimiRounded-SemiBold.ttf",
+            "TsukimiRounded-Bold.ttf",
+        ],
+    }
 
     # Font stacks with bundled fonts prioritized
     FONT_STACKS = {
         "ui": [
-            "system-ui",  # Use system UI font (best for UI)
-            "Inter",  # If available
+            "Open Sans",  # Our primary bundled font
+            "Inter",  # Modern and clean
+            "DM Sans",  # Professional alternative
+            "Nunito",  # Friendly rounded
             "Roboto",  # Google's system font
-            "Liberation Sans",  # Open source Arial alternative
-            "DejaVu Sans",  # Common on Linux
+            "IBM Plex Sans",  # Technical but readable
+            "Work Sans",  # Clean and versatile
+            "PT Sans",  # Classic and readable
+            "Radio Canada",  # Government standard
+            "system-ui",  # System UI font fallback
             "sans-serif",  # Generic fallback
         ],
         "monospace": [
-            "JetBrains Mono",  # Our bundled font (prioritized)
-            "Fira Code",  # Popular with ligatures
+            "JetBrains Mono",  # Our primary monospace font
+            "Syne Mono",  # Modern monospace
+            "VT323",  # Retro terminal style
+            "Silkscreen",  # Pixel perfect monospace
             "Source Code Pro",  # Adobe's open source monospace
-            "Liberation Mono",  # Open source Courier alternative
-            "DejaVu Sans Mono",  # Common on Linux
             "Consolas",  # Windows system font
             "Monaco",  # macOS system font
             "monospace",  # Generic fallback
         ],
+        "display": [  # New category for decorative/theme fonts
+            "Orbitron",  # Futuristic
+            "Jura",  # Sci-fi style
+            "Turret Road",  # Bold and distinctive
+            "Pixelify Sans",  # Pixel art style
+            "Dongle",  # Quirky and fun
+            "Tsukimi Rounded",  # Soft and rounded
+            "Doppio One",  # Unique display
+            "Kosugi Maru",  # Japanese style
+            "Mandali",  # Clean geometric
+        ],
         "reading": [
-            "system-ui",  # Use system font for reading too
-            "Georgia",  # Good screen serif
-            "Liberation Serif",  # Open source Times alternative
-            "DejaVu Serif",  # Common on Linux
+            "PT Sans",  # Our best serif alternative
+            "Nunito",  # Readable and friendly
+            "Open Sans",  # Clean and readable
+            "system-ui",  # Use system font for reading
             "serif",  # Generic fallback
         ],
     }
@@ -64,7 +156,9 @@ class FontManager:
         # Cache for resolved fonts
         self._font_cache = {}
 
-        nfo("FontManager initialized with %d available fonts", len(self.available_fonts))
+        nfo(
+            "FontManager initialized with %d available fonts", len(self.available_fonts)
+        )
 
     def _load_bundled_fonts(self) -> None:
         """Load bundled fonts from the fonts/ directory."""
@@ -86,7 +180,9 @@ class FontManager:
                     try:
                         font_id = QFontDatabase.addApplicationFont(str(font_path))
                         if font_id != -1:
-                            loaded_families = QFontDatabase.applicationFontFamilies(font_id)
+                            loaded_families = QFontDatabase.applicationFontFamilies(
+                                font_id
+                            )
                             if loaded_families:
                                 nfo(
                                     "Loaded bundled font: %s from %s",
@@ -166,15 +262,21 @@ class FontManager:
         nfo("Using system default font for %s", font_type)
         return font
 
-    def get_ui_font(self, size: int = 9, weight: QFont.Weight = QFont.Weight.Normal) -> QFont:
+    def get_ui_font(
+        self, size: int = 9, weight: QFont.Weight = QFont.Weight.Normal
+    ) -> QFont:
         """Get the best UI font."""
         return self.get_best_font("ui", size, weight)
 
-    def get_monospace_font(self, size: int = 9, weight: QFont.Weight = QFont.Weight.Normal) -> QFont:
+    def get_monospace_font(
+        self, size: int = 9, weight: QFont.Weight = QFont.Weight.Normal
+    ) -> QFont:
         """Get the best monospace font."""
         return self.get_best_font("monospace", size, weight)
 
-    def get_reading_font(self, size: int = 10, weight: QFont.Weight = QFont.Weight.Normal) -> QFont:
+    def get_reading_font(
+        self, size: int = 10, weight: QFont.Weight = QFont.Weight.Normal
+    ) -> QFont:
         """Get the best reading font."""
         return self.get_best_font("reading", size, weight)
 
@@ -299,13 +401,17 @@ def get_ui_font(size: int = 9, weight: QFont.Weight = QFont.Weight.Normal) -> QF
     return manager.get_ui_font(size, weight)
 
 
-def get_monospace_font(size: int = 9, weight: QFont.Weight = QFont.Weight.Normal) -> QFont:
+def get_monospace_font(
+    size: int = 9, weight: QFont.Weight = QFont.Weight.Normal
+) -> QFont:
     """Get the best monospace font."""
     manager = get_font_manager()
     return manager.get_monospace_font(size, weight)
 
 
-def get_reading_font(size: int = 10, weight: QFont.Weight = QFont.Weight.Normal) -> QFont:
+def get_reading_font(
+    size: int = 10, weight: QFont.Weight = QFont.Weight.Normal
+) -> QFont:
     """Get the best reading font."""
     manager = get_font_manager()
     return manager.get_reading_font(size, weight)
