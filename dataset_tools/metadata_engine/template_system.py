@@ -77,10 +77,14 @@ class TemplateProcessor:
         """Recursively process template structures."""
         if isinstance(template, dict):
             return {
-                key: self._process_recursive(value, extracted_fields, context_data) for key, value in template.items()
+                key: self._process_recursive(value, extracted_fields, context_data)
+                for key, value in template.items()
             }
         if isinstance(template, list):
-            return [self._process_recursive(item, extracted_fields, context_data) for item in template]
+            return [
+                self._process_recursive(item, extracted_fields, context_data)
+                for item in template
+            ]
         if isinstance(template, str):
             return self._substitute_variables(template, extracted_fields, context_data)
         return template
@@ -107,16 +111,26 @@ class TemplateProcessor:
             value = json_path_get_utility(extracted_fields, var_path)
             if value is not None:
                 return str(value)
-            self.logger.debug(f"Template variable '${var_path}' not found, replacing with empty string")
+            self.logger.debug(
+                f"Template variable '${var_path}' not found, replacing with empty string"
+            )
             return ""
 
         return self.variable_pattern.sub(replacer, template_string)
 
     def _handle_input_string_original(self) -> str:
-        return str(self._original_input_data) if self._original_input_data is not None else ""
+        return (
+            str(self._original_input_data)
+            if self._original_input_data is not None
+            else ""
+        )
 
     def _handle_input_json_as_string(self) -> str:
-        return json.dumps(self._input_json_object, indent=2) if self._input_json_object is not None else ""
+        return (
+            json.dumps(self._input_json_object, indent=2)
+            if self._input_json_object is not None
+            else ""
+        )
 
     def _handle_current_timestamp(self) -> str:
         import datetime
@@ -155,15 +169,22 @@ class TemplateValidator:
         self._validate_recursive(template, available_fields, available_context_keys)
         return len(self.errors) == 0
 
-    def _validate_recursive(self, template: TemplateData, fields: list[str], context_keys: list[str]):
+    def _validate_recursive(
+        self, template: TemplateData, fields: list[str], context_keys: list[str]
+    ):
         if isinstance(template, dict):
-            [self._validate_recursive(v, fields, context_keys) for v in template.values()]
+            [
+                self._validate_recursive(v, fields, context_keys)
+                for v in template.values()
+            ]
         elif isinstance(template, list):
             [self._validate_recursive(i, fields, context_keys) for i in template]
         elif isinstance(template, str):
             self._validate_string_template(template, fields, context_keys)
 
-    def _validate_string_template(self, t_string: str, fields: list[str], context_keys: list[str]):
+    def _validate_string_template(
+        self, t_string: str, fields: list[str], context_keys: list[str]
+    ):
         special_vars = [
             "INPUT_STRING_ORIGINAL_CHUNK",
             "INPUT_JSON_OBJECT_AS_STRING",
@@ -224,7 +245,9 @@ class TemplateBuilder:
     def create_standard_ai_template(cls, tool_name: str, **kwargs) -> "TemplateBuilder":
         builder = cls().add_field("tool", tool_name)
         if kwargs.get("include_prompts", True):
-            builder.add_variable("prompt", "prompt").add_variable("negative_prompt", "negative_prompt")
+            builder.add_variable("prompt", "prompt").add_variable(
+                "negative_prompt", "negative_prompt"
+            )
         if kwargs.get("extra_fields"):
             [builder.add_variable(k, v) for k, v in kwargs["extra_fields"].items()]
         return builder
@@ -260,7 +283,9 @@ class OutputFormatter:
             output = self._add_processing_metadata(output)
         return output
 
-    def _apply_standard_formatting(self, output: dict[str, Any], context: ContextData) -> dict[str, Any]:
+    def _apply_standard_formatting(
+        self, output: dict[str, Any], context: ContextData
+    ) -> dict[str, Any]:
         formatted = output.copy()
         if "tool" in formatted and isinstance(formatted.get("tool"), str):
             formatted["tool"] = formatted["tool"].strip()
@@ -294,11 +319,17 @@ class OutputFormatter:
         if isinstance(data, dict):
             return {
                 k: v
-                for k, v in ((k, self._cleanup_empty_values(v)) for k, v in data.items())
+                for k, v in (
+                    (k, self._cleanup_empty_values(v)) for k, v in data.items()
+                )
                 if not self._is_empty_value(v)
             }
         if isinstance(data, list):
-            return [v for item in data if not self._is_empty_value(v := self._cleanup_empty_values(item))]
+            return [
+                v
+                for item in data
+                if not self._is_empty_value(v := self._cleanup_empty_values(item))
+            ]
         return data
 
     def _is_empty_value(self, value: Any) -> bool:
@@ -324,10 +355,14 @@ def process_template(
 ) -> TemplateData:
     """Convenience function to process a template without manually creating a processor."""
     processor = TemplateProcessor(kwargs.get("logger"))
-    return processor.process_template(template, extracted_fields, context_data, **kwargs)
+    return processor.process_template(
+        template, extracted_fields, context_data, **kwargs
+    )
 
 
-def format_template_output(processed_template: TemplateData, context_data: ContextData, **kwargs) -> dict[str, Any]:
+def format_template_output(
+    processed_template: TemplateData, context_data: ContextData, **kwargs
+) -> dict[str, Any]:
     """Convenience function to format template output."""
     formatter = OutputFormatter(kwargs.get("logger"))
     return formatter.format_output(processed_template, context_data, **kwargs)

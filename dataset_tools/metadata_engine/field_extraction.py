@@ -13,6 +13,7 @@ from ..logger import get_logger
 from .extractors.a1111_extractors import A1111Extractor
 from .extractors.civitai_extractors import CivitaiExtractor
 from .extractors.comfyui_extractors import ComfyUIExtractor
+
 # Import extraction modules
 from .extractors.direct_extractors import DirectValueExtractor
 from .extractors.json_extractors import JSONExtractor
@@ -92,7 +93,9 @@ class FieldExtractor:
             return None
 
         # Get the actual data to work with
-        data_for_method = self._get_source_data(method_def, input_data, context_data, extracted_fields)
+        data_for_method = self._get_source_data(
+            method_def, input_data, context_data, extracted_fields
+        )
 
         # Get the extraction method
         extraction_method = self._method_registry.get(method_name)
@@ -102,13 +105,17 @@ class FieldExtractor:
 
         try:
             # Execute the extraction
-            value = extraction_method(data_for_method, method_def, context_data, extracted_fields)
+            value = extraction_method(
+                data_for_method, method_def, context_data, extracted_fields
+            )
 
             # Apply type conversion if specified
             return self._apply_type_conversion(value, method_def)
 
         except Exception as e:
-            self.logger.error(f"Error in extraction method '{method_name}': {e}", exc_info=True)
+            self.logger.error(
+                f"Error in extraction method '{method_name}': {e}", exc_info=True
+            )
             return None
 
     def _get_source_data(
@@ -132,9 +139,19 @@ class FieldExtractor:
             "exif_user_comment": lambda: context_data.get("raw_user_comment_str"),
             "xmp_string": lambda: context_data.get("xmp_string"),
             "file_content_raw_text": lambda: context_data.get("raw_file_content_text"),
-            "file_content_json_object": lambda: context_data.get("parsed_root_json_object"),
+            "raw_file_content_text": lambda: context_data.get(
+                "raw_file_content_text"
+            ),  # Add this alias
+            "file_content_json_object": lambda: context_data.get(
+                "parsed_root_json_object"
+            ),
+            "parsed_root_json_object": lambda: context_data.get(
+                "parsed_root_json_object"
+            ),  # Add this alias
             "direct_context_key": lambda: context_data.get(source_key),
-            "variable": lambda: extracted_fields.get(source_key.replace(".", "_") + "_VAR_"),
+            "variable": lambda: extracted_fields.get(
+                source_key.replace(".", "_") + "_VAR_"
+            ),
             "exif_field": lambda: context_data.get("exif_data", {}).get(source_key),
         }
 
@@ -158,7 +175,11 @@ class FieldExtractor:
                 "integer": lambda v: int(float(str(v))),
                 "float": lambda v: float(str(v)),
                 "string": lambda v: str(v),
-                "boolean": lambda v: (v if isinstance(v, bool) else str(v).lower() in ("true", "1", "yes", "on")),
+                "boolean": lambda v: (
+                    v
+                    if isinstance(v, bool)
+                    else str(v).lower() in ("true", "1", "yes", "on")
+                ),
                 "array": lambda v: v if isinstance(v, list) else [v],
             }
 
@@ -237,10 +258,16 @@ class A1111ParameterExtractor:
 
         result = {}
         result["positive_prompt"] = (
-            methods["a1111_extract_prompt_positive"](param_string, method_def, context, fields) or ""
+            methods["a1111_extract_prompt_positive"](
+                param_string, method_def, context, fields
+            )
+            or ""
         )
         result["negative_prompt"] = (
-            methods["a1111_extract_prompt_negative"](param_string, method_def, context, fields) or ""
+            methods["a1111_extract_prompt_negative"](
+                param_string, method_def, context, fields
+            )
+            or ""
         )
 
         return result
@@ -250,9 +277,13 @@ class ComfyUIWorkflowExtractor:
     """Backward compatibility wrapper for ComfyUIExtractor."""
 
     def __init__(self, logger=None):
-        self.extractor = ComfyUIExtractor(logger or get_logger("ComfyUIWorkflowExtractor"))
+        self.extractor = ComfyUIExtractor(
+            logger or get_logger("ComfyUIWorkflowExtractor")
+        )
 
-    def extract_workflow_metadata(self, workflow_data: dict[str, Any]) -> dict[str, Any]:
+    def extract_workflow_metadata(
+        self, workflow_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Extract metadata from a ComfyUI workflow."""
         if not isinstance(workflow_data, dict):
             return {}
@@ -262,7 +293,9 @@ class ComfyUIWorkflowExtractor:
         method_def = {}
         fields = {}
 
-        return methods["comfy_extract_prompts"](workflow_data, method_def, context, fields)
+        return methods["comfy_extract_prompts"](
+            workflow_data, method_def, context, fields
+        )
 
 
 # Keep the convenience functions for backward compatibility
@@ -272,7 +305,9 @@ def extract_a1111_parameters(param_string: str, logger=None) -> dict[str, Any]:
     return extractor.extract_all_parameters(param_string)
 
 
-def extract_comfyui_metadata(workflow_data: dict[str, Any], logger=None) -> dict[str, Any]:
+def extract_comfyui_metadata(
+    workflow_data: dict[str, Any], logger=None
+) -> dict[str, Any]:
     """Convenience function to extract ComfyUI workflow metadata."""
     extractor = ComfyUIWorkflowExtractor(logger)
     return extractor.extract_workflow_metadata(workflow_data)

@@ -159,12 +159,20 @@ class ComfyUIControlNetExtractor:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     apply_params[node_id] = {
-                        "strength": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], (int, float)) else 1.0),
+                        "strength": (
+                            widgets[0]
+                            if len(widgets) > 0 and isinstance(widgets[0], (int, float))
+                            else 1.0
+                        ),
                         "start_percent": (
-                            widgets[1] if len(widgets) > 1 and isinstance(widgets[1], (int, float)) else 0.0
+                            widgets[1]
+                            if len(widgets) > 1 and isinstance(widgets[1], (int, float))
+                            else 0.0
                         ),
                         "end_percent": (
-                            widgets[2] if len(widgets) > 2 and isinstance(widgets[2], (int, float)) else 1.0
+                            widgets[2]
+                            if len(widgets) > 2 and isinstance(widgets[2], (int, float))
+                            else 1.0
                         ),
                         "node_type": class_type,
                         "node_id": node_id,
@@ -174,12 +182,20 @@ class ComfyUIControlNetExtractor:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     apply_params[node_id] = {
-                        "strength": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], (int, float)) else 1.0),
+                        "strength": (
+                            widgets[0]
+                            if len(widgets) > 0 and isinstance(widgets[0], (int, float))
+                            else 1.0
+                        ),
                         "start_percent": (
-                            widgets[1] if len(widgets) > 1 and isinstance(widgets[1], (int, float)) else 0.0
+                            widgets[1]
+                            if len(widgets) > 1 and isinstance(widgets[1], (int, float))
+                            else 0.0
                         ),
                         "end_percent": (
-                            widgets[2] if len(widgets) > 2 and isinstance(widgets[2], (int, float)) else 1.0
+                            widgets[2]
+                            if len(widgets) > 2 and isinstance(widgets[2], (int, float))
+                            else 1.0
                         ),
                         "mask_optional": widgets[3] if len(widgets) > 3 else None,
                         "node_type": class_type,
@@ -220,7 +236,9 @@ class ComfyUIControlNetExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if any(advanced_type in class_type for advanced_type in advanced_node_types):
+            if any(
+                advanced_type in class_type for advanced_type in advanced_node_types
+            ):
                 widgets = node_data.get("widgets_values", [])
                 advanced_params[node_id] = {
                     "type": class_type,
@@ -285,7 +303,9 @@ class ComfyUIControlNetExtractor:
             return {}
 
         summary = {
-            "is_controlnet_workflow": self._detect_controlnet_workflow(data, {}, {}, {}),
+            "is_controlnet_workflow": self._detect_controlnet_workflow(
+                data, {}, {}, {}
+            ),
             "models": self._extract_controlnet_models(data, {}, {}, {}),
             "preprocessors": self._extract_preprocessors(data, {}, {}, {}),
             "apply_params": self._extract_apply_params(data, {}, {}, {}),

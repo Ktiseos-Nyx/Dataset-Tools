@@ -76,6 +76,12 @@ local_scheme = "no-local-version"   # <<< THIS IS THE KEY FOR PYPI RELEASES
 [tool.uv]
 dev-dependencies = ["pytest"]
 
+# --- PYTEST Configuration ---
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
 # --- RUFF Configuration ---
 [tool.ruff] # General Ruff settings
 line-length    = 120

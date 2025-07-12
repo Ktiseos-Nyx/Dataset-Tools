@@ -24,7 +24,9 @@ class DrawThings(BaseFormat):
     def _validate_info(self) -> bool:
         """Validates that self._info is present and is a dictionary."""
         if not self._info or not isinstance(self._info, dict):
-            self._logger.warning("%s: Info data is empty or not a dictionary.", self.tool)
+            self._logger.warning(
+                "%s: Info data is empty or not a dictionary.", self.tool
+            )
             self.status = self.Status.FORMAT_ERROR  # Set status here
             self._error = "Draw Things metadata (info dict) is missing or invalid."
             return False

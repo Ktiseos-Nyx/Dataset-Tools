@@ -69,18 +69,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## Notices for ComfyUI Workflows & Image Research
+## Notices for ComfyUI Workflows & Test Data
 
-### ComfyUI Workflows
+### ComfyUI Workflow Files
 
-99% of the comfyUI workflows do not come with a lisc, and we don't have the URLS FOR MOST OF THEM.
-We don't own these, these are ONLY for research into how to traverse these. Please do NOT use these without finding who made them.
-Except that one stupid Flux one from TensorARt that loads our own Flux loras.
-Go for gold.
+The majority of ComfyUI workflow files included in this project for testing purposes do not include explicit licensing information or source attribution. These workflows are included solely for research and development purposes to understand workflow parsing and traversal.
 
-### ComfyUI or Other Image Data
+**Important Notice**: These workflow files are not owned by this project and should not be redistributed or used in production without proper attribution to their original creators. Users are strongly advised to identify and contact the original creators before using these workflows.
 
-Workflow images, or images otherwise kept for testing for now are advanced UI resources. They're not ours, and we do not own them.
-Thank you to Quadmoon, Tatersbarn and a few others for actually GIVING US some.
-If you or someone else you know MADE an image from this pile of gold - please let us know.
-Your efforts are a goldmine of information and give us insight into modern UI/UX for AI generation.
+### Test Images and Workflow Data
+
+Test images and workflow data included in this repository are used exclusively for development and testing purposes. These resources are not owned by this project.
+
+**Acknowledgments**: We gratefully acknowledge contributions from community members including Quadmoon, Tatersbarn, and other contributors who have provided test data for development purposes.
+
+**Attribution Request**: If you are the original creator of any test data included in this project, please contact the maintainers so proper attribution can be provided.

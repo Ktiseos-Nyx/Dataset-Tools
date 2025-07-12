@@ -1,50 +1,35 @@
 # Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
 # SPDX-License-Identifier: MIT
 
-"""Test UI"""
+"""Initial UI tests"""
 
-# import unittest
-# from unittest.mock import MagicMock
-# from dataset_tools.correct_types import UpField
-# from dataset_tools.ui import MainWindow
+import sys
 
+from PyQt6 import QtWidgets
 
-# class TestDisplayText(unittest.TestCase):
-#     """test class"""
-
-# @patch("dataset_tools.ui.MainWindow.unpack_content_of")
-# def test_display_text(self, mock_unpack):
-# """test"""
-# instance = MainWindow()
-
-# # Mock widgets setters
-# instance.top_separator, instance.mid_separator, instance.upper_box, instance.lower_box = [MagicMock()] * 4
-
-# metadata = {"label": "data"}
-
-# mock_unpack.side_effect = [{"title": "Up", "display": "Upper"}, {"title": "Mid", "display": "Lower"}]
-
-# instance.display_text_of(metadata)
-
-# instance.top_separator.setText.assert_called_with("Up")
-# instance.upper_box.setText.assert_called_with("Upper")
-# instance.mid_separator.setText.assert_called_with("Mid")
-# instance.lower_box.setText.assert_called_with("Lower")
-
-# def test_none_metadata(self):
-#     """test"""
-#     instance = MainWindow()
-
-#     # Mock with placeholder
-#     instance.top_separator, instance.mid_separator, instance.upper_box, instance.lower_box = [MagicMock()] * 4
-
-#     instance.display_text_of(None)
-
-#     placeholder = UpField.PLACEHOLDER
-#     calls = [unittest.mock.call(placeholder)] * 4
-
-#     self.assertEqual(instance.top_separator.setText.call_args_list, calls)
+from dataset_tools.ui.main_window import MainWindow
 
 
-# if __name__ == "__main__":
-#     unittest.main()
+# Basic test to ensure the MainWindow can be instantiated.
+def test_main_window_creation(qtbot):
+    """Test if the main window can be created."""
+    # Create the application instance
+    app = QtWidgets.QApplication.instance()
+    if app is None:
+        app = QtWidgets.QApplication(sys.argv)
+
+    # Create the main window
+    window = MainWindow()
+
+    # Add the window to qtbot to manage it
+    qtbot.addWidget(window)
+
+    # Show the window
+    window.show()
+
+    # Assert that the window is created and visible
+    assert window is not None
+    assert window.isVisible()
+
+    # Assert the window title is set correctly
+    assert window.windowTitle() == "Dataset Viewer"

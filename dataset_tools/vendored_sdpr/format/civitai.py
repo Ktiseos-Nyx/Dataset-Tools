@@ -57,7 +57,9 @@ class CivitaiFormat(BaseFormat):
 
         # Heuristic for mojibake common in some Civitai UserComments
         needs_mojibake_fix = (
-            "笀" in data_to_process or "∀" in data_to_process or "izarea" in data_to_process
+            "笀" in data_to_process
+            or "∀" in data_to_process
+            or "izarea" in data_to_process
         ) and not (data_to_process.startswith("{") and data_to_process.endswith("}"))
 
         if needs_mojibake_fix:
@@ -68,7 +70,9 @@ class CivitaiFormat(BaseFormat):
             try:
                 json_string_bytes = data_to_process.encode("latin-1", "replace")
                 json_string = json_string_bytes.decode("utf-16le", "replace")
-                json_string = json_string.strip("\x00")  # Strip nulls again after decode
+                json_string = json_string.strip(
+                    "\x00"
+                )  # Strip nulls again after decode
                 json.loads(json_string)  # Validate if it's JSON now
                 self._logger.debug(
                     "%s: Mojibake reversal/decode (latin-1 -> utf-16le) successful.",
@@ -113,14 +117,18 @@ class CivitaiFormat(BaseFormat):
         if not self._raw:
             return False
 
-        cleaned_workflow_json_str = self._decode_user_comment_for_civitai_json(self._raw)
+        cleaned_workflow_json_str = self._decode_user_comment_for_civitai_json(
+            self._raw
+        )
         if not cleaned_workflow_json_str:
             return False  # Not the ComfyUI JSON flavor we're looking for
 
         try:
             parsed_workflow_data = json.loads(cleaned_workflow_json_str)
             if not isinstance(parsed_workflow_data, dict):
-                self._logger.debug("%s: Parsed UserComment workflow is not a dictionary.", self.tool)
+                self._logger.debug(
+                    "%s: Parsed UserComment workflow is not a dictionary.", self.tool
+                )
                 return False
 
             extra_metadata_str = parsed_workflow_data.get("extraMetadata")
@@ -133,7 +141,9 @@ class CivitaiFormat(BaseFormat):
 
             extra_meta_dict = json.loads(extra_metadata_str)
             if not isinstance(extra_meta_dict, dict):
-                self._logger.debug("%s: 'extraMetadata' content is not a dictionary.", self.tool)
+                self._logger.debug(
+                    "%s: 'extraMetadata' content is not a dictionary.", self.tool
+                )
                 return False
 
             # --- If all checks pass, populate fields ---
@@ -158,7 +168,9 @@ class CivitaiFormat(BaseFormat):
                 handled_keys_in_extra_meta.add("CFG scale")
                 handled_keys_in_extra_meta.add("cfgScale")
 
-            sampler_val = extra_meta_dict.get("sampler", extra_meta_dict.get("sampler_name"))
+            sampler_val = extra_meta_dict.get(
+                "sampler", extra_meta_dict.get("sampler_name")
+            )
             if sampler_val is not None:
                 self._parameter["sampler_name"] = str(sampler_val)
                 handled_keys_in_extra_meta.add("sampler")
@@ -180,10 +192,14 @@ class CivitaiFormat(BaseFormat):
 
             workflow_id_in_extra = extra_meta_dict.get("workflowId")
             if workflow_id_in_extra:
-                self._parameter["civitai_workflowId_from_extra"] = str(workflow_id_in_extra)
+                self._parameter["civitai_workflowId_from_extra"] = str(
+                    workflow_id_in_extra
+                )
                 handled_keys_in_extra_meta.add("workflowId")
 
-            self._extract_and_set_dimensions(extra_meta_dict, "width", "height", handled_keys_in_extra_meta)
+            self._extract_and_set_dimensions(
+                extra_meta_dict, "width", "height", handled_keys_in_extra_meta
+            )
 
             self._setting = self._build_settings_string(
                 include_standard_params=False,
@@ -193,7 +209,9 @@ class CivitaiFormat(BaseFormat):
                 sort_parts=True,
             )
 
-            self._logger.info("%s: Successfully parsed as Civitai ComfyUI JSON.", self.tool)
+            self._logger.info(
+                "%s: Successfully parsed as Civitai ComfyUI JSON.", self.tool
+            )
             return True
 
         except json.JSONDecodeError as e_json:
@@ -208,7 +226,8 @@ class CivitaiFormat(BaseFormat):
                 "%s: Unexpected error during Civitai ComfyUI JSON parse attempt: %s",
                 self.tool,
                 e_generic,
-                exc_info=self._logger.level <= 10,  # DEBUG level or lower for full exc_info
+                exc_info=self._logger.level
+                <= 10,  # DEBUG level or lower for full exc_info
             )
             return False
 
@@ -232,7 +251,9 @@ class CivitaiFormat(BaseFormat):
         a1111_status = a1111_parser_util.parse()
 
         if a1111_status != self.Status.READ_SUCCESS:
-            self._logger.debug("%s: Underlying A1111 text parsing failed or no A1111 data.", self.tool)
+            self._logger.debug(
+                "%s: Underlying A1111 text parsing failed or no A1111 data.", self.tool
+            )
             return False  # A1111 parsing itself failed
 
         # A1111 parsing succeeded. Now check for Civitai markers.
@@ -248,7 +269,11 @@ class CivitaiFormat(BaseFormat):
         # A1111's _parse_settings_string_to_dict is a method, so call on instance
         a1111_parsed_settings_dict = {}
         if raw_settings_block_from_a1111:
-            a1111_parsed_settings_dict = a1111_parser_util._parse_settings_string_to_dict(raw_settings_block_from_a1111)
+            a1111_parsed_settings_dict = (
+                a1111_parser_util._parse_settings_string_to_dict(
+                    raw_settings_block_from_a1111
+                )
+            )
 
         if "Civitai resources" not in a1111_parsed_settings_dict:
             self._logger.debug(
@@ -275,7 +300,9 @@ class CivitaiFormat(BaseFormat):
             try:
                 self.civitai_resources_parsed = json.loads(civitai_resources_str)
                 # Add to self._parameter for UI display or further processing
-                self._parameter["civitai_resources_data"] = self.civitai_resources_parsed
+                self._parameter["civitai_resources_data"] = (
+                    self.civitai_resources_parsed
+                )
             except json.JSONDecodeError:
                 self._logger.warning(
                     "%s: Failed to parse 'Civitai resources' JSON from A1111 text: %s",
@@ -317,7 +344,9 @@ class CivitaiFormat(BaseFormat):
             return  # Successfully parsed
 
         # If not ComfyUI JSON, try parsing as Civitai A1111 Text
-        self._logger.debug("%s: Not Civitai ComfyUI JSON, now trying Civitai A1111 text.", self.tool)
+        self._logger.debug(
+            "%s: Not Civitai ComfyUI JSON, now trying Civitai A1111 text.", self.tool
+        )
         if self._parse_as_civitai_a1111_text():
             self.status = self.Status.READ_SUCCESS
             # self.tool is already updated to "Civitai A1111" by the method
@@ -329,4 +358,6 @@ class CivitaiFormat(BaseFormat):
             self.tool,
         )
         self.status = self.Status.FORMAT_DETECTION_ERROR
-        self._error = "Not a recognized Civitai format (ComfyUI JSON or A1111 text with markers)."
+        self._error = (
+            "Not a recognized Civitai format (ComfyUI JSON or A1111 text with markers)."
+        )

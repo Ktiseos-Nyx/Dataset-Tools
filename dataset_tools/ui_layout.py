@@ -4,7 +4,7 @@ import logging
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets as Qw
 
-from .ui.font_manager import get_monospace_font, get_reading_font
+# Font functions removed - fonts now inherit from user settings
 # Import your custom widgets. These must be defined in widgets.py first.
 from .widgets import ImageLabel, LeftPanelWidget
 
@@ -55,30 +55,42 @@ def setup_ui_layout(main_window: Qw.QMainWindow):
     metadata_layout.addWidget(main_window.positive_prompt_label)
     main_window.positive_prompt_box = Qw.QTextEdit()
     main_window.positive_prompt_box.setReadOnly(True)
-    main_window.positive_prompt_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
+    main_window.positive_prompt_box.setSizePolicy(
+        Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred
+    )
     main_window.positive_prompt_box.setWordWrapMode(Qw.QTextOption.WrapMode.WordWrap)
-    main_window.positive_prompt_box.setLineWrapMode(Qw.QTextEdit.LineWrapMode.WidgetWidth)
-    main_window.positive_prompt_box.setFont(get_reading_font(size=10))
+    main_window.positive_prompt_box.setLineWrapMode(
+        Qw.QTextEdit.LineWrapMode.WidgetWidth
+    )
+    # Font will be inherited from global font settings
     metadata_layout.addWidget(main_window.positive_prompt_box)
 
     main_window.negative_prompt_label = Qw.QLabel("Negative Prompt")
     metadata_layout.addWidget(main_window.negative_prompt_label)
     main_window.negative_prompt_box = Qw.QTextEdit()
     main_window.negative_prompt_box.setReadOnly(True)
-    main_window.negative_prompt_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
+    main_window.negative_prompt_box.setSizePolicy(
+        Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred
+    )
     main_window.negative_prompt_box.setWordWrapMode(Qw.QTextOption.WrapMode.WordWrap)
-    main_window.negative_prompt_box.setLineWrapMode(Qw.QTextEdit.LineWrapMode.WidgetWidth)
-    main_window.negative_prompt_box.setFont(get_reading_font(size=10))
+    main_window.negative_prompt_box.setLineWrapMode(
+        Qw.QTextEdit.LineWrapMode.WidgetWidth
+    )
+    # Font will be inherited from global font settings
     metadata_layout.addWidget(main_window.negative_prompt_box)
 
     main_window.generation_data_label = Qw.QLabel("Generation Details & Metadata")
     metadata_layout.addWidget(main_window.generation_data_label)
     main_window.generation_data_box = Qw.QTextEdit()
     main_window.generation_data_box.setReadOnly(True)
-    main_window.generation_data_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
+    main_window.generation_data_box.setSizePolicy(
+        Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred
+    )
     main_window.generation_data_box.setWordWrapMode(Qw.QTextOption.WrapMode.WordWrap)
-    main_window.generation_data_box.setLineWrapMode(Qw.QTextEdit.LineWrapMode.WidgetWidth)
-    main_window.generation_data_box.setFont(get_monospace_font(size=9))
+    main_window.generation_data_box.setLineWrapMode(
+        Qw.QTextEdit.LineWrapMode.WidgetWidth
+    )
+    # Font will be inherited from global font settings
     metadata_layout.addWidget(main_window.generation_data_box)
     metadata_layout.addStretch(1)
 
@@ -100,7 +112,9 @@ def setup_ui_layout(main_window: Qw.QMainWindow):
     action_buttons_layout.setSpacing(10)
 
     main_window.copy_metadata_button = Qw.QPushButton("Copy All Metadata")
-    main_window.copy_metadata_button.clicked.connect(main_window.copy_metadata_to_clipboard)
+    main_window.copy_metadata_button.clicked.connect(
+        main_window.copy_metadata_to_clipboard
+    )
     action_buttons_layout.addWidget(main_window.copy_metadata_button)
 
     main_window.settings_button = Qw.QPushButton("Settings")
@@ -129,4 +143,6 @@ def setup_ui_layout(main_window: Qw.QMainWindow):
     meta_img_splitter_sizes = main_window.settings.value(
         "metaImageSplitterSizes", [win_width // 3, win_width * 2 // 3], type=list
     )
-    main_window.metadata_image_splitter.setSizes([int(s) for s in meta_img_splitter_sizes])
+    main_window.metadata_image_splitter.setSizes(
+        [int(s) for s in meta_img_splitter_sizes]
+    )

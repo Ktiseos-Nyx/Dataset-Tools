@@ -1,6 +1,7 @@
 # In dataset_tools/rule_evaluator.py
 
 import json
+
 # import os
 import re
 
@@ -44,9 +45,13 @@ class RuleEvaluator:
                             rule["parser_name"] = parser_name
                         self.rules.extend(parser_config["detection_rules"])
 
-            self.logger.info(f"Successfully loaded {len(self.rules)} rules from {filepath}.")
+            self.logger.info(
+                f"Successfully loaded {len(self.rules)} rules from {filepath}."
+            )
         except Exception as e:
-            self.logger.error("Failed to load or parse rules from %s: %s", filepath, e, exc_info=True)
+            self.logger.error(
+                "Failed to load or parse rules from %s: %s", filepath, e, exc_info=True
+            )
 
     def _get_a1111_param_string(self, context_data: dict) -> str | None:
         """Help to extract the A1111 parameter string from common locations with Unicode handling."""
@@ -90,27 +95,39 @@ class RuleEvaluator:
                                     )
                                     return decoded
                             except Exception as e:
-                                self.logger.debug(f"Detection: Manual Unicode extraction failed as UTF-16: {e}")
+                                self.logger.debug(
+                                    f"Detection: Manual Unicode extraction failed as UTF-16: {e}"
+                                )
 
                         # Strategy 2: charset=Unicode prefix
                         if user_comment_raw.startswith(b"charset=Unicode"):
                             try:
-                                unicode_part = user_comment_raw[len(b"charset=Unicode ") :]
-                                decoded = unicode_part.decode("utf-16le", errors="ignore")
+                                unicode_part = user_comment_raw[
+                                    len(b"charset=Unicode ") :
+                                ]
+                                decoded = unicode_part.decode(
+                                    "utf-16le", errors="ignore"
+                                )
                                 if "Steps:" in decoded:
                                     self.logger.debug(
                                         f"Detection: charset=Unicode extracted {len(decoded)} chars with A1111 patterns"
                                     )
                                     return decoded
                             except Exception as e:
-                                self.logger.debug(f"Detection: charset=Unicode extraction failed as UTF-16: {e}")
+                                self.logger.debug(
+                                    f"Detection: charset=Unicode extraction failed as UTF-16: {e}"
+                                )
         except Exception as e:
-            self.logger.debug(f"Detection: Manual Unicode extraction completely failed: {e}")
+            self.logger.debug(
+                f"Detection: Manual Unicode extraction completely failed: {e}"
+            )
 
         self.logger.debug("Detection: No A1111 patterns found in UserComment")
         return None
 
-    def _get_data_from_json_path(self, rule: dict, context_data: dict) -> tuple[any, bool]:
+    def _get_data_from_json_path(
+        self, rule: dict, context_data: dict
+    ) -> tuple[any, bool]:
         """Handle source_types that need to query a JSON object via a path."""
         source_keys = rule.get("source_key_options") or [rule.get("source_key")]
         json_path_to_check = rule.get("json_path")
@@ -133,7 +150,9 @@ class RuleEvaluator:
             self.logger.debug("Could not parse JSON for JSON path rule.")
             return None, False
 
-    def _get_source_data_and_status(self, rule: dict, context_data: dict) -> tuple[any, bool]:
+    def _get_source_data_and_status(
+        self, rule: dict, context_data: dict
+    ) -> tuple[any, bool]:
         """Gets the source data for a rule to evaluate."""  # noqa: D401
         source_type = rule.get("source_type")
         source_key = rule.get("source_key")
@@ -152,7 +171,9 @@ class RuleEvaluator:
             "direct_context_key": context_data.get(source_key),
             "pil_info_pil_mode": context_data.get("pil_mode"),
             "pil_info_object": context_data.get("pil_info"),
-            "context_iptc_field_value": context_data.get("parsed_iptc", {}).get(rule.get("iptc_field_name")),
+            "context_iptc_field_value": context_data.get("parsed_iptc", {}).get(
+                rule.get("iptc_field_name")
+            ),
         }
         if source_type in simple_source_map:
             data = simple_source_map[source_type]
@@ -195,7 +216,11 @@ class RuleEvaluator:
                 return None, False
             try:
                 wrapper = json.loads(a1111_string)
-                if isinstance(wrapper, dict) and "parameters" in wrapper and isinstance(wrapper["parameters"], str):
+                if (
+                    isinstance(wrapper, dict)
+                    and "parameters" in wrapper
+                    and isinstance(wrapper["parameters"], str)
+                ):
                     return wrapper["parameters"], True
             except json.JSONDecodeError:
                 pass
@@ -233,27 +258,37 @@ class RuleEvaluator:
             json_str = context_data.get("raw_user_comment_str")
             if not json_str:
                 png_chunks = context_data.get("png_chunks", {})
-                for key in rule.get("chunk_source_key_options_for_png", ["parameters", "Comment"]):
+                for key in rule.get(
+                    "chunk_source_key_options_for_png", ["parameters", "Comment"]
+                ):
                     if key in png_chunks:
                         json_str = png_chunks[key]
                         break
             if json_str:
                 try:
-                    self.logger.debug(f"Attempting to load JSON from user comment/PNG chunk: {json_str[:50]}...")
+                    self.logger.debug(
+                        f"Attempting to load JSON from user comment/PNG chunk: {json_str[:50]}..."
+                    )
                     return json.loads(json_str), True
                 except json.JSONDecodeError:
-                    self.logger.debug(f"Failed to decode JSON from user comment/PNG chunk: {json_str[:50]}...")
+                    self.logger.debug(
+                        f"Failed to decode JSON from user comment/PNG chunk: {json_str[:50]}..."
+                    )
                     return None, False
             return None, False
 
         elif source_type == "json_from_xmp_exif_user_comment":
             json_str = context_data.get("xmp_user_comment_json_str")
             if json_str:
-                self.logger.debug(f"Attempting to load JSON from extracted XMP UserComment: {json_str[:50]}...")
+                self.logger.debug(
+                    f"Attempting to load JSON from extracted XMP UserComment: {json_str[:50]}..."
+                )
                 try:
                     return json.loads(json_str), True
                 except json.JSONDecodeError:
-                    self.logger.debug(f"Failed to decode JSON from XMP UserComment: {json_str[:50]}...")
+                    self.logger.debug(
+                        f"Failed to decode JSON from XMP UserComment: {json_str[:50]}..."
+                    )
                     return None, False
             return None, False
 
@@ -261,10 +296,14 @@ class RuleEvaluator:
             json_str = context_data.get("raw_user_comment_str")
             if json_str:
                 try:
-                    self.logger.debug(f"Attempting to load JSON from raw_user_comment_str: {json_str[:50]}...")
+                    self.logger.debug(
+                        f"Attempting to load JSON from raw_user_comment_str: {json_str[:50]}..."
+                    )
                     return json.loads(json_str), True
                 except json.JSONDecodeError:
-                    self.logger.debug(f"Failed to decode JSON from raw_user_comment_str: {json_str[:50]}...")
+                    self.logger.debug(
+                        f"Failed to decode JSON from raw_user_comment_str: {json_str[:50]}..."
+                    )
                     return None, False
             return None, False
 
@@ -275,12 +314,16 @@ class RuleEvaluator:
 
         else:  # Final catch-all
             if source_type is not None:
-                self.logger.warning(f"RuleEvaluator: Unknown source_type in detection rule: '{source_type}'")
+                self.logger.warning(
+                    f"RuleEvaluator: Unknown source_type in detection rule: '{source_type}'"
+                )
             else:
                 self.logger.debug("RuleEvaluator: Rule is missing 'source_type'.")
             return None, False
 
-    def _apply_operator(self, operator: str, data_to_check: any, rule: dict, context_data: dict) -> bool:
+    def _apply_operator(
+        self, operator: str, data_to_check: any, rule: dict, context_data: dict
+    ) -> bool:
         # Parameters extracted from 'rule' (as you have at the top of your _apply_operator)
         expected_value = rule.get("value")
         expected_keys = rule.get("expected_keys")
@@ -314,7 +357,10 @@ class RuleEvaluator:
                     return False
                 if data_to_check is None and expected_value is None:
                     return True
-                return str(data_to_check).strip().lower() == str(expected_value).strip().lower()
+                return (
+                    str(data_to_check).strip().lower()
+                    == str(expected_value).strip().lower()
+                )
             elif operator == "contains":
                 if not isinstance(data_to_check, str):
                     return False
@@ -335,38 +381,52 @@ class RuleEvaluator:
                 if not isinstance(data_to_check, str):
                     return False
                 if not regex_pattern:
-                    self.logger.warning("RuleEvaluator: Operator 'regex_match' called without 'regex_pattern'.")
+                    self.logger.warning(
+                        "RuleEvaluator: Operator 'regex_match' called without 'regex_pattern'."
+                    )
                     return False
                 return re.search(regex_pattern, data_to_check) is not None
             elif operator == "regex_match_all":
                 if not isinstance(data_to_check, str):
                     return False
                 if not regex_patterns or not isinstance(regex_patterns, list):
-                    self.logger.warning("RuleEvaluator: 'regex_match_all' needs list 'regex_patterns'.")
+                    self.logger.warning(
+                        "RuleEvaluator: 'regex_match_all' needs list 'regex_patterns'."
+                    )
                     return False
                 return all(re.search(p, data_to_check) for p in regex_patterns)
             elif operator == "regex_match_any":
                 if not isinstance(data_to_check, str):
                     return False
                 if not regex_patterns or not isinstance(regex_patterns, list):
-                    self.logger.warning("RuleEvaluator: 'regex_match_any' needs list 'regex_patterns'.")
+                    self.logger.warning(
+                        "RuleEvaluator: 'regex_match_any' needs list 'regex_patterns'."
+                    )
                     return False
                 return any(re.search(p, data_to_check) for p in regex_patterns)
             elif operator == "is_string":
                 return isinstance(data_to_check, str)
-            elif operator == "is_true" and source_type != "pil_info_key_json_path_query":
+            elif (
+                operator == "is_true" and source_type != "pil_info_key_json_path_query"
+            ):
                 return data_to_check is True
             elif operator == "is_in_list":
                 if data_to_check is None:
                     return False
                 if not value_list or not isinstance(value_list, list):
-                    self.logger.warning("RuleEvaluator: 'is_in_list' needs list 'value_list'.")
+                    self.logger.warning(
+                        "RuleEvaluator: 'is_in_list' needs list 'value_list'."
+                    )
                     return False
                 return str(data_to_check) in value_list
 
-            elif operator == "json_path_exists":  # This was one of the operators we added earlier
+            elif (
+                operator == "json_path_exists"
+            ):  # This was one of the operators we added earlier
                 if not json_path:
-                    self.logger.warning("RuleEvaluator: Operator 'json_path_exists': 'json_path' not provided in rule.")
+                    self.logger.warning(
+                        "RuleEvaluator: Operator 'json_path_exists': 'json_path' not provided in rule."
+                    )
                     return False
                 target_obj = None
                 if isinstance(data_to_check, dict | list):
@@ -375,10 +435,14 @@ class RuleEvaluator:
                     try:
                         target_obj = json.loads(data_to_check)
                     except json.JSONDecodeError:
-                        self.logger.debug("RuleEvaluator: Op 'json_path_exists': data string not valid JSON.")
+                        self.logger.debug(
+                            "RuleEvaluator: Op 'json_path_exists': data string not valid JSON."
+                        )
                         return False
                 else:
-                    self.logger.debug("RuleEvaluator: Op 'json_path_exists': data not suitable for JSON path.")
+                    self.logger.debug(
+                        "RuleEvaluator: Op 'json_path_exists': data not suitable for JSON path."
+                    )
                     return False
                 return json_path_get_utility(target_obj, json_path) is not None
 
@@ -386,13 +450,19 @@ class RuleEvaluator:
             elif operator == "json_contains_any_key":
                 target_json_obj_for_keys = None  # Initialize
 
-                if isinstance(data_to_check, dict):  # data_to_check might be pil_info or parsed JSON from source_type
+                if isinstance(
+                    data_to_check, dict
+                ):  # data_to_check might be pil_info or parsed JSON from source_type
                     target_json_obj_for_keys = data_to_check
-                elif isinstance(data_to_check, str):  # If data_to_check is a string that needs parsing
+                elif isinstance(
+                    data_to_check, str
+                ):  # If data_to_check is a string that needs parsing
                     try:
                         target_json_obj_for_keys = json.loads(data_to_check)
                     except json.JSONDecodeError:
-                        self.logger.debug(f"RuleEvaluator: Op '{operator}', data_to_check string not valid JSON.")
+                        self.logger.debug(
+                            f"RuleEvaluator: Op '{operator}', data_to_check string not valid JSON."
+                        )
                         return False  # Cannot proceed if string is not valid JSON
                 # else: data_to_check is None or some other type, target_json_obj_for_keys remains None
 
@@ -405,7 +475,9 @@ class RuleEvaluator:
 
                 # 'expected_keys' is defined at the top of _apply_operator from rule.get("expected_keys")
                 if not expected_keys or not isinstance(expected_keys, list):
-                    self.logger.warning(f"RuleEvaluator: Op '{operator}' needs a list for 'expected_keys' in rule.")
+                    self.logger.warning(
+                        f"RuleEvaluator: Op '{operator}' needs a list for 'expected_keys' in rule."
+                    )
                     return False  # Rule is malformed if expected_keys isn't a list
 
                 if not expected_keys:  # If the list of expected_keys is empty
@@ -429,7 +501,9 @@ class RuleEvaluator:
             # ...
             elif operator == "json_path_value_equals":
                 if not json_path:
-                    self.logger.warning("RuleEvaluator: Op 'json_path_value_equals': 'json_path' not provided.")
+                    self.logger.warning(
+                        "RuleEvaluator: Op 'json_path_value_equals': 'json_path' not provided."
+                    )
                     return False
                 target_obj = None
                 if isinstance(data_to_check, dict | list):
@@ -438,12 +512,18 @@ class RuleEvaluator:
                     try:
                         target_obj = json.loads(data_to_check)
                     except json.JSONDecodeError:
-                        self.logger.debug("RuleEvaluator: Op 'json_path_value_equals': data string not valid JSON.")
+                        self.logger.debug(
+                            "RuleEvaluator: Op 'json_path_value_equals': data string not valid JSON."
+                        )
                         return False
                 else:
-                    self.logger.debug("RuleEvaluator: Op 'json_path_value_equals': data not suitable for JSON path.")
+                    self.logger.debug(
+                        "RuleEvaluator: Op 'json_path_value_equals': data not suitable for JSON path."
+                    )
                     return False
-                value_at_path = json_path_get_utility(target_obj, json_path)  # USE UTILITY
+                value_at_path = json_path_get_utility(
+                    target_obj, json_path
+                )  # USE UTILITY
                 if value_at_path is None and expected_value is not None:
                     return False
                 if value_at_path is not None and expected_value is None:
@@ -454,7 +534,9 @@ class RuleEvaluator:
 
             elif operator == "is_valid_json":
                 if source_type == "file_content_json":
-                    return isinstance(context_data.get("parsed_root_json_object"), dict | list)
+                    return isinstance(
+                        context_data.get("parsed_root_json_object"), dict | list
+                    )
                 if isinstance(data_to_check, dict | list):
                     return True
                 if not isinstance(data_to_check, str):
@@ -466,7 +548,9 @@ class RuleEvaluator:
                     return False
 
             elif operator == "is_valid_json_structure":
-                return isinstance(context_data.get("parsed_root_json_object"), dict | list)
+                return isinstance(
+                    context_data.get("parsed_root_json_object"), dict | list
+                )
 
             elif operator in ["json_contains_keys", "json_contains_all_keys"]:
                 target_json_obj_for_keys = None
@@ -480,11 +564,15 @@ class RuleEvaluator:
                 if not isinstance(target_json_obj_for_keys, dict):
                     return False
                 if not expected_keys or not isinstance(expected_keys, list):
-                    self.logger.warning("RuleEvaluator: '{operator}' needs list 'expected_keys'.")
+                    self.logger.warning(
+                        "RuleEvaluator: '{operator}' needs list 'expected_keys'."
+                    )
                     return False
                 return all(k in target_json_obj_for_keys for k in expected_keys)
 
-            elif operator == "is_true" and source_type == "pil_info_key_json_path_query":
+            elif (
+                operator == "is_true" and source_type == "pil_info_key_json_path_query"
+            ):
                 if not isinstance(data_to_check, str):
                     self.logger.debug(
                         "RuleEvaluator: Operator 'is_true' with 'pil_info_key_json_path_query' expected string data_to_check, got {type(data_to_check)}"
@@ -498,7 +586,9 @@ class RuleEvaluator:
                 try:
                     json_obj_for_query = json.loads(data_to_check)
                     if json_query_type == "has_numeric_string_keys":
-                        return isinstance(json_obj_for_query, dict) and any(k.isdigit() for k in json_obj_for_query)
+                        return isinstance(json_obj_for_query, dict) and any(
+                            k.isdigit() for k in json_obj_for_query
+                        )
                     if json_query_type == "has_any_node_class_type":
                         if not class_types_to_check or not isinstance(
                             class_types_to_check, list
@@ -509,11 +599,14 @@ class RuleEvaluator:
                             return False
                         if not isinstance(json_obj_for_query, dict):
                             return False
-                        nodes_container = json_obj_for_query.get("nodes", json_obj_for_query)
+                        nodes_container = json_obj_for_query.get(
+                            "nodes", json_obj_for_query
+                        )
                         if not isinstance(nodes_container, dict):
                             return False
                         return any(
-                            isinstance(nd_val, dict) and nd_val.get("type") in class_types_to_check
+                            isinstance(nd_val, dict)
+                            and nd_val.get("type") in class_types_to_check
                             for nd_val in nodes_container.values()
                         )
                     else:  # noqa: RET505
@@ -529,13 +622,18 @@ class RuleEvaluator:
 
             elif operator == "not_strictly_simple_json_object_with_prompt_key":
                 if not isinstance(data_to_check, str):
-                    self.logger.debug(f"RuleEvaluator: Operator '{operator}': data_to_check is not a string, failing.")
+                    self.logger.debug(
+                        f"RuleEvaluator: Operator '{operator}': data_to_check is not a string, failing."
+                    )
                     return False
                 is_simple_json_with_prompt = False
                 try:
                     parsed_json = json.loads(data_to_check)
                     if isinstance(parsed_json, dict):
-                        has_prompt_key = any(k in parsed_json for k in ["prompt", "Prompt", "positive_prompt"])
+                        has_prompt_key = any(
+                            k in parsed_json
+                            for k in ["prompt", "Prompt", "positive_prompt"]
+                        )
                         if has_prompt_key:
                             is_simple_json_with_prompt = True
                 except json.JSONDecodeError:
@@ -575,14 +673,20 @@ class RuleEvaluator:
 
     def evaluate_rule(self, rule: dict, context_data: dict) -> bool:
         operator_for_precheck = rule.get("operator", "exists")
-        data_to_check, source_found = self._get_source_data_and_status(rule, context_data)
+        data_to_check, source_found = self._get_source_data_and_status(
+            rule, context_data
+        )
 
         if not source_found and operator_for_precheck not in ["not_exists", "is_none"]:
             rule_comment = rule.get(
                 "comment",
                 f"source_type: {rule.get('source_type')}, operator: {operator_for_precheck}",
             )
-            self.logger.debug(f"RuleEvaluator: Source data not found for rule '{rule_comment}'.")
+            self.logger.debug(
+                f"RuleEvaluator: Source data not found for rule '{rule_comment}'."
+            )
             return False
 
-        return self._apply_operator(operator_for_precheck, data_to_check, rule, context_data)
+        return self._apply_operator(
+            operator_for_precheck, data_to_check, rule, context_data
+        )

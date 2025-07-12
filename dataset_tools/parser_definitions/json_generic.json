@@ -1,0 +1,41 @@
+{
+  "parser_name": "JSON (Generic)",
+  "priority": 50,
+  "target_file_types": [
+    "JSON"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: File must be a valid JSON object or array",
+      "source_type": "raw_file_content_text",
+      "operator": "is_valid_json"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "raw_file_content_text"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "raw_json_content",
+        "method": "direct_json_path",
+        "json_path": "$",
+        "value_type": "object"
+      }
+    ],
+    "output_template": {
+      "tool": "JSON Parser",
+      "format": "Generic JSON",
+      "raw_metadata": "$raw_json_content"
+    }
+  }
+}

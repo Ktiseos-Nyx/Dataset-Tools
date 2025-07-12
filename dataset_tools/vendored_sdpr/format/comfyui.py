@@ -10,10 +10,8 @@ import json
 import logging  # For type hinting
 from typing import Any  # Use Dict
 
-from .base_format import \
-    BaseFormat  # Assuming BaseFormat is in the same package level
-from .utility import \
-    merge_dict  # Assuming utility.py is in the same package level
+from .base_format import BaseFormat  # Assuming BaseFormat is in the same package level
+from .utility import merge_dict  # Assuming utility.py is in the same package level
 
 # Mapping of common keys found in ComfyUI KSampler nodes to standard parameter names
 COMFY_FLOW_TO_PARAM_MAP: dict[str, str | list[str]] = {
@@ -89,7 +87,9 @@ class ComfyUI(BaseFormat):
             **kwargs,  # Pass remaining kwargs
         )
         self._prompt_json: dict[str, Any] = {}  # Parsed "prompt" chunk (workflow)
-        self._workflow_json: dict[str, Any] | None = None  # Parsed "workflow" chunk (API format)
+        self._workflow_json: dict[str, Any] | None = (
+            None  # Parsed "workflow" chunk (API format)
+        )
 
     def _process(self) -> None:
         self._logger.debug("Attempting to parse using %s logic.", self.tool)
@@ -98,7 +98,9 @@ class ComfyUI(BaseFormat):
         # or 'workflow' (API format JSON) fields of self._info.
         # ImageDataReader passes all PNG chunks in self._info.
         prompt_str = str(self._info.get("prompt", ""))  # Main source: workflow JSON
-        workflow_api_str = str(self._info.get("workflow", ""))  # Secondary source: API format
+        workflow_api_str = str(
+            self._info.get("workflow", "")
+        )  # Secondary source: API format
 
         source_json_str_to_parse = None
         source_description = ""
@@ -115,7 +117,9 @@ class ComfyUI(BaseFormat):
                 self.tool,
             )
             self.status = self.Status.FORMAT_ERROR  # Or MISSING_INFO
-            self._error = "ComfyUI metadata (prompt/workflow JSON) missing from PNG info."
+            self._error = (
+                "ComfyUI metadata (prompt/workflow JSON) missing from PNG info."
+            )
             return
 
         try:
@@ -127,19 +131,27 @@ class ComfyUI(BaseFormat):
                     source_description,
                 )
                 self.status = self.Status.FORMAT_ERROR
-                self._error = f"ComfyUI metadata from {source_description} is not a dict."
+                self._error = (
+                    f"ComfyUI metadata from {source_description} is not a dict."
+                )
                 return
 
             # Store the parsed JSON based on its likely source type
             # If 'nodes' and 'links' are top-level, it's likely API format, store in _workflow_json
             # Otherwise, assume it's the standard workflow (node graph), store in _prompt_json
-            if "nodes" in loaded_json and "links" in loaded_json:  # Heuristic for API format
+            if (
+                "nodes" in loaded_json and "links" in loaded_json
+            ):  # Heuristic for API format
                 self._workflow_json = loaded_json
                 self._prompt_json = loaded_json  # For traversal, treat API format like prompt if prompt chunk missing
-                self._logger.info("%s: Loaded API format JSON from %s.", self.tool, source_description)
+                self._logger.info(
+                    "%s: Loaded API format JSON from %s.", self.tool, source_description
+                )
             else:  # Assume it's the standard 'prompt' chunk content (node graph)
                 self._prompt_json = loaded_json
-                self._logger.info("%s: Loaded workflow JSON from %s.", self.tool, source_description)
+                self._logger.info(
+                    "%s: Loaded workflow JSON from %s.", self.tool, source_description
+                )
 
         except json.JSONDecodeError as json_err:
             self._logger.error(
@@ -157,11 +169,16 @@ class ComfyUI(BaseFormat):
         self._comfy_png_traverse_and_extract()
 
         # Set self._raw to the JSON string that was successfully parsed, for display/consistency
-        if not self._raw and source_json_str_to_parse:  # If _raw wasn't set by ImageDataReader
+        if (
+            not self._raw and source_json_str_to_parse
+        ):  # If _raw wasn't set by ImageDataReader
             self._raw = source_json_str_to_parse
 
         # Final status check based on extracted data
-        if self.status != self.Status.FORMAT_ERROR and self.status != self.Status.COMFYUI_ERROR:
+        if (
+            self.status != self.Status.FORMAT_ERROR
+            and self.status != self.Status.COMFYUI_ERROR
+        ):
             if (
                 self._positive
                 or self._negative
@@ -171,22 +188,31 @@ class ComfyUI(BaseFormat):
                 or self._width != "0"
                 or self._height != "0"
             ):
-                self._logger.info("%s: Data successfully extracted from workflow.", self.tool)
+                self._logger.info(
+                    "%s: Data successfully extracted from workflow.", self.tool
+                )
                 # BaseFormat.parse() will set READ_SUCCESS if no errors were raised by _process
             else:
                 self._logger.warning(
                     "%s: Workflow traversal completed but no key data extracted.",
                     self.tool,
                 )
-                self.status = self.Status.COMFYUI_ERROR  # More specific than general FORMAT_ERROR
-                if not self._error:  # Only set if a more specific error isn't already there
+                self.status = (
+                    self.Status.COMFYUI_ERROR
+                )  # More specific than general FORMAT_ERROR
+                if (
+                    not self._error
+                ):  # Only set if a more specific error isn't already there
                     self._error = f"{self.tool}: Failed to extract meaningful data from workflow graph."
 
-    def _find_end_node_candidates(self, workflow_json_data: dict[str, Any]) -> dict[str, str]:
+    def _find_end_node_candidates(
+        self, workflow_json_data: dict[str, Any]
+    ) -> dict[str, str]:
         candidates: dict[str, str] = {}
         # Check if any SaveImage type nodes are present first
         is_save_image_present = any(
-            isinstance(node_data, dict) and node_data.get("class_type") in self.SAVE_IMAGE_TYPE
+            isinstance(node_data, dict)
+            and node_data.get("class_type") in self.SAVE_IMAGE_TYPE
             for node_data in workflow_json_data.values()
         )
 
@@ -206,7 +232,9 @@ class ComfyUI(BaseFormat):
         # This part is tricky. For now, we rely on SaveImage or KSampler.
         # If after all this `candidates` is empty, it means we couldn't find a typical end node.
         if not candidates:
-            self._logger.debug("No SaveImage or KSampler nodes found as primary end candidates.")
+            self._logger.debug(
+                "No SaveImage or KSampler nodes found as primary end candidates."
+            )
             # As a last resort, consider *any* node that doesn't have outgoing links
             # to other processing nodes (harder to determine without full graph analysis here).
             # For simplicity now, we'll stick to SaveImage/KSampler.
@@ -220,11 +248,13 @@ class ComfyUI(BaseFormat):
         count = 0
         # Check prompts
         if flow_details.get("positive_prompt") or (
-            isinstance(flow_details.get("positive_sdxl_prompts"), dict) and flow_details.get("positive_sdxl_prompts")
+            isinstance(flow_details.get("positive_sdxl_prompts"), dict)
+            and flow_details.get("positive_sdxl_prompts")
         ):
             count += 1
         if flow_details.get("negative_prompt") or (
-            isinstance(flow_details.get("negative_sdxl_prompts"), dict) and flow_details.get("negative_sdxl_prompts")
+            isinstance(flow_details.get("negative_sdxl_prompts"), dict)
+            and flow_details.get("negative_sdxl_prompts")
         ):
             count += 1
 
@@ -233,7 +263,10 @@ class ComfyUI(BaseFormat):
         if isinstance(flow_params, dict):  # Ensure it's a dict
             # Access PARAMETER_KEY from the class, not an instance attribute that might not be set
             for key in self.__class__.PARAMETER_KEY:
-                if flow_params.get(key) and flow_params[key] != self.DEFAULT_PARAMETER_PLACEHOLDER:
+                if (
+                    flow_params.get(key)
+                    and flow_params[key] != self.DEFAULT_PARAMETER_PLACEHOLDER
+                ):
                     count += 1
 
         # Check dimensions
@@ -278,22 +311,34 @@ class ComfyUI(BaseFormat):
             return {}  # Return empty if no candidates to traverse from
 
         for end_node_id, class_type in end_node_candidates.items():
-            self._logger.debug("Traversing from end node: %s (Type: %s)", end_node_id, class_type)
-            temp_flow_details = self._run_traversal_for_node(workflow_json_data, end_node_id)
+            self._logger.debug(
+                "Traversing from end node: %s (Type: %s)", end_node_id, class_type
+            )
+            temp_flow_details = self._run_traversal_for_node(
+                workflow_json_data, end_node_id
+            )
             num_params_in_flow = self._count_meaningful_params(temp_flow_details)
-            self._logger.debug("Flow from node %s yielded %s params.", end_node_id, num_params_in_flow)
+            self._logger.debug(
+                "Flow from node %s yielded %s params.", end_node_id, num_params_in_flow
+            )
             if num_params_in_flow > max_extracted_params:
                 max_extracted_params = num_params_in_flow
                 best_flow_data = temp_flow_details
 
         if best_flow_data:
-            self._logger.info("Best flow selected with %s params.", max_extracted_params)
+            self._logger.info(
+                "Best flow selected with %s params.", max_extracted_params
+            )
         elif end_node_candidates:  # Candidates existed but no data extracted
-            self._logger.warning("No meaningful data extracted from any traversal path, though end nodes were found.")
+            self._logger.warning(
+                "No meaningful data extracted from any traversal path, though end nodes were found."
+            )
             # Don't set error here if one was already set due to no candidates
             if self.status != self.Status.COMFYUI_ERROR:
                 self.status = self.Status.COMFYUI_ERROR
-                self._error = "Workflow traversal from candidate end nodes yielded no data."
+                self._error = (
+                    "Workflow traversal from candidate end nodes yielded no data."
+                )
         # If no end_node_candidates, status/error already set.
         return best_flow_data
 
@@ -313,7 +358,9 @@ class ComfyUI(BaseFormat):
 
         self._is_sdxl = flow_data.get("is_sdxl_workflow", False)
 
-        if self._is_sdxl:  # If SDXL, construct main prompts from SDXL components if main ones are empty
+        if (
+            self._is_sdxl
+        ):  # If SDXL, construct main prompts from SDXL components if main ones are empty
             if not self._positive and self._positive_sdxl:
                 self._positive = self.merge_clip(self._positive_sdxl)
             if not self._negative and self._negative_sdxl:
@@ -322,7 +369,9 @@ class ComfyUI(BaseFormat):
         flow_params = flow_data.get("parameters", {})
         if isinstance(flow_params, dict):  # Ensure it's a dict
             for key, value in flow_params.items():
-                if key in self._parameter and value is not None:  # Check if key is in our standard list
+                if (
+                    key in self._parameter and value is not None
+                ):  # Check if key is in our standard list
                     self._parameter[key] = str(value)  # Store as string
 
         fw_str = str(flow_data.get("width", "0")).strip()
@@ -354,7 +403,9 @@ class ComfyUI(BaseFormat):
         workflow_to_traverse = self._prompt_json or self._workflow_json
 
         if not workflow_to_traverse:
-            self._logger.error("%s: No workflow JSON available for traversal.", self.tool)
+            self._logger.error(
+                "%s: No workflow JSON available for traversal.", self.tool
+            )
             self.status = self.Status.COMFYUI_ERROR  # Or FORMAT_ERROR
             self._error = "ComfyUI workflow JSON missing for traversal."
             return
@@ -370,11 +421,16 @@ class ComfyUI(BaseFormat):
 
         if not best_flow:
             # _get_best_flow_data should have set status and error if it failed to find meaningful data
-            self._logger.warning("%s: Graph traversal yielded no data or failed.", self.tool)
+            self._logger.warning(
+                "%s: Graph traversal yielded no data or failed.", self.tool
+            )
             # Ensure error/status is set if not already
             if self.status not in [self.Status.FORMAT_ERROR, self.Status.COMFYUI_ERROR]:
                 self.status = self.Status.COMFYUI_ERROR
-                self._error = self._error or "Workflow graph traversal failed to extract any data."
+                self._error = (
+                    self._error
+                    or "Workflow graph traversal failed to extract any data."
+                )
             return  # Stop if no data could be extracted
 
         self._apply_flow_data_to_self(best_flow)
@@ -387,7 +443,9 @@ class ComfyUI(BaseFormat):
                 self._raw = str(self._info.get("prompt"))
             elif self._info.get("workflow"):
                 self._raw = str(self._info.get("workflow"))
-            elif workflow_to_traverse:  # Fallback to the parsed JSON if original string not available
+            elif (
+                workflow_to_traverse
+            ):  # Fallback to the parsed JSON if original string not available
                 try:
                     self._raw = json.dumps(workflow_to_traverse)
                 except TypeError:
@@ -419,7 +477,9 @@ class ComfyUI(BaseFormat):
         original_neg_sdxl, self._negative_sdxl = self._negative_sdxl.copy(), {}
         original_is_sdxl, self._is_sdxl = self._is_sdxl, False
 
-        raw_flow_values, _ = self._original_comfy_traverse_logic(workflow_json_data, start_node_id)
+        raw_flow_values, _ = self._original_comfy_traverse_logic(
+            workflow_json_data, start_node_id
+        )
 
         current_path_data: dict[str, Any] = {
             "positive_prompt": self._positive,
@@ -436,11 +496,22 @@ class ComfyUI(BaseFormat):
 
         if isinstance(raw_flow_values, dict):  # Ensure raw_flow_values is a dict
             for comfy_key, target_keys_val in COMFY_FLOW_TO_PARAM_MAP.items():
-                if comfy_key in raw_flow_values and raw_flow_values[comfy_key] is not None:
-                    value = self._remove_quotes_from_string_utility(str(raw_flow_values[comfy_key]))
-                    target_keys_list = [target_keys_val] if isinstance(target_keys_val, str) else target_keys_val
+                if (
+                    comfy_key in raw_flow_values
+                    and raw_flow_values[comfy_key] is not None
+                ):
+                    value = self._remove_quotes_from_string_utility(
+                        str(raw_flow_values[comfy_key])
+                    )
+                    target_keys_list = (
+                        [target_keys_val]
+                        if isinstance(target_keys_val, str)
+                        else target_keys_val
+                    )
                     for tk_item in target_keys_list:
-                        if tk_item in BaseFormat.PARAMETER_KEY:  # Use class variable correctly
+                        if (
+                            tk_item in BaseFormat.PARAMETER_KEY
+                        ):  # Use class variable correctly
                             current_path_data["parameters"][tk_item] = value
                             handled_in_params_or_dims.add(comfy_key)
                             break
@@ -453,18 +524,23 @@ class ComfyUI(BaseFormat):
                 handled_in_params_or_dims.add("k_height")
 
             for setting_key in COMFY_SPECIFIC_SETTINGS_KEYS:
-                if setting_key in raw_flow_values and raw_flow_values[setting_key] is not None:
+                if (
+                    setting_key in raw_flow_values
+                    and raw_flow_values[setting_key] is not None
+                ):
                     disp_key = self._format_key_for_display(setting_key)
-                    current_path_data["custom_settings"][disp_key] = self._remove_quotes_from_string_utility(
-                        str(raw_flow_values[setting_key])
+                    current_path_data["custom_settings"][disp_key] = (
+                        self._remove_quotes_from_string_utility(
+                            str(raw_flow_values[setting_key])
+                        )
                     )
                     handled_in_params_or_dims.add(setting_key)
 
             for key, value_item in raw_flow_values.items():
                 if key not in handled_in_params_or_dims and value_item is not None:
                     disp_key = self._format_key_for_display(key)
-                    current_path_data["custom_settings"][disp_key] = self._remove_quotes_from_string_utility(
-                        str(value_item)
+                    current_path_data["custom_settings"][disp_key] = (
+                        self._remove_quotes_from_string_utility(str(value_item))
                     )
 
         # Restore original state
@@ -489,7 +565,9 @@ class ComfyUI(BaseFormat):
         self,
         prompt_data: dict[str, Any],  # Full workflow/prompt JSON
         node_id: str,  # Current node ID to process
-    ) -> tuple[dict[str, Any], list[str]]:  # Returns (extracted_flow_data, node_path_list)
+    ) -> tuple[
+        dict[str, Any], list[str]
+    ]:  # Returns (extracted_flow_data, node_path_list)
         flow: dict[str, Any] = {}
         node_path_history: list[str] = [node_id]  # Track nodes visited in this path
 
@@ -513,11 +591,19 @@ class ComfyUI(BaseFormat):
 
         # 1. SaveImage (or similar output nodes)
         if class_type in self.SAVE_IMAGE_TYPE:
-            images_input_link = current_node_inputs.get("images")  # Typically ["node_id_str", output_slot_int]
-            if isinstance(images_input_link, list) and len(images_input_link) >= 1 and images_input_link[0] is not None:
+            images_input_link = current_node_inputs.get(
+                "images"
+            )  # Typically ["node_id_str", output_slot_int]
+            if (
+                isinstance(images_input_link, list)
+                and len(images_input_link) >= 1
+                and images_input_link[0] is not None
+            ):
                 prev_node_id = str(images_input_link[0])
                 if prev_node_id in prompt_data:
-                    sub_flow, sub_nodes = self._original_comfy_traverse_logic(prompt_data, prev_node_id)
+                    sub_flow, sub_nodes = self._original_comfy_traverse_logic(
+                        prompt_data, prev_node_id
+                    )
                     flow = merge_dict(flow, sub_flow)
                     node_path_history.extend(sub_nodes)
 
@@ -538,12 +624,18 @@ class ComfyUI(BaseFormat):
                 "return_with_left_over_noise",
             ]
             for k_key in direct_sampler_keys:
-                if (val := current_node_inputs.get(k_key)) is not None:  # Walrus operator
+                if (
+                    val := current_node_inputs.get(k_key)
+                ) is not None:  # Walrus operator
                     flow[k_key] = val
 
             # Try to get width/height from connected EmptyLatentImage node
             latent_input_link = current_node_inputs.get("latent_image")
-            if isinstance(latent_input_link, list) and len(latent_input_link) >= 1 and latent_input_link[0] is not None:
+            if (
+                isinstance(latent_input_link, list)
+                and len(latent_input_link) >= 1
+                and latent_input_link[0] is not None
+            ):
                 prev_latent_node_id = str(latent_input_link[0])
                 prev_latent_node_details = prompt_data.get(prev_latent_node_id)
                 if (
@@ -558,17 +650,25 @@ class ComfyUI(BaseFormat):
                     if (h_val := lat_inputs.get("height")) is not None:
                         flow["k_height"] = h_val
                 elif prev_latent_node_id in prompt_data:
-                    sub_flow, sub_nodes = self._original_comfy_traverse_logic(prompt_data, prev_latent_node_id)
+                    sub_flow, sub_nodes = self._original_comfy_traverse_logic(
+                        prompt_data, prev_latent_node_id
+                    )
                     flow = merge_dict(flow, sub_flow)
                     node_path_history.extend(sub_nodes)
 
             # Traverse model, positive, negative inputs
             for input_name in ["model", "positive", "negative"]:
                 input_link = current_node_inputs.get(input_name)
-                if isinstance(input_link, list) and len(input_link) >= 1 and input_link[0] is not None:
+                if (
+                    isinstance(input_link, list)
+                    and len(input_link) >= 1
+                    and input_link[0] is not None
+                ):
                     prev_node_id = str(input_link[0])
                     if prev_node_id in prompt_data:
-                        trav_data, p_nodes = self._original_comfy_traverse_logic(prompt_data, prev_node_id)
+                        trav_data, p_nodes = self._original_comfy_traverse_logic(
+                            prompt_data, prev_node_id
+                        )
                         node_path_history.extend(p_nodes)
                         if input_name == "positive":
                             if isinstance(trav_data, str):
@@ -589,11 +689,17 @@ class ComfyUI(BaseFormat):
             text_input_val = current_node_inputs.get("text")
             actual_text_str = ""
 
-            if isinstance(text_input_val, list) and len(text_input_val) >= 1 and text_input_val[0] is not None:
+            if (
+                isinstance(text_input_val, list)
+                and len(text_input_val) >= 1
+                and text_input_val[0] is not None
+            ):
                 # Text is linked from another node
                 prev_text_node_id = str(text_input_val[0])
                 if prev_text_node_id in prompt_data:
-                    text_node_data, _ = self._original_comfy_traverse_logic(prompt_data, prev_text_node_id)
+                    text_node_data, _ = self._original_comfy_traverse_logic(
+                        prompt_data, prev_text_node_id
+                    )
                     # PrimitiveNode returns {"text_output": "value"}
                     actual_text_str = (
                         text_node_data.get("text_output", str(text_node_data))
@@ -612,10 +718,16 @@ class ComfyUI(BaseFormat):
                 for clip_suffix, input_key in [("G", "text_g"), ("L", "text_l")]:
                     text_val_sdxl = current_node_inputs.get(input_key)
                     resolved_text_sdxl = ""
-                    if isinstance(text_val_sdxl, list) and len(text_val_sdxl) >= 1 and text_val_sdxl[0] is not None:
+                    if (
+                        isinstance(text_val_sdxl, list)
+                        and len(text_val_sdxl) >= 1
+                        and text_val_sdxl[0] is not None
+                    ):
                         prev_sdxl_text_node_id = str(text_val_sdxl[0])
                         if prev_sdxl_text_node_id in prompt_data:
-                            sdxl_text_data, _ = self._original_comfy_traverse_logic(prompt_data, prev_sdxl_text_node_id)
+                            sdxl_text_data, _ = self._original_comfy_traverse_logic(
+                                prompt_data, prev_sdxl_text_node_id
+                            )
                             resolved_text_sdxl = (
                                 sdxl_text_data.get("text_output", str(sdxl_text_data))
                                 if isinstance(sdxl_text_data, dict)
@@ -641,10 +753,16 @@ class ComfyUI(BaseFormat):
             # The effect of LoRA is on the model, so traverse back through model/clip
             for input_name in ["model", "clip"]:
                 input_link = current_node_inputs.get(input_name)
-                if isinstance(input_link, list) and len(input_link) >= 1 and input_link[0] is not None:
+                if (
+                    isinstance(input_link, list)
+                    and len(input_link) >= 1
+                    and input_link[0] is not None
+                ):
                     prev_node_id = str(input_link[0])
                     if prev_node_id in prompt_data:
-                        sub_flow, sub_nodes = self._original_comfy_traverse_logic(prompt_data, prev_node_id)
+                        sub_flow, sub_nodes = self._original_comfy_traverse_logic(
+                            prompt_data, prev_node_id
+                        )
                         flow = merge_dict(flow, sub_flow)
                         node_path_history.extend(sub_nodes)
 
@@ -656,10 +774,16 @@ class ComfyUI(BaseFormat):
         # 6. VAEEncode (often in img2img or inpaint chains)
         elif class_type in self.VAE_ENCODE_TYPE:
             pixels_input_link = current_node_inputs.get("pixels")
-            if isinstance(pixels_input_link, list) and len(pixels_input_link) >= 1 and pixels_input_link[0] is not None:
+            if (
+                isinstance(pixels_input_link, list)
+                and len(pixels_input_link) >= 1
+                and pixels_input_link[0] is not None
+            ):
                 prev_node_id = str(pixels_input_link[0])  # Could be LoadImage, etc.
                 if prev_node_id in prompt_data:
-                    sub_flow, sub_nodes = self._original_comfy_traverse_logic(prompt_data, prev_node_id)
+                    sub_flow, sub_nodes = self._original_comfy_traverse_logic(
+                        prompt_data, prev_node_id
+                    )
                     flow = merge_dict(flow, sub_flow)
                     node_path_history.extend(sub_nodes)
 
@@ -711,15 +835,24 @@ class ComfyUI(BaseFormat):
             found_traversal_path = False
             for input_name in preferred_input_order:
                 input_link = current_node_inputs.get(input_name)
-                if isinstance(input_link, list) and len(input_link) >= 1 and input_link[0] is not None:
+                if (
+                    isinstance(input_link, list)
+                    and len(input_link) >= 1
+                    and input_link[0] is not None
+                ):
                     prev_node_id = str(input_link[0])
                     if prev_node_id in prompt_data:
-                        sub_flow, sub_nodes = self._original_comfy_traverse_logic(prompt_data, prev_node_id)
+                        sub_flow, sub_nodes = self._original_comfy_traverse_logic(
+                            prompt_data, prev_node_id
+                        )
                         flow = merge_dict(flow, sub_flow)
                         node_path_history.extend(sub_nodes)
                         # If this path yielded significant data (model name, text output), prioritize it
                         is_significant_sub_flow = isinstance(sub_flow, str) or (
-                            isinstance(sub_flow, dict) and (sub_flow.get("ckpt_name") or sub_flow.get("text_output"))
+                            isinstance(sub_flow, dict)
+                            and (
+                                sub_flow.get("ckpt_name") or sub_flow.get("text_output")
+                            )
                         )
                         if is_significant_sub_flow:
                             found_traversal_path = True

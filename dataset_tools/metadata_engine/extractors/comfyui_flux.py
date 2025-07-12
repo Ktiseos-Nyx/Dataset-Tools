@@ -111,19 +111,25 @@ class ComfyUIFluxExtractor:
             if "FluxCheckpointLoader" in class_type or "DiffusionModel" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["checkpoint"] = widgets[0] if isinstance(widgets[0], str) else ""
+                    model_info["checkpoint"] = (
+                        widgets[0] if isinstance(widgets[0], str) else ""
+                    )
 
             # FLUX UNET loaders
             elif "FluxUNETLoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["unet"] = widgets[0] if isinstance(widgets[0], str) else ""
+                    model_info["unet"] = (
+                        widgets[0] if isinstance(widgets[0], str) else ""
+                    )
 
             # FLUX VAE loaders
             elif "FluxVAELoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["vae"] = widgets[0] if isinstance(widgets[0], str) else ""
+                    model_info["vae"] = (
+                        widgets[0] if isinstance(widgets[0], str) else ""
+                    )
 
         return model_info
 
@@ -180,15 +186,26 @@ class ComfyUIFluxExtractor:
             class_type = node_data.get("class_type", "")
 
             # FLUX schedulers
-            if "FluxScheduler" in class_type or "FlowMatchEulerDiscreteScheduler" in class_type:
+            if (
+                "FluxScheduler" in class_type
+                or "FlowMatchEulerDiscreteScheduler" in class_type
+            ):
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     scheduler_params.update(
                         {
                             "scheduler_type": class_type,
-                            "steps": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], (int, float)) else 20),
+                            "steps": (
+                                widgets[0]
+                                if len(widgets) > 0
+                                and isinstance(widgets[0], (int, float))
+                                else 20
+                            ),
                             "denoise": (
-                                widgets[1] if len(widgets) > 1 and isinstance(widgets[1], (int, float)) else 1.0
+                                widgets[1]
+                                if len(widgets) > 1
+                                and isinstance(widgets[1], (int, float))
+                                else 1.0
                             ),
                         }
                     )
@@ -200,12 +217,23 @@ class ComfyUIFluxExtractor:
                     scheduler_params.update(
                         {
                             "sampler_type": class_type,
-                            "steps": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], (int, float)) else 20),
+                            "steps": (
+                                widgets[0]
+                                if len(widgets) > 0
+                                and isinstance(widgets[0], (int, float))
+                                else 20
+                            ),
                             "max_shift": (
-                                widgets[1] if len(widgets) > 1 and isinstance(widgets[1], (int, float)) else 1.15
+                                widgets[1]
+                                if len(widgets) > 1
+                                and isinstance(widgets[1], (int, float))
+                                else 1.15
                             ),
                             "base_shift": (
-                                widgets[2] if len(widgets) > 2 and isinstance(widgets[2], (int, float)) else 0.5
+                                widgets[2]
+                                if len(widgets) > 2
+                                and isinstance(widgets[2], (int, float))
+                                else 0.5
                             ),
                         }
                     )

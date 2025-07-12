@@ -8,6 +8,7 @@ Each widget has a specific purpose and clean interface
 
 from pathlib import Path
 
+from PIL import Image, ImageOps
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
 
@@ -52,7 +53,9 @@ class FileListWidget(Qw.QWidget):
         # File list
         self.list_widget = Qw.QListWidget()
         self.list_widget.setAlternatingRowColors(True)
-        self.list_widget.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
+        self.list_widget.setSelectionMode(
+            Qw.QAbstractItemView.SelectionMode.SingleSelection
+        )
         layout.addWidget(self.list_widget, 1)  # Give it most of the space
 
         # Sort controls
@@ -60,7 +63,9 @@ class FileListWidget(Qw.QWidget):
         sort_layout.addWidget(Qw.QLabel("Sort:"))
 
         self.sort_combo = Qw.QComboBox()
-        self.sort_combo.addItems(["Name (A-Z)", "Name (Z-A)", "Type", "Size", "Date Modified"])
+        self.sort_combo.addItems(
+            ["Name (A-Z)", "Name (Z-A)", "Type", "Size", "Date Modified"]
+        )
         sort_layout.addWidget(self.sort_combo)
         sort_layout.addStretch()
 
@@ -159,7 +164,9 @@ class FileListWidget(Qw.QWidget):
         # Apply filter
         filter_text = self.filter_edit.text().lower()
         if filter_text:
-            self._filtered_files = [f for f in self._current_files if filter_text in f.lower()]
+            self._filtered_files = [
+                f for f in self._current_files if filter_text in f.lower()
+            ]
         else:
             self._filtered_files = self._current_files.copy()
 
@@ -209,12 +216,16 @@ class FileListWidget(Qw.QWidget):
         if suffix in {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"}:
             return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileIcon)
         if suffix in {".txt", ".json", ".yaml", ".xml"}:
-            return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileDialogDetailedView)
+            return style.standardIcon(
+                Qw.QStyle.StandardPixmap.SP_FileDialogDetailedView
+            )
         if suffix in {".ckpt", ".safetensors", ".pt", ".pth"}:
             return style.standardIcon(Qw.QStyle.StandardPixmap.SP_ComputerIcon)
         return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileIcon)
 
-    def _on_selection_changed(self, current: Qw.QListWidgetItem, previous: Qw.QListWidgetItem) -> None:
+    def _on_selection_changed(
+        self, current: Qw.QListWidgetItem, previous: Qw.QListWidgetItem
+    ) -> None:
         """Handle selection change."""
         if current:
             filename = current.text()
@@ -381,23 +392,96 @@ class ImagePreviewWidget(Qw.QLabel):
 
         """
         try:
-            pixmap = QtGui.QPixmap(image_path)
+            # Create memory-efficient thumbnail instead of loading full image
+            max_size = 2048  # Reasonable max for preview widget
+            pixmap = self._create_safe_thumbnail(image_path, max_size)
 
             if pixmap.isNull():
                 self.logger.warning(f"Failed to load image: {image_path}")
                 self.set_error_text("Could not load image")
                 return False
 
+            # Store the already-scaled pixmap instead of full resolution
             self._original_pixmap = pixmap
             self._update_scaled_pixmap()
 
-            self.logger.debug(f"Loaded image: {Path(image_path).name} ({pixmap.width()}x{pixmap.height()})")
+            self.logger.debug(
+                f"Loaded image: {Path(image_path).name} ({pixmap.width()}x{pixmap.height()})"
+            )
             return True
 
         except Exception as e:
             self.logger.error(f"Error loading image '{image_path}': {e}")
             self.set_error_text(f"Error loading image: {e!s}")
             return False
+
+    def _create_safe_thumbnail(self, image_path: str, max_size: int) -> QtGui.QPixmap:
+        """Create a memory-efficient thumbnail avoiding Lanczos artifacts.
+
+        Args:
+            image_path: Path to the source image
+            max_size: Maximum dimension for the thumbnail
+
+        Returns:
+            QPixmap containing the thumbnail, or null pixmap on error
+
+        """
+        try:
+            # Use 'with' to ensure immediate cleanup of full-resolution image
+            with Image.open(image_path) as img:
+                # Fix rotation issues BEFORE doing anything else
+                img = ImageOps.exif_transpose(img)
+
+                # Use thumbnail() instead of resize() - it's memory efficient and safer
+                # thumbnail() modifies in-place and uses a good resampling filter
+                img.thumbnail(
+                    (max_size, max_size), Image.Resampling.BILINEAR
+                )  # Safer than LANCZOS
+
+                # Convert to Qt format with proper color channel handling
+                return self._pil_to_qpixmap(img)
+
+        except Exception as e:
+            self.logger.error(f"Error creating thumbnail for '{image_path}': {e}")
+            # Return empty pixmap on error
+            return QtGui.QPixmap()
+
+    def _pil_to_qpixmap(self, pil_image: Image.Image) -> QtGui.QPixmap:
+        """Convert PIL Image to QPixmap with proper color handling.
+
+        Args:
+            pil_image: PIL Image to convert
+
+        Returns:
+            QPixmap or null pixmap on error
+
+        """
+        try:
+            # Convert to RGB if needed (handles various modes safely)
+            if pil_image.mode not in ("RGB", "RGBA"):
+                pil_image = pil_image.convert("RGB")
+
+            # Get image data
+            width, height = pil_image.size
+
+            if pil_image.mode == "RGBA":
+                # Handle transparency
+                image_data = pil_image.tobytes("raw", "RGBA")
+                qimage = QtGui.QImage(
+                    image_data, width, height, QtGui.QImage.Format.Format_RGBA8888
+                )
+            else:
+                # RGB mode
+                image_data = pil_image.tobytes("raw", "RGB")
+                qimage = QtGui.QImage(
+                    image_data, width, height, QtGui.QImage.Format.Format_RGB888
+                )
+
+            return QtGui.QPixmap.fromImage(qimage)
+
+        except Exception as e:
+            self.logger.error(f"Error converting PIL to QPixmap: {e}")
+            return QtGui.QPixmap()
 
     def set_pixmap_direct(self, pixmap: QtGui.QPixmap) -> None:
         """Set a pixmap directly.
@@ -559,7 +643,9 @@ class StatusInfoWidget(Qw.QWidget):
         self.models_label.setText(str(models))
         self.total_label.setText(str(total))
 
-        self.logger.debug(f"File counts updated: {images}i, {texts}t, {models}m = {total} total")
+        self.logger.debug(
+            f"File counts updated: {images}i, {texts}t, {models}m = {total} total"
+        )
 
     def clear_counts(self) -> None:
         """Clear all file counts."""
@@ -612,7 +698,9 @@ class LeftPanelWidget(Qw.QWidget):
 
     def _connect_signals(self) -> None:
         """Connect internal widget signals to external signals."""
-        self.folder_control.open_folder_requested.connect(self.open_folder_requested.emit)
+        self.folder_control.open_folder_requested.connect(
+            self.open_folder_requested.emit
+        )
         self.folder_control.folder_path_changed.connect(self.folder_path_changed.emit)
         self.file_list.file_selected.connect(self.file_selected.emit)
         self.file_list.sort_changed.connect(self.sort_changed.emit)

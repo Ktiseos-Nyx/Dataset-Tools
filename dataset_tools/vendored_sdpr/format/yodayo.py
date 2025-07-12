@@ -62,7 +62,11 @@ class YodayoFormat(A1111):
                 )
                 return True
             # If software tag explicitly indicates A1111/Forge, it's NOT Yodayo
-            if "automatic1111" in software or "forge" in software or "sd.next" in software:
+            if (
+                "automatic1111" in software
+                or "forge" in software
+                or "sd.next" in software
+            ):
                 self._logger.debug(
                     "[%s] EXIF:Software indicates A1111/Forge/SD.Next ('%s'). Not Yodayo/Moescape.",
                     intended_parser_tool_name,
@@ -84,8 +88,12 @@ class YodayoFormat(A1111):
             return True
 
         if has_yodayo_specific_lora_hashes_key:
-            model_value = settings_dict.get("Model")  # Yodayo might use UUID for model name here
-            if model_value and re.fullmatch(r"[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}", model_value, re.IGNORECASE):
+            model_value = settings_dict.get(
+                "Model"
+            )  # Yodayo might use UUID for model name here
+            if model_value and re.fullmatch(
+                r"[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}", model_value, re.IGNORECASE
+            ):
                 self._logger.debug(
                     "[%s] Identified by 'Lora hashes' key AND UUID-like Model value.",
                     intended_parser_tool_name,
@@ -101,9 +109,13 @@ class YodayoFormat(A1111):
         # Priority 3: Negative indicators - presence of strong A1111/Forge markers
         # These suggest it's more likely advanced A1111/Forge than Yodayo's typical output.
         has_a1111_forge_hires_params = (
-            "Hires upscale" in settings_dict and "Hires upscaler" in settings_dict and "Hires steps" in settings_dict
+            "Hires upscale" in settings_dict
+            and "Hires upscaler" in settings_dict
+            and "Hires steps" in settings_dict
         )
-        has_ultimate_sd_upscale_params = any(k.startswith("Ultimate SD upscale") for k in settings_dict)
+        has_ultimate_sd_upscale_params = any(
+            k.startswith("Ultimate SD upscale") for k in settings_dict
+        )
         has_adetailer_params = any(k.startswith("ADetailer") for k in settings_dict)
 
         version_str = settings_dict.get("Version", "")
@@ -138,7 +150,9 @@ class YodayoFormat(A1111):
             return []
         loras: list[dict[str, str]] = []
         parts = lora_hashes_str.split(",")
-        for part_str in parts:  # Renamed part to part_str to avoid conflict with re.match var
+        for (
+            part_str
+        ) in parts:  # Renamed part to part_str to avoid conflict with re.match var
             part_str = part_str.strip()
             if not part_str:
                 continue
@@ -159,7 +173,9 @@ class YodayoFormat(A1111):
                 )
         return loras
 
-    def _extract_loras_from_prompt_text(self, prompt_text: str) -> tuple[str, list[dict[str, str]]]:
+    def _extract_loras_from_prompt_text(
+        self, prompt_text: str
+    ) -> tuple[str, list[dict[str, str]]]:
         if not prompt_text:
             return "", []
         lora_pattern = re.compile(r"<lora:([^:]+):([0-9\.]+)(:[^>]+)?>")
@@ -254,13 +270,17 @@ class YodayoFormat(A1111):
 
         # Extract <lora:...> from prompts if parent A1111 didn't (it usually doesn't)
         if self._positive:
-            cleaned_positive, extracted_loras_pos = self._extract_loras_from_prompt_text(self._positive)
+            cleaned_positive, extracted_loras_pos = (
+                self._extract_loras_from_prompt_text(self._positive)
+            )
             if extracted_loras_pos:
                 self._positive = cleaned_positive
                 self._parameter["loras_from_prompt_positive"] = extracted_loras_pos
 
         if self._negative:
-            cleaned_negative, extracted_loras_neg = self._extract_loras_from_prompt_text(self._negative)
+            cleaned_negative, extracted_loras_neg = (
+                self._extract_loras_from_prompt_text(self._negative)
+            )
             if extracted_loras_neg:
                 self._negative = cleaned_negative
                 self._parameter["loras_from_prompt_negative"] = extracted_loras_neg
@@ -277,6 +297,8 @@ class YodayoFormat(A1111):
         #     include_standard_params=False # Already in self._parameter
         # )
 
-        self._logger.info("[%s] Successfully processed and identified as Yodayo/Moescape.", self.tool)
+        self._logger.info(
+            "[%s] Successfully processed and identified as Yodayo/Moescape.", self.tool
+        )
         # self.status is already READ_SUCCESS (from A1111 parent's successful parse).
         # We have now refined self.tool and potentially self._parameter and prompts.

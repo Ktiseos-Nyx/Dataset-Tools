@@ -19,7 +19,9 @@ log = logging.getLogger(__name__)
 # --- Main Handler Function (The Conductor) ---
 
 
-def handle_file_selection(main_window: "MainWindow", current_item: Qw.QListWidgetItem | None):
+def handle_file_selection(
+    main_window: "MainWindow", current_item: Qw.QListWidgetItem | None
+):
     """Orchestrates all actions when a new file is selected."""
     if not current_item:
         _handle_no_selection(main_window)
@@ -37,7 +39,11 @@ def handle_file_selection(main_window: "MainWindow", current_item: Qw.QListWidge
         # code was correct.
 
         formatted_data = format_metadata_for_display(
-            {main_window.EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}}
+            {
+                main_window.EmptyField.PLACEHOLDER.value: {
+                    "Error": "Folder/file context missing."
+                }
+            }
         )
         main_window.display_text_of(formatted_data)
         return
@@ -74,13 +80,21 @@ def _update_status_for_selection(main_window: "MainWindow", file_name: str):
     """Updates the status bar and other UI text for a new selection."""
     if hasattr(main_window, "left_panel"):
         count = len(main_window.current_files_in_list)
-        folder_name = Path(main_window.current_folder).name if main_window.current_folder else "Unknown"
+        folder_name = (
+            Path(main_window.current_folder).name
+            if main_window.current_folder
+            else "Unknown"
+        )
         main_window.left_panel.set_message_text(f"{count} file(s) in {folder_name}")
     main_window.main_status_bar.showMessage(f"Selected: {file_name}", 4000)
-    log.info("File selected: '%s' in folder '%s'", file_name, main_window.current_folder)
+    log.info(
+        "File selected: '%s' in folder '%s'", file_name, main_window.current_folder
+    )
 
 
-def _process_image_preview(main_window: "MainWindow", full_file_path: str, file_name: str):
+def _process_image_preview(
+    main_window: "MainWindow", full_file_path: str, file_name: str
+):
     """Checks if a file is an image and calls the display function if it is."""
     from .correct_types import ExtensionType as Ext
 
@@ -93,4 +107,6 @@ def _process_image_preview(main_window: "MainWindow", full_file_path: str, file_
         log.debug("File '%s' is a displayable image, showing preview.", file_name)
         main_window.display_image_of(full_file_path)
     else:
-        log.debug("File '%s' did not match any image format set for display.", file_name)
+        log.debug(
+            "File '%s' did not match any image format set for display.", file_name
+        )

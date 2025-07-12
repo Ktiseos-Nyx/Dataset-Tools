@@ -260,7 +260,9 @@ class ComfyUIImpactExtractor:
         summary = {
             "is_impact_workflow": self._detect_impact_workflow(data, {}, {}, {}),
             "wildcard_prompt": self._extract_wildcard_prompt(data, {}, {}, {}),
-            "face_detailer_params": self._extract_face_detailer_params(data, {}, {}, {}),
+            "face_detailer_params": self._extract_face_detailer_params(
+                data, {}, {}, {}
+            ),
             "segs_info": self._extract_segs_info(data, {}, {}, {}),
             "detailer_pipe": self._extract_detailer_pipe(data, {}, {}, {}),
         }

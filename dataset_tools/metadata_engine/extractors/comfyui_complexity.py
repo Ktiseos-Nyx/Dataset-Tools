@@ -98,11 +98,15 @@ class ComfyUIComplexityExtractor:
 
             class_type = node_data.get("class_type", "")
             if any(gen_type in class_type for gen_type in dynamic_node_types):
-                generators.append({"node_id": node_id, "node_data": node_data, "type": class_type})
+                generators.append(
+                    {"node_id": node_id, "node_data": node_data, "type": class_type}
+                )
 
         return generators
 
-    def _process_dynamic_generators(self, generators: list[dict], prompt_data: dict) -> str:
+    def _process_dynamic_generators(
+        self, generators: list[dict], prompt_data: dict
+    ) -> str:
         """Process dynamic prompt generators to extract final text."""
         for gen in generators:
             node_data = gen["node_data"]
@@ -212,7 +216,10 @@ class ComfyUIComplexityExtractor:
                     return widgets[0]
 
             # If this is a text processor, get the processed text
-            elif any(proc in class_type for proc in ["Wildcard", "Text", "Prompt", "Generator"]):
+            elif any(
+                proc in class_type
+                for proc in ["Wildcard", "Text", "Prompt", "Generator"]
+            ):
                 widgets = node_data.get("widgets_values", [])
                 if widgets and isinstance(widgets[0], str):
                     return widgets[0]
@@ -242,11 +249,15 @@ class ComfyUIComplexityExtractor:
 
             class_type = node_data.get("class_type", "")
             if any(proc_type in class_type for proc_type in complex_types):
-                processors.append({"node_id": node_id, "node_data": node_data, "type": class_type})
+                processors.append(
+                    {"node_id": node_id, "node_data": node_data, "type": class_type}
+                )
 
         return processors
 
-    def _process_complex_processors(self, processors: list[dict], prompt_data: dict) -> str:
+    def _process_complex_processors(
+        self, processors: list[dict], prompt_data: dict
+    ) -> str:
         """Process complex text processors to extract final text."""
         for proc in processors:
             node_data = proc["node_data"]
@@ -286,7 +297,9 @@ class ComfyUIComplexityExtractor:
             return ""
 
         # Use the dynamic extraction method for now
-        return self._extract_dynamic_prompt_from_workflow(data, method_def, context, fields)
+        return self._extract_dynamic_prompt_from_workflow(
+            data, method_def, context, fields
+        )
 
     def _extract_multi_step_workflow(
         self,
@@ -383,7 +396,12 @@ class ComfyUIComplexityExtractor:
                 processing_steps += 1
 
         # Calculate complexity score
-        complexity_score = node_count * 0.3 + custom_node_count * 0.5 + connection_count * 0.2 + processing_steps * 0.4
+        complexity_score = (
+            node_count * 0.3
+            + custom_node_count * 0.5
+            + connection_count * 0.2
+            + processing_steps * 0.4
+        )
 
         if complexity_score < 10:
             complexity_level = "simple"
@@ -442,7 +460,9 @@ class ComfyUIComplexityExtractor:
             if "Conditional" in class_type or "Switch" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    conditional_prompts.append({"node_id": node_id, "type": class_type, "conditions": widgets})
+                    conditional_prompts.append(
+                        {"node_id": node_id, "type": class_type, "conditions": widgets}
+                    )
 
         return conditional_prompts
 

@@ -152,7 +152,9 @@ class ComfyUINodeChecker:
         if not isinstance(node, dict):
             return False
         node_type = node.get("class_type", node.get("type", "")).lower()
-        return any(indicator in node_type for indicator in self._MODEL_LOADER_INDICATORS)
+        return any(
+            indicator in node_type for indicator in self._MODEL_LOADER_INDICATORS
+        )
 
     def is_lora_node(self, node: dict) -> bool:
         """Check if a node is a LoRA loader or application node."""
@@ -173,7 +175,9 @@ class ComfyUINodeChecker:
         if not isinstance(node, dict):
             return False
         node_type = node.get("class_type", node.get("type", "")).lower()
-        return any(indicator in node_type for indicator in self._CONDITIONING_INDICATORS)
+        return any(
+            indicator in node_type for indicator in self._CONDITIONING_INDICATORS
+        )
 
     def is_custom_node(self, node: dict) -> bool:
         """Check if a node likely originates from a custom node pack."""
@@ -181,7 +185,9 @@ class ComfyUINodeChecker:
             return False
         properties = node.get("properties", {})
         if isinstance(properties, dict) and properties.get("Node name for S&R"):
-            return True  # A very strong indicator of a custom node or a named core node.
+            return (
+                True  # A very strong indicator of a custom node or a named core node.
+            )
 
         node_type = node.get("class_type", node.get("type", "")).lower()
         return any(prefix in node_type for prefix in self._CUSTOM_NODE_PREFIXES)
@@ -279,7 +285,11 @@ class ComfyUINodeChecker:
             return False
 
         text_lower = text.lower()
-        negative_count = sum(1 for indicator in self._NEGATIVE_PROMPT_INDICATORS if indicator in text_lower)
+        negative_count = sum(
+            1
+            for indicator in self._NEGATIVE_PROMPT_INDICATORS
+            if indicator in text_lower
+        )
 
         # If 2 or more negative indicators are found, it's very likely a negative prompt.
         # This threshold prevents false positives on words like "text" or "blurry".

@@ -1,0 +1,527 @@
+codiumai-pr-agent-free[bot]
+ left a comment 
+(Ktiseos-Nyx/Dataset-Tools#109)
+PR Reviewer Guide 
+Here are some key observations to aid the review process:
+ Estimated effort to review: 4 
+ PR contains tests
+ No security concerns identified
+ Recommended focus areas for review
+
+Memory Management
+The code adds constants for size limits but doesn't consistently use them throughout the file. Some hardcoded values remain in the code which could lead to inconsistent behavior.
+# --- SUGGESTION: Define constants for limits ---
+MAX_IMAGE_PIXELS = 64_000_000  # 64MP limit
+MAX_JSON_SIZE = 50 * 1024 * 1024  # 50MB
+MAX_TEXT_SIZE = 10 * 1024 * 1024  # 10MB
+MAX_BINARY_SIZE = 20 * 1024 * 1024  # 20MB
+Redundant Import
+The json module is imported at the top level but then imported again inside the _parse_json_data method, creating unnecessary redundancy.
+import json # Import json at the top level
+Debug Statements
+Multiple debug print statements were added that should be removed before merging to production. These statements expose internal details and could impact performance.
+try:
+    print(f"[DEBUG] get_parser_for_file called with: {file_input}, type: {type(file_input)}")
+    display_name = getattr(file_input, "name", str(file_input))
+    print(f"[DEBUG] display_name: {display_name}")
+    self.logger.info(f"MetadataEngine: Starting metadata parsing for: {display_name}")
+    print(f"[DEBUG] Logger info call completed")
+except Exception as e:
+    print(f"[DEBUG] Exception in get_parser_for_file start: {e}")
+    self.logger.error(f"MetadataEngine: Exception at very start: {e}")
+    return None
+
+# Prepare context data
+print(f"[DEBUG] About to call context_preparer.prepare_context")
+context_data = self.context_preparer.prepare_context(file_input)
+print(f"[DEBUG] prepare_context returned: {type(context_data)} - {bool(context_data)}")
+if not context_data:
+    print(f"[DEBUG] Context data is None/empty, returning None")
+    self.logger.warning(f"Failed to prepare context data for {display_name}")
+    return None
+
+print(f"[DEBUG] Context data looks good, continuing to find matching parser")
+print(f"[DEBUG] Context data keys: {list(context_data.keys())}")
+print(f"[DEBUG] raw_user_comment_str: {context_data.get('raw_user_comment_str', 'NOT_FOUND')[:100] if context_data.get('raw_user_comment_str') else 'EMPTY'}")
+
+
+@llamapreview[bot] commented on this pull request.
+
+Auto Pull Request Review from LlamaPReview
+1. Overview
+1.1 Core Changes
+Primary purpose and scope: Introduces theme support and enhances metadata processing capabilities
+Key components modified: Font assets, metadata processing, UI display system, and configuration
+Cross-component impacts: Affects UI rendering, metadata processing pipeline, and asset management
+Business value alignment: Improves UX through theming, better metadata handling, and clearer legal compliance
+1.2 Technical Architecture
+System design modifications: Extends UI framework with new theme capabilities and metadata sections
+Component interaction changes: New data flow for workflow analysis in metadata processing
+Integration points impact: Font system integration with Qt framework
+Dependency changes and implications: New font assets require proper loading mechanism
+2. Critical Findings
+2.1 Must Fix (P0🔴)
+Issue: Missing Font License Attribution
+
+Analysis Confidence: High
+Impact: Potential license compliance violation that could lead to legal issues
+Resolution: Add license headers to all font files referencing the appropriate license files (LICENSE.txt/OFL.txt)
+Issue: Incomplete Font Loading Mechanism
+
+Analysis Confidence: High
+Impact: Added fonts won't be available in the UI, making the theme functionality ineffective
+Resolution: Implement font registration in the application startup code using QFontDatabase
+2.2 Should Fix (P1🟡)
+Issue: Hardcoded Font Paths
+
+Analysis Confidence: High
+Impact: Font loading will fail when running from different working directories
+Suggested Solution: Use resource-relative paths with proper path joining:
+  import os
+  font_path = os.path.join(os.path.dirname(__file__), "fonts", "DMSans-VariableFont_opsz,wght.ttf")
+Issue: Type Safety in Prompt Extraction
+
+Analysis Confidence: High
+Impact: Potential TypeErrors when processing non-string prompt values
+Suggested Solution: Add type validation for prompt extraction:
+  positive = str(metadata_dict.get("prompt", "")) if isinstance(metadata_dict.get("prompt"), (str, type(None))) else ""
+Issue: Workflow Analysis Content Handling
+
+Analysis Confidence: High
+Impact: Display errors when workflow analysis contains non-string content
+Suggested Solution: Add content normalization for workflow analysis:
+  def append_unpacked_section(title: str, field: Any):
+      content = _unpack_content_of(metadata_dict, [field])
+      display_text = str(content) if not isinstance(content, str) else content
+2.3 Consider (P2🟢)
+Area: Font Caching Mechanism
+
+Analysis Confidence: Medium
+Improvement Opportunity: Implement preloading of fonts during application startup to improve UI performance
+Area: Theme Configuration Abstraction
+
+Analysis Confidence: Medium
+Improvement Opportunity: Create theme configuration files (JSON/YAML) to allow user customization of fonts without code changes
+Area: Font Fallback System
+
+Analysis Confidence: Medium
+Improvement Opportunity: Define font priority lists in theme configuration to improve cross-platform compatibility
+2.4 Summary of Action Items
+Critical (P0): Implement font registration and add license headers to font files (should be done before merging)
+High Priority (P1): Fix path handling and add type safety to prompt extraction (should be addressed in next iteration)
+Medium Priority (P2): Consider implementing font caching and theme configuration system (can be planned for future enhancements)
+3. Technical Analysis
+3.1 Code Logic Analysis
+📁 dataset_tools/correct_types.py - UpField Enum
+
+Submitted PR Code:
+    class UpField(Enum):
+        WORKFLOW_ANALYSIS = "workflow_analysis_section"  # New section
+
+        @classmethod
+        def get_ordered_labels(cls) -> list["UpField"]:
+            return [cls.PROMPT, cls.TAGS, cls.METADATA, cls.TEXT_DATA, cls.WORKFLOW_ANALYSIS]
+Analysis:
+Adds new metadata section for workflow analysis
+Extends the UI display framework with additional data category
+The new section is properly integrated into the ordered labels list
+No apparent edge case issues with the current implementation
+Improvement rationale:
+The change is well-implemented and doesn't require modifications
+Properly extends the existing enum pattern
+📁 dataset_tools/display_formatter.py - _format_prompts function
+
+Submitted PR Code:
+    def _format_prompts(metadata_dict: dict[str, Any]) -> tuple[str, str]:
+        # First check structured prompt section
+        if isinstance(prompt_section, dict):
+            positive = ... # existing logic
+
+        # Fallback: check root level fields
+        positive = str(metadata_dict.get("prompt", "")).strip()
+        negative = str(metadata_dict.get("negative_prompt", "")).strip()
+Analysis:
+Implements dual-layer prompt extraction (structured + root-level)
+Handles more metadata formats including Drawthings JSON
+Current implementation might fail if prompt_section is not a dict
+Could benefit from additional type checking
+LlamaPReview Suggested Improvements:
+    def _format_prompts(metadata_dict: dict[str, Any]) -> tuple[str, str]:
+        # First check structured prompt section
+        prompt_section = metadata_dict.get(UpField.PROMPT.value, {})
+        if isinstance(prompt_section, dict):
+            positive = str(prompt_section.get("Positive", "")).strip()
+            negative = str(prompt_section.get("Negative", "")).strip()
+            if positive or negative:
+                return positive, negative
+
+        # Fallback with type checking
+        positive = str(metadata_dict.get("prompt", "")) if isinstance(metadata_dict.get("prompt"), (str, type(None))) else ""
+        negative = str(metadata_dict.get("negative_prompt", "")) if isinstance(metadata_dict.get("negative_prompt"), (str, type(None))) else ""
+        return positive, negative
+Improvement rationale:
+Adds proper type checking for both structured and root-level prompts
+Makes the fallback mechanism more robust
+Maintains the same functionality while being more defensive
+📁 dataset_tools/display_formatter.py - _build_details_string function
+
+Submitted PR Code:
+    append_unpacked_section("Workflow Analysis", UpField.WORKFLOW_ANALYSIS)
+Analysis:
+Adds workflow analysis to UI display
+Integrates with existing details rendering system
+No apparent edge case handling for the workflow content
+Could benefit from content type validation
+LlamaPReview Suggested Improvements:
+    def append_unpacked_section(title: str, field: Any):
+        content = _unpack_content_of(metadata_dict, [field])
+        if content is None:
+            return
+        display_text = str(content) if not isinstance(content, str) else content
+        details_parts.append(f"{title}:\n{display_text}")
+Improvement rationale:
+Adds proper content type handling
+More robust against None values
+Maintains string conversion for non-string content
+3.2 Key Quality Aspects
+System scalability considerations: Font loading mechanism should be optimized for performance
+Performance bottlenecks and optimizations: Consider implementing font caching
+Testing strategy and coverage: Need comprehensive tests for:
+Different prompt formats (structured and root-level)
+Font loading under various conditions
+Workflow analysis content handling
+Documentation needs: Should document:
+Theme configuration options
+Font usage guidelines
+License compliance requirements
+4. Overall Evaluation
+Technical assessment: Well-structured implementation with some critical gaps in asset handling
+Business impact: Significant UX improvements through theming and better metadata handling
+Risk evaluation: Moderate risk due to incomplete font loading mechanism and potential license issues
+Notable positive aspects and good practices:
+Clean implementation of new workflow section
+Good license compliance documentation
+Improved metadata handling with fallback mechanism
+Implementation quality: Generally good with some areas needing improvement
+Final recommendation: Request Changes (Critical font loading and license issues need to be addressed before merging)
+
+
+PR Code Suggestions ✨
+Explore these optional code suggestions:
+
+Category	Suggestion                                                                                                                                   	Impact
+Possible issue	Fix indentation error
+The method has an indentation error. The function body is not properly indented
+under the function definition, causing the code to be outside the method scope.
+This will lead to syntax errors and execution failures.
+
+dataset_tools/metadata_engine/context_preparation_backup.py [156-180]
+
+ def _extract_exif_data(self, context: ContextData) -> None:
+     """Extract EXIF data, prioritizing the problematic UserComment field."""
+-exif_bytes = context["pil_info"].get("exif")
+-if not exif_bytes:
+-    return
++    exif_bytes = context["pil_info"].get("exif")
++    if not exif_bytes:
++        return
+ 
+-try:
+-    loaded_exif = piexif.load(exif_bytes)
+-    context["exif_dict"] = loaded_exif
++    try:
++        loaded_exif = piexif.load(exif_bytes)
++        context["exif_dict"] = loaded_exif
+ 
+-    # Software Tag
+-    sw_bytes = loaded_exif.get("0th", {}).get(piexif.ImageIFD.Software)
+-    if sw_bytes and isinstance(sw_bytes, bytes):
+-        context["software_tag"] = sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
++        # Software Tag
++        sw_bytes = loaded_exif.get("0th", {}).get(piexif.ImageIFD.Software)
++        if sw_bytes and isinstance(sw_bytes, bytes):
++            context["software_tag"] = sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
+ 
+-    # UserComment Extraction
+-    uc_bytes = loaded_exif.get("Exif", {}).get(piexif.ExifIFD.UserComment)
+-    if uc_bytes:
+-        user_comment = self._decode_usercomment_bytes_robust(uc_bytes)
+-        if user_comment:
+-            context["raw_user_comment_str"] = user_comment
+-            self.logger.debug(f"Successfully decoded UserComment: {len(user_comment)} chars")
++        # UserComment Extraction
++        uc_bytes = loaded_exif.get("Exif", {}).get(piexif.ExifIFD.UserComment)
++        if uc_bytes:
++            user_comment = self._decode_usercomment_bytes_robust(uc_bytes)
++            if user_comment:
++                context["raw_user_comment_str"] = user_comment
++                self.logger.debug(f"Successfully decoded UserComment: {len(user_comment)} chars")
+ 
+-except Exception as e:
+-    self.logger.debug(f"Could not load EXIF data with piexif: {e}. Some metadata might be missing.")
++    except Exception as e:
++        self.logger.debug(f"Could not load EXIF data with piexif: {e}. Some metadata might be missing.")
+ Apply / Chat
+Suggestion importance[1-10]: 10
+__
+
+Why: The suggestion correctly identifies a critical indentation error that would cause a SyntaxError, making the _extract_exif_data function unusable.
+
+High
+Remove duplicate code blocks
+The method has duplicate code blocks for handling large images and extracting
+metadata. The second block after the "pass" statement is redundant and will
+cause the same operations to be performed twice, potentially leading to
+performance issues and unexpected behavior.
+
+dataset_tools/metadata_engine/context_preparation_backup.py [104-152]
+
+ def _process_as_image(self, file_input: FileInput, context: ContextData) -> ContextData:
+     """Process the input as an image file with a clear, single-pass logic."""
+     self.logger.debug(f"Processing as image: {context['file_path_original']}")
+ 
+     with Image.open(file_input) as img:
+         # --- STRENGTHENING: Centralize basic info extraction ---
+         context.update({
+             "pil_info": img.info.copy() if img.info else {},
+             "width": img.width,
+             "height": img.height,
+             "file_format": img.format.upper() if img.format else "",
+             "file_extension": Path(getattr(img, "filename", "")).suffix.lstrip(".").lower(),
+         })
+ 
+-    # Handle extremely large images by stopping early
+-    if img.width * img.height > MAX_IMAGE_PIXELS:
+-        self.logger.warning(f"Large image ({img.width}x{img.height}) detected. Performing minimal metadata extraction.")
+-        # You can keep your existing _process_large_image_minimal or
+-        # _extract_minimal_metadata logic
+-        # The key is that the main flow is now simpler.
+-
++        # Handle extremely large images by stopping early
++        if img.width * img.height > MAX_IMAGE_PIXELS:
++            self.logger.warning(f"Large image ({img.width}x{img.height}) detected. Performing minimal metadata extraction.")
++            # You can keep your existing _process_large_image_minimal or
++            # _extract_minimal_metadata logic
+ 
+     # --- STRENGTHENING: Structured metadata extraction flow ---
+     # For normal-sized images, extract everything possible.
+     self._extract_exif_data(context)
+     self._extract_xmp_data(context)
+     self._extract_png_chunks(context)
+ 
+     # --- STRENGTHENING: Centralized JSON parsing logic ---
+     # After all text fields are populated, try to parse the most likely one.
+     # self._find_and_parse_comfyui_json(context)
+-    pass
+-
+-
+-
+-# Handle extremely large images by stopping early
+-    if img.width * img.height > MAX_IMAGE_PIXELS:
+-        self.logger.warning(
+-            "Large image (%sx%s) detected. Performing minimal metadata extraction.",
+-            img.width,
+-            img.height,
+-        )
+-
+-    # For normal-sized images, extract everything possible.
+-    self._extract_exif_data(context)
+-    self._extract_xmp_data(context)
+-    self._extract_png_chunks(context)
+ 
+     return context
+ Apply / Chat
+Suggestion importance[1-10]: 10
+__
+
+Why: The suggestion correctly identifies a duplicated block of code which would cause a NameError at runtime because the img object is used outside of its with statement context.
+
+High
+Prevent KeyError on missing png_chunks
+The function will crash with a KeyError when accessing context["png_chunks"] if
+the key doesn't exist. This happens when processing non-PNG images or when PNG
+chunk extraction fails.
+
+dataset_tools/metadata_engine/context_preparation.py [227-251]
+
+ def _find_and_parse_comfyui_json(self, context: ContextData) -> None:
+     """
+     After all metadata is extracted, find the most likely source of ComfyUI
+     workflow JSON and parse it.
+     """
+     # --- STRENGTHENING: Prioritized search for the workflow string ---
++    png_chunks = context.get("png_chunks", {})
+     potential_sources = [
+         context.get("raw_user_comment_str"),           # Highest priority
+-        context["png_chunks"].get("workflow"),          # ComfyUI's native PNG chunk
+-        context["png_chunks"].get("prompt"),            # Also used by ComfyUI
+-        context["png_chunks"].get("parameters"),        # A1111 format, sometimes adopted
++        png_chunks.get("workflow"),                    # ComfyUI's native PNG chunk
++        png_chunks.get("prompt"),                      # Also used by ComfyUI
++        png_chunks.get("parameters"),                  # A1111 format, sometimes adopted
+     ]
+ 
+     for source_str in potential_sources:
+         if isinstance(source_str, str) and source_str.strip().startswith('{'):
+             try:
+                 # Found a potential JSON, try to parse it
+                 parsed_json = json.loads(source_str)
+                 # Check for a key indicator of a ComfyUI workflow
+                 if isinstance(parsed_json, dict) and ("nodes" in parsed_json or "prompt" in parsed_json):
+                     context["comfyui_workflow_json"] = parsed_json
+                     self.logger.debug("Successfully found and parsed ComfyUI workflow JSON.")
+                     return  # Stop after finding the first valid workflow
+             except (json.JSONDecodeError, TypeError):
+                 continue  # Not a valid JSON, try the next source
+ Apply / Chat
+Suggestion importance[1-10]: 8
+__
+
+Why: The suggestion correctly identifies a potential KeyError when accessing context["png_chunks"] for non-PNG files and provides a robust fix using context.get().
+
+Medium
+Fix UserComment decoding logic
+The function has a critical bug where it returns empty string for data less than
+8 bytes, but EXIF UserComment can be valid with shorter data. Also, the codec
+header check is too strict and may miss valid encodings with different header
+formats.
+
+dataset_tools/metadata_engine/context_preparation.py [187-205]
+
+ def _decode_usercomment_bytes_robust(self, data: bytes) -> str:
+     """Try various decoding strategies for UserComment bytes. This is the secret sauce."""
+-    if not isinstance(data, bytes) or len(data) < 8:
++    if not isinstance(data, bytes) or len(data) == 0:
+         return ""
+ 
+     # Strategy 1: Standard encoding prefix (e.g., ASCII, UTF-8, UNICODE)
+-    # The first 8 bytes often define the encoding.
+-    codec_header = data[:8]
+-    comment_bytes = data[8:]
+-    
+-    try:
+-        if codec_header == b"ASCII\x00\x00\x00":
+-            return comment_bytes.decode("ascii").strip('\x00')
+-        if codec_header == b"UNICODE\x00":  # A common variation for UTF-16
+-            return comment_bytes.decode("utf-16le").strip('\x00')
+-        if codec_header == b"UTF-8\x00\x00\x00":
+-            return comment_bytes.decode("utf-8").strip('\x00')
+-    except Exception:
+-        pass  # Fall through to other strategies
++    # The first 8 bytes often define the encoding, but handle shorter data too
++    if len(data) >= 8:
++        codec_header = data[:8]
++        comment_bytes = data[8:]
++        
++        try:
++            if codec_header.startswith(b"ASCII\x00"):
++                return comment_bytes.decode("ascii").strip('\x00')
++            if codec_header.startswith(b"UNICODE\x00"):  # A common variation for UTF-16
++                return comment_bytes.decode("utf-16le").strip('\x00')
++            if codec_header.startswith(b"UTF-8\x00"):
++                return comment_bytes.decode("utf-8").strip('\x00')
++        except Exception:
++            pass  # Fall through to other strategies
+ Apply / Chat
+Suggestion importance[1-10]: 7
+__
+
+Why: The suggestion correctly identifies that the length check is too strict and the header comparison is not flexible enough, improving the robustness of the UserComment decoding.
+
+Medium
+General	Remove debug print statements
+Remove debug print statements that were likely used during development. These
+statements expose internal implementation details and can clutter logs in
+production. Use the logger object instead for any necessary logging.
+
+dataset_tools/metadata_engine/extractors/comfyui_extractors.py [318-336]
+
+ def _find_legacy_text_from_main_sampler_input(
+     self,
+     data: Any,
+     method_def: MethodDefinition,
+     context: ContextData,
+     fields: ExtractedFields,
+ ) -> str:
+     """
+     Find text from main sampler input by traversing ComfyUI workflow connections.
+     This method performs a backward traversal from the sampler to find the
+     originating text encoder, navigating through reroute nodes.
+     """
+-    print(f"[DEBUG] _find_legacy_text_from_main_sampler_input called!")
+-    print(f"[DEBUG] Original data type: {type(data)}")
+-    print(f"[DEBUG] Original data preview: {str(data)[:100] if data else 'None'}")
+-    
+     data = self._parse_json_data(data)
+-    print(f"[DEBUG] Parsed data type: {type(data)}")
+-    print(f"[DEBUG] Is dict: {isinstance(data, dict)}")
+ Apply / Chat
+Suggestion importance[1-10]: 6
+__
+
+Why: The suggestion correctly identifies debug print statements that should be removed or replaced with proper logging, which improves code quality.
+
+Low
+Remove debug logging
+Remove debug print statements from the traversal method. These statements will
+generate excessive output when processing complex workflows and should be
+replaced with appropriate logger calls if the information is needed for
+troubleshooting.
+
+dataset_tools/metadata_engine/extractors/comfyui_extractors.py [449-465]
+
+ def _traverse_for_text(self, node_id: str, node_lookup: dict, data: dict, text_encoder_types: list, visited: set, max_depth: int = 5) -> str:
+     """Recursively traverse node connections to find text encoders."""
+     if max_depth <= 0 or node_id in visited:
+         return ""
+     
+     visited.add(node_id)
+     
+     if node_id not in node_lookup:
+         return ""
+         
+     node = node_lookup[node_id]
+     if not isinstance(node, dict):
+         return ""
+     
+     # Check if this node is a text encoder
+     class_type = node.get("class_type", node.get("type", ""))
+-    print(f"[DEBUG] Traversing node {node_id}: {class_type}")
+ Apply / Chat
+Suggestion importance[1-10]: 6
+
+Code Review
+The code changes introduce new themes, font management, and a refactored ComfyUI metadata extraction engine. The new modular approach for ComfyUI extractors is a significant improvement for maintainability and extensibility.
+
+In NOTICE.md:
+
+> +99% of the comfyUI workflows do not come with a lisc, and we don't have the URLS FOR MOST OF THEM.
++We don't own these, these are ONLY for research into how to traverse these. Please do NOT use these without finding who made them.
++Except that one stupid Flux one from TensorARt that loads our own Flux loras.
++Go for gold.
++
++### ComfyUI or Other Image Data
++
++Workflow images, or images otherwise kept for testing for now are advanced UI resources. They're not ours, and we do not own them.
++Thank you to Quadmoon, Tatersbarn and a few others for actually GIVING US some.
++If you or someone else you know MADE an image from this pile of gold - please let us know.
++Your efforts are a goldmine of information and give us insight into modern UI/UX for AI generation.
+medium
+
+This notice uses a very informal tone. For a public-facing file like NOTICE.md, a more professional tone would be appropriate. For example, phrases like Go for gold and pile of gold are very informal. Standardize capitalization (e.g., URLS -> URLs, GIVING US -> giving us).
+
+In dataset_tools/main.py:
+
+> +    from PyQt6.QtGui import QFontDatabase
++    import os
+medium
+
+Per PEP 8, imports should generally be at the top of the file. Moving from PyQt6.QtGui import QFontDatabase and import os to the top of dataset_tools/main.py would improve code style and readability.
+
+In dataset_tools/metadata_engine/context_preparation.py:
+
+> @@ -667,6 +492,7 @@ def create_test_context() -> ContextData:
+         "raw_file_content_text": None,
+         "parsed_root_json_object": None,
+         "file_path_original": "test_image.png",
++        "comfyui_workflow_json": None,

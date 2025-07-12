@@ -7,6 +7,7 @@ __copyright__ = "Copyright 2023, Receyuki"
 __email__ = "receyuki@gmail.com"
 
 import json
+
 # import logging # Not needed for type hinting if self._logger from BaseFormat
 import re
 
@@ -66,22 +67,32 @@ class InvokeAI(BaseFormat):
         parsed_successfully = False
 
         if not self._info:
-            self._logger.warning("%s: _info dictionary is empty. Cannot parse.", self.tool)
+            self._logger.warning(
+                "%s: _info dictionary is empty. Cannot parse.", self.tool
+            )
             self.status = self.Status.FORMAT_ERROR
             self._error = "InvokeAI metadata (_info dict) is missing."
             return
 
         if "invokeai_metadata" in self._info:
-            self._logger.debug("Found 'invokeai_metadata', attempting that format for %s.", self.tool)
+            self._logger.debug(
+                "Found 'invokeai_metadata', attempting that format for %s.", self.tool
+            )
             parsed_successfully = self._parse_invoke_metadata_format()
         elif "sd-metadata" in self._info:
-            self._logger.debug("Found 'sd-metadata', attempting that format for %s.", self.tool)
+            self._logger.debug(
+                "Found 'sd-metadata', attempting that format for %s.", self.tool
+            )
             parsed_successfully = self._parse_sd_metadata_format()
         elif "Dream" in self._info:
-            self._logger.debug("Found 'Dream' string, attempting that format for %s.", self.tool)
+            self._logger.debug(
+                "Found 'Dream' string, attempting that format for %s.", self.tool
+            )
             parsed_successfully = self._parse_dream_format()
         else:
-            self._logger.warning("%s: No known InvokeAI metadata keys found in info dict.", self.tool)
+            self._logger.warning(
+                "%s: No known InvokeAI metadata keys found in info dict.", self.tool
+            )
             self.status = self.Status.FORMAT_ERROR
             self._error = "No InvokeAI metadata keys (invokeai_metadata, sd-metadata, Dream) found."
             return
@@ -108,9 +119,13 @@ class InvokeAI(BaseFormat):
             self._negative = str(data_json.pop("negative_prompt", "")).strip()
 
             if data_json.get("positive_style_prompt"):
-                self._positive_sdxl["style"] = str(data_json.pop("positive_style_prompt", "")).strip()
+                self._positive_sdxl["style"] = str(
+                    data_json.pop("positive_style_prompt", "")
+                ).strip()
             if data_json.get("negative_style_prompt"):
-                self._negative_sdxl["style"] = str(data_json.pop("negative_style_prompt", "")).strip()
+                self._negative_sdxl["style"] = str(
+                    data_json.pop("negative_style_prompt", "")
+                ).strip()
             if self._positive_sdxl or self._negative_sdxl:
                 self._is_sdxl = True
 
@@ -123,11 +138,17 @@ class InvokeAI(BaseFormat):
 
             model_info = data_json.get("model")
             if isinstance(model_info, dict):
-                self._populate_parameter("model", model_info.get("model_name"), "model.model_name")
-                self._populate_parameter("model_hash", model_info.get("hash"), "model.hash")
+                self._populate_parameter(
+                    "model", model_info.get("model_name"), "model.model_name"
+                )
+                self._populate_parameter(
+                    "model_hash", model_info.get("hash"), "model.hash"
+                )
                 handled_keys.add("model")
 
-            self._populate_parameters_from_map(data_json, INVOKE_METADATA_PARAM_MAP, handled_keys)
+            self._populate_parameters_from_map(
+                data_json, INVOKE_METADATA_PARAM_MAP, handled_keys
+            )
             self._extract_and_set_dimensions(data_json, "width", "height", handled_keys)
 
             self._setting = self._build_settings_string(
@@ -143,7 +164,9 @@ class InvokeAI(BaseFormat):
             return False
         except Exception as general_err:  # pylint: disable=broad-except
             self._error = f"Error parsing invokeai_metadata: {general_err}"
-            self._logger.error("InvokeAI metadata parsing error: %s", general_err, exc_info=True)
+            self._logger.error(
+                "InvokeAI metadata parsing error: %s", general_err, exc_info=True
+            )
             return False
 
     def _parse_sd_metadata_format(self) -> bool:
@@ -175,10 +198,16 @@ class InvokeAI(BaseFormat):
             handled_keys_top_level = {"image", "model_weights"}
 
             if "model_weights" in data_json:
-                self._populate_parameter("model", data_json.get("model_weights"), "model_weights")
+                self._populate_parameter(
+                    "model", data_json.get("model_weights"), "model_weights"
+                )
 
-            self._populate_parameters_from_map(image_data, SD_METADATA_IMAGE_PARAM_MAP, handled_keys_image_data)
-            self._extract_and_set_dimensions(image_data, "width", "height", handled_keys_image_data)
+            self._populate_parameters_from_map(
+                image_data, SD_METADATA_IMAGE_PARAM_MAP, handled_keys_image_data
+            )
+            self._extract_and_set_dimensions(
+                image_data, "width", "height", handled_keys_image_data
+            )
 
             custom_settings_parts = []
             for k, v_val in image_data.items():
@@ -203,7 +232,9 @@ class InvokeAI(BaseFormat):
             return False
         except Exception as general_err:  # pylint: disable=broad-except
             self._error = f"Error parsing sd-metadata: {general_err}"
-            self._logger.error("InvokeAI sd-metadata parsing error: %s", general_err, exc_info=True)
+            self._logger.error(
+                "InvokeAI sd-metadata parsing error: %s", general_err, exc_info=True
+            )
             return False
 
     def _parse_dream_format(self) -> bool:
@@ -219,19 +250,25 @@ class InvokeAI(BaseFormat):
 
             if not match:
                 self._error = "Could not parse 'Dream' string structure."
-                self._logger.warning("%s: %s. String: %s", self.tool, self._error, dream_data_str[:100])
+                self._logger.warning(
+                    "%s: %s. String: %s", self.tool, self._error, dream_data_str[:100]
+                )
                 return False
 
             full_prompt_text = match.group(1).strip('" ')
             options_str = (match.group(2) or "").strip()
 
-            self._positive, self._negative = self.split_invokeai_prompt(full_prompt_text)
+            self._positive, self._negative = self.split_invokeai_prompt(
+                full_prompt_text
+            )
 
             option_pattern = r"-(\w+)\s+([\w.-]+)"
             parsed_options_dict = dict(re.findall(option_pattern, options_str))
 
             handled_option_keys = set()
-            self._populate_parameters_from_map(parsed_options_dict, DREAM_FORMAT_PARAM_MAP, handled_option_keys)
+            self._populate_parameters_from_map(
+                parsed_options_dict, DREAM_FORMAT_PARAM_MAP, handled_option_keys
+            )
 
             dim_source_dict = {}
             if "W" in parsed_options_dict:
@@ -247,10 +284,14 @@ class InvokeAI(BaseFormat):
 
             # Use self.DREAM_MAPPING (which is DisplayKey: ShortKey)
             # We need to map ShortKey (from parsed_options_dict) to DisplayKey
-            short_to_display_dream_map = {v_short: k_display for k_display, v_short in self.DREAM_MAPPING.items()}
+            short_to_display_dream_map = {
+                v_short: k_display for k_display, v_short in self.DREAM_MAPPING.items()
+            }
 
             def dream_key_formatter(short_key_from_options: str) -> str:
-                return short_to_display_dream_map.get(short_key_from_options, short_key_from_options.capitalize())
+                return short_to_display_dream_map.get(
+                    short_key_from_options, short_key_from_options.capitalize()
+                )
 
             self._setting = self._build_settings_string(
                 remaining_data_dict=parsed_options_dict,
@@ -262,7 +303,9 @@ class InvokeAI(BaseFormat):
             return True
         except Exception as general_err:  # pylint: disable=broad-except
             self._error = f"Error parsing Dream string: {general_err}"
-            self._logger.error("InvokeAI Dream parsing error: %s", general_err, exc_info=True)
+            self._logger.error(
+                "InvokeAI Dream parsing error: %s", general_err, exc_info=True
+            )
             return False
 
     @staticmethod

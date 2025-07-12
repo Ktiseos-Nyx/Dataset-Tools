@@ -219,8 +219,21 @@ class EnhancedThemeManager:
             if not initial_load:
                 self.settings.setValue("enhanced_theme", theme_id)
 
-            action_text = "Initial theme loaded" if initial_load else "Theme applied and saved"
+            action_text = (
+                "Initial theme loaded" if initial_load else "Theme applied and saved"
+            )
             nfo("%s: %s", action_text, theme_id)
+
+            # Re-apply fonts after theme to ensure they don't get overridden
+            if (
+                not initial_load
+                and hasattr(self, "main_window")
+                and hasattr(self.main_window, "apply_global_font")
+            ):
+                # Use a timer to delay font application slightly to ensure theme is fully applied first
+                from PyQt6.QtCore import QTimer
+
+                QTimer.singleShot(100, self.main_window.apply_global_font)
 
         return success
 
@@ -326,8 +339,12 @@ class EnhancedThemeManager:
                     return match.group(0)
 
                 # Replace local asset URLs
-                stylesheet = re.sub(r'url\("(assets/[^"]+)"\)', replace_asset_url_enhanced, stylesheet)
-                stylesheet = re.sub(r"url\('(assets/[^']+)'\)", replace_asset_url_enhanced, stylesheet)
+                stylesheet = re.sub(
+                    r'url\("(assets/[^"]+)"\)', replace_asset_url_enhanced, stylesheet
+                )
+                stylesheet = re.sub(
+                    r"url\('(assets/[^']+)'\)", replace_asset_url_enhanced, stylesheet
+                )
 
             nfo(f"Processed custom QSS theme: {theme_name}, asset replacements applied")
 
@@ -482,6 +499,8 @@ class EnhancedThemeManager:
 
 
 # Convenience functions for backward compatibility
-def get_enhanced_theme_manager(main_window: Qw.QMainWindow, settings: QSettings) -> EnhancedThemeManager:
+def get_enhanced_theme_manager(
+    main_window: Qw.QMainWindow, settings: QSettings
+) -> EnhancedThemeManager:
     """Get an enhanced theme manager instance."""
     return EnhancedThemeManager(main_window, settings)

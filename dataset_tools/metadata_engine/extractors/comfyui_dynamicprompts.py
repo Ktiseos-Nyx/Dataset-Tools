@@ -56,7 +56,9 @@ class ComfyUIDynamicPromptsExtractor:
             return {}
         # Handle both {"prompt": {"1": ...}} and {"nodes": [...]} formats
         if "nodes" in data and isinstance(data["nodes"], list):
-            return {str(node.get("id", i)): node for i, node in enumerate(data["nodes"])}
+            return {
+                str(node.get("id", i)): node for i, node in enumerate(data["nodes"])
+            }
         if "prompt" in data and isinstance(data["prompt"], dict):
             return data["prompt"]
         if all(isinstance(v, dict) and "class_type" in v for v in data.values()):
@@ -125,12 +127,18 @@ class ComfyUIDynamicPromptsExtractor:
                     if "DPRandomGenerator" in class_type:
                         generator_config["mode"] = "random"
                         if widgets and len(widgets) > 0:
-                            generator_config["seed"] = widgets[0] if isinstance(widgets[0], (int, float)) else None
+                            generator_config["seed"] = (
+                                widgets[0]
+                                if isinstance(widgets[0], (int, float))
+                                else None
+                            )
                     elif "DPCombinatorialGenerator" in class_type:
                         generator_config["mode"] = "combinatorial"
                         if widgets and len(widgets) > 0:
                             generator_config["max_combinations"] = (
-                                widgets[0] if isinstance(widgets[0], (int, float)) else None
+                                widgets[0]
+                                if isinstance(widgets[0], (int, float))
+                                else None
                             )
 
                     generators.append(generator_config)
@@ -167,7 +175,9 @@ class ComfyUIDynamicPromptsExtractor:
 
                     # Extract wildcard patterns from widgets
                     for widget in widgets:
-                        if isinstance(widget, str) and ("{" in widget and "}" in widget):
+                        if isinstance(widget, str) and (
+                            "{" in widget and "}" in widget
+                        ):
                             wildcard_config["patterns"].append(widget)
 
                     if wildcard_config["patterns"]:
@@ -176,7 +186,9 @@ class ComfyUIDynamicPromptsExtractor:
                 # Also check text nodes for wildcard patterns
                 elif "CLIPTextEncode" in class_type or "Text" in class_type:
                     for widget in widgets:
-                        if isinstance(widget, str) and ("{" in widget and "}" in widget):
+                        if isinstance(widget, str) and (
+                            "{" in widget and "}" in widget
+                        ):
                             wildcard_config = {
                                 "node_id": node_id,
                                 "type": "text_with_wildcards",
@@ -211,7 +223,11 @@ class ComfyUIDynamicPromptsExtractor:
                     template_config = {
                         "node_id": node_id,
                         "type": class_type,
-                        "template": (widgets[0] if widgets and isinstance(widgets[0], str) else ""),
+                        "template": (
+                            widgets[0]
+                            if widgets and isinstance(widgets[0], str)
+                            else ""
+                        ),
                         "parameters": widgets[1:] if len(widgets) > 1 else [],
                     }
 
@@ -269,7 +285,9 @@ class ComfyUIDynamicPromptsExtractor:
 
         return variant_info
 
-    def extract_dynamicprompts_workflow_summary(self, data: dict, *args, **kwargs) -> dict[str, Any]:
+    def extract_dynamicprompts_workflow_summary(
+        self, data: dict, *args, **kwargs
+    ) -> dict[str, Any]:
         """Extract comprehensive DynamicPrompts workflow summary."""
         if not self._detect_dynamicprompts_workflow(data, {}, {}, {}):
             return {"is_dynamicprompts_workflow": False}
@@ -287,7 +305,10 @@ class ComfyUIDynamicPromptsExtractor:
                     n
                     for n in nodes.values()
                     if isinstance(n, dict)
-                    and any(dp_node in n.get("class_type", "") for dp_node in self.DYNAMICPROMPTS_NODES)
+                    and any(
+                        dp_node in n.get("class_type", "")
+                        for dp_node in self.DYNAMICPROMPTS_NODES
+                    )
                 ]
             ),
         }
@@ -297,9 +318,15 @@ class ComfyUIDynamicPromptsExtractor:
             "total_generators": len(summary["generators"]),
             "total_wildcards": len(summary["wildcards"]),
             "total_templates": len(summary["templates"]),
-            "uses_random": any("Random" in gen.get("type", "") for gen in summary["generators"]),
-            "uses_combinatorial": any("Combinatorial" in gen.get("type", "") for gen in summary["generators"]),
-            "uses_magic_prompt": any("Magic" in gen.get("type", "") for gen in summary["generators"]),
+            "uses_random": any(
+                "Random" in gen.get("type", "") for gen in summary["generators"]
+            ),
+            "uses_combinatorial": any(
+                "Combinatorial" in gen.get("type", "") for gen in summary["generators"]
+            ),
+            "uses_magic_prompt": any(
+                "Magic" in gen.get("type", "") for gen in summary["generators"]
+            ),
         }
 
         return summary

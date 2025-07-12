@@ -28,6 +28,7 @@ class FileScanResult(NamedTuple):
     models: list[str]
     folder_path: str
     total_files: int
+    scan_duration: float = 0.0
     scan_success: bool
     error_message: str | None = None
 
@@ -202,7 +203,9 @@ class FileExtensionCategories:
             val_str = str(getattr(Ext, attr_name, "N/A"))
             val_display = val_str[:70] + "..." if len(val_str) > 70 else val_str
 
-            self.logger.debug(f"Ext.{attr_name}? {has_attr}. Value (first 70 chars): {val_display}")
+            self.logger.debug(
+                f"Ext.{attr_name}? {has_attr}. Value (first 70 chars): {val_display}"
+            )
 
         self.logger.debug("--- END DEBUG WIDGETS ---")
 
@@ -252,7 +255,9 @@ class DirectoryScanner:
                 )
 
             # Categorize the files
-            images, texts, models, total_files = self._categorize_files(items, folder_path)
+            images, texts, models, total_files = self._categorize_files(
+                items, folder_path
+            )
 
             self.logger.info(
                 f"Scan completed for {folder_path}: {len(images)} images, {len(texts)} texts, {len(models)} models"
@@ -308,7 +313,9 @@ class DirectoryScanner:
             self.logger.warning(f"OS error accessing directory '{folder_path}': {e}")
             return None
 
-    def _categorize_files(self, item_paths: list[str], folder_path: str) -> tuple[list[str], list[str], list[str], int]:
+    def _categorize_files(
+        self, item_paths: list[str], folder_path: str
+    ) -> tuple[list[str], list[str], list[str], int]:
         """Categorize a list of file paths.
 
         Args:
@@ -349,7 +356,9 @@ class DirectoryScanner:
             except (OSError, ValueError, TypeError, AttributeError) as e:
                 self.logger.debug(f"Error processing item '{item_path}': {e}")
             except Exception as e:
-                self.logger.warning(f"Unexpected error processing item '{item_path}': {e}")
+                self.logger.warning(
+                    f"Unexpected error processing item '{item_path}': {e}"
+                )
 
         return images, texts, models, total_files
 

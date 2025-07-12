@@ -186,7 +186,10 @@ class ComfyUISDXLExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if "CheckpointLoaderSimple" in class_type or "CheckpointLoader" in class_type:
+            if (
+                "CheckpointLoaderSimple" in class_type
+                or "CheckpointLoader" in class_type
+            ):
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     model_name = widgets[0] if isinstance(widgets[0], str) else ""
@@ -197,7 +200,9 @@ class ComfyUISDXLExtractor:
             elif "SDXLCheckpointLoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["base_model"] = widgets[0] if isinstance(widgets[0], str) else ""
+                    model_info["base_model"] = (
+                        widgets[0] if isinstance(widgets[0], str) else ""
+                    )
 
         return model_info
 
@@ -316,13 +321,19 @@ class ComfyUISDXLExtractor:
                         if primitive_node_id in prompt_data:
                             primitive_node = prompt_data[primitive_node_id]
                             if "PrimitiveNode" in primitive_node.get("class_type", ""):
-                                primitive_widgets = primitive_node.get("widgets_values", [])
-                                if primitive_widgets and isinstance(primitive_widgets[0], str):
+                                primitive_widgets = primitive_node.get(
+                                    "widgets_values", []
+                                )
+                                if primitive_widgets and isinstance(
+                                    primitive_widgets[0], str
+                                ):
                                     return primitive_widgets[0].strip()
 
         return ""
 
-    def _get_sdxl_text_input(self, node_data: dict, prompt_data: dict, input_name: str) -> str:
+    def _get_sdxl_text_input(
+        self, node_data: dict, prompt_data: dict, input_name: str
+    ) -> str:
         """Get specific text input (text_g or text_l) from SDXL node."""
         inputs = node_data.get("inputs", {})
         if isinstance(inputs, dict) and input_name in inputs:
@@ -374,7 +385,9 @@ class ComfyUISDXLExtractor:
 
         return ""
 
-    def _extract_standard_clip_prompt(self, prompt_data: dict, positive: bool = True) -> str:
+    def _extract_standard_clip_prompt(
+        self, prompt_data: dict, positive: bool = True
+    ) -> str:
         """Extract from standard CLIPTextEncode nodes."""
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
@@ -388,7 +401,9 @@ class ComfyUISDXLExtractor:
                     text = widgets[0].strip()
                     if text:
                         is_negative = self._looks_like_negative_prompt(text)
-                        if (positive and not is_negative) or (not positive and is_negative):
+                        if (positive and not is_negative) or (
+                            not positive and is_negative
+                        ):
                             return text
 
         return ""
@@ -431,7 +446,9 @@ class ComfyUISDXLExtractor:
         ]
 
         text_lower = text.lower()
-        negative_count = sum(1 for indicator in negative_indicators if indicator in text_lower)
+        negative_count = sum(
+            1 for indicator in negative_indicators if indicator in text_lower
+        )
 
         return negative_count >= 2
 
