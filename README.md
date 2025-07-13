@@ -109,9 +109,9 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 ## Example Images
  If you're interested in seeing the app in action, this table shows what's up! 
 
-| Screenshot 1: Light Green Theme | Screenshot 2: Options Display (Light Green) | Screenshot 3: Font Choices |
+| Screenshot 1: Dark QSS Themes | Screenshot 2: ConsoleStyle Gtronicks QSS | Screenshot 3: Font Choices |
 | :-----------------------------: | :------------------------------: | :--------------------------: |
-| <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.44.11.png" alt="Light Green Theme" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.39.png" alt="Options Display (Light Green)" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 22.07.01.jpg" alt="Theme (Dark Teal) Choosing" width="250"> |
+| <img src="example_images/Screenshot 2025-07-13 at 22.07.43.jpg" alt="GTRONICK QSS: Manjaromix" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 20.02.22.jpg" alt="ConsoleStyle" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 22.07.01.jpg" alt="Theme (Dark Teal) Choosing" width="250"> |
 | Screenshot 4: Assaulting Rainbow Themes | Screenshot 5: Material Blue | Screenshot 6: Deadpool Inspired |
 | <img src=".example_images/Screenshot 2025-07-13 at 12.53.05.jpg" alt="Screen Sizes" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 20.01.15.jpg" alt="Civitai Metadata" width="250"> |  <img src="example_images/Screenshot 2025-07-13 at 22.13.02.jpg" alt="Civitai Metadata" width="250">|
 
