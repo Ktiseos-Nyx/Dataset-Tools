@@ -15,7 +15,7 @@
     {
       "comment": "Rule 2: OR contains smZ CLIPTextEncode nodes (Civitai custom nodes)",
       "operator": "OR",
-      "source_type": "any_metadata_source", 
+      "source_type": "any_metadata_source",
       "operator": "contains",
       "value": "smZ CLIPTextEncode"
     }

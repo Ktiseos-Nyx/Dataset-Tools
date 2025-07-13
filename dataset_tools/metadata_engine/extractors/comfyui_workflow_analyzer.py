@@ -498,14 +498,13 @@ class ComfyUIWorkflowAnalyzer:
                 widgets = node.get("widgets_values", [])
                 if widgets:
                     try:
-                        if len(widgets) >= 3:
-                            sampling_info["steps"] = widgets[2] if widgets[2] else None
-                            sampling_info["cfg"] = widgets[3] if len(widgets) > 3 and widgets[3] else None
-                        if len(widgets) >= 2:
-                            sampling_info["sampler_name"] = widgets[0] if widgets[0] else None
-                            sampling_info["scheduler"] = widgets[1] if widgets[1] else None
-                        if len(widgets) >= 5:
-                            sampling_info["denoise"] = widgets[4] if widgets[4] else None
+                        sampling_info["seed"] = widgets[0]
+                        sampling_info["steps"] = widgets[1]
+                        sampling_info["cfg"] = widgets[2]
+                        sampling_info["sampler"] = widgets[3]
+                        sampling_info["scheduler"] = widgets[4]
+                        if len(widgets) > 5:
+                            sampling_info["denoise"] = widgets[5]
                     except (IndexError, TypeError):
                         continue
                 break

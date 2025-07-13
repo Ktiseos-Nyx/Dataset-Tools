@@ -614,3 +614,8 @@
 2025-07-13 22:12:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
 2025-07-13 22:12:53 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/cyborg2.png
 2025-07-13 22:12:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 23:03:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Close event triggered. Saving settings.
+2025-07-13 23:03:45 | INFO     | dataset_tools_app | info_monitor:271 | Layout state saved successfully
+2025-07-13 23:03:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loading thread cleaned up successfully
+2025-07-13 23:03:45 | INFO     | dataset_tools_app | log_session_end:291 | === Dataset Tools Session Ended ===
+2025-07-13 23:03:45 | INFO     | dataset_tools_app | log_session_end:292 | Log file saved to: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/logs/dataset_tools_20250713_215810.log

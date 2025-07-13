@@ -283,7 +283,9 @@ def get_icon_manager() -> IconManager:
     return get_icon_manager._icon_manager
 
 
-def get_themed_icon(icon_name: str, color_type: str = "primary", size: QSize = QSize(24, 24)) -> QIcon:
+def get_themed_icon(icon_name: str, color_type: str = "primary", size: QSize | None = None) -> QIcon:
+    if size is None:
+        size = QSize(24, 24)
     """Convenience function to get a themed icon.
 
     Args:

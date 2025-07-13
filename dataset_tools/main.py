@@ -14,8 +14,10 @@ from PyQt6.QtGui import QFontDatabase
 
 # For version display
 # Import from your package's __init__.py
-from dataset_tools import __version__  # type: ignore
-from dataset_tools import set_package_log_level  # type: ignore
+from dataset_tools import (
+    __version__,  # type: ignore
+    set_package_log_level,  # type: ignore
+)
 from dataset_tools import logger as app_logger  # type: ignore
 
 # Import your logger module

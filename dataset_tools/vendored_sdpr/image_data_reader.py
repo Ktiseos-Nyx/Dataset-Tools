@@ -18,16 +18,16 @@ from defusedxml import minidom
 from PIL import Image, UnidentifiedImageError
 
 from .constants import PARAMETER_PLACEHOLDER
-from .format import CivitaiFormat  # YodayoFormat,
-from .format import MochiDiffusionFormat  # Now expects IPTC data
 from .format import (
     A1111,
     BaseFormat,
+    CivitaiFormat,  # YodayoFormat,
     ComfyUI,
     DrawThings,
     EasyDiffusion,
     Fooocus,
     InvokeAI,
+    MochiDiffusionFormat,  # Now expects IPTC data
     NovelAI,
     RuinedFooocusFormat,
     SwarmUI,

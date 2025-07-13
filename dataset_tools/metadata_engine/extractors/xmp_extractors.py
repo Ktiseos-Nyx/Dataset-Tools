@@ -9,8 +9,9 @@ metadata in XMP format, providing more robust extraction than fallback methods.
 import json
 import logging
 import re
-import xml.etree.ElementTree as ET
 from typing import Any
+
+import defusedxml.ElementTree as ET
 
 # Type aliases
 ContextData = dict[str, Any]
@@ -84,7 +85,8 @@ class XMPExtractor:
                 element = root.find(pattern, namespaces)
                 if element is not None:
                     return element.text
-            except Exception:
+            except Exception as e:
+                self.logger.debug(f"[XMP] Error finding XMP field '{field_name}' with pattern '{pattern}': {e}")
                 continue
 
         # Fallback: search without namespaces
