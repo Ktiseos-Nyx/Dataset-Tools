@@ -107,35 +107,13 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 * `.json`, `.toml`: Displays content (future: structured view).
 
 ## Example Images
+ If you're interested in seeing the app in action, this table shows what's up! 
 
-<details>
-<summary>  If you're interested in seeing the app in action, this table shows what's up! </summary>
-
-| Image |
-| :---- |
-| ![Screenshot 2025-07-13 at 12.53.05.jpg](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/2d61ac48b8ecf45769beb8692e4f38627c6ecec3/example_images/Screenshot%202025-07-13%20at%2012.53.05.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 14.54.59.jpg](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/2d61ac48b8ecf45769beb8692e4f38627c6ecec3/example_images/Screenshot%202025-07-13%20at%2014.54.59.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 14.55.09.jpg](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/2d61ac48b8ecf45769beb8692e4f38627c6ecec3/example_images/Screenshot%202025-07-13%20at%2014.55.09.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.01.15.jpg](example_images/Screenshot 2025-07-13 at 20.01.15.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.01.32.jpg](example_images/Screenshot 2025-07-13 at 20.01.32.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.01.54.jpg](example_images/Screenshot 2025-07-13 at 20.01.54.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.02.08.jpg](example_images/Screenshot 2025-07-13 at 20.02.08.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.02.22.jpg](example_images/Screenshot 2025-07-13 at 20.02.22.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.02.36.jpg](example_images/Screenshot 2025-07-13 at 20.02.36.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.03.12.jpg](example_images/Screenshot 2025-07-13 at 20.03.12.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.03.22.jpg](example_images/Screenshot 2025-07-13 at 20.03.22.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.05.56.jpg](example_images/Screenshot 2025-07-13 at 22.05.56.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.06.12.jpg](example_images/Screenshot 2025-07-13 at 22.06.12.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.07.01.jpg](example_images/Screenshot 2025-07-13 at 22.07.01.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.07.12.jpg](example_images/Screenshot 2025-07-13 at 22.07.12.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.07.31.jpg](example_images/Screenshot 2025-07-13 at 22.07.31.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.07.43.jpg](example_images/Screenshot 2025-07-13 at 22.07.43.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.12.38.jpg](example_images/Screenshot 2025-07-13 at 22.12.38.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.12.41.jpg](example_images/Screenshot 2025-07-13 at 22.12.41.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.12.48.jpg](example_images/Screenshot 2025-07-13 at 22.12.48.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.13.02.jpg](example_images/Screenshot 2025-07-13 at 22.13.02.jpg){: width="200px"} |
-
-</details>
+| Screenshot 1: Light Green Theme | Screenshot 2: Options Display (Light Green) | Screenshot 3: Font Choices |
+| :-----------------------------: | :------------------------------: | :--------------------------: |
+| <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.44.11.png" alt="Light Green Theme" width="250"> | <img src=".github/Github Screenshots/Screenshot 2025-05-26 at 19.43.39.png" alt="Options Display (Light Green)" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 22.07.01.jpg" alt="Theme (Dark Teal) Choosing" width="250"> |
+| Screenshot 4: Assaulting Rainbow Themes | Screenshot 5: Material Blue | Screenshot 6: Deadpool Inspired |
+| <img src=".example_images/Screenshot 2025-07-13 at 12.53.05.jpg" alt="Screen Sizes" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 20.01.15.jpg" alt="Civitai Metadata" width="250"> |  <img src="example_images/Screenshot 2025-07-13 at 22.13.02.jpg" alt="Civitai Metadata" width="250">|
 
 ## Installation
 
