@@ -320,7 +320,9 @@ class EnhancedThemeManager:
                             import urllib.request
 
                             nfo(f"Downloading GitHub asset: {github_url}")
-                            urllib.request.urlretrieve(github_url, cached_file)  # noqa: S310 # URL scheme is validated to be GitHub, which is trusted for asset downloads.
+                            urllib.request.urlretrieve(
+                                github_url, cached_file
+                            )  # URL scheme is validated to be GitHub, which is trusted for asset downloads.
                             nfo(f"Cached asset: {cached_file}")
                         except Exception as e:
                             nfo(f"Failed to download asset {github_url}: {e}")

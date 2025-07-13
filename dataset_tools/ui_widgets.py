@@ -9,7 +9,6 @@ Each widget has a specific purpose and clean interface
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageOps
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
 from PyQt6.QtWidgets import QApplication, QMainWindow, QSplitter

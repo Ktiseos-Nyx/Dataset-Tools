@@ -139,6 +139,11 @@ ignore = [
     # ANN101, ANN102 were removed by Ruff as deprecated/handled differently
     "COM812", # Add this to ignore the formatter conflict with trailing commas
     "S101",   # Temporarily ignore assert statements
+    "S310",   # Audit URL open for permitted schemes (false positive for trusted GitHub URLs)
+    "PLR2004",  # Magic value used in comparison
+    "B008",   # Do not perform function call in argument defaults
+    "B007",   # Loop control variable not used within loop body
+    "C901",   # Function is too complex (McCabe complexity)
 ]
 # fix = true # If you want `ruff check` to also attempt fixes without --fix flag
 

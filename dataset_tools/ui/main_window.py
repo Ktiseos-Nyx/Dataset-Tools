@@ -789,7 +789,7 @@ class MainWindow(Qw.QMainWindow):
         try:
             # Memory-efficient thumbnail generation using Pillow
             max_preview_size = 1024
-            pixmap = self._create_safe_thumbnail(image_file_path, max_preview_size)
+            pixmap = create_safe_thumbnail(image_file_path, max_preview_size)
 
             if pixmap.isNull():
                 nfo("[UI] Failed to load image: '%s'", image_file_path)
