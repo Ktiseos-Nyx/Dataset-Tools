@@ -56,15 +56,11 @@ class ContextDataPreparer:
 
         """
         context = self._initialize_context(file_input)
-        self.logger.info(
-            f"[CONTEXT_PREP] Starting context preparation for: {context.get('file_path_original')}"
-        )
+        self.logger.info(f"[CONTEXT_PREP] Starting context preparation for: {context.get('file_path_original')}")
         try:
             # First, attempt to process as an image, as they contain the most diverse metadata
             result = self._process_as_image(file_input, context)
-            self.logger.info(
-                f"[CONTEXT_PREP] Successfully processed as image: {context.get('file_path_original')}"
-            )
+            self.logger.info(f"[CONTEXT_PREP] Successfully processed as image: {context.get('file_path_original')}")
             return result
         except (FileNotFoundError, UnidentifiedImageError, OSError) as e:
             # If it fails, it's either not an image or the file is inaccessible
@@ -73,9 +69,7 @@ class ContextDataPreparer:
                 f"[CONTEXT_PREP] Failed as image ({e}), trying as non-image: {context.get('file_path_original')}"
             )
             result = self._process_as_non_image(file_input, context)
-            self.logger.info(
-                f"[CONTEXT_PREP] Successfully processed as non-image: {context.get('file_path_original')}"
-            )
+            self.logger.info(f"[CONTEXT_PREP] Successfully processed as non-image: {context.get('file_path_original')}")
             return result
         except Exception as e:
             self.logger.error(
@@ -114,13 +108,9 @@ class ContextDataPreparer:
             return file_input.name
         return str(file_input)
 
-    def _process_as_image(
-        self, file_input: FileInput, context: ContextData
-    ) -> ContextData:
+    def _process_as_image(self, file_input: FileInput, context: ContextData) -> ContextData:
         """Process the input as an image file with a clear, single-pass logic."""
-        self.logger.info(
-            f"[CONTEXT_PREP] Processing as image: {context['file_path_original']}"
-        )
+        self.logger.info(f"[CONTEXT_PREP] Processing as image: {context['file_path_original']}")
 
         with Image.open(file_input) as img:
             # --- STRENGTHENING: Centralize basic info extraction ---
@@ -164,14 +154,10 @@ class ContextDataPreparer:
         """Extract EXIF data, prioritizing the problematic UserComment field."""
         exif_bytes = context["pil_info"].get("exif")
         if not exif_bytes:
-            self.logger.info(
-                f"[CONTEXT_PREP] No EXIF data found in PIL info for: {context.get('file_path_original')}"
-            )
+            self.logger.info(f"[CONTEXT_PREP] No EXIF data found in PIL info for: {context.get('file_path_original')}")
             return
 
-        self.logger.info(
-            f"[CONTEXT_PREP] Found EXIF data, processing: {context.get('file_path_original')}"
-        )
+        self.logger.info(f"[CONTEXT_PREP] Found EXIF data, processing: {context.get('file_path_original')}")
 
         try:
             loaded_exif = piexif.load(exif_bytes)
@@ -180,9 +166,7 @@ class ContextDataPreparer:
             # Software Tag
             sw_bytes = loaded_exif.get("0th", {}).get(piexif.ImageIFD.Software)
             if sw_bytes and isinstance(sw_bytes, bytes):
-                context["software_tag"] = (
-                    sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
-                )
+                context["software_tag"] = sw_bytes.decode("ascii", "ignore").strip("\x00").strip()
 
             # UserComment Extraction - Use piexif.helper.UserComment.load like SDPR does
             uc_bytes = loaded_exif.get("Exif", {}).get(piexif.ExifIFD.UserComment)
@@ -199,23 +183,17 @@ class ContextDataPreparer:
                     else:
                         self.logger.debug("UserComment decoded but empty")
                 except Exception as e:
-                    self.logger.debug(
-                        f"piexif UserComment.load failed: {e}, trying fallback"
-                    )
+                    self.logger.debug(f"piexif UserComment.load failed: {e}, trying fallback")
                     # Fallback to custom decoding
                     user_comment = self._decode_usercomment_bytes_robust(uc_bytes)
                     if user_comment:
                         context["raw_user_comment_str"] = user_comment
-                        self.logger.info(
-                            f"Fallback decoded UserComment: {len(user_comment)} chars"
-                        )
+                        self.logger.info(f"Fallback decoded UserComment: {len(user_comment)} chars")
             else:
                 self.logger.debug("No UserComment found in EXIF data")
 
         except Exception as e:
-            self.logger.debug(
-                f"Could not load EXIF data with piexif: {e}. Some metadata might be missing."
-            )
+            self.logger.debug(f"Could not load EXIF data with piexif: {e}. Some metadata might be missing.")
 
     def _decode_usercomment_bytes_robust(self, data: bytes) -> str:
         """Try various decoding strategies for UserComment bytes. This is the secret sauce."""
@@ -231,9 +209,7 @@ class ContextDataPreparer:
             try:
                 if codec_header.startswith(b"ASCII\x00"):
                     return comment_bytes.decode("ascii").strip("\x00")
-                if codec_header.startswith(
-                    b"UNICODE\x00"
-                ):  # A common variation for UTF-16
+                if codec_header.startswith(b"UNICODE\x00"):  # A common variation for UTF-16
                     return comment_bytes.decode("utf-16le").strip("\x00")
                 if codec_header.startswith(b"UTF-8\x00"):
                     return comment_bytes.decode("utf-8").strip("\x00")
@@ -279,13 +255,9 @@ class ContextDataPreparer:
                     # Found a potential JSON, try to parse it
                     parsed_json = json.loads(source_str)
                     # Check for a key indicator of a ComfyUI workflow
-                    if isinstance(parsed_json, dict) and (
-                        "nodes" in parsed_json or "prompt" in parsed_json
-                    ):
+                    if isinstance(parsed_json, dict) and ("nodes" in parsed_json or "prompt" in parsed_json):
                         context["comfyui_workflow_json"] = parsed_json
-                        self.logger.debug(
-                            "Successfully found and parsed ComfyUI workflow JSON."
-                        )
+                        self.logger.debug("Successfully found and parsed ComfyUI workflow JSON.")
                         return  # Stop after finding the first valid workflow
                 except (json.JSONDecodeError, TypeError):
                     continue  # Not a valid JSON, try the next source
@@ -304,15 +276,10 @@ class ContextDataPreparer:
                 context["png_chunks"][key] = val
 
         # Ensure UserComment is in png_chunks if it exists
-        if (
-            "UserComment" in context["pil_info"]
-            and "UserComment" not in context["png_chunks"]
-        ):
+        if "UserComment" in context["pil_info"] and "UserComment" not in context["png_chunks"]:
             context["png_chunks"]["UserComment"] = context["pil_info"]["UserComment"]
 
-    def _process_as_non_image(
-        self, file_input: FileInput, context: ContextData
-    ) -> ContextData | None:
+    def _process_as_non_image(self, file_input: FileInput, context: ContextData) -> ContextData | None:
         """Process the input as a non-image file."""
         self.logger.info(f"Processing as non-image: {context['file_path_original']}")
 
@@ -330,22 +297,16 @@ class ContextDataPreparer:
             return self._process_safetensors_file(file_input, context)
         if context["file_extension"] == "gguf":
             return self._process_gguf_file(file_input, context)
-        self.logger.info(
-            f"File extension '{context['file_extension']}' not specifically handled"
-        )
+        self.logger.info(f"File extension '{context['file_extension']}' not specifically handled")
         # Try to read as binary for generic processing
         self._read_as_binary(file_input, context)
         return context
 
-    def _process_json_file(
-        self, file_input: FileInput, context: ContextData
-    ) -> ContextData:
+    def _process_json_file(self, file_input: FileInput, context: ContextData) -> ContextData:
         """Process a JSON file with memory limits."""
         try:
             # Limit JSON files to 50MB to prevent memory issues
-            content_str = self._read_file_content(
-                file_input, mode="r", encoding="utf-8", max_size=MAX_JSON_SIZE
-            )
+            content_str = self._read_file_content(file_input, mode="r", encoding="utf-8", max_size=MAX_JSON_SIZE)
             context["raw_file_content_text"] = content_str
 
             # Parse JSON with memory error handling
@@ -371,9 +332,7 @@ class ContextDataPreparer:
 
         return context
 
-    def _process_text_file(
-        self, file_input: FileInput, context: ContextData
-    ) -> ContextData | None:
+    def _process_text_file(self, file_input: FileInput, context: ContextData) -> ContextData | None:
         """Process a text file with memory limits."""
         try:
             # Limit text files to 10MB to prevent memory issues
@@ -391,9 +350,7 @@ class ContextDataPreparer:
 
         return context
 
-    def _process_safetensors_file(
-        self, file_input: FileInput, context: ContextData
-    ) -> ContextData:
+    def _process_safetensors_file(self, file_input: FileInput, context: ContextData) -> ContextData:
         """Process a SafeTensors model file."""
         try:
             from ..model_parsers.safetensors_parser import SafetensorsParser
@@ -402,18 +359,14 @@ class ContextDataPreparer:
             if parser.parse():
                 context["safetensors_metadata"] = parser.metadata_header
             else:
-                self.logger.warning(
-                    f"SafeTensors parser failed: {getattr(parser, 'error_message', 'Unknown error')}"
-                )
+                self.logger.warning(f"SafeTensors parser failed: {getattr(parser, 'error_message', 'Unknown error')}")
         except ImportError:
             self.logger.error("SafetensorsParser or its dependencies not available.")
         except Exception as e:
             self.logger.error(f"Error processing SafeTensors file: {e}")
         return context
 
-    def _process_gguf_file(
-        self, file_input: FileInput, context: ContextData
-    ) -> ContextData:
+    def _process_gguf_file(self, file_input: FileInput, context: ContextData) -> ContextData:
         """Process a GGUF model file."""
         try:
             # Import here to avoid dependency issues if not available
@@ -445,9 +398,7 @@ class ContextDataPreparer:
         """Read file as binary data with memory limits."""
         with contextlib.suppress(Exception):
             # Limit binary files to 20MB to prevent memory issues
-            context["raw_file_content_bytes"] = self._read_file_content(
-                file_input, mode="rb", max_size=MAX_BINARY_SIZE
-            )
+            context["raw_file_content_bytes"] = self._read_file_content(file_input, mode="rb", max_size=MAX_BINARY_SIZE)
 
     def _read_file_content(
         self,
@@ -477,9 +428,7 @@ class ContextDataPreparer:
             if max_size:
                 content = file_input.read(max_size)
                 if len(content) == max_size:
-                    self.logger.warning(
-                        f"File truncated to {max_size} bytes due to size limit"
-                    )
+                    self.logger.warning(f"File truncated to {max_size} bytes due to size limit")
             else:
                 content = file_input.read()
 
@@ -512,9 +461,7 @@ class ContextDataPreparer:
             if max_size:
                 content = f.read(max_size)
                 if len(content) == max_size:
-                    self.logger.warning(
-                        f"File {file_path} truncated to {max_size} bytes"
-                    )
+                    self.logger.warning(f"File {file_path} truncated to {max_size} bytes")
                 return content
             return f.read()
 
@@ -524,9 +471,7 @@ class ContextDataPreparer:
 # ============================================================================
 
 
-def prepare_context_data(
-    file_input: FileInput, logger: logging.Logger | None = None
-) -> ContextData | None:
+def prepare_context_data(file_input: FileInput, logger: logging.Logger | None = None) -> ContextData | None:
     """Convenience function to prepare context data from a file.
 
     Args:

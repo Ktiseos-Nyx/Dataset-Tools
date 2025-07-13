@@ -1,0 +1,58 @@
+/* LINUX DISTRO: SUNOS THEME */
+/* Inspired by SunOS (Sun Microsystems) - Classic, somewhat retro feel with blues, grays, and a touch of orange/yellow. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00008B, stop: 0.3 #708090,
+                                stop: 0.7 #B0C4DE, stop: 1 #00008B);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00008B, stop: 0.3 #708090,
+                                stop: 0.7 #B0C4DE, stop: 1 #00008B);
+    color: #FFFFFF;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFA500, stop: 1 #FF8C00);
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #000000;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF8C00, stop: 1 #FFA500);
+    border: 2px solid #E0E0E0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #00008B;
+    border-radius: 3px;
+    padding: 5px;
+    color: #708090;
+    selection-background-color: #FFA500;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #00008B;
+    border-radius: 3px;
+    alternate-background-color: #F0F8FF;
+    color: #708090;
+}
+
+QListWidget::item:selected {
+    background: #FFA500;
+    color: #FFFFFF;
+}

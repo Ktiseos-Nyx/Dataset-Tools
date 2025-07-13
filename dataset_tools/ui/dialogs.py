@@ -9,20 +9,13 @@ This module contains all dialog windows used in the application,
 including settings configuration and about information dialogs.
 """
 
-from PyQt6.QtCore import QSettings
-<<<<<<< HEAD
-from PyQt6.QtGui import QFont, QFontDatabase
-=======
->>>>>>> origin/main
+from PyQt6.QtCore import QSettings, pyqtSignal
 from PyQt6.QtWidgets import (
     QComboBox,
     QDialog,
     QDialogButtonBox,
-<<<<<<< HEAD
-    QFontComboBox,
-=======
->>>>>>> origin/main
     QFormLayout,
+    QGridLayout,
     QLabel,
     QMessageBox,
     QSpinBox,
@@ -41,10 +34,13 @@ from ..logger import info_monitor as nfo
 class SettingsDialog(QDialog):
     """Application settings configuration dialog with a tabbed interface."""
 
+    theme_changed = pyqtSignal(str)
+
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
         self.parent_window = parent
         self.settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
+        self.theme_combos: dict[str, QComboBox] = {}
 
         self._setup_dialog()
         self._create_tabs()
@@ -69,20 +65,58 @@ class SettingsDialog(QDialog):
         self._create_font_tab()
 
     def _create_theme_tab(self) -> None:
-        """Create the Themes tab."""
+        """Create the Themes tab with multiple dropdowns."""
         theme_widget = QWidget()
-        layout = QVBoxLayout(theme_widget)
-        layout.setSpacing(20)
+        layout = QGridLayout(theme_widget)
+        layout.setSpacing(15)
 
-        # Theme Section
-        theme_label = QLabel("<b>Display Theme:</b>")
-        self.theme_combo = QComboBox()
-        self._populate_theme_combo()
-        layout.addWidget(theme_label)
-        layout.addWidget(self.theme_combo)
+        if hasattr(self.parent_window, "enhanced_theme_manager"):
+            enhanced_manager = self.parent_window.enhanced_theme_manager
+            available_themes = enhanced_manager.get_available_themes()
 
-        layout.addStretch(1)
+            row = 0
+            for category, themes in available_themes.items():
+                if not themes:
+                    continue
+
+                category_name = enhanced_manager.THEME_CATEGORIES.get(category, category.title())
+
+                label = QLabel(f"<b>{category_name}:</b>")
+                combo = QComboBox()
+                combo.addItem("Select a theme...", "none")
+
+                for theme_name in themes:
+                    theme_id = f"{category}:{theme_name}"
+                    display_name = theme_name.replace("_", " ").replace(".xml", "").title()
+                    combo.addItem(display_name, theme_id)
+
+                combo.activated.connect(self._on_theme_selected)
+
+                layout.addWidget(label, row, 0)
+                layout.addWidget(combo, row, 1)
+
+                self.theme_combos[category] = combo
+                row += 1
+        else:
+            layout.addWidget(QLabel("No themes available."), 0, 0)
+
         self.tab_widget.addTab(theme_widget, "Themes")
+
+    def _on_theme_selected(self, index: int) -> None:
+        """Handle theme selection in one of the dropdowns."""
+        sender_combo = self.sender()
+        if not isinstance(sender_combo, QComboBox):
+            return
+
+        selected_theme_id = sender_combo.itemData(index)
+
+        # Deselect other dropdowns
+        for category, combo in self.theme_combos.items():
+            if combo is not sender_combo:
+                combo.setCurrentIndex(0)
+
+        if selected_theme_id and selected_theme_id != "none":
+            self.theme_changed.emit(selected_theme_id)
 
     def _create_appearance_tab(self) -> None:
         """Create the Appearance tab with window size options."""
@@ -120,25 +154,6 @@ class SettingsDialog(QDialog):
 
         self.tab_widget.addTab(font_widget, "Fonts")
 
-    def _populate_theme_combo(self) -> None:
-        """Populate the theme combo box."""
-        if hasattr(self.parent_window, "enhanced_theme_manager"):
-            enhanced_manager = self.parent_window.enhanced_theme_manager
-            available_themes = enhanced_manager.get_available_themes()
-            for category, themes in available_themes.items():
-                if not themes:
-                    continue
-                category_name = enhanced_manager.THEME_CATEGORIES.get(
-                    category, category.title()
-                )
-                for theme_name in themes:
-                    theme_id = f"{category}:{theme_name}"
-                    display_name = f"{category_name} - {theme_name.replace('_', ' ').replace('.xml', '').title()}"
-                    self.theme_combo.addItem(display_name, theme_id)
-        else:
-            self.theme_combo.addItem("No themes available")
-            self.theme_combo.setEnabled(False)
-
     def _populate_size_combo(self) -> None:
         """Populate the size combo box."""
         self.size_presets: dict[str, tuple[int, int] | None] = {
@@ -164,9 +179,7 @@ class SettingsDialog(QDialog):
                 for family in sorted(bundled_font_names):
                     self.font_combo.addItem(family)
 
-                nfo(
-                    f"Added {len(bundled_font_names)} bundled fonts to combo box (no system fonts)"
-                )
+                nfo(f"Added {len(bundled_font_names)} bundled fonts to combo box (no system fonts)")
             else:
                 nfo("No bundled fonts found - adding fallback option")
                 self.font_combo.addItem("Open Sans")  # Fallback
@@ -184,9 +197,7 @@ class SettingsDialog(QDialog):
         )
         self.button_box.accepted.connect(self.accept_settings)
         self.button_box.rejected.connect(self.reject)
-        self.button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(
-            self.apply_all_settings
-        )
+        self.button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.apply_all_settings)
         self.layout.addWidget(self.button_box)
 
     def _load_current_settings(self) -> None:
@@ -198,11 +209,17 @@ class SettingsDialog(QDialog):
     def _load_theme_setting(self) -> None:
         """Load and set current theme setting."""
         if hasattr(self.parent_window, "enhanced_theme_manager"):
-            current_theme = self.parent_window.enhanced_theme_manager.current_theme
-            for i in range(self.theme_combo.count()):
-                if self.theme_combo.itemData(i) == current_theme:
-                    self.theme_combo.setCurrentIndex(i)
-                    return
+            current_theme_id = self.parent_window.enhanced_theme_manager.current_theme
+            try:
+                category, name = current_theme_id.split(":", 1)
+                if category in self.theme_combos:
+                    combo = self.theme_combos[category]
+                    for i in range(combo.count()):
+                        if combo.itemData(i) == current_theme_id:
+                            combo.setCurrentIndex(i)
+                            return
+            except ValueError:
+                pass
 
     def _load_window_size_setting(self) -> None:
         """Load and set current window size setting."""
@@ -240,7 +257,12 @@ class SettingsDialog(QDialog):
 
     def _apply_theme_settings(self) -> None:
         """Apply the selected theme."""
-        selected_theme_id = self.theme_combo.currentData()
+        selected_theme_id = None
+        for combo in self.theme_combos.values():
+            if combo.currentIndex() > 0:
+                selected_theme_id = combo.currentData()
+                break
+
         if selected_theme_id and hasattr(self.parent_window, "enhanced_theme_manager"):
             self.parent_window.enhanced_theme_manager.apply_theme(selected_theme_id)
 
@@ -337,9 +359,7 @@ class AboutDialog(QDialog):
 
     def _get_contributors_text(self) -> str:
         """Get formatted contributors text."""
-        contributors = [
-            "KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA (Lead Developer)"
-        ]
+        contributors = ["KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA (Lead Developer)"]
 
         contributor_lines = [f"- {contributor}" for contributor in contributors]
         return "Contributors:<br>" + "<br>".join(contributor_lines)
@@ -432,9 +452,7 @@ class DialogFactory:
     """
 
     @staticmethod
-    def create_settings_dialog(
-        parent: QWidget, current_theme: str = ""
-    ) -> SettingsDialog:
+    def create_settings_dialog(parent: QWidget, current_theme: str = "") -> SettingsDialog:
         """Create a settings dialog.
 
         Args:

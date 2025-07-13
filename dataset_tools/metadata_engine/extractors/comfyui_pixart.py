@@ -87,30 +87,22 @@ class ComfyUIPixArtExtractor:
             if "PixArtCheckpointLoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["checkpoint"] = (
-                        widgets[0] if isinstance(widgets[0], str) else ""
-                    )
+                    model_info["checkpoint"] = widgets[0] if isinstance(widgets[0], str) else ""
 
             elif "PixArtModelLoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["model"] = (
-                        widgets[0] if isinstance(widgets[0], str) else ""
-                    )
+                    model_info["model"] = widgets[0] if isinstance(widgets[0], str) else ""
 
             elif "PixArtVAELoader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["vae"] = (
-                        widgets[0] if isinstance(widgets[0], str) else ""
-                    )
+                    model_info["vae"] = widgets[0] if isinstance(widgets[0], str) else ""
 
             elif "PixArtT5Loader" in class_type:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
-                    model_info["t5_model"] = (
-                        widgets[0] if isinstance(widgets[0], str) else ""
-                    )
+                    model_info["t5_model"] = widgets[0] if isinstance(widgets[0], str) else ""
 
         return model_info
 
@@ -188,11 +180,7 @@ class ComfyUIPixArtExtractor:
                 widgets = node_data.get("widgets_values", [])
                 if widgets:
                     conditioning_params["t5_conditioning"] = {
-                        "text": (
-                            widgets[0]
-                            if len(widgets) > 0 and isinstance(widgets[0], str)
-                            else ""
-                        ),
+                        "text": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], str) else ""),
                         "max_length": widgets[1] if len(widgets) > 1 else 256,
                         "guidance_scale": widgets[2] if len(widgets) > 2 else 7.5,
                         "node_type": class_type,

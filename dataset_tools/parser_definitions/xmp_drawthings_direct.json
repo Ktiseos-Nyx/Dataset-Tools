@@ -1,0 +1,29 @@
+{
+    "parser_name": "XMP DrawThings Direct",
+    "name": "XMP DrawThings Direct Extractor",
+    "version": "1.0",
+    "description": "Direct XMP extraction for DrawThings metadata without fallback dependency",
+    "author": "Dataset-Tools",
+    "mime_types": ["image/png", "image/jpeg", "image/webp", "image/tiff"],
+    "rules": [
+        {
+            "id": "xmp_tool_detection",
+            "type": "python",
+            "method": "xmp_extractors.XMPExtractor.detect_ai_tool_from_xmp",
+            "output_field": "tool_detection"
+        },
+        {
+            "id": "drawthings_extraction", 
+            "type": "python",
+            "method": "xmp_extractors.XMPExtractor.extract_drawthings_from_xmp",
+            "output_field": "drawthings_metadata",
+            "condition": "tool_detection.detected_tool == 'Draw Things'"
+        },
+        {
+            "id": "creator_tool_info",
+            "type": "python", 
+            "method": "xmp_extractors.XMPExtractor.extract_creator_tool",
+            "output_field": "creator_tool"
+        }
+    ]
+}

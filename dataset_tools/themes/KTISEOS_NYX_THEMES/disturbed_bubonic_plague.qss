@@ -1,0 +1,725 @@
+/* DISTURBED IDEA: BUBONIC PLAGUE */
+/* A comprehensive theme capturing the medieval disease aesthetic with sickly yellows, */
+/* infected greens, necrotic blacks, and fevered reds - evoking swollen buboes and pestilence */
+
+/* Color Palette:
+ * Necrotic Black: #0A0A0A, #1A1A1A, #000000
+ * Sickly Yellow: #D4C75A, #E6E066, #CCCC3D, #B8B83D
+ * Infected Green: #4A5D23, #5A6B2A, #3D4D1A, #6B7D33
+ * Fevered Red: #8B2635, #A52A2A, #7D1E2B, #B83C4A
+ * Diseased Flesh: #C9A96E, #B89968, #A68B5B
+ * Pustule White: #F5F5DC, #FFFACD
+ */
+
+/* Main Application Window */
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #0A0A0A, stop: 0.3 #4A5D23,
+                                stop: 0.6 #1A1A1A, stop: 1 #8B2635);
+    color: #D4C75A;
+    border: 3px solid #5A6B2A;
+}
+
+/* Base Widget Styling */
+QWidget {
+    background-color: #1A1A1A;
+    color: #D4C75A;
+    font-family: 'Courier New', 'Times New Roman', serif;
+    font-size: 13px;
+    border: 1px solid #4A5D23;
+}
+
+/* Push Buttons - Swollen Buboes Effect */
+QPushButton {
+    background: qradialgrad ient(cx: 0.5, cy: 0.5, radius: 1,
+                                 stop: 0 #8B2635, stop: 0.7 #7D1E2B, stop: 1 #000000);
+    border: 3px outset #A52A2A;
+    border-radius: 12px;
+    padding: 8px 16px;
+    color: #F5F5DC;
+    font-weight: bold;
+    font-size: 14px;
+    min-height: 25px;
+}
+
+QPushButton:hover {
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1,
+                                stop: 0 #B83C4A, stop: 0.7 #8B2635, stop: 1 #1A1A1A);
+    border: 3px outset #E6E066;
+    color: #FFFACD;
+}
+
+QPushButton:pressed {
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1,
+                                stop: 0 #7D1E2B, stop: 0.7 #4A5D23, stop: 1 #000000);
+    border: 3px inset #CCCC3D;
+    color: #D4C75A;
+}
+
+QPushButton:disabled {
+    background: #3D4D1A;
+    border: 2px solid #5A6B2A;
+    color: #6B7D33;
+}
+
+/* Text Input Fields - Infected Wounds */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 0.1 #4A5D23,
+                                stop: 0.9 #1A1A1A, stop: 1 #8B2635);
+    border: 2px inset #5A6B2A;
+    border-radius: 6px;
+    padding: 6px;
+    color: #E6E066;
+    selection-background-color: #8B2635;
+    selection-color: #FFFACD;
+    font-family: 'Courier New', monospace;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 3px solid #D4C75A;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1A1A1A, stop: 0.1 #5A6B2A,
+                                stop: 0.9 #000000, stop: 1 #A52A2A);
+}
+
+/* List Widgets - Diseased Tissue */
+QListWidget, QTreeWidget, QTableWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 0.5 #1A1A1A, stop: 1 #4A5D23);
+    border: 2px solid #6B7D33;
+    border-radius: 4px;
+    alternate-background-color: #3D4D1A;
+    color: #D4C75A;
+    gridline-color: #5A6B2A;
+}
+
+QListWidget::item, QTreeWidget::item, QTableWidget::item {
+    padding: 4px;
+    border-bottom: 1px dotted #5A6B2A;
+    color: #E6E066;
+}
+
+QListWidget::item:selected, QTreeWidget::item:selected, QTableWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8B2635, stop: 0.5 #A52A2A, stop: 1 #7D1E2B);
+    color: #FFFACD;
+    border: 1px solid #D4C75A;
+}
+
+QListWidget::item:hover, QTreeWidget::item:hover, QTableWidget::item:hover {
+    background: #6B7D33;
+    color: #F5F5DC;
+}
+
+/* Headers - Necrotic Tissue */
+QHeaderView::section {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4A5D23, stop: 0.5 #000000, stop: 1 #8B2635);
+    color: #D4C75A;
+    padding: 6px;
+    border: 1px solid #5A6B2A;
+    font-weight: bold;
+}
+
+QHeaderView::section:hover {
+    background: #A52A2A;
+    color: #FFFACD;
+}
+
+/* Combo Boxes - Pustule Dropdowns */
+QComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5A6B2A, stop: 1 #1A1A1A);
+    border: 2px solid #6B7D33;
+    border-radius: 5px;
+    padding: 5px 15px 5px 8px;
+    color: #D4C75A;
+    min-width: 80px;
+}
+
+QComboBox:hover {
+    border: 2px solid #E6E066;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #6B7D33, stop: 1 #3D4D1A);
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 2px solid #8B2635;
+    background: #4A5D23;
+}
+
+QComboBox::down-arrow {
+    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMUw2IDZMMTEgMSIgc3Ryb2tlPSIjRDRDNzVBIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==);
+    width: 12px;
+    height: 8px;
+}
+
+QComboBox QAbstractItemView {
+    background: #000000;
+    border: 2px solid #5A6B2A;
+    selection-background-color: #8B2635;
+    selection-color: #FFFACD;
+    color: #E6E066;
+}
+
+/* Spin Boxes - Infected Counters */
+QSpinBox, QDoubleSpinBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1A1A1A, stop: 1 #4A5D23);
+    border: 2px solid #6B7D33;
+    border-radius: 4px;
+    padding: 3px;
+    color: #D4C75A;
+    min-width: 60px;
+}
+
+QSpinBox::up-button, QDoubleSpinBox::up-button {
+    background: #8B2635;
+    border: 1px solid #A52A2A;
+    border-top-right-radius: 3px;
+}
+
+QSpinBox::down-button, QDoubleSpinBox::down-button {
+    background: #4A5D23;
+    border: 1px solid #5A6B2A;
+    border-bottom-right-radius: 3px;
+}
+
+QSpinBox::up-arrow, QDoubleSpinBox::up-arrow {
+    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iNiIgdmlld0JveD0iMCAwIDEwIDYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgNUw1IDFMOSA1IiBzdHJva2U9IiNGNUY1REMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+);
+    width: 10px;
+    height: 6px;
+}
+
+QSpinBox::down-arrow, QDoubleSpinBox::down-arrow {
+    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iNiIgdmlld0JveD0iMCAwIDEwIDYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMUw1IDVMOSA1IiBzdHJva2U9IiNENEM3NUEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+);
+    width: 10px;
+    height: 6px;
+}
+
+/* Sliders - Disease Progression */
+QSlider::groove:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #4A5D23, stop: 0.5 #8B2635, stop: 1 #000000);
+    height: 8px;
+    border: 1px solid #5A6B2A;
+    border-radius: 4px;
+}
+
+QSlider::handle:horizontal {
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1,
+                                stop: 0 #D4C75A, stop: 0.7 #E6E066, stop: 1 #CCCC3D);
+    border: 2px solid #8B2635;
+    width: 20px;
+    height: 20px;
+    margin: -8px 0;
+    border-radius: 12px;
+}
+
+QSlider::handle:horizontal:hover {
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1,
+                                stop: 0 #FFFACD, stop: 0.7 #F5F5DC, stop: 1 #E6E066);
+    border: 2px solid #A52A2A;
+}
+
+QSlider::groove:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4A5D23, stop: 0.5 #8B2635, stop: 1 #000000);
+    width: 8px;
+    border: 1px solid #5A6B2A;
+    border-radius: 4px;
+}
+
+QSlider::handle:vertical {
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1,
+                                stop: 0 #D4C75A, stop: 0.7 #E6E066, stop: 1 #CCCC3D);
+    border: 2px solid #8B2635;
+    width: 20px;
+    height: 20px;
+    margin: 0 -8px;
+    border-radius: 12px;
+}
+
+/* Progress Bars - Disease Spread */
+QProgressBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #000000, stop: 1 #1A1A1A);
+    border: 2px solid #4A5D23;
+    border-radius: 8px;
+    text-align: center;
+    color: #D4C75A;
+    font-weight: bold;
+    min-height: 20px;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8B2635, stop: 0.5 #A52A2A, stop: 1 #B83C4A);
+    border-radius: 6px;
+    border: 1px solid #7D1E2B;
+}
+
+/* Check Boxes - Symptoms */
+QCheckBox {
+    color: #D4C75A;
+    spacing: 8px;
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #5A6B2A;
+    border-radius: 3px;
+    background: #000000;
+}
+
+QCheckBox::indicator:checked {
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1,
+                                stop: 0 #8B2635, stop: 0.7 #A52A2A, stop: 1 #7D1E2B);
+    border: 2px solid #E6E066;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px solid #D4C75A;
+    background: #1A1A1A;
+}
+
+/* Radio Buttons - Plague Variants */
+QRadioButton {
+    color: #D4C75A;
+    spacing: 8px;
+}
+
+QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #5A6B2A;
+    border-radius: 8px;
+    background: #000000;
+}
+
+QRadioButton::indicator:checked {
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1,
+                                stop: 0 #D4C75A, stop: 0.4 #E6E066, 
+                                stop: 0.7 #8B2635, stop: 1 #4A5D23);
+    border: 2px solid #FFFACD;
+}
+
+QRadioButton::indicator:hover {
+    border: 2px solid #E6E066;
+    background: #1A1A1A;
+}
+
+/* Tab Widgets - Plague Records */
+QTabWidget::pane {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1A1A1A, stop: 1 #000000);
+    border: 2px solid #4A5D23;
+    border-radius: 6px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5A6B2A, stop: 1 #3D4D1A);
+    border: 2px solid #6B7D33;
+    border-bottom-color: #4A5D23;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    min-width: 80px;
+    padding: 8px 12px;
+    color: #D4C75A;
+    margin-right: 2px;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B2635, stop: 1 #A52A2A);
+    border-bottom-color: #8B2635;
+    color: #FFFACD;
+    font-weight: bold;
+}
+
+QTabBar::tab:hover:!selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #6B7D33, stop: 1 #5A6B2A);
+    color: #E6E066;
+}
+
+/* Group Boxes - Disease Categories */
+QGroupBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #1A1A1A, stop: 0.5 #000000, stop: 1 #4A5D23);
+    border: 2px solid #5A6B2A;
+    border-radius: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    color: #D4C75A;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 4px 8px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8B2635, stop: 1 #A52A2A);
+    border: 1px solid #7D1E2B;
+    border-radius: 4px;
+    color: #FFFACD;
+}
+
+/* Scroll Bars - Infection Spread */
+QScrollBar:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #000000, stop: 1 #1A1A1A);
+    width: 16px;
+    border: 1px solid #4A5D23;
+    border-radius: 8px;
+    margin: 20px 0 20px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8B2635, stop: 0.5 #A52A2A, stop: 1 #7D1E2B);
+    border: 1px solid #5A6B2A;
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #B83C4A, stop: 0.5 #A52A2A, stop: 1 #8B2635);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: #4A5D23;
+    border: 1px solid #5A6B2A;
+    border-radius: 6px;
+    height: 18px;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-line:vertical {
+    subcontrol-position: bottom;
+}
+
+QScrollBar::sub-line:vertical {
+    subcontrol-position: top;
+}
+
+QScrollBar:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 1 #1A1A1A);
+    height: 16px;
+    border: 1px solid #4A5D23;
+    border-radius: 8px;
+    margin: 0 20px 0 20px;
+}
+
+QScrollBar::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B2635, stop: 0.5 #A52A2A, stop: 1 #7D1E2B);
+    border: 1px solid #5A6B2A;
+    border-radius: 6px;
+    min-width: 20px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B83C4A, stop: 0.5 #A52A2A, stop: 1 #8B2635);
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    background: #4A5D23;
+    border: 1px solid #5A6B2A;
+    border-radius: 6px;
+    width: 18px;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-line:horizontal {
+    subcontrol-position: right;
+}
+
+QScrollBar::sub-line:horizontal {
+    subcontrol-position: left;
+}
+
+/* Menu Bar - Plague Menu */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4A5D23, stop: 1 #000000);
+    border-bottom: 2px solid #8B2635;
+    color: #D4C75A;
+    padding: 2px;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B2635, stop: 1 #A52A2A);
+    color: #FFFACD;
+}
+
+QMenuBar::item:pressed {
+    background: #7D1E2B;
+    color: #F5F5DC;
+}
+
+/* Context Menus - Infection Options */
+QMenu {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #000000, stop: 0.5 #1A1A1A, stop: 1 #4A5D23);
+    border: 2px solid #5A6B2A;
+    border-radius: 6px;
+    color: #D4C75A;
+    padding: 4px;
+}
+
+QMenu::item {
+    background: transparent;
+    padding: 6px 20px;
+    border-radius: 3px;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8B2635, stop: 1 #A52A2A);
+    color: #FFFACD;
+}
+
+QMenu::separator {
+    height: 2px;
+    background: #5A6B2A;
+    margin: 4px 8px;
+}
+
+/* Tool Bar - Plague Tools */
+QToolBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4A5D23, stop: 1 #1A1A1A);
+    border: 1px solid #5A6B2A;
+    border-radius: 4px;
+    spacing: 4px;
+    padding: 4px;
+}
+
+QToolBar::handle {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8B2635, stop: 1 #A52A2A);
+    border: 1px solid #7D1E2B;
+    border-radius: 2px;
+    width: 8px;
+    margin: 2px;
+}
+
+QToolButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5A6B2A, stop: 1 #3D4D1A);
+    border: 1px solid #6B7D33;
+    border-radius: 4px;
+    padding: 6px;
+    color: #D4C75A;
+    min-width: 30px;
+    min-height: 30px;
+}
+
+QToolButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B2635, stop: 1 #A52A2A);
+    border: 1px solid #E6E066;
+    color: #FFFACD;
+}
+
+QToolButton:pressed {
+    background: #7D1E2B;
+    border: 1px solid #CCCC3D;
+}
+
+/* Status Bar - Plague Status */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #000000, stop: 0.5 #1A1A1A, stop: 1 #4A5D23);
+    border-top: 2px solid #5A6B2A;
+    color: #D4C75A;
+    padding: 4px;
+}
+
+QStatusBar::item {
+    background: transparent;
+    border: none;
+}
+
+/* Splitter - Disease Boundaries */
+QSplitter::handle {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8B2635, stop: 0.5 #A52A2A, stop: 1 #7D1E2B);
+    border: 1px solid #5A6B2A;
+}
+
+QSplitter::handle:horizontal {
+    width: 6px;
+}
+
+QSplitter::handle:vertical {
+    height: 6px;
+}
+
+QSplitter::handle:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #B83C4A, stop: 0.5 #A52A2A, stop: 1 #8B2635);
+}
+
+/* Dock Widgets - Quarantine Areas */
+QDockWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #1A1A1A, stop: 1 #000000);
+    border: 2px solid #4A5D23;
+    border-radius: 6px;
+    titlebar-close-icon: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgNEw0IDEyTTQgNEwxMiAxMiIgc3Ryb2tlPSIjOEIyNjM1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==);
+    titlebar-normal-icon: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHN0cm9rZT0iIzRBNUQyMyIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+);
+}
+
+QDockWidget::title {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8B2635, stop: 1 #A52A2A);
+    color: #FFFACD;
+    padding: 6px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Tool Tips - Plague Information */
+QToolTip {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #000000, stop: 1 #1A1A1A);
+    border: 2px solid #8B2635;
+    border-radius: 6px;
+    padding: 6px;
+    color: #E6E066;
+    font-size: 12px;
+    opacity: 240;
+}
+
+/* Calendar Widget - Plague Timeline */
+QCalendarWidget {
+    background: #000000;
+    border: 2px solid #4A5D23;
+    border-radius: 8px;
+}
+
+QCalendarWidget QTableView {
+    background: #1A1A1A;
+    alternate-background-color: #3D4D1A;
+    selection-background-color: #8B2635;
+    selection-color: #FFFACD;
+    gridline-color: #5A6B2A;
+}
+
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #4A5D23, stop: 1 #8B2635);
+    color: #D4C75A;
+}
+
+QCalendarWidget QToolButton {
+    background: #5A6B2A;
+    color: #D4C75A;
+    border: 1px solid #6B7D33;
+    border-radius: 3px;
+    margin: 2px;
+}
+
+QCalendarWidget QToolButton:hover {
+    background: #8B2635;
+    color: #FFFACD;
+}
+
+/* Dial Widget - Disease Severity */
+QDial {
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1,
+                                stop: 0 #1A1A1A, stop: 0.7 #4A5D23, stop: 1 #000000);
+    border: 3px solid #5A6B2A;
+    border-radius: 50px;
+}
+
+/* Font Combo Box - Plague Fonts */
+QFontComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5A6B2A, stop: 1 #1A1A1A);
+    border: 2px solid #6B7D33;
+    border-radius: 5px;
+    padding: 5px;
+    color: #D4C75A;
+}
+
+QFontComboBox:hover {
+    border: 2px solid #E6E066;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #6B7D33, stop: 1 #3D4D1A);
+}
+
+/* LCD Number - Plague Counter */
+QLCDNumber {
+    background: #000000;
+    color: #D4C75A;
+    border: 2px solid #4A5D23;
+    border-radius: 6px;
+}
+
+/* Scroll Area - Infected Regions */
+QScrollArea {
+    background: #1A1A1A;
+    border: 2px solid #4A5D23;
+    border-radius: 6px;
+}
+
+QScrollArea QWidget {
+    background: transparent;
+}
+
+/* Final touches for comprehensive coverage */
+QAbstractScrollArea {
+    background: #1A1A1A;
+    border: 1px solid #4A5D23;
+    color: #D4C75A;
+}
+
+QAbstractScrollArea::corner {
+    background: #5A6B2A;
+    border: 1px solid #6B7D33;
+}
+
+/* Error styling - Critical infection */
+QWidget[error="true"] {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8B2635, stop: 1 #A52A2A);
+    border: 2px solid #B83C4A;
+    color: #FFFACD;
+}
+
+/* Warning styling - Mild infection */
+QWidget[warning="true"] {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #CCCC3D, stop: 1 #E6E066);
+    border: 2px solid #D4C75A;
+    color: #000000;
+}
+
+/* Success styling - Recovery/immunity */
+QWidget[success="true"] {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #4A5D23, stop: 1 #6B7D33);
+    border: 2px solid #5A6B2A;
+    color: #F5F5DC;
+}

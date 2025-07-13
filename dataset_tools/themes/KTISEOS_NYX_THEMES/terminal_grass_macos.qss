@@ -1,0 +1,272 @@
+/* TERMINAL GRASS (MACOS-INSPIRED) THEME */
+/* Mimics a MacOS terminal with a creamy yellow background and dark green text */
+
+QMainWindow {
+    background: #F5F5DC; /* Creamy yellow */
+    color: #006400; /* Dark green */
+    border: none;
+}
+
+QWidget {
+    background: #F5F5DC; /* Creamy yellow */
+    color: #006400; /* Dark green */
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #006400;
+    border: 1px solid #F5F5DC;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: #F5F5DC;
+}
+
+QPushButton:hover {
+    background: #008000;
+}
+
+QPushButton:pressed {
+    background: #004000;
+}
+
+QPushButton:disabled {
+    background: #B0B0B0;
+    border: 1px solid #D0D0D0;
+    color: #808080;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 1px solid #006400;
+    border-radius: 3px;
+    padding: 5px;
+    color: #006400;
+    selection-background-color: #008000;
+    selection-color: #FFFFFF;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #008000;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 1px solid #006400;
+    border-radius: 3px;
+    alternate-background-color: #F0F0D0;
+    color: #006400;
+    gridline-color: #004000;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 5px 8px;
+    border-bottom: 1px solid #E0E0C0;
+}
+
+QListWidget::item:selected {
+    background: #008000;
+    color: #FFFFFF;
+}
+
+QListWidget::item:hover {
+    background: #E0E0C0;
+}
+
+QMenuBar {
+    background: #F5F5DC;
+    color: #006400;
+    border-bottom: 1px solid #006400;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background: #006400;
+}
+
+QMenu {
+    background: #F5F5DC;
+    border: 1px solid #006400;
+    padding: 3px;
+}
+
+QMenu::item {
+    padding: 5px 15px;
+    color: #006400;
+}
+
+QMenu::item:selected {
+    background: #006400;
+}
+
+QScrollBar:vertical {
+    background: #F5F5DC;
+    width: 10px;
+    border-radius: 5px;
+}
+
+QScrollBar::handle:vertical {
+    background: #006400;
+    border-radius: 4px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: #F5F5DC;
+    height: 10px;
+    border-radius: 5px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #006400;
+    border-radius: 4px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #006400;
+    background: #FFFFFF;
+}
+
+QTabBar::tab {
+    background: #F5F5DC;
+    border: 1px solid #006400;
+    padding: 6px 10px;
+    color: #006400;
+}
+
+QTabBar::tab:selected {
+    background: #FFFFFF;
+    color: #006400;
+}
+
+QTabBar::tab:hover:!selected {
+    background: #E0E0C0;
+}
+
+QStatusBar {
+    background: #F5F5DC;
+    border-top: 1px solid #006400;
+    color: #006400;
+}
+
+QLineEdit {
+    background: #FFFFFF;
+    border: 1px solid #006400;
+    border-radius: 3px;
+    padding: 5px;
+    color: #006400;
+    selection-background-color: #008000;
+    selection-color: #FFFFFF;
+}
+
+QLineEdit:focus {
+    border: 1px solid #008000;
+}
+
+QComboBox {
+    background: #F5F5DC;
+    border: 1px solid #006400;
+    border-radius: 3px;
+    padding: 4px;
+    color: #006400;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 18px;
+    border-left: 1px solid #006400;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid #006400;
+}
+
+QComboBox QAbstractItemView {
+    background: #F5F5DC;
+    border: 1px solid #006400;
+    selection-background-color: #008000;
+    color: #006400;
+}
+
+QSplitter::handle {
+    background: #006400;
+    border: 1px solid #F5F5DC;
+}
+
+QSplitter::handle:horizontal {
+    width: 4px;
+}
+
+QSplitter::handle:vertical {
+    height: 4px;
+}
+
+QProgressBar {
+    border: 1px solid #006400;
+    border-radius: 3px;
+    background: #FFFFFF;
+    text-align: center;
+    color: #006400;
+}
+
+QProgressBar::chunk {
+    background: #006400;
+    border-radius: 2px;
+}
+
+QToolTip {
+    background: #F5F5DC;
+    border: 1px solid #006400;
+    color: #006400;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QLabel {
+    color: #006400;
+}
+
+QGroupBox {
+    border: 1px solid #006400;
+    border-radius: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    color: #006400;
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 8px;
+    padding: 0 4px 0 4px;
+    background: #006400;
+    color: #F5F5DC;
+    border-radius: 2px;
+}
+
+QCheckBox {
+    color: #006400;
+}
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid #006400;
+    background: #FFFFFF;
+}
+
+QCheckBox::indicator:checked {
+    background: #006400;
+}

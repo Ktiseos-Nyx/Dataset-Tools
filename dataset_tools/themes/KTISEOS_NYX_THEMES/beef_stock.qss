@@ -1,0 +1,57 @@
+/* BEEF STOCK THEME */
+/* Rich, dark browns and some lighter, almost golden accents, evoking the color of beef stock. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3E2723, stop: 0.3 #5D4037,
+                                stop: 0.7 #8B4513, stop: 1 #3E2723);
+    color: #F5DEB3;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3E2723, stop: 0.3 #5D4037,
+                                stop: 0.7 #8B4513, stop: 1 #3E2723);
+    color: #F5DEB3;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DAA520, stop: 1 #B8860B);
+    border: 2px solid #3E2723;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B8860B, stop: 1 #DAA520);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #3E2723;
+    border-radius: 3px;
+    padding: 5px;
+    color: #5D4037;
+    selection-background-color: #8B4513;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #3E2723;
+    border-radius: 3px;
+    alternate-background-color: #F5F5DC;
+    color: #5D4037;
+}
+
+QListWidget::item:selected {
+    background: #8B4513;
+    color: #FFFFFF;
+}

@@ -1,0 +1,52 @@
+/* STUPID IDEA: BLURRY VISION */
+/* A theme where everything is slightly out of focus, with muted colors and soft edges. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D3D3D3, stop: 0.5 #C0C0C0,
+                                stop: 1 #A9A9A9);
+    color: #696969;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D3D3D3, stop: 0.5 #C0C0C0,
+                                stop: 1 #A9A9A9);
+    color: #696969;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: #A9A9A9;
+    border: 2px solid #D3D3D3;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #696969;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #C0C0C0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    color: #696969;
+    border: 2px solid #A9A9A9;
+    border-radius: 3px;
+    padding: 8px;
+}
+
+QListWidget {
+    background-color: #FFFFFF;
+    color: #696969;
+    border: 2px solid #A9A9A9;
+    border-radius: 3px;
+}
+
+QListWidget::item:selected {
+    background-color: #C0C0C0;
+    color: #696969;
+}

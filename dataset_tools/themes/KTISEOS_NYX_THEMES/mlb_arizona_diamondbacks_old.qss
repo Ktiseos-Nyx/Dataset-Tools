@@ -1,0 +1,219 @@
+/* MLB: ARIZONA DIAMONDBACKS (OLD COLORS) THEME */
+/* Solid colors inspired by the old Arizona Diamondbacks: purple, teal, and copper. */
+
+QMainWindow {
+    background: #330066; /* Purple */
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: #330066; /* Purple */
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #00A3AD; /* Teal */
+    border: 2px solid #CC9933; /* Copper */
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #008C99; /* Darker Teal */
+    border: 2px solid #E0E0E0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #330066; /* Purple */
+    border-radius: 3px;
+    padding: 5px;
+    color: #00A3AD; /* Teal */
+    selection-background-color: #CC9933; /* Copper */
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #330066; /* Purple */
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #00A3AD; /* Teal */
+}
+
+QListWidget::item:selected {
+    background: #00A3AD; /* Teal */
+    color: #FFFFFF;
+}
+
+QMenuBar {
+    background: #330066; /* Purple */
+    color: #FFFFFF;
+    border-bottom: 1px solid #00A3AD; /* Teal */
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background: #00A3AD; /* Teal */
+}
+
+QMenu {
+    background: #330066; /* Purple */
+    border: 1px solid #00A3AD; /* Teal */
+    padding: 3px;
+}
+
+QMenu::item {
+    padding: 5px 15px;
+    color: #FFFFFF;
+}
+
+QMenu::item:selected {
+    background: #00A3AD; /* Teal */
+}
+
+QScrollBar:vertical {
+    background: #330066; /* Purple */
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #00A3AD; /* Teal */
+    border-radius: 5px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #00A3AD; /* Teal */
+    background: #FFFFFF;
+}
+
+QTabBar::tab {
+    background: #330066; /* Purple */
+    border: 1px solid #00A3AD; /* Teal */
+    padding: 6px 10px;
+    color: #FFFFFF;
+}
+
+QTabBar::tab:selected {
+    background: #FFFFFF;
+    color: #330066; /* Purple */
+}
+
+QStatusBar {
+    background: #330066; /* Purple */
+    border-top: 1px solid #00A3AD; /* Teal */
+    color: #FFFFFF;
+}
+
+QLineEdit {
+    background: #FFFFFF;
+    border: 2px solid #330066; /* Purple */
+    border-radius: 3px;
+    padding: 5px;
+    color: #00A3AD; /* Teal */
+    selection-background-color: #CC9933; /* Copper */
+    selection-color: #FFFFFF;
+}
+
+QComboBox {
+    background: #330066; /* Purple */
+    border: 2px solid #00A3AD; /* Teal */
+    border-radius: 3px;
+    padding: 4px;
+    color: #FFFFFF;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 18px;
+    border-left: 1px solid #00A3AD; /* Teal */
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid #FFFFFF;
+}
+
+QComboBox QAbstractItemView {
+    background: #330066; /* Purple */
+    border: 1px solid #00A3AD; /* Teal */
+    selection-background-color: #CC9933; /* Copper */
+    color: #FFFFFF;
+}
+
+QSplitter::handle {
+    background: #00A3AD; /* Teal */
+    border: 1px solid #FFFFFF;
+}
+
+QProgressBar {
+    border: 2px solid #330066; /* Purple */
+    border-radius: 3px;
+    background: #FFFFFF;
+    text-align: center;
+    color: #00A3AD; /* Teal */
+}
+
+QProgressBar::chunk {
+    background: #00A3AD; /* Teal */
+    border-radius: 2px;
+}
+
+QToolTip {
+    background: #330066; /* Purple */
+    border: 1px solid #00A3AD; /* Teal */
+    color: #FFFFFF;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QLabel {
+    color: #FFFFFF;
+}
+
+QGroupBox {
+    border: 2px solid #00A3AD; /* Teal */
+    border-radius: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    color: #FFFFFF;
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 8px;
+    padding: 0 4px 0 4px;
+    background: #00A3AD; /* Teal */
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QCheckBox {
+    color: #FFFFFF;
+}
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid #330066; /* Purple */
+    background: #FFFFFF;
+}
+
+QCheckBox::indicator:checked {
+    background: #00A3AD; /* Teal */
+}

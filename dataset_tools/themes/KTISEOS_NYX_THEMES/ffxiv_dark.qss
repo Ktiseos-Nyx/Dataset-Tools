@@ -1,0 +1,435 @@
+/* FFXIV DARK THEME */
+/* Inspired by FFXIV Dark UI - Rich dark greys with elegant gold beveled borders */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 0.5 #2d2d2d,
+                                stop: 1 #202020);
+    color: #e6e6e6;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 0.5 #2d2d2d,
+                                stop: 1 #202020);
+    color: #e6e6e6;
+    font-size: 13px;
+}
+
+/* Rich gold-beveled buttons on dark */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #d4af37, stop: 0.3 #c9a832,
+                                stop: 0.7 #b8972b, stop: 1 #a68725);
+    border: 3px outset #d4af37;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: #2a1f15;
+    font-weight: bold;
+    min-height: 16px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #e6c547, stop: 0.3 #dab93c,
+                                stop: 0.7 #ca9f30, stop: 1 #b8972b);
+    border: 3px outset #e6c547;
+    color: #1a130d;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #a68725, stop: 0.3 #b8972b,
+                                stop: 0.7 #c9a832, stop: 1 #d4af37);
+    border: 3px inset #b8972b;
+    color: #2a1f15;
+}
+
+QPushButton:disabled {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a4a4a, stop: 1 #3a3a3a);
+    border: 3px outset #555555;
+    color: #888888;
+}
+
+/* Dark elegant text areas with gold borders */
+QTextEdit, QPlainTextEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+    border: 3px inset #d4af37;
+    border-radius: 8px;
+    padding: 12px;
+    color: #e6e6e6;
+    selection-background-color: #d4af37;
+    selection-color: #000000;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 3px inset #e6c547;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #252525, stop: 1 #1a1a1a);
+}
+
+/* Dark noble lists */
+QListWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+    border: 3px inset #d4af37;
+    border-radius: 8px;
+    alternate-background-color: #252525;
+    color: #e6e6e6;
+    gridline-color: #3a3a3a;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 10px 12px;
+    border-bottom: 1px solid #3a3a3a;
+    border-radius: 4px;
+    margin: 2px;
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #d4af37, stop: 1 #b8972b);
+    color: #000000;
+    border-radius: 6px;
+    border: 1px solid #e6c547;
+}
+
+QListWidget::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2a2a2a);
+    color: #d4af37;
+    border-radius: 6px;
+}
+
+QListWidget::item:selected:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #e6c547, stop: 1 #dab93c);
+    border: 1px solid #f5d96a;
+}
+
+/* Dark regal menu styling */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a4a4a, stop: 1 #3a3a3a);
+    color: #e6e6e6;
+    border-bottom: 3px outset #d4af37;
+    font-weight: bold;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 8px 14px;
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #d4af37, stop: 1 #b8972b);
+    color: #000000;
+}
+
+QMenu {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2a2a2a, stop: 1 #1a1a1a);
+    border: 3px outset #d4af37;
+    border-radius: 8px;
+    padding: 6px;
+}
+
+QMenu::item {
+    padding: 8px 20px;
+    border-radius: 4px;
+    margin: 1px;
+    color: #e6e6e6;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #d4af37, stop: 1 #b8972b);
+    color: #000000;
+}
+
+/* Dark ornate scrollbars */
+QScrollBar:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #1a1a1a, stop: 1 #2a2a2a);
+    width: 16px;
+    border: 2px outset #666666;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #d4af37, stop: 0.5 #e6c547,
+                                stop: 1 #b8972b);
+    border: 2px outset #d4af37;
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #e6c547, stop: 0.5 #f5d96a,
+                                stop: 1 #dab93c);
+}
+
+QScrollBar::handle:vertical:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #b8972b, stop: 0.5 #d4af37,
+                                stop: 1 #9d7f1f);
+    border: 2px inset #b8972b;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #2a2a2a);
+    height: 16px;
+    border: 2px outset #666666;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #d4af37, stop: 0.5 #e6c547,
+                                stop: 1 #b8972b);
+    border: 2px outset #d4af37;
+    border-radius: 6px;
+    min-width: 30px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #e6c547, stop: 0.5 #f5d96a,
+                                stop: 1 #dab93c);
+}
+
+QScrollBar::handle:horizontal:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #b8972b, stop: 0.5 #d4af37,
+                                stop: 1 #9d7f1f);
+    border: 2px inset #b8972b;
+}
+
+/* Dark noble tabs */
+QTabWidget::pane {
+    border: 3px outset #d4af37;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+    border-radius: 8px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a4a4a, stop: 1 #3a3a3a);
+    border: 3px outset #666666;
+    padding: 10px 18px;
+    margin-right: 3px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: bold;
+    color: #e6e6e6;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #d4af37, stop: 1 #b8972b);
+    border: 3px outset #d4af37;
+    border-bottom: none;
+    color: #000000;
+}
+
+QTabBar::tab:hover:!selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5a5a5a, stop: 1 #4a4a4a);
+    border: 3px outset #888888;
+    color: #d4af37;
+}
+
+/* Dark royal status bar */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a4a4a, stop: 1 #3a3a3a);
+    border-top: 3px outset #d4af37;
+    color: #e6e6e6;
+    font-weight: bold;
+}
+
+/* Dark gilded input fields */
+QLineEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+    border: 3px inset #d4af37;
+    border-radius: 6px;
+    padding: 8px;
+    color: #e6e6e6;
+    selection-background-color: #d4af37;
+    selection-color: #000000;
+}
+
+QLineEdit:focus {
+    border: 3px inset #e6c547;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #252525, stop: 1 #1a1a1a);
+}
+
+/* Dark aristocratic combo boxes */
+QComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a4a4a, stop: 1 #3a3a3a);
+    border: 3px outset #666666;
+    border-radius: 6px;
+    padding: 8px;
+    color: #e6e6e6;
+    min-width: 80px;
+    font-weight: bold;
+}
+
+QComboBox:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5a5a5a, stop: 1 #4a4a4a);
+    border: 3px outset #d4af37;
+    color: #d4af37;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 25px;
+    border-left: 2px solid #666666;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid #e6e6e6;
+}
+
+QComboBox QAbstractItemView {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2a2a2a, stop: 1 #1a1a1a);
+    border: 3px outset #d4af37;
+    border-radius: 6px;
+    selection-background-color: #d4af37;
+    selection-color: #000000;
+    color: #e6e6e6;
+}
+
+/* Dark ornamental splitter */
+QSplitter::handle {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #d4af37, stop: 0.5 #e6c547,
+                                stop: 1 #b8972b);
+    border: 1px outset #d4af37;
+    border-radius: 2px;
+}
+
+QSplitter::handle:horizontal {
+    width: 4px;
+}
+
+QSplitter::handle:vertical {
+    height: 4px;
+}
+
+/* Dark majestic progress bars */
+QProgressBar {
+    border: 3px inset #d4af37;
+    border-radius: 6px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+    text-align: center;
+    color: #e6e6e6;
+    font-weight: bold;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #d4af37, stop: 0.5 #e6c547,
+                                stop: 1 #b8972b);
+    border-radius: 4px;
+    margin: 1px;
+}
+
+/* Dark elegant tool tips */
+QToolTip {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2a2a2a, stop: 1 #1a1a1a);
+    border: 3px outset #d4af37;
+    color: #e6e6e6;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+/* Additional dark FFXIV styling */
+QLabel {
+    color: #e6e6e6;
+    font-weight: bold;
+}
+
+QGroupBox {
+    border: 3px outset #d4af37;
+    border-radius: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    font-weight: bold;
+    color: #e6e6e6;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 15px;
+    padding: 0 12px 0 12px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #d4af37, stop: 1 #e6c547);
+    color: #000000;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 2px outset #d4af37;
+}
+
+/* Dark FFXIV checkboxes */
+QCheckBox {
+    color: #e6e6e6;
+    font-weight: bold;
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 2px inset #666666;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+}
+
+QCheckBox::indicator:checked {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #d4af37, stop: 1 #e6c547);
+    border: 2px outset #d4af37;
+}
+
+QCheckBox::indicator:checked:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #e6c547, stop: 1 #f5d96a);
+    border: 2px outset #e6c547;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px inset #d4af37;
+}

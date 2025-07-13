@@ -1,0 +1,57 @@
+/* POKEMON THEME: GENGAR */
+/* Inspired by Gengar - Dark purples, black, and a touch of red for the eyes. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2A002A, stop: 0.3 #4B0082,
+                                stop: 0.7 #6A006A, stop: 1 #2A002A);
+    color: #F0F0F0;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2A002A, stop: 0.3 #4B0082,
+                                stop: 0.7 #6A006A, stop: 1 #2A002A);
+    color: #F0F0F0;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B0000, stop: 1 #B22222);
+    border: 2px solid #F0F0F0;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 1 #8B0000);
+    border: 2px solid #FFD700;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #4B0082;
+    border-radius: 3px;
+    padding: 5px;
+    color: #F0F0F0;
+    selection-background-color: #8B0000;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #4B0082;
+    border-radius: 3px;
+    alternate-background-color: #1A001A;
+    color: #F0F0F0;
+}
+
+QListWidget::item:selected {
+    background: #4B0082;
+    color: #FFFFFF;
+}

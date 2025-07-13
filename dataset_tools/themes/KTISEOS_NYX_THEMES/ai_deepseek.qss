@@ -1,0 +1,57 @@
+/* DEEPSEEK AI THEME */
+/* A sophisticated theme with deep blues, purples, and subtle gradients. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #0A0A2A, stop: 0.3 #1A1A4A,
+                                stop: 0.7 #2A2A6A, stop: 1 #0A0A2A);
+    color: #ADD8E6;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #0A0A2A, stop: 0.3 #1A1A4A,
+                                stop: 0.7 #2A2A6A, stop: 1 #0A0A2A);
+    color: #ADD8E6;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00BFFF, stop: 1 #1E90FF);
+    border: 2px solid #ADD8E6;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1E90FF, stop: 1 #00BFFF);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #00BFFF;
+    border-radius: 3px;
+    padding: 5px;
+    color: #ADD8E6;
+    selection-background-color: #1E90FF;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #00BFFF;
+    border-radius: 3px;
+    alternate-background-color: #1A1A1A;
+    color: #ADD8E6;
+}
+
+QListWidget::item:selected {
+    background: #1E90FF;
+    color: #FFFFFF;
+}

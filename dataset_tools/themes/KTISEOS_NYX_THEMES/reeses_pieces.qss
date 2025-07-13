@@ -1,0 +1,421 @@
+/* REESE'S PIECES THEME */
+/* Sweet orange and brown colors inspired by the classic candy */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8c00, stop: 0.5 #ff7f00,
+                                stop: 1 #d2691e);
+    color: #8b4513;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8c00, stop: 0.5 #ff7f00,
+                                stop: 1 #d2691e);
+    color: #8b4513;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Candy-coated buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #654321);
+    border: 3px solid #ff8c00;
+    border-radius: 15px;
+    padding: 12px 18px;
+    color: #ffa500;
+    font-weight: bold;
+    min-height: 16px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #a0522d, stop: 1 #8b4513);
+    border: 3px solid #ffa500;
+    color: #ffff99;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #654321, stop: 1 #5d4037);
+    border: 3px solid #d2691e;
+    color: #ff8c00;
+}
+
+QPushButton:disabled {
+    background: #8d6e63;
+    border: 3px solid #a1887f;
+    color: #bcaaa4;
+}
+
+/* Sweet text areas */
+QTextEdit, QPlainTextEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5d4037, stop: 1 #4e342e);
+    border: 3px solid #ff8c00;
+    border-radius: 12px;
+    padding: 15px;
+    color: #ffa500;
+    selection-background-color: #ff8c00;
+    selection-color: #5d4037;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 3px solid #ffa500;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #6d4c41, stop: 1 #5d4037);
+    color: #ffff99;
+}
+
+/* Candy jar lists */
+QListWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5d4037, stop: 1 #4e342e);
+    border: 3px solid #ff8c00;
+    border-radius: 12px;
+    alternate-background-color: #6d4c41;
+    color: #ffa500;
+    gridline-color: #8d6e63;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 10px 14px;
+    border-bottom: 2px solid #8d6e63;
+    border-radius: 8px;
+    margin: 3px;
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8c00, stop: 1 #d2691e);
+    color: #5d4037;
+    border-radius: 10px;
+    border: 2px solid #ffa500;
+}
+
+QListWidget::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8d6e63, stop: 1 #6d4c41);
+    color: #ffff99;
+    border-radius: 10px;
+}
+
+QListWidget::item:selected:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffa500, stop: 1 #ff8c00);
+    border: 2px solid #ffff99;
+    color: #4e342e;
+}
+
+/* Candy wrapper menu */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #654321);
+    color: #ff8c00;
+    border-bottom: 3px solid #ffa500;
+    font-weight: bold;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin: 2px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8c00, stop: 1 #d2691e);
+    color: #5d4037;
+}
+
+QMenu {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #6d4c41, stop: 1 #5d4037);
+    border: 3px solid #ff8c00;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+QMenu::item {
+    padding: 10px 25px;
+    border-radius: 8px;
+    margin: 2px;
+    color: #ffa500;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8c00, stop: 1 #d2691e);
+    color: #5d4037;
+}
+
+/* Chocolate scrollbars */
+QScrollBar:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #5d4037, stop: 1 #6d4c41);
+    width: 16px;
+    border: 2px solid #8d6e63;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff8c00, stop: 1 #d2691e);
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ffa500, stop: 1 #ff8c00);
+}
+
+QScrollBar::handle:vertical:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #d2691e, stop: 1 #b8860b);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5d4037, stop: 1 #6d4c41);
+    height: 16px;
+    border: 2px solid #8d6e63;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8c00, stop: 1 #d2691e);
+    border-radius: 6px;
+    min-width: 30px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffa500, stop: 1 #ff8c00);
+}
+
+QScrollBar::handle:horizontal:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #d2691e, stop: 1 #b8860b);
+}
+
+/* Sweet tabs */
+QTabWidget::pane {
+    border: 3px solid #ff8c00;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5d4037, stop: 1 #4e342e);
+    border-radius: 12px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #654321);
+    border: 3px solid #ff8c00;
+    padding: 12px 20px;
+    margin-right: 4px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    font-weight: bold;
+    color: #ffa500;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8c00, stop: 1 #d2691e);
+    border-bottom: none;
+    color: #5d4037;
+}
+
+QTabBar::tab:hover:!selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #a0522d, stop: 1 #8b4513);
+    color: #ffff99;
+}
+
+/* Candy store status bar */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #654321);
+    border-top: 3px solid #ff8c00;
+    color: #ffa500;
+    font-weight: bold;
+}
+
+/* Sweet input fields */
+QLineEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5d4037, stop: 1 #4e342e);
+    border: 3px solid #ff8c00;
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #ffa500;
+    selection-background-color: #ff8c00;
+    selection-color: #5d4037;
+}
+
+QLineEdit:focus {
+    border: 3px solid #ffa500;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #6d4c41, stop: 1 #5d4037);
+    color: #ffff99;
+}
+
+/* Candy dispenser combo boxes */
+QComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #654321);
+    border: 3px solid #ff8c00;
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #ffa500;
+    min-width: 80px;
+    font-weight: bold;
+}
+
+QComboBox:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #a0522d, stop: 1 #8b4513);
+    border: 3px solid #ffa500;
+    color: #ffff99;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 30px;
+    border-left: 3px solid #ff8c00;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 10px solid #ffa500;
+}
+
+QComboBox QAbstractItemView {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #6d4c41, stop: 1 #5d4037);
+    border: 3px solid #ff8c00;
+    border-radius: 10px;
+    selection-background-color: #ff8c00;
+    selection-color: #5d4037;
+    color: #ffa500;
+}
+
+/* Candy wrapper splitter */
+QSplitter::handle {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff8c00, stop: 1 #d2691e);
+    border-radius: 3px;
+}
+
+QSplitter::handle:horizontal {
+    width: 4px;
+}
+
+QSplitter::handle:vertical {
+    height: 4px;
+}
+
+/* Sweet progress bars */
+QProgressBar {
+    border: 3px solid #ff8c00;
+    border-radius: 10px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5d4037, stop: 1 #4e342e);
+    text-align: center;
+    color: #ffa500;
+    font-weight: bold;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff8c00, stop: 0.5 #ffa500,
+                                stop: 1 #d2691e);
+    border-radius: 7px;
+    margin: 2px;
+}
+
+/* Candy tool tips */
+QToolTip {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #654321);
+    border: 3px solid #ff8c00;
+    color: #ffa500;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* Additional sweet styling */
+QLabel {
+    color: #8b4513;
+    font-weight: bold;
+}
+
+QGroupBox {
+    border: 3px solid #ff8c00;
+    border-radius: 15px;
+    margin-top: 15px;
+    padding-top: 15px;
+    font-weight: bold;
+    color: #8b4513;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #d2691e, stop: 1 #b8860b);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 20px;
+    padding: 0 15px 0 15px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff8c00, stop: 1 #ffa500);
+    color: #5d4037;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+/* Sweet checkboxes */
+QCheckBox {
+    color: #8b4513;
+    font-weight: bold;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    border: 3px solid #ff8c00;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5d4037, stop: 1 #4e342e);
+}
+
+QCheckBox::indicator:checked {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #ff8c00, stop: 1 #ffa500);
+    border: 3px solid #ffff99;
+}
+
+QCheckBox::indicator:checked:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #ffa500, stop: 1 #ffff99);
+    border: 3px solid #ffffff;
+}
+
+QCheckBox::indicator:hover {
+    border: 3px solid #ffa500;
+}

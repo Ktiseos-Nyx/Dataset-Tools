@@ -1,0 +1,57 @@
+/* MOZART'S MUSIC THEME */
+/* Elegant, harmonious colors, reflecting the beauty and complexity of Mozart's compositions. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F0F8FF, stop: 0.3 #E6E6FA,
+                                stop: 0.7 #B0C4DE, stop: 1 #F0F8FF);
+    color: #2F4F4F;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F0F8FF, stop: 0.3 #E6E6FA,
+                                stop: 0.7 #B0C4DE, stop: 1 #F0F8FF);
+    color: #2F4F4F;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4682B4, stop: 1 #4169E1);
+    border: 2px solid #2F4F4F;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4169E1, stop: 1 #4682B4);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #B0C4DE;
+    border-radius: 3px;
+    padding: 5px;
+    color: #2F4F4F;
+    selection-background-color: #4682B4;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #B0C4DE;
+    border-radius: 3px;
+    alternate-background-color: #F0F8FF;
+    color: #2F4F4F;
+}
+
+QListWidget::item:selected {
+    background: #4682B4;
+    color: #FFFFFF;
+}

@@ -1,0 +1,58 @@
+/* DISTURBED IDEA: SNOT GREEN */
+/* A truly unpleasant, slimy green theme. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #7CFC00, stop: 0.5 #ADFF2F,
+                                stop: 1 #9ACD32);
+    color: #4B3621;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #7CFC00, stop: 0.5 #ADFF2F,
+                                stop: 1 #9ACD32);
+    color: #4B3621;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 1 #A0522D);
+    border: 3px solid #4B3621;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A0522D, stop: 1 #8B4513);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #7CFC00;
+    border-radius: 5px;
+    padding: 8px;
+    color: #4B3621;
+    selection-background-color: #ADFF2F;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #7CFC00;
+    border-radius: 5px;
+    alternate-background-color: #F0FFF0;
+    color: #4B3621;
+}
+
+QListWidget::item:selected {
+    background: #ADFF2F;
+    color: #FFFFFF;
+}

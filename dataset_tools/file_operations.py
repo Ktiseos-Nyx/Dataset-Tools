@@ -204,7 +204,10 @@ class FileExtensionCategories:
             val_display = val_str[:70] + "..." if len(val_str) > 70 else val_str
 
             self.logger.debug(
-                "Ext.%s? %s. Value (first 70 chars): %s", attr_name, has_attr, val_display
+                "Ext.%s? %s. Value (first 70 chars): %s",
+                attr_name,
+                has_attr,
+                val_display,
             )
 
         self.logger.debug("--- END DEBUG WIDGETS ---")
@@ -255,13 +258,14 @@ class DirectoryScanner:
                 )
 
             # Categorize the files
-            images, texts, models, total_files = self._categorize_files(
-                items, folder_path
-            )
+            images, texts, models, total_files = self._categorize_files(items, folder_path)
 
             self.logger.info(
                 "Scan completed for %s: %d images, %d texts, %d models",
-                folder_path, len(images), len(texts), len(models)
+                folder_path,
+                len(images),
+                len(texts),
+                len(models),
             )
 
             return FileScanResult(
@@ -275,7 +279,9 @@ class DirectoryScanner:
 
         except Exception as e:
             self.logger.error(
-                f"Unexpected error scanning directory '{folder_path}': {e}",
+                "Unexpected error scanning directory '%s': %s",
+                folder_path,
+                e,
                 exc_info=True,
             )
             return FileScanResult(
@@ -314,9 +320,7 @@ class DirectoryScanner:
             self.logger.warning("OS error accessing directory '%s': %s", folder_path, e)
             return None
 
-    def _categorize_files(
-        self, item_paths: list[str], folder_path: str
-    ) -> tuple[list[str], list[str], list[str], int]:
+    def _categorize_files(self, item_paths: list[str], folder_path: str) -> tuple[list[str], list[str], list[str], int]:
         """Categorize a list of file paths.
 
         Args:
@@ -357,9 +361,7 @@ class DirectoryScanner:
             except (OSError, ValueError, TypeError, AttributeError) as e:
                 self.logger.debug("Error processing item '%s': %s", item_path, e)
             except Exception as e:
-                self.logger.warning(
-                    "Unexpected error processing item '%s': %s", item_path, e
-                )
+                self.logger.warning("Unexpected error processing item '%s': %s", item_path, e)
 
         return images, texts, models, total_files
 
@@ -498,7 +500,7 @@ def test_file_operations():
 
     for test_file in test_files:
         category = categorizer.categorize_file(test_file)
-        logger.info("%s: %s", test_file, category or 'UNCATEGORIZED')
+        logger.info("%s: %s", test_file, category or "UNCATEGORIZED")
 
     # Test supported extensions
     logger.info("Supported extensions:")

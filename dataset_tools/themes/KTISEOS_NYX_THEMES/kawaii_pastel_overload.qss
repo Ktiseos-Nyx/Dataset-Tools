@@ -9,6 +9,7 @@ QMainWindow {
 }
 
 QWidget {
+    background-color: #FDF5E6; /* Cream white for opaqueness */
     color: #8B4B8B;
 
     font-size: 11pt;

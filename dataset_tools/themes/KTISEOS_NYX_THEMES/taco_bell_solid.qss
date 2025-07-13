@@ -1,0 +1,224 @@
+/* TACO BELL (SOLID) THEME */
+/* Inspired by Taco Bell's vibrant logo colors: purples, pinks, and yellows, using solid colors. */
+
+QMainWindow {
+    background: #800080; /* Purple */
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: #800080; /* Purple */
+    color: #FFFFFF;
+    font-family: 'Impact', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: #FF1493; /* Pink */
+    border: 3px solid #FFFF00; /* Yellow */
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: #FFFF00; /* Yellow */
+    border: 3px solid #FF1493; /* Pink */
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #800080; /* Purple */
+    border-radius: 5px;
+    padding: 8px;
+    color: #FF1493; /* Pink */
+    selection-background-color: #FFFF00; /* Yellow */
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #800080; /* Purple */
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #FF1493; /* Pink */
+}
+
+QListWidget::item:selected {
+    background: #FFFF00; /* Yellow */
+    color: #800080; /* Purple */
+}
+
+QMenuBar {
+    background: #FF1493; /* Pink */
+    color: #FFFFFF;
+    border-bottom: 1px solid #FFFF00; /* Yellow */
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 5px 10px;
+}
+
+QMenuBar::item:selected {
+    background: #FFFF00; /* Yellow */
+}
+
+QMenu {
+    background: #FF1493; /* Pink */
+    border: 1px solid #FFFF00; /* Yellow */
+    padding: 5px;
+}
+
+QMenu::item {
+    padding: 5px 15px;
+    color: #FFFFFF;
+}
+
+QMenu::item:selected {
+    background: #FFFF00; /* Yellow */
+}
+
+QScrollBar:vertical {
+    background: #800080; /* Purple */
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #FF1493; /* Pink */
+    border-radius: 5px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #FFFF00; /* Yellow */
+    background: #FFFFFF;
+}
+
+QTabBar::tab {
+    background: #800080; /* Purple */
+    border: 1px solid #FFFF00; /* Yellow */
+    padding: 8px 15px;
+    color: #FFFFFF;
+}
+
+QTabBar::tab:selected {
+    background: #FFFFFF;
+    color: #800080; /* Purple */
+}
+
+QTabBar::tab:hover:!selected {
+    background: #FF1493; /* Pink */
+}
+
+QStatusBar {
+    background: #800080; /* Purple */
+    border-top: 1px solid #FFFF00; /* Yellow */
+    color: #FFFFFF;
+}
+
+QLineEdit {
+    background: #FFFFFF;
+    border: 2px solid #800080; /* Purple */
+    border-radius: 5px;
+    padding: 8px;
+    color: #FF1493; /* Pink */
+    selection-background-color: #FFFF00; /* Yellow */
+    selection-color: #FFFFFF;
+}
+
+QComboBox {
+    background: #800080; /* Purple */
+    border: 2px solid #FFFF00; /* Yellow */
+    border-radius: 5px;
+    padding: 5px;
+    color: #FFFFFF;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #FFFF00; /* Yellow */
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 8px solid #FFFFFF;
+}
+
+QComboBox QAbstractItemView {
+    background: #800080; /* Purple */
+    border: 1px solid #FFFF00; /* Yellow */
+    selection-background-color: #FFFF00; /* Yellow */
+    color: #FFFFFF;
+}
+
+QSplitter::handle {
+    background: #FF1493; /* Pink */
+    border: 1px solid #FFFFFF;
+}
+
+QProgressBar {
+    border: 2px solid #800080; /* Purple */
+    border-radius: 5px;
+    background: #FFFFFF;
+    text-align: center;
+    color: #FF1493; /* Pink */
+}
+
+QProgressBar::chunk {
+    background: #FFFF00; /* Yellow */
+    border-radius: 3px;
+}
+
+QToolTip {
+    background: #FF1493; /* Pink */
+    border: 1px solid #FFFF00; /* Yellow */
+    color: #FFFFFF;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+QLabel {
+    color: #FFFFFF;
+}
+
+QGroupBox {
+    border: 2px solid #FFFF00; /* Yellow */
+    border-radius: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    color: #FFFFFF;
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px 0 5px;
+    background: #FF1493; /* Pink */
+    color: #FFFFFF;
+    border-radius: 3px;
+}
+
+QCheckBox {
+    color: #FFFFFF;
+}
+
+QCheckBox::indicator {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    border: 1px solid #800080; /* Purple */
+    background: #FFFFFF;
+}
+
+QCheckBox::indicator:checked {
+    background: #FFFF00; /* Yellow */
+}

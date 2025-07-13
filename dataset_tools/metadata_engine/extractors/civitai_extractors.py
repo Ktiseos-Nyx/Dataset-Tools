@@ -67,9 +67,7 @@ class CivitaiExtractor:
         self.logger.debug(f"Extracted '{field_name}' from extraMetadata: {value}")
         return value
 
-    def _get_civitai_extra_metadata(
-        self, context: ContextData
-    ) -> dict[str, Any] | None:
+    def _get_civitai_extra_metadata(self, context: ContextData) -> dict[str, Any] | None:
         """Extract and parse Civitai's extraMetadata from context.
 
         Returns the parsed extraMetadata dictionary or None if not found.
@@ -82,29 +80,19 @@ class CivitaiExtractor:
 
             try:
                 # Parse the main JSON
-                main_json = (
-                    json.loads(chunk_data)
-                    if isinstance(chunk_data, str)
-                    else chunk_data
-                )
+                main_json = json.loads(chunk_data) if isinstance(chunk_data, str) else chunk_data
 
                 # Look for extra.extraMetadata
-                extra_metadata_str = json_path_get_utility(
-                    main_json, "extra.extraMetadata"
-                )
+                extra_metadata_str = json_path_get_utility(main_json, "extra.extraMetadata")
                 if isinstance(extra_metadata_str, str):
                     # Parse the nested JSON string
                     extra_metadata = json.loads(extra_metadata_str)
                     if isinstance(extra_metadata, dict):
-                        self.logger.debug(
-                            f"Found Civitai extraMetadata in {chunk_name}"
-                        )
+                        self.logger.debug(f"Found Civitai extraMetadata in {chunk_name}")
                         return extra_metadata
 
             except (json.JSONDecodeError, TypeError) as e:
-                self.logger.debug(
-                    f"Failed to parse {chunk_name} for extraMetadata: {e}"
-                )
+                self.logger.debug(f"Failed to parse {chunk_name} for extraMetadata: {e}")
                 continue
 
         return None

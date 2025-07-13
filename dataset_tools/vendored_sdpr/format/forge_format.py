@@ -32,9 +32,7 @@ class ForgeFormat(A1111):
             self._raw = self._extract_raw_data_from_info()
 
         if not self._raw:
-            raise self.NotApplicableError(
-                "No raw text data found to check for Forge markers."
-            )
+            raise self.NotApplicableError("No raw text data found to check for Forge markers.")
 
         # --- THE DEFINITIVE SIGNATURE CHECK (ON THE ENTIRE RAW STRING) ---
         # A file is considered Forge/ReForge if it has ANY of these unique markers.
@@ -44,14 +42,10 @@ class ForgeFormat(A1111):
         has_auto_scheduler = "Schedule type: Automatic" in self._raw
         has_hires_module = "Hires Module 1:" in self._raw
 
-        is_unambiguously_forge = (
-            forge_version_match or has_auto_scheduler or has_hires_module
-        )
+        is_unambiguously_forge = forge_version_match or has_auto_scheduler or has_hires_module
 
         if not is_unambiguously_forge:
-            raise self.NotApplicableError(
-                "No definitive Forge/ReForge markers found in raw text."
-            )
+            raise self.NotApplicableError("No definitive Forge/ReForge markers found in raw text.")
         # --- END OF CHECK ---
 
         # --- IT IS FORGE! NOW WE PARSE IT FULLY ---

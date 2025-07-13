@@ -1,0 +1,218 @@
+/* NFL: CLEVELAND BROWNS THEME */
+/* Solid colors inspired by the Cleveland Browns: brown, orange, and white. */
+
+QMainWindow {
+    background: #311D00; /* Brown */
+    color: #FF3300; /* Orange */
+    border: none;
+}
+
+QWidget {
+    background: #311D00; /* Brown */
+    color: #FF3300; /* Orange */
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #FF3300; /* Orange */
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #311D00; /* Brown */
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #FF6600; /* Brighter Orange */
+    border: 2px solid #E0E0E0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #311D00; /* Brown */
+    border-radius: 3px;
+    padding: 5px;
+    color: #311D00; /* Brown */
+    selection-background-color: #FF3300; /* Orange */
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #311D00; /* Brown */
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #311D00; /* Brown */
+}
+
+QListWidget::item:selected {
+    background: #FF3300; /* Orange */
+    color: #311D00; /* Brown */
+}
+
+QMenuBar {
+    background: #311D00; /* Brown */
+    color: #FF3300; /* Orange */
+    border-bottom: 1px solid #FF3300; /* Orange */
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background: #FF3300; /* Orange */
+}
+
+QMenu {
+    background: #311D00; /* Brown */
+    border: 1px solid #FF3300; /* Orange */
+    padding: 3px;
+}
+
+QMenu::item {
+    padding: 5px 15px;
+    color: #FF3300; /* Orange */
+}
+
+QMenu::item:selected {
+    background: #FF3300; /* Orange */
+}
+
+QScrollBar:vertical {
+    background: #311D00; /* Brown */
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #FF3300; /* Orange */
+    border-radius: 5px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #FF3300; /* Orange */
+    background: #FFFFFF;
+}
+
+QTabBar::tab {
+    background: #311D00; /* Brown */
+    border: 1px solid #FF3300; /* Orange */
+    padding: 6px 10px;
+    color: #FF3300; /* Orange */
+}
+
+QTabBar::tab:selected {
+    background: #FFFFFF;
+    color: #311D00; /* Brown */
+}
+
+QStatusBar {
+    background: #311D00; /* Brown */
+    border-top: 1px solid #FF3300; /* Orange */
+    color: #FF3300; /* Orange */
+}
+
+QLineEdit {
+    background: #FFFFFF;
+    border: 2px solid #311D00; /* Brown */
+    border-radius: 3px;
+    padding: 5px;
+    color: #311D00; /* Brown */
+    selection-background-color: #FF3300; /* Orange */
+    selection-color: #FFFFFF;
+}
+
+QComboBox {
+    background: #311D00; /* Brown */
+    border: 2px solid #FF3300; /* Orange */
+    border-radius: 3px;
+    padding: 4px;
+    color: #FF3300; /* Orange */
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 18px;
+    border-left: 1px solid #FF3300; /* Orange */
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid #FF3300; /* Orange */
+}
+
+QComboBox QAbstractItemView {
+    background: #311D00; /* Brown */
+    border: 1px solid #FF3300; /* Orange */
+    selection-background-color: #FF3300; /* Orange */
+    color: #FF3300; /* Orange */
+}
+
+QSplitter::handle {
+    background: #FF3300; /* Orange */
+    border: 1px solid #FFFFFF;
+}
+
+QProgressBar {
+    border: 2px solid #311D00; /* Brown */
+    border-radius: 3px;
+    background: #FFFFFF;
+    text-align: center;
+    color: #311D00; /* Brown */
+}
+
+QProgressBar::chunk {
+    background: #FF3300; /* Orange */
+    border-radius: 2px;
+}
+
+QToolTip {
+    background: #311D00; /* Brown */
+    border: 1px solid #FF3300; /* Orange */
+    color: #FF3300; /* Orange */
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QLabel {
+    color: #FF3300; /* Orange */
+}
+
+QGroupBox {
+    border: 2px solid #FF3300; /* Orange */
+    border-radius: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    color: #FF3300; /* Orange */
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 8px;
+    padding: 0 4px 0 4px;
+    background: #FF3300; /* Orange */
+    color: #311D00; /* Brown */
+    border-radius: 2px;
+}
+
+QCheckBox {
+    color: #FF3300; /* Orange */
+}
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid #311D00; /* Brown */
+    background: #FFFFFF;
+}
+
+QCheckBox::indicator:checked {
+    background: #FF3300; /* Orange */
+}

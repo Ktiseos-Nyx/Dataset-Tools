@@ -1,0 +1,57 @@
+/* DISTURBED IDEA: CHIPOTLE AT 4PM */
+/* A theme with a mix of earthy, slightly muddy greens, browns, and reds, reflecting the colors of a busy Chipotle. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 0.3 #6B8E23,
+                                stop: 0.7 #DC143C, stop: 1 #8B4513);
+    color: #F5F5DC;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 0.3 #6B8E23,
+                                stop: 0.7 #DC143C, stop: 1 #8B4513);
+    color: #F5F5DC;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #6B8E23, stop: 1 #8B4513);
+    border: 2px solid #F5F5DC;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 1 #6B8E23);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #DC143C;
+    border-radius: 3px;
+    padding: 5px;
+    color: #8B4513;
+    selection-background-color: #6B8E23;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #DC143C;
+    border-radius: 3px;
+    alternate-background-color: #F5F5DC;
+    color: #8B4513;
+}
+
+QListWidget::item:selected {
+    background: #6B8E23;
+    color: #FFFFFF;
+}

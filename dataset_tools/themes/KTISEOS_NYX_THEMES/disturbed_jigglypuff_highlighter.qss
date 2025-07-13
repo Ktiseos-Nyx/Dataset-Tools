@@ -1,0 +1,59 @@
+/* DISTURBED IDEA: JIGGLYPUFF (HIGHLIGHTER MURDERED) */
+/* Jigglypuff's sweet pink, but assaulted by neon green and blue highlighters. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF69B4, stop: 0.5 #39FF14,
+                                stop: 1 #00BFFF);
+    color: #000000;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF69B4, stop: 0.5 #39FF14,
+                                stop: 1 #00BFFF);
+    color: #000000;
+    font-family: 'Impact', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #39FF14, stop: 1 #00BFFF);
+    border: 3px solid #FF69B4;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00BFFF, stop: 1 #39FF14);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #FF69B4;
+    border-radius: 5px;
+    padding: 8px;
+    color: #39FF14;
+    selection-background-color: #00BFFF;
+    selection-color: #000000;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #FF69B4;
+    border-radius: 5px;
+    alternate-background-color: #39FF14;
+    color: #00BFFF;
+}
+
+QListWidget::item:selected {
+    background: #FF69B4;
+    color: #000000;
+}

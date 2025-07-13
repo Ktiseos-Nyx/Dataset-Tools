@@ -1,0 +1,232 @@
+{
+  "parser_name": "ComfyUI PixArt",
+  "priority": 150,
+  "description": "ComfyUI workflows that use PixArt Sigma/Alpha models with T5 text encoding",
+  "version": "1.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain PixArt-specific nodes",
+      "source_type": "pil_info_key_json_path_query",
+      "source_key_options": [
+        "workflow",
+        "prompt"
+      ],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "PixArtT5TextEncode",
+        "PixArtCheckpointLoader",
+        "PixArtSigmaSampler",
+        "PixArtAlphaSampler"
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler"
+        ],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "PixArtT5TextEncode",
+          "T5TextEncode"
+        ]
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler"
+        ],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "PixArtT5TextEncode",
+          "T5TextEncode"
+        ]
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler"
+        ],
+        "input_key": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler"
+        ],
+        "input_key": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler"
+        ],
+        "input_key": "cfg",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "PixArtResolutionCond"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "PixArtResolutionCond"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "model_info.checkpoint",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "CheckpointLoaderSimple",
+          "PixArtCheckpointLoader"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string"
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI PixArt",
+      "tool": "ComfyUI (PixArt)",
+      "format": "PixArt Text-to-Image",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "model_info": {
+        "checkpoint": "$model_info.checkpoint"
+      },
+      "architecture_info": {
+        "detected_as": "PixArt",
+        "text_encoding": "T5",
+        "workflow_type": "PixArt Generation"
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI PixArt workflow",
+        "parser_priority": 150,
+        "confidence": "high",
+        "pixart_workflow": true
+      }
+    }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Specifically designed for PixArt Sigma and PixArt Alpha workflows",
+    "Handles PixArtT5TextEncode nodes for T5-based text encoding",
+    "Supports both dedicated PixArt samplers and generic ComfyUI samplers",
+    "Priority 150 puts it above generic ComfyUI parsers for PixArt workflows"
+  ]
+}

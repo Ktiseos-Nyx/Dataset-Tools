@@ -1,0 +1,58 @@
+/* VEGEMITE THEME */
+/* A very dark, almost black-brown, with a hint of reddish-brown, like Vegemite. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2F2F2F, stop: 0.5 #3E2723,
+                                stop: 1 #2F2F2F);
+    color: #F5F5DC;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2F2F2F, stop: 0.5 #3E2723,
+                                stop: 1 #2F2F2F);
+    color: #F5F5DC;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5D4037, stop: 1 #3E2723);
+    border: 2px solid #F5F5DC;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3E2723, stop: 1 #5D4037);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #2F2F2F;
+    border-radius: 3px;
+    padding: 5px;
+    color: #3E2723;
+    selection-background-color: #5D4037;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #2F2F2F;
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #3E2723;
+}
+
+QListWidget::item:selected {
+    background: #5D4037;
+    color: #FFFFFF;
+}

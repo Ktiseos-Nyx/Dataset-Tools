@@ -1,0 +1,57 @@
+/* KAWAII PASTEL OVERLOAD */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FFB3BA, stop: 0.25 #FFDFBA,
+                                stop: 0.5 #FFFFBA, stop: 0.75 #BAFFC9,
+                                stop: 1 #BAE1FF);
+
+}
+
+QWidget {
+    background-color: #FDF5E6; /* Cream white for opaqueness */
+    color: #8B4B8B;
+
+    font-size: 11pt;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFB3E6, stop: 1 #E6B3FF);
+    border: 3px solid #FF99CC;
+    border-radius: 25px;
+    padding: 12px 20px;
+    font-weight: bold;
+    color: #8B008B;
+    font-size: 12pt;
+
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFCCF9, stop: 1 #F9CCFF);
+    border: 3px solid #FF66B2;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    color: #8B4B8B;
+    border: 2px solid #FFB3E6;
+    border-radius: 15px;
+    padding: 10px;
+
+}
+
+QListWidget {
+    background-color: #FFF0F5;
+    color: #8B4B8B;
+    border: 2px solid #FFB3E6;
+    border-radius: 10px;
+
+}
+
+QListWidget::item:selected {
+    background-color: #FFB3E6;
+    color: #8B008B;
+    border-radius: 5px;
+}

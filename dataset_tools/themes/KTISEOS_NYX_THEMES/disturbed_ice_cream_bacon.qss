@@ -1,0 +1,58 @@
+/* DISTURBED IDEA: ICE CREAM BUT BACON FLAVORED */
+/* A truly unsettling mix of creamy pastels and greasy browns/reds. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFF0F5, stop: 0.3 #F5DEB3,
+                                stop: 0.7 #A0522D, stop: 1 #8B0000);
+    color: #4B3621;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFF0F5, stop: 0.3 #F5DEB3,
+                                stop: 0.7 #A0522D, stop: 1 #8B0000);
+    color: #4B3621;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF69B4, stop: 1 #FF1493);
+    border: 3px solid #A0522D;
+    border-radius: 10px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF1493, stop: 1 #FF69B4);
+    border: 3px solid #8B0000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #F5DEB3;
+    border-radius: 5px;
+    padding: 8px;
+    color: #4B3621;
+    selection-background-color: #A0522D;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #F5DEB3;
+    border-radius: 5px;
+    alternate-background-color: #FFFACD;
+    color: #4B3621;
+}
+
+QListWidget::item:selected {
+    background: #A0522D;
+    color: #FFFFFF;
+}

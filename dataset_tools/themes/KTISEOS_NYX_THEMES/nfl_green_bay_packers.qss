@@ -1,0 +1,218 @@
+/* NFL: GREEN BAY PACKERS THEME */
+/* Solid colors inspired by the Green Bay Packers: green and gold. */
+
+QMainWindow {
+    background: #203731; /* Dark Green */
+    color: #FFB612; /* Gold */
+    border: none;
+}
+
+QWidget {
+    background: #203731; /* Dark Green */
+    color: #FFB612; /* Gold */
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #FFB612; /* Gold */
+    border: 2px solid #203731; /* Dark Green */
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #203731; /* Dark Green */
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #FFD700; /* Brighter Gold */
+    border: 2px solid #304A40; /* Darker Green */
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #203731; /* Dark Green */
+    border-radius: 3px;
+    padding: 5px;
+    color: #203731; /* Dark Green */
+    selection-background-color: #FFB612; /* Gold */
+    selection-color: #203731; /* Dark Green */
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #203731; /* Dark Green */
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #203731; /* Dark Green */
+}
+
+QListWidget::item:selected {
+    background: #FFB612; /* Gold */
+    color: #203731; /* Dark Green */
+}
+
+QMenuBar {
+    background: #203731; /* Dark Green */
+    color: #FFB612; /* Gold */
+    border-bottom: 1px solid #FFB612; /* Gold */
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background: #FFB612; /* Gold */
+}
+
+QMenu {
+    background: #203731; /* Dark Green */
+    border: 1px solid #FFB612; /* Gold */
+    padding: 3px;
+}
+
+QMenu::item {
+    padding: 5px 15px;
+    color: #FFB612; /* Gold */
+}
+
+QMenu::item:selected {
+    background: #FFB612; /* Gold */
+}
+
+QScrollBar:vertical {
+    background: #203731; /* Dark Green */
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #FFB612; /* Gold */
+    border-radius: 5px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #FFB612; /* Gold */
+    background: #FFFFFF;
+}
+
+QTabBar::tab {
+    background: #203731; /* Dark Green */
+    border: 1px solid #FFB612; /* Gold */
+    padding: 6px 10px;
+    color: #FFB612; /* Gold */
+}
+
+QTabBar::tab:selected {
+    background: #FFFFFF;
+    color: #203731; /* Dark Green */
+}
+
+QStatusBar {
+    background: #203731; /* Dark Green */
+    border-top: 1px solid #FFB612; /* Gold */
+    color: #FFB612; /* Gold */
+}
+
+QLineEdit {
+    background: #FFFFFF;
+    border: 2px solid #203731; /* Dark Green */
+    border-radius: 3px;
+    padding: 5px;
+    color: #203731; /* Dark Green */
+    selection-background-color: #FFB612; /* Gold */
+    selection-color: #203731; /* Dark Green */
+}
+
+QComboBox {
+    background: #203731; /* Dark Green */
+    border: 2px solid #FFB612; /* Gold */
+    border-radius: 3px;
+    padding: 4px;
+    color: #FFB612; /* Gold */
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 18px;
+    border-left: 1px solid #FFB612; /* Gold */
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid #FFB612; /* Gold */
+}
+
+QComboBox QAbstractItemView {
+    background: #203731; /* Dark Green */
+    border: 1px solid #FFB612; /* Gold */
+    selection-background-color: #FFB612; /* Gold */
+    color: #203731; /* Dark Green */
+}
+
+QSplitter::handle {
+    background: #FFB612; /* Gold */
+    border: 1px solid #203731; /* Dark Green */
+}
+
+QProgressBar {
+    border: 2px solid #203731; /* Dark Green */
+    border-radius: 3px;
+    background: #FFFFFF;
+    text-align: center;
+    color: #203731; /* Dark Green */
+}
+
+QProgressBar::chunk {
+    background: #FFB612; /* Gold */
+    border-radius: 2px;
+}
+
+QToolTip {
+    background: #203731; /* Dark Green */
+    border: 1px solid #FFB612; /* Gold */
+    color: #FFB612; /* Gold */
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QLabel {
+    color: #FFB612; /* Gold */
+}
+
+QGroupBox {
+    border: 2px solid #FFB612; /* Gold */
+    border-radius: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    color: #FFB612; /* Gold */
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 8px;
+    padding: 0 4px 0 4px;
+    background: #FFB612; /* Gold */
+    color: #203731; /* Dark Green */
+    border-radius: 2px;
+}
+
+QCheckBox {
+    color: #FFB612; /* Gold */
+}
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid #203731; /* Dark Green */
+    background: #FFFFFF;
+}
+
+QCheckBox::indicator:checked {
+    background: #FFB612; /* Gold */
+}

@@ -1,0 +1,986 @@
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | <module>:84 | === Dataset Tools Session Started ===
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | <module>:85 | Log file: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/logs/dataset_tools_20250713_211546.log
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | <module>:86 | Initial log level: INFO
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Dataset-Tools Logger level reconfigured to: INFO
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Configured external logger 'PyQt6' with Rich+File handlers at level INFO.
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Configured external logger 'PIL' with Rich+File handlers at level INFO.
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Dataset Tools v0.60.2.dev0 launching...
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Application log level set to: INFO
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Log file location: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/logs/dataset_tools_20250713_211546.log
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'IBM Plex Sans' from IBMPlexSans-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Pixelify Sans' from PixelifySans-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'VT323' from VT323-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Radio Canada' from RadioCanada-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Radio Canada' from RadioCanada-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'JetBrains Mono' from JetBrainsMono-Bold.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Open Sans' from OpenSans-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'PT Sans' from PTSans-Italic.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Dongle' from Dongle-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'JetBrains Mono' from JetBrainsMono-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Tsukimi Rounded' from TsukimiRounded-Medium.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Tsukimi Rounded' from TsukimiRounded-Light.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'IBM Plex Sans' from IBMPlexSans-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Inter' from Inter-VariableFont_opsz,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'PT Sans' from PTSans-BoldItalic.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Syne Mono' from SyneMono-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Tsukimi Rounded' from TsukimiRounded-Bold.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Silkscreen' from Silkscreen-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Silkscreen' from Silkscreen-Bold.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Pixelify Sans' from PixelifySans-Medium.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'DM Sans' from DMSans-Italic-VariableFont_opsz,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Work Sans' from WorkSans-VariableFont_wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Nunito' from Nunito-VariableFont_wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Tsukimi Rounded' from TsukimiRounded-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Inter' from Inter-Italic-VariableFont_opsz,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Pixelify Sans' from PixelifySans-VariableFont_wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-Light.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-Medium.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Tsukimi Rounded' from TsukimiRounded-SemiBold.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Jura' from Jura-VariableFont_wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Roboto' from Roboto-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-Bold.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Work Sans' from WorkSans-Italic-VariableFont_wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'PT Sans' from PTSans-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Kosugi Maru' from KosugiMaru-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-ExtraBold.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Mandali' from Mandali-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Nunito' from Nunito-Italic-VariableFont_wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-ExtraLight.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Pixelify Sans' from PixelifySans-Bold.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'PT Sans' from PTSans-Bold.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Orbitron' from Orbitron-VariableFont_wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Roboto' from Roboto-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Open Sans' from OpenSans-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Dongle' from Dongle-Light.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Pixelify Sans' from PixelifySans-SemiBold.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'DM Sans' from DMSans-VariableFont_opsz,wght.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Doppio One' from DoppioOne-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-Regular.ttf
+2025-07-13 21:15:46 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Dongle' from Dongle-Bold.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loading thread initialized successfully
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Enhanced ThemeManager initialized
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Available systems: qt-material=True, qt-themes=False, unreal=True
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied qt-material theme: dark_blue.xml
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Initial theme loaded: qt_material:dark_blue.xml
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Detected dark theme, adjusting icon colors accordingly
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Open Sans from OpenSans-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Open Sans from OpenSans-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Inter from Inter-VariableFont_opsz,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Inter from Inter-Italic-VariableFont_opsz,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: DM Sans from DMSans-VariableFont_opsz,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: DM Sans from DMSans-Italic-VariableFont_opsz,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Work Sans from WorkSans-VariableFont_wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Work Sans from WorkSans-Italic-VariableFont_wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Roboto from Roboto-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Roboto from Roboto-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: IBM Plex Sans from IBMPlexSans-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: IBM Plex Sans from IBMPlexSans-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Nunito from Nunito-VariableFont_wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Nunito from Nunito-Italic-VariableFont_wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: PT Sans from PTSans-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: PT Sans from PTSans-Bold.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: PT Sans from PTSans-Italic.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: PT Sans from PTSans-BoldItalic.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Radio Canada from RadioCanada-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Radio Canada from RadioCanada-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: JetBrains Mono from JetBrainsMono-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: JetBrains Mono from JetBrainsMono-Bold.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Syne Mono from SyneMono-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: VT323 from VT323-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Orbitron from Orbitron-VariableFont_wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Jura from Jura-VariableFont_wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-Light.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-Medium.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-Bold.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-ExtraLight.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-ExtraBold.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Pixelify Sans from PixelifySans-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Pixelify Sans from PixelifySans-Medium.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Pixelify Sans from PixelifySans-SemiBold.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Pixelify Sans from PixelifySans-Bold.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Pixelify Sans from PixelifySans-VariableFont_wght.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Silkscreen from Silkscreen-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Silkscreen from Silkscreen-Bold.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Dongle from Dongle-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Dongle from Dongle-Light.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Dongle from Dongle-Bold.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Doppio One from DoppioOne-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Kosugi Maru from KosugiMaru-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Mandali from Mandali-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Tsukimi Rounded from TsukimiRounded-Regular.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Tsukimi Rounded from TsukimiRounded-Light.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Tsukimi Rounded from TsukimiRounded-Medium.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Tsukimi Rounded from TsukimiRounded-SemiBold.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Tsukimi Rounded from TsukimiRounded-Bold.ttf
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Loaded 50 bundled font files
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | FontManager initialized with 594 available fonts
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Using font for ui: Open Sans
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Applied default font to application: Open Sans
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Applied optimal fonts to application
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Clearing file list and selections.
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Attempting to load files from: /Users/duskfall/Downloads/Metadata Samples
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] FileLoader thread started for: /Users/duskfall/Downloads/Metadata Samples
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [FileLoader] Starting to scan directory: /Users/duskfall/Downloads/Metadata Samples
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [FileLoader] Scanned 1374 items (files/dirs) in directory: /Users/duskfall/Downloads/Metadata Samples
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [FileLoader] Categorized files: 1372 images, 0 text/schema, 0 models.
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [FileLoader] Scan finished. Emitting result for folder: /Users/duskfall/Downloads/Metadata Samples. File to select: None. Counts: Img=1372, Txt=0, Mdl=0
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] FileLoader finished. Received result for folder: /Users/duskfall/Downloads/Metadata Samples
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [LeftPanel] Added 1372 items to file list
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: 00000-1626107238.jpeg
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: '00000-1626107238.jpeg'
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: 00000-1626107238.jpeg...
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 450x658
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 450x658
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parser_version', 'prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:15:47 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Auto-selected first file in the list.
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: 00002-4723.png
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: '00002-4723.png'
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00002-4723.png'
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/00002-4723.png'
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: 00002-4723.png...
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 585x1024
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 585x1024
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00002-4723.png
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00002-4723.png
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:15:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: c28d581c-8206-481e-9b8a-7b96838d9b8d.jpeg
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'c28d581c-8206-481e-9b8a-7b96838d9b8d.jpeg'
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/c28d581c-8206-481e-9b8a-7b96838d9b8d.jpeg'
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/c28d581c-8206-481e-9b8a-7b96838d9b8d.jpeg'
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: c28d581c-8206-481e-9b8a-7b96838d9b8d.jpeg...
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 683x1024
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 683x1024
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/c28d581c-8206-481e-9b8a-7b96838d9b8d.jpeg
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/c28d581c-8206-481e-9b8a-7b96838d9b8d.jpeg
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parser_version', 'prompt', 'parameters', 'midjourney_specific', '_metadata']
+2025-07-13 21:15:51 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_00008_.png
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_00008_.png'
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_00008_.png'
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_00008_.png'
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_00008_.png...
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 585x1024
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 585x1024
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_00008_.png
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_00008_.png
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:15:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_03294_.png
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_03294_.png'
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_03294_.png'
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_03294_.png'
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_03294_.png...
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 683x1024
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 683x1024
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_03294_.png
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_03294_.png
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:15:55 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:17:12 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:17:12 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:17:12 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:18:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_05822_.png
+2025-07-13 21:18:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_05822_.png'
+2025-07-13 21:18:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_05822_.png'
+2025-07-13 21:18:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:18:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_05822_.png'
+2025-07-13 21:18:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_05822_.png...
+2025-07-13 21:18:23 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 683x1024
+2025-07-13 21:18:23 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 683x1024
+2025-07-13 21:18:23 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_05822_.png
+2025-07-13 21:18:23 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_05822_.png
+2025-07-13 21:18:23 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:18:23 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:18:23 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:18:23 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:18:23 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_08957_.jpeg
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_08957_.jpeg'
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_08957_.jpeg'
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_08957_.jpeg'
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_08957_.jpeg...
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 683x1024
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 683x1024
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_08957_.jpeg
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_08957_.jpeg
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_08957_.jpeg
+2025-07-13 21:18:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_07052_.jpeg
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_07052_.jpeg'
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_07052_.jpeg'
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_07052_.jpeg'
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_07052_.jpeg...
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 683x1024
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 683x1024
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_07052_.jpeg
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_07052_.jpeg
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_07052_.jpeg
+2025-07-13 21:18:27 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_08965_.jpeg
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_08965_.jpeg'
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_08965_.jpeg'
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_08965_.jpeg'
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_08965_.jpeg...
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 683x1024
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 683x1024
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_08965_.jpeg
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_08965_.jpeg
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_08965_.jpeg
+2025-07-13 21:18:28 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_11651_.png
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_11651_.png'
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_11651_.png'
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_11651_.png'
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_11651_.png...
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 775x1024
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 775x1024
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_11651_.png
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_11651_.png
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:18:29 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_20666_.png
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_20666_.png'
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_20666_.png'
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_20666_.png'
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_20666_.png...
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 1024x1024
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 1024x1024
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_20666_.png
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_20666_.png
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:18:30 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:18:31 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_11651_.png
+2025-07-13 21:18:31 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_11651_.png'
+2025-07-13 21:18:31 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_11651_.png'
+2025-07-13 21:18:31 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:18:31 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_11651_.png'
+2025-07-13 21:18:31 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_11651_.png...
+2025-07-13 21:18:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 775x1024
+2025-07-13 21:18:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 775x1024
+2025-07-13 21:18:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_11651_.png
+2025-07-13 21:18:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_11651_.png
+2025-07-13 21:18:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:18:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:18:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:18:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:18:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_20666_.png
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_20666_.png'
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_20666_.png'
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_20666_.png'
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_20666_.png...
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 1024x1024
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 1024x1024
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_20666_.png
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_20666_.png
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:18:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:20:38 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:20:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:20:38 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_34947_.png
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_34947_.png'
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_34947_.png'
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_34947_.png'
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_34947_.png...
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 862x1024
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 862x1024
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_34947_.png
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_34947_.png
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:21:54 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_PixArt_00186_.png
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_PixArt_00186_.png'
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_PixArt_00186_.png'
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_PixArt_00186_.png'
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_PixArt_00186_.png...
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 796x1024
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 796x1024
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_PixArt_00186_.png
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_PixArt_00186_.png
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:21:58 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:22:01 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:22:01 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:22:01 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:31:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_temp_cqlmt_00001_upzft_1737447026.png
+2025-07-13 21:31:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_temp_cqlmt_00001_upzft_1737447026.png'
+2025-07-13 21:31:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_cqlmt_00001_upzft_1737447026.png'
+2025-07-13 21:31:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:31:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_cqlmt_00001_upzft_1737447026.png'
+2025-07-13 21:31:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_temp_cqlmt_00001_upzft_1737447026.png...
+2025-07-13 21:31:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 1024x1024
+2025-07-13 21:31:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 1024x1024
+2025-07-13 21:31:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_cqlmt_00001_upzft_1737447026.png
+2025-07-13 21:31:42 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_cqlmt_00001_upzft_1737447026.png
+2025-07-13 21:31:42 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_cqlmt_00001_upzft_1737447026.png
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_temp_hmrem_00014_.png
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_temp_hmrem_00014_.png'
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_hmrem_00014_.png'
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_hmrem_00014_.png'
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_temp_hmrem_00014_.png...
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 585x1024
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 585x1024
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_hmrem_00014_.png
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_hmrem_00014_.png
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:31:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:31:48 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:31:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:31:48 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_temp_jpjcg_00187_.png
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_temp_jpjcg_00187_.png'
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_jpjcg_00187_.png'
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_jpjcg_00187_.png'
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_temp_jpjcg_00187_.png...
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 680x1024
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 680x1024
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_jpjcg_00187_.png
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_jpjcg_00187_.png
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:32:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_temp_yfugg_00012_.png
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_temp_yfugg_00012_.png'
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yfugg_00012_.png'
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yfugg_00012_.png'
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_temp_yfugg_00012_.png...
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 585x1024
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 585x1024
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yfugg_00012_.png
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yfugg_00012_.png
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:32:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:32:25 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:32:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:32:25 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_temp_yosop_00024_ (1).png
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_temp_yosop_00024_ (1).png'
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yosop_00024_ (1).png'
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yosop_00024_ (1).png'
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_temp_yosop_00024_ (1).png...
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 576x1024
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 576x1024
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yosop_00024_ (1).png
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yosop_00024_ (1).png
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:32:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:32:56 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:32:56 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:32:56 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ComfyUI_temp_yosop_00024_.png
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ComfyUI_temp_yosop_00024_.png'
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yosop_00024_.png'
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yosop_00024_.png'
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ComfyUI_temp_yosop_00024_.png...
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 576x1024
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 576x1024
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yosop_00024_.png
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ComfyUI_temp_yosop_00024_.png
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:35:32 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: cute.png
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'cute.png'
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/cute.png'
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/cute.png'
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: cute.png...
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 585x1024
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 585x1024
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/cute.png
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/cute.png
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/cute.png
+2025-07-13 21:35:35 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:35:36 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: cyborg2.png
+2025-07-13 21:35:36 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'cyborg2.png'
+2025-07-13 21:35:36 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/cyborg2.png'
+2025-07-13 21:35:36 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:35:36 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/cyborg2.png'
+2025-07-13 21:35:36 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: cyborg2.png...
+2025-07-13 21:35:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 682x1024
+2025-07-13 21:35:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 682x1024
+2025-07-13 21:35:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/cyborg2.png
+2025-07-13 21:35:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/cyborg2.png
+2025-07-13 21:35:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:35:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:35:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:35:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:35:37 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/cyborg2.png
+2025-07-13 21:35:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: D139B88EF91FCF4E1692F161A05B2ED31AD6618B22D23021075621E4FB88776E.jpeg
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'D139B88EF91FCF4E1692F161A05B2ED31AD6618B22D23021075621E4FB88776E.jpeg'
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/D139B88EF91FCF4E1692F161A05B2ED31AD6618B22D23021075621E4FB88776E.jpeg'
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/D139B88EF91FCF4E1692F161A05B2ED31AD6618B22D23021075621E4FB88776E.jpeg'
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: D139B88EF91FCF4E1692F161A05B2ED31AD6618B22D23021075621E4FB88776E.jpeg...
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/D139B88EF91FCF4E1692F161A05B2ED31AD6618B22D23021075621E4FB88776E.jpeg
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/D139B88EF91FCF4E1692F161A05B2ED31AD6618B22D23021075621E4FB88776E.jpeg
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'workflow', '_metadata']
+2025-07-13 21:35:38 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: d1417789-9c18-4d99-825c-428f4a3a2a45.jpeg
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'd1417789-9c18-4d99-825c-428f4a3a2a45.jpeg'
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/d1417789-9c18-4d99-825c-428f4a3a2a45.jpeg'
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/d1417789-9c18-4d99-825c-428f4a3a2a45.jpeg'
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: d1417789-9c18-4d99-825c-428f4a3a2a45.jpeg...
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 614x1024
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 614x1024
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/d1417789-9c18-4d99-825c-428f4a3a2a45.jpeg
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/d1417789-9c18-4d99-825c-428f4a3a2a45.jpeg
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:35:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:35:51 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:35:51 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:35:51 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: d2525bba-5297-48b6-8ee4-c0acbed2fd34.jpeg
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'd2525bba-5297-48b6-8ee4-c0acbed2fd34.jpeg'
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/d2525bba-5297-48b6-8ee4-c0acbed2fd34.jpeg'
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/d2525bba-5297-48b6-8ee4-c0acbed2fd34.jpeg'
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: d2525bba-5297-48b6-8ee4-c0acbed2fd34.jpeg...
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/d2525bba-5297-48b6-8ee4-c0acbed2fd34.jpeg
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/d2525bba-5297-48b6-8ee4-c0acbed2fd34.jpeg
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'workflow', '_metadata']
+2025-07-13 21:36:37 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: d269aca1-b1e2-4690-8c7a-a218d7507219.jpg
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'd269aca1-b1e2-4690-8c7a-a218d7507219.jpg'
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/d269aca1-b1e2-4690-8c7a-a218d7507219.jpg'
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpg'
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/d269aca1-b1e2-4690-8c7a-a218d7507219.jpg'
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: d269aca1-b1e2-4690-8c7a-a218d7507219.jpg...
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 1024x796
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 1024x796
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/d269aca1-b1e2-4690-8c7a-a218d7507219.jpg
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/d269aca1-b1e2-4690-8c7a-a218d7507219.jpg
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/d269aca1-b1e2-4690-8c7a-a218d7507219.jpg
+2025-07-13 21:36:39 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: d4127b51-eae2-4704-9250-b26e15a92257.jpeg
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'd4127b51-eae2-4704-9250-b26e15a92257.jpeg'
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/d4127b51-eae2-4704-9250-b26e15a92257.jpeg'
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/d4127b51-eae2-4704-9250-b26e15a92257.jpeg'
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: d4127b51-eae2-4704-9250-b26e15a92257.jpeg...
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/d4127b51-eae2-4704-9250-b26e15a92257.jpeg
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/d4127b51-eae2-4704-9250-b26e15a92257.jpeg
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', '_metadata']
+2025-07-13 21:36:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: D847A64F6C4711679F9BA80F005DC0D83918AFB698E63FD830C1B5C1056F877B.jpeg
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'D847A64F6C4711679F9BA80F005DC0D83918AFB698E63FD830C1B5C1056F877B.jpeg'
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/D847A64F6C4711679F9BA80F005DC0D83918AFB698E63FD830C1B5C1056F877B.jpeg'
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/D847A64F6C4711679F9BA80F005DC0D83918AFB698E63FD830C1B5C1056F877B.jpeg'
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: D847A64F6C4711679F9BA80F005DC0D83918AFB698E63FD830C1B5C1056F877B.jpeg...
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 1024x701
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 1024x701
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/D847A64F6C4711679F9BA80F005DC0D83918AFB698E63FD830C1B5C1056F877B.jpeg
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/D847A64F6C4711679F9BA80F005DC0D83918AFB698E63FD830C1B5C1056F877B.jpeg
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'workflow', '_metadata']
+2025-07-13 21:36:41 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: D896E77AEB98A4EBB2D0CF308EFE039F39DD45FD7797300A7EFC21436B1D9970.jpeg
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'D896E77AEB98A4EBB2D0CF308EFE039F39DD45FD7797300A7EFC21436B1D9970.jpeg'
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/D896E77AEB98A4EBB2D0CF308EFE039F39DD45FD7797300A7EFC21436B1D9970.jpeg'
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/D896E77AEB98A4EBB2D0CF308EFE039F39DD45FD7797300A7EFC21436B1D9970.jpeg'
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: D896E77AEB98A4EBB2D0CF308EFE039F39DD45FD7797300A7EFC21436B1D9970.jpeg...
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/D896E77AEB98A4EBB2D0CF308EFE039F39DD45FD7797300A7EFC21436B1D9970.jpeg
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/D896E77AEB98A4EBB2D0CF308EFE039F39DD45FD7797300A7EFC21436B1D9970.jpeg
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'workflow', '_metadata']
+2025-07-13 21:36:44 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: d8a43471-0a78-4b9b-9bfb-ffd6de48acff.jpeg
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'd8a43471-0a78-4b9b-9bfb-ffd6de48acff.jpeg'
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/d8a43471-0a78-4b9b-9bfb-ffd6de48acff.jpeg'
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/d8a43471-0a78-4b9b-9bfb-ffd6de48acff.jpeg'
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: d8a43471-0a78-4b9b-9bfb-ffd6de48acff.jpeg...
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/d8a43471-0a78-4b9b-9bfb-ffd6de48acff.jpeg
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/d8a43471-0a78-4b9b-9bfb-ffd6de48acff.jpeg
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'workflow', '_metadata']
+2025-07-13 21:36:45 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: D8CB813DF6BE5B3D6A36FE7CF7E6F9A028BE7C0B3DED3D63AD811267B835CAEE.jpeg
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'D8CB813DF6BE5B3D6A36FE7CF7E6F9A028BE7C0B3DED3D63AD811267B835CAEE.jpeg'
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/D8CB813DF6BE5B3D6A36FE7CF7E6F9A028BE7C0B3DED3D63AD811267B835CAEE.jpeg'
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/D8CB813DF6BE5B3D6A36FE7CF7E6F9A028BE7C0B3DED3D63AD811267B835CAEE.jpeg'
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: D8CB813DF6BE5B3D6A36FE7CF7E6F9A028BE7C0B3DED3D63AD811267B835CAEE.jpeg...
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/D8CB813DF6BE5B3D6A36FE7CF7E6F9A028BE7C0B3DED3D63AD811267B835CAEE.jpeg
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/D8CB813DF6BE5B3D6A36FE7CF7E6F9A028BE7C0B3DED3D63AD811267B835CAEE.jpeg
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'workflow', '_metadata']
+2025-07-13 21:36:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: d9128538-5f03-49a3-a5b7-29aafb640ed9.jpeg
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'd9128538-5f03-49a3-a5b7-29aafb640ed9.jpeg'
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/d9128538-5f03-49a3-a5b7-29aafb640ed9.jpeg'
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/d9128538-5f03-49a3-a5b7-29aafb640ed9.jpeg'
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: d9128538-5f03-49a3-a5b7-29aafb640ed9.jpeg...
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/d9128538-5f03-49a3-a5b7-29aafb640ed9.jpeg
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/d9128538-5f03-49a3-a5b7-29aafb640ed9.jpeg
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: d93155f0-fe9e-469a-acd3-2132a77bf40e.jpeg
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'd93155f0-fe9e-469a-acd3-2132a77bf40e.jpeg'
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/d93155f0-fe9e-469a-acd3-2132a77bf40e.jpeg'
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/d93155f0-fe9e-469a-acd3-2132a77bf40e.jpeg'
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: d93155f0-fe9e-469a-acd3-2132a77bf40e.jpeg...
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/d93155f0-fe9e-469a-acd3-2132a77bf40e.jpeg
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/d93155f0-fe9e-469a-acd3-2132a77bf40e.jpeg
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', '_metadata']
+2025-07-13 21:36:48 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: DA258749F3EC584583ED44DCD0462BC7B0522FE972CD7D38218C2E1657B54501.jpeg
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'DA258749F3EC584583ED44DCD0462BC7B0522FE972CD7D38218C2E1657B54501.jpeg'
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/DA258749F3EC584583ED44DCD0462BC7B0522FE972CD7D38218C2E1657B54501.jpeg'
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/DA258749F3EC584583ED44DCD0462BC7B0522FE972CD7D38218C2E1657B54501.jpeg'
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: DA258749F3EC584583ED44DCD0462BC7B0522FE972CD7D38218C2E1657B54501.jpeg...
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/DA258749F3EC584583ED44DCD0462BC7B0522FE972CD7D38218C2E1657B54501.jpeg
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/DA258749F3EC584583ED44DCD0462BC7B0522FE972CD7D38218C2E1657B54501.jpeg
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'workflow', '_metadata']
+2025-07-13 21:36:49 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: DailyWorldMorphChallenge_Base_0026.png
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'DailyWorldMorphChallenge_Base_0026.png'
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/DailyWorldMorphChallenge_Base_0026.png'
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/DailyWorldMorphChallenge_Base_0026.png'
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: DailyWorldMorphChallenge_Base_0026.png...
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 796x1024
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 796x1024
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/DailyWorldMorphChallenge_Base_0026.png
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/DailyWorldMorphChallenge_Base_0026.png
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:36:50 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:37:15 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:37:15 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:37:15 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: DALL·E 2025-01-31 21.18.12 - A dark and eerie gothic landscape featuring a mysterious, ancient cathedral in the distance. A twisted, stone-paved path leads towards it, surrounded .webp
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'DALL·E 2025-01-31 21.18.12 - A dark and eerie gothic landscape featuring a mysterious, ancient cathedral in the distance. A twisted, stone-paved path leads towards it, surrounded .webp'
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/DALL·E 2025-01-31 21.18.12 - A dark and eerie gothic landscape featuring a mysterious, ancient cathedral in the distance. A twisted, stone-paved path leads towards it, surrounded .webp'
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.webp'
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/DALL·E 2025-01-31 21.18.12 - A dark and eerie gothic landscape featuring a mysterious, ancient cathedral in the distance. A twisted, stone-paved path leads towards it, surrounded .webp'
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: DALL·E 2025-01-31 21.18.12 - A dark and eerie gothic landscape featuring a mysterious, ancient cathedral in the distance. A twisted, stone-paved path leads towards it, surrounded .webp...
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 585x1024
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 585x1024
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/DALL·E 2025-01-31 21.18.12 - A dark and eerie gothic landscape featuring a mysterious, ancient cathedral in the distance. A twisted, stone-paved path leads towards it, surrounded .webp
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/DALL·E 2025-01-31 21.18.12 - A dark and eerie gothic landscape featuring a mysterious, ancient cathedral in the distance. A twisted, stone-paved path leads towards it, surrounded .webp
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/DALL·E 2025-01-31 21.18.12 - A dark and eerie gothic landscape featuring a mysterious, ancient cathedral in the distance. A twisted, stone-paved path leads towards it, surrounded .webp
+2025-07-13 21:37:18 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: DB97576D520602969916110BE8DF81F9B3F415F75E218ED2A4ABEF4E4DD849F4.jpeg
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'DB97576D520602969916110BE8DF81F9B3F415F75E218ED2A4ABEF4E4DD849F4.jpeg'
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/DB97576D520602969916110BE8DF81F9B3F415F75E218ED2A4ABEF4E4DD849F4.jpeg'
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/DB97576D520602969916110BE8DF81F9B3F415F75E218ED2A4ABEF4E4DD849F4.jpeg'
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: DB97576D520602969916110BE8DF81F9B3F415F75E218ED2A4ABEF4E4DD849F4.jpeg...
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/DB97576D520602969916110BE8DF81F9B3F415F75E218ED2A4ABEF4E4DD849F4.jpeg
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/DB97576D520602969916110BE8DF81F9B3F415F75E218ED2A4ABEF4E4DD849F4.jpeg
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'workflow', '_metadata']
+2025-07-13 21:37:19 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: dcdc3cc5-f7f7-4eba-9901-9116eeed6203.jpeg
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'dcdc3cc5-f7f7-4eba-9901-9116eeed6203.jpeg'
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/dcdc3cc5-f7f7-4eba-9901-9116eeed6203.jpeg'
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/dcdc3cc5-f7f7-4eba-9901-9116eeed6203.jpeg'
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: dcdc3cc5-f7f7-4eba-9901-9116eeed6203.jpeg...
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 702x1024
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 702x1024
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/dcdc3cc5-f7f7-4eba-9901-9116eeed6203.jpeg
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/dcdc3cc5-f7f7-4eba-9901-9116eeed6203.jpeg
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:37:21 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: ddd8eb6a-3467-48e3-a583-abdd511420ff.jpeg
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'ddd8eb6a-3467-48e3-a583-abdd511420ff.jpeg'
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/ddd8eb6a-3467-48e3-a583-abdd511420ff.jpeg'
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/ddd8eb6a-3467-48e3-a583-abdd511420ff.jpeg'
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: ddd8eb6a-3467-48e3-a583-abdd511420ff.jpeg...
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/ddd8eb6a-3467-48e3-a583-abdd511420ff.jpeg
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/ddd8eb6a-3467-48e3-a583-abdd511420ff.jpeg
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: dfd29e0c-7819-4ad9-9d55-5bc3c3acf437.jpeg
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'dfd29e0c-7819-4ad9-9d55-5bc3c3acf437.jpeg'
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/dfd29e0c-7819-4ad9-9d55-5bc3c3acf437.jpeg'
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/dfd29e0c-7819-4ad9-9d55-5bc3c3acf437.jpeg'
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: dfd29e0c-7819-4ad9-9d55-5bc3c3acf437.jpeg...
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 597x1024
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 597x1024
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/dfd29e0c-7819-4ad9-9d55-5bc3c3acf437.jpeg
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/dfd29e0c-7819-4ad9-9d55-5bc3c3acf437.jpeg
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:37:22 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: download (75).png
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'download (75).png'
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/download (75).png'
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/download (75).png'
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: download (75).png...
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 1024x1024
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 1024x1024
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/download (75).png
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/download (75).png
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/download (75).png
+2025-07-13 21:37:24 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: download (76).png
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'download (76).png'
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/download (76).png'
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/download (76).png'
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: download (76).png...
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 1024x1024
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 1024x1024
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/download (76).png
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/download (76).png
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/download (76).png
+2025-07-13 21:37:25 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: Ds3_4.png
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'Ds3_4.png'
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/Ds3_4.png'
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/Ds3_4.png'
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: Ds3_4.png...
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 1024x683
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 1024x683
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/Ds3_4.png
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/Ds3_4.png
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/Ds3_4.png
+2025-07-13 21:37:26 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: duskfallcrew_cinematic_illustration_of_Gambit_Remy_Lebeau_rei_2c93f0e1-e960-43b4-a416-e1c37782b630_0.png
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'duskfallcrew_cinematic_illustration_of_Gambit_Remy_Lebeau_rei_2c93f0e1-e960-43b4-a416-e1c37782b630_0.png'
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/duskfallcrew_cinematic_illustration_of_Gambit_Remy_Lebeau_rei_2c93f0e1-e960-43b4-a416-e1c37782b630_0.png'
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/duskfallcrew_cinematic_illustration_of_Gambit_Remy_Lebeau_rei_2c93f0e1-e960-43b4-a416-e1c37782b630_0.png'
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: duskfallcrew_cinematic_illustration_of_Gambit_Remy_Lebeau_rei_2c93f0e1-e960-43b4-a416-e1c37782b630_0.png...
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 683x1024
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 683x1024
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/duskfallcrew_cinematic_illustration_of_Gambit_Remy_Lebeau_rei_2c93f0e1-e960-43b4-a416-e1c37782b630_0.png
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/duskfallcrew_cinematic_illustration_of_Gambit_Remy_Lebeau_rei_2c93f0e1-e960-43b4-a416-e1c37782b630_0.png
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:37:27 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parser_version', 'prompt', 'parameters', 'midjourney_specific', '_metadata']
+2025-07-13 21:37:28 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: e65be68f-407d-48ab-b76a-240b582c7ab7.jpeg
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'e65be68f-407d-48ab-b76a-240b582c7ab7.jpeg'
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/e65be68f-407d-48ab-b76a-240b582c7ab7.jpeg'
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/e65be68f-407d-48ab-b76a-240b582c7ab7.jpeg'
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: e65be68f-407d-48ab-b76a-240b582c7ab7.jpeg...
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/e65be68f-407d-48ab-b76a-240b582c7ab7.jpeg
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/e65be68f-407d-48ab-b76a-240b582c7ab7.jpeg
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:37:33 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:37:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: Freckledvixon_01381_.png
+2025-07-13 21:37:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'Freckledvixon_01381_.png'
+2025-07-13 21:37:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/Freckledvixon_01381_.png'
+2025-07-13 21:37:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:37:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/Freckledvixon_01381_.png'
+2025-07-13 21:37:41 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: Freckledvixon_01381_.png...
+2025-07-13 21:37:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 701x1024
+2025-07-13 21:37:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 701x1024
+2025-07-13 21:37:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/Freckledvixon_01381_.png
+2025-07-13 21:37:42 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/Freckledvixon_01381_.png
+2025-07-13 21:37:42 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:42 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:42 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:37:42 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'prompt', 'negative_prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:37:42 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: flux_00939_.png
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'flux_00939_.png'
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/flux_00939_.png'
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/flux_00939_.png'
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: flux_00939_.png...
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 768x1024
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 768x1024
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/flux_00939_.png
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/flux_00939_.png
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:37:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:37:49 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:37:49 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:37:49 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: FLUX_00120_.png
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'FLUX_00120_.png'
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/FLUX_00120_.png'
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/FLUX_00120_.png'
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: FLUX_00120_.png...
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 724x1024
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 724x1024
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/FLUX_00120_.png
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/FLUX_00120_.png
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:38:01 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:38:03 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:38:03 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:38:03 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:40:31 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:40:31 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:40:31 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: flux_00939_.png
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'flux_00939_.png'
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/flux_00939_.png'
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/flux_00939_.png'
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: flux_00939_.png...
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 768x1024
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 768x1024
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/flux_00939_.png
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/flux_00939_.png
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:40:35 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:40:36 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:40:36 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:40:36 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:40:37 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:40:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:40:37 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: file-6k5hbW2XqvuQFd61dDvTUS.webp
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'file-6k5hbW2XqvuQFd61dDvTUS.webp'
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/file-6k5hbW2XqvuQFd61dDvTUS.webp'
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.webp'
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/file-6k5hbW2XqvuQFd61dDvTUS.webp'
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: file-6k5hbW2XqvuQFd61dDvTUS.webp...
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 1024x1024
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 1024x1024
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/file-6k5hbW2XqvuQFd61dDvTUS.webp
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/file-6k5hbW2XqvuQFd61dDvTUS.webp
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'NoneType'> - False
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine found no matching parser or returned invalid data.
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | Failed to find/load any metadata for file: /Users/duskfall/Downloads/Metadata Samples/file-6k5hbW2XqvuQFd61dDvTUS.webp
+2025-07-13 21:40:40 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['info']
+2025-07-13 21:40:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: duskfallcrew_masterpiece_very_aesthetic_Remy_Lebeau_miqote_1b_d4b1b2c8-b750-4e98-b495-27b458d6b4cb_0.png
+2025-07-13 21:40:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'duskfallcrew_masterpiece_very_aesthetic_Remy_Lebeau_miqote_1b_d4b1b2c8-b750-4e98-b495-27b458d6b4cb_0.png'
+2025-07-13 21:40:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/duskfallcrew_masterpiece_very_aesthetic_Remy_Lebeau_miqote_1b_d4b1b2c8-b750-4e98-b495-27b458d6b4cb_0.png'
+2025-07-13 21:40:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:40:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/duskfallcrew_masterpiece_very_aesthetic_Remy_Lebeau_miqote_1b_d4b1b2c8-b750-4e98-b495-27b458d6b4cb_0.png'
+2025-07-13 21:40:42 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: duskfallcrew_masterpiece_very_aesthetic_Remy_Lebeau_miqote_1b_d4b1b2c8-b750-4e98-b495-27b458d6b4cb_0.png...
+2025-07-13 21:40:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 683x1024
+2025-07-13 21:40:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 683x1024
+2025-07-13 21:40:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/duskfallcrew_masterpiece_very_aesthetic_Remy_Lebeau_miqote_1b_d4b1b2c8-b750-4e98-b495-27b458d6b4cb_0.png
+2025-07-13 21:40:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/duskfallcrew_masterpiece_very_aesthetic_Remy_Lebeau_miqote_1b_d4b1b2c8-b750-4e98-b495-27b458d6b4cb_0.png
+2025-07-13 21:40:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:40:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:40:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:40:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parser_version', 'prompt', 'parameters', 'midjourney_specific', '_metadata']
+2025-07-13 21:40:43 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: DailyWorldMorphChallenge_Base_0026.png
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: 'DailyWorldMorphChallenge_Base_0026.png'
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/DailyWorldMorphChallenge_Base_0026.png'
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.png'
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/DailyWorldMorphChallenge_Base_0026.png'
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: DailyWorldMorphChallenge_Base_0026.png...
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 796x1024
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 796x1024
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/DailyWorldMorphChallenge_Base_0026.png
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/DailyWorldMorphChallenge_Base_0026.png
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 21:40:46 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 21:40:48 | INFO     | dataset_tools_app | info_monitor:271 | Copy All Metadata button clicked.
+2025-07-13 21:40:48 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Displayed metadata copied to clipboard!
+2025-07-13 21:40:48 | INFO     | dataset_tools_app | info_monitor:271 | Displayed metadata copied to clipboard.
+2025-07-13 21:47:08 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Close event triggered. Saving settings.
+2025-07-13 21:47:08 | INFO     | dataset_tools_app | info_monitor:271 | Layout state saved successfully
+2025-07-13 21:47:08 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loading thread cleaned up successfully
+2025-07-13 21:47:08 | INFO     | dataset_tools_app | log_session_end:291 | === Dataset Tools Session Ended ===
+2025-07-13 21:47:08 | INFO     | dataset_tools_app | log_session_end:292 | Log file saved to: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/logs/dataset_tools_20250713_211546.log

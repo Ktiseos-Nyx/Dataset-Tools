@@ -1,0 +1,57 @@
+/* GOOGLE GEMINI THEME */
+/* Blue, green, yellow, and red, reflecting the Gemini logo. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #4285F4, stop: 0.25 #34A853,
+                                stop: 0.5 #FBBC05, stop: 0.75 #EA4335,
+                                stop: 1 #4285F4);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #4285F4, stop: 0.25 #34A853,
+                                stop: 0.5 #FBBC05, stop: 0.75 #EA4335,
+                                stop: 1 #4285F4);
+    color: #FFFFFF;
+    font-family: 'Google Sans', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #FFFFFF;
+    border: 2px solid #4285F4;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #4285F4;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #F0F0F0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #4285F4;
+    border-radius: 3px;
+    padding: 5px;
+    color: #34A853;
+    selection-background-color: #FBBC05;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #4285F4;
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #34A853;
+}
+
+QListWidget::item:selected {
+    background: #FBBC05;
+    color: #FFFFFF;
+}

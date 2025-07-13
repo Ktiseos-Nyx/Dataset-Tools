@@ -1,0 +1,57 @@
+/* VAMPIRE THEME */
+/* A dark, gothic theme with deep reds, blacks, and grays, evoking a sense of mystery and danger. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1A1A1A, stop: 0.3 #2F2F2F,
+                                stop: 0.7 #8B0000, stop: 1 #1A1A1A);
+    color: #F0F0F0;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1A1A1A, stop: 0.3 #2F2F2F,
+                                stop: 0.7 #8B0000, stop: 1 #1A1A1A);
+    color: #F0F0F0;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DC143C, stop: 1 #B22222);
+    border: 2px solid #F0F0F0;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 1 #DC143C);
+    border: 2px solid #FFD700;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #8B0000;
+    border-radius: 3px;
+    padding: 5px;
+    color: #F0F0F0;
+    selection-background-color: #DC143C;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #8B0000;
+    border-radius: 3px;
+    alternate-background-color: #1A1A1A;
+    color: #F0F0F0;
+}
+
+QListWidget::item:selected {
+    background: #DC143C;
+    color: #FFFFFF;
+}

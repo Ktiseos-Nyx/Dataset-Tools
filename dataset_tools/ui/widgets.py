@@ -36,7 +36,5 @@ class FileLoader(QThread):
             FileLoadResult containing the current folder_path.
         """
         # Basic implementation - just emit empty result for now
-        result = FileLoadResult(
-            folder_path=self.folder_path, image_files=[], text_files=[], model_files=[]
-        )
+        result = FileLoadResult(folder_path=self.folder_path, image_files=[], text_files=[], model_files=[])
         self.result_ready.emit(result)

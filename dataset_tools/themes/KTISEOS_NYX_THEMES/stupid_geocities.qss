@@ -1,0 +1,52 @@
+/* STUPID IDEA: EARLY 2000S GEOCITIES */
+/* A chaotic mix of bright backgrounds, Comic Sans, and jarring contrasts, reminiscent of early 2000s web design. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FFD700, stop: 0.5 #00FFFF,
+                                stop: 1 #FF69B4);
+    color: #000000;
+    border: 5px dashed #FF0000;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FFD700, stop: 0.5 #00FFFF,
+                                stop: 1 #FF69B4);
+    color: #000000;
+    font-size: 16px;
+}
+
+QPushButton {
+    background: #00FF00;
+    border: 5px double #FF0000;
+    border-radius: 0px;
+    padding: 20px 30px;
+    color: #0000FF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: #FFFF00;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    color: #800080;
+    border: 5px solid #00FF00;
+    border-radius: 0px;
+    padding: 15px;
+}
+
+QListWidget {
+    background-color: #000000;
+    color: #FFD700;
+    border: 5px solid #FF69B4;
+    border-radius: 0px;
+}
+
+QListWidget::item:selected {
+    background-color: #00FFFF;
+    color: #000000;
+}

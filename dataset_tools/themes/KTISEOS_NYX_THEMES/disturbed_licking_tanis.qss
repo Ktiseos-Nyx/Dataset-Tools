@@ -1,0 +1,58 @@
+/* DISTURBED IDEA: LICKING TANIS HALF-ELVEN */
+/* A theme with a mix of earthy, slightly metallic, and perhaps a bit unsettling colors, reflecting the character's unique nature. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 0.3 #A9A9A9,
+                                stop: 0.7 #696969, stop: 1 #8B4513);
+    color: #F5F5DC;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 0.3 #A9A9A9,
+                                stop: 0.7 #696969, stop: 1 #8B4513);
+    color: #F5F5DC;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #708090, stop: 1 #696969);
+    border: 2px solid #F5F5DC;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #696969, stop: 1 #708090);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #8B4513;
+    border-radius: 3px;
+    padding: 5px;
+    color: #696969;
+    selection-background-color: #A9A9A9;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #8B4513;
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #696969;
+}
+
+QListWidget::item:selected {
+    background: #A9A9A9;
+    color: #FFFFFF;
+}

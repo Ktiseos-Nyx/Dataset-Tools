@@ -5,34 +5,17 @@
 """Launch and exit the application"""
 
 import argparse  # Import argparse for command-line argument processing
-<<<<<<< HEAD
-import os
-import sys
-=======
 import multiprocessing
 import sys
 from pathlib import Path
->>>>>>> origin/main
 
 from PyQt6 import QtWidgets
 from PyQt6.QtGui import QFontDatabase
 
 # For version display
 # Import from your package's __init__.py
-<<<<<<< HEAD
-=======
-# For version display
-from dataset_tools import (
-    __version__,  # type: ignore
-    set_package_log_level,  # type: ignore
-)
-
->>>>>>> origin/main
-# For version display
-from dataset_tools import (
-    __version__,  # type: ignore
-    set_package_log_level,  # type: ignore
-)
+from dataset_tools import __version__  # type: ignore
+from dataset_tools import set_package_log_level  # type: ignore
 from dataset_tools import logger as app_logger  # type: ignore
 
 # Import your logger module
@@ -107,6 +90,27 @@ def main(cli_args_list=None):
         app_logger.reconfigure_all_loggers(
             chosen_log_level_name,
         )  # Call the correct function
+
+        # Configure external libraries to use our Rich console logging
+        import logging as pylog
+
+        # PyQt6 logging
+        qt_logger = pylog.getLogger("PyQt6")
+        if hasattr(app_logger, "setup_rich_handler_for_external_logger"):
+            app_logger.setup_rich_handler_for_external_logger(
+                qt_logger,
+                app_logger._dataset_tools_main_rich_console,
+                chosen_log_level_name,
+            )
+
+        # PIL/Pillow logging
+        pil_logger = pylog.getLogger("PIL")
+        if hasattr(app_logger, "setup_rich_handler_for_external_logger"):
+            app_logger.setup_rich_handler_for_external_logger(
+                pil_logger,
+                app_logger._dataset_tools_main_rich_console,
+                chosen_log_level_name,
+            )
     else:
         # This else block might not even be strictly necessary if you know the
         # function exists,
@@ -129,10 +133,11 @@ def main(cli_args_list=None):
         # logger
 
     # Now use your logger (it should reflect the new level if reconfigured)
-    app_logger.info_monitor(f"Dataset Tools v{__version__} launching...")
-    app_logger.info_monitor(f"Application log level set to: {chosen_log_level_name}")
+    app_logger.info_monitor("Dataset Tools v%s launching...", __version__)
+    app_logger.info_monitor("Application log level set to: %s", chosen_log_level_name)
+    app_logger.info_monitor("Log file location: %s", app_logger.get_log_file_path())
     # Example debug message
-    app_logger.debug_message(f"Arguments parsed: {args}")
+    app_logger.debug_message("Arguments parsed: %s", args)
 
     # 5. Initialize and run the PyQt application
     # For QApplication, sys.argv is usually passed to allow Qt to process its
@@ -151,22 +156,21 @@ def main(cli_args_list=None):
                 font_id = QFontDatabase.addApplicationFont(str(font_file))
                 if font_id != -1:
                     family = QFontDatabase.applicationFontFamilies(font_id)[0]
-<<<<<<< HEAD
-                    app_logger.info_monitor(f"Successfully loaded font: '{family}' from {font_file}")
-                else:
-                    app_logger.info_monitor(f"Failed to load font: {font_file}")
-=======
-                    app_logger.info_monitor(
-                        f"Successfully loaded font: '{family}' from {font_file.name}"
-                    )
+                    app_logger.info_monitor(f"Successfully loaded font: '{family}' from {font_file.name}")
                 else:
                     app_logger.info_monitor(f"Failed to load font: {font_file.name}")
->>>>>>> origin/main
 
     window = MainWindow()  # Initialize our main window.
     window.show()
     window.apply_global_font()  # Apply saved font settings after UI is fully created
-    sys.exit(app.exec())
+
+    try:
+        exit_code = app.exec()
+    finally:
+        # Log session end for debugging support
+        app_logger.log_session_end()
+
+    sys.exit(exit_code)
 
 
 if __name__ == "__main__":

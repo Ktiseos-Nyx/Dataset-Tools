@@ -1,0 +1,58 @@
+/* STEVE THE FISH (LE POISSON STEVE) THEME */
+/* Blues, greens, and a touch of orange, reflecting a friendly, cartoonish fish. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4682B4, stop: 0.3 #66CDAA,
+                                stop: 0.7 #FFA500, stop: 1 #4682B4);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4682B4, stop: 0.3 #66CDAA,
+                                stop: 0.7 #FFA500, stop: 1 #4682B4);
+    color: #FFFFFF;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFA500, stop: 1 #FF8C00);
+    border: 3px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF8C00, stop: 1 #FFA500);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #4682B4;
+    border-radius: 5px;
+    padding: 8px;
+    color: #66CDAA;
+    selection-background-color: #FFA500;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #4682B4;
+    border-radius: 5px;
+    alternate-background-color: #F0F8FF;
+    color: #66CDAA;
+}
+
+QListWidget::item:selected {
+    background: #FFA500;
+    color: #FFFFFF;
+}

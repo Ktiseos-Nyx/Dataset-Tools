@@ -78,9 +78,7 @@ def dispatch_to_specific_parser(reader_instance: ImageReaderInstance) -> dict[st
     ParserClass = TOOL_CLASS_MAP.get(tool_name)  # noqa: N806
 
     if not ParserClass:
-        nfo(
-            f"No specific parser class found for tool '{tool_name}'. Returning raw parameters as fallback."
-        )
+        nfo(f"No specific parser class found for tool '{tool_name}'. Returning raw parameters as fallback.")
         # Fallback for unknown tools: just return the raw parameter dict
         return getattr(reader_instance, "parameter", {})
 

@@ -1,0 +1,61 @@
+/* DISTURBED IDEA: COLORS ONLY A MOTHER WOULD LOVE */
+/* A theme with a mix of clashing, unappealing colors that are somehow endearing to a specific person. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #800080, stop: 0.2 #FFD700,
+                                stop: 0.4 #008000, stop: 0.6 #FF69B4,
+                                stop: 0.8 #4682B4, stop: 1 #A0522D);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #800080, stop: 0.2 #FFD700,
+                                stop: 0.4 #008000, stop: 0.6 #FF69B4,
+                                stop: 0.8 #4682B4, stop: 1 #A0522D);
+    color: #FFFFFF;
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFD700, stop: 1 #800080);
+    border: 3px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #800080, stop: 1 #FFD700);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #008000;
+    border-radius: 5px;
+    padding: 8px;
+    color: #A0522D;
+    selection-background-color: #FF69B4;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #008000;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #A0522D;
+}
+
+QListWidget::item:selected {
+    background: #FF69B4;
+    color: #FFFFFF;
+}

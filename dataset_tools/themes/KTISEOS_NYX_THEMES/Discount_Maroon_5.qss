@@ -1,0 +1,217 @@
+/* General Styles */
+QWidget {
+    background-color: #94868D;
+    color: #3C1D26;
+    border: 1px solid #33313C;
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #432529;
+    color: #3C1D26;
+    border: 1px solid #33313C;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+QPushButton:hover {
+    background-color: #60222B;
+}
+
+QPushButton:pressed {
+    background-color: #33313C;
+}
+
+/* LineEdit and TextEdit */
+QLineEdit, QTextEdit {
+    background-color: #60222B;
+    color: #3C1D26;
+    border: 1px solid #33313C;
+    padding: 3px;
+    border-radius: 3px;
+}
+
+/* Labels */
+QLabel {
+    color: #3C1D26;
+}
+
+/* GroupBox */
+QGroupBox {
+    background-color: #94868D;
+    border: 1px solid #33313C;
+    margin-top: 1ex; /* leave space at the top for the title */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left; /* position at the top left */
+    padding: 0 3px;
+    background-color: #432529;
+    color: #3C1D26;
+}
+
+/* ComboBox */
+QComboBox {
+    background-color: #60222B;
+    color: #3C1D26;
+    border: 1px solid #33313C;
+    padding: 1px 0px 1px 3px; /* top, right, bottom, left */
+    border-radius: 3px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+    border-left-width: 1px;
+    border-left-color: #33313C;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 3px;
+}
+
+QComboBox::down-arrow {
+    image: url(down_arrow.png); /* Placeholder for an arrow icon */
+}
+
+/* ScrollBar */
+QScrollBar:vertical {
+    border: 1px solid #33313C;
+    background: #94868D;
+    width: 10px;
+    margin: 15px 0 15px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #432529;
+    min-height: 20px;
+}
+
+QScrollBar::add-line:vertical {
+    border: 1px solid #33313C;
+    background: #60222B;
+    height: 15px;
+    subcontrol-origin: bottom;
+    subcontrol-position: bottom;
+}
+
+QScrollBar::sub-line:vertical {
+    border: 1px solid #33313C;
+    background: #60222B;
+    height: 15px;
+    subcontrol-origin: top;
+    subcontrol-position: top;
+}
+
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    background: #3C1D26;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* CheckBox */
+QCheckBox {
+    color: #3C1D26;
+}
+
+QCheckBox::indicator {
+    width: 13px;
+    height: 13px;
+    border: 1px solid #33313C;
+    background-color: #60222B;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #432529;
+}
+
+/* RadioButton */
+QRadioButton {
+    color: #3C1D26;
+}
+
+QRadioButton::indicator {
+    width: 13px;
+    height: 13px;
+    border: 1px solid #33313C;
+    border-radius: 6px; /* Makes it circular */
+    background-color: #60222B;
+}
+
+QRadioButton::indicator:checked {
+    background-color: #432529;
+}
+
+/* TabWidget */
+QTabWidget::pane {
+    border: 1px solid #33313C;
+    background-color: #94868D;
+}
+
+QTabBar::tab {
+    background: #60222B;
+    border: 1px solid #33313C;
+    border-bottom-color: #33313C; /* same as pane color */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    min-width: 8ex;
+    padding: 2px;
+    color: #3C1D26;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: #432529;
+}
+
+QTabBar::tab:selected {
+    border-color: #33313C;
+    border-bottom-color: #432529; /* make the selected tab appear above the pane */
+}
+
+/* MenuBar */
+QMenuBar {
+    background-color: #60222B;
+    color: #3C1D26;
+}
+
+QMenuBar::item {
+    spacing: 3px;
+    padding: 1px 4px;
+    background: transparent;
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected {
+    background: #432529;
+}
+
+QMenuBar::item:pressed {
+    background: #33313C;
+}
+
+/* Menu */
+QMenu {
+    background-color: #60222B;
+    border: 1px solid #33313C;
+    border-radius: 3px;
+}
+
+QMenu::item {
+    padding: 2px 25px 2px 20px;
+    border: 1px solid transparent; /* reserve space for selection border */
+}
+
+QMenu::item:selected {
+    background-color: #432529;
+    color: #3C1D26;
+}
+
+QMenu::separator {
+    height: 1px;
+    background: #33313C;
+    margin-left: 10px;
+    margin-right: 10px;
+}

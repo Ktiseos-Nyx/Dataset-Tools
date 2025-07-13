@@ -1,0 +1,56 @@
+/* 2020S THEME */
+/* A mix of dark mode, neon accents, and futuristic elements. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1A1A1A, stop: 0.3 #2F2F2F,
+                                stop: 0.7 #00FFFF, stop: 1 #1A1A1A);
+    color: #00FFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1A1A1A, stop: 0.3 #2F2F2F,
+                                stop: 0.7 #00FFFF, stop: 1 #1A1A1A);
+    color: #00FFFF;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #00FFFF;
+    border: 2px solid #FF00FF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #000000;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #FF00FF;
+    border: 2px solid #00FFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #00FFFF;
+    border-radius: 3px;
+    padding: 5px;
+    color: #FF00FF;
+    selection-background-color: #00FFFF;
+    selection-color: #000000;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #00FFFF;
+    border-radius: 3px;
+    alternate-background-color: #333333;
+    color: #FF00FF;
+}
+
+QListWidget::item:selected {
+    background: #00FFFF;
+    color: #000000;
+}

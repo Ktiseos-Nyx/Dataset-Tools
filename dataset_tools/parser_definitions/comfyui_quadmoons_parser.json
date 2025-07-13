@@ -1,0 +1,26 @@
+{
+    "parser_name": "ComfyUI QuadMoons",
+    "name": "ComfyUI QuadMoons Extractor",
+    "version": "1.0",
+    "description": "A parser for ComfyUI workflows that use the quadMoons custom nodes.",
+    "author": "Gemini",
+    "mime_types": ["image/png", "image/jpeg"],
+    "rules": [
+        {
+            "id": "quadmoons_sampler",
+            "type": "python",
+            "method": "comfyui_quadmoons.ComfyUIQuadMoonsExtractor.extract_quadmoons_data",
+            "target_node_type": "KSampler - Extra Outputs",
+            "mappings": {
+                "seed": "seed",
+                "steps": "steps",
+                "cfg": "cfg",
+                "sampler_name": "sampler_name",
+                "scheduler": "scheduler",
+                "positive_prompt": "positive",
+                "negative_prompt": "negative",
+                "model": "model"
+            }
+        }
+    ]
+}

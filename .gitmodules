@@ -1,0 +1,3 @@
+[submodule "dataset_tools/themes/GTRONICK_QSS"]
+	path = dataset_tools/themes/GTRONICK_QSS
+	url = https://github.com/GTRONICK/QSS

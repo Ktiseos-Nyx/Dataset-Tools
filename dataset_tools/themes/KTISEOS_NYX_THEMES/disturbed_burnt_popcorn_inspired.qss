@@ -1,0 +1,377 @@
+/* DISTURBED BURNT POPCORN INSPIRED THEME */
+/* That acrid smell and charred kernels from the microwave mishap */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2f2f2f, stop: 0.5 #1a1a1a,
+                                stop: 1 #000000);
+    color: #deb887;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2f2f2f, stop: 0.5 #1a1a1a,
+                                stop: 1 #000000);
+    color: #deb887;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Charred buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #654321, stop: 0.5 #8b4513,
+                                stop: 1 #a0522d);
+    border: 3px outset #696969;
+    border-radius: 3px;
+    padding: 10px 16px;
+    color: #f5deb3;
+    min-height: 16px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 0.5 #a0522d,
+                                stop: 1 #cd853f);
+    border: 3px outset #808080;
+    color: #ffffff;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 0.5 #2f2f2f,
+                                stop: 1 #654321);
+    border: 3px inset #696969;
+}
+
+QPushButton:disabled {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #000000);
+    border: 3px outset #2f2f2f;
+    color: #696969;
+}
+
+/* Scorched text areas */
+QTextEdit, QPlainTextEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2f2f2f);
+    border: 3px inset #654321;
+    border-radius: 4px;
+    padding: 12px;
+    color: #f5deb3;
+    selection-background-color: #8b4513;
+    selection-color: #ffffff;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 3px inset #8b4513;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a4a4a, stop: 1 #3a3a3a);
+}
+
+/* Kernels lists */
+QListWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2f2f2f);
+    border: 3px inset #654321;
+    border-radius: 4px;
+    alternate-background-color: #4a4a4a;
+    color: #f5deb3;
+    gridline-color: #8b4513;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 8px 12px;
+    border-bottom: 2px solid #8b4513;
+    border-radius: 2px;
+    margin: 2px;
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #654321);
+    color: #ffffff;
+    border-radius: 4px;
+    border: 2px solid #a0522d;
+    font-weight: bold;
+}
+
+QListWidget::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #654321, stop: 1 #2f2f2f);
+    color: #deb887;
+    border-radius: 4px;
+}
+
+/* Smoky menu */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2f2f2f, stop: 1 #1a1a1a);
+    color: #deb887;
+    border-bottom: 3px outset #654321;
+    font-weight: bold;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 8px 14px;
+    border-radius: 2px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #654321);
+    color: #ffffff;
+    border: 2px outset #a0522d;
+}
+
+QMenu {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2f2f2f);
+    border: 3px outset #654321;
+    border-radius: 4px;
+    padding: 6px;
+}
+
+QMenu::item {
+    padding: 8px 20px;
+    border-radius: 2px;
+    margin: 2px;
+    color: #f5deb3;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #654321);
+    color: #ffffff;
+}
+
+/* Burnt scrollbars */
+QScrollBar:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #1a1a1a, stop: 1 #2f2f2f);
+    width: 16px;
+    border: 3px outset #2f2f2f;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #654321, stop: 0.5 #8b4513,
+                                stop: 1 #a0522d);
+    border: 3px outset #696969;
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8b4513, stop: 0.5 #a0522d,
+                                stop: 1 #cd853f);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #2f2f2f);
+    height: 16px;
+    border: 3px outset #2f2f2f;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #654321, stop: 0.5 #8b4513,
+                                stop: 1 #a0522d);
+    border: 3px outset #696969;
+    border-radius: 6px;
+    min-width: 30px;
+}
+
+/* Microwave tabs */
+QTabWidget::pane {
+    border: 3px outset #654321;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2f2f2f);
+    border-radius: 4px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2f2f2f, stop: 1 #1a1a1a);
+    border: 3px outset #2f2f2f;
+    padding: 10px 18px;
+    margin-right: 3px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    font-weight: bold;
+    color: #deb887;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #654321);
+    border: 3px outset #a0522d;
+    border-bottom: none;
+    color: #ffffff;
+}
+
+QTabBar::tab:hover:!selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a4a4a, stop: 1 #2f2f2f);
+    border: 3px outset #654321;
+    color: #f5deb3;
+}
+
+/* Acrid status bar */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2f2f2f, stop: 1 #1a1a1a);
+    border-top: 3px outset #654321;
+    color: #deb887;
+    font-weight: bold;
+}
+
+/* Overheated input fields */
+QLineEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a4a4a, stop: 1 #3a3a3a);
+    border: 3px inset #654321;
+    border-radius: 3px;
+    padding: 8px;
+    color: #f5deb3;
+    selection-background-color: #8b4513;
+    selection-color: #ffffff;
+}
+
+QLineEdit:focus {
+    border: 3px inset #8b4513;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5a5a5a, stop: 1 #4a4a4a);
+}
+
+/* Toasted combo boxes */
+QComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2f2f2f, stop: 1 #1a1a1a);
+    border: 3px outset #2f2f2f;
+    border-radius: 3px;
+    padding: 8px;
+    color: #deb887;
+    min-width: 80px;
+    font-weight: bold;
+}
+
+QComboBox:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a4a4a, stop: 1 #2f2f2f);
+    border: 3px outset #654321;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid #deb887;
+}
+
+QComboBox QAbstractItemView {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2f2f2f);
+    border: 3px outset #654321;
+    border-radius: 3px;
+    selection-background-color: #8b4513;
+    selection-color: #ffffff;
+    color: #f5deb3;
+}
+
+/* Cremated progress bars */
+QProgressBar {
+    border: 3px inset #654321;
+    border-radius: 3px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2f2f2f);
+    text-align: center;
+    color: #f5deb3;
+    font-weight: bold;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #654321, stop: 0.5 #8b4513,
+                                stop: 1 #a0522d);
+    border-radius: 2px;
+    margin: 1px;
+}
+
+/* Burnt tooltips */
+QToolTip {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2f2f2f);
+    border: 3px outset #8b4513;
+    color: #f5deb3;
+    padding: 8px 12px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+/* Additional charred styling */
+QLabel {
+    color: #deb887;
+    font-weight: bold;
+}
+
+QGroupBox {
+    border: 3px outset #654321;
+    border-radius: 6px;
+    margin-top: 12px;
+    padding-top: 12px;
+    font-weight: bold;
+    color: #f5deb3;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2f2f2f);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 15px;
+    padding: 0 12px 0 12px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8b4513, stop: 1 #a0522d);
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 3px;
+    border: 2px outset #654321;
+}
+
+QCheckBox {
+    color: #deb887;
+    font-weight: bold;
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    border: 2px inset #2f2f2f;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2f2f2f);
+}
+
+QCheckBox::indicator:checked {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #a0522d);
+    border: 2px outset #654321;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px inset #654321;
+}

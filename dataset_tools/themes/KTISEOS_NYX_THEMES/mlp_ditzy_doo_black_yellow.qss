@@ -1,0 +1,57 @@
+/* MLP: DITZY DOO (DERPY HOOVES) - BLACK AND YELLOW THEME */
+/* Inspired by a black and yellow Ditzy Doo figurine. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 0.5 #333333,
+                                stop: 1 #000000);
+    color: #FFFF00;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 0.5 #333333,
+                                stop: 1 #000000);
+    color: #FFFF00;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFFF00, stop: 1 #FFD700);
+    border: 2px solid #000000;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #000000;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFD700, stop: 1 #FFFF00);
+    border: 2px solid #333333;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 3px;
+    padding: 5px;
+    color: #333333;
+    selection-background-color: #FFFF00;
+    selection-color: #000000;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #333333;
+}
+
+QListWidget::item:selected {
+    background: #FFFF00;
+    color: #000000;
+}

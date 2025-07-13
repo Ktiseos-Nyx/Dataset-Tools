@@ -1,0 +1,50 @@
+/* LINUX DISTRO: SLACKWARE OS THEME */
+/* A minimalist, text-based theme with a dark background and light text, reflecting its no-frills approach. */
+
+QMainWindow {
+    background: #000000;
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: #000000;
+    color: #FFFFFF;
+    font-family: 'Monospace', 'Courier New', monospace;
+    font-size: 12px;
+}
+
+QPushButton {
+    background: #333333;
+    border: 1px solid #FFFFFF;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: #FFFFFF;
+}
+
+QPushButton:hover {
+    background: #555555;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 1px solid #FFFFFF;
+    border-radius: 3px;
+    padding: 5px;
+    color: #FFFFFF;
+    selection-background-color: #808080;
+    selection-color: #000000;
+}
+
+QListWidget {
+    background: #000000;
+    border: 1px solid #FFFFFF;
+    border-radius: 3px;
+    alternate-background-color: #1A1A1A;
+    color: #FFFFFF;
+}
+
+QListWidget::item:selected {
+    background: #808080;
+    color: #000000;
+}

@@ -1,0 +1,58 @@
+/* MLP: TWILIGHT SPARKLE THEME */
+/* Inspired by Twilight Sparkle - Purples, pinks, and blues. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4B0082, stop: 0.3 #8A2BE2,
+                                stop: 0.7 #FF69B4, stop: 1 #4B0082);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4B0082, stop: 0.3 #8A2BE2,
+                                stop: 0.7 #FF69B4, stop: 1 #4B0082);
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8A2BE2, stop: 1 #4B0082);
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4B0082, stop: 1 #8A2BE2);
+    border: 2px solid #E0E0E0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #4B0082;
+    border-radius: 3px;
+    padding: 5px;
+    color: #8A2BE2;
+    selection-background-color: #FF69B4;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #4B0082;
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #8A2BE2;
+}
+
+QListWidget::item:selected {
+    background: #FF69B4;
+    color: #FFFFFF;
+}

@@ -1,0 +1,60 @@
+/* STUPID IDEA: RAINBOW BARF */
+/* Every color of the rainbow, in a chaotic, unorganized, and nauseating fashion. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FF0000, stop: 0.14 #FFA500,
+                                stop: 0.28 #FFFF00, stop: 0.42 #008000,
+                                stop: 0.56 #0000FF, stop: 0.70 #4B0082,
+                                stop: 0.84 #EE82EE, stop: 1 #FF0000);
+    color: #000000;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FF0000, stop: 0.14 #FFA500,
+                                stop: 0.28 #FFFF00, stop: 0.42 #008000,
+                                stop: 0.56 #0000FF, stop: 0.70 #4B0082,
+                                stop: 0.84 #EE82EE, stop: 1 #FF0000);
+    color: #000000;
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 16px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF0000, stop: 1 #0000FF);
+    border: 5px solid #FFFF00;
+    border-radius: 0px;
+    padding: 20px 30px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #0000FF, stop: 1 #FF0000);
+    border: 5px solid #00FF00;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    color: #FF0000;
+    border: 5px solid #0000FF;
+    border-radius: 0px;
+    padding: 15px;
+}
+
+QListWidget {
+    background-color: #000000;
+    color: #FFFF00;
+    border: 5px solid #FFA500;
+    border-radius: 0px;
+}
+
+QListWidget::item:selected {
+    background-color: #008000;
+    color: #FFFFFF;
+}

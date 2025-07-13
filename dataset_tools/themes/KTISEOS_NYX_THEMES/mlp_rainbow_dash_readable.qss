@@ -1,0 +1,62 @@
+/* RAINBOW DASH (READABLE) THEME */
+/* A vibrant rainbow theme, with careful color choices to ensure readability. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FF0000, stop: 0.16 #FFA500,
+                                stop: 0.32 #FFFF00, stop: 0.48 #008000,
+                                stop: 0.64 #0000FF, stop: 0.80 #4B0082,
+                                stop: 1 #EE82EE);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FF0000, stop: 0.16 #FFA500,
+                                stop: 0.32 #FFFF00, stop: 0.48 #008000,
+                                stop: 0.64 #0000FF, stop: 0.80 #4B0082,
+                                stop: 1 #EE82EE);
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00BFFF, stop: 1 #1E90FF);
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1E90FF, stop: 1 #00BFFF);
+    border: 2px solid #E0E0E0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 3px;
+    padding: 5px;
+    color: #000000;
+    selection-background-color: #00BFFF;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background: #00BFFF;
+    color: #FFFFFF;
+}

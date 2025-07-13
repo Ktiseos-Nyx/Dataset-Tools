@@ -7,22 +7,14 @@
 
 import os
 from pathlib import Path
-<<<<<<< HEAD
 from typing import NamedTuple  # Removed List as TypingList, Optional if progress bar gone
-=======
-from typing import (
-    NamedTuple,
-)  # Removed List as TypingList, Optional if progress bar gone
->>>>>>> origin/main
 
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
 
 from dataset_tools.correct_types import ExtensionType as Ext
-from dataset_tools.logger import (
-    debug_message,  # Import debug_message
-    debug_monitor,
-)
+from dataset_tools.logger import debug_message  # Import debug_message
+from dataset_tools.logger import debug_monitor
 from dataset_tools.logger import info_monitor as nfo
 
 
@@ -109,9 +101,7 @@ class FileLoader(QtCore.QThread):
         folder_item_paths: list[str] | None,
     ) -> tuple[list[str], list[str], list[str]]:
         if folder_item_paths is None:
-            nfo(
-                "[FileLoader] populate_index_from_list received None. Returning empty lists."
-            )
+            nfo("[FileLoader] populate_index_from_list received None. Returning empty lists.")
             return [], [], []
 
         local_images: list[str] = []
@@ -119,9 +109,7 @@ class FileLoader(QtCore.QThread):
         local_model_files: list[str] = []
 
         if os.getenv("DEBUG_WIDGETS_EXT"):
-            debug_message(
-                "--- DEBUG WIDGETS: Inspecting Ext (ExtensionType) ---"
-            )  # CHANGED
+            debug_message("--- DEBUG WIDGETS: Inspecting Ext (ExtensionType) ---")  # CHANGED
             debug_message("DEBUG WIDGETS: Type of Ext: %s", type(Ext))  # CHANGED
             expected_attrs = [
                 "IMAGE",
@@ -143,9 +131,7 @@ class FileLoader(QtCore.QThread):
                 )
             debug_message("--- END DEBUG WIDGETS ---")  # CHANGED
 
-        all_image_exts = {
-            ext for ext_set in getattr(Ext, "IMAGE", []) for ext in ext_set
-        }
+        all_image_exts = {ext for ext_set in getattr(Ext, "IMAGE", []) for ext in ext_set}
         all_plain_exts_final = set()
         if hasattr(Ext, "PLAIN_TEXT_LIKE"):
             for ext_set in Ext.PLAIN_TEXT_LIKE:
@@ -165,9 +151,7 @@ class FileLoader(QtCore.QThread):
         all_text_like_exts = all_plain_exts_final.union(all_schema_exts)
         ignore_list = getattr(Ext, "IGNORE", [])
         if not isinstance(ignore_list, list):
-            nfo(
-                "[FileLoader] WARNING: Ext.IGNORE is not a list. Using empty ignore list."
-            )
+            nfo("[FileLoader] WARNING: Ext.IGNORE is not a list. Using empty ignore list.")
             ignore_list = []
 
         # Progress calculation and emission REMOVED
@@ -233,9 +217,7 @@ class LeftPanelWidget(Qw.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.layout = Qw.QVBoxLayout(self)
-        self.layout.setContentsMargins(
-            0, 0, 0, 0
-        )  # No external margins, handled by splitter
+        self.layout.setContentsMargins(0, 0, 0, 0)  # No external margins, handled by splitter
         self.layout.setSpacing(5)
 
         # 1. Folder Path Display and Open Button
@@ -246,9 +228,7 @@ class LeftPanelWidget(Qw.QWidget):
         folder_controls_layout.addWidget(self.folder_path_display, 1)
 
         self.open_folder_button = Qw.QPushButton("Open Folder")
-        self.open_folder_button.clicked.connect(
-            self.open_folder_requested.emit
-        )  # Emit signal
+        self.open_folder_button.clicked.connect(self.open_folder_requested.emit)  # Emit signal
         folder_controls_layout.addWidget(self.open_folder_button)
         self.layout.addLayout(folder_controls_layout)
 
@@ -261,12 +241,8 @@ class LeftPanelWidget(Qw.QWidget):
         sort_controls_layout = Qw.QHBoxLayout()
         sort_controls_layout.addWidget(Qw.QLabel("Sort by:"))
         self.sort_combo = Qw.QComboBox()
-        self.sort_combo.addItems(
-            ["Name (Asc)", "Name (Desc)", "Type", "Date Modified"]
-        )  # Example sort options
-        self.sort_combo.currentTextChanged.connect(
-            self.sort_files_requested.emit
-        )  # Emit signal
+        self.sort_combo.addItems(["Name (Asc)", "Name (Desc)", "Type", "Date Modified"])  # Example sort options
+        self.sort_combo.currentTextChanged.connect(self.sort_files_requested.emit)  # Emit signal
         sort_controls_layout.addWidget(self.sort_combo)
         sort_controls_layout.addStretch()
         self.layout.addLayout(sort_controls_layout)
@@ -276,9 +252,7 @@ class LeftPanelWidget(Qw.QWidget):
     def set_folder_path_display(self, path_str: str):
         self.folder_path_display.setText(path_str)
 
-    def _on_list_item_changed(
-        self, current_item: Qw.QListWidgetItem, previous_item: Qw.QListWidgetItem
-    ):
+    def _on_list_item_changed(self, current_item: Qw.QListWidgetItem, previous_item: Qw.QListWidgetItem):
         # Ensure current_item is not None before accessing its text
         if current_item:
             self.list_item_selected.emit(current_item.text())

@@ -1,0 +1,7 @@
+2025-07-13 21:51:26 | INFO     | dataset_tools_app | <module>:84 | === Dataset Tools Session Started ===
+2025-07-13 21:51:26 | INFO     | dataset_tools_app | <module>:85 | Log file: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/logs/dataset_tools_20250713_215126.log
+2025-07-13 21:51:26 | INFO     | dataset_tools_app | <module>:86 | Initial log level: INFO
+2025-07-13 21:51:26 | INFO     | dataset_tools_app | info_monitor:271 | [ImageReader] Reading PNG metadata: FLUX_00120_.png
+2025-07-13 21:51:27 | INFO     | dataset_tools_app | info_monitor:271 | [ImageReader] pyexiv2 found no metadata in: FLUX_00120_.png
+2025-07-13 21:51:27 | INFO     | dataset_tools_app | info_monitor:271 | [ImageReader] Attempting Pillow fallback for PNG: FLUX_00120_.png
+2025-07-13 21:51:27 | INFO     | dataset_tools_app | info_monitor:271 | [ImageReader] Pillow found no EXIF data

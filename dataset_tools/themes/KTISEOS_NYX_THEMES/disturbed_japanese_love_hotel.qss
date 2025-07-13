@@ -1,0 +1,58 @@
+/* DISTURBED IDEA: JAPANESE LOVE HOTEL */
+/* A theme with a mix of gaudy, romantic, and slightly tacky elements, using reds, pinks, purples, and unexpected patterns. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF1493, stop: 0.3 #800080,
+                                stop: 0.7 #FF69B4, stop: 1 #FF1493);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF1493, stop: 0.3 #800080,
+                                stop: 0.7 #FF69B4, stop: 1 #FF1493);
+    color: #FFFFFF;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFD700, stop: 1 #FFA500);
+    border: 3px solid #800080;
+    border-radius: 10px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFA500, stop: 1 #FFD700);
+    border: 3px solid #FF1493;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #FF1493;
+    border-radius: 5px;
+    padding: 8px;
+    color: #800080;
+    selection-background-color: #FF69B4;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #FF1493;
+    border-radius: 5px;
+    alternate-background-color: #FFF0F5;
+    color: #800080;
+}
+
+QListWidget::item:selected {
+    background: #FF69B4;
+    color: #FFFFFF;
+}

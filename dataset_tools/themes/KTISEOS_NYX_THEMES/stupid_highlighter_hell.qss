@@ -1,0 +1,52 @@
+/* STUPID IDEA: HIGHLIGHTER HELL */
+/* Overuse of bright, transparent-looking highlighter colors, making everything hard to read. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFFF00, stop: 0.5 #00FF00,
+                                stop: 1 #FF00FF);
+    color: #000000;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFFF00, stop: 0.5 #00FF00,
+                                stop: 1 #FF00FF);
+    color: #000000;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: #FF00FF;
+    border: 3px solid #FFFF00;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #000000;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #00FF00;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    color: #FF00FF;
+    border: 3px solid #FFFF00;
+    border-radius: 0px;
+    padding: 10px;
+}
+
+QListWidget {
+    background-color: #000000;
+    color: #FFFF00;
+    border: 3px solid #00FF00;
+    border-radius: 0px;
+}
+
+QListWidget::item:selected {
+    background-color: #FF00FF;
+    color: #000000;
+}

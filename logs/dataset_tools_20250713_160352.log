@@ -1,0 +1,597 @@
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | <module>:84 | === Dataset Tools Session Started ===
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | <module>:85 | Log file: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/logs/dataset_tools_20250713_160352.log
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | <module>:86 | Initial log level: INFO
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Dataset-Tools Logger level reconfigured to: INFO
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Configured external logger 'PyQt6' with Rich+File handlers at level INFO.
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Configured external logger 'PIL' with Rich+File handlers at level INFO.
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Dataset Tools v0.60.2.dev0 launching...
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Application log level set to: INFO
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Log file location: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/logs/dataset_tools_20250713_160352.log
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'IBM Plex Sans' from IBMPlexSans-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Pixelify Sans' from PixelifySans-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'VT323' from VT323-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Radio Canada' from RadioCanada-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Radio Canada' from RadioCanada-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'JetBrains Mono' from JetBrainsMono-Bold.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Open Sans' from OpenSans-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'PT Sans' from PTSans-Italic.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Dongle' from Dongle-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'JetBrains Mono' from JetBrainsMono-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Tsukimi Rounded' from TsukimiRounded-Medium.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Tsukimi Rounded' from TsukimiRounded-Light.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'IBM Plex Sans' from IBMPlexSans-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Inter' from Inter-VariableFont_opsz,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'PT Sans' from PTSans-BoldItalic.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Syne Mono' from SyneMono-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Tsukimi Rounded' from TsukimiRounded-Bold.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Silkscreen' from Silkscreen-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Silkscreen' from Silkscreen-Bold.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Pixelify Sans' from PixelifySans-Medium.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'DM Sans' from DMSans-Italic-VariableFont_opsz,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Work Sans' from WorkSans-VariableFont_wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Nunito' from Nunito-VariableFont_wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Tsukimi Rounded' from TsukimiRounded-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Inter' from Inter-Italic-VariableFont_opsz,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Pixelify Sans' from PixelifySans-VariableFont_wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-Light.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-Medium.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Tsukimi Rounded' from TsukimiRounded-SemiBold.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Jura' from Jura-VariableFont_wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Roboto' from Roboto-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-Bold.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Work Sans' from WorkSans-Italic-VariableFont_wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'PT Sans' from PTSans-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Kosugi Maru' from KosugiMaru-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-ExtraBold.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Mandali' from Mandali-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Nunito' from Nunito-Italic-VariableFont_wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-ExtraLight.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Pixelify Sans' from PixelifySans-Bold.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'PT Sans' from PTSans-Bold.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Orbitron' from Orbitron-VariableFont_wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Roboto' from Roboto-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Open Sans' from OpenSans-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Dongle' from Dongle-Light.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Pixelify Sans' from PixelifySans-SemiBold.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'DM Sans' from DMSans-VariableFont_opsz,wght.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Doppio One' from DoppioOne-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Turret Road' from TurretRoad-Regular.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully loaded font: 'Dongle' from Dongle-Bold.ttf
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loading thread initialized successfully
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Enhanced ThemeManager initialized
+2025-07-13 16:03:52 | INFO     | dataset_tools_app | info_monitor:271 | Available systems: qt-material=True, qt-themes=False, unreal=False
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied qt-material theme: dark_teal.xml
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Initial theme loaded: qt_material:dark_teal.xml
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Detected dark theme, adjusting icon colors accordingly
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Open Sans from OpenSans-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Open Sans from OpenSans-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Inter from Inter-VariableFont_opsz,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Inter from Inter-Italic-VariableFont_opsz,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: DM Sans from DMSans-VariableFont_opsz,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: DM Sans from DMSans-Italic-VariableFont_opsz,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Work Sans from WorkSans-VariableFont_wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Work Sans from WorkSans-Italic-VariableFont_wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Roboto from Roboto-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Roboto from Roboto-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: IBM Plex Sans from IBMPlexSans-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: IBM Plex Sans from IBMPlexSans-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Nunito from Nunito-VariableFont_wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Nunito from Nunito-Italic-VariableFont_wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: PT Sans from PTSans-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: PT Sans from PTSans-Bold.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: PT Sans from PTSans-Italic.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: PT Sans from PTSans-BoldItalic.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Radio Canada from RadioCanada-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Radio Canada from RadioCanada-Italic-VariableFont_wdth,wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: JetBrains Mono from JetBrainsMono-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: JetBrains Mono from JetBrainsMono-Bold.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Syne Mono from SyneMono-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: VT323 from VT323-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Orbitron from Orbitron-VariableFont_wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Jura from Jura-VariableFont_wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-Light.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-Medium.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-Bold.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-ExtraLight.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Turret Road from TurretRoad-ExtraBold.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Pixelify Sans from PixelifySans-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Pixelify Sans from PixelifySans-Medium.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Pixelify Sans from PixelifySans-SemiBold.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Pixelify Sans from PixelifySans-Bold.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Pixelify Sans from PixelifySans-VariableFont_wght.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Silkscreen from Silkscreen-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Silkscreen from Silkscreen-Bold.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Dongle from Dongle-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Dongle from Dongle-Light.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Dongle from Dongle-Bold.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Doppio One from DoppioOne-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Kosugi Maru from KosugiMaru-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Mandali from Mandali-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Tsukimi Rounded from TsukimiRounded-Regular.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Tsukimi Rounded from TsukimiRounded-Light.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Tsukimi Rounded from TsukimiRounded-Medium.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Tsukimi Rounded from TsukimiRounded-SemiBold.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded bundled font: Tsukimi Rounded from TsukimiRounded-Bold.ttf
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Loaded 50 bundled font files
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | FontManager initialized with 594 available fonts
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Using font for ui: Open Sans
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Applied default font to application: Open Sans
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Applied optimal fonts to application
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Clearing file list and selections.
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Attempting to load files from: /Users/duskfall/Downloads/Metadata Samples
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] FileLoader thread started for: /Users/duskfall/Downloads/Metadata Samples
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [FileLoader] Starting to scan directory: /Users/duskfall/Downloads/Metadata Samples
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [FileLoader] Scanned 1374 items (files/dirs) in directory: /Users/duskfall/Downloads/Metadata Samples
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [FileLoader] Categorized files: 1372 images, 0 text/schema, 0 models.
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [FileLoader] Scan finished. Emitting result for folder: /Users/duskfall/Downloads/Metadata Samples. File to select: None. Counts: Img=1372, Txt=0, Mdl=0
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] FileLoader finished. Received result for folder: /Users/duskfall/Downloads/Metadata Samples
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [LeftPanel] Added 1372 items to file list
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Selected: 00000-1626107238.jpeg
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File selected: '00000-1626107238.jpeg'
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Processing file: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] File matches image format: '.jpeg'
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Requesting image load for preview: '/Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg'
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Loading image: 00000-1626107238.jpeg...
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Status: Image loaded: 450x658
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loaded successfully: 450x658
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Loading metadata from: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: >>> ENTERING parse_metadata for: /Users/duskfall/Downloads/Metadata Samples/00000-1626107238.jpeg
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Creating metadata engine with path: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/dataset_tools/parser_definitions
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Engine created successfully, calling get_parser_for_file
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: get_parser_for_file returned: <class 'dict'> - True
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: Successfully parsed metadata with engine. Keys: ['tool', 'parser_version', 'prompt', 'parameters', 'raw_metadata', '_metadata']
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: ['prompt_data_section', 'generation_parameters_section', 'raw_tool_specific_data_section', 'metadata_info_section', 'unclassified']
+2025-07-13 16:03:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Auto-selected first file in the list.
+2025-07-13 16:04:30 | INFO     | dataset_tools_app | info_monitor:271 | Added 22 bundled fonts to combo box (no system fonts)
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_grandmas_undies_inspired
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_grandmas_undies_inspired, asset replacements applied
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_grandmas_undies_inspired
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_grandmas_undies_inspired
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:04:35 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme ffxiv_gosetsu
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: ffxiv_gosetsu, asset replacements applied
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: ffxiv_gosetsu
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:ffxiv_gosetsu
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:04:45 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:04:46 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:04:46 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:04:46 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:04:46 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_piss_yellow
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_piss_yellow, asset replacements applied
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_piss_yellow
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_piss_yellow
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:04:53 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_dennys_bathroom_inspired
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_dennys_bathroom_inspired, asset replacements applied
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_dennys_bathroom_inspired
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_dennys_bathroom_inspired
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:02 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_poop_stain_inspired
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_poop_stain_inspired, asset replacements applied
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_poop_stain_inspired
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_poop_stain_inspired
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:06 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme stupid_radioactive_slime
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: stupid_radioactive_slime, asset replacements applied
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: stupid_radioactive_slime
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:stupid_radioactive_slime
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:15 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme playstation_2_inspired
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: playstation_2_inspired, asset replacements applied
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: playstation_2_inspired
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:playstation_2_inspired
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:21 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:22 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:22 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:22 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:22 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme playstation_5_inspired
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: playstation_5_inspired, asset replacements applied
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: playstation_5_inspired
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:playstation_5_inspired
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_dog_barf_inspired
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_dog_barf_inspired, asset replacements applied
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_dog_barf_inspired
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_dog_barf_inspired
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:32 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:35 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme decade_1990s
+2025-07-13 16:05:35 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: decade_1990s, asset replacements applied
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: decade_1990s
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:decade_1990s
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme cyberpunk_2077
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: cyberpunk_2077, asset replacements applied
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: cyberpunk_2077
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:cyberpunk_2077
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:39 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:40 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:40 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:40 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:40 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:42 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_math_class
+2025-07-13 16:05:42 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_math_class, asset replacements applied
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_math_class
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_math_class
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:43 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_jagged_little_pill
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_jagged_little_pill, asset replacements applied
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_jagged_little_pill
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_jagged_little_pill
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:45 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_burnt_popcorn_inspired
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_burnt_popcorn_inspired, asset replacements applied
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_burnt_popcorn_inspired
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_burnt_popcorn_inspired
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:52 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme nfl_minnesota_vikings
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: nfl_minnesota_vikings, asset replacements applied
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: nfl_minnesota_vikings
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:nfl_minnesota_vikings
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:05:57 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme visual_kei_malice_mizer_inspired
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: visual_kei_malice_mizer_inspired, asset replacements applied
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: visual_kei_malice_mizer_inspired
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:visual_kei_malice_mizer_inspired
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:00 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:04 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme taco_bell_90s_interior_inspired
+2025-07-13 16:06:04 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: taco_bell_90s_interior_inspired, asset replacements applied
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: taco_bell_90s_interior_inspired
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:taco_bell_90s_interior_inspired
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:05 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_ice_cream_bacon
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_ice_cream_bacon, asset replacements applied
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_ice_cream_bacon
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_ice_cream_bacon
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:16 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_potato_vodka
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_potato_vodka, asset replacements applied
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_potato_vodka
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_potato_vodka
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:20 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_braces_tightened
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_braces_tightened, asset replacements applied
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_braces_tightened
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_braces_tightened
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:25 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:26 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:26 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:06:26 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:26 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:26 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:26 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_genshin_impact
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_genshin_impact, asset replacements applied
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_genshin_impact
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_genshin_impact
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:28 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_tuberculosis
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_tuberculosis, asset replacements applied
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_tuberculosis
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_tuberculosis
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:06:36 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | Found 6 assets for theme disturbed_tuberculosis
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | Processed custom QSS theme: disturbed_tuberculosis, asset replacements applied
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | Successfully applied custom QSS theme: disturbed_tuberculosis
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | Theme applied and saved: custom_qss:disturbed_tuberculosis
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Window resized to: 1600x900
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | Applied global font: Open Sans, 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | All settings applied.
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | Using font: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to positive_prompt_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to negative_prompt_box: Open Sans 14pt
+2025-07-13 16:07:37 | INFO     | dataset_tools_app | info_monitor:271 | [FONT] Applied to generation_data_box: Open Sans 14pt
+2025-07-13 16:07:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Close event triggered. Saving settings.
+2025-07-13 16:07:38 | INFO     | dataset_tools_app | info_monitor:271 | Layout state saved successfully
+2025-07-13 16:07:38 | INFO     | dataset_tools_app | info_monitor:271 | [UI] Image loading thread cleaned up successfully
+2025-07-13 16:07:38 | INFO     | dataset_tools_app | log_session_end:291 | === Dataset Tools Session Ended ===
+2025-07-13 16:07:38 | INFO     | dataset_tools_app | log_session_end:292 | Log file saved to: /Users/duskfall/Downloads/Dataset-Tools-Toomany_Branches_LintingFixes/Dataset-Tools/logs/dataset_tools_20250713_160352.log

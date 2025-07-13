@@ -1,0 +1,392 @@
+/* TACO BELL 90S INTERIOR INSPIRED THEME */
+/* 1990s Taco Bell restaurant vibes - teal, pink, purple with southwestern patterns */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #008080, stop: 0.33 #ff69b4,
+                                stop: 0.66 #9370db, stop: 1 #008080);
+    color: #ffffff;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #008080, stop: 0.33 #ff69b4,
+                                stop: 0.66 #9370db, stop: 1 #008080);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Yo Quiero buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffff00, stop: 0.5 #ffd700,
+                                stop: 1 #ff8c00);
+    border: 4px ridge #ff69b4;
+    border-radius: 0px;
+    padding: 12px 18px;
+    color: #8b0000;
+    min-height: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffff47, stop: 0.5 #ffff00,
+                                stop: 1 #ffd700);
+    border: 4px ridge #9370db;
+    text-shadow: 2px 2px 4px #008080;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8c00, stop: 0.5 #ff6347,
+                                stop: 1 #dc143c);
+    border: 4px inset #ff69b4;
+}
+
+QPushButton:disabled {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #696969, stop: 1 #2f4f4f);
+    border: 4px ridge #808080;
+    color: #c0c0c0;
+}
+
+/* Drive-thru menu text areas */
+QTextEdit, QPlainTextEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffacd, stop: 1 #ffefd5);
+    border: 4px ridge #008080;
+    border-radius: 0px;
+    padding: 15px;
+    color: #8b0000;
+    selection-background-color: #ff69b4;
+    selection-color: #ffffff;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 4px ridge #ff69b4;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffffff, stop: 1 #fffacd);
+}
+
+/* Nacho lists */
+QListWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffacd, stop: 1 #ffefd5);
+    border: 4px ridge #008080;
+    border-radius: 0px;
+    alternate-background-color: #fff8dc;
+    color: #8b0000;
+    gridline-color: #ff69b4;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 12px 15px;
+    border-bottom: 3px solid #ff69b4;
+    border-radius: 0px;
+    margin: 2px;
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff69b4, stop: 1 #ff1493);
+    color: #ffffff;
+    border-radius: 0px;
+    border: 3px solid #ffff00;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QListWidget::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #9370db, stop: 1 #8a2be2);
+    color: #ffffff;
+    border-radius: 0px;
+}
+
+/* Southwestern menu */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #008080, stop: 1 #006666);
+    color: #ffffff;
+    border-bottom: 4px ridge #ff69b4;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 10px 16px;
+    border-radius: 0px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff69b4, stop: 1 #ff1493);
+    color: #ffffff;
+    border: 3px ridge #ffff00;
+}
+
+QMenu {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffacd, stop: 1 #ffefd5);
+    border: 4px ridge #008080;
+    border-radius: 0px;
+    padding: 8px;
+}
+
+QMenu::item {
+    padding: 10px 24px;
+    border-radius: 0px;
+    margin: 2px;
+    color: #8b0000;
+    text-transform: uppercase;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff69b4, stop: 1 #ff1493);
+    color: #ffffff;
+}
+
+/* Bell scrollbars */
+QScrollBar:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #008080, stop: 0.5 #ff69b4,
+                                stop: 1 #9370db);
+    width: 18px;
+    border: 3px ridge #ffff00;
+    border-radius: 0px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ffff00, stop: 0.5 #ffd700,
+                                stop: 1 #ff8c00);
+    border: 3px ridge #ff69b4;
+    border-radius: 0px;
+    min-height: 35px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ffff47, stop: 0.5 #ffff00,
+                                stop: 1 #ffd700);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #008080, stop: 0.5 #ff69b4,
+                                stop: 1 #9370db);
+    height: 18px;
+    border: 3px ridge #ffff00;
+    border-radius: 0px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffff00, stop: 0.5 #ffd700,
+                                stop: 1 #ff8c00);
+    border: 3px ridge #ff69b4;
+    border-radius: 0px;
+    min-width: 35px;
+}
+
+/* Crunchwrap tabs */
+QTabWidget::pane {
+    border: 4px ridge #ff69b4;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffacd, stop: 1 #ffefd5);
+    border-radius: 0px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #008080, stop: 1 #006666);
+    border: 4px ridge #9370db;
+    padding: 12px 20px;
+    margin-right: 3px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    font-weight: bold;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff69b4, stop: 1 #ff1493);
+    border: 4px ridge #ffff00;
+    border-bottom: none;
+    color: #ffffff;
+}
+
+QTabBar::tab:hover:!selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #9370db, stop: 1 #8a2be2);
+    border: 4px ridge #ff69b4;
+    color: #ffffff;
+}
+
+/* Mexican pizza status bar */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #008080, stop: 1 #006666);
+    border-top: 4px ridge #ff69b4;
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Chalupa input fields */
+QLineEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffffff, stop: 1 #fffacd);
+    border: 4px ridge #008080;
+    border-radius: 0px;
+    padding: 10px;
+    color: #8b0000;
+    selection-background-color: #ff69b4;
+    selection-color: #ffffff;
+}
+
+QLineEdit:focus {
+    border: 4px ridge #ff69b4;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffffff, stop: 1 #fff8dc);
+}
+
+/* Quesadilla combo boxes */
+QComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #008080, stop: 1 #006666);
+    border: 4px ridge #9370db;
+    border-radius: 0px;
+    padding: 10px;
+    color: #ffffff;
+    min-width: 90px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QComboBox:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #20b2aa, stop: 1 #008080);
+    border: 4px ridge #ff69b4;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 10px solid #ffffff;
+}
+
+QComboBox QAbstractItemView {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffacd, stop: 1 #ffefd5);
+    border: 4px ridge #008080;
+    border-radius: 0px;
+    selection-background-color: #ff69b4;
+    selection-color: #ffffff;
+    color: #8b0000;
+}
+
+/* Baja blast progress bars */
+QProgressBar {
+    border: 4px ridge #008080;
+    border-radius: 0px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffacd, stop: 1 #ffefd5);
+    text-align: center;
+    color: #8b0000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff69b4, stop: 0.33 #9370db,
+                                stop: 0.66 #008080, stop: 1 #ffff00);
+    border-radius: 0px;
+    margin: 2px;
+}
+
+/* Spicy tooltips */
+QToolTip {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffacd, stop: 1 #ffefd5);
+    border: 4px ridge #ff69b4;
+    color: #8b0000;
+    padding: 10px 15px;
+    border-radius: 0px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Additional 90s Taco Bell styling */
+QLabel {
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QGroupBox {
+    border: 4px ridge #ff69b4;
+    border-radius: 0px;
+    margin-top: 15px;
+    padding-top: 15px;
+    font-weight: bold;
+    color: #8b0000;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffacd, stop: 1 #ffefd5);
+    text-transform: uppercase;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 18px;
+    padding: 0 15px 0 15px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff69b4, stop: 1 #ff1493);
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 0px;
+    border: 3px ridge #ffff00;
+    text-transform: uppercase;
+}
+
+QCheckBox {
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 0px;
+    border: 3px ridge #9370db;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffacd, stop: 1 #ffefd5);
+}
+
+QCheckBox::indicator:checked {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #ff69b4, stop: 1 #ffff00);
+    border: 3px ridge #008080;
+}
+
+QCheckBox::indicator:hover {
+    border: 3px ridge #ff69b4;
+}

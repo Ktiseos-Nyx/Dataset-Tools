@@ -1,0 +1,43 @@
+{
+    "parser_name": "XMP Universal AI Detector",
+    "name": "XMP Universal AI Tool Detector",
+    "version": "1.0", 
+    "description": "Universal XMP extractor that detects and extracts metadata from any AI tool",
+    "author": "Dataset-Tools",
+    "mime_types": ["image/png", "image/jpeg", "image/webp", "image/tiff"],
+    "rules": [
+        {
+            "id": "detect_ai_tool",
+            "type": "python",
+            "method": "xmp_extractors.XMPExtractor.detect_ai_tool_from_xmp",
+            "output_field": "detected_tool_info"
+        },
+        {
+            "id": "extract_drawthings",
+            "type": "python", 
+            "method": "xmp_extractors.XMPExtractor.extract_drawthings_from_xmp",
+            "output_field": "drawthings_data",
+            "condition": "detected_tool_info.detected_tool == 'Draw Things'"
+        },
+        {
+            "id": "extract_invokeai",
+            "type": "python",
+            "method": "xmp_extractors.XMPExtractor.extract_invokeai_from_xmp", 
+            "output_field": "invokeai_data",
+            "condition": "detected_tool_info.detected_tool == 'InvokeAI'"
+        },
+        {
+            "id": "extract_generic_json",
+            "type": "python",
+            "method": "xmp_extractors.XMPExtractor.extract_json_from_usercomment",
+            "output_field": "generic_json_data",
+            "condition": "detected_tool_info.detected_tool == 'unknown'"
+        },
+        {
+            "id": "extract_software_details",
+            "type": "python",
+            "method": "xmp_extractors.XMPExtractor.extract_software_info",
+            "output_field": "software_details"
+        }
+    ]
+}

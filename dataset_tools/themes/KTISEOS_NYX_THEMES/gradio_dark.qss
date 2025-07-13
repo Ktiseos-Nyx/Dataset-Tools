@@ -1,0 +1,218 @@
+/* GRADIO DARK THEME */
+/* Inspired by Gradio's default dark theme: navy background, light text, flat oranges and some blue accents. */
+
+QMainWindow {
+    background: #1F2937; /* Dark Navy */
+    color: #F9FAFB; /* Light Gray */
+    border: none;
+}
+
+QWidget {
+    background: #1F2937; /* Dark Navy */
+    color: #F9FAFB; /* Light Gray */
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #F59E0B; /* Flat Orange */
+    border: 2px solid #3B82F6; /* Blue */
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #D97706; /* Darker Orange */
+    border: 2px solid #2563EB; /* Darker Blue */
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #374151; /* Darker Gray */
+    border: 2px solid #3B82F6; /* Blue */
+    border-radius: 3px;
+    padding: 5px;
+    color: #F9FAFB; /* Light Gray */
+    selection-background-color: #F59E0B; /* Flat Orange */
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #374151; /* Darker Gray */
+    border: 2px solid #3B82F6; /* Blue */
+    border-radius: 3px;
+    alternate-background-color: #4B5563; /* Even Darker Gray */
+    color: #F9FAFB; /* Light Gray */
+}
+
+QListWidget::item:selected {
+    background: #F59E0B; /* Flat Orange */
+    color: #FFFFFF;
+}
+
+QMenuBar {
+    background: #1F2937; /* Dark Navy */
+    color: #F9FAFB; /* Light Gray */
+    border-bottom: 1px solid #3B82F6; /* Blue */
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background: #F59E0B; /* Flat Orange */
+}
+
+QMenu {
+    background: #1F2937; /* Dark Navy */
+    border: 1px solid #3B82F6; /* Blue */
+    padding: 3px;
+}
+
+QMenu::item {
+    padding: 5px 15px;
+    color: #F9FAFB; /* Light Gray */
+}
+
+QMenu::item:selected {
+    background: #F59E0B; /* Flat Orange */
+}
+
+QScrollBar:vertical {
+    background: #1F2937; /* Dark Navy */
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #F59E0B; /* Flat Orange */
+    border-radius: 5px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #3B82F6; /* Blue */
+    background: #374151; /* Darker Gray */
+}
+
+QTabBar::tab {
+    background: #1F2937; /* Dark Navy */
+    border: 1px solid #3B82F6; /* Blue */
+    padding: 6px 10px;
+    color: #F9FAFB; /* Light Gray */
+}
+
+QTabBar::tab:selected {
+    background: #374151; /* Darker Gray */
+    color: #F9FAFB; /* Light Gray */
+}
+
+QStatusBar {
+    background: #1F2937; /* Dark Navy */
+    border-top: 1px solid #3B82F6; /* Blue */
+    color: #F9FAFB; /* Light Gray */
+}
+
+QLineEdit {
+    background: #374151; /* Darker Gray */
+    border: 2px solid #3B82F6; /* Blue */
+    border-radius: 3px;
+    padding: 5px;
+    color: #F9FAFB; /* Light Gray */
+    selection-background-color: #F59E0B; /* Flat Orange */
+    selection-color: #FFFFFF;
+}
+
+QComboBox {
+    background: #1F2937; /* Dark Navy */
+    border: 2px solid #3B82F6; /* Blue */
+    border-radius: 3px;
+    padding: 4px;
+    color: #F9FAFB; /* Light Gray */
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 18px;
+    border-left: 1px solid #3B82F6; /* Blue */
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid #F9FAFB; /* Light Gray */
+}
+
+QComboBox QAbstractItemView {
+    background: #1F2937; /* Dark Navy */
+    border: 1px solid #3B82F6; /* Blue */
+    selection-background-color: #F59E0B; /* Flat Orange */
+    color: #F9FAFB; /* Light Gray */
+}
+
+QSplitter::handle {
+    background: #F59E0B; /* Flat Orange */
+    border: 1px solid #3B82F6; /* Blue */
+}
+
+QProgressBar {
+    border: 2px solid #3B82F6; /* Blue */
+    border-radius: 3px;
+    background: #374151; /* Darker Gray */
+    text-align: center;
+    color: #F9FAFB; /* Light Gray */
+}
+
+QProgressBar::chunk {
+    background: #F59E0B; /* Flat Orange */
+    border-radius: 2px;
+}
+
+QToolTip {
+    background: #1F2937; /* Dark Navy */
+    border: 1px solid #3B82F6; /* Blue */
+    color: #F9FAFB; /* Light Gray */
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QLabel {
+    color: #F9FAFB; /* Light Gray */
+}
+
+QGroupBox {
+    border: 2px solid #3B82F6; /* Blue */
+    border-radius: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    color: #F9FAFB; /* Light Gray */
+    background: #374151; /* Darker Gray */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 8px;
+    padding: 0 4px 0 4px;
+    background: #F59E0B; /* Flat Orange */
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QCheckBox {
+    color: #F9FAFB; /* Light Gray */
+}
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid #3B82F6; /* Blue */
+    background: #374151; /* Darker Gray */
+}
+
+QCheckBox::indicator:checked {
+    background: #F59E0B; /* Flat Orange */
+}

@@ -64,31 +64,21 @@ def parse_metadata(file_path_named: str) -> dict[str, Any]:
 
     try:
         # Create the metadata engine
-        nfo(
-            f"[DT.metadata_parser]: Creating metadata engine with path: {PARSER_DEFINITIONS_PATH}"
-        )
+        nfo(f"[DT.metadata_parser]: Creating metadata engine with path: {PARSER_DEFINITIONS_PATH}")
         engine = create_metadata_engine(PARSER_DEFINITIONS_PATH)
-        nfo(
-            "[DT.metadata_parser]: Engine created successfully, calling get_parser_for_file"
-        )
+        nfo("[DT.metadata_parser]: Engine created successfully, calling get_parser_for_file")
 
         # Process the file
         result = engine.get_parser_for_file(file_path_named)
-        nfo(
-            f"[DT.metadata_parser]: get_parser_for_file returned: {type(result)} - {bool(result)}"
-        )
+        nfo(f"[DT.metadata_parser]: get_parser_for_file returned: {type(result)} - {bool(result)}")
 
         if result and isinstance(result, dict) and result:
             # Transform the engine result to UI format
             _transform_engine_result_to_ui_dict(result, final_ui_dict)
             potential_ai_parsed = True
-            nfo(
-                f"[DT.metadata_parser]: Successfully parsed metadata with engine. Keys: {list(result.keys())}"
-            )
+            nfo(f"[DT.metadata_parser]: Successfully parsed metadata with engine. Keys: {list(result.keys())}")
         else:
-            nfo(
-                "[DT.metadata_parser]: Engine found no matching parser or returned invalid data."
-            )
+            nfo("[DT.metadata_parser]: Engine found no matching parser or returned invalid data.")
             potential_ai_parsed = False
 
     except Exception as e:
@@ -110,15 +100,11 @@ def parse_metadata(file_path_named: str) -> dict[str, Any]:
         }
         nfo(f"Failed to find/load any metadata for file: {file_path_named}")
 
-    nfo(
-        f"[DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: {list(final_ui_dict.keys())}"
-    )
+    nfo(f"[DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: {list(final_ui_dict.keys())}")
     return final_ui_dict
 
 
-def _transform_engine_result_to_ui_dict(
-    result: dict[str, Any], ui_dict: dict[str, Any]
-) -> None:
+def _transform_engine_result_to_ui_dict(result: dict[str, Any], ui_dict: dict[str, Any]) -> None:
     """Transforms the raw result from the metadata engine into the structured UI dictionary."""
     # --- Main Prompts ---
     prompt_data = {
@@ -138,7 +124,7 @@ def _transform_engine_result_to_ui_dict(
     # --- Raw Data ---
     raw_data = result.get("raw_metadata")
     if not isinstance(raw_data, dict):
-        raw_data = {"raw_content": str(raw_data)} # Wrap non-dict raw_metadata in a dict
+        raw_data = {"raw_content": str(raw_data)}  # Wrap non-dict raw_metadata in a dict
     ui_dict[DownField.RAW_DATA.value] = raw_data
 
     # --- Detected Tool ---
@@ -184,17 +170,11 @@ def _transform_engine_result_to_ui_dict(
     if "advanced_upscaling" in result:
         workflow_analysis_data["Advanced Upscaling"] = result["advanced_upscaling"]
     if "multi_stage_conditioning" in result:
-        workflow_analysis_data["Multi-Stage Conditioning"] = result[
-            "multi_stage_conditioning"
-        ]
+        workflow_analysis_data["Multi-Stage Conditioning"] = result["multi_stage_conditioning"]
     if "post_processing_effects" in result:
-        workflow_analysis_data["Post-Processing Effects"] = result[
-            "post_processing_effects"
-        ]
+        workflow_analysis_data["Post-Processing Effects"] = result["post_processing_effects"]
     if "custom_node_ecosystems" in result:
-        workflow_analysis_data["Custom Node Ecosystems"] = result[
-            "custom_node_ecosystems"
-        ]
+        workflow_analysis_data["Custom Node Ecosystems"] = result["custom_node_ecosystems"]
     if "workflow_techniques" in result:
         workflow_analysis_data["Workflow Techniques"] = result["workflow_techniques"]
 
