@@ -113,9 +113,9 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 
 | Image |
 | :---- |
-| ![Screenshot 2025-07-13 at 12.53.05.jpg](example_images/Screenshot 2025-07-13 at 12.53.05.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 14.54.59.jpg](example_images/Screenshot 2025-07-13 at 14.54.59.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 14.55.09.jpg](example_images/Screenshot 2025-07-13 at 14.55.09.jpg){: width="200px"} |
+| ![Screenshot 2025-07-13 at 12.53.05.jpg](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/2d61ac48b8ecf45769beb8692e4f38627c6ecec3/example_images/Screenshot%202025-07-13%20at%2012.53.05.jpg){: width="200px"} |
+| ![Screenshot 2025-07-13 at 14.54.59.jpg](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/2d61ac48b8ecf45769beb8692e4f38627c6ecec3/example_images/Screenshot%202025-07-13%20at%2014.54.59.jpg){: width="200px"} |
+| ![Screenshot 2025-07-13 at 14.55.09.jpg](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/2d61ac48b8ecf45769beb8692e4f38627c6ecec3/example_images/Screenshot%202025-07-13%20at%2014.55.09.jpg){: width="200px"} |
 | ![Screenshot 2025-07-13 at 20.01.15.jpg](example_images/Screenshot 2025-07-13 at 20.01.15.jpg){: width="200px"} |
 | ![Screenshot 2025-07-13 at 20.01.32.jpg](example_images/Screenshot 2025-07-13 at 20.01.32.jpg){: width="200px"} |
 | ![Screenshot 2025-07-13 at 20.01.54.jpg](example_images/Screenshot 2025-07-13 at 20.01.54.jpg){: width="200px"} |
