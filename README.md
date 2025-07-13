@@ -107,35 +107,13 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 * `.json`, `.toml`: Displays content (future: structured view).
 
 ## Example Images
+ If you're interested in seeing the app in action, this table shows what's up! 
 
-<details>
-<summary>  If you're interested in seeing the app in action, this table shows what's up! </summary>
-
-| Image |
-| :---- |
-| ![Screenshot 2025-07-13 at 12.53.05.jpg](example_images/Screenshot 2025-07-13 at 12.53.05.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 14.54.59.jpg](example_images/Screenshot 2025-07-13 at 14.54.59.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 14.55.09.jpg](example_images/Screenshot 2025-07-13 at 14.55.09.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.01.15.jpg](example_images/Screenshot 2025-07-13 at 20.01.15.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.01.32.jpg](example_images/Screenshot 2025-07-13 at 20.01.32.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.01.54.jpg](example_images/Screenshot 2025-07-13 at 20.01.54.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.02.08.jpg](example_images/Screenshot 2025-07-13 at 20.02.08.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.02.22.jpg](example_images/Screenshot 2025-07-13 at 20.02.22.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.02.36.jpg](example_images/Screenshot 2025-07-13 at 20.02.36.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.03.12.jpg](example_images/Screenshot 2025-07-13 at 20.03.12.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 20.03.22.jpg](example_images/Screenshot 2025-07-13 at 20.03.22.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.05.56.jpg](example_images/Screenshot 2025-07-13 at 22.05.56.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.06.12.jpg](example_images/Screenshot 2025-07-13 at 22.06.12.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.07.01.jpg](example_images/Screenshot 2025-07-13 at 22.07.01.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.07.12.jpg](example_images/Screenshot 2025-07-13 at 22.07.12.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.07.31.jpg](example_images/Screenshot 2025-07-13 at 22.07.31.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.07.43.jpg](example_images/Screenshot 2025-07-13 at 22.07.43.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.12.38.jpg](example_images/Screenshot 2025-07-13 at 22.12.38.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.12.41.jpg](example_images/Screenshot 2025-07-13 at 22.12.41.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.12.48.jpg](example_images/Screenshot 2025-07-13 at 22.12.48.jpg){: width="200px"} |
-| ![Screenshot 2025-07-13 at 22.13.02.jpg](example_images/Screenshot 2025-07-13 at 22.13.02.jpg){: width="200px"} |
-
-</details>
+| Screenshot 1: Dark QSS Themes | Screenshot 2: ConsoleStyle Gtronicks QSS | Screenshot 3: Font Choices |
+| :-----------------------------: | :------------------------------: | :--------------------------: |
+| <img src="example_images/Screenshot 2025-07-13 at 22.07.43.jpg" alt="GTRONICK QSS: Manjaromix" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 20.02.22.jpg" alt="ConsoleStyle" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 22.07.01.jpg" alt="Theme (Dark Teal) Choosing" width="250"> |
+| Screenshot 4: Paimon Inspired | Screenshot 5: Material Blue | Screenshot 6: Deadpool Inspired |
+| <img src="example_images/Screenshot 2025-07-13 at 20.01.54.jpg" alt="Screen Sizes" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 20.01.15.jpg" alt="Civitai Metadata" width="250"> |  <img src="example_images/Screenshot 2025-07-13 at 22.13.02.jpg" alt="Civitai Metadata" width="250">|
 
 ## Installation
 
@@ -341,7 +319,7 @@ Your contributions are welcome! Whether it's bug reports, feature requests, docu
 
 ## License
 
-This project is licensed under the terms of the <YOUR_NEW_LICENSE_NAME_HERE, e.g., Apache License 2.0 / MIT License / etc.>
+This project is licensed under the terms of the GNU GENERAL PUBLIC LICENSE [GPL 3.0](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/Themes-Lost-Dreams/LICENSE)
 Please see the LICENSE file in the repository root for the full license text.
 
 ## Acknowledgements
@@ -349,7 +327,7 @@ Please see the LICENSE file in the repository root for the full license text.
 * Core Parsing Logic & Inspiration: This project incorporates and significantly adapts parsing functionalities from Stable Diffusion Prompt Reader by  **[receyuki](https://github.com/receyuki)** . Our sincere thanks for this foundational work.
       Original Repository: [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
       The original MIT license for this vendored code is included in the NOTICE.md file.
-* UI Theming: The beautiful PyQt themes are made possible by [qt-material](https://github.com/dunderlab/qt-material) by [DunderLab](https://github.com/dunderlab)
+* UI Theming: The beautiful PyQt themes are made possible by [qt-material](https://github.com/dunderlab/qt-material) by [DunderLab](https://github.com/dunderlab) as well as GTRONICK - [GTRONICKS](https://github.com/GTRONICK/QSS) and the UNREAL STYLE SHEET Creator [UNREAL STYLESHEET](https://github.com/leixingyu/unrealStylesheet)
 * Essential Libraries: This project relies on great open-source Python libraries including [Pillow,](https://github.com/python-pillow/Pillow), [PyQt6](https://www.riverbankcomputing.com/software/pyqt/), [piexif](https://github.com/hMatoba/Piexif), [pyexiv2](https://github.com/LeoHsiao1/pyexiv2), [toml](https://github.com/uiri/toml), [Pydantic](https://docs.pydantic.dev/latest/), and [Rich](https://github.com/Textualize/rich). Their respective licenses apply.
 * **[Anzhc](https://github.com/anzhc)** for continued support and motivation.
 * Our peers and the wider AI and open-source communities for their continuous support and inspiration.
