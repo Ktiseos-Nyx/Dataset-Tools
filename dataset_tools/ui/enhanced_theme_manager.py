@@ -144,8 +144,7 @@ class EnhancedThemeManager:
             if not chaos_unlocked:
                 # Remove 'moms_2am_' themes if not unlocked
                 custom_themes["KTISEOS_NYX_THEMES"] = [
-                    theme for theme in custom_themes["KTISEOS_NYX_THEMES"]
-                    if not theme.startswith("moms_2am_")
+                    theme for theme in custom_themes["KTISEOS_NYX_THEMES"] if not theme.startswith("moms_2am_")
                 ]
                 if not custom_themes["KTISEOS_NYX_THEMES"]:
                     del custom_themes["KTISEOS_NYX_THEMES"]
@@ -493,7 +492,7 @@ class EnhancedThemeManager:
         if hasattr(self.main_window, "menu_manager"):
             # Assuming menu_manager has a reference to the themes menu
             # This might need adjustment based on actual menu structure
-            theme_menu = self.main_window.menu_manager.themes_menu # Assuming this attribute exists
+            theme_menu = self.main_window.menu_manager.themes_menu  # Assuming this attribute exists
             if theme_menu:
                 self._populate_theme_menus(theme_menu)
                 nfo("Theme menus refreshed.")

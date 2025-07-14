@@ -9,8 +9,9 @@ This module contains all dialog windows used in the application,
 including settings configuration and about information dialogs.
 """
 
-from PyQt6.QtCore import QSettings, pyqtSignal, Qt
+from PyQt6.QtCore import QSettings, Qt, pyqtSignal
 from PyQt6.QtWidgets import (
+    QCheckBox,
     QComboBox,
     QDialog,
     QDialogButtonBox,
@@ -22,7 +23,6 @@ from PyQt6.QtWidgets import (
     QTabWidget,
     QVBoxLayout,
     QWidget,
-    QCheckBox,
 )
 
 from ..logger import info_monitor as nfo
@@ -207,9 +207,9 @@ class SettingsDialog(QDialog):
             QMessageBox.information(
                 self,
                 "Chaos Collection Enabled",
-                "Mom's 2AM Fever Dreams themes are now enabled. \n\n"\
-                "You can find them in the Themes tab. Prepare for visual chaos!\n\n"\
-                "To disable this warning in the future, check the 'Don't show this warning again' checkbox in this tab."
+                "Mom's 2AM Fever Dreams themes are now enabled. \n\n"
+                "You can find them in the Themes tab. Prepare for visual chaos!\n\n"
+                "To disable this warning in the future, check the 'Don't show this warning again' checkbox in this tab.",
             )
             self.settings.setValue("chaosCollection/dontShowWarningAgain", True)
 

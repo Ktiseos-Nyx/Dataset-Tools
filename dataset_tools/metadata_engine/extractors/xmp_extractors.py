@@ -46,10 +46,10 @@ class XMPExtractor:
         try:
             # Clean up XMP content - remove any leading/trailing whitespace
             xmp_clean = xmp_content.strip()
-            
+
             # Remove or replace invalid XML characters
-            xmp_clean = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', xmp_clean)
-            
+            xmp_clean = re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]", "", xmp_clean)
+
             # Parse the XML
             root = ET.fromstring(xmp_clean)
             return root

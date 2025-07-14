@@ -1,0 +1,158 @@
+{
+  "parser_name": "PixArt Alpha & Sigma T5",
+  "priority": 160,
+  "description": "Detects PixArt Alpha or Sigma workflows using T5TextEncode nodes.",
+  "version": "1.1",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be a valid ComfyUI workflow",
+      "condition": "OR",
+      "rules": [
+        { "source_type": "pil_info_key", "source_key": "workflow", "operator": "is_valid_json" },
+        { "source_type": "pil_info_key", "source_key": "prompt", "operator": "is_valid_json" }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain T5TextEncode nodes",
+      "source_type": "pil_info_key_json_path_query",
+      "source_key_options": ["workflow", "prompt"],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": ["T5TextEncode", "T5v11Loader"]
+    },
+    {
+      "comment": "Rule 3: Must contain a PixArt Alpha or Sigma loader",
+      "source_type": "pil_info_key_json_path_query",
+      "source_key_options": ["workflow", "prompt"],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "PixArtCheckpointLoader",
+        "PixArtSigmaCheckpointLoader"
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        { "source_type": "pil_info_key", "source_key": "workflow" },
+        { "source_type": "pil_info_key", "source_key": "prompt" }
+      ],
+      "transformations": [
+        { "type": "json_decode_string_itself" }
+      ]
+    },
+    "fields": [
+      { "target_key": "prompt", "method": "pixart_extract_prompt_from_t5_nodes" },
+      { "target_key": "negative_prompt", "method": "pixart_extract_negative_from_t5_nodes" },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "PixArtCheckpointLoader",
+          "PixArtSigmaCheckpointLoader"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string",
+        "fallback": "Unknown PixArt Model"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "steps",
+        "value_type": "integer",
+        "fallback": 20
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "cfg",
+        "value_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "KSamplerAdvanced"],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["EmptyLatentImage", "PixArtResolutionSelect"],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["EmptyLatentImage", "PixArtResolutionSelect"],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      { "comment": "🎯 TIPO AI Prompt Enhancement Detection", "target_key": "tipo_enhancement", "method": "comfyui_detect_tipo_enhancement" },
+      { "comment": "📊 Workflow Complexity Analysis", "target_key": "workflow_complexity", "method": "comfyui_calculate_workflow_complexity" },
+      { "comment": "🚀 Advanced Upscaling Detection", "target_key": "advanced_upscaling", "method": "comfyui_detect_advanced_upscaling" },
+      { "comment": "🎨 Multi-Stage Conditioning Detection", "target_key": "multi_stage_conditioning", "method": "comfyui_detect_multi_stage_conditioning" },
+      { "comment": "✨ Post-Processing Effects Detection", "target_key": "post_processing_effects", "method": "comfyui_detect_post_processing_effects" },
+      { "comment": "🔌 Custom Node Ecosystem Detection", "target_key": "custom_node_ecosystems", "method": "comfyui_detect_custom_node_ecosystems" },
+      { "comment": "🎯 High-Level Workflow Techniques", "target_key": "workflow_techniques", "method": "comfyui_extract_workflow_techniques" }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "PixArt T5",
+      "tool": "ComfyUI (PixArt)",
+      "format": "PixArt T5 Workflow",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "architecture_info": {
+        "detected_as": "PixArt T5 architecture",
+        "text_encoder": "T5-v11"
+      },
+      "workflow_metadata": { "source": "ComfyUI workflow", "parser_priority": 160, "confidence": "high" }
+    }
+  },
+  "error_handling": { "on_parse_failure": "return_partial_data", "log_errors": true, "validation_level": "strict" },
+  "notes": [
+    "Specifically designed for PixArt Alpha & Sigma workflows with direct T5TextEncode nodes.",
+    "Priority 160 puts it above a general parser to catch these cases first.",
+    "Includes all advanced node discovery capabilities."
+  ],
+  "enhanced_with_node_discovery": true,
+  "enhancement_date": "2025-07-14"
+}

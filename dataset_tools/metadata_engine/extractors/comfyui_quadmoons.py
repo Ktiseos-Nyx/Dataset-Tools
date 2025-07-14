@@ -63,6 +63,12 @@ class ComfyUIQuadMoonsExtractor:
                 # Stop after finding the first matching node to avoid overwriting data
                 break
 
+    def get_methods(self) -> dict[str, callable]:
+        """Return dictionary of extraction methods."""
+        return {
+            "quadmoons_data": self.extract_quadmoons_data,
+        }
+
     def _trace_input_value(self, node_id: str, input_name: str) -> Any | None:
         """Recursively trace an input to its source value."""
         # Check for a direct widget value on the current node first

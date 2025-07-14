@@ -57,5 +57,10 @@ def test_comfyui_animeflux_workflow_parsing():
     assert (
         metadata.get("metadata_info_section", {}).get("format") == "ComfyUI Workflow (Generic Workflow Traversal)"
         or metadata.get("metadata_info_section", {}).get("format") == "ComfyUI Workflow (Civitai extraMetadata)"
+        or metadata.get("metadata_info_section", {}).get("format") == "ComfyUI Workflow (Wrapped JSON)"
     )
-    assert metadata.get("raw_tool_specific_data_section", {}).get("workflow") is not None
+    # Check for workflow data in either location - the wrapped parser puts it in unclassified
+    workflow_data = metadata.get("raw_tool_specific_data_section", {}).get("workflow") or metadata.get(
+        "unclassified", {}
+    ).get("workflow")
+    assert workflow_data is not None
