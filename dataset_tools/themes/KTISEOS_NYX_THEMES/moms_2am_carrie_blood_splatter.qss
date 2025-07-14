@@ -1,0 +1,239 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Carrie Blood Splatter"
+When prom night goes horribly, horribly wrong
+Stephen King's royalty checks just got bigger
+*/
+
+QWidget {
+    background-color: #8B0000; /* Dark red base */
+    color: #FFE4E1; /* Misty rose text */
+    font-family: "Georgia", serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #000000, stop:0.2 #8B0000, stop:0.4 #DC143C, 
+                stop:0.6 #B22222, stop:0.8 #8B0000, stop:1 #000000);
+}
+
+/* BLOOD SPLATTER BUTTONS! */
+QPushButton {
+    background: qradial-gradient(ellipse at 70% 20%, #DC143C 30%, #B22222 60%, #8B0000 90%);
+    color: #FFE4E1;
+    border: 4px solid #4A0000;
+    border-radius: 5px 60px 15px 45px; /* Irregular splatter shape! */
+    padding: 16px 22px;
+    font-weight: bold;
+    font-size: 13px;
+    box-shadow: inset 0px 0px 10px rgba(74,0,0,0.5);
+}
+
+QPushButton:hover {
+    background: qradial-gradient(ellipse at 30% 80%, #FF0000 20%, #DC143C 50%, #B22222 80%);
+    border-color: #2F0000;
+    border-radius: 10px 70px 25px 55px; /* Bigger splatter on hover */
+    box-shadow: 0px 0px 25px rgba(220,20,60,0.8), inset 0px 0px 8px rgba(47,0,0,0.6);
+    color: #FFFFFF;
+    transform: scale(1.06); /* Splatter expansion */
+}
+
+QPushButton:pressed {
+    background: qradial-gradient(ellipse at 50% 50%, #4A0000 40%, #2F0000 80%);
+    border-radius: 3px 40px 8px 30px; /* Compressed splatter */
+    border-color: #1A0000;
+    transform: scale(0.88);
+    box-shadow: inset 0px 0px 18px rgba(26,0,0,0.9);
+}
+
+/* PROM CORSAGE TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFF0F5, stop:0.3 #FFE4E1, stop:0.7 #FFC0CB, stop:1 #FFF0F5);
+    color: #8B0000;
+    border: 4px solid #DC143C;
+    border-radius: 40px 20px 35px 25px; /* Corsage flower shape */
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #B22222;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFB6C1, stop:0.4 #FF69B4, stop:0.8 #FF1493, stop:1 #FFB6C1);
+    border-radius: 50px 30px 45px 35px; /* Wilted corsage */
+    box-shadow: 0px 0px 15px rgba(178,34,34,0.5);
+    color: #2F0000;
+}
+
+/* GYMNASIUM BLEACHER TABS */
+QTabWidget::pane {
+    background: qradial-gradient(ellipse at 50% 40%, #696969 30%, #2F4F4F 60%, #000000 90%);
+    border: 5px solid #8B0000;
+    border-radius: 10px 10px 40px 40px; /* Bleacher steps shape! */
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #A9A9A9, stop:0.4 #696969, stop:0.8 #2F4F4F, stop:1 #000000);
+    color: #FFE4E1;
+    padding: 14px 26px;
+    margin: 3px;
+    border-radius: 20px 20px 0px 0px; /* Bleacher bench tops */
+    font-weight: bold;
+    font-size: 14px;
+    border: 3px solid #4A4A4A;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 50% 30%, #DC143C 40%, #8B0000 80%);
+    color: #FFE4E1;
+    border-radius: 30px 30px 0px 0px; /* Blood-stained selected bleacher */
+    border-color: #B22222;
+    box-shadow: 0px 0px 12px rgba(220,20,60,0.5);
+}
+
+/* TELEKINETIC SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #8B0000, stop:0.3 #B22222, stop:0.7 #DC143C, stop:1 #8B0000);
+    width: 28px;
+    border-radius: 14px;
+    border: 4px solid #4A0000;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(circle, #FF0000 40%, #8B0000 80%);
+    border-radius: 12px;
+    min-height: 40px;
+    border: 3px solid #DC143C;
+    margin: 4px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(circle, #FF4500 30%, #DC143C 70%);
+    box-shadow: 0px 0px 15px rgba(255,69,0,0.7);
+}
+
+/* HORROR MOVIE MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #4A0000, stop:0.3 #8B0000, stop:0.7 #B22222, stop:1 #4A0000);
+    color: #FFE4E1;
+    border-bottom: 5px solid #2F0000;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 0px 0px 20px 40px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #DC143C 40%, #B22222 80%);
+    color: #FFFFFF;
+    border-radius: 15px 35px 10px 25px;
+    padding: 12px 20px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2F2F2F, stop:0.25 #4A4A4A, stop:0.5 #696969, 
+                stop:0.75 #8B0000, stop:1 #2F2F2F);
+    color: #FFE4E1;
+    border: 5px solid #DC143C;
+    border-radius: 25px 40px 15px 50px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #B22222 30%, #8B0000 70%);
+    color: #FFFFFF;
+    border-radius: 10px 30px 20px 25px;
+    margin: 3px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #2F0000, stop:0.4 #4A0000, stop:0.8 #8B0000, stop:1 #2F0000);
+    color: #FFE4E1;
+    border-top: 5px solid #1A0000;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 40px 30px 0px 0px;
+}
+
+/* BLOOD SPLATTER PATTERN */
+QLabel#bloodSplatter {
+    background: qradial-gradient(ellipse at 15% 25%, #DC143C 18%, transparent 19%),
+                qradial-gradient(ellipse at 70% 40%, #B22222 15%, transparent 16%),
+                qradial-gradient(ellipse at 35% 75%, #8B0000 22%, transparent 23%),
+                qradial-gradient(ellipse at 85% 20%, #FF0000 12%, transparent 13%),
+                qradial-gradient(ellipse at 25% 80%, #DC143C 20%, transparent 21%),
+                qradial-gradient(ellipse at 60% 15%, #B22222 16%, transparent 17%),
+                qradial-gradient(ellipse at 90% 70%, #8B0000 14%, transparent 15%),
+                #000000;
+    color: #FFE4E1;
+    border: 4px solid #4A0000;
+    border-radius: 10px 50px 25px 60px;
+    padding: 18px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* PROM CROWN EFFECT */
+QWidget#promCrown {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFD700, stop:0.3 #FFA500, stop:0.7 #FF8C00, stop:1 #FFD700);
+    border: 3px solid #B8860B;
+    border-radius: 60px 60px 20px 20px; /* Crown shape */
+    color: #8B4513;
+    font-weight: bold;
+}
+
+/* TELEKINETIC POWER INDICATOR */
+QLabel#telekineticPower {
+    background: qradial-gradient(circle at 50% 50%, #9370DB 20%, #8A2BE2 50%, #4B0082 80%);
+    color: #E6E6FA;
+    border: 6px solid #9932CC;
+    border-radius: 25px 60px 35px 70px;
+    padding: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: "Impact", sans-serif;
+    text-align: center;
+}
+
+/* PIGS BLOOD BUCKET */
+QLabel#pigBloodBucket {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #C0C0C0, stop:0.2 #A9A9A9, stop:0.8 #DC143C, stop:1 #8B0000);
+    color: #FFE4E1;
+    border: 4px solid #696969;
+    border-radius: 20px 20px 60px 60px; /* Bucket shape */
+    padding: 15px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+/* PROM DISASTER EFFECT */
+QWidget#promDisaster {
+    background: qradial-gradient(ellipse at 30% 40%, #DC143C 15%, transparent 16%),
+                qradial-gradient(ellipse at 70% 60%, #B22222 18%, transparent 19%),
+                qradial-gradient(ellipse at 50% 20%, #8B0000 12%, transparent 13%),
+                qradial-gradient(ellipse at 20% 80%, #FF0000 20%, transparent 21%),
+                #000000;
+    border: 5px solid #8B0000;
+    border-radius: 30px;
+}
+
+/* STEPHEN KING COPYRIGHT */
+QWidget#stephenKingCopyright {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2F2F2F, stop:0.5 #000000, stop:1 #2F2F2F);
+    border: 3px solid #8B0000;
+    border-radius: 15px;
+    color: #FFE4E1;
+    font-weight: bold;
+    font-size: 11px;
+    padding: 10px;
+}

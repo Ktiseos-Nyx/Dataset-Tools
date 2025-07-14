@@ -1,0 +1,228 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Crib Death"
+The darkest possible nursery theme
+Child safety advocates have left the building
+*/
+
+QWidget {
+    background-color: #2F2F2F; /* Dark gray base */
+    color: #E6E6FA; /* Lavender text */
+    font-family: "Times New Roman", serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #000000, stop:0.2 #2F2F2F, stop:0.4 #4A4A4A, 
+                stop:0.6 #FFB6C1, stop:0.8 #2F2F2F, stop:1 #000000);
+}
+
+/* CRIB RAIL BUTTONS! */
+QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #696969, stop:0.3 #4A4A4A, stop:0.7 #2F2F2F, stop:1 #1C1C1C);
+    color: #E6E6FA;
+    border: 4px solid #000000;
+    border-radius: 5px 5px 30px 30px; /* Crib rail shape! */
+    padding: 18px 26px;
+    font-weight: bold;
+    font-size: 13px;
+    box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5);
+}
+
+QPushButton:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFB6C1, stop:0.4 #FF69B4, stop:0.8 #4A4A4A, stop:1 #2F2F2F);
+    border-color: #FF69B4;
+    border-radius: 8px 8px 40px 40px; /* Slightly taller crib rails */
+    box-shadow: 0px 0px 20px rgba(255,105,180,0.4), inset 0px 0px 8px rgba(0,0,0,0.6);
+    color: #FFFFFF;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #1C1C1C, stop:0.5 #000000, stop:1 #1C1C1C);
+    border-radius: 3px 3px 20px 20px; /* Lowered crib rails */
+    border-color: #000000;
+    transform: scale(0.9);
+    box-shadow: inset 0px 0px 15px rgba(0,0,0,0.8);
+}
+
+/* BABY BLANKET TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFF0F5, stop:0.3 #FFE4E1, stop:0.7 #FFB6C1, stop:1 #FFF0F5);
+    color: #8B0000;
+    border: 4px solid #4A4A4A;
+    border-radius: 20px 40px 25px 45px; /* Soft blanket folds */
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    font-family: "Georgia", serif;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #FF69B4;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F0F8FF, stop:0.5 #E6E6FA, stop:1 #F0F8FF);
+    border-radius: 30px 50px 35px 55px; /* Disturbed blanket */
+    box-shadow: 0px 0px 15px rgba(255,105,180,0.3);
+    color: #2F2F2F;
+}
+
+/* NURSERY MOBILE TABS */
+QTabWidget::pane {
+    background: qradial-gradient(ellipse at 50% 30%, #E6E6FA 20%, #D3D3D3 50%, #A9A9A9 80%);
+    border: 5px solid #2F2F2F;
+    border-radius: 60px 60px 20px 20px; /* Mobile dome shape! */
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFB6C1, stop:0.4 #FF69B4, stop:0.8 #C0C0C0, stop:1 #A9A9A9);
+    color: #2F2F2F;
+    padding: 16px 28px;
+    margin: 4px;
+    border-radius: 40px 40px 0px 0px; /* Mobile hanging pieces */
+    font-weight: bold;
+    font-size: 14px;
+    border: 3px solid #4A4A4A;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 50% 40%, #E6E6FA 40%, #D3D3D3 80%);
+    color: #000000;
+    border-radius: 50px 50px 0px 0px; /* Selected mobile piece */
+    border-color: #2F2F2F;
+    box-shadow: 0px 0px 12px rgba(230,230,250,0.4);
+}
+
+/* SILENT MONITOR SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #4A4A4A, stop:0.3 #2F2F2F, stop:0.7 #1C1C1C, stop:1 #4A4A4A);
+    width: 26px;
+    border-radius: 13px;
+    border: 4px solid #000000;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(circle, #8B0000 40%, #4A0000 80%);
+    border-radius: 11px;
+    min-height: 35px;
+    border: 3px solid #2F2F2F;
+    margin: 4px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(circle, #DC143C 30%, #8B0000 70%);
+    box-shadow: 0px 0px 12px rgba(220,20,60,0.5);
+}
+
+/* NURSERY RHYME MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #2F2F2F, stop:0.3 #4A4A4A, stop:0.7 #696969, stop:1 #2F2F2F);
+    color: #E6E6FA;
+    border-bottom: 5px solid #000000;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 0px 0px 30px 60px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #FFB6C1 40%, #FF69B4 80%);
+    color: #2F2F2F;
+    border-radius: 25px 45px 20px 40px;
+    padding: 12px 22px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F0F8FF, stop:0.25 #E6E6FA, stop:0.5 #D3D3D3, 
+                stop:0.75 #A9A9A9, stop:1 #F0F8FF);
+    color: #2F2F2F;
+    border: 5px solid #4A4A4A;
+    border-radius: 35px 55px 30px 60px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #8B0000 30%, #4A0000 70%);
+    color: #E6E6FA;
+    border-radius: 20px 40px 25px 45px;
+    margin: 3px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #000000, stop:0.4 #1C1C1C, stop:0.8 #2F2F2F, stop:1 #000000);
+    color: #E6E6FA;
+    border-top: 5px solid #4A4A4A;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 50px 40px 0px 0px;
+}
+
+/* ANGEL WINGS PATTERN */
+QLabel#angelWings {
+    background: qradial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.6) 25%, transparent 26%),
+                qradial-gradient(ellipse at 70% 50%, rgba(255,255,255,0.6) 25%, transparent 26%),
+                qradial-gradient(ellipse at 30% 50%, rgba(230,230,250,0.4) 15%, transparent 16%),
+                qradial-gradient(ellipse at 70% 50%, rgba(230,230,250,0.4) 15%, transparent 16%),
+                #2F2F2F;
+    color: #E6E6FA;
+    border: 4px solid #4A4A4A;
+    border-radius: 80px 20px 80px 20px;
+    padding: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: "Georgia", serif;
+}
+
+/* PEACEFUL SLEEP EFFECT */
+QWidget#peacefulSleep {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #E6E6FA, stop:0.3 #D3D3D3, stop:0.7 #A9A9A9, stop:1 #2F2F2F);
+    border: 3px solid #4A4A4A;
+    border-radius: 60px 60px 30px 30px;
+    color: #2F2F2F;
+    font-weight: bold;
+}
+
+/* MEMORY CANDLE */
+QLabel#memoryCandle {
+    background: qradial-gradient(circle at 50% 20%, #FFFACD 30%, #F0E68C 60%, #DAA520 90%);
+    color: #8B4513;
+    border: 6px solid #B8860B;
+    border-radius: 25px 25px 60px 60px;
+    padding: 22px;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: "Georgia", serif;
+    text-align: center;
+}
+
+/* EMPTY CRADLE EFFECT */
+QLabel#emptyCradle {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #D2B48C, stop:0.3 #BC9A6A, stop:0.7 #A0522D, stop:1 #D2B48C);
+    color: #654321;
+    border: 3px solid #8B4513;
+    border-radius: 40px 40px 20px 20px;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+/* LULLABY SILENCE */
+QWidget#lullabySilence {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #2F2F2F, stop:0.5 #000000, stop:1 #2F2F2F);
+    border: 4px solid #1C1C1C;
+    border-radius: 30px;
+    color: #E6E6FA;
+    font-weight: bold;
+    font-size: 12px;
+}

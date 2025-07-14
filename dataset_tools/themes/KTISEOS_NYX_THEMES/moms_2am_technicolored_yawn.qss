@@ -1,0 +1,165 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Technicolored Yawn"
+A rainbow of regret in CSS form
+Inspired by too much Marvel Snap and questionable life choices
+*/
+
+QWidget {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FF6B6B, stop:0.2 #4ECDC4, stop:0.4 #45B7D1, 
+                stop:0.6 #96CEB4, stop:0.8 #FFEAA7, stop:1 #FF6B6B);
+    color: #2D3436; /* Dark gray text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FF6B6B, stop:0.15 #FF7675, stop:0.3 #FDCB6E, 
+                stop:0.45 #6C5CE7, stop:0.6 #A29BFE, stop:0.75 #FD79A8, 
+                stop:0.9 #E84393, stop:1 #FF6B6B);
+}
+
+QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #74B9FF, stop:0.5 #0984E3, stop:1 #74B9FF);
+    color: #FFFFFF;
+    border: 3px solid #00B894;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #A29BFE, stop:0.5 #6C5CE7, stop:1 #A29BFE);
+    border-color: #00CEC9;
+    box-shadow: 0px 0px 15px #FF7675;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #E84393, stop:0.5 #FD79A8, stop:1 #E84393);
+    border-color: #FF6B6B;
+}
+
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #DFFFDF, stop:0.5 #B9E7FF, stop:1 #FFE5B4);
+    color: #2D3436;
+    border: 3px solid #81ECEC;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 3px solid #FF7675;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFE5E5, stop:0.5 #E5F3FF, stop:1 #FFF3E5);
+    box-shadow: 0px 0px 12px #A29BFE;
+}
+
+QTabWidget::pane {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFEAA7, stop:0.5 #DDA0DD, stop:1 #98D8C8);
+    border: 4px solid #00B894;
+    border-radius: 12px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FDCB6E, stop:0.5 #E17055, stop:1 #FDCB6E);
+    color: #2D3436;
+    padding: 12px 24px;
+    margin: 4px;
+    border-radius: 10px 10px 0px 0px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #A29BFE, stop:0.5 #6C5CE7, stop:1 #A29BFE);
+    color: #FFFFFF;
+    border: 3px solid #00CEC9;
+}
+
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FF7675, stop:0.5 #FDCB6E, stop:1 #FF7675);
+    width: 20px;
+    border-radius: 10px;
+    border: 2px solid #00B894;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #74B9FF, stop:0.5 #0984E3, stop:1 #74B9FF);
+    border-radius: 8px;
+    min-height: 30px;
+    border: 2px solid #FFFFFF;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #A29BFE, stop:0.5 #6C5CE7, stop:1 #A29BFE);
+    box-shadow: 0px 0px 8px #FF6B6B;
+}
+
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #00CEC9, stop:0.5 #00B894, stop:1 #00CEC9);
+    color: #2D3436;
+    border-bottom: 4px solid #E17055;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FDCB6E, stop:0.5 #E17055, stop:1 #FDCB6E);
+    border-radius: 8px;
+    padding: 6px 12px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #DDA0DD, stop:0.5 #98D8C8, stop:1 #FFEAA7);
+    color: #2D3436;
+    border: 4px solid #00B894;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FF7675, stop:0.5 #E84393, stop:1 #FF7675);
+    color: #FFFFFF;
+    border-radius: 6px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #E84393, stop:0.5 #FD79A8, stop:1 #E84393);
+    color: #FFFFFF;
+    border-top: 4px solid #00CEC9;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+/* Special rainbow effect for headers */
+QLabel#rainbowHeader {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FF0000, stop:0.17 #FF8C00, stop:0.33 #FFD700, 
+                stop:0.5 #00FF00, stop:0.67 #0000FF, stop:0.83 #8B00FF, stop:1 #FF0000);
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 3px solid #2D3436;
+}

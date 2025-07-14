@@ -1,0 +1,125 @@
+/*
+ * Mom's 2AM Fever Dreams: Necrosis Nose Theme
+ *
+ * This theme delves into the grim reality of decaying flesh – black, gray, and utterly morbid.
+ * Not for the faint of heart, or nose.
+ *
+ * Legal Disclaimer: If your UI starts to smell, it's probably not the theme.
+ * Please consult a medical professional immediately. Or a priest.
+ */
+
+QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #000000, /* Black - the void */
+                               stop:0.3 #2F4F4F, /* DarkSlateGray - decaying tissue */
+                               stop:0.6 #696969, /* DimGray - ashen */
+                               stop:1 #A9A9A9); /* DarkGray - bone */
+    color: #F8F8FF; /* GhostWhite - for contrast */
+}
+
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #000000, /* Black */
+                               stop:0.3 #2F4F4F, /* DarkSlateGray */
+                               stop:0.6 #696969, /* DimGray */
+                               stop:1 #A9A9A9); /* DarkGray */
+}
+
+QPushButton {
+    border: 3px solid #1C1C1C; /* Very dark gray - medical stitching */
+    border-radius: 40px 15px 60px 25px; /* Irregular, like a diseased organ */
+    background-color: #2F4F4F; /* DarkSlateGray - main decay color */
+    color: #FFFFFF; /* White - sterile bandage */
+    padding: 15px 30px;
+    font-size: 20px;
+    transform: rotate(15deg); /* Severely tilted, like a broken nose */
+}
+
+QPushButton:hover {
+    background-color: #1C1C1C; /* Very dark gray - deeper decay */
+    border: 3px solid #000000; /* Black */
+    transform: rotate(18deg) scale(1.05); /* More pronounced */
+}
+
+QPushButton:pressed {
+    background-color: #000000; /* Black */
+    border: 3px solid #000000; /* Black */
+    transform: rotate(12deg) scale(0.95); /* Squished */
+}
+
+/* Add more QSS elements as needed for a complete theme */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    border: 1px solid #2F4F4F; /* DarkSlateGray */
+    background-color: #D3D3D3; /* LightGray - sterile surface */
+    color: #1C1C1C; /* Very dark gray text */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #000000; /* Black - focused on the horror */
+}
+
+QTabWidget::pane {
+    border-top: 2px solid #2F4F4F; /* DarkSlateGray */
+}
+
+QTabBar::tab {
+    background: #696969; /* DimGray */
+    border: 1px solid #2F4F4F; /* DarkSlateGray */
+    border-bottom-color: #2F4F4F; /* Same as pane */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 8px;
+}
+
+QTabBar::tab:selected {
+    background: #000000; /* Black */
+    border-color: #000000;
+    border-bottom-color: #000000; /* Selected tab blends with pane */
+}
+
+QScrollBar:vertical {
+    border: 1px solid #2F4F4F;
+    background: #D3D3D3;
+    width: 15px;
+    margin: 22px 0 22px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #000000;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QMenuBar {
+    background-color: #2F4F4F; /* DarkSlateGray */
+    color: #F8F8FF; /* GhostWhite */
+}
+
+QMenu {
+    background-color: #D3D3D3; /* LightGray */
+    border: 1px solid #2F4F4F;
+}
+
+QMenu::item:selected {
+    background-color: #000000; /* Black */
+}
+
+QStatusBar {
+    background-color: #1C1C1C; /* Very dark gray */
+    color: #F8F8FF;
+}
+
+/* Custom QLabel elements with theme-specific IDs */
+QLabel#necrosisTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000; /* Black */
+    text-align: center;
+}
+
+QLabel#necrosisDescription {
+    font-size: 14px;
+    color: #2F4F4F; /* DarkSlateGray */
+}

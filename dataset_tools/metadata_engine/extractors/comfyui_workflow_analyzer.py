@@ -483,6 +483,7 @@ class ComfyUIWorkflowAnalyzer:
     def _extract_sampling_info(self, nodes: dict[str, NodeData]) -> dict[str, Any]:
         """Extract sampling-related information from nodes."""
         sampling_info = {
+            "seed": None,
             "steps": None,
             "cfg": None,
             "sampler_name": None,
@@ -498,14 +499,19 @@ class ComfyUIWorkflowAnalyzer:
                 widgets = node.get("widgets_values", [])
                 if widgets:
                     try:
-                        sampling_info["seed"] = widgets[0]
-                        sampling_info["steps"] = widgets[1]
-                        sampling_info["cfg"] = widgets[2]
-                        sampling_info["sampler"] = widgets[3]
-                        sampling_info["scheduler"] = widgets[4]
-                        if len(widgets) > 5:
+                        if len(widgets) >= 1:
+                            sampling_info["seed"] = widgets[0]
+                        if len(widgets) >= 2:
+                            sampling_info["steps"] = widgets[1]
+                        if len(widgets) >= 3:
+                            sampling_info["cfg"] = widgets[2]
+                        if len(widgets) >= 4:
+                            sampling_info["sampler_name"] = widgets[3]
+                        if len(widgets) >= 5:
+                            sampling_info["scheduler"] = widgets[4]
+                        if len(widgets) >= 6:
                             sampling_info["denoise"] = widgets[5]
-                    except (IndexError, TypeError):
+                    except (TypeError):
                         continue
                 break
 

@@ -17,6 +17,7 @@ The template system supports:
 import json
 import logging
 import re
+from pathlib import Path
 from typing import Any, Union
 
 # Assumed to exist based on your other files
@@ -128,7 +129,7 @@ class TemplateProcessor:
 
     def _handle_file_name(self) -> str:
         file_path = self._context_data.get("file_path_original", "")
-        return __import__("pathlib").Path(file_path).name if file_path else ""
+        return Path(file_path).name if file_path else ""
 
     def _handle_file_extension(self) -> str:
         return str(self._context_data.get("file_extension", ""))

@@ -248,7 +248,7 @@ class ComfyUIExtractor:
             "SamplerCustomAdvanced",
         ]
 
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
                 if any(sampler_type in class_type for sampler_type in sampler_types):
@@ -338,7 +338,7 @@ class ComfyUIExtractor:
             return None
 
         # Simple field search
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if isinstance(node_data, dict):
                 if field_name in node_data:
                     return node_data[field_name]
@@ -368,7 +368,7 @@ class ComfyUIExtractor:
 
         # Find nodes by class
         matching_nodes = {}
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
                 if target_class in class_type:
@@ -397,7 +397,7 @@ class ComfyUIExtractor:
         if not nodes:
             return None
 
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if isinstance(node_data, dict):
                 inputs = node_data.get("inputs", {})
                 if isinstance(inputs, dict) and input_name in inputs:
@@ -920,7 +920,7 @@ class ComfyUIExtractor:
         data_type = method_def.get("data_type", "string")
         fallback = method_def.get("fallback")
 
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if isinstance(node_data, dict):
                 if self.manager.node_checker.is_sampler_node(node_data):
                     inputs = node_data.get("inputs", {})
@@ -1041,7 +1041,7 @@ class ComfyUIExtractor:
             return []
 
         loras = []
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if isinstance(node_data, dict):
                 if self.manager.node_checker.is_lora_node(node_data):
                     widgets = node_data.get("widgets_values", [])
@@ -1191,7 +1191,7 @@ class ComfyUIExtractor:
             return []
 
         custom_nodes = []
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
+        for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
             if isinstance(node_data, dict):
                 if self.manager.node_checker.is_custom_node(node_data):
                     custom_nodes.append(
@@ -1205,6 +1205,73 @@ class ComfyUIExtractor:
 
         return custom_nodes
 
+    # Helper methods for SDXL extraction
+    def _get_workflow_nodes(self, data: Any) -> list[dict[str, Any]]:
+        """Parse JSON data and return workflow nodes."""
+        try:
+            workflow = self._parse_json_data(data)
+            if not isinstance(workflow, dict):
+                return []
+            nodes = workflow.get("nodes", [])
+            if not isinstance(nodes, list):
+                self.logger.warning("Workflow nodes is not a list")
+                return []
+            return nodes
+        except Exception as e:
+            self.logger.error(f"Error parsing workflow data: {e}")
+            return []
+
+    def _extract_text_from_refiner_node(self, node: dict[str, Any], prompt_type: str = "positive") -> str:
+        """Extract text from CLIPTextEncodeSDXLRefiner node."""
+        try:
+            if not isinstance(node, dict) or node.get("type") != "CLIPTextEncodeSDXLRefiner":
+                return ""
+
+            # For negative prompts, check title
+            if prompt_type == "negative":
+                title = node.get("title", "").lower()
+                if "negative" not in title and "refiner" not in title:
+                    return ""
+
+            widgets_values = node.get("widgets_values", [])
+            if not isinstance(widgets_values, list):
+                self.logger.warning(f"Invalid widgets_values type in refiner node: {type(widgets_values)}")
+                return ""
+                
+            if len(widgets_values) >= 4:
+                prompt_text = widgets_values[3]  # Text is at index 3
+                if isinstance(prompt_text, str) and prompt_text.strip():
+                    self.logger.info(f"[SDXL Refiner] Found {prompt_type} prompt: {prompt_text[:100]}...")
+                    return prompt_text
+            else:
+                self.logger.debug(f"Insufficient widgets_values in refiner node: {len(widgets_values)} < 4")
+            return ""
+        except Exception as e:
+            self.logger.error(f"Error extracting text from refiner node: {e}")
+            return ""
+
+    def _extract_text_from_primitive_node(self, nodes: list[dict[str, Any]], titles: list[str]) -> str:
+        """Extract text from PrimitiveNode with matching titles."""
+        try:
+            for node in nodes:
+                if not isinstance(node, dict):
+                    continue
+                    
+                if node.get("type") == "PrimitiveNode":
+                    node_title = node.get("title", "").lower()
+                    if node_title in titles:
+                        widgets_values = node.get("widgets_values", [])
+                        if not isinstance(widgets_values, list):
+                            self.logger.warning(f"Invalid widgets_values type in primitive node: {type(widgets_values)}")
+                            continue
+                            
+                        if widgets_values and isinstance(widgets_values[0], str):
+                            return widgets_values[0]
+            return ""
+        except Exception as e:
+            self.logger.error(f"Error extracting text from primitive node: {e}")
+            return ""
+
     # Convenience methods for direct access to the manager
     def _extract_sdxl_refiner_prompt(
         self,
@@ -1214,35 +1281,18 @@ class ComfyUIExtractor:
         fields: ExtractedFields,
     ) -> str:
         """Extract positive prompt from CLIPTextEncodeSDXLRefiner nodes."""
-        workflow = self._parse_json_data(data)
-        if not isinstance(workflow, dict):
+        nodes = self._get_workflow_nodes(data)
+        if not nodes:
             return ""
-
-        nodes = workflow.get("nodes", [])
 
         # Look for CLIPTextEncodeSDXLRefiner nodes
         for node in nodes:
-            if isinstance(node, dict) and node.get("type") == "CLIPTextEncodeSDXLRefiner":
-                widgets_values = node.get("widgets_values", [])
-                # widget_values structure: [cfg, width, height, text]
-                if len(widgets_values) >= 4:
-                    prompt_text = widgets_values[3]  # Text is at index 3
-                    if isinstance(prompt_text, str) and prompt_text.strip():
-                        self.logger.info(f"[SDXL Refiner] Found positive prompt: {prompt_text[:100]}...")
-                        return prompt_text
+            result = self._extract_text_from_refiner_node(node, "positive")
+            if result:
+                return result
 
         # Fallback: look in PrimitiveNode with title "Positive Prompt"
-        for node in nodes:
-            if isinstance(node, dict):
-                if node.get("type") == "PrimitiveNode" and node.get("title", "").lower() in [
-                    "positive prompt",
-                    "positive",
-                ]:
-                    widgets_values = node.get("widgets_values", [])
-                    if widgets_values and isinstance(widgets_values[0], str):
-                        return widgets_values[0]
-
-        return ""
+        return self._extract_text_from_primitive_node(nodes, ["positive prompt", "positive"])
 
     def _extract_sdxl_refiner_negative(
         self,
@@ -1252,37 +1302,18 @@ class ComfyUIExtractor:
         fields: ExtractedFields,
     ) -> str:
         """Extract negative prompt from CLIPTextEncodeSDXLRefiner nodes."""
-        workflow = self._parse_json_data(data)
-        if not isinstance(workflow, dict):
+        nodes = self._get_workflow_nodes(data)
+        if not nodes:
             return ""
-
-        nodes = workflow.get("nodes", [])
 
         # Look for CLIPTextEncodeSDXLRefiner nodes with negative title/purpose
         for node in nodes:
-            if isinstance(node, dict) and node.get("type") == "CLIPTextEncodeSDXLRefiner":
-                title = node.get("title", "").lower()
-                if "negative" in title or "refiner" in title:
-                    widgets_values = node.get("widgets_values", [])
-                    # widget_values structure: [cfg, width, height, text]
-                    if len(widgets_values) >= 4:
-                        prompt_text = widgets_values[3]  # Text is at index 3
-                        if isinstance(prompt_text, str) and prompt_text.strip():
-                            self.logger.info(f"[SDXL Refiner] Found negative prompt: {prompt_text[:100]}...")
-                            return prompt_text
+            result = self._extract_text_from_refiner_node(node, "negative")
+            if result:
+                return result
 
         # Fallback: look in PrimitiveNode with title "Negative Prompt"
-        for node in nodes:
-            if isinstance(node, dict):
-                if node.get("type") == "PrimitiveNode" and node.get("title", "").lower() in [
-                    "negative prompt",
-                    "negative",
-                ]:
-                    widgets_values = node.get("widgets_values", [])
-                    if widgets_values and isinstance(widgets_values[0], str):
-                        return widgets_values[0]
-
-        return ""
+        return self._extract_text_from_primitive_node(nodes, ["negative prompt", "negative"])
 
     def _extract_sdxl_base_steps(
         self,
@@ -1292,31 +1323,39 @@ class ComfyUIExtractor:
         fields: ExtractedFields,
     ) -> int:
         """Extract base model steps from SDXL workflow."""
-        workflow = self._parse_json_data(data)
-        if not isinstance(workflow, dict):
-            return 32
+        try:
+            nodes = self._get_workflow_nodes(data)
+            if not nodes:
+                return 32
 
-        nodes = workflow.get("nodes", [])
+            # Look for PrimitiveNode with title containing "Base Model" or "Steps On Base"
+            for node in nodes:
+                if not isinstance(node, dict):
+                    continue
+                    
+                if node.get("type") == "PrimitiveNode":
+                    title = node.get("title", "").lower()
+                    if "base" in title and "step" in title:
+                        widgets_values = node.get("widgets_values", [])
+                        if isinstance(widgets_values, list) and widgets_values and isinstance(widgets_values[0], int):
+                            return widgets_values[0]
 
-        # Look for PrimitiveNode with title containing "Base Model" or "Steps On Base"
-        for node in nodes:
-            if isinstance(node, dict) and node.get("type") == "PrimitiveNode":
-                title = node.get("title", "").lower()
-                if "base" in title and "step" in title:
+            # Fallback: look for KSamplerAdvanced with end_at_step
+            for node in nodes:
+                if not isinstance(node, dict):
+                    continue
+                    
+                if node.get("type") == "KSamplerAdvanced":
                     widgets_values = node.get("widgets_values", [])
-                    if widgets_values and isinstance(widgets_values[0], int):
-                        return widgets_values[0]
+                    if isinstance(widgets_values, list) and len(widgets_values) >= 10:
+                        end_step = widgets_values[9]  # end_at_step is usually at index 9
+                        if isinstance(end_step, int) and end_step > 0:
+                            return end_step
 
-        # Fallback: look for KSamplerAdvanced with end_at_step
-        for node in nodes:
-            if isinstance(node, dict) and node.get("type") == "KSamplerAdvanced":
-                widgets_values = node.get("widgets_values", [])
-                if len(widgets_values) >= 10:  # end_at_step is usually at index 9
-                    end_step = widgets_values[9]
-                    if isinstance(end_step, int) and end_step > 0:
-                        return end_step
-
-        return 32  # Default base steps
+            return 50  # Default base steps (reasonable for SDXL)
+        except Exception as e:
+            self.logger.error(f"Error extracting SDXL base steps: {e}")
+            return 50
 
     def _extract_sdxl_refiner_steps(
         self,
@@ -1326,10 +1365,14 @@ class ComfyUIExtractor:
         fields: ExtractedFields,
     ) -> int:
         """Extract refiner steps from SDXL workflow."""
-        total_steps = self._extract_sdxl_total_steps(data, method_def, context, fields)
-        base_steps = self._extract_sdxl_base_steps(data, method_def, context, fields)
-        refiner_steps = total_steps - base_steps
-        return max(0, refiner_steps)  # Ensure non-negative
+        try:
+            total_steps = self._extract_sdxl_total_steps(data, method_def, context, fields)
+            base_steps = self._extract_sdxl_base_steps(data, method_def, context, fields)
+            refiner_steps = total_steps - base_steps
+            return max(0, refiner_steps)  # Ensure non-negative
+        except Exception as e:
+            self.logger.error(f"Error extracting SDXL refiner steps: {e}")
+            return 0
 
     def _extract_sdxl_total_steps(
         self,
@@ -1339,32 +1382,41 @@ class ComfyUIExtractor:
         fields: ExtractedFields,
     ) -> int:
         """Extract total steps from SDXL workflow."""
-        workflow = self._parse_json_data(data)
-        if not isinstance(workflow, dict):
-            return 40
+        try:
+            nodes = self._get_workflow_nodes(data)
+            if not nodes:
+                return 40
 
-        nodes = workflow.get("nodes", [])
+            # Look for PrimitiveNode with title "Total Steps"
+            for node in nodes:
+                if not isinstance(node, dict):
+                    continue
+                    
+                if node.get("type") == "PrimitiveNode":
+                    title = node.get("title", "").lower()
+                    if "total" in title and "step" in title:
+                        widgets_values = node.get("widgets_values", [])
+                        if isinstance(widgets_values, list) and widgets_values and isinstance(widgets_values[0], int):
+                            return widgets_values[0]
 
-        # Look for PrimitiveNode with title "Total Steps"
-        for node in nodes:
-            if isinstance(node, dict) and node.get("type") == "PrimitiveNode":
-                title = node.get("title", "").lower()
-                if "total" in title and "step" in title:
+            # Fallback: find the highest steps value in any sampler
+            max_steps = 80  # Higher default for modern workflows
+            for node in nodes:
+                if not isinstance(node, dict):
+                    continue
+                    
+                node_type = node.get("type", "")
+                if isinstance(node_type, str) and "sampler" in node_type.lower():
                     widgets_values = node.get("widgets_values", [])
-                    if widgets_values and isinstance(widgets_values[0], int):
-                        return widgets_values[0]
+                    if isinstance(widgets_values, list) and len(widgets_values) >= 4:
+                        steps = widgets_values[3]  # steps is usually at index 3
+                        if isinstance(steps, int) and steps > max_steps:
+                            max_steps = steps
 
-        # Fallback: find the highest steps value in any sampler
-        max_steps = 40
-        for node in nodes:
-            if isinstance(node, dict) and "sampler" in node.get("type", "").lower():
-                widgets_values = node.get("widgets_values", [])
-                if len(widgets_values) >= 4:  # steps is usually at index 3
-                    steps = widgets_values[3]
-                    if isinstance(steps, int) and steps > max_steps:
-                        max_steps = steps
-
-        return max_steps
+            return max_steps
+        except Exception as e:
+            self.logger.error(f"Error extracting SDXL total steps: {e}")
+            return 80  # Higher fallback for modern workflows
 
     def get_manager(self) -> ComfyUIExtractorManager:
         """Get the underlying extractor manager."""

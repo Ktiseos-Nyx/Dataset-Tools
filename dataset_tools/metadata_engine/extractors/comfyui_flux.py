@@ -198,7 +198,7 @@ class ComfyUIFluxExtractor:
                     scheduler_params.update(
                         {
                             "scheduler_type": class_type,
-                            "steps": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], (int, float)) else 20),
+                            "steps": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], (int, float)) else 50),
                             "denoise": (
                                 widgets[1] if len(widgets) > 1 and isinstance(widgets[1], (int, float)) else 1.0
                             ),
@@ -212,7 +212,7 @@ class ComfyUIFluxExtractor:
                     scheduler_params.update(
                         {
                             "sampler_type": class_type,
-                            "steps": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], (int, float)) else 20),
+                            "steps": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], (int, float)) else 50),
                             "max_shift": (
                                 widgets[1] if len(widgets) > 1 and isinstance(widgets[1], (int, float)) else 1.15
                             ),

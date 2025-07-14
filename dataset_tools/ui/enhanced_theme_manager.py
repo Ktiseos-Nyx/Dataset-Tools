@@ -137,6 +137,19 @@ class EnhancedThemeManager:
 
         # Custom QSS themes from subfolders
         custom_themes = self._load_custom_qss_themes_from_subfolders()
+
+        # Filter KTISEOS_NYX_THEMES based on chaos unlock status
+        if "KTISEOS_NYX_THEMES" in custom_themes:
+            chaos_unlocked = self.settings.value("chaosCollection/unlocked", False, type=bool)
+            if not chaos_unlocked:
+                # Remove 'moms_2am_' themes if not unlocked
+                custom_themes["KTISEOS_NYX_THEMES"] = [
+                    theme for theme in custom_themes["KTISEOS_NYX_THEMES"]
+                    if not theme.startswith("moms_2am_")
+                ]
+                if not custom_themes["KTISEOS_NYX_THEMES"]:
+                    del custom_themes["KTISEOS_NYX_THEMES"]
+
         themes.update(custom_themes)
 
         return themes
@@ -426,6 +439,14 @@ class EnhancedThemeManager:
 
     def create_theme_menus(self, parent_menu: Qw.QMenu) -> None:
         """Create organized theme menus."""
+        self._populate_theme_menus(parent_menu)
+
+    def _populate_theme_menus(self, parent_menu: Qw.QMenu) -> None:
+        """Helper to populate theme menus, allowing refresh."""
+        # Clear existing actions to repopulate
+        parent_menu.clear()
+        self.theme_actions.clear()
+
         available_themes = self.get_available_themes()
 
         if not available_themes:
@@ -466,6 +487,20 @@ class EnhancedThemeManager:
             theme_id = action.data()
             if theme_id:
                 self.apply_theme(theme_id)
+
+    def refresh_theme_categories(self) -> None:
+        """Refreshes the theme menus, typically after a setting change (e.g., unlock)."""
+        if hasattr(self.main_window, "menu_manager"):
+            # Assuming menu_manager has a reference to the themes menu
+            # This might need adjustment based on actual menu structure
+            theme_menu = self.main_window.menu_manager.themes_menu # Assuming this attribute exists
+            if theme_menu:
+                self._populate_theme_menus(theme_menu)
+                nfo("Theme menus refreshed.")
+            else:
+                nfo("Could not find themes menu to refresh.")
+        else:
+            nfo("Menu manager not available to refresh themes.")
 
     def get_theme_info(self) -> dict[str, any]:
         """Get information about available theme systems."""

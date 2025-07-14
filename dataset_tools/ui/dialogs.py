@@ -9,7 +9,7 @@ This module contains all dialog windows used in the application,
 including settings configuration and about information dialogs.
 """
 
-from PyQt6.QtCore import QSettings, pyqtSignal
+from PyQt6.QtCore import QSettings, pyqtSignal, Qt
 from PyQt6.QtWidgets import (
     QComboBox,
     QDialog,
@@ -22,6 +22,7 @@ from PyQt6.QtWidgets import (
     QTabWidget,
     QVBoxLayout,
     QWidget,
+    QCheckBox,
 )
 
 from ..logger import info_monitor as nfo
@@ -63,6 +64,7 @@ class SettingsDialog(QDialog):
         self._create_theme_tab()
         self._create_appearance_tab()
         self._create_font_tab()
+        self._create_chaos_tab()
 
     def _create_theme_tab(self) -> None:
         """Create the Themes tab with multiple dropdowns."""
@@ -154,6 +156,68 @@ class SettingsDialog(QDialog):
 
         self.tab_widget.addTab(font_widget, "Fonts")
 
+    def _create_chaos_tab(self) -> None:
+        """Create the Chaos Collection tab with warning and unlock buttons."""
+        chaos_widget = QWidget()
+        layout = QVBoxLayout(chaos_widget)
+        layout.setSpacing(15)
+
+        warning_message = """
+        You are about to enter Mom's 2AM Fever Dreams Collection.
+        This theme collection contains mature content that may cause:
+
+        • Uncontrollable laughter
+        • Questioning of your life choices
+        • Sudden urge to call your mother
+        • Permanent changes to your theme preferences
+        • Loss of innocence regarding UI design
+        • Spontaneous snorting while using the application
+
+        Content Warning: These themes were conceived during a late-night
+        Marvel Snap session and contain references to bodily functions,
+        medical conditions, and general chaos.
+        """
+        label = QLabel(warning_message)
+        label.setWordWrap(True)
+        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(label)
+
+        self.chaos_unlocked_checkbox = QCheckBox("Enable Mom's 2AM Fever Dreams Themes")
+        layout.addWidget(self.chaos_unlocked_checkbox)
+
+        self.chaos_unlocked_checkbox.stateChanged.connect(self._on_chaos_checkbox_changed)
+
+        layout.addStretch(1)
+        self.tab_widget.addTab(chaos_widget, "Chaos Collection")
+
+    def _on_chaos_checkbox_changed(self, state: int) -> None:
+        """Handle the state change of the chaos unlock checkbox."""
+        is_checked = bool(state == Qt.CheckState.Checked.value)
+        self.settings.setValue("chaosCollection/unlocked", is_checked)
+        nfo(f"Chaos Collection unlocked status set to: {is_checked}")
+
+        # Refresh theme categories in the parent window's theme manager
+        if hasattr(self.parent_window, "enhanced_theme_manager"):
+            self.parent_window.enhanced_theme_manager.refresh_theme_categories()
+
+        # If themes are enabled, and the warning was not previously dismissed, show it.
+        if is_checked and not self.settings.value("chaosCollection/dontShowWarningAgain", False, type=bool):
+            # This is a simplified warning for the settings dialog context.
+            # The full modal warning is no longer needed as a separate dialog.
+            QMessageBox.information(
+                self,
+                "Chaos Collection Enabled",
+                "Mom's 2AM Fever Dreams themes are now enabled. \n\n"\
+                "You can find them in the Themes tab. Prepare for visual chaos!\n\n"\
+                "To disable this warning in the future, check the 'Don't show this warning again' checkbox in this tab."
+            )
+            self.settings.setValue("chaosCollection/dontShowWarningAgain", True)
+
+    def _load_chaos_setting(self) -> None:
+        """Load and set the current chaos collection setting."""
+        unlocked = self.settings.value("chaosCollection/unlocked", False, type=bool)
+        self.chaos_unlocked_checkbox.setChecked(unlocked)
+
     def _populate_size_combo(self) -> None:
         """Populate the size combo box."""
         self.size_presets: dict[str, tuple[int, int] | None] = {
@@ -205,6 +269,7 @@ class SettingsDialog(QDialog):
         self._load_theme_setting()
         self._load_window_size_setting()
         self._load_font_setting()
+        self._load_chaos_setting()
 
     def _load_theme_setting(self) -> None:
         """Load and set current theme setting."""

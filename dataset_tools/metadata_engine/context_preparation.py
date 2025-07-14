@@ -213,11 +213,13 @@ class ContextDataPreparer:
                     return comment_bytes.decode("utf-16le").strip("\x00")
                 if codec_header.startswith(b"UTF-8\x00"):
                     return comment_bytes.decode("utf-8").strip("\x00")
+                if codec_header.startswith(b"JIS\x00"):  # Support for Japanese encoding
+                    return comment_bytes.decode("shift_jis").strip("\x00")
             except UnicodeDecodeError:
                 pass  # Fall through to other strategies
 
         # Strategy 2: Try different encodings to decode properly
-        for encoding in ["utf-8", "utf-16le", "utf-16be", "latin-1"]:
+        for encoding in ["utf-8", "utf-16le", "utf-16be", "shift_jis", "latin-1"]:
             try:
                 # Try with header skipped first (EXIF UserComment often has 8-byte header)
                 if len(data) > 8:

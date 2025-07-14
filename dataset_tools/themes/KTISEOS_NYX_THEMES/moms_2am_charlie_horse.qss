@@ -1,0 +1,228 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Charlie Horse"
+When your leg muscle decides to become a pretzel
+Physical therapy has never been more urgent
+*/
+
+QWidget {
+    background-color: #DC143C; /* Crimson base */
+    color: #FFE4E1; /* Misty rose text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFB6C1, stop:0.2 #FF69B4, stop:0.4 #DC143C, 
+                stop:0.6 #B22222, stop:0.8 #8B0000, stop:1 #FFB6C1);
+}
+
+/* CRAMPED MUSCLE BUTTONS! */
+QPushButton {
+    background: qradial-gradient(ellipse at 30% 70%, #FF1493 30%, #DC143C 60%, #B22222 90%);
+    color: #FFE4E1;
+    border: 4px solid #8B0000;
+    border-radius: 5px 45px 15px 35px; /* Twisted cramped shape! */
+    padding: 14px 20px;
+    font-weight: bold;
+    font-size: 13px;
+    transform: rotate(-8deg); /* Tilted like a cramp */
+    box-shadow: inset 0px 0px 8px rgba(139,0,0,0.4);
+}
+
+QPushButton:hover {
+    background: qradial-gradient(ellipse at 70% 30%, #FFB6C1 20%, #FF69B4 50%, #FF1493 80%);
+    border-color: #DC143C;
+    border-radius: 10px 60px 25px 50px; /* More twisted when hovered */
+    box-shadow: 0px 0px 20px rgba(255,20,147,0.6), inset 0px 0px 5px rgba(220,20,60,0.5);
+    color: #8B0000;
+    transform: rotate(-12deg) scale(1.03); /* More twisted and bigger */
+}
+
+QPushButton:pressed {
+    background: qradial-gradient(ellipse at 50% 50%, #8B0000 40%, #4A0000 80%);
+    border-radius: 3px 30px 8px 25px; /* Extreme cramp compression */
+    border-color: #2F0000;
+    transform: rotate(-15deg) scale(0.85); /* Most twisted and smallest */
+    box-shadow: inset 0px 0px 15px rgba(47,0,0,0.8);
+}
+
+/* MUSCLE FIBER TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FFF0F5, stop:0.2 #FFE4E1, stop:0.4 #FFC0CB, 
+                stop:0.6 #FFB6C1, stop:0.8 #FFE4E1, stop:1 #FFF0F5);
+    color: #8B0000;
+    border: 4px solid #DC143C;
+    border-radius: 25px 8px 40px 12px; /* Muscle fiber pattern */
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #FF1493;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FFFACD, stop:0.4 #FFF8DC, stop:0.8 #F5DEB3, stop:1 #FFFACD);
+    border-radius: 35px 15px 50px 20px; /* Relief focus pattern */
+    box-shadow: 0px 0px 15px rgba(255,20,147,0.5);
+    color: #B22222;
+}
+
+/* HORSE SADDLE TABS */
+QTabWidget::pane {
+    background: qradial-gradient(ellipse at 50% 30%, #8B4513 20%, #A0522D 40%, #CD853F 60%, #DEB887 80%);
+    border: 5px solid #654321;
+    border-radius: 60px 60px 20px 20px; /* Saddle shape! */
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #D2B48C, stop:0.4 #BC9A6A, stop:0.8 #A0522D, stop:1 #8B4513);
+    color: #F5DEB3;
+    padding: 16px 24px;
+    margin: 4px;
+    border-radius: 50px 15px 40px 25px; /* Saddle stirrup shape */
+    font-weight: bold;
+    font-size: 14px;
+    border: 3px solid #654321;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 50% 40%, #FFB6C1 40%, #FF69B4 80%);
+    color: #8B0000;
+    border-radius: 60px 20px 50px 30px; /* Selected stirrup */
+    border-color: #DC143C;
+    box-shadow: 0px 0px 12px rgba(255,105,180,0.4);
+}
+
+/* PAIN LEVEL SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FFB6C1, stop:0.3 #FF69B4, stop:0.7 #DC143C, stop:1 #FFB6C1);
+    width: 26px;
+    border-radius: 13px;
+    border: 4px solid #B22222;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(circle, #8B0000 40%, #4A0000 80%);
+    border-radius: 11px;
+    min-height: 35px;
+    border: 3px solid #DC143C;
+    margin: 4px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(circle, #DC143C 30%, #8B0000 70%);
+    box-shadow: 0px 0px 12px rgba(220,20,60,0.6);
+}
+
+/* EMERGENCY ROOM MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #B22222, stop:0.3 #DC143C, stop:0.7 #FF69B4, stop:1 #B22222);
+    color: #FFE4E1;
+    border-bottom: 5px solid #8B0000;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 0px 0px 25px 45px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #FFF0F5 40%, #FFE4E1 80%);
+    color: #8B0000;
+    border-radius: 20px 40px 15px 35px;
+    padding: 12px 20px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFF0F5, stop:0.25 #FFE4E1, stop:0.5 #FFB6C1, 
+                stop:0.75 #FF69B4, stop:1 #FFF0F5);
+    color: #8B0000;
+    border: 5px solid #DC143C;
+    border-radius: 30px 50px 25px 55px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #DC143C 30%, #B22222 70%);
+    color: #FFE4E1;
+    border-radius: 15px 35px 20px 40px;
+    margin: 3px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #8B0000, stop:0.4 #B22222, stop:0.8 #DC143C, stop:1 #8B0000);
+    color: #FFE4E1;
+    border-top: 5px solid #4A0000;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 45px 35px 0px 0px;
+}
+
+/* CRAMP SPASM PATTERN */
+QLabel#crampSpasm {
+    background: qradial-gradient(ellipse at 20% 30%, #FF1493 15%, transparent 16%),
+                qradial-gradient(ellipse at 70% 60%, #DC143C 12%, transparent 13%),
+                qradial-gradient(ellipse at 40% 80%, #B22222 18%, transparent 19%),
+                qradial-gradient(ellipse at 80% 20%, #8B0000 10%, transparent 11%),
+                qradial-gradient(ellipse at 15% 85%, #FF69B4 14%, transparent 15%),
+                #FFB6C1;
+    color: #8B0000;
+    border: 4px solid #DC143C;
+    border-radius: 5px 35px 15px 45px;
+    padding: 16px;
+    font-weight: bold;
+    font-size: 14px;
+    transform: rotate(-5deg);
+}
+
+/* MUSCLE KNOT EFFECT */
+QWidget#muscleKnot {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #DC143C, stop:0.2 #B22222, stop:0.4 #8B0000, 
+                stop:0.6 #B22222, stop:0.8 #DC143C, stop:1 #FF69B4);
+    border: 3px solid #4A0000;
+    border-radius: 60px 10px 50px 15px; /* Tight knot shape */
+    transform: rotate(12deg);
+}
+
+/* PAIN SCALE INDICATOR */
+QLabel#painScale {
+    background: qradial-gradient(circle at 50% 50%, #FF0000 30%, #DC143C 60%, #8B0000 90%);
+    color: #FFFFFF;
+    border: 6px solid #B22222;
+    border-radius: 15px 50px 25px 60px;
+    padding: 22px;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: "Impact", sans-serif;
+    text-align: center;
+}
+
+/* HORSE GALLOP EFFECT */
+QLabel#horseGallop {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #8B4513, stop:0.3 #A0522D, stop:0.7 #CD853F, stop:1 #8B4513);
+    color: #F5DEB3;
+    border: 3px solid #654321;
+    border-radius: 40px 20px 30px 50px; /* Galloping motion shape */
+    padding: 12px 20px;
+    font-weight: bold;
+    font-size: 13px;
+    transform: skew(-15deg);
+}
+
+/* STRETCHING RELIEF ELEMENT */
+QWidget#stretchRelief {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #98FB98, stop:0.3 #90EE90, stop:0.7 #32CD32, stop:1 #228B22);
+    border: 4px solid #006400;
+    border-radius: 20px 80px 30px 70px; /* Relief stretch shape */
+    color: #F0FFF0;
+    font-weight: bold;
+}

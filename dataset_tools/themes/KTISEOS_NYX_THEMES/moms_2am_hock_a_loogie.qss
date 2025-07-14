@@ -1,0 +1,227 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Hock a Loogie"
+When throat clearing becomes an art form
+Etiquette coaches everywhere are fainting
+*/
+
+QWidget {
+    background-color: #9ACD32; /* Yellow green base */
+    color: #2F4F2F; /* Dark slate gray text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #ADFF2F, stop:0.2 #9ACD32, stop:0.4 #6B8E23, 
+                stop:0.6 #556B2F, stop:0.8 #8FBC8F, stop:1 #ADFF2F);
+}
+
+/* PHLEGM GLOB BUTTONS! */
+QPushButton {
+    background: qradial-gradient(ellipse at 60% 30%, #ADFF2F 20%, #9ACD32 50%, #6B8E23 80%);
+    color: #2F4F2F;
+    border: 4px solid #556B2F;
+    border-radius: 45px 20px 35px 25px; /* Irregular loogie glob shape! */
+    padding: 16px 22px;
+    font-weight: bold;
+    font-size: 13px;
+    box-shadow: inset 0px 0px 8px rgba(85,107,47,0.4);
+    transform: rotate(-3deg); /* Slightly tilted like it's dripping */
+}
+
+QPushButton:hover {
+    background: qradial-gradient(ellipse at 40% 70%, #FFFF00 30%, #ADFF2F 60%, #32CD32 90%);
+    border-color: #228B22;
+    border-radius: 55px 30px 45px 35px; /* Bigger glob on hover */
+    box-shadow: 0px 0px 18px rgba(173,255,47,0.7), inset 0px 0px 5px rgba(34,139,34,0.5);
+    color: #006400;
+    transform: rotate(-5deg) scale(1.05); /* More tilted and bigger */
+}
+
+QPushButton:pressed {
+    background: qradial-gradient(ellipse at 50% 50%, #556B2F 40%, #2F4F2F 80%);
+    border-radius: 30px 15px 25px 20px; /* Splattered loogie */
+    border-color: #1C3A1C;
+    transform: rotate(-8deg) scale(0.88);
+    box-shadow: inset 0px 0px 15px rgba(28,58,28,0.8);
+}
+
+/* THROAT CLEARING TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F0FFF0, stop:0.3 #E0FFE0, stop:0.7 #98FB98, stop:1 #F0FFF0);
+    color: #006400;
+    border: 4px solid #32CD32;
+    border-radius: 25px 50px 20px 40px; /* Throat passage shape */
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #ADFF2F;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFFACD, stop:0.4 #FFFF00, stop:0.8 #ADFF2F, stop:1 #FFFACD);
+    border-radius: 35px 60px 30px 50px; /* Cleared throat shape */
+    box-shadow: 0px 0px 15px rgba(173,255,47,0.6);
+    color: #556B2F;
+}
+
+/* SPIT CUP TABS */
+QTabWidget::pane {
+    background: qradial-gradient(ellipse at 50% 60%, #F0FFF0 30%, #98FB98 60%, #32CD32 90%);
+    border: 5px solid #228B22;
+    border-radius: 20px 20px 70px 70px; /* Spit cup shape! */
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #ADFF2F, stop:0.4 #9ACD32, stop:0.8 #6B8E23, stop:1 #556B2F);
+    color: #2F4F2F;
+    padding: 14px 24px;
+    margin: 3px;
+    border-radius: 30px 30px 0px 0px; /* Cup rim tabs */
+    font-weight: bold;
+    font-size: 14px;
+    border: 3px solid #228B22;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 50% 40%, #FFFF00 40%, #ADFF2F 80%);
+    color: #006400;
+    border-radius: 40px 40px 0px 0px; /* Selected cup rim */
+    border-color: #32CD32;
+    box-shadow: 0px 0px 12px rgba(255,255,0,0.5);
+}
+
+/* MUCUS TRAIL SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #9ACD32, stop:0.3 #6B8E23, stop:0.7 #556B2F, stop:1 #9ACD32);
+    width: 24px;
+    border-radius: 12px;
+    border: 4px solid #228B22;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(circle, #ADFF2F 40%, #32CD32 80%);
+    border-radius: 10px;
+    min-height: 30px;
+    border: 3px solid #228B22;
+    margin: 3px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(circle, #FFFF00 30%, #ADFF2F 70%);
+    box-shadow: 0px 0px 12px rgba(255,255,0,0.6);
+}
+
+/* TOBACCO SPIT MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #556B2F, stop:0.3 #6B8E23, stop:0.7 #9ACD32, stop:1 #556B2F);
+    color: #F0FFF0;
+    border-bottom: 5px solid #2F4F2F;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 0px 0px 25px 45px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #ADFF2F 40%, #32CD32 80%);
+    color: #006400;
+    border-radius: 20px 40px 15px 35px;
+    padding: 12px 20px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F0FFF0, stop:0.25 #E0FFE0, stop:0.5 #98FB98, 
+                stop:0.75 #32CD32, stop:1 #F0FFF0);
+    color: #2F4F2F;
+    border: 5px solid #228B22;
+    border-radius: 30px 50px 25px 55px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #6B8E23 30%, #556B2F 70%);
+    color: #F0FFF0;
+    border-radius: 15px 35px 20px 40px;
+    margin: 3px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #2F4F2F, stop:0.4 #556B2F, stop:0.8 #6B8E23, stop:1 #2F4F2F);
+    color: #F0FFF0;
+    border-top: 5px solid #1C3A1C;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 45px 35px 0px 0px;
+}
+
+/* MUCUS CONSISTENCY PATTERN */
+QLabel#mucusConsistency {
+    background: qradial-gradient(ellipse at 25% 35%, #ADFF2F 18%, transparent 19%),
+                qradial-gradient(ellipse at 70% 20%, #9ACD32 15%, transparent 16%),
+                qradial-gradient(ellipse at 40% 75%, #6B8E23 22%, transparent 23%),
+                qradial-gradient(ellipse at 80% 60%, #556B2F 12%, transparent 13%),
+                qradial-gradient(ellipse at 15% 80%, #32CD32 20%, transparent 21%),
+                #F0FFF0;
+    color: #2F4F2F;
+    border: 4px solid #228B22;
+    border-radius: 35px 20px 45px 25px;
+    padding: 16px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* THROAT IRRITATION EFFECT */
+QWidget#throatIrritation {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FF6347, stop:0.3 #DC143C, stop:0.7 #B22222, stop:1 #FF6347);
+    border: 3px solid #8B0000;
+    border-radius: 60px 15px 50px 20px;
+    color: #FFE4E1;
+    font-weight: bold;
+}
+
+/* DISTANCE ACHIEVED INDICATOR */
+QLabel#distanceAchieved {
+    background: qradial-gradient(circle at 50% 50%, #FFD700 20%, #FFA500 50%, #FF8C00 80%);
+    color: #8B4513;
+    border: 6px solid #B8860B;
+    border-radius: 20px 50px 30px 60px;
+    padding: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: "Impact", sans-serif;
+    text-align: center;
+}
+
+/* SALIVA ACCUMULATION */
+QLabel#salivaPool {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #F0FFF0, stop:0.3 #E0FFE0, stop:0.7 #98FB98, stop:1 #F0FFF0);
+    color: #006400;
+    border: 3px solid #32CD32;
+    border-radius: 80px 30px 70px 40px;
+    padding: 12px 18px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* PHLEGM THICKNESS METER */
+QWidget#phlegmThickness {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #ADFF2F, stop:0.2 #9ACD32, stop:0.4 #6B8E23, 
+                stop:0.6 #556B2F, stop:0.8 #32CD32, stop:1 #ADFF2F);
+    border: 4px solid #228B22;
+    border-radius: 25px 60px 35px 70px;
+    color: #2F4F2F;
+    font-weight: bold;
+    font-size: 13px;
+}

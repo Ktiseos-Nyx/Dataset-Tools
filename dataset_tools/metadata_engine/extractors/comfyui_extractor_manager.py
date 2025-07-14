@@ -20,7 +20,6 @@ from .comfyui_impact import ComfyUIImpactExtractor
 from .comfyui_inspire import ComfyUIInspireExtractor
 from .comfyui_node_checker import ComfyUINodeChecker
 from .comfyui_pixart import ComfyUIPixArtExtractor
-from .comfyui_pixart_extractor import ComfyUIPixArtExtractor as ComfyUIPixArtExtractorNew
 from .comfyui_rgthree import ComfyUIRGthreeExtractor
 from .comfyui_sdxl import ComfyUISDXLExtractor
 
@@ -54,7 +53,6 @@ class ComfyUIExtractorManager:
         self.efficiency = ComfyUIEfficiencyExtractor(logger)
         self.was = ComfyUIWASExtractor(logger)
         self.pixart = ComfyUIPixArtExtractor(logger)
-        self.pixart_extractor = ComfyUIPixArtExtractorNew(logger)
         self.animatediff = ComfyUIAnimateDiffExtractor(logger)
         self.controlnet = ComfyUIControlNetExtractor(logger)
         # --- FIX: Corrected typo from "Searche" to "Searge" ---
@@ -80,7 +78,6 @@ class ComfyUIExtractorManager:
         methods.update(self.efficiency.get_methods())
         methods.update(self.was.get_methods())
         methods.update(self.pixart.get_methods())
-        methods.update(self.pixart_extractor.get_methods() if hasattr(self.pixart_extractor, "get_methods") else {})
         methods.update(self.animatediff.get_methods())
         methods.update(self.controlnet.get_methods())
         methods.update(self.searge.get_methods())

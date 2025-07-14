@@ -1,0 +1,212 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Sex in a Pile of Macaroni and Cheese but Moldy"
+The most cursed food-related experience imaginable
+Kraft Singles has left the chat
+*/
+
+QWidget {
+    background-color: #8B4513; /* Saddle brown base */
+    color: #FFEFD5; /* Papaya whip text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F4A460, stop:0.15 #DEB887, stop:0.3 #FFE4B5, 
+                stop:0.45 #32CD32, stop:0.6 #228B22, stop:0.75 #6B8E23, 
+                stop:0.9 #8FBC8F, stop:1 #F4A460);
+}
+
+/* MACARONI SHAPED BUTTONS! */
+QPushButton {
+    background: qradial-gradient(ellipse at 40% 30%, #FFE4B5 20%, #DEB887 50%, #D2B48C 80%);
+    color: #8B4513;
+    border: 4px solid #CD853F;
+    border-radius: 30px 15px 25px 35px; /* Elbow macaroni shape! */
+    padding: 14px 22px;
+    font-weight: bold;
+    font-size: 13px;
+    transform: rotate(5deg); /* Slightly tilted like spilled noodles */
+}
+
+QPushButton:hover {
+    background: qradial-gradient(ellipse at 60% 70%, #ADFF2F 30%, #32CD32 60%, #228B22 90%);
+    border-color: #6B8E23;
+    border-radius: 20px 40px 30px 50px; /* Moldy shape! */
+    box-shadow: 0px 0px 18px #9ACD32;
+    color: #2F4F2F;
+    transform: rotate(-3deg); /* Wobbles when hovered */
+}
+
+QPushButton:pressed {
+    background: qradial-gradient(ellipse at 50% 50%, #8FBC8F 40%, #556B2F 80%);
+    border-radius: 45px 10px 35px 20px; /* Squished cheese shape */
+    border-color: #2F4F2F;
+    transform: rotate(0deg) scale(0.95);
+}
+
+/* CHEESE SAUCE TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFFACD, stop:0.3 #FFE4B5, stop:0.7 #DEB887, stop:1 #FFFACD);
+    color: #654321;
+    border: 4px solid #F4A460;
+    border-radius: 25px 40px 20px 45px; /* Goopy cheese shape */
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #32CD32;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F0FFF0, stop:0.4 #98FB98, stop:0.8 #90EE90, stop:1 #F0FFF0);
+    border-radius: 40px 25px 45px 20px; /* Moldy focus shape */
+    box-shadow: 0px 0px 15px #ADFF2F;
+    color: #2F4F2F;
+}
+
+/* CHEESE WHEEL TABS */
+QTabWidget::pane {
+    background: qradial-gradient(circle at 30% 40%, #FFE4B5 20%, #DEB887 40%, #D2B48C 60%, #CD853F 80%);
+    border: 5px solid #8B4513;
+    border-radius: 80px 80px 30px 30px; /* Cheese wheel shape! */
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #F4A460, stop:0.4 #DEB887, stop:0.8 #CD853F, stop:1 #8B4513);
+    color: #FFEFD5;
+    padding: 16px 28px;
+    margin: 4px;
+    border-radius: 60px 20px 40px 50px; /* Irregular cheese wedge! */
+    font-weight: bold;
+    font-size: 14px;
+    border: 3px solid #654321;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 50% 30%, #98FB98 30%, #32CD32 60%, #228B22 90%);
+    color: #2F4F2F;
+    border-radius: 50px 40px 60px 30px; /* Moldy selected tab */
+    border-color: #6B8E23;
+}
+
+/* CHUNKY SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #DEB887, stop:0.3 #F4A460, stop:0.7 #CD853F, stop:1 #DEB887);
+    width: 28px;
+    border-radius: 14px;
+    border: 4px solid #8B4513;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(ellipse, #32CD32 30%, #228B22 70%);
+    border-radius: 12px;
+    min-height: 40px;
+    border: 3px solid #6B8E23;
+    margin: 4px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(ellipse, #ADFF2F 20%, #32CD32 60%, #228B22 90%);
+    box-shadow: 0px 0px 12px #9ACD32;
+}
+
+/* KRAFTY MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #CD853F, stop:0.3 #DEB887, stop:0.7 #F4A460, stop:1 #CD853F);
+    color: #8B4513;
+    border-bottom: 5px solid #654321;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 0px 0px 40px 60px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #98FB98 40%, #32CD32 80%);
+    color: #2F4F2F;
+    border-radius: 30px 50px 25px 45px;
+    padding: 12px 18px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFFACD, stop:0.25 #FFE4B5, stop:0.5 #DEB887, 
+                stop:0.75 #98FB98, stop:1 #FFFACD);
+    color: #654321;
+    border: 5px solid #8B4513;
+    border-radius: 35px 50px 25px 60px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #32CD32 30%, #228B22 70%);
+    color: #F0FFF0;
+    border-radius: 20px 45px 35px 25px;
+    margin: 3px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #8B4513, stop:0.4 #CD853F, stop:0.8 #DEB887, stop:1 #8B4513);
+    color: #FFEFD5;
+    border-top: 5px solid #654321;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 60px 40px 0px 0px;
+}
+
+/* MOLD SPORE PATTERN */
+QLabel#moldSpores {
+    background: qradial-gradient(ellipse at 20% 30%, #32CD32 15%, transparent 16%),
+                qradial-gradient(ellipse at 70% 60%, #228B22 12%, transparent 13%),
+                qradial-gradient(ellipse at 40% 80%, #6B8E23 18%, transparent 19%),
+                qradial-gradient(ellipse at 80% 20%, #9ACD32 10%, transparent 11%),
+                qradial-gradient(ellipse at 10% 70%, #ADFF2F 14%, transparent 15%),
+                #DEB887;
+    color: #2F4F2F;
+    border: 4px solid #8B4513;
+    border-radius: 25px 45px 35px 50px;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* CHEESE DRIP EFFECT */
+QWidget#cheeseDrip {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFE4B5, stop:0.3 #DEB887, stop:0.6 #CD853F, 
+                stop:0.8 #8B4513, stop:1 #654321);
+    border-radius: 50px 50px 10px 10px; /* Dripping shape */
+}
+
+/* EXPIRATION DATE WARNING */
+QLabel#expiredWarning {
+    background: qradial-gradient(circle at 50% 50%, #DC143C 30%, #8B0000 60%, #654321 90%);
+    color: #FFFACD;
+    border: 6px solid #FF6347;
+    border-radius: 15px 50px 25px 60px;
+    padding: 18px;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: "Impact", sans-serif;
+    text-decoration: blink; /* If supported, makes it blink! */
+}
+
+/* MACARONI NOODLE SPECIAL ELEMENT */
+QLabel#macNoodle {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FFE4B5, stop:0.5 #DEB887, stop:1 #FFE4B5);
+    color: #8B4513;
+    border: 3px solid #CD853F;
+    border-radius: 40px 15px 35px 20px; /* Elbow noodle shape */
+    padding: 12px 20px;
+    font-weight: bold;
+    font-size: 13px;
+    transform: rotate(15deg); /* Tilted like a fallen noodle */
+}

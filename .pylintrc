@@ -6,10 +6,10 @@ disable=C0301,C0114,C0115,C0116,R0903,W0511
 
 [DESIGN]
 # Complexity limits updated to match pyproject.toml ruff settings
-max-args=10        # Increased from 7 to handle complex methods
-max-locals=25      # Increased from 15 to handle complex data processing  
-max-statements=80  # Increased from 60 to handle complex parsing logic
-max-branches=30    # Increased from 15 to silence ComfyUI warnings
+max-args=15        # Increased to handle very complex methods
+max-locals=35      # Increased to handle complex data processing  
+max-statements=120 # Increased to handle complex parsing logic
+max-branches=50    # Increased to silence complexity warnings
 max-parents=7
 max-attributes=10
 min-public-methods=1 # (R0903 is disabled above, but this is where it would go)

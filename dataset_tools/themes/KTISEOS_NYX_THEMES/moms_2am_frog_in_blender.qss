@@ -1,0 +1,215 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Frog in a Blender"
+The most disturbing kitchen appliance experience
+PETA has issued a restraining order
+*/
+
+QWidget {
+    background-color: #228B22; /* Forest green base */
+    color: #F0FFF0; /* Honeydew text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #32CD32, stop:0.15 #228B22, stop:0.3 #006400, 
+                stop:0.45 #DC143C, stop:0.6 #8B0000, stop:0.75 #228B22, 
+                stop:0.9 #32CD32, stop:1 #228B22);
+}
+
+/* BLENDER PITCHER BUTTONS! */
+QPushButton {
+    background: qradial-gradient(ellipse at 50% 20%, #98FB98 20%, #90EE90 50%, #32CD32 80%);
+    color: #006400;
+    border: 4px solid #228B22;
+    border-radius: 10px 10px 60px 60px; /* Blender pitcher shape! */
+    padding: 18px 24px;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 8px rgba(34,139,34,0.4);
+}
+
+QPushButton:hover {
+    background: qradial-gradient(ellipse at 50% 30%, #FF6347 30%, #DC143C 60%, #8B0000 90%);
+    border-color: #B22222;
+    border-radius: 15px 15px 70px 70px; /* Spinning blender effect! */
+    box-shadow: 0px 0px 20px rgba(220,20,60,0.6), inset 0px 0px 5px rgba(139,0,0,0.5);
+    color: #FFE4E1;
+    animation: spin 0.5s linear infinite; /* Would spin if CSS animations worked */
+}
+
+QPushButton:pressed {
+    background: qradial-gradient(ellipse at 50% 70%, #006400 40%, #004000 80%);
+    border-radius: 8px 8px 50px 50px; /* Squished aftermath */
+    border-color: #2F4F2F;
+    transform: scale(0.88);
+    box-shadow: inset 0px 0px 15px rgba(47,79,47,0.8);
+}
+
+/* LILY PAD TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F0FFF0, stop:0.3 #98FB98, stop:0.7 #90EE90, stop:1 #F0FFF0);
+    color: #006400;
+    border: 4px solid #32CD32;
+    border-radius: 80px 30px 80px 30px; /* Lily pad shape */
+    padding: 14px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #FF6347;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFE4E1, stop:0.4 #FFA07A, stop:0.8 #FF6347, stop:1 #FFE4E1);
+    border-radius: 90px 40px 90px 40px; /* Disturbed lily pad */
+    box-shadow: 0px 0px 15px rgba(255,99,71,0.5);
+    color: #8B0000;
+}
+
+/* POND SCUM TABS */
+QTabWidget::pane {
+    background: qradial-gradient(ellipse at 50% 50%, #98FB98 30%, #32CD32 60%, #228B22 90%);
+    border: 5px solid #006400;
+    border-radius: 70px 70px 20px 20px; /* Pond shape! */
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #ADFF2F, stop:0.4 #9ACD32, stop:0.8 #6B8E23, stop:1 #556B2F);
+    color: #2F4F2F;
+    padding: 16px 26px;
+    margin: 4px;
+    border-radius: 50px 20px 40px 30px; /* Frog leg shape */
+    font-weight: bold;
+    font-size: 14px;
+    border: 3px solid #228B22;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 50% 40%, #DC143C 40%, #FF6347 80%);
+    color: #FFE4E1;
+    border-radius: 60px 30px 50px 40px; /* Bloody selected tab */
+    border-color: #B22222;
+    box-shadow: 0px 0px 12px rgba(220,20,60,0.4);
+}
+
+/* BLENDER BLADE SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #32CD32, stop:0.3 #228B22, stop:0.7 #006400, stop:1 #32CD32);
+    width: 26px;
+    border-radius: 13px;
+    border: 4px solid #2F4F2F;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(circle, #C0C0C0 40%, #808080 80%);
+    border-radius: 11px;
+    min-height: 35px;
+    border: 3px solid #696969;
+    margin: 4px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(circle, #FF6347 30%, #DC143C 70%);
+    box-shadow: 0px 0px 12px rgba(255,99,71,0.6);
+}
+
+/* KITCHEN HORROR MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #228B22, stop:0.3 #32CD32, stop:0.7 #90EE90, stop:1 #228B22);
+    color: #F0FFF0;
+    border-bottom: 5px solid #006400;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 0px 0px 25px 45px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #FF6347 40%, #DC143C 80%);
+    color: #FFE4E1;
+    border-radius: 20px 40px 15px 35px;
+    padding: 12px 20px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F0FFF0, stop:0.25 #98FB98, stop:0.5 #90EE90, 
+                stop:0.75 #32CD32, stop:1 #F0FFF0);
+    color: #006400;
+    border: 5px solid #228B22;
+    border-radius: 30px 50px 25px 55px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #DC143C 30%, #8B0000 70%);
+    color: #F0FFF0;
+    border-radius: 15px 35px 20px 40px;
+    margin: 3px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #006400, stop:0.4 #228B22, stop:0.8 #32CD32, stop:1 #006400);
+    color: #F0FFF0;
+    border-top: 5px solid #2F4F2F;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 45px 35px 0px 0px;
+}
+
+/* FROG EYES PATTERN */
+QLabel#frogEyes {
+    background: qradial-gradient(ellipse at 30% 20%, #FFD700 20%, transparent 21%),
+                qradial-gradient(ellipse at 70% 20%, #FFD700 20%, transparent 21%),
+                qradial-gradient(ellipse at 30% 20%, #000000 8%, transparent 9%),
+                qradial-gradient(ellipse at 70% 20%, #000000 8%, transparent 9%),
+                #32CD32;
+    color: #2F4F2F;
+    border: 4px solid #228B22;
+    border-radius: 80px 80px 40px 40px;
+    padding: 20px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* BLOODY SPLASH EFFECT */
+QWidget#bloodySplash {
+    background: qradial-gradient(ellipse at 25% 35%, #DC143C 12%, transparent 13%),
+                qradial-gradient(ellipse at 65% 20%, #B22222 15%, transparent 16%),
+                qradial-gradient(ellipse at 40% 70%, #8B0000 18%, transparent 19%),
+                qradial-gradient(ellipse at 80% 80%, #FF0000 10%, transparent 11%),
+                qradial-gradient(ellipse at 15% 85%, #CD5C5C 20%, transparent 21%),
+                #32CD32;
+    border: 3px solid #006400;
+    border-radius: 20px;
+}
+
+/* BLENDER SPEED DIAL */
+QLabel#speedDial {
+    background: qradial-gradient(circle at 50% 50%, #C0C0C0 30%, #808080 60%, #696969 90%);
+    color: #000000;
+    border: 6px solid #2F4F2F;
+    border-radius: 100px; /* Perfect circle */
+    padding: 25px;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: "Impact", sans-serif;
+    text-align: center;
+}
+
+/* KITCHEN TILE EFFECT */
+QWidget#kitchenTile {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #F0F8FF, stop:0.1 #E0E0E0, stop:0.2 #F0F8FF, 
+                stop:0.3 #E0E0E0, stop:0.4 #F0F8FF, stop:0.5 #E0E0E0,
+                stop:0.6 #F0F8FF, stop:0.7 #E0E0E0, stop:0.8 #F0F8FF, 
+                stop:0.9 #E0E0E0, stop:1 #F0F8FF);
+    border: 2px solid #D3D3D3;
+    border-radius: 5px;
+}

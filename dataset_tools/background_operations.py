@@ -10,6 +10,7 @@ continue adventuring! 🎒⚡
 import os
 import sys
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 from PyQt6 import QtCore
@@ -260,7 +261,6 @@ class MetadataLoaderTask(BackgroundTask):
 
                 try:
                     progress = int((i / total_files) * 100)
-                    from pathlib import Path
 
                     self.emit_progress(
                         progress,

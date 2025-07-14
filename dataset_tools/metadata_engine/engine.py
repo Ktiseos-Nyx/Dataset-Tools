@@ -125,7 +125,7 @@ class MetadataEngine:
         """
         self.parser_definitions_path = Path(parser_definitions_path)
         self.logger = logger_obj or get_logger("MetadataEngine")
-        print(f"[DEBUG] MetadataEngine: __init__ called, logger type: {type(self.logger)}")
+        self.logger.debug(f"MetadataEngine: __init__ called, logger type: {type(self.logger)}")
 
         # Initialize components
         self.context_preparer = ContextDataPreparer(self.logger)
@@ -154,34 +154,34 @@ class MetadataEngine:
 
         """
         try:
-            print(f"[DEBUG] get_parser_for_file called with: {file_input}, type: {type(file_input)}")
+            self.logger.debug(f"get_parser_for_file called with: {file_input}, type: {type(file_input)}")
             display_name = getattr(file_input, "name", str(file_input))
-            print(f"[DEBUG] display_name: {display_name}")
+            self.logger.debug(f"display_name: {display_name}")
             self.logger.info(f"MetadataEngine: Starting metadata parsing for: {display_name}")
-            print("[DEBUG] Logger info call completed")
+            self.logger.debug("Logger info call completed")
         except Exception as e:
-            print(f"[DEBUG] Exception in get_parser_for_file start: {e}")
+            self.logger.debug(f"Exception in get_parser_for_file start: {e}")
             self.logger.error(f"MetadataEngine: Exception at very start: {e}")
             return None
 
         # Prepare context data
-        print("[DEBUG] About to call context_preparer.prepare_context")
+        self.logger.debug("About to call context_preparer.prepare_context")
         context_data = self.context_preparer.prepare_context(file_input)
-        print(f"[DEBUG] prepare_context returned: {type(context_data)} - {bool(context_data)}")
+        self.logger.debug(f"prepare_context returned: {type(context_data)} - {bool(context_data)}")
         if not context_data:
-            print("[DEBUG] Context data is None/empty, returning None")
+            self.logger.debug("Context data is None/empty, returning None")
             self.logger.warning(f"Failed to prepare context data for {display_name}")
             return None
 
-        print("[DEBUG] Context data looks good, continuing to find matching parser")
-        print(f"[DEBUG] Context data keys: {list(context_data.keys())}")
-        print(
-            f"[DEBUG] raw_user_comment_str: {context_data.get('raw_user_comment_str', 'NOT_FOUND')[:100] if context_data.get('raw_user_comment_str') else 'EMPTY'}"
+        self.logger.debug("Context data looks good, continuing to find matching parser")
+        self.logger.debug(f"Context data keys: {list(context_data.keys())}")
+        self.logger.debug(
+            f"raw_user_comment_str: {context_data.get('raw_user_comment_str', 'NOT_FOUND')[:100] if context_data.get('raw_user_comment_str') else 'EMPTY'}"
         )
 
         # Find matching parser definition
         chosen_parser_def = self._find_matching_parser(context_data)
-        print(f"[DEBUG] _find_matching_parser returned: {chosen_parser_def}")
+        self.logger.debug(f"_find_matching_parser returned: {chosen_parser_def}")
         if not chosen_parser_def:
             self.logger.info(f"No suitable parser definition matched for {display_name}")
             return None

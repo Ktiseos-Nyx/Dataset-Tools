@@ -294,14 +294,14 @@ class MenuManager:
         view_menu = menu_bar.addMenu("&View")
 
         # Themes submenu
-        themes_menu = Qw.QMenu("&Themes", self.main_window)
-        view_menu.addMenu(themes_menu)
+        self.themes_menu = Qw.QMenu("&Themes", self.main_window)
+        view_menu.addMenu(self.themes_menu)
 
         # Use enhanced theme manager if available, fallback to standard
         if hasattr(self.main_window, "enhanced_theme_manager"):
-            self.main_window.enhanced_theme_manager.create_theme_menus(themes_menu)
+            self.main_window.enhanced_theme_manager.create_theme_menus(self.themes_menu)
         elif self.theme_manager:
-            self.theme_manager.create_theme_actions(themes_menu)
+            self.theme_manager.create_theme_actions(self.themes_menu)
 
     def _setup_help_menu(self, menu_bar: Qw.QMenuBar) -> None:
         """Setup the Help menu."""

@@ -121,7 +121,7 @@ class ComfyUIAnimateDiffExtractor:
                 if widgets:
                     animation_params = {
                         "seed": (widgets[0] if len(widgets) > 0 and isinstance(widgets[0], int) else 0),
-                        "steps": (widgets[1] if len(widgets) > 1 and isinstance(widgets[1], int) else 20),
+                        "steps": (widgets[1] if len(widgets) > 1 and isinstance(widgets[1], int) else 50),
                         "cfg": (widgets[2] if len(widgets) > 2 and isinstance(widgets[2], (int, float)) else 7.5),
                         "sampler_name": (widgets[3] if len(widgets) > 3 and isinstance(widgets[3], str) else ""),
                         "scheduler": (widgets[4] if len(widgets) > 4 and isinstance(widgets[4], str) else ""),

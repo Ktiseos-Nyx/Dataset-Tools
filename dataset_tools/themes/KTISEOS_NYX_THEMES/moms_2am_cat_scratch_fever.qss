@@ -1,0 +1,123 @@
+/*
+ * Mom's 2AM Fever Dreams: Cat Scratch Fever Theme
+ *
+ * This theme embodies the aftermath of a feline frenzy – sharp, sudden, and a little painful.
+ * Expect claw marks and angry red.
+ *
+ * Legal Disclaimer: We are not responsible for any sudden urges to adopt more cats.
+ * Please ensure all vaccinations are up to date, for both you and your UI.
+ */
+
+QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #8B0000, /* DarkRed - fresh scratch */
+                               stop:0.5 #DC143C, /* Crimson - inflamed */
+                               stop:1 #FF6347); /* Tomato - healing */
+    color: #F0F8FF; /* AliceBlue - for contrast */
+}
+
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #8B0000, /* DarkRed */
+                               stop:0.5 #DC143C, /* Crimson */
+                               stop:1 #FF6347); /* Tomato */
+}
+
+QPushButton {
+    border: 3px solid #A52A2A; /* Brown - dried blood */
+    border-radius: 10px 50px 20px 60px; /* Irregular, like a claw mark */
+    background-color: #DC143C; /* Crimson - main scratch color */
+    color: #FFFFFF; /* White - clean bandage */
+    padding: 12px 25px;
+    font-size: 18px;
+    transform: rotate(-12deg); /* Sharp, aggressive tilt */
+}
+
+QPushButton:hover {
+    background-color: #B22222; /* FireBrick - more angry */
+    border: 3px solid #800000; /* Maroon */
+    transform: rotate(-15deg) scale(1.05); /* More pronounced */
+}
+
+QPushButton:pressed {
+    background-color: #A52A2A; /* Brown */
+    border: 3px solid #690000; /* Darker maroon */
+    transform: rotate(-10deg) scale(0.97); /* Impact */
+}
+
+/* Add more QSS elements as needed for a complete theme */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    border: 1px solid #DC143C; /* Crimson */
+    background-color: #F0F8FF; /* AliceBlue - clean skin */
+    color: #8B0000; /* DarkRed text */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #8B0000; /* DarkRed - focused on the pain */
+}
+
+QTabWidget::pane {
+    border-top: 2px solid #DC143C; /* Crimson */
+}
+
+QTabBar::tab {
+    background: #FF6347; /* Tomato */
+    border: 1px solid #DC143C; /* Crimson */
+    border-bottom-color: #DC143C; /* Same as pane */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 8px;
+}
+
+QTabBar::tab:selected {
+    background: #8B0000; /* DarkRed */
+    border-color: #8B0000;
+    border-bottom-color: #8B0000; /* Selected tab blends with pane */
+}
+
+QScrollBar:vertical {
+    border: 1px solid #DC143C;
+    background: #F0F8FF;
+    width: 15px;
+    margin: 22px 0 22px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #8B0000;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QMenuBar {
+    background-color: #DC143C; /* Crimson */
+    color: #FFFFFF; /* White */
+}
+
+QMenu {
+    background-color: #F0F8FF; /* AliceBlue */
+    border: 1px solid #DC143C;
+}
+
+QMenu::item:selected {
+    background-color: #8B0000; /* DarkRed */
+}
+
+QStatusBar {
+    background-color: #A52A2A; /* Brown */
+    color: #FFFFFF;
+}
+
+/* Custom QLabel elements with theme-specific IDs */
+QLabel#catScratchTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #8B0000; /* DarkRed */
+    text-align: center;
+}
+
+QLabel#catScratchDescription {
+    font-size: 14px;
+    color: #DC143C; /* Crimson */
+}

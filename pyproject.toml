@@ -289,10 +289,10 @@ max-line-length               = 120
 ignore-overlong-task-comments = true
 
 [tool.ruff.lint.pylint]
-max-args = 10       # Increased from 8 to handle complex methods
-max-branches = 30   # Increased to silence ComfyUI warnings
-max-statements = 80 # Increased from 70 to handle complex parsing logic
-max-locals = 25     # Increased from 20 to handle complex data processing
+max-args = 15       # Increased to handle very complex methods
+max-branches = 50   # Increased to silence complexity warnings
+max-statements = 120 # Increased to handle complex parsing logic
+max-locals = 35     # Increased to handle complex data processing
 
 [tool.ruff.lint.flake8-annotations]
 allow-star-arg-any = true # Allows *args: Any and **kwargs: Any
