@@ -182,7 +182,6 @@
         "method": "comfy_find_input_of_node_type",
         "node_types": [
           "CheckpointLoaderSimple",
-          "ECHOCheckpointLoaderSimple",
           "UNETLoader",
           "UnetLoaderGGUF"
         ],

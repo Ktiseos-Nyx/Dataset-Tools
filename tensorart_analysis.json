@@ -1,0 +1,233 @@
+{
+  "processed_files": [
+    "883289781298057046.png",
+    "884233797929799233.png",
+    "a738b908397b4f0f80af4c784a09407bd6e221b8c2c8a9ed93a55985c987ee33.png",
+    "hC9L2mOQgeJYH5AcTiObj.png",
+    "l9kz8EISxlHzDI9JR1cqM.png",
+    "3MHSJskeIoKo6NY_7CmgT.png",
+    "874162108210635487.png",
+    "pK8PXn5K6ohMKfzZk2kpo.png"
+  ],
+  "metadata_extractions": [
+    {
+      "filename": "883289781298057046.png",
+      "raw_metadata": null,
+      "parsed_metadata": {
+        "prompt_data_section": {
+          "Positive": "1girl, solo, long hair, bangs, green eyes, pink hair, braid, multicolored hair, full pink VFX, parted lips, japanese clothes, green hair, mole, twin braids, two-tone hair, lips, eyelashes, mole under eye, gradient hair, looking away, bug, pink VFX butterfly, portrait, haori, demon slayer uniform, kanroji mitsuri",
+          "Negative": "text, watermark, worst quality, twitter username, multiple"
+        },
+        "raw_tool_specific_data_section": {
+          "raw_content": "{'10002': {'class_type': 'ECHOCheckpointLoaderSimple', 'inputs': {'ckpt_name': 'EMS-1045417-EMS.safetensors'}, '_properties': None}, '10021': {'class_type': 'LoraTagLoader', 'inputs': {'clip': ['10002', 1], 'model': ['10002', 0], 'text': 'ECHO_EMPTY'}, '_properties': None}, '10023': {'class_type': 'CLIPSetLastLayer', 'inputs': {'clip': ['10021', 1], 'stop_at_clip_layer': -2}, '_properties': None}, '10034': {'class_type': 'BNK_CLIPTextEncodeAdvanced', 'inputs': {'clip': ['10023', 0], 'text': '1girl, solo, long hair, bangs, green eyes, pink hair, braid, multicolored hair, full pink VFX, parted lips, japanese clothes, green hair, mole, twin braids, two-tone hair, lips, eyelashes, mole under eye, gradient hair, looking away, bug, pink VFX butterfly, portrait, haori, demon slayer uniform, kanroji mitsuri', 'token_normalization': 'none', 'weight_interpretation': 'A1111'}, '_properties': None}, '10035': {'class_type': 'BNK_CLIPTextEncodeAdvanced', 'inputs': {'clip': ['10023', 0], 'text': 'text, watermark, worst quality, twitter username, multiple', 'token_normalization': 'none', 'weight_interpretation': 'A1111'}, '_properties': None}, '10060': {'class_type': 'EmptyLatentImage', 'inputs': {'batch_size': 2, 'height': 1152, 'width': 768}, '_properties': None}, '11001': {'class_type': 'SetSubseeds', 'inputs': {'latent': ['10060', 0]}, '_properties': None}, '11002': {'class_type': 'KSampler_A1111', 'inputs': {'cfg': 7.0, 'denoise': 1.0, 'ensd': 31337, 'latent_image': ['11001', 0], 'model': ['10021', 0], 'negative': ['10035', 0], 'positive': ['10034', 0], 'sampler_name': 'euler_ancestral', 'scheduler': 'karras', 'seed': 2161435213, 'seed_mode': 'A1111', 'steps': 25}, '_properties': None}, '11021': {'class_type': 'VAEDecode', 'inputs': {'samples': ['11002', 0], 'vae': ['10002', 2]}, '_properties': None}, '11023': {'class_type': 'LoraTagLoader', 'inputs': {'clip': ['10023', 0], 'model': ['10021', 0], 'text': 'ECHO_EMPTY'}, '_properties': None}, '11024': {'class_type': 'CLIPSetLastLayer', 'inputs': {'clip': ['11023', 1], 'stop_at_clip_layer': -2}, '_properties': None}, '11026': {'class_type': 'YoloDetectorProvider', 'inputs': {'max_faces': 5, 'model_name': 'bbox/face_yolov8s.pt'}, '_properties': None}, '11027': {'class_type': 'BNK_CLIPTextEncodeAdvanced', 'inputs': {'clip': ['11024', 0], 'text': '1girl, solo, long hair, bangs, green eyes, pink hair, braid, multicolored hair, full pink VFX, parted lips, japanese clothes, green hair, mole, twin braids, two-tone hair, lips, eyelashes, mole under eye, gradient hair, looking away, bug, pink VFX butterfly, portrait, haori, demon slayer uniform, kanroji mitsuri', 'token_normalization': 'none', 'weight_interpretation': 'A1111'}, '_properties': None}, '11029': {'class_type': 'BNK_CLIPTextEncodeAdvanced', 'inputs': {'clip': ['11024', 0], 'text': 'text, watermark, worst quality, twitter username, multiple', 'token_normalization': 'none', 'weight_interpretation': 'A1111'}, '_properties': None}, '11030': {'class_type': 'FaceDetector_ad', 'inputs': {'bbox_detector': ['11026', 0], 'bbox_threshold': 0.5, 'dilate_erode': 4, 'image': ['11021', 0], 'mask_merge_mode': 'None', 'x_offset': 0, 'y_offset': 0}, '_properties': None}, '11031': {'class_type': 'InpaintCrop_ad', 'inputs': {'blend_pixels': 16.0, 'blur_mask': 4.0, 'context_expand_factor': 1.0, 'context_expand_pixels': 32, 'fill_mask_holes': True, 'force_height': 1152, 'force_width': 768, 'images': ['11030', 0], 'invert_mask': False, 'masks': ['11030', 1], 'mode': 'forced size', 'rescale_algorithm': 'bicubic'}, '_properties': None}, '11032': {'class_type': 'InpaintModelConditioning', 'inputs': {'mask': ['11031', 2], 'negative': ['11029', 0], 'noise_mask': True, 'pixels': ['11031', 1], 'positive': ['11027', 0], 'vae': ['10002', 2]}, '_properties': None}, '11033': {'class_type': 'DifferentialDiffusion', 'inputs': {'model': ['11023', 0]}, '_properties': None}, '11034': {'class_type': 'SetSubseeds', 'inputs': {'latent': ['11032', 2]}, '_properties': None}, '11035': {'class_type': 'KSampler_A1111', 'inputs': {'cfg': 7.0, 'control_after_generate': 'randomize', 'denoise': 0.4, 'ensd': 31337, 'latent_image': ['11034', 0], 'model': ['11033', 0], 'negative': ['11032', 1], 'positive': ['11032', 0], 'sampler_name': 'euler_ancestral', 'scheduler': 'karras', 'seed': 2161435213, 'seed_mode': 'A1111', 'steps': 25}, '_properties': None}, '11036': {'class_type': 'VAEDecode', 'inputs': {'samples': ['11035', 0], 'vae': ['10002', 2]}, '_properties': None}, '11037': {'class_type': 'InpaintStitchOneImage_ad', 'inputs': {'inpainted_images': ['11036', 0], 'rescale_algorithm': 'bicubic', 'stitchs': ['11031', 0]}, '_properties': None}, '12004': {'class_type': 'SetSubseeds_Image', 'inputs': {'images': ['11037', 0]}, '_properties': None}, '12005': {'class_type': 'SaveImage', 'inputs': {'filename_prefix': '883289586820738222', 'images': ['12004', 0]}, '_properties': None}}"
+        },
+        "metadata_info_section": {
+          "Detected Tool": "ComfyUI"
+        },
+        "unclassified": {
+          "_metadata": {
+            "processed_at": "2025-07-15T11:45:31.272391",
+            "processor": "MetadataEngine",
+            "template_processed": true
+          }
+        }
+      },
+      "analysis": {
+        "has_comfyui_workflow": false,
+        "has_ems_patterns": false,
+        "has_job_id": false,
+        "node_types_found": [],
+        "detection_confidence": "detected"
+      }
+    },
+    {
+      "filename": "884233797929799233.png",
+      "raw_metadata": null,
+      "parsed_metadata": {
+        "prompt_data_section": {
+          "Positive": "1girl, solo, long hair, Hair style big wavy hairlooking at viewer, blonde hair, Hair style big wavy hair,closed mouth, The girl's right hand moved her hair behind her right ear.Hair style big wavy hairupper body, mole, lips, colorful abstract paint on the wall behind her. water color, rain by Daniel Gerhartz,DonMM1y4XL",
+          "Negative": "text, watermark, worst quality, twitter username, multiple"
+        },
+        "raw_tool_specific_data_section": {
+          "raw_content": "{'10002': {'class_type': 'ECHOCheckpointLoaderSimple', 'inputs': {'ckpt_name': 'EMS-1097168-EMS.safetensors'}, '_properties': None}, '10022': {'class_type': 'LoraTagLoader', 'inputs': {'clip': ['10002', 1], 'model': ['10002', 0], 'text': 'ECHO_EMPTY'}, '_properties': None}, '10024': {'class_type': 'CLIPSetLastLayer', 'inputs': {'clip': ['10022', 1], 'stop_at_clip_layer': -2}, '_properties': None}, '10035': {'class_type': 'BNK_CLIPTextEncodeAdvanced', 'inputs': {'clip': ['10024', 0], 'text': \"1girl, solo, long hair, Hair style big wavy hairlooking at viewer, blonde hair, Hair style big wavy hair,closed mouth, The girl's right hand moved her hair behind her right ear.Hair style big wavy hairupper body, mole, lips, colorful abstract paint on the wall behind her. water color, rain by Daniel Gerhartz,DonMM1y4XL\", 'token_normalization': 'none', 'weight_interpretation': 'A1111'}, '_properties': None}, '10036': {'class_type': 'BNK_CLIPTextEncodeAdvanced', 'inputs': {'clip': ['10024', 0], 'text': 'text, watermark, worst quality, twitter username, multiple', 'token_normalization': 'none', 'weight_interpretation': 'A1111'}, '_properties': None}, '10061': {'class_type': 'EmptyLatentImage', 'inputs': {'batch_size': 2, 'height': 1152, 'width': 768}, '_properties': None}, '11001': {'class_type': 'SetSubseeds', 'inputs': {'latent': ['10061', 0]}, '_properties': None}, '11002': {'class_type': 'KSampler_A1111', 'inputs': {'cfg': 7.0, 'denoise': 1.0, 'ensd': 31337, 'latent_image': ['11001', 0], 'model': ['10022', 0], 'negative': ['10036', 0], 'positive': ['10035', 0], 'sampler_name': 'euler_ancestral', 'scheduler': 'karras', 'seed': 316418967, 'seed_mode': 'A1111', 'steps': 25}, '_properties': None}, '11021': {'class_type': 'VAEDecode', 'inputs': {'samples': ['11002', 0], 'vae': ['10002', 2]}, '_properties': None}, '11023': {'class_type': 'LoraTagLoader', 'inputs': {'clip': ['10024', 0], 'model': ['10022', 0], 'text': 'ECHO_EMPTY'}, '_properties': None}, '11024': {'class_type': 'CLIPSetLastLayer', 'inputs': {'clip': ['11023', 1], 'stop_at_clip_layer': -2}, '_properties': None}, '11026': {'class_type': 'YoloDetectorProvider', 'inputs': {'max_faces': 5, 'model_name': 'bbox/face_yolov8s.pt'}, '_properties': None}, '11027': {'class_type': 'BNK_CLIPTextEncodeAdvanced', 'inputs': {'clip': ['11024', 0], 'text': \"1girl, solo, long hair, Hair style big wavy hairlooking at viewer, blonde hair, Hair style big wavy hair,closed mouth, The girl's right hand moved her hair behind her right ear.Hair style big wavy hairupper body, mole, lips, colorful abstract paint on the wall behind her. water color, rain by Daniel Gerhartz,DonMM1y4XL\", 'token_normalization': 'none', 'weight_interpretation': 'A1111'}, '_properties': None}, '11029': {'class_type': 'BNK_CLIPTextEncodeAdvanced', 'inputs': {'clip': ['11024', 0], 'text': 'text, watermark, worst quality, twitter username, multiple', 'token_normalization': 'none', 'weight_interpretation': 'A1111'}, '_properties': None}, '11030': {'class_type': 'FaceDetector_ad', 'inputs': {'bbox_detector': ['11026', 0], 'bbox_threshold': 0.5, 'dilate_erode': 4, 'image': ['11021', 0], 'mask_merge_mode': 'None', 'x_offset': 0, 'y_offset': 0}, '_properties': None}, '11031': {'class_type': 'InpaintCrop_ad', 'inputs': {'blend_pixels': 16.0, 'blur_mask': 4.0, 'context_expand_factor': 1.0, 'context_expand_pixels': 32, 'fill_mask_holes': True, 'force_height': 1152, 'force_width': 768, 'images': ['11030', 0], 'invert_mask': False, 'masks': ['11030', 1], 'mode': 'forced size', 'rescale_algorithm': 'bicubic'}, '_properties': None}, '11032': {'class_type': 'InpaintModelConditioning', 'inputs': {'mask': ['11031', 2], 'negative': ['11029', 0], 'noise_mask': True, 'pixels': ['11031', 1], 'positive': ['11027', 0], 'vae': ['10002', 2]}, '_properties': None}, '11033': {'class_type': 'DifferentialDiffusion', 'inputs': {'model': ['11023', 0]}, '_properties': None}, '11034': {'class_type': 'SetSubseeds', 'inputs': {'latent': ['11032', 2]}, '_properties': None}, '11035': {'class_type': 'KSampler_A1111', 'inputs': {'cfg': 7.0, 'control_after_generate': 'randomize', 'denoise': 0.4, 'ensd': 31337, 'latent_image': ['11034', 0], 'model': ['11033', 0], 'negative': ['11032', 1], 'positive': ['11032', 0], 'sampler_name': 'euler_ancestral', 'scheduler': 'karras', 'seed': 316418967, 'seed_mode': 'A1111', 'steps': 25}, '_properties': None}, '11036': {'class_type': 'VAEDecode', 'inputs': {'samples': ['11035', 0], 'vae': ['10002', 2]}, '_properties': None}, '11037': {'class_type': 'InpaintStitchOneImage_ad', 'inputs': {'inpainted_images': ['11036', 0], 'rescale_algorithm': 'bicubic', 'stitchs': ['11031', 0]}, '_properties': None}, '12004': {'class_type': 'SetSubseeds_Image', 'inputs': {'images': ['11037', 0]}, '_properties': None}, '12005': {'class_type': 'SaveImage', 'inputs': {'filename_prefix': '884233603452703252', 'images': ['12004', 0]}, '_properties': None}}"
+        },
+        "metadata_info_section": {
+          "Detected Tool": "ComfyUI"
+        },
+        "unclassified": {
+          "_metadata": {
+            "processed_at": "2025-07-15T11:45:31.338944",
+            "processor": "MetadataEngine",
+            "template_processed": true
+          }
+        }
+      },
+      "analysis": {
+        "has_comfyui_workflow": false,
+        "has_ems_patterns": false,
+        "has_job_id": false,
+        "node_types_found": [],
+        "detection_confidence": "detected"
+      }
+    },
+    {
+      "filename": "a738b908397b4f0f80af4c784a09407bd6e221b8c2c8a9ed93a55985c987ee33.png",
+      "raw_metadata": null,
+      "parsed_metadata": {
+        "info": {
+          "Info": "No processable metadata found."
+        }
+      },
+      "analysis": {
+        "has_comfyui_workflow": false,
+        "has_ems_patterns": false,
+        "has_job_id": false,
+        "node_types_found": [],
+        "detection_confidence": "unknown"
+      }
+    },
+    {
+      "filename": "hC9L2mOQgeJYH5AcTiObj.png",
+      "raw_metadata": null,
+      "parsed_metadata": {
+        "prompt_data_section": {
+          "Positive": "",
+          "Negative": ""
+        },
+        "raw_tool_specific_data_section": {
+          "raw_content": "{'10006': {'class_type': 'NunchakuFluxDiTLoader', 'inputs': {'attention': 'nunchaku-fp16', 'cache_threshold': 0.0, 'cpu_offload': 'disable', 'data_type': 'bfloat16', 'device_id': 0, 'i2f_mode': 'enabled', 'model_path': 'svdq-int4-flux.1-dev'}, '_properties': None}, '10008': {'class_type': 'DualCLIPLoader', 'inputs': {'clip_name1': 't5xxl_fp8_e4m3fn.safetensors', 'clip_name2': 'clip_l_sdxl_base.safetensors', 'type': 'flux'}, '_properties': None}, '10021': {'class_type': 'VAELoader', 'inputs': {'vae_name': 'ae.sft'}, '_properties': None}, '10023': {'class_type': 'NunchakuFluxLoraLoader', 'inputs': {'lora_name': 'EMS-1017214-FP8-EMS.safetensors', 'lora_strength': 0.7, 'model': ['10006', 0]}, '_properties': None}, '10024': {'class_type': 'NunchakuFluxLoraLoader', 'inputs': {'lora_name': 'EMS-829581-FP8-EMS.safetensors', 'lora_strength': 0.7, 'model': ['10023', 0]}, '_properties': None}, '10035': {'class_type': 'CLIPTextEncode', 'inputs': {'clip': ['10008', 0], 'text': 'Geometric Pattern Effect: Repeating shapes (tiles, panels) create structured complexity. Color Spectrum Display: Wide range of hues from cool to warm tones.  Reflective Surface Theme: Smooth, light-catching textures evoke motion and depth. Symmetry and Balance: Central alignment with mirrored visual weight. \\n\\nA transparent boat sail filled with forget-me-nots in various colors, softly highlighted. Pearl butterflies emerge from the sail. Night scene with a starry sky, gentle light and sparkles illuminating the delicate composition.\\n\\nA macro-style image of an imaginary computer keyboard. The focus is on the \"Esc\" button, which contains an insanely detailed, colorful miniature tropical seaside scene inside it—golden sand, clear turquoise waves, a bright sunny sky, and tiny palm trees. A soft glowing LED light shines on the Esc key, enhancing the dreamlike atmosphere. Inside this tiny beach world, a miniature woman is lounging in a relaxed pose on the sand, wearing a red bikini and sunhat, enjoying the sunshine. The overall image has hyper-realistic textures and surreal charm.', 'token_normalization': 'none', 'weight_interpretation': 'comfy'}, '_properties': None}, '10036': {'class_type': 'CLIPTextEncode', 'inputs': {'clip': ['10008', 0], 'text': '', 'token_normalization': 'none', 'weight_interpretation': 'comfy'}, '_properties': None}, '10039': {'class_type': 'FluxGuidance', 'inputs': {'conditioning': ['10035', 0], 'guidance': 8.0}, '_properties': None}, '10063': {'class_type': 'EmptySD3LatentImage', 'inputs': {'batch_size': 1, 'height': 1536, 'width': 1024}, '_properties': None}, '11002': {'class_type': 'KSampler', 'inputs': {'cfg': 1.0, 'denoise': 1.0, 'ensd': 31337, 'latent_image': ['10063', 0], 'model': ['10024', 0], 'negative': ['10036', 0], 'positive': ['10039', 0], 'sampler_name': 'euler', 'scheduler': 'simple', 'seed': 283733712, 'seed_mode': 'A1111', 'steps': 25}, '_properties': None}, '11019': {'class_type': 'VAEDecode', 'inputs': {'samples': ['11002', 0], 'vae': ['10021', 0]}, '_properties': None}, '12005': {'class_type': 'SaveImage', 'inputs': {'filename_prefix': '879831833204823630', 'images': ['11019', 0]}, '_properties': None}}"
+        },
+        "metadata_info_section": {
+          "Detected Tool": "ComfyUI"
+        },
+        "unclassified": {
+          "_metadata": {
+            "processed_at": "2025-07-15T11:45:31.528453",
+            "processor": "MetadataEngine",
+            "template_processed": true
+          }
+        }
+      },
+      "analysis": {
+        "has_comfyui_workflow": false,
+        "has_ems_patterns": false,
+        "has_job_id": false,
+        "node_types_found": [],
+        "detection_confidence": "detected"
+      }
+    },
+    {
+      "filename": "l9kz8EISxlHzDI9JR1cqM.png",
+      "raw_metadata": null,
+      "parsed_metadata": {
+        "prompt_data_section": {
+          "Positive": "",
+          "Negative": ""
+        },
+        "raw_tool_specific_data_section": {
+          "raw_content": "{'10001': {'class_type': 'ECHOCheckpointLoaderSimple', 'inputs': {'ckpt_name': 'EMS-526950-EMS.safetensors'}, '_properties': None}, '10008': {'class_type': 'DualCLIPLoader', 'inputs': {'clip_name1': 't5xxl_fp8_e4m3fn.safetensors', 'clip_name2': 'clip_l_sdxl_base.safetensors', 'type': 'flux'}, '_properties': None}, '10020': {'class_type': 'LoraTagLoader', 'inputs': {'clip': ['10008', 0], 'model': ['10001', 0], 'text': '<lora:EMS-668630-FP8-EMS.safetensors:0.800000>'}, '_properties': None}, '10021': {'class_type': 'VAELoader', 'inputs': {'vae_name': 'ae.sft'}, '_properties': None}, '10034': {'class_type': 'CLIPTextEncode', 'inputs': {'clip': ['10020', 1], 'text': 'A highly stylized, abstract-tech portrait of Spider-Man in side profile, depicted in a futuristic, circuit-patterned art style. His iconic red and blue suit is reimagined with glowing neon web patterns, intricate data streams, and microchip-like panels layered across the fabric. The red segments of the suit shimmer with hexagonal circuitry, while the blue areas are embedded with glowing nanotech filaments and digital textures. His white eye lenses are sleek and illuminated, radiating a soft blue glow like a scanner interface. The background is a moody, cloudy space rendered in soft gradients of navy, black, and silver, with floating holographic data points, faint glitch effects, and geometric nodes resembling Spider-Verse portal particles. Thin digital threads resembling web strands stretch vertically and diagonally across the image, layered with circuit glyphs and matrix code fragments. The overall effect blends cyberpunk, graffiti minimalism, and futuristic schematics — in the style of Beeple meets Tron meets Into the Spider-Verse. High-resolution, ultra-futuristic, glitch-core Spider-Man in an abstract techscape.\",Cybernetic Glamour,TechnoPrism', 'token_normalization': 'none', 'weight_interpretation': 'comfy'}, '_properties': None}, '10035': {'class_type': 'CLIPTextEncode', 'inputs': {'clip': ['10020', 1], 'text': '', 'token_normalization': 'none', 'weight_interpretation': 'comfy'}, '_properties': None}, '10038': {'class_type': 'FluxGuidance', 'inputs': {'conditioning': ['10034', 0], 'guidance': 4.0}, '_properties': None}, '10062': {'class_type': 'EmptySD3LatentImage', 'inputs': {'batch_size': 2, 'height': 1280, 'width': 720}, '_properties': None}, '11001': {'class_type': 'SetSubseeds', 'inputs': {'latent': ['10062', 0]}, '_properties': None}, '11002': {'class_type': 'KSampler', 'inputs': {'cfg': 1.0, 'denoise': 1.0, 'ensd': 31337, 'latent_image': ['11001', 0], 'model': ['10020', 0], 'negative': ['10035', 0], 'positive': ['10038', 0], 'sampler_name': 'euler', 'scheduler': 'simple', 'seed': 2776042030, 'seed_mode': 'A1111', 'steps': 25}, '_properties': None}, '11010': {'class_type': 'VAEDecode', 'inputs': {'samples': ['11002', 0], 'vae': ['10021', 0]}, '_properties': None}, '11013': {'class_type': 'UpscaleModelLoader', 'inputs': {'model_name': 'RealESRGAN_x4plus.pth'}, '_properties': None}, '11014': {'class_type': 'ImageUpscaleWithModel', 'inputs': {'image': ['11010', 0], 'upscale_model': ['11013', 0]}, '_properties': None}, '11015': {'class_type': 'ImageScale', 'inputs': {'crop': 'disabled', 'height': 1280, 'image': ['11014', 0], 'upscale_method': 'nearest-exact', 'width': 720}, '_properties': None}, '11016': {'class_type': 'VAEEncode', 'inputs': {'pixels': ['11015', 0], 'vae': ['10021', 0]}, '_properties': None}, '11017': {'class_type': 'SetSubseeds', 'inputs': {'latent': ['11016', 0]}, '_properties': None}, '11018': {'class_type': 'KSampler', 'inputs': {'cfg': 1.0, 'denoise': 0.75, 'ensd': 31337, 'latent_image': ['11017', 0], 'model': ['10020', 0], 'negative': ['10035', 0], 'positive': ['10038', 0], 'sampler_name': 'euler', 'scheduler': 'simple', 'seed': 2776042030, 'seed_mode': 'A1111', 'steps': 20}, '_properties': None}, '11019': {'class_type': 'VAEDecode', 'inputs': {'samples': ['11018', 0], 'vae': ['10021', 0]}, '_properties': None}, '12004': {'class_type': 'SetSubseeds_Image', 'inputs': {'images': ['11019', 0]}, '_properties': None}, '12005': {'class_type': 'SaveImage', 'inputs': {'filename_prefix': '882289014059746975', 'images': ['12004', 0]}, '_properties': None}}"
+        },
+        "metadata_info_section": {
+          "Detected Tool": "ComfyUI"
+        },
+        "unclassified": {
+          "_metadata": {
+            "processed_at": "2025-07-15T11:45:31.597866",
+            "processor": "MetadataEngine",
+            "template_processed": true
+          }
+        }
+      },
+      "analysis": {
+        "has_comfyui_workflow": false,
+        "has_ems_patterns": false,
+        "has_job_id": false,
+        "node_types_found": [],
+        "detection_confidence": "detected"
+      }
+    },
+    {
+      "filename": "3MHSJskeIoKo6NY_7CmgT.png",
+      "raw_metadata": null,
+      "parsed_metadata": {
+        "prompt_data_section": {
+          "Positive": "((best quality:1.4,beautiful detailed eyes)) ,girl 7 years old, solo, loli,perfect body,animal ears,fox ears,medium hair, twintail, yellow hair, sharpe eyes, heterochromia, right purple eye, left yellow eye, fox tail, purple ribbon, ( ,flower pattern shirt, , short jeans), smile, (dual water guns on dual hands), fighting pose, shooting, outdoors, sky, festival flags,(water splash), water, thailand festival, songkran",
+          "Negative": ", nsfw, photo, deformed, black and white, realism, disfigured, low contrast, lowres, (bad), text, error, fewer, extra, missing, worst quality, jpeg artifacts, low quality, watermark, unfinished, displeasing, oldest, early, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], bad artist, inaccurate limb, bad hands, bad anatomy, mutations, fat body\n\nembedding:EasyNegative"
+        },
+        "raw_tool_specific_data_section": {
+          "raw_content": "{'10001': {'class_type': 'ECHOCheckpointLoaderSimple', 'inputs': {'ckpt_name': 'EMS-838355-EMS.safetensors'}, '_properties': None}, '10012': {'class_type': 'LoraTagLoader', 'inputs': {'clip': ['10001', 1], 'model': ['10001', 0], 'text': 'ECHO_EMPTY'}, '_properties': None}, '10014': {'class_type': 'CLIPSetLastLayer', 'inputs': {'clip': ['10012', 1], 'stop_at_clip_layer': -2}, '_properties': None}, '10015': {'class_type': 'EmptyLatentImage', 'inputs': {'batch_size': 1, 'height': 1460, 'width': 1024}, '_properties': None}, '10026': {'class_type': 'CLIPTextEncode', 'inputs': {'clip': ['10014', 0], 'text': '((best quality:1.4,beautiful detailed eyes)) ,girl 7 years old, solo, loli,perfect body,animal ears,fox ears,medium hair, twintail, yellow hair, sharpe eyes, heterochromia, right purple eye, left yellow eye, fox tail, purple ribbon, ( ,flower pattern shirt, , short jeans), smile, (dual water guns on dual hands), fighting pose, shooting, outdoors, sky, festival flags,(water splash), water, thailand festival, songkran', 'token_normalization': 'none', 'weight_interpretation': 'comfy'}, '_properties': None}, '10027': {'class_type': 'CLIPTextEncode', 'inputs': {'clip': ['10014', 0], 'text': ', nsfw, photo, deformed, black and white, realism, disfigured, low contrast, lowres, (bad), text, error, fewer, extra, missing, worst quality, jpeg artifacts, low quality, watermark, unfinished, displeasing, oldest, early, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], bad artist, inaccurate limb, bad hands, bad anatomy, mutations, fat body\\n\\nembedding:EasyNegative', 'token_normalization': 'none', 'weight_interpretation': 'comfy'}, '_properties': None}, '11002': {'class_type': 'KSampler', 'inputs': {'cfg': 6.0, 'denoise': 1.0, 'ensd': 31337, 'latent_image': ['10015', 0], 'model': ['10012', 0], 'negative': ['10027', 0], 'positive': ['10026', 0], 'sampler_name': 'euler_ancestral', 'scheduler': 'normal', 'seed': 2654967198, 'seed_mode': 'A1111', 'steps': 20}, '_properties': None}, '11019': {'class_type': 'VAEDecode', 'inputs': {'samples': ['11002', 0], 'vae': ['10001', 2]}, '_properties': None}, '12005': {'class_type': 'SaveImage', 'inputs': {'filename_prefix': '848699895903819693', 'images': ['11019', 0]}, '_properties': None}}"
+        },
+        "metadata_info_section": {
+          "Detected Tool": "ComfyUI"
+        },
+        "unclassified": {
+          "_metadata": {
+            "processed_at": "2025-07-15T11:45:31.688000",
+            "processor": "MetadataEngine",
+            "template_processed": true
+          }
+        }
+      },
+      "analysis": {
+        "has_comfyui_workflow": false,
+        "has_ems_patterns": false,
+        "has_job_id": false,
+        "node_types_found": [],
+        "detection_confidence": "detected"
+      }
+    },
+    {
+      "filename": "874162108210635487.png",
+      "raw_metadata": null,
+      "parsed_metadata": {
+        "prompt_data_section": {
+          "Positive": "masterpiece, best quality, 1boy, male focus, solo, solo focus, beard, red eyes, blue hair, two tone hair, red hair, gradient hair, teal hair, purple hair, black hair, stubble, cat boy, closed mouth, earrings, facial hair, hair jewelry,  multicolored hair, portrait, miqo'te, long hair, indoors, kitchen, looking at viewer, straight-on",
+          "Negative": "bad quality, worst quality, sketch, disfigured, asian"
+        },
+        "raw_tool_specific_data_section": {
+          "raw_content": "{'10001': {'class_type': 'ECHOCheckpointLoaderSimple', 'inputs': {'ckpt_name': 'EMS-924273-EMS.safetensors'}, '_properties': None}, '10018': {'class_type': 'LoraTagLoader', 'inputs': {'clip': ['10001', 1], 'model': ['10001', 0], 'text': 'ECHO_EMPTY'}, '_properties': None}, '10019': {'class_type': 'VAELoader', 'inputs': {'vae_name': 'sdxl-vae-fp16-fix.safetensors'}, '_properties': None}, '10020': {'class_type': 'CLIPSetLastLayer', 'inputs': {'clip': ['10018', 1], 'stop_at_clip_layer': -2}, '_properties': None}, '10021': {'class_type': 'EmptyLatentImage', 'inputs': {'batch_size': 2, 'height': 1152, 'width': 768}, '_properties': None}, '10032': {'class_type': 'BNK_CLIPTextEncodeAdvanced', 'inputs': {'clip': ['10020', 0], 'text': \"masterpiece, best quality, 1boy, male focus, solo, solo focus, beard, red eyes, blue hair, two tone hair, red hair, gradient hair, teal hair, purple hair, black hair, stubble, cat boy, closed mouth, earrings, facial hair, hair jewelry,  multicolored hair, portrait, miqo'te, long hair, indoors, kitchen, looking at viewer, straight-on\", 'token_normalization': 'none', 'weight_interpretation': 'A1111'}, '_properties': None}, '10033': {'class_type': 'BNK_CLIPTextEncodeAdvanced', 'inputs': {'clip': ['10020', 0], 'text': 'bad quality, worst quality, sketch, disfigured, asian', 'token_normalization': 'none', 'weight_interpretation': 'A1111'}, '_properties': None}, '11001': {'class_type': 'SetSubseeds', 'inputs': {'latent': ['10021', 0]}, '_properties': None}, '11002': {'class_type': 'KSampler_A1111', 'inputs': {'cfg': 7.0, 'denoise': 1.0, 'ensd': 31337, 'latent_image': ['11001', 0], 'model': ['10018', 0], 'negative': ['10033', 0], 'positive': ['10032', 0], 'sampler_name': 'euler_ancestral', 'scheduler': 'normal', 'seed': 341803262, 'seed_mode': 'A1111', 'steps': 25}, '_properties': None}, '11010': {'class_type': 'VAEDecode', 'inputs': {'samples': ['11002', 0], 'vae': ['10019', 0]}, '_properties': None}, '11013': {'class_type': 'UpscaleModelLoader', 'inputs': {'model_name': '4x_foolhardy_Remacri.pth'}, '_properties': None}, '11014': {'class_type': 'ImageUpscaleWithModel', 'inputs': {'image': ['11010', 0], 'upscale_model': ['11013', 0]}, '_properties': None}, '11015': {'class_type': 'ImageScale', 'inputs': {'crop': 'disabled', 'height': 1728, 'image': ['11014', 0], 'upscale_method': 'nearest-exact', 'width': 1152}, '_properties': None}, '11016': {'class_type': 'VAEEncode', 'inputs': {'pixels': ['11015', 0], 'vae': ['10019', 0]}, '_properties': None}, '11017': {'class_type': 'SetSubseeds', 'inputs': {'latent': ['11016', 0]}, '_properties': None}, '11018': {'class_type': 'KSampler_A1111', 'inputs': {'cfg': 7.0, 'denoise': 0.3, 'ensd': 31337, 'latent_image': ['11017', 0], 'model': ['10018', 0], 'negative': ['10033', 0], 'positive': ['10032', 0], 'sampler_name': 'euler_ancestral', 'scheduler': 'normal', 'seed': 341803262, 'seed_mode': 'A1111', 'steps': 20}, '_properties': None}, '11019': {'class_type': 'VAEDecode', 'inputs': {'samples': ['11018', 0], 'vae': ['10019', 0]}, '_properties': None}, '12004': {'class_type': 'SetSubseeds_Image', 'inputs': {'images': ['11019', 0]}, '_properties': None}, '12005': {'class_type': 'SaveImage', 'inputs': {'filename_prefix': '874161638855650508', 'images': ['12004', 0]}, '_properties': None}}"
+        },
+        "metadata_info_section": {
+          "Detected Tool": "ComfyUI"
+        },
+        "unclassified": {
+          "_metadata": {
+            "processed_at": "2025-07-15T11:45:31.804119",
+            "processor": "MetadataEngine",
+            "template_processed": true
+          }
+        }
+      },
+      "analysis": {
+        "has_comfyui_workflow": false,
+        "has_ems_patterns": false,
+        "has_job_id": false,
+        "node_types_found": [],
+        "detection_confidence": "detected"
+      }
+    },
+    {
+      "filename": "pK8PXn5K6ohMKfzZk2kpo.png",
+      "raw_metadata": null,
+      "parsed_metadata": {
+        "info": {
+          "Info": "No processable metadata found."
+        }
+      },
+      "analysis": {
+        "has_comfyui_workflow": false,
+        "has_ems_patterns": false,
+        "has_job_id": false,
+        "node_types_found": [],
+        "detection_confidence": "unknown"
+      }
+    }
+  ],
+  "unique_patterns": {
+    "node_types": [],
+    "job_id_patterns": [],
+    "ems_patterns": [],
+    "workflow_signatures": []
+  },
+  "errors": []
+}

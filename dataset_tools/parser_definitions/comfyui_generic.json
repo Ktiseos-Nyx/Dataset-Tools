@@ -148,7 +148,6 @@
         "start_node_input_name": "model",
         "target_ancestor_types": [
           "CheckpointLoaderSimple",
-          "ECHOCheckpointLoaderSimple",
           "UNETLoader"
         ],
         "target_input_key_in_ancestor": "ckpt_name",
@@ -159,8 +158,7 @@
         "target_key": "parameters.vae_model",
         "method": "comfy_find_ancestor_node_input_value",
         "start_node_types": [
-          "CheckpointLoaderSimple",
-          "ECHOCheckpointLoaderSimple"
+          "CheckpointLoaderSimple"
         ],
         "start_node_output_slot_name": "VAE",
         "target_ancestor_types": [
