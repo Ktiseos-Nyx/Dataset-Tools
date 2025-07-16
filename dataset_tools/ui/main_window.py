@@ -31,8 +31,8 @@ from ..metadata_parser import (
 )  # pylint: disable=relative-beyond-top-level
 from ..widgets import (
     FileLoader,  # pylint: disable=relative-beyond-top-level
-    FileLoadResult,
 )
+from .widgets import FileLoadResult
 from .dialogs import SettingsDialog
 from .enhanced_theme_manager import (
     get_enhanced_theme_manager,
