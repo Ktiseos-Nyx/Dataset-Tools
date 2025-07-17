@@ -386,6 +386,12 @@ pip install kn-dataset-tools[fonts]
 2. **Check file size:** Very large workflows may take time to parse
 3. **Validate JSON:** Use a JSON validator to check file structure
 
+### "Well, you said it worked on your machine!"
+
+Sometimes, a feature may work in a development environment but not in the packaged application. This can happen because the lead developer, Duskfallcrew, often works in "editable mode" (`pip install -e .`), which can cause minor discrepancies in how files and dependencies are handled compared to a standard installation.
+
+If you encounter an issue that seems to stem from this, please know that it is not your fault. We appreciate you bringing it to our attention so we can resolve it for all users. Please open a bug report on our GitHub repository, and we will address it as quickly as possible.
+
 ---
 
 ## 🚀 Performance & Optimization

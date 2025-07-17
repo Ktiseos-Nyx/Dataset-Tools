@@ -13,8 +13,10 @@ from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
 
 from dataset_tools.correct_types import ExtensionType as Ext
-from dataset_tools.logger import debug_message  # Import debug_message
-from dataset_tools.logger import debug_monitor
+from dataset_tools.logger import (
+    debug_message,  # Import debug_message
+    debug_monitor,
+)
 from dataset_tools.logger import info_monitor as nfo
 
 

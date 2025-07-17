@@ -38,3 +38,7 @@ htmlcov/
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+# Documentation files
+CLAUDE.md
+

@@ -747,29 +747,29 @@ class ComfyUIExtractorManager:
         data = self._parse_json_data(data)
         if not isinstance(data, dict):
             return {"is_tensorart": False, "signatures": [], "confidence": 0.0}
-        
+
         signatures_found = []
         confidence_score = 0.0
-        
+
         # Get all nodes for analysis
         nodes = self.traversal.get_nodes_from_data(data)
         if not nodes:
             return {"is_tensorart": False, "signatures": [], "confidence": 0.0}
-        
+
         # Check for ECHOCheckpointLoaderSimple (TensorArt infrastructure)
         echo_nodes = []
         ems_models = []
-        
+
         node_iterator = (
             nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
         )
-        
+
         for node_id, node_data in node_iterator:
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
-            
+
             # Detect ECHOCheckpointLoaderSimple
             if "ECHOCheckpointLoaderSimple" in class_type:
                 echo_nodes.append({
@@ -779,11 +779,11 @@ class ComfyUIExtractorManager:
                 })
                 signatures_found.append("ECHOCheckpointLoaderSimple")
                 confidence_score += 0.8  # High confidence indicator
-                
+
             # Check for EMS pattern in checkpoint names
             inputs = node_data.get("inputs", {})
             widgets = node_data.get("widgets_values", [])
-            
+
             # Check inputs for EMS patterns
             for input_key, input_value in inputs.items():
                 if isinstance(input_value, str) and self._contains_ems_pattern(input_value):
@@ -796,7 +796,7 @@ class ComfyUIExtractorManager:
                     if "EMS" not in [s for s in signatures_found if "EMS" in s]:
                         signatures_found.append("EMS-pattern-model")
                         confidence_score += 0.6
-                        
+
             # Check widgets for EMS patterns
             for i, widget_value in enumerate(widgets):
                 if isinstance(widget_value, str) and self._contains_ems_pattern(widget_value):
@@ -809,33 +809,33 @@ class ComfyUIExtractorManager:
                     if "EMS" not in [s for s in signatures_found if "EMS" in s]:
                         signatures_found.append("EMS-pattern-model")
                         confidence_score += 0.6
-        
+
         # Additional TensorArt-specific nodes
         tensorart_nodes = [
             "TensorArt_CheckpointLoader",
-            "TensorArt_LoraLoader", 
+            "TensorArt_LoraLoader",
             "LoraTagLoader",
             "TensorArt_TextEncode"
         ]
-        
+
         for node_id, node_data in node_iterator:
             if not isinstance(node_data, dict):
                 continue
-                
+
             class_type = node_data.get("class_type", "")
             for ta_node in tensorart_nodes:
                 if ta_node in class_type:
                     signatures_found.append(ta_node)
                     confidence_score += 0.4
                     break
-        
+
         # Remove duplicates and cap confidence
         signatures_found = list(set(signatures_found))
         confidence_score = min(confidence_score, 1.0)
-        
+
         # Determine if this is likely TensorArt
         is_tensorart = confidence_score > 0.3 or len(signatures_found) > 0
-        
+
         result = {
             "is_tensorart": is_tensorart,
             "signatures": signatures_found,
@@ -844,15 +844,15 @@ class ComfyUIExtractorManager:
             "ems_models": ems_models,
             "total_signatures": len(signatures_found)
         }
-        
+
         if is_tensorart:
             self.logger.info(f"TensorArt signatures detected: {signatures_found} (confidence: {confidence_score:.2f})")
         else:
             self.logger.debug("No TensorArt signatures detected")
-            
+
         return result
-        
+
     def _contains_ems_pattern(self, text: str) -> bool:
         """Check if text contains EMS-NUMBER-EMS pattern."""
         import re
-        return bool(re.search(r'EMS-\d+-EMS', text))
+        return bool(re.search(r"EMS-\d+-EMS", text))

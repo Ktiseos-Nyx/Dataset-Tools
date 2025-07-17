@@ -2,65 +2,74 @@
 
 This project incorporates code from the following open-source software:
 
-## 1. Stable Diffusion Prompt Reader
+## 1. Core Dependencies
 
-* **Original Author:** receyuki
-* **Project Repository:** [https://github.com/receyuki/stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
-* **Version Vendored:** (Specify if known, e.g., v1.3.5, or commit hash a1b2c3d)
-* **Original License:** MIT License
-* The NovelAI metadata parsing logic within the vendored stable-diffusion-prompt-reader code aligns with the specifications published by NovelAI regarding their image metadata formats (see https://github.com/NovelAI/novelai-image-metadata).
-* **Modifications:** The code vendored from Stable Diffusion Prompt Reader has been adapted and modified for integration into Dataset-Tools. These modifications primarily reside within the `dataset_tools/vendored_sdpr/` directory.
-Directory Structure of files
-`dataset_tools/
-├── __init__.py
-├── access_disk.py
-├── correct_types.py
-├── logger.py
-├── main.py
-├── metadata_parser.py
-├── model_parsers/
-│   ├── __init__.py
-│   ├── base_model_parser.py
-│   ├── gguf_parser.py
-│   └── safetensors_parser.py
-├── model_tool.py
-├── ui.py
-├── ui_old.py
-├── vendored_sdpr/
-│   ├── __init__.py               # Package marker for vendored_sdpr
-│   ├── constants.py            # Constants used by vendored code (e.g., PARAMETER_PLACEHOLDER)
-│   ├── image_data_reader.py    # Vendored Image Reader (Modified)
-│   ├── logger.py               # The simple Logger class vendored from SDPR
-│   ├── resources/              # Directory for resources (created for importlib.resources)
-│   │   └── __init__.py         # Makes 'resources' a sub-package
-│   ├── format/                 # Sub-package for different metadata format parsers
-│   │   ├── __init__.py         # Exports all format classes
-│   │   ├── a1111.py
-│   │   ├── base_format.py
-│   │   ├── civitai.py          # CivitAI Mojibake Parsing
-│   │   ├── comfyui.py
-│   │   ├── drawthings.py
-│   │   ├── easydiffusion.py
-│   │   ├── fooocus.py
-│   │   ├── invokeai.py
-│   │   ├── novelai.py
-│   │   ├── ruinedfooocus.py    # RuinedFoocus
-│   │   ├── swarmui.py
-│   │   └── utility.py          # Utility functions for the format parsers
-└── widgets.py`
+This project relies on the following third-party libraries, which are automatically installed as dependencies:
 
-### Original Copyright Notice (from Stable Diffusion Prompt Reader)
+- **Pillow:** A powerful imaging library.
+  - **License:** PIL Software License
+  - **Copyright:** © 1997-2011 by Secret Labs AB, © 2011-2024 by Alex Clark and contributors.
 
+- **PyQt6:** A comprehensive set of Python bindings for the Qt application framework.
+  - **License:** GPL v3
+  - **Copyright:** © Riverbank Computing Limited
+
+- **qt-material:** A library for styling PyQt applications with Material Design themes.
+  - **License:** MIT License
+  - **Copyright:** © 2020-2024 Gonzalo Odiard
+
+- **Rich:** A library for rich text and beautiful formatting in the terminal.
+  - **License:** MIT License
+  - **Copyright:** © 2020-2024 Will McGugan
+
+- **Pydantic:** A library for data validation and settings management using Python type hints.
+  - **License:** MIT License
+  - **Copyright:** © 2017-2024 Pydantic Team
+
+- **pyexiv2:** A Python binding to the Exiv2 library for reading and writing image metadata.
+  - **License:** GPL-2.0-or-later
+  - **Copyright:** © 2006-2024 The Exiv2 Team
+
+- **piexif:** A pure Python library for reading and writing EXIF data.
+  - **License:** MIT License
+  - **Copyright:** © 2014, hMatoba
+
+- **defusedxml:** A library for parsing XML data safely.
+  - **License:** Python Software Foundation License 2.0
+  - **Copyright:** © 2013-2024 Christian Heimes
+
+- **toml:** A library for parsing TOML configuration files.
+  - **License:** MIT License
+  - **Copyright:** © 2015-2024 William Pearson
+
+## 2. Vendored Code
+
+### Stable Diffusion Prompt Reader
+
+This project includes a modified, or "vendored," version of the **Stable Diffusion Prompt Reader** library.
+
+- **Original Author:** receyuki
+- **Project Repository:** [https://github.com/receyuki/stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
+- **Original License:** MIT License
+- **Modifications:** The vendored code has been adapted for integration and resides in the `dataset_tools/vendored_sdpr/` directory.
+
+The original MIT license for this library is included below:
+
+```
 MIT License
+
 Copyright (c) 2023 receyuki
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
+
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -68,19 +77,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```
 
-## Notices for ComfyUI Workflows & Test Data
+## 3. Test Data and Workflows
 
-### ComfyUI Workflow Files
+This repository contains test images and workflow data used for development and testing purposes. This data is not owned by the project and may be subject to different licenses.
 
-The majority of ComfyUI workflow files included in this project for testing purposes do not include explicit licensing information or source attribution. These workflows are included solely for research and development purposes to understand workflow parsing and traversal.
+We gratefully acknowledge contributions from community members, including **Quadmoon** and **Tatersbarn**, who have provided test data.
 
-**Important Notice**: These workflow files are not owned by this project and should not be redistributed or used in production without proper attribution to their original creators. Users are strongly advised to identify and contact the original creators before using these workflows.
-
-### Test Images and Workflow Data
-
-Test images and workflow data included in this repository are used exclusively for development and testing purposes. These resources are not owned by this project.
-
-**Acknowledgments**: We gratefully acknowledge contributions from community members including Quadmoon, Tatersbarn, and other contributors who have provided test data for development purposes.
-
-**Attribution Request**: If you are the original creator of any test data included in this project, please contact the maintainers so proper attribution can be provided.
+If you are the creator of any test data included in this project, please contact the maintainers for proper attribution.

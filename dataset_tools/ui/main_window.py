@@ -30,15 +30,19 @@ from ..metadata_parser import (
 from ..widgets import (
     FileLoader,  # pylint: disable=relative-beyond-top-level
 )
-from .widgets import FileLoadResult
 from .dialogs import SettingsDialog
 from .enhanced_theme_manager import get_enhanced_theme_manager  # pylint: disable=relative-beyond-top-level
-from .font_manager import apply_fonts_to_app  # pylint: disable=relative-beyond-top-level
-from .font_manager import get_font_manager  # pylint: disable=relative-beyond-top-level
-from .managers import LayoutManager  # pylint: disable=relative-beyond-top-level
-from .managers import MenuManager  # pylint: disable=relative-beyond-top-level
-from .managers import MetadataDisplayManager  # pylint: disable=relative-beyond-top-level
-from .managers import ThemeManager  # pylint: disable=relative-beyond-top-level
+from .font_manager import (
+    apply_fonts_to_app,  # pylint: disable=relative-beyond-top-level
+    get_font_manager,  # pylint: disable=relative-beyond-top-level
+)
+from .managers import (
+    LayoutManager,  # pylint: disable=relative-beyond-top-level
+    MenuManager,  # pylint: disable=relative-beyond-top-level
+    MetadataDisplayManager,  # pylint: disable=relative-beyond-top-level
+    ThemeManager,  # pylint: disable=relative-beyond-top-level
+)
+from .widgets import FileLoadResult
 
 # ============================================================================
 # CONSTANTS
