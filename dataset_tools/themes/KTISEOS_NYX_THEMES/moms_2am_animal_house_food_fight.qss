@@ -1,0 +1,125 @@
+/*
+ * Mom's 2AM Fever Dreams: Animal House Food Fight Theme
+ *
+ * This theme captures the glorious, messy chaos of a college cafeteria food fight.
+ * Expect splattered colors and questionable textures.
+ *
+ * Legal Disclaimer: Do not attempt to recreate this theme in real life.
+ * We are not responsible for food waste, disciplinary actions, or projectile mashed potatoes.
+ */
+
+QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #FFD700, /* Gold - mustard */
+                               stop:0.3 #FF6347, /* Tomato - ketchup */
+                               stop:0.6 #9ACD32, /* YellowGreen - peas */
+                               stop:1 #8B4513); /* Saddle Brown - gravy/mystery meat */
+    color: #FFFFFF; /* White - clean plates (for now) */
+}
+
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #FFD700, /* Gold */
+                               stop:0.3 #FF6347, /* Tomato */
+                               stop:0.6 #9ACD32, /* YellowGreen */
+                               stop:1 #8B4513); /* Saddle Brown */
+}
+
+QPushButton {
+    border: 3px dashed #A9A9A9; /* DarkGray - cafeteria tray edge */
+    border-radius: 30px 10px 40px 20px; /* Irregular, like a splattered tray */
+    background-color: #FF6347; /* Tomato - main food projectile */
+    color: #FFFFFF; /* White - clean napkin */
+    padding: 15px 30px;
+    font-size: 20px;
+    transform: rotate(8deg); /* Tilted, mid-air food */
+}
+
+QPushButton:hover {
+    background-color: #FF4500; /* OrangeRed - more intense splatter */
+    border: 3px dashed #696969; /* DimGray */
+    transform: rotate(10deg) scale(1.05); /* More aggressive */
+}
+
+QPushButton:pressed {
+    background-color: #CD5C5C; /* IndianRed - squished food */
+    border: 3px dashed #4F4F4F; /* Gray */
+    transform: rotate(5deg) scale(0.95); /* Impact */
+}
+
+/* Add more QSS elements as needed for a complete theme */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    border: 1px solid #8B4513; /* Saddle Brown */
+    background-color: #FFFACD; /* LemonChiffon - clean table */
+    color: #4F4F4F; /* Gray text */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #FFD700; /* Gold - focused on the mess */
+}
+
+QTabWidget::pane {
+    border-top: 2px solid #8B4513; /* Saddle Brown */
+}
+
+QTabBar::tab {
+    background: #9ACD32; /* YellowGreen */
+    border: 1px solid #8B4513; /* Saddle Brown */
+    border-bottom-color: #8B4513; /* Same as pane */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 8px;
+}
+
+QTabBar::tab:selected {
+    background: #FF6347; /* Tomato */
+    border-color: #FF6347;
+    border-bottom-color: #FF6347; /* Selected tab blends with pane */
+}
+
+QScrollBar:vertical {
+    border: 1px solid #8B4513;
+    background: #FFFACD;
+    width: 15px;
+    margin: 22px 0 22px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #FFD700;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QMenuBar {
+    background-color: #8B4513; /* Saddle Brown */
+    color: #FFFFFF; /* White */
+}
+
+QMenu {
+    background-color: #FFFACD; /* LemonChiffon */
+    border: 1px solid #8B4513;
+}
+
+QMenu::item:selected {
+    background-color: #FFD700; /* Gold */
+}
+
+QStatusBar {
+    background-color: #696969; /* DimGray */
+    color: #FFFFFF;
+}
+
+/* Custom QLabel elements with theme-specific IDs */
+QLabel#foodFightTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF6347; /* Tomato */
+    text-align: center;
+}
+
+QLabel#foodFightDescription {
+    font-size: 14px;
+    color: #8B4513; /* Saddle Brown */
+}

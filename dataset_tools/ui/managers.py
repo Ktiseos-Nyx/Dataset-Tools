@@ -107,9 +107,7 @@ class ThemeManager:
             if not initial_load:
                 self.settings.setValue("theme", theme_name)
 
-            action_text = (
-                "Initial theme loaded" if initial_load else "Theme applied and saved"
-            )
+            action_text = "Initial theme loaded" if initial_load else "Theme applied and saved"
             nfo("%s: %s", action_text, theme_name)
 
             # Update icon manager colors when theme changes
@@ -177,10 +175,7 @@ class ThemeManager:
             icon_manager = get_icon_manager()
 
             # Determine colors based on theme name
-            if any(
-                dark_indicator in theme_name.lower()
-                for dark_indicator in ["dark", "black"]
-            ):
+            if any(dark_indicator in theme_name.lower() for dark_indicator in ["dark", "black"]):
                 # Dark theme colors
                 from PyQt6.QtGui import QColor
 
@@ -299,14 +294,14 @@ class MenuManager:
         view_menu = menu_bar.addMenu("&View")
 
         # Themes submenu
-        themes_menu = Qw.QMenu("&Themes", self.main_window)
-        view_menu.addMenu(themes_menu)
+        self.themes_menu = Qw.QMenu("&Themes", self.main_window)
+        view_menu.addMenu(self.themes_menu)
 
         # Use enhanced theme manager if available, fallback to standard
         if hasattr(self.main_window, "enhanced_theme_manager"):
-            self.main_window.enhanced_theme_manager.create_theme_menus(themes_menu)
+            self.main_window.enhanced_theme_manager.create_theme_menus(self.themes_menu)
         elif self.theme_manager:
-            self.theme_manager.create_theme_actions(themes_menu)
+            self.theme_manager.create_theme_actions(self.themes_menu)
 
     def _setup_help_menu(self, menu_bar: Qw.QMenuBar) -> None:
         """Setup the Help menu."""
@@ -390,9 +385,7 @@ class LayoutManager:
         middle_right_layout.setSpacing(5)
 
         # Metadata-Image splitter
-        self.main_window.metadata_image_splitter = Qw.QSplitter(
-            QtCore.Qt.Orientation.Horizontal
-        )
+        self.main_window.metadata_image_splitter = Qw.QSplitter(QtCore.Qt.Orientation.Horizontal)
         middle_right_layout.addWidget(self.main_window.metadata_image_splitter)
 
         # Setup panels
@@ -434,9 +427,7 @@ class LayoutManager:
             # Create text box
             text_box = Qw.QTextEdit()
             text_box.setReadOnly(True)
-            text_box.setSizePolicy(
-                Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred
-            )
+            text_box.setSizePolicy(Qw.QSizePolicy.Policy.Expanding, Qw.QSizePolicy.Policy.Preferred)
 
             # Enable word wrap for proper text display
             text_box.setWordWrapMode(QTextOption.WrapMode.WordWrap)
@@ -452,9 +443,7 @@ class LayoutManager:
     def _setup_image_panel(self) -> None:
         """Setup the image preview panel."""
         self.main_window.image_preview = EnhancedImageLabel()
-        self.main_window.metadata_image_splitter.addWidget(
-            self.main_window.image_preview
-        )
+        self.main_window.metadata_image_splitter.addWidget(self.main_window.image_preview)
 
     def _setup_bottom_bar(self) -> None:
         """Setup the bottom action button bar."""
@@ -520,17 +509,13 @@ class LayoutManager:
 
             # Main splitter
             main_default = self._calculate_main_splitter_sizes(window_width)
-            main_saved = self.settings.value(
-                "mainSplitterSizes", main_default, type=list
-            )
+            main_saved = self.settings.value("mainSplitterSizes", main_default, type=list)
             main_sizes = [int(s) for s in main_saved]
             self.main_window.main_splitter.setSizes(main_sizes)
 
             # Metadata-image splitter
             meta_default = self._calculate_metadata_image_sizes(window_width)
-            meta_saved = self.settings.value(
-                "metaImageSplitterSizes", meta_default, type=list
-            )
+            meta_saved = self.settings.value("metaImageSplitterSizes", meta_default, type=list)
             meta_sizes = [int(s) for s in meta_saved]
             self.main_window.metadata_image_splitter.setSizes(meta_sizes)
 
@@ -668,9 +653,7 @@ class MetadataDisplayManager:
         ]
 
         for box_attr, label_attr, default_label in box_configs:
-            content = self._get_box_content_with_label(
-                box_attr, label_attr, default_label
-            )
+            content = self._get_box_content_with_label(box_attr, label_attr, default_label)
             if content:
                 text_parts.append(content)
 
@@ -678,9 +661,7 @@ class MetadataDisplayManager:
         separator = "\n\n" + "═" * 20 + "\n\n"
         return separator.join(text_parts)
 
-    def _get_box_content_with_label(
-        self, box_attr: str, label_attr: str, default_label: str
-    ) -> str | None:
+    def _get_box_content_with_label(self, box_attr: str, label_attr: str, default_label: str) -> str | None:
         """Get formatted content from a text box with its label."""
         if not hasattr(self.main_window, box_attr):
             return None
@@ -706,9 +687,7 @@ class MetadataDisplayManager:
 
         return f"{label_text}:\n{content}"
 
-    def format_metadata_section(
-        self, metadata_dict: dict[str, Any], section_enum: Any
-    ) -> str:
+    def format_metadata_section(self, metadata_dict: dict[str, Any], section_enum: Any) -> str:
         """Format a specific metadata section for display.
 
         Args:
@@ -735,11 +714,7 @@ class MetadataDisplayManager:
             for key, value in sorted(data.items()):
                 if value is not None:
                     if isinstance(value, dict):
-                        nested_parts = [
-                            f"  {k}: {v}"
-                            for k, v in sorted(value.items())
-                            if v is not None
-                        ]
+                        nested_parts = [f"  {k}: {v}" for k, v in sorted(value.items()) if v is not None]
                         if nested_parts:
                             parts.append(f"{key}:")
                             parts.extend(nested_parts)

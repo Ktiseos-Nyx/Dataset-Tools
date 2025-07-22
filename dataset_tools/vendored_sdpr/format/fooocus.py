@@ -41,9 +41,7 @@ class Fooocus(BaseFormat):
         self._logger.debug("Attempting to parse using %s logic.", self.tool)
 
         if not self._info or not isinstance(self._info, dict):
-            self._logger.warning(
-                "%s: Info data (parsed JSON) is empty or not a dictionary.", self.tool
-            )
+            self._logger.warning("%s: Info data (parsed JSON) is empty or not a dictionary.", self.tool)
             self.status = self.Status.FORMAT_ERROR
             self._error = "Fooocus metadata (info dict) is missing or invalid."
             return
@@ -58,14 +56,10 @@ class Fooocus(BaseFormat):
             handled_keys_for_settings = {"prompt", "negative_prompt"}
 
             # --- Populate Standard Parameters ---
-            self._populate_parameters_from_map(
-                data_json, FOOOCUS_PARAM_MAP, handled_keys_for_settings
-            )
+            self._populate_parameters_from_map(data_json, FOOOCUS_PARAM_MAP, handled_keys_for_settings)
 
             # --- Handle Dimensions ---
-            self._extract_and_set_dimensions(
-                data_json, "width", "height", handled_keys_for_settings
-            )
+            self._extract_and_set_dimensions(data_json, "width", "height", handled_keys_for_settings)
 
             # --- Build Settings String ---
             # Original code included all *other* keys from data_json in the settings string.

@@ -12,6 +12,7 @@ This module extends the base ThemeManager to support:
 - unreal-stylesheet theming
 """
 
+import re
 from pathlib import Path
 
 from PyQt6 import QtGui
@@ -62,6 +63,8 @@ class EnhancedThemeManager:
         "qt_material": "Material Design",
         "qt_themes": "Color Palettes",
         "unreal": "Unreal Style",
+        "GTRONICK_QSS": "GTRONICK's Themes",
+        "KTISEOS_NYX_THEMES": "Ktiseos Nyx's Themes",
         "custom_qss": "Custom Themes",
     }
 
@@ -122,28 +125,53 @@ class EnhancedThemeManager:
 
         # qt-material themes
         if QT_MATERIAL_AVAILABLE:
-            themes["qt_material"] = list_themes()
+            themes["qt_material"] = sorted(list_themes(), key=self._natural_sort_key)
 
         # qt-themes color palettes
         if QT_THEMES_AVAILABLE:
-            themes["qt_themes"] = self.QT_THEMES_PALETTES.copy()
+            themes["qt_themes"] = sorted(self.QT_THEMES_PALETTES.copy(), key=self._natural_sort_key)
 
         # Unreal stylesheet
         if UNREAL_STYLESHEET_AVAILABLE:
             themes["unreal"] = ["unreal_engine_5"]
 
-        # Custom QSS themes
-        themes["custom_qss"] = self._load_custom_qss_themes()
+        # Custom QSS themes from subfolders
+        custom_themes = self._load_custom_qss_themes_from_subfolders()
+
+        # Filter KTISEOS_NYX_THEMES based on chaos unlock status
+        if "KTISEOS_NYX_THEMES" in custom_themes:
+            chaos_unlocked = self.settings.value("chaosCollection/unlocked", False, type=bool)
+            if not chaos_unlocked:
+                # Remove 'moms_2am_' themes if not unlocked
+                custom_themes["KTISEOS_NYX_THEMES"] = [
+                    theme for theme in custom_themes["KTISEOS_NYX_THEMES"] if not theme.startswith("moms_2am_")
+                ]
+                if not custom_themes["KTISEOS_NYX_THEMES"]:
+                    del custom_themes["KTISEOS_NYX_THEMES"]
+
+        themes.update(custom_themes)
 
         return themes
 
-    def _load_custom_qss_themes(self) -> list[str]:
-        """Load custom QSS themes from the 'themes' directory."""
-        custom_themes = []
+    def _natural_sort_key(self, s: str) -> list[str]:
+        """Create a sort key for natural sorting (handles numbers in strings)."""
+        return [int(text) if text.isdigit() else text.lower() for text in re.split(r"([0-9]+)", s)]
+
+    def _load_custom_qss_themes_from_subfolders(self) -> dict[str, list[str]]:
+        """Load custom QSS themes from subdirectories in the 'themes' directory."""
+        custom_themes = {}
         themes_dir = Path(__file__).parent.parent / "themes"
-        if themes_dir.exists():
-            for qss_file in themes_dir.glob("*.qss"):
-                custom_themes.append(qss_file.stem)
+        if themes_dir.exists() and themes_dir.is_dir():
+            for sub_dir in themes_dir.iterdir():
+                if sub_dir.is_dir():
+                    category_name = sub_dir.name
+                    qss_files = [qss_file.stem for qss_file in sub_dir.glob("*.qss")]
+                    if qss_files:
+                        custom_themes[category_name] = sorted(qss_files, key=str.lower)
+            # also load any loose qss files
+            loose_qss_files = [qss_file.stem for qss_file in themes_dir.glob("*.qss")]
+            if loose_qss_files:
+                custom_themes["custom_qss"] = sorted(loose_qss_files, key=str.lower)
         return custom_themes
 
     def _validate_asset_support(self, assets_dir: Path) -> dict[str, bool]:
@@ -205,8 +233,8 @@ class EnhancedThemeManager:
         elif category == "unreal" and UNREAL_STYLESHEET_AVAILABLE:
             success = self._apply_unreal_theme(app)
 
-        elif category == "custom_qss":
-            success = self._apply_custom_qss_theme(name, app)
+        elif category in self.THEME_CATEGORIES:
+            success = self._apply_custom_qss_theme(theme_id, app)
 
         if success:
             self.current_theme = theme_id
@@ -219,17 +247,11 @@ class EnhancedThemeManager:
             if not initial_load:
                 self.settings.setValue("enhanced_theme", theme_id)
 
-            action_text = (
-                "Initial theme loaded" if initial_load else "Theme applied and saved"
-            )
+            action_text = "Initial theme loaded" if initial_load else "Theme applied and saved"
             nfo("%s: %s", action_text, theme_id)
 
             # Re-apply fonts after theme to ensure they don't get overridden
-            if (
-                not initial_load
-                and hasattr(self, "main_window")
-                and hasattr(self.main_window, "apply_global_font")
-            ):
+            if not initial_load and hasattr(self, "main_window") and hasattr(self.main_window, "apply_global_font"):
                 # Use a timer to delay font application slightly to ensure theme is fully applied first
                 from PyQt6.QtCore import QTimer
 
@@ -267,11 +289,22 @@ class EnhancedThemeManager:
             nfo("Error applying qt-themes palette %s: %s", palette_name, e)
             return False
 
-    def _apply_custom_qss_theme(self, theme_name: str, app: QApplication) -> bool:
+    def _apply_custom_qss_theme(self, theme_id: str, app: QApplication) -> bool:
         """Apply a custom QSS theme from the 'themes' directory."""
         try:
+            category, theme_name = theme_id.split(":", 1)
+        except ValueError:
+            # for backward compatibility with old theme saving
+            category = "custom_qss"
+            theme_name = theme_id
+
+        try:
             themes_dir = Path(__file__).parent.parent / "themes"
-            qss_file = themes_dir / f"{theme_name}.qss"
+            # Look for the theme in its category sub-directory
+            qss_file = themes_dir / category / f"{theme_name}.qss"
+            if not qss_file.exists():
+                # Fallback for loose files
+                qss_file = themes_dir / f"{theme_name}.qss"
 
             if not qss_file.exists():
                 nfo("Custom QSS theme file not found: %s", qss_file)
@@ -299,7 +332,9 @@ class EnhancedThemeManager:
                             import urllib.request
 
                             nfo(f"Downloading GitHub asset: {github_url}")
-                            urllib.request.urlretrieve(github_url, cached_file)  # noqa: S310
+                            urllib.request.urlretrieve(
+                                github_url, cached_file
+                            )  # URL scheme is validated to be GitHub, which is trusted for asset downloads.
                             nfo(f"Cached asset: {cached_file}")
                         except Exception as e:
                             nfo(f"Failed to download asset {github_url}: {e}")
@@ -339,12 +374,8 @@ class EnhancedThemeManager:
                     return match.group(0)
 
                 # Replace local asset URLs
-                stylesheet = re.sub(
-                    r'url\("(assets/[^"]+)"\)', replace_asset_url_enhanced, stylesheet
-                )
-                stylesheet = re.sub(
-                    r"url\('(assets/[^']+)'\)", replace_asset_url_enhanced, stylesheet
-                )
+                stylesheet = re.sub(r'url\("(assets/[^"]+)"\)', replace_asset_url_enhanced, stylesheet)
+                stylesheet = re.sub(r"url\('(assets/[^']+)'\)", replace_asset_url_enhanced, stylesheet)
 
             nfo(f"Processed custom QSS theme: {theme_name}, asset replacements applied")
 
@@ -407,6 +438,14 @@ class EnhancedThemeManager:
 
     def create_theme_menus(self, parent_menu: Qw.QMenu) -> None:
         """Create organized theme menus."""
+        self._populate_theme_menus(parent_menu)
+
+    def _populate_theme_menus(self, parent_menu: Qw.QMenu) -> None:
+        """Helper to populate theme menus, allowing refresh."""
+        # Clear existing actions to repopulate
+        parent_menu.clear()
+        self.theme_actions.clear()
+
         available_themes = self.get_available_themes()
 
         if not available_themes:
@@ -447,6 +486,20 @@ class EnhancedThemeManager:
             theme_id = action.data()
             if theme_id:
                 self.apply_theme(theme_id)
+
+    def refresh_theme_categories(self) -> None:
+        """Refreshes the theme menus, typically after a setting change (e.g., unlock)."""
+        if hasattr(self.main_window, "menu_manager"):
+            # Assuming menu_manager has a reference to the themes menu
+            # This might need adjustment based on actual menu structure
+            theme_menu = self.main_window.menu_manager.themes_menu  # Assuming this attribute exists
+            if theme_menu:
+                self._populate_theme_menus(theme_menu)
+                nfo("Theme menus refreshed.")
+            else:
+                nfo("Could not find themes menu to refresh.")
+        else:
+            nfo("Menu manager not available to refresh themes.")
 
     def get_theme_info(self) -> dict[str, any]:
         """Get information about available theme systems."""
@@ -499,8 +552,11 @@ class EnhancedThemeManager:
 
 
 # Convenience functions for backward compatibility
-def get_enhanced_theme_manager(
-    main_window: Qw.QMainWindow, settings: QSettings
-) -> EnhancedThemeManager:
+def get_enhanced_theme_manager(main_window: Qw.QMainWindow, settings: QSettings) -> EnhancedThemeManager:
     """Get an enhanced theme manager instance."""
     return EnhancedThemeManager(main_window, settings)
+
+
+def get_theme_manager(main_window: Qw.QMainWindow, settings: QSettings) -> EnhancedThemeManager:
+    """Alias for get_enhanced_theme_manager."""
+    return get_enhanced_theme_manager(main_window, settings)

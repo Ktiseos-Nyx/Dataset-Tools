@@ -1,0 +1,58 @@
+/* ANTIBIOTICS THEME */
+/* A sterile theme with whites, blues, and sickly yellows, evoking the feeling of medicine. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F0F8FF, stop: 0.3 #ADD8E6,
+                                stop: 0.7 #FFFACD, stop: 1 #F0F8FF);
+    color: #4682B4;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F0F8FF, stop: 0.3 #ADD8E6,
+                                stop: 0.7 #FFFACD, stop: 1 #F0F8FF);
+    color: #4682B4;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4682B4, stop: 1 #4169E1);
+    border: 2px solid #F0F8FF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4169E1, stop: 1 #4682B4);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #ADD8E6;
+    border-radius: 3px;
+    padding: 5px;
+    color: #4682B4;
+    selection-background-color: #4169E1;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #ADD8E6;
+    border-radius: 3px;
+    alternate-background-color: #F0F8FF;
+    color: #4682B4;
+}
+
+QListWidget::item:selected {
+    background: #4169E1;
+    color: #FFFFFF;
+}

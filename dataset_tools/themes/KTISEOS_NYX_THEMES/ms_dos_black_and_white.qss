@@ -1,0 +1,51 @@
+/* MS DOS BLACK AND WHITE THEME */
+/* A stark, high-contrast theme with only black and white, mimicking the old DOS interface. */
+
+QMainWindow {
+    background: #000000;
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: #000000;
+    color: #FFFFFF;
+    font-family: 'Fixedsys', 'Courier New', monospace;
+    font-size: 12px;
+}
+
+QPushButton {
+    background: #000000;
+    border: 1px solid #FFFFFF;
+    border-radius: 0px;
+    padding: 5px 10px;
+    color: #FFFFFF;
+}
+
+QPushButton:hover {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 1px solid #FFFFFF;
+    border-radius: 0px;
+    padding: 5px;
+    color: #FFFFFF;
+    selection-background-color: #FFFFFF;
+    selection-color: #000000;
+}
+
+QListWidget {
+    background: #000000;
+    border: 1px solid #FFFFFF;
+    border-radius: 0px;
+    alternate-background-color: #000000;
+    color: #FFFFFF;
+}
+
+QListWidget::item:selected {
+    background: #FFFFFF;
+    color: #000000;
+}

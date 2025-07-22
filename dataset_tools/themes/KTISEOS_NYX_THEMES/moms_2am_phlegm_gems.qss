@@ -1,0 +1,137 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Phlegm Gems"
+The finest specimen collection in glorious green
+Born from a 2:30 AM coughing fit revelation
+*/
+
+QWidget {
+    background-color: #9ACD32; /* Yellow-green base */
+    color: #2F4F2F; /* Dark olive text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #9ACD32, stop:0.3 #ADFF2F, stop:0.7 #32CD32, stop:1 #9ACD32);
+}
+
+QPushButton {
+    background-color: #FFD700; /* Golden "gems" */
+    color: #2F4F2F; /* Dark olive text */
+    border: 3px solid #ADFF2F; /* Bright lime border */
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+QPushButton:hover {
+    background-color: #FFED4E; /* Brighter gold hover */
+    border-color: #32CD32; /* Lime green border */
+    box-shadow: 0px 0px 10px #ADFF2F;
+}
+
+QPushButton:pressed {
+    background-color: #DAA520; /* Dark goldenrod press */
+    border-color: #228B22;
+}
+
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #F0FFF0; /* Honeydew background */
+    color: #006400; /* Dark green text */
+    border: 3px solid #7CFC00; /* Lawn green border */
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 13px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #FFD700; /* Gold focus */
+    background-color: #FFFACD; /* Lemon chiffon */
+    box-shadow: 0px 0px 8px #ADFF2F;
+}
+
+QTabWidget::pane {
+    background-color: #98FB98; /* Pale green */
+    border: 3px solid #32CD32;
+    border-radius: 8px;
+}
+
+QTabBar::tab {
+    background-color: #7CFC00; /* Lawn green */
+    color: #2F4F2F;
+    padding: 10px 20px;
+    margin: 3px;
+    border-radius: 8px 8px 0px 0px;
+    font-weight: bold;
+}
+
+QTabBar::tab:selected {
+    background-color: #FFD700; /* Golden selected */
+    color: #006400;
+    border: 2px solid #ADFF2F;
+}
+
+QScrollBar:vertical {
+    background-color: #7CFC00;
+    width: 18px;
+    border-radius: 9px;
+    border: 2px solid #32CD32;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #FFD700;
+    border-radius: 7px;
+    min-height: 25px;
+    border: 1px solid #ADFF2F;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #FFED4E;
+    box-shadow: 0px 0px 5px #32CD32;
+}
+
+QMenuBar {
+    background-color: #32CD32;
+    color: #2F4F2F;
+    border-bottom: 3px solid #228B22;
+    font-weight: bold;
+}
+
+QMenuBar::item:selected {
+    background-color: #FFD700;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+QMenu {
+    background-color: #98FB98;
+    color: #006400;
+    border: 3px solid #32CD32;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+QMenu::item:selected {
+    background-color: #FFD700;
+    color: #2F4F2F;
+    border-radius: 4px;
+}
+
+QStatusBar {
+    background-color: #32CD32;
+    color: #2F4F2F;
+    border-top: 3px solid #228B22;
+    font-weight: bold;
+}
+
+/* Special "gem" highlight effect */
+QLabel#gemLabel {
+    background-color: #FFD700;
+    color: #2F4F2F;
+    border: 2px solid #ADFF2F;
+    border-radius: 50%;
+    padding: 8px;
+    font-weight: bold;
+}

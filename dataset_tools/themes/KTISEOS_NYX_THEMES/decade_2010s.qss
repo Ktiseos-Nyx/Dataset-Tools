@@ -1,0 +1,55 @@
+/* 2010S THEME */
+/* A mix of flat design, minimalist aesthetics, and vibrant, often desaturated colors. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3498DB, stop: 0.3 #2ECC71,
+                                stop: 0.7 #F1C40F, stop: 1 #3498DB);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3498DB, stop: 0.3 #2ECC71,
+                                stop: 0.7 #F1C40F, stop: 1 #3498DB);
+    color: #FFFFFF;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #FFFFFF;
+    border: 2px solid #3498DB;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #3498DB;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #F0F0F0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #3498DB;
+    border-radius: 3px;
+    padding: 5px;
+    color: #2ECC71;
+    selection-background-color: #F1C40F;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #3498DB;
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #2ECC71;
+}
+
+QListWidget::item:selected {
+    background: #F1C40F;
+    color: #FFFFFF;
+}

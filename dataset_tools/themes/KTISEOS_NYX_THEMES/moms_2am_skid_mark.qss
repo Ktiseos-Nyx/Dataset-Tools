@@ -1,0 +1,123 @@
+/*
+ * Mom's 2AM Fever Dreams: Skid Mark Theme
+ *
+ * This theme celebrates the unfortunate, yet universally relatable, underwear mishap.
+ * Embrace the brown streaks and questionable textures.
+ *
+ * Legal Disclaimer: We are not responsible for any laundry-related trauma induced by this theme.
+ * Please consult a professional if you experience persistent brown-related anxieties.
+ */
+
+QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #8B4513, /* Saddle Brown - for that fresh skid */
+                               stop:0.5 #A0522D, /* Sienna - a slightly faded one */
+                               stop:1 #D2B48C); /* Tan - the clean part of the underwear */
+    color: #F5DEB3; /* Wheat - for contrast */
+}
+
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #8B4513, /* Saddle Brown */
+                               stop:0.5 #A0522D, /* Sienna */
+                               stop:1 #D2B48C); /* Tan */
+}
+
+QPushButton {
+    border: 3px solid #5C4033; /* Darker brown - elastic border */
+    border-radius: 15px 60px 25px 45px; /* Irregular, like a stretched elastic */
+    background-color: #A0522D; /* Sienna - the main stain color */
+    color: #FFFFFF; /* White - for the clean bits */
+    padding: 12px 25px;
+    font-size: 18px;
+    transform: rotate(-5deg); /* Slightly askew */
+}
+
+QPushButton:hover {
+    background-color: #654321; /* Darker brown - more intense stain */
+    border: 3px solid #2F1700; /* Almost black */
+    transform: rotate(-7deg) scale(1.03); /* More pronounced */
+}
+
+QPushButton:pressed {
+    background-color: #5C4033; /* Even darker */
+    border: 3px solid #1A0D00; /* Deepest brown */
+    transform: rotate(-3deg) scale(0.97); /* Squished */
+}
+
+/* Add more QSS elements as needed for a complete theme */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    border: 1px solid #A0522D; /* Sienna */
+    background-color: #F5DEB3; /* Wheat - clean paper */
+    color: #5C4033; /* Dark brown text */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #8B4513; /* Saddle Brown - focused on the stain */
+}
+
+QTabWidget::pane {
+    border-top: 2px solid #A0522D; /* Sienna */
+}
+
+QTabBar::tab {
+    background: #D2B48C; /* Tan */
+    border: 1px solid #A0522D; /* Sienna */
+    border-bottom-color: #A0522D; /* Same as pane */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 8px;
+}
+
+QTabBar::tab:selected {
+    background: #8B4513; /* Saddle Brown */
+    border-color: #8B4513;
+    border-bottom-color: #8B4513; /* Selected tab blends with pane */
+}
+
+QScrollBar:vertical {
+    border: 1px solid #A0522D;
+    background: #D2B48C;
+    width: 15px;
+    margin: 22px 0 22px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #8B4513;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QMenuBar {
+    background-color: #A0522D; /* Sienna */
+    color: #F5DEB3; /* Wheat */
+}
+
+QMenu {
+    background-color: #D2B48C; /* Tan */
+    border: 1px solid #A0522D;
+}
+
+QMenu::item:selected {
+    background-color: #8B4513; /* Saddle Brown */
+}
+
+QStatusBar {
+    background-color: #5C4033; /* Darker brown */
+    color: #FFFFFF;
+}
+
+/* Custom QLabel elements with theme-specific IDs */
+QLabel#skidMarkTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #5C4033; /* Darker brown */
+    text-align: center;
+}
+
+QLabel#skidMarkDescription {
+    font-size: 14px;
+    color: #8B4513; /* Saddle Brown */
+}

@@ -156,9 +156,7 @@ class FontManager:
         # Cache for resolved fonts
         self._font_cache = {}
 
-        nfo(
-            "FontManager initialized with %d available fonts", len(self.available_fonts)
-        )
+        nfo("FontManager initialized with %d available fonts", len(self.available_fonts))
 
     def _load_bundled_fonts(self) -> None:
         """Load bundled fonts from the fonts/ directory."""
@@ -180,9 +178,7 @@ class FontManager:
                     try:
                         font_id = QFontDatabase.addApplicationFont(str(font_path))
                         if font_id != -1:
-                            loaded_families = QFontDatabase.applicationFontFamilies(
-                                font_id
-                            )
+                            loaded_families = QFontDatabase.applicationFontFamilies(font_id)
                             if loaded_families:
                                 nfo(
                                     "Loaded bundled font: %s from %s",
@@ -262,21 +258,15 @@ class FontManager:
         nfo("Using system default font for %s", font_type)
         return font
 
-    def get_ui_font(
-        self, size: int = 9, weight: QFont.Weight = QFont.Weight.Normal
-    ) -> QFont:
+    def get_ui_font(self, size: int = 9, weight: QFont.Weight = QFont.Weight.Normal) -> QFont:
         """Get the best UI font."""
         return self.get_best_font("ui", size, weight)
 
-    def get_monospace_font(
-        self, size: int = 9, weight: QFont.Weight = QFont.Weight.Normal
-    ) -> QFont:
+    def get_monospace_font(self, size: int = 9, weight: QFont.Weight = QFont.Weight.Normal) -> QFont:
         """Get the best monospace font."""
         return self.get_best_font("monospace", size, weight)
 
-    def get_reading_font(
-        self, size: int = 10, weight: QFont.Weight = QFont.Weight.Normal
-    ) -> QFont:
+    def get_reading_font(self, size: int = 10, weight: QFont.Weight = QFont.Weight.Normal) -> QFont:
         """Get the best reading font."""
         return self.get_best_font("reading", size, weight)
 
@@ -401,17 +391,13 @@ def get_ui_font(size: int = 9, weight: QFont.Weight = QFont.Weight.Normal) -> QF
     return manager.get_ui_font(size, weight)
 
 
-def get_monospace_font(
-    size: int = 9, weight: QFont.Weight = QFont.Weight.Normal
-) -> QFont:
+def get_monospace_font(size: int = 9, weight: QFont.Weight = QFont.Weight.Normal) -> QFont:
     """Get the best monospace font."""
     manager = get_font_manager()
     return manager.get_monospace_font(size, weight)
 
 
-def get_reading_font(
-    size: int = 10, weight: QFont.Weight = QFont.Weight.Normal
-) -> QFont:
+def get_reading_font(size: int = 10, weight: QFont.Weight = QFont.Weight.Normal) -> QFont:
     """Get the best reading font."""
     manager = get_font_manager()
     return manager.get_reading_font(size, weight)

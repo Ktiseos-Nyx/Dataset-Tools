@@ -1,0 +1,52 @@
+/* CHATGPT THEME */
+/* A clean, minimalist theme with dark grays, whites, and a subtle green accent. */
+
+QMainWindow {
+    background: #343541; /* Dark Gray */
+    color: #D1D5DB; /* Light Gray */
+    border: none;
+}
+
+QWidget {
+    background: #343541; /* Dark Gray */
+    color: #D1D5DB; /* Light Gray */
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #10A37F; /* Green */
+    border: 2px solid #D1D5DB; /* Light Gray */
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #0E8C6F; /* Darker Green */
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #444654; /* Medium Gray */
+    border: 2px solid #10A37F; /* Green */
+    border-radius: 3px;
+    padding: 5px;
+    color: #D1D5DB; /* Light Gray */
+    selection-background-color: #10A37F; /* Green */
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #444654; /* Medium Gray */
+    border: 2px solid #10A37F; /* Green */
+    border-radius: 3px;
+    alternate-background-color: #343541; /* Dark Gray */
+    color: #D1D5DB; /* Light Gray */
+}
+
+QListWidget::item:selected {
+    background: #10A37F; /* Green */
+    color: #FFFFFF;
+}

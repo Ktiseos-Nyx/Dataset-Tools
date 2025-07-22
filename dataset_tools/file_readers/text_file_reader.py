@@ -99,9 +99,7 @@ class TextFileReader:
                 continue
 
         # If all encodings failed
-        nfo(
-            f"[TextReader] Failed to decode {Path(file_path).name} with any supported encoding"
-        )
+        nfo(f"[TextReader] Failed to decode {Path(file_path).name} with any supported encoding")
         return None
 
     def _read_with_encoding(self, file_path: str, encoding: str) -> str | None:
@@ -213,18 +211,13 @@ class TextFileReader:
             return "markdown"
 
         # Check for code-like content
-        if any(
-            lang in content_lower
-            for lang in ["import ", "def ", "function ", "var ", "const "]
-        ):
+        if any(lang in content_lower for lang in ["import ", "def ", "function ", "var ", "const "]):
             return "code"
 
         # Check for configuration-like content
         if "=" in content and "\n" in content:
             lines = content.split("\n")
-            config_lines = sum(
-                1 for line in lines if "=" in line and not line.strip().startswith("#")
-            )
+            config_lines = sum(1 for line in lines if "=" in line and not line.strip().startswith("#"))
             if config_lines > len(lines) * 0.3:  # 30% of lines look like config
                 return "configuration"
 
@@ -269,9 +262,7 @@ class TextFileReader:
             "concept art",
         ]
 
-        weak_count = sum(
-            1 for indicator in weak_indicators if indicator in content_lower
-        )
+        weak_count = sum(1 for indicator in weak_indicators if indicator in content_lower)
         return weak_count >= 3  # Need at least 3 weak indicators
 
     def _has_metadata_markers(self, content: str) -> bool:
@@ -356,15 +347,9 @@ class TextContentAnalyzer:
 
             # Analyze positive prompt
             if analysis["positive_prompt"]:
-                analysis["style_tags"] = self._extract_style_tags(
-                    analysis["positive_prompt"]
-                )
-                analysis["quality_tags"] = self._extract_quality_tags(
-                    analysis["positive_prompt"]
-                )
-                analysis["subject_tags"] = self._extract_subject_tags(
-                    analysis["positive_prompt"]
-                )
+                analysis["style_tags"] = self._extract_style_tags(analysis["positive_prompt"])
+                analysis["quality_tags"] = self._extract_quality_tags(analysis["positive_prompt"])
+                analysis["subject_tags"] = self._extract_subject_tags(analysis["positive_prompt"])
 
             # Count tags
             analysis["total_tags"] = len(analysis["positive_prompt"].split(","))
@@ -404,9 +389,7 @@ class TextContentAnalyzer:
             sections["positive_prompt"] = content[:pos_end].strip()
         else:
             # Look for parameter section to find end of positive prompt
-            param_match = re.search(
-                r"\n(?:steps:|sampler:|cfg scale:|seed:|model:)", content, re.IGNORECASE
-            )
+            param_match = re.search(r"\n(?:steps:|sampler:|cfg scale:|seed:|model:)", content, re.IGNORECASE)
             if param_match:
                 sections["positive_prompt"] = content[: param_match.start()].strip()
             else:
@@ -643,9 +626,7 @@ class PromptFileReader:
             positive = analysis.get("positive_prompt", "")
             if positive:
                 # Take first 100 characters
-                summary["preview"] = (
-                    positive[:100] + "..." if len(positive) > 100 else positive
-                )
+                summary["preview"] = positive[:100] + "..." if len(positive) > 100 else positive
 
         return summary
 
@@ -729,9 +710,7 @@ Steps: 20, Sampler: Euler a, CFG scale: 7, Seed: 12345, Model: animefull-final-p
         if text_result:
             logger.info("Basic text reading successful")
             logger.info(f"Detected content type: {text_result.get('content_type')}")
-            logger.info(
-                f"Appears to be prompt: {text_result.get('appears_to_be_prompt')}"
-            )
+            logger.info(f"Appears to be prompt: {text_result.get('appears_to_be_prompt')}")
             logger.info(f"Character count: {text_result.get('character_count')}")
             logger.info(f"Word count: {text_result.get('word_count')}")
 

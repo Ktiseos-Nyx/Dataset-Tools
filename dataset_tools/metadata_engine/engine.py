@@ -125,9 +125,7 @@ class MetadataEngine:
         """
         self.parser_definitions_path = Path(parser_definitions_path)
         self.logger = logger_obj or get_logger("MetadataEngine")
-        print(
-            f"[DEBUG] MetadataEngine: __init__ called, logger type: {type(self.logger)}"
-        )
+        self.logger.debug(f"MetadataEngine: __init__ called, logger type: {type(self.logger)}")
 
         # Initialize components
         self.context_preparer = ContextDataPreparer(self.logger)
@@ -145,9 +143,7 @@ class MetadataEngine:
             f"parser definitions from {self.parser_definitions_path}"
         )
 
-    def get_parser_for_file(
-        self, file_input: FileInput
-    ) -> dict[str, Any] | BaseFormat | None:
+    def get_parser_for_file(self, file_input: FileInput) -> dict[str, Any] | BaseFormat | None:
         """Get the appropriate parser result for a file.
 
         Args:
@@ -158,44 +154,36 @@ class MetadataEngine:
 
         """
         try:
-            print(
-                f"[DEBUG] get_parser_for_file called with: {file_input}, type: {type(file_input)}"
-            )
+            self.logger.debug(f"get_parser_for_file called with: {file_input}, type: {type(file_input)}")
             display_name = getattr(file_input, "name", str(file_input))
-            print(f"[DEBUG] display_name: {display_name}")
-            self.logger.info(
-                f"MetadataEngine: Starting metadata parsing for: {display_name}"
-            )
-            print("[DEBUG] Logger info call completed")
+            self.logger.debug(f"display_name: {display_name}")
+            self.logger.info(f"MetadataEngine: Starting metadata parsing for: {display_name}")
+            self.logger.debug("Logger info call completed")
         except Exception as e:
-            print(f"[DEBUG] Exception in get_parser_for_file start: {e}")
+            self.logger.debug(f"Exception in get_parser_for_file start: {e}")
             self.logger.error(f"MetadataEngine: Exception at very start: {e}")
             return None
 
         # Prepare context data
-        print("[DEBUG] About to call context_preparer.prepare_context")
+        self.logger.debug("About to call context_preparer.prepare_context")
         context_data = self.context_preparer.prepare_context(file_input)
-        print(
-            f"[DEBUG] prepare_context returned: {type(context_data)} - {bool(context_data)}"
-        )
+        self.logger.debug(f"prepare_context returned: {type(context_data)} - {bool(context_data)}")
         if not context_data:
-            print("[DEBUG] Context data is None/empty, returning None")
+            self.logger.debug("Context data is None/empty, returning None")
             self.logger.warning(f"Failed to prepare context data for {display_name}")
             return None
 
-        print("[DEBUG] Context data looks good, continuing to find matching parser")
-        print(f"[DEBUG] Context data keys: {list(context_data.keys())}")
-        print(
-            f"[DEBUG] raw_user_comment_str: {context_data.get('raw_user_comment_str', 'NOT_FOUND')[:100] if context_data.get('raw_user_comment_str') else 'EMPTY'}"
+        self.logger.debug("Context data looks good, continuing to find matching parser")
+        self.logger.debug(f"Context data keys: {list(context_data.keys())}")
+        self.logger.debug(
+            f"raw_user_comment_str: {context_data.get('raw_user_comment_str', 'NOT_FOUND')[:100] if context_data.get('raw_user_comment_str') else 'EMPTY'}"
         )
 
         # Find matching parser definition
         chosen_parser_def = self._find_matching_parser(context_data)
-        print(f"[DEBUG] _find_matching_parser returned: {chosen_parser_def}")
+        self.logger.debug(f"_find_matching_parser returned: {chosen_parser_def}")
         if not chosen_parser_def:
-            self.logger.info(
-                f"No suitable parser definition matched for {display_name}"
-            )
+            self.logger.info(f"No suitable parser definition matched for {display_name}")
             return None
 
         parser_name = chosen_parser_def["parser_name"]
@@ -206,9 +194,7 @@ class MetadataEngine:
             return self._process_json_instructions(chosen_parser_def, context_data)
         if "base_format_class" in chosen_parser_def:
             return self._process_python_class(chosen_parser_def, context_data)
-        self.logger.error(
-            f"Parser definition '{parser_name}' has neither instructions nor class"
-        )
+        self.logger.error(f"Parser definition '{parser_name}' has neither instructions nor class")
         return None
 
     def _load_parser_definitions(self) -> list[ParserDefinition]:
@@ -216,9 +202,7 @@ class MetadataEngine:
         definitions = []
 
         if not self.parser_definitions_path.is_dir():
-            self.logger.error(
-                f"Parser definitions path is not a directory: {self.parser_definitions_path}"
-            )
+            self.logger.error(f"Parser definitions path is not a directory: {self.parser_definitions_path}")
             return definitions
 
         for filepath in self.parser_definitions_path.glob("*.json"):
@@ -232,9 +216,7 @@ class MetadataEngine:
                     definitions.append(definition)
                     self.logger.debug(f"Loaded parser: {definition['parser_name']}")
                 else:
-                    self.logger.warning(
-                        f"Skipping invalid parser definition (missing parser_name): {filepath.name}"
-                    )
+                    self.logger.warning(f"Skipping invalid parser definition (missing parser_name): {filepath.name}")
 
             except json.JSONDecodeError as e:
                 self.logger.error(f"Failed to decode JSON from {filepath.name}: {e}")
@@ -245,13 +227,9 @@ class MetadataEngine:
 
     def _sort_definitions_by_priority(self) -> list[ParserDefinition]:
         """Sort parser definitions by priority (highest first)."""
-        return sorted(
-            self.parser_definitions, key=lambda p: p.get("priority", 0), reverse=True
-        )
+        return sorted(self.parser_definitions, key=lambda p: p.get("priority", 0), reverse=True)
 
-    def _find_matching_parser(
-        self, context_data: ContextData
-    ) -> ParserDefinition | None:
+    def _find_matching_parser(self, context_data: ContextData) -> ParserDefinition | None:
         """Find the first parser definition that matches the context data.
 
         Args:
@@ -267,9 +245,7 @@ class MetadataEngine:
 
         return None
 
-    def _parser_matches_context(
-        self, parser_def: ParserDefinition, context_data: ContextData
-    ) -> bool:
+    def _parser_matches_context(self, parser_def: ParserDefinition, context_data: ContextData) -> bool:
         """Check if a parser definition matches the context data.
 
         Args:
@@ -285,14 +261,10 @@ class MetadataEngine:
             return False
 
         # Check detection rules
-        self.logger.debug(
-            f"Evaluating detection rules for parser: {parser_def['parser_name']}"
-        )
+        self.logger.debug(f"Evaluating detection rules for parser: {parser_def['parser_name']}")
         return self._check_detection_rules(parser_def, context_data)
 
-    def _check_file_type_match(
-        self, parser_def: ParserDefinition, context_data: ContextData
-    ) -> bool:
+    def _check_file_type_match(self, parser_def: ParserDefinition, context_data: ContextData) -> bool:
         """Check if file type matches parser target types."""
         parser_name = parser_def["parser_name"]
         target_types_cfg = parser_def.get("target_file_types", ["*"])
@@ -305,9 +277,7 @@ class MetadataEngine:
 
         self.logger.debug(f"  Checking file type for parser: {parser_name}")
         self.logger.debug(f"    Parser target types: {target_types}")
-        self.logger.debug(
-            f"    Current file format: {current_file_format}, extension: {current_file_ext}"
-        )
+        self.logger.debug(f"    Current file format: {current_file_format}, extension: {current_file_ext}")
 
         match = (
             "*" in target_types
@@ -317,35 +287,25 @@ class MetadataEngine:
         self.logger.debug(f"    File type match result for {parser_name}: {match}")
         return match
 
-    def _check_detection_rules(
-        self, parser_def: ParserDefinition, context_data: ContextData
-    ) -> bool:
+    def _check_detection_rules(self, parser_def: ParserDefinition, context_data: ContextData) -> bool:
         """Check if detection rules pass for this parser."""
         detection_rules = parser_def.get("detection_rules", [])
 
         # No rules means match (file type was already checked)
         if not detection_rules:
-            self.logger.debug(
-                f"No detection rules for {parser_def['parser_name']}, matching."
-            )
+            self.logger.debug(f"No detection rules for {parser_def['parser_name']}, matching.")
             return True
 
         # All rules must pass
         for rule in detection_rules:
             rule_comment = rule.get("comment", "Unnamed Rule")
             rule_passed = self.rule_engine.evaluate_rule(rule, context_data)
-            self.logger.debug(
-                f"  Rule '{rule_comment}' for {parser_def['parser_name']} evaluated to: {rule_passed}"
-            )
+            self.logger.debug(f"  Rule '{rule_comment}' for {parser_def['parser_name']} evaluated to: {rule_passed}")
             if not rule_passed:
-                self.logger.debug(
-                    f"Rule failed for {parser_def['parser_name']}: {rule.get('comment', rule)}"
-                )
+                self.logger.debug(f"Rule failed for {parser_def['parser_name']}: {rule.get('comment', rule)}")
                 return False
 
-        self.logger.debug(
-            f"All detection rules passed for parser: {parser_def['parser_name']}"
-        )
+        self.logger.debug(f"All detection rules passed for parser: {parser_def['parser_name']}")
         return True
 
     def _process_json_instructions(
@@ -367,31 +327,23 @@ class MetadataEngine:
         self.logger.info(f"Using JSON-defined parsing instructions for {parser_name}")
 
         # Prepare input data
-        input_data, original_input = self._prepare_input_data(
-            instructions, context_data
-        )
+        input_data, original_input = self._prepare_input_data(instructions, context_data)
         if input_data is None:
             self.logger.warning(f"No input data found for {parser_name}")
             return None
 
         # Transform input data if needed
-        transformed_data = self._transform_input_data(
-            input_data, instructions, original_input
-        )
+        transformed_data = self._transform_input_data(input_data, instructions, original_input)
 
         # Extract fields
-        extracted_fields = self._extract_fields(
-            instructions, transformed_data, context_data
-        )
+        extracted_fields = self._extract_fields(instructions, transformed_data, context_data)
 
         # Process output template
         return self._process_output_template(
             parser_def, extracted_fields, context_data, original_input, transformed_data
         )
 
-    def _prepare_input_data(
-        self, instructions: dict[str, Any], context_data: ContextData
-    ) -> tuple[Any, Any]:
+    def _prepare_input_data(self, instructions: dict[str, Any], context_data: ContextData) -> tuple[Any, Any]:
         """Prepare input data based on instruction configuration.
 
         Returns:
@@ -413,9 +365,7 @@ class MetadataEngine:
 
         return None, None
 
-    def _get_data_from_source(
-        self, source_def: dict[str, Any], context_data: ContextData
-    ) -> Any:
+    def _get_data_from_source(self, source_def: dict[str, Any], context_data: ContextData) -> Any:
         """Get data from a specific source definition."""
         source_type = source_def.get("source_type")
         source_key = source_def.get("source_key")
@@ -425,18 +375,10 @@ class MetadataEngine:
             "exif_user_comment": lambda: context_data.get("raw_user_comment_str"),
             "xmp_string_content": lambda: context_data.get("xmp_string"),
             "file_content_raw_text": lambda: context_data.get("raw_file_content_text"),
-            "raw_file_content_text": lambda: context_data.get(
-                "raw_file_content_text"
-            ),  # Add alias
-            "file_content_json_object": lambda: context_data.get(
-                "parsed_root_json_object"
-            ),
-            "parsed_root_json_object": lambda: context_data.get(
-                "parsed_root_json_object"
-            ),  # Add alias
-            "direct_context_key": lambda: context_data.get(
-                source_key
-            ),  # Add direct context access
+            "raw_file_content_text": lambda: context_data.get("raw_file_content_text"),  # Add alias
+            "file_content_json_object": lambda: context_data.get("parsed_root_json_object"),
+            "parsed_root_json_object": lambda: context_data.get("parsed_root_json_object"),  # Add alias
+            "direct_context_key": lambda: context_data.get(source_key),  # Add direct context access
             "png_chunk": lambda: context_data.get("png_chunks", {}).get(source_key),
             "exif_field": lambda: context_data.get("exif_data", {}).get(source_key),
         }
@@ -447,9 +389,7 @@ class MetadataEngine:
         self.logger.warning(f"Unknown source type: {source_type}")
         return None
 
-    def _transform_input_data(
-        self, input_data: Any, instructions: dict[str, Any], original_input: Any
-    ) -> Any:
+    def _transform_input_data(self, input_data: Any, instructions: dict[str, Any], original_input: Any) -> Any:
         """Apply transformations to input data."""
         transformations = instructions.get("input_data", {}).get("transformations", [])
         current_data = input_data
@@ -479,10 +419,7 @@ class MetadataEngine:
                 self.logger.debug("Failed to decode JSON in transformation")
                 return None
 
-        elif (
-            transform_type == "conditional_json_unwrap_parameters_string"
-            and isinstance(data, str)
-        ):
+        elif transform_type == "conditional_json_unwrap_parameters_string" and isinstance(data, str):
             try:
                 potential_wrapper = json.loads(data)
                 if (
@@ -504,9 +441,7 @@ class MetadataEngine:
             # Filter out non-dict values to keep only node data for ComfyUI workflows
             return {k: v for k, v in data.items() if isinstance(v, dict)}
 
-        elif transform_type == "extract_json_from_xmp_user_comment" and isinstance(
-            data, str
-        ):
+        elif transform_type == "extract_json_from_xmp_user_comment" and isinstance(data, str):
             # Extract JSON from XMP exif:UserComment element (for Draw Things)
             try:
                 from defusedxml.minidom import parseString  # type: ignore
@@ -526,8 +461,7 @@ class MetadataEngine:
                         if (
                             li_nodes
                             and li_nodes[0].childNodes
-                            and li_nodes[0].childNodes[0].nodeType
-                            == li_nodes[0].TEXT_NODE
+                            and li_nodes[0].childNodes[0].nodeType == li_nodes[0].TEXT_NODE
                         ):
                             return li_nodes[0].childNodes[0].data.strip()
                 return None
@@ -550,9 +484,7 @@ class MetadataEngine:
                 continue
 
             # Extract the field value
-            value = self.field_extractor.extract_field(
-                field_def, input_data, context_data, extracted_fields
-            )
+            value = self.field_extractor.extract_field(field_def, input_data, context_data, extracted_fields)
 
             # Store in cache for variable references
             cache_key = target_key_path.replace(".", "_VAR_")
@@ -594,31 +526,19 @@ class MetadataEngine:
         """Process the output template with extracted data."""
         # Get template from instructions or parser definition
         instructions = parser_def.get("parsing_instructions", {})
-        output_template = instructions.get("output_template") or parser_def.get(
-            "output_template"
-        )
+        output_template = instructions.get("output_template") or parser_def.get("output_template")
 
         if not output_template:
-            self.logger.debug(
-                "No output template found, returning raw extracted fields"
-            )
+            self.logger.debug("No output template found, returning raw extracted fields")
             # Return fields without variable cache keys
             return {
-                k: v
-                for k, v in extracted_fields.items()
-                if "_VAR_" not in k and k != "_input_data_object_for_template"
+                k: v for k, v in extracted_fields.items() if "_VAR_" not in k and k != "_input_data_object_for_template"
             }
 
         # Prepare data for template processing
-        original_input_str = (
-            str(original_input)
-            if isinstance(original_input, (str, int, float, bool))
-            else None
-        )
+        original_input_str = str(original_input) if isinstance(original_input, (str, int, float, bool)) else None
 
-        input_json_object = (
-            transformed_data if isinstance(transformed_data, (dict, list)) else None
-        )
+        input_json_object = transformed_data if isinstance(transformed_data, (dict, list)) else None
 
         # Process template with variable substitution
         processed_template = self.template_processor.process_template(
@@ -639,13 +559,9 @@ class MetadataEngine:
                     params["height"] = context_data["height"]
 
         # Format the final output
-        return self.output_formatter.format_output(
-            processed_template, format_type="standard", cleanup_empty=True
-        )
+        return self.output_formatter.format_output(processed_template, format_type="standard", cleanup_empty=True)
 
-    def _process_python_class(
-        self, parser_def: ParserDefinition, context_data: ContextData
-    ) -> BaseFormat | None:
+    def _process_python_class(self, parser_def: ParserDefinition, context_data: ContextData) -> BaseFormat | None:
         """Process parser definition with Python class.
 
         Args:
@@ -659,16 +575,12 @@ class MetadataEngine:
         parser_name = parser_def["parser_name"]
         class_name = parser_def["base_format_class"]
 
-        self.logger.info(
-            f"Using Python class-based parser {class_name} for {parser_name}"
-        )
+        self.logger.info(f"Using Python class-based parser {class_name} for {parser_name}")
 
         # Get the parser class
         ParserClass = get_parser_class_by_name(class_name)
         if not ParserClass:
-            self.logger.error(
-                f"Python class '{class_name}' not found for {parser_name}"
-            )
+            self.logger.error(f"Python class '{class_name}' not found for {parser_name}")
             return None
 
         # Prepare raw input data for the parser
@@ -698,14 +610,10 @@ class MetadataEngine:
             return None
 
         except Exception as e:
-            self.logger.error(
-                f"Exception in Python parser {class_name}: {e}", exc_info=True
-            )
+            self.logger.error(f"Exception in Python parser {class_name}: {e}", exc_info=True)
             return None
 
-    def _prepare_raw_input_for_class(
-        self, parser_def: ParserDefinition, context_data: ContextData
-    ) -> str:
+    def _prepare_raw_input_for_class(self, parser_def: ParserDefinition, context_data: ContextData) -> str:
         """Prepare raw input string for Python class parser."""
         primary_data_def = parser_def.get("primary_data_source_for_raw", {})
         source_type = primary_data_def.get("source_type")
@@ -750,23 +658,17 @@ class MetadataEngineBuilder:
         self.logger = logger
         return self
 
-    def with_context_preparer(
-        self, preparer: ContextDataPreparer
-    ) -> "MetadataEngineBuilder":
+    def with_context_preparer(self, preparer: ContextDataPreparer) -> "MetadataEngineBuilder":
         """Set a custom context preparer."""
         self.custom_context_preparer = preparer
         return self
 
-    def with_field_extractor(
-        self, extractor: FieldExtractor
-    ) -> "MetadataEngineBuilder":
+    def with_field_extractor(self, extractor: FieldExtractor) -> "MetadataEngineBuilder":
         """Set a custom field extractor."""
         self.custom_field_extractor = extractor
         return self
 
-    def with_template_processor(
-        self, processor: TemplateProcessor
-    ) -> "MetadataEngineBuilder":
+    def with_template_processor(self, processor: TemplateProcessor) -> "MetadataEngineBuilder":
         """Set a custom template processor."""
         self.custom_template_processor = processor
         return self
@@ -805,9 +707,7 @@ class MetadataEngineManager:
         self.engines: dict[str, MetadataEngine] = {}
         self.default_engine: str | None = None
 
-    def register_engine(
-        self, name: str, engine: MetadataEngine, set_as_default: bool = False
-    ) -> None:
+    def register_engine(self, name: str, engine: MetadataEngine, set_as_default: bool = False) -> None:
         """Register a MetadataEngine instance.
 
         Args:
@@ -842,9 +742,7 @@ class MetadataEngineManager:
 
         return self.engines.get(name)
 
-    def parse_file(
-        self, file_input: FileInput, engine_name: str | None = None
-    ) -> dict[str, Any] | BaseFormat | None:
+    def parse_file(self, file_input: FileInput, engine_name: str | None = None) -> dict[str, Any] | BaseFormat | None:
         """Parse a file using the specified or default engine.
 
         Args:
@@ -981,10 +879,7 @@ def test_metadata_engine():
         # Test engine builder
         logger.info("Testing engine builder...")
         builder_engine = (
-            create_engine_builder()
-            .with_parser_definitions(test_definitions_path)
-            .with_logger(logger)
-            .build()
+            create_engine_builder().with_parser_definitions(test_definitions_path).with_logger(logger).build()
         )
 
         builder_result = builder_engine.get_parser_for_file(test_file)

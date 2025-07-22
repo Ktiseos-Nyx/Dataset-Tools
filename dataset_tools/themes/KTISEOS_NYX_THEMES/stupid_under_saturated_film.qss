@@ -1,0 +1,52 @@
+/* STUPID IDEA: UNDER-SATURATED FILM */
+/* A theme with muted, dull colors and a generally depressing, washed-out feel. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A9A9A9, stop: 0.5 #808080,
+                                stop: 1 #696969);
+    color: #D3D3D3;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A9A9A9, stop: 0.5 #808080,
+                                stop: 1 #696969);
+    color: #D3D3D3;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: #696969;
+    border: 2px solid #A9A9A9;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #D3D3D3;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #808080;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #D3D3D3;
+    color: #696969;
+    border: 2px solid #A9A9A9;
+    border-radius: 3px;
+    padding: 8px;
+}
+
+QListWidget {
+    background-color: #D3D3D3;
+    color: #696969;
+    border: 2px solid #A9A9A9;
+    border-radius: 3px;
+}
+
+QListWidget::item:selected {
+    background-color: #808080;
+    color: #D3D3D3;
+}

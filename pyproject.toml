@@ -139,6 +139,11 @@ ignore = [
     # ANN101, ANN102 were removed by Ruff as deprecated/handled differently
     "COM812", # Add this to ignore the formatter conflict with trailing commas
     "S101",   # Temporarily ignore assert statements
+    "S310",   # Audit URL open for permitted schemes (false positive for trusted GitHub URLs)
+    "PLR2004",  # Magic value used in comparison
+    "B008",   # Do not perform function call in argument defaults
+    "B007",   # Loop control variable not used within loop body
+    "C901",   # Function is too complex (McCabe complexity)
 ]
 # fix = true # If you want `ruff check` to also attempt fixes without --fix flag
 
@@ -284,10 +289,10 @@ max-line-length               = 120
 ignore-overlong-task-comments = true
 
 [tool.ruff.lint.pylint]
-max-args = 8        # Increased from 7
-max-branches = 30   # Increased to silence ComfyUI warnings
-max-statements = 70
-max-locals = 20
+max-args = 15       # Increased to handle very complex methods
+max-branches = 50   # Increased to silence complexity warnings
+max-statements = 120 # Increased to handle complex parsing logic
+max-locals = 35     # Increased to handle complex data processing
 
 [tool.ruff.lint.flake8-annotations]
 allow-star-arg-any = true # Allows *args: Any and **kwargs: Any
@@ -297,6 +302,51 @@ files.extend-exclude = [
     # "tests/",     # If you want to check typos in tests, remove this
     # "test_*.py", # and this
 ]
+
+# --- MARKDOWNLINT Configuration ---
+[tool.markdownlint]
+# Common rules to disable that are often annoying:
+disable = [
+    "MD001",  # Heading levels should only increment by one level at a time
+    "MD003",  # Heading style (## vs # {.unnumbered})
+    "MD007",  # Unordered list indentation (often conflicts with prettier)
+    "MD010",  # Hard tabs (some people prefer tabs)
+    "MD012",  # Multiple consecutive blank lines
+    "MD013",  # Line length (often too strict for links/code)
+    "MD022",  # Headings should be surrounded by blank lines
+    "MD024",  # Multiple headings with the same content
+    "MD025",  # Multiple top level headings in the same document
+    "MD026",  # Trailing punctuation in heading
+    "MD029",  # Ordered list item prefix (1. vs 1))
+    "MD030",  # Spaces after list markers
+    "MD032",  # Lists should be surrounded by blank lines
+    "MD033",  # Inline HTML (often needed for GitHub badges, formatting)
+    "MD034",  # Bare URL used (auto-linking often preferred)
+    "MD036",  # Emphasis used instead of a heading
+    "MD040",  # Fenced code blocks should have a language specified
+    "MD041",  # First line in file should be a top level heading
+    "MD042",  # No empty links
+    "MD045",  # Images should have alternate text (alt text)
+    "MD046",  # Code block style (fenced vs indented)
+    "MD049",  # Emphasis style (_ vs *)
+    "MD050",  # Strong style (** vs __)
+]
+
+# Alternative: If you want to be more specific, you can configure individual rules
+[tool.markdownlint.MD013]
+# Line length - increase the limit instead of disabling
+line_length = 120
+tables = false          # Don't apply to tables
+code_blocks = false     # Don't apply to code blocks
+headings = false        # Don't apply to headings
+
+[tool.markdownlint.MD007]
+# Unordered list indentation - allow both 2 and 4 spaces
+indent = 2
+
+[tool.markdownlint.MD024]
+# Allow duplicate headings if they're in different sections
+siblings_only = true
 
 # --- MYPY Configuration ---
 [tool.mypy]

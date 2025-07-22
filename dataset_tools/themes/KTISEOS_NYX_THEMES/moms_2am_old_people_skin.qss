@@ -1,0 +1,125 @@
+/*
+ * Mom's 2AM Fever Dreams: Old People Skin Theme
+ *
+ * This theme celebrates the wisdom and wrinkles that come with age.
+ * Embrace the subtle discoloration and the gentle sag.
+ *
+ * Legal Disclaimer: No elderly individuals were harmed in the creation of this theme.
+ * We encourage you to respect your elders and their beautifully textured skin.
+ */
+
+QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #F5DEB3, /* Wheat - youthful glow */
+                               stop:0.3 #D2B48C, /* Tan - sun-kissed */
+                               stop:0.6 #BC8F8F, /* Rosy Brown - age spots */
+                               stop:1 #8B4513); /* Saddle Brown - deep wrinkles */
+    color: #4B0082; /* Indigo - for contrast */
+}
+
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #F5DEB3, /* Wheat */
+                               stop:0.3 #D2B48C, /* Tan */
+                               stop:0.6 #BC8F8F, /* Rosy Brown */
+                               stop:1 #8B4513); /* Saddle Brown */
+}
+
+QPushButton {
+    border: 2px solid #A0522D; /* Sienna - subtle veins */
+    border-radius: 25px 45px 15px 60px; /* Irregular, like a liver spot */
+    background-color: #D2B48C; /* Tan - main skin tone */
+    color: #FFFFFF; /* White - for contrast */
+    padding: 10px 20px;
+    font-size: 16px;
+    transform: rotate(2deg); /* Slightly saggy */
+}
+
+QPushButton:hover {
+    background-color: #BC8F8F; /* Rosy Brown - more pronounced age spot */
+    border: 2px solid #8B4513; /* Saddle Brown */
+    transform: rotate(3deg) scale(1.02); /* More pronounced */
+}
+
+QPushButton:pressed {
+    background-color: #A0522D; /* Sienna */
+    border: 2px solid #654321; /* Darker brown */
+    transform: rotate(1deg) scale(0.98); /* Squished */
+}
+
+/* Add more QSS elements as needed for a complete theme */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    border: 1px solid #BC8F8F; /* Rosy Brown */
+    background-color: #FFF8DC; /* Cornsilk - smooth patch */
+    color: #4B0082; /* Indigo text */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #8B4513; /* Saddle Brown - focused on the wrinkles */
+}
+
+QTabWidget::pane {
+    border-top: 2px solid #BC8F8F; /* Rosy Brown */
+}
+
+QTabBar::tab {
+    background: #D2B48C; /* Tan */
+    border: 1px solid #BC8F8F; /* Rosy Brown */
+    border-bottom-color: #BC8F8F; /* Same as pane */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 8px;
+}
+
+QTabBar::tab:selected {
+    background: #8B4513; /* Saddle Brown */
+    border-color: #8B4513;
+    border-bottom-color: #8B4513; /* Selected tab blends with pane */
+}
+
+QScrollBar:vertical {
+    border: 1px solid #BC8F8F;
+    background: #FFF8DC;
+    width: 15px;
+    margin: 22px 0 22px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #8B4513;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QMenuBar {
+    background-color: #D2B48C; /* Tan */
+    color: #4B0082; /* Indigo */
+}
+
+QMenu {
+    background-color: #FFF8DC; /* Cornsilk */
+    border: 1px solid #D2B48C;
+}
+
+QMenu::item:selected {
+    background-color: #8B4513; /* Saddle Brown */
+}
+
+QStatusBar {
+    background-color: #A0522D; /* Sienna */
+    color: #FFFFFF;
+}
+
+/* Custom QLabel elements with theme-specific IDs */
+QLabel#oldSkinTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #8B4513; /* Saddle Brown */
+    text-align: center;
+}
+
+QLabel#oldSkinDescription {
+    font-size: 14px;
+    color: #4B0082; /* Indigo */
+}

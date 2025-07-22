@@ -1,0 +1,58 @@
+/* DISTURBED IDEA: SOUND OF MY BUTTCHEEKS */
+/* A fleshy, muted, and slightly embarrassing color palette. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F5DEB3, stop: 0.3 #FFDAB9,
+                                stop: 0.7 #D2B48C, stop: 1 #F5DEB3);
+    color: #8B4513;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F5DEB3, stop: 0.3 #FFDAB9,
+                                stop: 0.7 #D2B48C, stop: 1 #F5DEB3);
+    color: #8B4513;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #BC8F8F, stop: 1 #CD853F);
+    border: 3px solid #8B4513;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #CD853F, stop: 1 #BC8F8F);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #F5DEB3;
+    border-radius: 5px;
+    padding: 8px;
+    color: #8B4513;
+    selection-background-color: #BC8F8F;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #F5DEB3;
+    border-radius: 5px;
+    alternate-background-color: #FFFACD;
+    color: #8B4513;
+}
+
+QListWidget::item:selected {
+    background: #BC8F8F;
+    color: #FFFFFF;
+}

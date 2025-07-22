@@ -1,0 +1,416 @@
+/* SUNSET GRADIENT THEME */
+/* Warm oranges, pinks, and purples inspired by evening sunsets */
+/* NO TRANSPARENCY - Solid colors for maximum compatibility */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff6b6b, stop: 0.3 #ff8e53,
+                                stop: 0.7 #ff6b9d, stop: 1 #c44569);
+    color: #ffffff;
+    border: none;
+}
+
+/* Apply gradient to main widget containers */
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff6b6b, stop: 0.3 #ff8e53,
+                                stop: 0.7 #ff6b9d, stop: 1 #c44569);
+    color: #ffffff;
+    font-family: 'Segoe UI', 'San Francisco', Arial, sans-serif;
+    font-size: 13px;
+}
+
+/* Make specific widgets transparent so they show the gradient underneath */
+QFrame, QScrollArea {
+    background: transparent;
+}
+
+/* Sunset glow buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8a80, stop: 1 #ff5722);
+    border: 2px solid #ffab91;
+    border-radius: 12px;
+    padding: 12px 20px;
+    color: #ffffff;
+    font-weight: bold;
+    min-height: 16px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffab91, stop: 1 #ff7043);
+    border: 2px solid #ffcc02;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff5722, stop: 1 #d84315);
+    border: 2px solid #ff8a65;
+}
+
+QPushButton:disabled {
+    background: #bf360c;
+    border: 2px solid #8d6e63;
+    color: #ffccbc;
+}
+
+/* Sunset text areas */
+QTextEdit, QPlainTextEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff7043, stop: 1 #bf360c);
+    border: 2px solid #ffab91;
+    border-radius: 12px;
+    padding: 15px;
+    color: #ffffff;
+    selection-background-color: #ffcc02;
+    selection-color: #1a1a1a;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #ffcc02;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8a65, stop: 1 #d84315);
+}
+
+/* Sunset lists */
+QListWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff7043, stop: 1 #bf360c);
+    border: 2px solid #ffab91;
+    border-radius: 12px;
+    alternate-background-color: #d84315;
+    color: #ffffff;
+    gridline-color: #ff8a65;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #ff8a65;
+    border-radius: 8px;
+    margin: 3px;
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffcc02, stop: 1 #ff9800);
+    color: #1a1a1a;
+    border-radius: 10px;
+    border: 1px solid #ffab91;
+}
+
+QListWidget::item:hover {
+    background: #ff8a65;
+    border-radius: 10px;
+}
+
+QListWidget::item:selected:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffd54f, stop: 1 #ffb74d);
+    border: 1px solid #ffcc02;
+    color: #1a1a1a;
+}
+
+/* Sunset menu styling */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8a80, stop: 1 #ff5722);
+    color: #ffffff;
+    border-bottom: 2px solid #ffab91;
+    font-weight: bold;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin: 2px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffcc02, stop: 1 #ff9800);
+    color: #1a1a1a;
+}
+
+QMenu {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff6b6b, stop: 0.5 #ff8e53,
+                                stop: 1 #ff6b9d);
+    border: 2px solid #ffab91;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+QMenu::item {
+    padding: 10px 25px;
+    border-radius: 8px;
+    margin: 2px;
+    color: #ffffff;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffcc02, stop: 1 #ff9800);
+    color: #1a1a1a;
+}
+
+/* Sunset scrollbars */
+QScrollBar:vertical {
+    background: #d84315;
+    width: 14px;
+    border-radius: 7px;
+    margin: 0;
+    border: 1px solid #ff8a65;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ffcc02, stop: 1 #ff9800);
+    border-radius: 7px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ffd54f, stop: 1 #ffb74d);
+}
+
+QScrollBar::handle:vertical:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff9800, stop: 1 #f57c00);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: #d84315;
+    height: 14px;
+    border-radius: 7px;
+    margin: 0;
+    border: 1px solid #ff8a65;
+}
+
+QScrollBar::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffcc02, stop: 1 #ff9800);
+    border-radius: 7px;
+    min-width: 30px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffd54f, stop: 1 #ffb74d);
+}
+
+QScrollBar::handle:horizontal:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff9800, stop: 1 #f57c00);
+}
+
+/* Sunset tabs */
+QTabWidget::pane {
+    border: 2px solid #ffab91;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff7043, stop: 1 #bf360c);
+    border-radius: 12px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8a80, stop: 1 #ff5722);
+    border: 2px solid #ffab91;
+    padding: 12px 24px;
+    margin-right: 4px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffcc02, stop: 1 #ff9800);
+    border-bottom: none;
+    color: #1a1a1a;
+}
+
+QTabBar::tab:hover:!selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffab91, stop: 1 #ff7043);
+}
+
+/* Sunset status bar */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8a80, stop: 1 #ff5722);
+    border-top: 2px solid #ffab91;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Sunset input fields */
+QLineEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff7043, stop: 1 #bf360c);
+    border: 2px solid #ffab91;
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #ffffff;
+    selection-background-color: #ffcc02;
+    selection-color: #1a1a1a;
+}
+
+QLineEdit:focus {
+    border: 2px solid #ffcc02;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8a65, stop: 1 #d84315);
+}
+
+/* Sunset combo boxes */
+QComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff8a80, stop: 1 #ff5722);
+    border: 2px solid #ffab91;
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #ffffff;
+    min-width: 80px;
+    font-weight: bold;
+}
+
+QComboBox:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffab91, stop: 1 #ff7043);
+    border: 2px solid #ffcc02;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 30px;
+    border-left: 2px solid #ffab91;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid #ffffff;
+}
+
+QComboBox QAbstractItemView {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff6b6b, stop: 0.5 #ff8e53,
+                                stop: 1 #ff6b9d);
+    border: 2px solid #ffab91;
+    border-radius: 10px;
+    selection-background-color: #ffcc02;
+    selection-color: #1a1a1a;
+    color: #ffffff;
+}
+
+/* Sunset splitter */
+QSplitter::handle {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ffcc02, stop: 1 #ff9800);
+    border-radius: 3px;
+}
+
+QSplitter::handle:horizontal {
+    width: 4px;
+}
+
+QSplitter::handle:vertical {
+    height: 4px;
+}
+
+/* Sunset progress bars */
+QProgressBar {
+    border: 2px solid #ffab91;
+    border-radius: 10px;
+    background: #bf360c;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ffcc02, stop: 0.5 #ff9800,
+                                stop: 1 #ff6b9d);
+    border-radius: 8px;
+    margin: 1px;
+}
+
+/* Sunset tool tips */
+QToolTip {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff6b6b, stop: 1 #c44569);
+    border: 2px solid #ffab91;
+    color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* Additional sunset styling */
+QLabel {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+QGroupBox {
+    border: 2px solid #ffab91;
+    border-radius: 15px;
+    margin-top: 15px;
+    padding-top: 15px;
+    font-weight: bold;
+    color: #ffffff;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff7043, stop: 1 #bf360c);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 20px;
+    padding: 0 15px 0 15px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ffcc02, stop: 1 #ff9800);
+    color: #1a1a1a;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+/* Checkbox styling */
+QCheckBox {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 2px solid #ffab91;
+    background-color: #bf360c;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #ffcc02;
+    border: 2px solid #ffcc02;
+}
+
+QCheckBox::indicator:checked:hover {
+    background-color: #ffd54f;
+    border: 2px solid #ffd54f;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px solid #ffcc02;
+}

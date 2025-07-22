@@ -1,0 +1,51 @@
+/* CLAUDE AI THEME */
+/* A clean, modern theme with blues, grays, and whites, reflecting Claude's minimalist aesthetic. */
+
+QMainWindow {
+    background: #F0F2F5; /* Light Gray */
+    color: #2F4F4F; /* Dark Gray */
+    border: none;
+}
+
+QWidget {
+    background: #F0F2F5; /* Light Gray */
+    color: #2F4F4F; /* Dark Gray */
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #4682B4; /* Steel Blue */
+    border: 2px solid #2F4F4F; /* Dark Gray */
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #4169E1; /* Royal Blue */
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #B0C4DE; /* Light Steel Blue */
+    border-radius: 3px;
+    padding: 5px;
+    color: #2F4F4F; /* Dark Gray */
+    selection-background-color: #4682B4; /* Steel Blue */
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #B0C4DE; /* Light Steel Blue */
+    border-radius: 3px;
+    alternate-background-color: #F0F8FF; /* Alice Blue */
+    color: #2F4F4F; /* Dark Gray */
+}
+
+QListWidget::item:selected {
+    background: #4682B4; /* Steel Blue */
+    color: #FFFFFF;
+}

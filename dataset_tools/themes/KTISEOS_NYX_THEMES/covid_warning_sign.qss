@@ -1,0 +1,59 @@
+/* COVID WARNING SIGN THEME */
+/* Stark reds, whites, and blacks, evoking a sense of urgency and danger. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 0.5 #000000,
+                                stop: 1 #B22222);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 0.5 #000000,
+                                stop: 1 #B22222);
+    color: #FFFFFF;
+    font-family: 'Impact', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DC143C, stop: 1 #B22222);
+    border: 3px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 1 #DC143C);
+    border: 3px solid #FFD700;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #B22222;
+    border-radius: 5px;
+    padding: 8px;
+    color: #000000;
+    selection-background-color: #DC143C;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #B22222;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background: #DC143C;
+    color: #FFFFFF;
+}

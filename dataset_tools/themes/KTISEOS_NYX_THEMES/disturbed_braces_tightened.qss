@@ -1,0 +1,57 @@
+/* DISTURBED IDEA: BRACES TIGHTENED */
+/* A theme with a mix of dull, aching grays and whites, with sharp, metallic accents. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A9A9A9, stop: 0.3 #D3D3D3,
+                                stop: 0.7 #C0C0C0, stop: 1 #A9A9A9);
+    color: #2F4F4F;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A9A9A9, stop: 0.3 #D3D3D3,
+                                stop: 0.7 #C0C0C0, stop: 1 #A9A9A9);
+    color: #2F4F4F;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #708090, stop: 1 #696969);
+    border: 2px solid #2F4F4F;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #696969, stop: 1 #708090);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #A9A9A9;
+    border-radius: 3px;
+    padding: 5px;
+    color: #2F4F4F;
+    selection-background-color: #708090;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #A9A9A9;
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #2F4F4F;
+}
+
+QListWidget::item:selected {
+    background: #708090;
+    color: #FFFFFF;
+}

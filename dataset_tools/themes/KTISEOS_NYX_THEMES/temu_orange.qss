@@ -1,0 +1,57 @@
+/* TEMU ORANGE THEME */
+/* A theme with a very specific, slightly garish orange, reflecting the Temu branding. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF6700, stop: 0.5 #FF8C00,
+                                stop: 1 #FF6700);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF6700, stop: 0.5 #FF8C00,
+                                stop: 1 #FF6700);
+    color: #FFFFFF;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF8C00, stop: 1 #FF6700);
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #000000;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF6700, stop: 1 #FF8C00);
+    border: 2px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #FF6700;
+    border-radius: 3px;
+    padding: 5px;
+    color: #000000;
+    selection-background-color: #FF8C00;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #FF6700;
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background: #FF8C00;
+    color: #FFFFFF;
+}

@@ -29,9 +29,12 @@ This project is inspired by tools within the AI art community, notably [stable-d
 
 **Navigation:**
 [Features](#features) •
+[Issues](#known-issues) •
 [Supported Formats](#supported-formats) •
+[Example Images](#example_images) •
 [Installation](#installation) •
 [Usage](#usage) •
+[Themes](#themes) •
 [Future Ideas (TODO)](#future-ideas-todo) •
 [Contributing](#contributing) •
 [License](#license) •
@@ -40,11 +43,6 @@ This project is inspired by tools within the AI art community, notably [stable-d
 ---
 
 ## Features
-
-## Known Issues
-
-*   **Material Theme Compatibility:** The integrated `qt-material` themes, while visually appealing, are not 100% compatible with all PyQt6/Qt6 elements. While the application remains functional, some minor visual inconsistencies may be present. We are actively exploring alternatives and plan to migrate to Tkinter in the near future to address these and other compatibility challenges.
-
 
 * **Lightweight & Fast:** Designed for quick loading and efficient metadata display.
 * **Cross-Platform:** Built with Python and PyQt6 (compatible with Windows, macOS, Linux).
@@ -67,6 +65,12 @@ This project is inspired by tools within the AI art community, notably [stable-d
   * **25+ Specialized Parsers:** Dedicated parsers for various AI tools and platforms with ongoing expansion.
   * **Model File Support:** Enhanced metadata viewing capabilities (Safetensors and GGUF support coming soon!).
 * **Configurable Logging:** Control application log verbosity via command-line arguments for easier debugging.
+
+## Known Issues
+
+*   **Material Theme Compatibility:** The integrated `qt-material` themes, while visually appealing, are not 100% compatible with all PyQt6/Qt6 elements. While the application remains functional, some minor visual inconsistencies may be present. We are actively exploring alternatives and plan to migrate to Tkinter in the near future to address these and other compatibility challenges.
+*   **Advanced Parsers** Advanced parsing is about 75% of the way there. Currently we are struggling to get a lot of the T5 style models to parse in ComfyUI. If you or someone you know use ComfyUI and can pass any information about workflows, or what nodes you're currently using that'd be amazing.
+*   **Draw Things** The XMP Extractor MIGHT be working, but with limited data on DrawThings and the original vendored code not working at the moment we're unsure of how this is working.
 
 ## Supported Formats
 
@@ -102,7 +106,18 @@ Dataset-Tools aims to read metadata from a wide array of sources. Current capabi
 * `.txt`: Displays content.
 * `.json`, `.toml`: Displays content (future: structured view).
 
+## Example Images
+ If you're interested in seeing the app in action, this table shows what's up! 
+
+| Screenshot 1: Dark QSS Themes | Screenshot 2: ConsoleStyle Gtronicks QSS | Screenshot 3: Font Choices |
+| :-----------------------------: | :------------------------------: | :--------------------------: |
+| <img src="example_images/Screenshot 2025-07-13 at 22.07.43.jpg" alt="GTRONICK QSS: Manjaromix" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 20.02.22.jpg" alt="ConsoleStyle" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 22.07.01.jpg" alt="Theme (Dark Teal) Choosing" width="250"> |
+| Screenshot 4: Paimon Inspired | Screenshot 5: Material Blue | Screenshot 6: Deadpool Inspired |
+| <img src="example_images/Screenshot 2025-07-13 at 20.01.54.jpg" alt="Screen Sizes" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 20.01.15.jpg" alt="Civitai Metadata" width="250"> |  <img src="example_images/Screenshot 2025-07-13 at 22.13.02.jpg" alt="Civitai Metadata" width="250">|
+
 ## Installation
+
+Installation is easy and is cross platform, there are no executables as those can create issues down the track when the developer isn't sure how that works. At the moment while we're still under heavy development the idea of having executables is months if not nearly a year down the track. However plans to push to package management systems beyond PYPI are entirely on track. Brew requirements will be the next push we work towards, as well as Windows and Linux compatible package managers!
 
 ### 🚀 Quick Install (Recommended)
 
@@ -241,6 +256,19 @@ Unlike SD Prompt Reader which focuses on basic prompt viewing, Dataset Tools pro
    * Settings & Themes:
          Access application settings (e.g., display theme, window size preferences) via the "Settings..." button at the bottom or the View > Themes menu for quick theme changes.
 
+### Themes
+
+A massive selection of horrifying and eye catching, eye tearing, and meme worthy themes are currently available in the app in QSS form for the PYQT6 branch only.
+Future development will include Tkinter themes in a similar format. Please note, that the main developer of this app has 0 clue how QSS entirely works, and just wanted to provide some good and some bad themes.
+You can use these for yourself by heading over to [QSS Themes](https://github.com/Ktiseos-Nyx/qss_themes/). You should be able to use your own QSS style sheets in the themes folder. Our insanity is not required, and you do not have to thank us.
+Yes, theres is a disclaimer file for theme information and we do not own any of the names, brands or concepts within them. Nor are we intentionally being offensive, trust me on this - nobody will shame you for using the theme "Colors only a Mother Would Love" you know you want to.
+
+We are also using the following imported themes:
+
+* [GTRONICKS](https://github.com/GTRONICK/QSS)
+* [UNREAL STYLESHEET](https://github.com/leixingyu/unrealStylesheet)
+* [DUNDERLAB QT MATERIAL STYLESHEETS](https://github.com/dunderlab/qt-material)
+
 ### Future Development Roadmap
 
 **Core Features:**
@@ -291,7 +319,7 @@ Your contributions are welcome! Whether it's bug reports, feature requests, docu
 
 ## License
 
-This project is licensed under the terms of the <YOUR_NEW_LICENSE_NAME_HERE, e.g., Apache License 2.0 / MIT License / etc.>
+This project is licensed under the terms of the GNU GENERAL PUBLIC LICENSE [GPL 3.0](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/Themes-Lost-Dreams/LICENSE)
 Please see the LICENSE file in the repository root for the full license text.
 
 ## Acknowledgements
@@ -299,7 +327,7 @@ Please see the LICENSE file in the repository root for the full license text.
 * Core Parsing Logic & Inspiration: This project incorporates and significantly adapts parsing functionalities from Stable Diffusion Prompt Reader by  **[receyuki](https://github.com/receyuki)** . Our sincere thanks for this foundational work.
       Original Repository: [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
       The original MIT license for this vendored code is included in the NOTICE.md file.
-* UI Theming: The beautiful PyQt themes are made possible by [qt-material](https://github.com/dunderlab/qt-material) by [DunderLab](https://github.com/dunderlab)
+* UI Theming: The beautiful PyQt themes are made possible by [qt-material](https://github.com/dunderlab/qt-material) by [DunderLab](https://github.com/dunderlab) as well as GTRONICK - [GTRONICKS](https://github.com/GTRONICK/QSS) and the UNREAL STYLE SHEET Creator [UNREAL STYLESHEET](https://github.com/leixingyu/unrealStylesheet)
 * Essential Libraries: This project relies on great open-source Python libraries including [Pillow,](https://github.com/python-pillow/Pillow), [PyQt6](https://www.riverbankcomputing.com/software/pyqt/), [piexif](https://github.com/hMatoba/Piexif), [pyexiv2](https://github.com/LeoHsiao1/pyexiv2), [toml](https://github.com/uiri/toml), [Pydantic](https://docs.pydantic.dev/latest/), and [Rich](https://github.com/Textualize/rich). Their respective licenses apply.
 * **[Anzhc](https://github.com/anzhc)** for continued support and motivation.
 * Our peers and the wider AI and open-source communities for their continuous support and inspiration.

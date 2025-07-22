@@ -1,0 +1,544 @@
+/* DISTURBED PUNCH IN STOMACH THEME */
+/* That sudden, breathless, winded feeling when the air gets knocked out of you */
+/* Dark suffocating grays with sudden bursts of sharp red pain */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 0.2 #8b0000,
+                                stop: 0.25 #0f0f0f, stop: 0.6 #2a2a2a,
+                                stop: 0.8 #8b0000, stop: 1 #0a0a0a);
+    color: #cccccc;
+    border: none;
+    font-family: 'Arial', sans-serif;
+}
+
+QWidget {
+    background-color: #1f1f1f;
+    color: #b0b0b0;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    border: none;
+}
+
+/* Buttons - sudden impact feeling */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 0.5 #2a2a2a,
+                                stop: 1 #1a1a1a);
+    border: 2px solid #404040;
+    border-radius: 6px;
+    padding: 8px 16px;
+    color: #cccccc;
+    font-weight: bold;
+    min-height: 20px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 0.3 #ff0000,
+                                stop: 0.7 #8b0000, stop: 1 #4a0000);
+    border: 2px solid #ff0000;
+    color: #ffffff;
+    box-shadow: 0 0 10px #8b0000;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff0000, stop: 0.5 #8b0000,
+                                stop: 1 #2a0000);
+    border: 2px solid #ff4444;
+    color: #ffffff;
+    padding: 9px 15px 7px 17px;
+}
+
+QPushButton:disabled {
+    background: #151515;
+    border: 2px solid #2a2a2a;
+    color: #555555;
+}
+
+/* Text areas - breathless, suffocating feeling */
+QTextEdit, QPlainTextEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #0f0f0f, stop: 0.3 #1a1a1a,
+                                stop: 0.7 #0f0f0f, stop: 1 #050505);
+    border: 2px solid #404040;
+    border-radius: 4px;
+    padding: 6px;
+    color: #b0b0b0;
+    selection-background-color: #8b0000;
+    selection-color: #ffffff;
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #8b0000;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #1a0000, stop: 0.5 #0f0f0f,
+                                stop: 1 #1a0000);
+}
+
+/* Line edits - sharp, constricted feeling */
+QLineEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+    border: 2px solid #404040;
+    border-radius: 4px;
+    padding: 6px;
+    color: #cccccc;
+    selection-background-color: #8b0000;
+    selection-color: #ffffff;
+}
+
+QLineEdit:focus {
+    border: 2px solid #ff0000;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2a0000, stop: 1 #1a1a1a);
+    box-shadow: 0 0 5px #8b0000;
+}
+
+/* Lists - gasping for air effect */
+QListWidget, QTreeWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #0a0a0a, stop: 0.5 #1f1f1f,
+                                stop: 1 #0a0a0a);
+    border: 2px solid #404040;
+    border-radius: 4px;
+    color: #b0b0b0;
+    alternate-background-color: #252525;
+    outline: none;
+}
+
+QListWidget::item, QTreeWidget::item {
+    padding: 5px;
+    border-bottom: 1px solid #2a2a2a;
+    background: transparent;
+}
+
+QListWidget::item:selected, QTreeWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 0.5 #ff0000,
+                                stop: 1 #8b0000);
+    color: #ffffff;
+    border: 1px solid #ff0000;
+}
+
+QListWidget::item:hover, QTreeWidget::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2a2a2a);
+    border: 1px solid #555555;
+}
+
+/* Tables - sharp, grid-like pain */
+QTableWidget, QTableView {
+    background: #0f0f0f;
+    border: 2px solid #404040;
+    gridline-color: #2a2a2a;
+    color: #b0b0b0;
+    selection-background-color: #8b0000;
+    selection-color: #ffffff;
+}
+
+QTableWidget::item, QTableView::item {
+    padding: 5px;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+QTableWidget::item:selected, QTableView::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 1 #ff0000);
+    color: #ffffff;
+}
+
+QHeaderView::section {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2a2a2a);
+    border: 1px solid #404040;
+    padding: 6px;
+    color: #cccccc;
+    font-weight: bold;
+}
+
+QHeaderView::section:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 1 #4a0000);
+    color: #ffffff;
+}
+
+/* Combo boxes - constricted breathing */
+QComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2a2a2a, stop: 1 #1a1a1a);
+    border: 2px solid #404040;
+    border-radius: 4px;
+    padding: 6px 30px 6px 10px;
+    color: #cccccc;
+    min-height: 20px;
+}
+
+QComboBox:hover {
+    border: 2px solid #8b0000;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a0000, stop: 1 #2a2a2a);
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 20px;
+    background: transparent;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid #cccccc;
+    margin-right: 6px;
+}
+
+QComboBox QAbstractItemView {
+    background: #1a1a1a;
+    border: 2px solid #8b0000;
+    color: #cccccc;
+    selection-background-color: #8b0000;
+    selection-color: #ffffff;
+}
+
+/* Progress bars - struggle for breath */
+QProgressBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #0f0f0f, stop: 1 #2a2a2a);
+    border: 2px solid #404040;
+    border-radius: 4px;
+    text-align: center;
+    color: #cccccc;
+    font-weight: bold;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8b0000, stop: 0.5 #ff0000,
+                                stop: 1 #8b0000);
+    border-radius: 2px;
+    margin: 1px;
+}
+
+/* Sliders - sharp adjustment pain */
+QSlider::groove:horizontal {
+    background: #2a2a2a;
+    border: 1px solid #404040;
+    height: 6px;
+    border-radius: 3px;
+}
+
+QSlider::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 1 #ff0000);
+    border: 2px solid #ffffff;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    margin: -5px 0;
+}
+
+QSlider::handle:horizontal:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff0000, stop: 1 #ff4444);
+    box-shadow: 0 0 8px #8b0000;
+}
+
+QSlider::groove:vertical {
+    background: #2a2a2a;
+    border: 1px solid #404040;
+    width: 6px;
+    border-radius: 3px;
+}
+
+QSlider::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8b0000, stop: 1 #ff0000);
+    border: 2px solid #ffffff;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    margin: 0 -5px;
+}
+
+/* Checkboxes and radio buttons - sharp selections */
+QCheckBox, QRadioButton {
+    color: #cccccc;
+    spacing: 8px;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+    background: #1a1a1a;
+    border: 2px solid #404040;
+}
+
+QCheckBox::indicator:checked {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #8b0000, stop: 1 #ff0000);
+    border: 2px solid #ff0000;
+    image: none;
+}
+
+QRadioButton::indicator {
+    border-radius: 8px;
+}
+
+QRadioButton::indicator:checked {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #8b0000, stop: 1 #ff0000);
+    border: 2px solid #ff0000;
+}
+
+/* Spin boxes - constricted breathing rhythm */
+QSpinBox, QDoubleSpinBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+    border: 2px solid #404040;
+    border-radius: 4px;
+    padding: 4px;
+    color: #cccccc;
+}
+
+QSpinBox:focus, QDoubleSpinBox:focus {
+    border: 2px solid #8b0000;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2a0000, stop: 1 #1a1a1a);
+}
+
+QSpinBox::up-button, QDoubleSpinBox::up-button {
+    background: #2a2a2a;
+    border: 1px solid #404040;
+    border-top-right-radius: 4px;
+    width: 16px;
+}
+
+QSpinBox::up-button:hover, QDoubleSpinBox::up-button:hover {
+    background: #8b0000;
+    border: 1px solid #ff0000;
+}
+
+QSpinBox::down-button, QDoubleSpinBox::down-button {
+    background: #2a2a2a;
+    border: 1px solid #404040;
+    border-bottom-right-radius: 4px;
+    width: 16px;
+}
+
+QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover {
+    background: #8b0000;
+    border: 1px solid #ff0000;
+}
+
+/* Tab widgets - gasping sections */
+QTabWidget {
+    background: transparent;
+}
+
+QTabWidget::pane {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+    border: 2px solid #404040;
+    border-radius: 4px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2a2a2a);
+    border: 2px solid #404040;
+    border-bottom: none;
+    padding: 8px 16px;
+    margin: 2px;
+    color: #cccccc;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 1 #ff0000);
+    border: 2px solid #ff0000;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+QTabBar::tab:hover:!selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a4a4a, stop: 1 #3a3a3a);
+    border: 2px solid #555555;
+}
+
+/* Scroll bars - struggling movement */
+QScrollBar:vertical {
+    background: #1a1a1a;
+    width: 16px;
+    border: 1px solid #404040;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #3a3a3a, stop: 1 #2a2a2a);
+    border: 1px solid #555555;
+    border-radius: 6px;
+    min-height: 30px;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8b0000, stop: 1 #ff0000);
+    border: 1px solid #ff0000;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0;
+    border: none;
+}
+
+QScrollBar:horizontal {
+    background: #1a1a1a;
+    height: 16px;
+    border: 1px solid #404040;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 1 #2a2a2a);
+    border: 1px solid #555555;
+    border-radius: 6px;
+    min-width: 30px;
+    margin: 2px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 1 #ff0000);
+    border: 1px solid #ff0000;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0;
+    border: none;
+}
+
+/* Menu bars - suffocating navigation */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2a2a2a, stop: 1 #1a1a1a);
+    border-bottom: 2px solid #404040;
+    color: #cccccc;
+    padding: 2px;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 1 #ff0000);
+    color: #ffffff;
+}
+
+QMenu {
+    background: #1a1a1a;
+    border: 2px solid #8b0000;
+    border-radius: 4px;
+    color: #cccccc;
+    padding: 4px;
+}
+
+QMenu::item {
+    background: transparent;
+    padding: 6px 20px;
+    border-radius: 2px;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 1 #ff0000);
+    color: #ffffff;
+}
+
+QMenu::separator {
+    height: 2px;
+    background: #404040;
+    margin: 4px 0;
+}
+
+/* Status bar - breathless status */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+    border-top: 2px solid #404040;
+    color: #b0b0b0;
+    padding: 4px;
+}
+
+/* Tool tips - sharp information bursts */
+QToolTip {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 1 #ff0000);
+    border: 2px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+    padding: 6px;
+    font-weight: bold;
+    opacity: 230;
+}
+
+/* Group boxes - constricted sections */
+QGroupBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2a2a2a, stop: 1 #1a1a1a);
+    border: 2px solid #404040;
+    border-radius: 6px;
+    margin: 10px 0 0 0;
+    padding: 10px 0 0 0;
+    color: #cccccc;
+    font-weight: bold;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 8px 0 8px;
+    background: #8b0000;
+    color: #ffffff;
+    border-radius: 3px;
+}
+
+/* Splitters - sharp dividing pain */
+QSplitter::handle {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #2a2a2a, stop: 0.5 #8b0000,
+                                stop: 1 #2a2a2a);
+    border: 1px solid #404040;
+}
+
+QSplitter::handle:horizontal {
+    width: 6px;
+    margin: 2px 0;
+}
+
+QSplitter::handle:vertical {
+    height: 6px;
+    margin: 0 2px;
+}
+
+QSplitter::handle:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8b0000, stop: 0.5 #ff0000,
+                                stop: 1 #8b0000);
+    border: 1px solid #ff0000;
+}

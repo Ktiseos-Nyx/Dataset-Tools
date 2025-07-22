@@ -1,0 +1,67 @@
+/* SHRIMP VISION THEME */
+/* A theme attempting to evoke the complex, multi-spectral, and overwhelming visual experience of a mantis shrimp. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FF0000, stop: 0.1 #FFA500,
+                                stop: 0.2 #FFFF00, stop: 0.3 #00FF00,
+                                stop: 0.4 #00FFFF, stop: 0.5 #0000FF,
+                                stop: 0.6 #800080, stop: 0.7 #FF00FF,
+                                stop: 0.8 #FF1493, stop: 0.9 #00BFFF,
+                                stop: 1 #39FF14);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FF0000, stop: 0.1 #FFA500,
+                                stop: 0.2 #FFFF00, stop: 0.3 #00FF00,
+                                stop: 0.4 #00FFFF, stop: 0.5 #0000FF,
+                                stop: 0.6 #800080, stop: 0.7 #FF00FF,
+                                stop: 0.8 #FF1493, stop: 0.9 #00BFFF,
+                                stop: 1 #39FF14);
+    color: #FFFFFF;
+    font-family: 'Impact', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF00FF, stop: 1 #00FFFF);
+    border: 3px solid #FFFF00;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00FFFF, stop: 1 #FF00FF);
+    border: 3px solid #FF0000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #FFFF00;
+    border-radius: 5px;
+    padding: 8px;
+    color: #00FF00;
+    selection-background-color: #FF00FF;
+    selection-color: #000000;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #FFFF00;
+    border-radius: 5px;
+    alternate-background-color: #1A1A1A;
+    color: #00FF00;
+}
+
+QListWidget::item:selected {
+    background: #FF00FF;
+    color: #000000;
+}

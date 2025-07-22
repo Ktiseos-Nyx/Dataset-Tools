@@ -29,15 +29,11 @@ class ComfyUIExtractor:
     def __init__(self, logger: logging.Logger) -> None:
         """Initialize the ComfyUI extractor."""
         self.logger = logger
-        self.logger.info(
-            "[ComfyUI EXTRACTOR] ComfyUIExtractor starting initialization..."
-        )
+        self.logger.info("[ComfyUI EXTRACTOR] ComfyUIExtractor starting initialization...")
         try:
             # Initialize the extractor manager that handles all the specialized extractors
             self.manager = ComfyUIExtractorManager(logger)
-            self.logger.info(
-                "[ComfyUI EXTRACTOR] ComfyUIExtractor initialized successfully!"
-            )
+            self.logger.info("[ComfyUI EXTRACTOR] ComfyUIExtractor initialized successfully!")
         except Exception as e:
             self.logger.error(f"[ComfyUI EXTRACTOR] Failed to initialize: {e}")
             raise
@@ -81,6 +77,11 @@ class ComfyUIExtractor:
             "comfyui_extract_raw_workflow": self._extract_legacy_raw_workflow,
             "comfy_detect_custom_nodes": self._detect_legacy_custom_nodes,
             "comfy_find_input_of_node_type": self._find_legacy_input_of_node_type,
+            "comfyui_extract_sdxl_refiner_prompt": self._extract_sdxl_refiner_prompt,
+            "comfyui_extract_sdxl_refiner_negative": self._extract_sdxl_refiner_negative,
+            "comfyui_extract_sdxl_base_steps": self._extract_sdxl_base_steps,
+            "comfyui_extract_sdxl_refiner_steps": self._extract_sdxl_refiner_steps,
+            "comfyui_extract_sdxl_total_steps": self._extract_sdxl_total_steps,
             "comfy_find_all_lora_nodes": self._extract_legacy_all_loras,
         }
 
@@ -109,9 +110,7 @@ class ComfyUIExtractor:
         fallback = method_def.get("fallback")
 
         if not node_types or not input_field:
-            self.logger.warning(
-                "_find_legacy_input_of_node_type: missing node_types or input_field"
-            )
+            self.logger.warning("_find_legacy_input_of_node_type: missing node_types or input_field")
             return fallback
 
         # Get nodes from the workflow data
@@ -131,9 +130,7 @@ class ComfyUIExtractor:
 
             # Check if this node matches any of our target types
             if any(target_type in class_type for target_type in node_types):
-                self.logger.info(
-                    f"Found matching node type '{class_type}' for {node_types}"
-                )
+                self.logger.info(f"Found matching node type '{class_type}' for {node_types}")
 
                 # Try to get value from inputs first
                 inputs = node_data.get("inputs", {})
@@ -171,9 +168,7 @@ class ComfyUIExtractor:
                 return str(value)
             return value
         except (ValueError, TypeError):
-            self.logger.warning(
-                f"Failed to convert {value} to {data_type}, using fallback"
-            )
+            self.logger.warning(f"Failed to convert {value} to {data_type}, using fallback")
             return fallback
 
     # Legacy method implementations that delegate to the new system
@@ -189,7 +184,11 @@ class ComfyUIExtractor:
         if not isinstance(data, dict):
             return ""
 
-        nodes = self.manager.traversal.get_nodes_from_data(data)
+        # Use workflow analyzer to get nodes
+        analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
+        if not analysis_result.get("is_valid_workflow", False):
+            return ""
+        nodes = self.manager.workflow_analyzer.nodes
         if not nodes:
             return ""
 
@@ -239,9 +238,7 @@ class ComfyUIExtractor:
 
         return text
 
-    def _find_sampler_input_text(
-        self, nodes: list | dict, data: dict, input_type: str
-    ) -> str:
+    def _find_sampler_input_text(self, nodes: list | dict, data: dict, input_type: str) -> str:
         """Find text from sampler input by following workflow connections."""
         # Find the sampler node (support multiple sampler types)
         sampler_node = None
@@ -255,9 +252,7 @@ class ComfyUIExtractor:
             "SamplerCustomAdvanced",
         ]
 
-        for node_id, node_data in (
-            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
-        ):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
                 if any(sampler_type in class_type for sampler_type in sampler_types):
@@ -313,25 +308,17 @@ class ComfyUIExtractor:
         """Legacy sampler settings extraction."""
         # Parse JSON data if needed
         data = self._parse_json_data(data)
-        workflow_types = self.manager._auto_detect_workflow(
-            data, method_def, context, fields
-        )
+        workflow_types = self.manager._auto_detect_workflow(data, method_def, context, fields)
 
         # Try architecture-specific extraction first
         if "flux" in workflow_types:
-            return self.manager.flux._extract_scheduler_params(
-                data, method_def, context, fields
-            )
+            return self.manager.flux._extract_scheduler_params(data, method_def, context, fields)
         if "sdxl" in workflow_types:
             return {"sampler_type": "sdxl", "detected": True}
         if "efficiency" in workflow_types:
-            return self.manager.efficiency._extract_sampler_params(
-                data, method_def, context, fields
-            )
+            return self.manager.efficiency._extract_sampler_params(data, method_def, context, fields)
         if "searge" in workflow_types:
-            return self.manager.searge._extract_sampler_params(
-                data, method_def, context, fields
-            )
+            return self.manager.searge._extract_sampler_params(data, method_def, context, fields)
 
         # Fallback to generic extraction
         return {"sampler_type": "unknown", "detected": False}
@@ -345,7 +332,11 @@ class ComfyUIExtractor:
     ) -> Any:
         """Legacy traverse field - now uses proper traversal."""
         # Use the traversal extractor
-        nodes = self.manager.traversal.get_nodes_from_data(data)
+        # Use workflow analyzer to get nodes
+        analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
+        if not analysis_result.get("is_valid_workflow", False):
+            return None
+        nodes = self.manager.workflow_analyzer.nodes
         if not nodes:
             return None
 
@@ -355,9 +346,7 @@ class ComfyUIExtractor:
             return None
 
         # Simple field search
-        for node_id, node_data in (
-            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
-        ):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
                 if field_name in node_data:
                     return node_data[field_name]
@@ -381,15 +370,17 @@ class ComfyUIExtractor:
         if not target_class:
             return {}
 
-        nodes = self.manager.traversal.get_nodes_from_data(data)
+        # Use workflow analyzer to get nodes
+        analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
+        if not analysis_result.get("is_valid_workflow", False):
+            return {}
+        nodes = self.manager.workflow_analyzer.nodes
         if not nodes:
             return {}
 
         # Find nodes by class
         matching_nodes = {}
-        for node_id, node_data in (
-            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
-        ):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
                 if target_class in class_type:
@@ -414,13 +405,15 @@ class ComfyUIExtractor:
             return data[input_name]
 
         # Check nodes for input
-        nodes = self.manager.traversal.get_nodes_from_data(data)
+        # Use workflow analyzer to get nodes
+        analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
+        if not analysis_result.get("is_valid_workflow", False):
+            return None
+        nodes = self.manager.workflow_analyzer.nodes
         if not nodes:
             return None
 
-        for node_id, node_data in (
-            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
-        ):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
                 inputs = node_data.get("inputs", {})
                 if isinstance(inputs, dict) and input_name in inputs:
@@ -441,16 +434,14 @@ class ComfyUIExtractor:
         """
         # print("\n--- [FACADE] Running: _find_legacy_text_from_main_sampler_input ---")
         # print(f"Method def: {method_def}")
-        
+
         data = self._parse_json_data(data)
 
         if not isinstance(data, dict):
             return ""
 
         try:
-            self.logger.info(
-                "[ComfyUI EXTRACTOR] ============ STARTING EXTRACTION ============"
-            )
+            self.logger.info("[ComfyUI EXTRACTOR] ============ STARTING EXTRACTION ============")
             self.logger.info(f"[ComfyUI EXTRACTOR] Method def: {method_def}")
         except Exception:
             return ""
@@ -459,12 +450,8 @@ class ComfyUIExtractor:
             "sampler_node_types",
             ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
         )
-        text_input_name_in_encoder = method_def.get(
-            "text_input_name_in_encoder", "text"
-        )
-        text_encoder_types = method_def.get(
-            "text_encoder_node_types", ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"]
-        )
+        text_input_name_in_encoder = method_def.get("text_input_name_in_encoder", "text")
+        text_encoder_types = method_def.get("text_encoder_node_types", ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"])
 
         # Determine which input to follow (positive or negative)
         if method_def.get("positive_input_name"):
@@ -480,12 +467,10 @@ class ComfyUIExtractor:
             return ""
 
         # print(f"Found nodes: {list(nodes.keys()) if isinstance(nodes, dict) else f'list with {len(nodes)} items'}")
-        
+
         # Debug: Show all nodes
         try:
-            node_iterator = (
-                nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
-            )
+            node_iterator = nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
 
             for node_id, node_data in node_iterator:
                 if isinstance(node_data, dict):
@@ -505,23 +490,19 @@ class ComfyUIExtractor:
                 # Use the actual node ID from the data, not the index
                 actual_id = node_data.get("id", node_id)
                 node_lookup[str(actual_id)] = node_data
-                class_type = node_data.get(
-                    "class_type", node_data.get("type", "unknown")
-                )
+                class_type = node_data.get("class_type", node_data.get("type", "unknown"))
 
         for node_id, node_data in node_lookup.items():
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", node_data.get("type", ""))
-                if any(
-                    sampler_type in class_type for sampler_type in sampler_node_types
-                ):
+                if any(sampler_type in class_type for sampler_type in sampler_node_types):
                     inputs = node_data.get("inputs", {})
                     # print(f"Found KSampler node {node_id}, inputs: {inputs}")
 
                     # Find the target input connection
                     target_connection = None
                     source_node_id = None
-                    
+
                     # Handle both formats: dict (direct) and list (API format)
                     if isinstance(inputs, dict):
                         # Direct format: {"positive": ["6", 0], "negative": ["7", 0]}
@@ -533,18 +514,12 @@ class ComfyUIExtractor:
                     elif isinstance(inputs, list):
                         # API format: [{"name": "positive", "link": 123}, ...]
                         for inp in inputs:
-                            if (
-                                isinstance(inp, dict)
-                                and inp.get("name") == target_input_name
-                            ):
+                            if isinstance(inp, dict) and inp.get("name") == target_input_name:
                                 target_connection = inp.get("link")
                                 break
 
                     # FLUX fallback: SamplerCustomAdvanced uses "guider" instead of positive/negative
-                    if (
-                        target_connection is None and source_node_id is None
-                        and class_type == "SamplerCustomAdvanced"
-                    ):
+                    if target_connection is None and source_node_id is None and class_type == "SamplerCustomAdvanced":
                         if isinstance(inputs, dict) and "guider" in inputs:
                             connection = inputs["guider"]
                             if isinstance(connection, list) and len(connection) >= 1:
@@ -572,7 +547,7 @@ class ComfyUIExtractor:
                                 # print(f"Found text via direct connection: '{found_text}' (length: {len(found_text)})")
                                 return found_text
                         # else:
-                            # print(f"Source node {source_node_id} not found in node_lookup")
+                        # print(f"Source node {source_node_id} not found in node_lookup")
 
                     # Handle link-based connections (traditional format)
                     elif target_connection is not None:
@@ -580,11 +555,7 @@ class ComfyUIExtractor:
                         # Look through links to find where this connection comes from
                         links = data.get("links", [])
                         for link in links:
-                            if (
-                                isinstance(link, list)
-                                and len(link) >= 6
-                                and link[0] == target_connection
-                            ):
+                            if isinstance(link, list) and len(link) >= 6 and link[0] == target_connection:
                                 source_node_id = str(link[1])  # Source node ID
 
                                 if source_node_id in node_lookup:
@@ -601,7 +572,7 @@ class ComfyUIExtractor:
                                 break
                     else:
                         print(f"No connection found for {target_input_name}")
-                    
+
                     break  # Found the sampler, stop looking
 
         return method_def.get("fallback", "")
@@ -617,7 +588,7 @@ class ComfyUIExtractor:
     ) -> str:
         """Recursively traverse node connections to find text encoders."""
         # print(f"_traverse_for_text: node_id={node_id}, max_depth={max_depth}")
-        
+
         if max_depth <= 0 or node_id in visited:
             # print(f"_traverse_for_text: stopping - max_depth={max_depth}, visited={node_id in visited}")
             return ""
@@ -635,12 +606,43 @@ class ComfyUIExtractor:
 
         # Check if this node is a text encoder
         class_type = node.get("class_type", node.get("type", ""))
+        self.logger.info(f"[TRAVERSE] Visiting node {node_id}, class_type: {class_type}")
         # print(f"_traverse_for_text: node {node_id} class_type={class_type}")
 
+        # --- PRIORITY: Check for Impact Pack and special text processing nodes FIRST ---
+        if class_type == "ImpactWildcardProcessor":
+            # This node processes wildcard text - the processed text is in widgets[1]
+            widget_values = node.get("widgets_values", [])
+            self.logger.info(f"[IMPACT FIX] Found ImpactWildcardProcessor node {node_id}!")
+            self.logger.info(f"[IMPACT FIX] Widget values: {widget_values}")
+            if len(widget_values) >= 2:
+                result = str(widget_values[1])  # Return the processed text
+                self.logger.info(f"[IMPACT FIX] Returning processed text: {result}")
+                return result
+            if len(widget_values) >= 1:
+                result = str(widget_values[0])  # Fallback to original text
+                self.logger.info(f"[IMPACT FIX] Returning original text: {result}")
+                return result
+            self.logger.info("[IMPACT FIX] No widget values found, returning empty")
+            return ""
+
+        if class_type == "AutoNegativePrompt":
+            # This node automatically generates negative prompts - output is in widgets[1]
+            widget_values = node.get("widgets_values", [])
+            if len(widget_values) >= 2:
+                return str(widget_values[1])  # Return the generated negative prompt
+            return str(widget_values[0]) if widget_values else ""
+
+        if class_type == "Wildcard Prompt from String":
+            # This is the source of wildcard strings
+            widget_values = node.get("widgets_values", [])
+            return str(widget_values[0]) if widget_values else ""
+
+        # --- EXISTING LOGIC: Check if this node is a text encoder ---
         # print(f"_traverse_for_text: checking if {class_type} matches any of {text_encoder_types}")
         # matches = [encoder for encoder in text_encoder_types if encoder in class_type]
         # print(f"_traverse_for_text: matches found: {matches}")
-        
+
         if any(encoder in class_type for encoder in text_encoder_types):
             # print(f"_traverse_for_text: Found a text encoder! Extracting text from node {node_id}")
             # Found a text encoder, extract text
@@ -648,13 +650,13 @@ class ComfyUIExtractor:
             inputs = node.get("inputs", {})
             # print(f"_traverse_for_text: widget_values={widget_values}")
             # print(f"_traverse_for_text: inputs={inputs}")
-            
+
             # Try widget_values first
             if widget_values and len(widget_values) > 0:
                 text_value = widget_values[0]
                 # print(f"_traverse_for_text: extracted from widgets: {text_value}")
                 return str(text_value)
-            
+
             # Try inputs["text"] for smZ CLIPTextEncode
             if isinstance(inputs, dict) and "text" in inputs:
                 text_value = inputs["text"]
@@ -712,9 +714,7 @@ class ComfyUIExtractor:
 
         return ""
 
-    def _extract_from_workflow_text_nodes(
-        self, data: dict, target_input_name: str
-    ) -> str:
+    def _extract_from_workflow_text_nodes(self, data: dict, target_input_name: str) -> str:
         """Extract text from workflow nodes directly for modern architectures.
 
         Modern architectures like FLUX, SD3/3.5, PixArt, HiDream, and Auraflow use
@@ -729,11 +729,13 @@ class ComfyUIExtractor:
             Extracted text or empty string
 
         """
-        self.logger.info(
-            f"[ComfyUI EXTRACTOR] *** WORKFLOW-ONLY EXTRACTION for {target_input_name} ***"
-        )
+        self.logger.info(f"[ComfyUI EXTRACTOR] *** WORKFLOW-ONLY EXTRACTION for {target_input_name} ***")
 
-        nodes = self.manager.traversal.get_nodes_from_data(data)
+        # Use workflow analyzer to get nodes
+        analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
+        if not analysis_result.get("is_valid_workflow", False):
+            return ""
+        nodes = self.manager.workflow_analyzer.nodes
         if not nodes:
             return ""
 
@@ -767,9 +769,7 @@ class ComfyUIExtractor:
             ):
                 widgets = node.get("widgets_values", [])
                 if widgets and isinstance(widgets[0], str) and widgets[0].strip():
-                    text_encoders.append(
-                        {"id": node_id, "type": node_type, "text": widgets[0].strip()}
-                    )
+                    text_encoders.append({"id": node_id, "type": node_type, "text": widgets[0].strip()})
 
         self.logger.info(
             f"[ComfyUI EXTRACTOR] Found {len(text_encoders)} text encoder nodes: {[(e['id'], e['type'], e['text'][:50]) for e in text_encoders]}"
@@ -777,49 +777,33 @@ class ComfyUIExtractor:
 
         # For positive prompts, try to find the main/primary text
         if target_input_name == "positive":
-            self.logger.debug(
-                "[ComfyUI EXTRACTOR] Attempting to extract POSITIVE prompt."
-            )
+            self.logger.debug("[ComfyUI EXTRACTOR] Attempting to extract POSITIVE prompt.")
             # Strategy 1: Look for T5TextEncode (FLUX) or PixArtT5TextEncode (PixArt) first
             for encoder in text_encoders:
-                self.logger.debug(
-                    f"[ComfyUI EXTRACTOR] Checking encoder type: {encoder['type']}"
-                )
+                self.logger.debug(f"[ComfyUI EXTRACTOR] Checking encoder type: {encoder['type']}")
                 if "T5TextEncode" in encoder["type"] or "PixArt" in encoder["type"]:
-                    self.logger.info(
-                        f"[ComfyUI EXTRACTOR] *** Found T5/PixArt encoder: {encoder['text'][:100]}... ***"
-                    )
+                    self.logger.info(f"[ComfyUI EXTRACTOR] *** Found T5/PixArt encoder: {encoder['text'][:100]}... ***")
                     return self._clean_prompt_text(encoder["text"])
 
             # Strategy 2: Look for any CLIP encoder
             for encoder in text_encoders:
-                self.logger.debug(
-                    f"[ComfyUI EXTRACTOR] Checking encoder type: {encoder['type']}"
-                )
+                self.logger.debug(f"[ComfyUI EXTRACTOR] Checking encoder type: {encoder['type']}")
                 if "CLIPTextEncode" in encoder["type"]:
-                    self.logger.info(
-                        f"[ComfyUI EXTRACTOR] *** Found CLIP encoder: {encoder['text'][:100]}... ***"
-                    )
+                    self.logger.info(f"[ComfyUI EXTRACTOR] *** Found CLIP encoder: {encoder['text'][:100]}... ***")
                     return self._clean_prompt_text(encoder["text"])
 
             # Strategy 3: Take any text encoder
             if text_encoders:
                 encoder = text_encoders[0]
-                self.logger.info(
-                    f"[ComfyUI EXTRACTOR] *** Taking first encoder: {encoder['text'][:100]}... ***"
-                )
+                self.logger.info(f"[ComfyUI EXTRACTOR] *** Taking first encoder: {encoder['text'][:100]}... ***")
                 return self._clean_prompt_text(encoder["text"])
 
         # For negative prompts, look for CLIP encoders for negative prompts
         elif target_input_name == "negative":
-            self.logger.debug(
-                "[ComfyUI EXTRACTOR] Attempting to extract NEGATIVE prompt."
-            )
+            self.logger.debug("[ComfyUI EXTRACTOR] Attempting to extract NEGATIVE prompt.")
             # Look for CLIP encoders for negative prompts
             for encoder in text_encoders:
-                self.logger.debug(
-                    f"[ComfyUI EXTRACTOR] Checking encoder type: {encoder['type']}"
-                )
+                self.logger.debug(f"[ComfyUI EXTRACTOR] Checking encoder type: {encoder['type']}")
                 if "CLIPTextEncode" in encoder["type"]:
                     text = encoder["text"]
                     if text.strip():  # Only return non-empty text
@@ -829,14 +813,10 @@ class ComfyUIExtractor:
                         return self._clean_prompt_text(text)
 
             # For modern architectures, negative prompts might be empty (especially FLUX)
-            self.logger.info(
-                "[ComfyUI EXTRACTOR] No negative prompt found (common in modern architectures)"
-            )
+            self.logger.info("[ComfyUI EXTRACTOR] No negative prompt found (common in modern architectures)")
             return ""
 
-        self.logger.info(
-            f"[ComfyUI EXTRACTOR] No suitable text encoder found for {target_input_name}"
-        )
+        self.logger.info(f"[ComfyUI EXTRACTOR] No suitable text encoder found for {target_input_name}")
         return ""
 
     def _find_node_by_id(self, nodes: Any, node_id: int | str) -> dict[str, Any] | None:
@@ -875,9 +855,7 @@ class ComfyUIExtractor:
                 break
 
         if not guider_node:
-            self.logger.debug(
-                "[FLUX] No BasicGuider found, fallback to direct T5 search"
-            )
+            self.logger.debug("[FLUX] No BasicGuider found, fallback to direct T5 search")
             return self._find_flux_text_direct(nodes, "T5TextEncode")
 
         # Find positive input link
@@ -934,9 +912,7 @@ class ComfyUIExtractor:
                 break
 
         if not guider_node:
-            self.logger.debug(
-                "[FLUX] No BasicGuider found, fallback to direct CLIP search"
-            )
+            self.logger.debug("[FLUX] No BasicGuider found, fallback to direct CLIP search")
             return self._find_flux_text_direct(nodes, "CLIPTextEncode")
 
         # Find negative input link
@@ -986,7 +962,11 @@ class ComfyUIExtractor:
         fields: ExtractedFields,
     ) -> dict[str, Any]:
         """Legacy input of main sampler."""
-        nodes = self.manager.traversal.get_nodes_from_data(data)
+        # Use workflow analyzer to get nodes
+        analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
+        if not analysis_result.get("is_valid_workflow", False):
+            return {}
+        nodes = self.manager.workflow_analyzer.nodes
         if not nodes:
             return {}
 
@@ -995,11 +975,10 @@ class ComfyUIExtractor:
         data_type = method_def.get("data_type", "string")
         fallback = method_def.get("fallback")
 
-        for node_id, node_data in (
-            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
-        ):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
-                if self.manager.node_checker.is_sampler_node(node_data):
+                class_type = node_data.get("class_type", node_data.get("type", ""))
+                if any(sampler in class_type for sampler in ["KSampler", "KSamplerAdvanced", "SamplerCustom"]):
                     inputs = node_data.get("inputs", {})
                     if input_field in inputs:
                         value = inputs[input_field]
@@ -1055,7 +1034,11 @@ class ComfyUIExtractor:
         if not node_id or not input_name:
             return None
 
-        nodes = self.manager.traversal.get_nodes_from_data(data)
+        # Use workflow analyzer to get nodes
+        analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
+        if not analysis_result.get("is_valid_workflow", False):
+            return None
+        nodes = self.manager.workflow_analyzer.nodes
         if not nodes:
             return None
 
@@ -1085,7 +1068,11 @@ class ComfyUIExtractor:
         if not node_id:
             return None
 
-        nodes = self.manager.traversal.get_nodes_from_data(data)
+        # Use workflow analyzer to get nodes
+        analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
+        if not analysis_result.get("is_valid_workflow", False):
+            return None
+        nodes = self.manager.workflow_analyzer.nodes
         if not nodes:
             return None
 
@@ -1113,24 +1100,25 @@ class ComfyUIExtractor:
         fields: ExtractedFields,
     ) -> list[dict[str, Any]]:
         """Legacy extract all loras."""
-        nodes = self.manager.traversal.get_nodes_from_data(data)
+        # Use workflow analyzer to get nodes
+        analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
+        if not analysis_result.get("is_valid_workflow", False):
+            return []
+        nodes = self.manager.workflow_analyzer.nodes
         if not nodes:
             return []
 
         loras = []
-        for node_id, node_data in (
-            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
-        ):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
-                if self.manager.node_checker.is_lora_node(node_data):
+                class_type = node_data.get("class_type", node_data.get("type", ""))
+                if "Lora" in class_type or "LoRA" in class_type:
                     widgets = node_data.get("widgets_values", [])
                     if widgets:
                         loras.append(
                             {
                                 "node_id": str(node_id),
-                                "lora_name": (
-                                    widgets[0] if isinstance(widgets[0], str) else ""
-                                ),
+                                "lora_name": (widgets[0] if isinstance(widgets[0], str) else ""),
                                 "strength": widgets[1] if len(widgets) > 1 else 1.0,
                                 "class_type": node_data.get("class_type", ""),
                             }
@@ -1167,12 +1155,8 @@ class ComfyUIExtractor:
         }
 
         # Call the fixed traversal method
-        result = self._find_legacy_text_from_main_sampler_input(
-            data, fake_method_def, context, fields
-        )
-        self.logger.info(
-            f"[ComfyUI EXTRACTOR] Positive prompt result: {result[:100]}..."
-        )
+        result = self._find_legacy_text_from_main_sampler_input(data, fake_method_def, context, fields)
+        self.logger.info(f"[ComfyUI EXTRACTOR] Positive prompt result: {result[:100]}...")
         return result
 
     def _extract_legacy_negative_prompt_from_workflow(
@@ -1204,12 +1188,8 @@ class ComfyUIExtractor:
         }
 
         # Call the fixed traversal method
-        result = self._find_legacy_text_from_main_sampler_input(
-            data, fake_method_def, context, fields
-        )
-        self.logger.info(
-            f"[ComfyUI EXTRACTOR] Negative prompt result: {result[:100]}..."
-        )
+        result = self._find_legacy_text_from_main_sampler_input(data, fake_method_def, context, fields)
+        self.logger.info(f"[ComfyUI EXTRACTOR] Negative prompt result: {result[:100]}...")
         return result
 
     def _extract_legacy_workflow_parameters(
@@ -1247,9 +1227,7 @@ class ComfyUIExtractor:
 
         # 4. Get any other key parameters from specialized extractors
         # Example for efficiency nodes, which has its own sampler params
-        efficiency_params = self.manager.efficiency._extract_sampler_params(
-            data, {}, {}, {}
-        )
+        efficiency_params = self.manager.efficiency._extract_sampler_params(data, {}, {}, {})
         all_params.update(efficiency_params)
 
         self.logger.debug(f"[FACADE] Final extracted params: {all_params}")
@@ -1277,32 +1255,266 @@ class ComfyUIExtractor:
         fields: ExtractedFields,
     ) -> list[dict[str, Any]]:
         """Legacy detect custom nodes."""
-        nodes = self.manager.traversal.get_nodes_from_data(data)
+        # Use workflow analyzer to get nodes
+        analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
+        if not analysis_result.get("is_valid_workflow", False):
+            return []
+        nodes = self.manager.workflow_analyzer.nodes
         if not nodes:
             return []
 
         custom_nodes = []
-        for node_id, node_data in (
-            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
-        ):
+        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
             if isinstance(node_data, dict):
-                if self.manager.node_checker.is_custom_node(node_data):
+                class_type = node_data.get("class_type", node_data.get("type", ""))
+                # Simple custom node detection - if not in standard ComfyUI nodes
+                standard_nodes = [
+                    "KSampler",
+                    "KSamplerAdvanced",
+                    "CheckpointLoaderSimple",
+                    "CLIPTextEncode",
+                    "VAEDecode",
+                    "SaveImage",
+                    "EmptyLatentImage",
+                ]
+                if class_type and not any(std in class_type for std in standard_nodes):
+                    # Determine ecosystem based on class_type
+                    ecosystem = "unknown"
+                    if "Impact" in class_type:
+                        ecosystem = "impact"
+                    elif "Efficiency" in class_type:
+                        ecosystem = "efficiency"
+                    elif "WAS" in class_type:
+                        ecosystem = "was"
+                    elif "Lora" in class_type:
+                        ecosystem = "lora"
+
                     custom_nodes.append(
                         {
                             "node_id": str(node_id),
-                            "class_type": node_data.get("class_type", ""),
-                            "ecosystem": self.manager.node_checker.get_node_ecosystem(
-                                node_data
-                            ),
-                            "complexity": self.manager.node_checker.get_node_complexity(
-                                node_data
-                            ),
+                            "class_type": class_type,
+                            "ecosystem": ecosystem,
+                            "complexity": "unknown",
                         }
                     )
 
         return custom_nodes
 
+    # Helper methods for SDXL extraction
+    def _get_workflow_nodes(self, data: Any) -> list[dict[str, Any]]:
+        """Parse JSON data and return workflow nodes."""
+        try:
+            workflow = self._parse_json_data(data)
+            if not isinstance(workflow, dict):
+                return []
+            nodes = workflow.get("nodes", [])
+            if not isinstance(nodes, list):
+                self.logger.warning("Workflow nodes is not a list")
+                return []
+            return nodes
+        except Exception as e:
+            self.logger.error(f"Error parsing workflow data: {e}")
+            return []
+
+    def _extract_text_from_refiner_node(self, node: dict[str, Any], prompt_type: str = "positive") -> str:
+        """Extract text from CLIPTextEncodeSDXLRefiner node."""
+        try:
+            if not isinstance(node, dict) or node.get("type") != "CLIPTextEncodeSDXLRefiner":
+                return ""
+
+            # For negative prompts, check title
+            if prompt_type == "negative":
+                title = node.get("title", "").lower()
+                if "negative" not in title and "refiner" not in title:
+                    return ""
+
+            widgets_values = node.get("widgets_values", [])
+            if not isinstance(widgets_values, list):
+                self.logger.warning(f"Invalid widgets_values type in refiner node: {type(widgets_values)}")
+                return ""
+
+            if len(widgets_values) >= 4:
+                prompt_text = widgets_values[3]  # Text is at index 3
+                if isinstance(prompt_text, str) and prompt_text.strip():
+                    self.logger.info(f"[SDXL Refiner] Found {prompt_type} prompt: {prompt_text[:100]}...")
+                    return prompt_text
+            else:
+                self.logger.debug(f"Insufficient widgets_values in refiner node: {len(widgets_values)} < 4")
+            return ""
+        except Exception as e:
+            self.logger.error(f"Error extracting text from refiner node: {e}")
+            return ""
+
+    def _extract_text_from_primitive_node(self, nodes: list[dict[str, Any]], titles: list[str]) -> str:
+        """Extract text from PrimitiveNode with matching titles."""
+        try:
+            for node in nodes:
+                if not isinstance(node, dict):
+                    continue
+
+                if node.get("type") == "PrimitiveNode":
+                    node_title = node.get("title", "").lower()
+                    if node_title in titles:
+                        widgets_values = node.get("widgets_values", [])
+                        if not isinstance(widgets_values, list):
+                            self.logger.warning(
+                                f"Invalid widgets_values type in primitive node: {type(widgets_values)}"
+                            )
+                            continue
+
+                        if widgets_values and isinstance(widgets_values[0], str):
+                            return widgets_values[0]
+            return ""
+        except Exception as e:
+            self.logger.error(f"Error extracting text from primitive node: {e}")
+            return ""
+
     # Convenience methods for direct access to the manager
+    def _extract_sdxl_refiner_prompt(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> str:
+        """Extract positive prompt from CLIPTextEncodeSDXLRefiner nodes."""
+        nodes = self._get_workflow_nodes(data)
+        if not nodes:
+            return ""
+
+        # Look for CLIPTextEncodeSDXLRefiner nodes
+        for node in nodes:
+            result = self._extract_text_from_refiner_node(node, "positive")
+            if result:
+                return result
+
+        # Fallback: look in PrimitiveNode with title "Positive Prompt"
+        return self._extract_text_from_primitive_node(nodes, ["positive prompt", "positive"])
+
+    def _extract_sdxl_refiner_negative(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> str:
+        """Extract negative prompt from CLIPTextEncodeSDXLRefiner nodes."""
+        nodes = self._get_workflow_nodes(data)
+        if not nodes:
+            return ""
+
+        # Look for CLIPTextEncodeSDXLRefiner nodes with negative title/purpose
+        for node in nodes:
+            result = self._extract_text_from_refiner_node(node, "negative")
+            if result:
+                return result
+
+        # Fallback: look in PrimitiveNode with title "Negative Prompt"
+        return self._extract_text_from_primitive_node(nodes, ["negative prompt", "negative"])
+
+    def _extract_sdxl_base_steps(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> int:
+        """Extract base model steps from SDXL workflow."""
+        try:
+            nodes = self._get_workflow_nodes(data)
+            if not nodes:
+                return 32
+
+            # Look for PrimitiveNode with title containing "Base Model" or "Steps On Base"
+            for node in nodes:
+                if not isinstance(node, dict):
+                    continue
+
+                if node.get("type") == "PrimitiveNode":
+                    title = node.get("title", "").lower()
+                    if "base" in title and "step" in title:
+                        widgets_values = node.get("widgets_values", [])
+                        if isinstance(widgets_values, list) and widgets_values and isinstance(widgets_values[0], int):
+                            return widgets_values[0]
+
+            # Fallback: look for KSamplerAdvanced with end_at_step
+            for node in nodes:
+                if not isinstance(node, dict):
+                    continue
+
+                if node.get("type") == "KSamplerAdvanced":
+                    widgets_values = node.get("widgets_values", [])
+                    if isinstance(widgets_values, list) and len(widgets_values) >= 10:
+                        end_step = widgets_values[9]  # end_at_step is usually at index 9
+                        if isinstance(end_step, int) and end_step > 0:
+                            return end_step
+
+            return 50  # Default base steps (reasonable for SDXL)
+        except Exception as e:
+            self.logger.error(f"Error extracting SDXL base steps: {e}")
+            return 50
+
+    def _extract_sdxl_refiner_steps(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> int:
+        """Extract refiner steps from SDXL workflow."""
+        try:
+            total_steps = self._extract_sdxl_total_steps(data, method_def, context, fields)
+            base_steps = self._extract_sdxl_base_steps(data, method_def, context, fields)
+            refiner_steps = total_steps - base_steps
+            return max(0, refiner_steps)  # Ensure non-negative
+        except Exception as e:
+            self.logger.error(f"Error extracting SDXL refiner steps: {e}")
+            return 0
+
+    def _extract_sdxl_total_steps(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> int:
+        """Extract total steps from SDXL workflow."""
+        try:
+            nodes = self._get_workflow_nodes(data)
+            if not nodes:
+                return 40
+
+            # Look for PrimitiveNode with title "Total Steps"
+            for node in nodes:
+                if not isinstance(node, dict):
+                    continue
+
+                if node.get("type") == "PrimitiveNode":
+                    title = node.get("title", "").lower()
+                    if "total" in title and "step" in title:
+                        widgets_values = node.get("widgets_values", [])
+                        if isinstance(widgets_values, list) and widgets_values and isinstance(widgets_values[0], int):
+                            return widgets_values[0]
+
+            # Fallback: find the highest steps value in any sampler
+            max_steps = 80  # Higher default for modern workflows
+            for node in nodes:
+                if not isinstance(node, dict):
+                    continue
+
+                node_type = node.get("type", "")
+                if isinstance(node_type, str) and "sampler" in node_type.lower():
+                    widgets_values = node.get("widgets_values", [])
+                    if isinstance(widgets_values, list) and len(widgets_values) >= 4:
+                        steps = widgets_values[3]  # steps is usually at index 3
+                        if isinstance(steps, int) and steps > max_steps:
+                            max_steps = steps
+
+            return max_steps
+        except Exception as e:
+            self.logger.error(f"Error extracting SDXL total steps: {e}")
+            return 80  # Higher fallback for modern workflows
+
     def get_manager(self) -> ComfyUIExtractorManager:
         """Get the underlying extractor manager."""
         return self.manager

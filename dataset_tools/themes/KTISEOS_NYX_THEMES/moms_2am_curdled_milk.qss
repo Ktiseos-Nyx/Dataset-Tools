@@ -1,0 +1,125 @@
+/*
+ * Mom's 2AM Fever Dreams: Curdled Milk Theme
+ *
+ * This theme celebrates the chunky, unappetizing beauty of spoiled dairy.
+ * Embrace the separation and the slightly off-white hues.
+ *
+ * Legal Disclaimer: Do not consume this theme. It is for visual purposes only.
+ * We are not responsible for any nausea, gag reflexes, or sudden urges to check expiration dates.
+ */
+
+QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #F5F5DC, /* Beige - the watery part */
+                               stop:0.3 #F8F8FF, /* GhostWhite - the curd */
+                               stop:0.6 #FFFACD, /* LemonChiffon - slightly yellowed */
+                               stop:1 #D2B48C); /* Tan - the bottom of the glass */
+    color: #4F4F4F; /* Gray - for contrast */
+}
+
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #F5F5DC, /* Beige */
+                               stop:0.3 #F8F8FF, /* GhostWhite */
+                               stop:0.6 #FFFACD, /* LemonChiffon */
+                               stop:1 #D2B48C); /* Tan */
+}
+
+QPushButton {
+    border: 2px solid #A9A9A9; /* DarkGray - the rim of the glass */
+    border-radius: 30px 10px 50px 20px; /* Irregular, like a floating chunk */
+    background-color: #F8F8FF; /* GhostWhite - main curd color */
+    color: #4F4F4F; /* Gray - for contrast */
+    padding: 12px 25px;
+    font-size: 18px;
+    transform: rotate(-7deg); /* Slightly tilted, like a spilled glass */
+}
+
+QPushButton:hover {
+    background-color: #E6E6FA; /* Lavender - slightly more opaque */
+    border: 2px solid #696969; /* DimGray */
+    transform: rotate(-9deg) scale(1.03); /* More pronounced */
+}
+
+QPushButton:pressed {
+    background-color: #DCDCDC; /* Gainsboro - squished curd */
+    border: 2px solid #4F4F4F; /* Gray */
+    transform: rotate(-5deg) scale(0.97); /* Impact */
+}
+
+/* Add more QSS elements as needed for a complete theme */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    border: 1px solid #D2B48C; /* Tan */
+    background-color: #F5F5DC; /* Beige - the watery part */
+    color: #4F4F4F; /* Gray text */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #F8F8FF; /* GhostWhite - focused on the curd */
+}
+
+QTabWidget::pane {
+    border-top: 2px solid #D2B48C; /* Tan */
+}
+
+QTabBar::tab {
+    background: #FFFACD; /* LemonChiffon */
+    border: 1px solid #D2B48C; /* Tan */
+    border-bottom-color: #D2B48C; /* Same as pane */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 8px;
+}
+
+QTabBar::tab:selected {
+    background: #F8F8FF; /* GhostWhite */
+    border-color: #F8F8FF;
+    border-bottom-color: #F8F8FF; /* Selected tab blends with pane */
+}
+
+QScrollBar:vertical {
+    border: 1px solid #D2B48C;
+    background: #F5F5DC;
+    width: 15px;
+    margin: 22px 0 22px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #F8F8FF;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QMenuBar {
+    background-color: #D2B48C; /* Tan */
+    color: #4F4F4F; /* Gray */
+}
+
+QMenu {
+    background-color: #F5F5DC; /* Beige */
+    border: 1px solid #D2B48C;
+}
+
+QMenu::item:selected {
+    background-color: #F8F8FF; /* GhostWhite */
+}
+
+QStatusBar {
+    background-color: #A9A9A9; /* DarkGray */
+    color: #FFFFFF;
+}
+
+/* Custom QLabel elements with theme-specific IDs */
+QLabel#curdledMilkTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4F4F4F; /* Gray */
+    text-align: center;
+}
+
+QLabel#curdledMilkDescription {
+    font-size: 14px;
+    color: #D2B48C; /* Tan */
+}

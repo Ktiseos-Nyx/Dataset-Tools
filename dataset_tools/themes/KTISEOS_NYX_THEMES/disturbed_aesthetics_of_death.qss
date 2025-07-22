@@ -1,0 +1,59 @@
+/* DISTURBED IDEA: THE AESTHETICS OF DEATH */
+/* A theme with dark, somber colors, evoking a sense of finality and decay. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 0.3 #2F4F4F,
+                                stop: 0.7 #696969, stop: 1 #000000);
+    color: #D3D3D3;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 0.3 #2F4F4F,
+                                stop: 0.7 #696969, stop: 1 #000000);
+    color: #D3D3D3;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4F4F4F, stop: 1 #2F4F4F);
+    border: 3px solid #D3D3D3;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2F4F4F, stop: 1 #4F4F4F);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #2F4F4F;
+    border-radius: 5px;
+    padding: 8px;
+    color: #D3D3D3;
+    selection-background-color: #696969;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #2F4F4F;
+    border-radius: 5px;
+    alternate-background-color: #1A1A1A;
+    color: #D3D3D3;
+}
+
+QListWidget::item:selected {
+    background: #696969;
+    color: #FFFFFF;
+}

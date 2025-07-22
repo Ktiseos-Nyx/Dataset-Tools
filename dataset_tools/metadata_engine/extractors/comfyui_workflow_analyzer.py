@@ -1,9 +1,12 @@
 # dataset_tools/metadata_engine/extractors/comfyui_workflow_analyzer.py
 
-"""ComfyUI workflow analyzer using node dictionary.
+"""IMPROVED ComfyUI workflow analyzer.
 
-This module provides intelligent parsing of ComfyUI workflows using a comprehensive
-node dictionary to extract meaningful metadata from complex workflow structures.
+This version moves to a "trace-everything" paradigm. Instead of reading widget
+values by index, it traces every key input (model, seed, steps, cfg, etc.)
+back to its source node to find the literal value. This makes the parser
+far more robust against custom nodes and complex workflows. It also correctly
+identifies and analyzes multi-stage workflows (e.g., base pass + hires fix).
 """
 
 import json
@@ -11,611 +14,334 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from ..utils import json_path_get_utility
+# Assume utils is in a sibling directory or accessible via python path
 
 # Type aliases
 ContextData = dict[str, Any]
 NodeData = dict[str, Any]
 WorkflowData = dict[str, Any]
+Link = list[Any]
 
 
 class ComfyUIWorkflowAnalyzer:
-    """Analyzes ComfyUI workflows using node dictionary for intelligent extraction."""
+    """Analyzes ComfyUI workflows using a robust tracing methodology."""
 
     def __init__(self, logger: logging.Logger, dictionary_path: str | None = None):
         """Initialize the workflow analyzer."""
         self.logger = logger
         self.node_dictionary = self._load_node_dictionary(dictionary_path)
+        # Store workflow data for access during recursive calls
+        self.nodes: dict[str, NodeData] = {}
+        self.links: list[Link] = []
 
-    def _load_node_dictionary(
-        self, dictionary_path: str | None = None
-    ) -> dict[str, Any]:
+    def _load_node_dictionary(self, dictionary_path: str | None = None) -> dict[str, Any]:
         """Load the ComfyUI node dictionary."""
+        # Your existing dictionary loading logic is good.
         if dictionary_path is None:
-            # Default path relative to this file
             current_dir = Path(__file__).parent.parent.parent
             dictionary_path = current_dir / "comfyui_node_dictionary.json"
-
         try:
             with open(dictionary_path, encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
             self.logger.error(f"Failed to load ComfyUI node dictionary: {e}")
-            return {"node_types": {}, "extraction_priorities": {}}
+            return {}
 
     def analyze_workflow(self, workflow_data: WorkflowData) -> dict[str, Any]:
-        """Analyze a ComfyUI workflow and extract key metadata.
+        """Analyze a ComfyUI workflow and extract key metadata."""
+        if not workflow_data or not isinstance(workflow_data, dict):
+            return {
+                "is_valid_workflow": False,
+                "error": "Input data is not a valid workflow dictionary.",
+            }
 
-        Args:
-            workflow_data: The parsed ComfyUI workflow JSON
+        self.nodes = self._extract_nodes(workflow_data)
+        self.links = workflow_data.get("links", [])
 
-        Returns:
-            Dictionary with extracted workflow metadata
+        if not self.nodes:
+            return {
+                "is_valid_workflow": False,
+                "error": "No nodes found in workflow data",
+            }
 
-        """
-        analysis = {
-            "is_comfyui_workflow": True,
-            "node_count": 0,
-            "node_types_found": [],
-            "extracted_parameters": {},
-            "model_info": {},
-            "prompt_info": {},
-            "sampling_info": {},
-            "workflow_chains": {},
-            "errors": [],
-        }
+        sampler_nodes = self._find_sampler_nodes()
 
-        try:
-            # Extract nodes from workflow
-            nodes = self._extract_nodes(workflow_data)
-            if not nodes:
-                analysis["is_comfyui_workflow"] = False
-                analysis["errors"].append("No nodes found in workflow data")
-                return analysis
-
-            analysis["node_count"] = len(nodes)
-
-            # Analyze each node
-            node_analysis = self._analyze_nodes(nodes)
-            analysis.update(node_analysis)
-
-            # Extract parameters using priority system
-            parameters = self._extract_parameters_by_priority(nodes)
-            analysis["extracted_parameters"] = parameters
-
-            # Group related information
-            analysis["model_info"] = self._extract_model_info(nodes)
-            links = workflow_data.get("links", [])
-            analysis["prompt_info"] = self._extract_prompt_info(nodes, links)
-            analysis["sampling_info"] = self._extract_sampling_info(nodes)
-
-            # Analyze workflow structure
-            analysis["workflow_chains"] = self._analyze_workflow_chains(nodes, links)
-
-        except Exception as e:
-            self.logger.error(f"Error analyzing ComfyUI workflow: {e}")
-            analysis["errors"].append(f"Analysis error: {e!s}")
-
-        return analysis
-
-    def _extract_nodes(self, workflow_data: WorkflowData) -> dict[str, NodeData]:
-        """Extract nodes from workflow data."""
-        # ComfyUI workflows can have nodes in different formats
-        if "nodes" in workflow_data:
-            # Format: {"nodes": [{"id": 1, "type": "...", ...}, ...]}
-            if isinstance(workflow_data["nodes"], list):
-                return {
-                    str(node.get("id", i)): node
-                    for i, node in enumerate(workflow_data["nodes"])
-                }
-            if isinstance(workflow_data["nodes"], dict):
-                return workflow_data["nodes"]
-
-        # Format: {"1": {"type": "...", ...}, "2": {...}, ...}
-        if all(
-            key.isdigit()
-            for key in workflow_data.keys()
-            if isinstance(workflow_data[key], dict)
-        ):
-            return {k: v for k, v in workflow_data.items() if isinstance(v, dict)}
-
-        return {}
-
-    def _analyze_nodes(self, nodes: dict[str, NodeData]) -> dict[str, Any]:
-        """Analyze the nodes in the workflow."""
-        node_types = []
-        categories = {}
-
-        for node_id, node_data in nodes.items():
-            node_type = node_data.get("type") or node_data.get("class_type")
-            if node_type:
-                node_types.append(node_type)
-
-                # Find category from dictionary
-                category = self._get_node_category(node_type)
-                if category:
-                    if category not in categories:
-                        categories[category] = []
-                    categories[category].append(node_type)
+        generation_passes = []
+        for sampler_node in sampler_nodes:
+            pass_info = self._analyze_generation_pass(sampler_node)
+            generation_passes.append(pass_info)
 
         return {
-            "node_types_found": list(set(node_types)),
-            "categories_used": categories,
-            "has_model_loading": "loaders" in categories,
-            "has_sampling": "sampling" in categories,
-            "has_conditioning": "conditioning" in categories,
+            "is_valid_workflow": True,
+            "node_count": len(self.nodes),
+            "link_count": len(self.links),
+            "generation_passes": generation_passes,
+            "custom_nodes_used": self._get_custom_node_types(),
         }
 
-    def _get_node_category(self, node_type: str) -> str | None:
-        """Get the category of a node type from the dictionary."""
-        node_types = self.node_dictionary.get("node_types", {})
-        for category, types in node_types.items():
-            if node_type in types:
-                return category
+    def _extract_nodes(self, workflow_data: WorkflowData) -> dict[str, NodeData]:
+        """Extracts and standardizes the node dictionary from the workflow."""
+        nodes_data = workflow_data.get("nodes", {})
+        if isinstance(nodes_data, list):
+            return {str(node.get("id", i)): node for i, node in enumerate(nodes_data)}
+        if isinstance(nodes_data, dict):
+            # Handles both {"1": {...}} and old formats
+            return {k: v for k, v in nodes_data.items() if isinstance(v, dict)}
+        return {}
+
+    def _find_sampler_nodes(self) -> list[NodeData]:
+        """Finds all KSampler (or equivalent) nodes in the workflow."""
+        sampler_types = ["KSampler", "KSamplerAdvanced", "SamplerCustom"]
+        found_samplers = []
+        for node in self.nodes.values():
+            node_type = node.get("type") or node.get("class_type")
+            if node_type in sampler_types:
+                found_samplers.append(node)
+        # Sort by vertical position as a heuristic for execution order
+        return sorted(found_samplers, key=lambda n: n.get("pos", [0, 0])[1])
+
+    def _analyze_generation_pass(self, sampler_node: NodeData) -> dict[str, Any]:
+        """Analyzes a single generation pass starting from a sampler node."""
+        sampler_id = str(sampler_node.get("id"))
+
+        # Use the new unified tracing method for everything
+        model_info = {
+            "model": self._trace_to_source_value(sampler_id, "model", "ckpt_name"),
+            "vae": self._trace_to_source_value(sampler_id, "vae", "vae_name"),
+        }
+
+        prompt_info = {
+            "positive_prompt": self._trace_conditioning_source(sampler_id, "positive"),
+            "negative_prompt": self._trace_conditioning_source(sampler_id, "negative"),
+        }
+
+        sampling_info = {
+            "seed": self._trace_to_source_value(sampler_id, "seed", "seed", "INT"),
+            "steps": self._trace_to_source_value(sampler_id, "steps", "steps", "INT"),
+            "cfg": self._trace_to_source_value(sampler_id, "cfg", "cfg", "FLOAT"),
+            "sampler_name": self._trace_to_source_value(sampler_id, "sampler_name", "sampler_name", "STRING"),
+            "scheduler": self._trace_to_source_value(sampler_id, "scheduler", "scheduler", "STRING"),
+            "denoise": self._trace_to_source_value(sampler_id, "denoise", "denoise", "FLOAT"),
+        }
+
+        latent_info = {
+            "width": self._trace_to_source_value(sampler_id, "latent_image", "width", "INT"),
+            "height": self._trace_to_source_value(sampler_id, "latent_image", "height", "INT"),
+        }
+
+        return {
+            "sampler_node_id": sampler_id,
+            "sampler_node_type": sampler_node.get("type") or sampler_node.get("class_type"),
+            "model_info": model_info,
+            "prompt_info": prompt_info,
+            "sampling_info": sampling_info,
+            "latent_info": latent_info,
+        }
+
+    def _find_input_link(self, node_id: str, input_name: str) -> Link | None:
+        """Finds the link connected to a specific input of a node."""
+        node = self.nodes.get(node_id)
+        if not node:
+            return None
+
+        # Standard format: inputs is a list of dicts
+        for i, inp in enumerate(node.get("inputs", [])):
+            if inp.get("name") == input_name:
+                link_index = inp.get("link")
+                if link_index is not None:
+                    # Find the link by its ID
+                    for link in self.links:
+                        if link[0] == link_index:
+                            return link
+                return None  # Input found but not linked
+
+        # Fallback for some formats where inputs is a dict
+        inputs_dict = node.get("inputs", {})
+        if isinstance(inputs_dict, dict) and input_name in inputs_dict:
+            link_info = inputs_dict[input_name]
+            if isinstance(link_info, list) and len(link_info) >= 2:
+                # Format: [source_node_id, source_slot_index]
+                for link in self.links:
+                    if link[1] == link_info[0] and link[2] == link_info[1]:
+                        return link
         return None
 
-    def _get_node_definition(self, node_type: str) -> dict[str, Any] | None:
-        """Get the full definition of a node type."""
-        node_types = self.node_dictionary.get("node_types", {})
-        for category, types in node_types.items():
-            if node_type in types:
-                return types[node_type]
-        return None
-
-    def _extract_parameters_by_priority(
-        self, nodes: dict[str, NodeData]
-    ) -> dict[str, Any]:
-        """Extract parameters using the priority system from the dictionary."""
-        parameters = {}
-        priorities = self.node_dictionary.get("extraction_priorities", {})
-
-        for param_name, priority_node_types in priorities.items():
-            for node_type in priority_node_types:
-                value = self._find_parameter_in_nodes(nodes, node_type, param_name)
-                if value is not None:
-                    parameters[param_name] = value
-                    break  # Use first (highest priority) match
-
-        return parameters
-
-    def _find_parameter_in_nodes(
-        self, nodes: dict[str, NodeData], node_type: str, param_name: str
+    def _trace_to_source_value(
+        self,
+        start_node_id: str,
+        input_to_trace: str,
+        target_widget_name: str,
+        target_type: str = "STRING",
+        depth=0,
     ) -> Any:
-        """Find a specific parameter from nodes of a given type."""
-        node_def = self._get_node_definition(node_type)
-        if not node_def:
+        """The new powerhouse function. Traces any input back to its literal source value."""
+        if depth > 20:
+            return None  # Safety break
+
+        link = self._find_input_link(start_node_id, input_to_trace)
+        if not link:
             return None
 
-        # Find nodes of this type
-        matching_nodes = [
-            node
-            for node in nodes.values()
-            if node.get("type") == node_type or node.get("class_type") == node_type
-        ]
-
-        if not matching_nodes:
+        source_node_id = str(link[1])
+        source_node = self.nodes.get(source_node_id)
+        if not source_node:
             return None
 
-        # Use the first matching node
-        node = matching_nodes[0]
+        node_type = source_node.get("type") or source_node.get("class_type")
+        widgets = source_node.get("widgets_values", [])
 
-        # Extract based on node definition
-        param_extraction = node_def.get("parameter_extraction", {})
+        # Check if the source node IS the provider of the value
+        if node_type in [
+            "CheckpointLoaderSimple",
+            "VAELoader",
+            "LoraLoader",
+            "EmptyLatentImage",
+            "PrimitiveNode",
+        ]:
+            if widgets:
+                # For EmptyLatentImage, find width/height
+                if node_type == "EmptyLatentImage" and target_widget_name in [
+                    "width",
+                    "height",
+                ]:
+                    return widgets[0] if target_widget_name == "width" else widgets[1]
+                # For PrimitiveNode, the value is the only widget
+                if node_type == "PrimitiveNode":
+                    return widgets[0]
+                # For loaders, it's the first widget
+                return widgets[0]
 
-        # Map parameter names to extraction patterns
-        extraction_map = {
-            "model": ["model_name", "ckpt_name"],
-            "lora": ["lora_name"],
-            "vae": ["vae_name"],
-            "prompt": ["string", "prompt_text"],
-            "sampler": ["sampler_name"],
-            "scheduler": ["scheduler"],
-            "steps": ["steps"],
-            "cfg": ["cfg", "guidance"],
-            "seed": ["noise_seed", "seed"],
-            "dimensions": ["width", "height"],
-        }
-
-        # Try to extract the parameter
-        possible_keys = extraction_map.get(param_name, [param_name])
-        for key in possible_keys:
-            if key in param_extraction:
-                extraction_path = param_extraction[key]
-                value = self._extract_value_from_node(node, extraction_path)
-                if value is not None:
-                    return value
-
-        return None
-
-    def _extract_value_from_node(self, node: NodeData, extraction_path: str) -> Any:
-        """Extract a value from a node using the extraction path."""
-        try:
-            if extraction_path.startswith("widgets_values["):
-                # Extract from widgets_values array
-                index_str = extraction_path.split("[")[1].split("]")[0]
-                index = int(index_str)
-                widgets = node.get("widgets_values", [])
-                if index < len(widgets):
-                    return widgets[index]
-
-            elif extraction_path.startswith("inputs."):
-                # Extract from inputs object (TensorArt format)
-                input_key = extraction_path.replace("inputs.", "", 1)
-                inputs = node.get("inputs", {})
-                return inputs.get(input_key)
-
-            elif "." in extraction_path:
-                # JSON path extraction
-                return json_path_get_utility(node, extraction_path)
-
-            else:
-                # Direct key access
-                return node.get(extraction_path)
-
-        except Exception as e:
-            self.logger.debug(
-                f"Error extracting value with path '{extraction_path}': {e}"
+        # If the source is another passthrough/logic node, recurse
+        # This list can be expanded with more passthrough-type nodes
+        passthrough_inputs = ["model", "vae", "latent", "LATENT", "MODEL", "VAE"]
+        if input_to_trace in passthrough_inputs:
+            return self._trace_to_source_value(
+                source_node_id,
+                input_to_trace,
+                target_widget_name,
+                target_type,
+                depth + 1,
             )
 
         return None
 
-    def _extract_model_info(self, nodes: dict[str, NodeData]) -> dict[str, Any]:
-        """Extract model-related information."""
-        model_info = {"main_model": None, "loras": [], "vae": None, "text_encoders": []}
-
-        for node in nodes.values():
-            node_type = node.get("type") or node.get("class_type")
-            widgets = node.get("widgets_values", [])
-            inputs = node.get("inputs", {})
-
-            if node_type in ["UNETLoader", "CheckpointLoaderSimple"]:
-                if widgets:
-                    model_info["main_model"] = widgets[0]
-
-            elif node_type == "ECHOCheckpointLoaderSimple":
-                if inputs and "ckpt_name" in inputs:
-                    model_info["main_model"] = inputs["ckpt_name"]
-
-            elif node_type in ["LoraLoader", "LoraLoaderModelOnly"]:
-                if len(widgets) >= 2:
-                    model_info["loras"].append(
-                        {"name": widgets[0], "strength": widgets[1]}
-                    )
-
-            elif node_type == "LoraTagLoader":
-                if inputs and "text" in inputs:
-                    # Parse LoRA tags like "<lora:name:strength>"
-                    lora_text = inputs["text"]
-                    import re
-
-                    lora_matches = re.findall(r"<lora:([^:]+):([^>]+)>", lora_text)
-                    for name, strength in lora_matches:
-                        model_info["loras"].append(
-                            {
-                                "name": name,
-                                "strength": (
-                                    float(strength)
-                                    if strength.replace(".", "").isdigit()
-                                    else strength
-                                ),
-                            }
-                        )
-
-            elif node_type == "VAELoader":
-                if widgets:
-                    model_info["vae"] = widgets[0]
-
-            elif node_type == "DualCLIPLoader":
-                if len(widgets) >= 2:
-                    model_info["text_encoders"] = [widgets[0], widgets[1]]
-
-        return model_info
-
-    def _extract_prompt_info(
-        self, nodes: dict[str, NodeData], links: list[Any]
-    ) -> dict[str, Any]:
-        """Extract prompt-related information by tracing KSampler inputs."""
-        prompt_info = {
-            "positive_prompt": None,
-            "negative_prompt": None,
-            "guidance_scale": None,
-        }
-
-        # Find KSampler (or similar) nodes
-        sampler_nodes = [
-            node
-            for node in nodes.values()
-            if node.get("type")
-            in [
-                "KSampler",
-                "KSamplerAdvanced",
-                "SamplerCustom",
-                "SamplerCustomAdvanced",
-            ]
-            or node.get("class_type")
-            in [
-                "KSampler",
-                "KSamplerAdvanced",
-                "SamplerCustom",
-                "SamplerCustomAdvanced",
-            ]
-        ]
-
-        for sampler_node in sampler_nodes:
-            sampler_inputs = sampler_node.get("inputs", {})
-
-            # Trace positive conditioning
-            positive_link = sampler_inputs.get("positive")
-            if (
-                positive_link
-                and isinstance(positive_link, list)
-                and len(positive_link) >= 2
-            ):
-                source_node_id = str(positive_link[0])
-                positive_prompt_text = self._trace_conditioning_source(
-                    nodes, links, source_node_id
-                )
-                if positive_prompt_text:
-                    self.logger.debug(f"Traced positive prompt: {positive_prompt_text}")
-                    if not prompt_info["positive_prompt"]:
-                        prompt_info["positive_prompt"] = positive_prompt_text
-
-            # Trace negative conditioning
-            negative_link = sampler_inputs.get("negative")
-            if (
-                negative_link
-                and isinstance(negative_link, list)
-                and len(negative_link) >= 2
-            ):
-                source_node_id = str(negative_link[0])
-                negative_prompt_text = self._trace_conditioning_source(
-                    nodes, links, source_node_id
-                )
-                if negative_prompt_text:
-                    self.logger.debug(f"Traced negative prompt: {negative_prompt_text}")
-                    if not prompt_info["negative_prompt"]:
-                        prompt_info["negative_prompt"] = negative_prompt_text
-
-            # Extract guidance scale if available (e.g., from FluxGuidance)
-            # This part remains similar to previous logic, but can be refined with tracing if needed
-            if "cfg" in sampler_inputs:
-                prompt_info["guidance_scale"] = sampler_inputs["cfg"]
-            elif (
-                "widgets_values" in sampler_node
-                and len(sampler_node["widgets_values"]) > 2
-            ):
-                # KSampler widgets: seed, steps, cfg, sampler_name, scheduler, denoise
-                try:
-                    prompt_info["guidance_scale"] = float(
-                        sampler_node["widgets_values"][2]
-                    )
-                except (ValueError, TypeError):
-                    pass
-
-            # Break after finding prompts from the first sampler, or continue if multiple samplers are relevant
-            if prompt_info["positive_prompt"] and prompt_info["negative_prompt"]:
-                break
-
-        # Fallback for FluxGuidance if not connected directly to KSampler
-        if not prompt_info["guidance_scale"]:
-            for node in nodes.values():
-                node_type = node.get("type") or node.get("class_type")
-                if node_type == "FluxGuidance":
-                    widgets = node.get("widgets_values", [])
-                    if widgets:
-                        prompt_info["guidance_scale"] = widgets[0]
-                    break
-
-        return prompt_info
-
-    def _trace_conditioning_source(
-        self,
-        nodes: dict[str, NodeData],
-        links: list[Any],
-        start_node_id: str,
-        depth: int = 0,
-    ) -> str | None:
-        """Recursively traces back the conditioning source to find the prompt text."""
-        if depth > 10:  # Prevent infinite loops in complex workflows
-            self.logger.debug(f"Max tracing depth reached for node {start_node_id}")
+    def _trace_conditioning_source(self, start_node_id: str, conditioning_type: str, depth=0) -> str | None:
+        """Improved prompt tracer. Now handles string concatenation."""
+        if depth > 20:
             return None
 
-        current_node = nodes.get(start_node_id)
-        if not current_node:
+        link = self._find_input_link(start_node_id, conditioning_type)
+        if not link:
             return None
 
-        class_type = current_node.get("type") or current_node.get("class_type")
-        inputs = current_node.get("inputs", {})
-        widgets = current_node.get("widgets_values", [])
+        source_node_id = str(link[1])
+        source_node = self.nodes.get(source_node_id)
+        if not source_node:
+            return None
 
-        # Direct text sources
-        if class_type == "String Literal":
-            if widgets:
-                return str(widgets[0])
-        elif class_type == "CLIPTextEncode":
-            # Prioritize linked 'text' input over widget values if available
-            if (
-                "text" in inputs
-                and isinstance(inputs["text"], list)
-                and len(inputs["text"]) >= 2
-            ):
-                source_node_id = str(inputs["text"][0])
-                traced_text = self._trace_conditioning_source(
-                    nodes, links, source_node_id, depth + 1
-                )
-                if traced_text:
-                    self.logger.debug(
-                        f"CLIPTextEncode (linked input) found text: {traced_text}"
-                    )
-                    return traced_text
-            elif "text" in inputs:  # Direct text input
-                self.logger.debug(
-                    f"CLIPTextEncode (direct input) found text: {inputs['text']}"
-                )
-                return str(inputs["text"])
-            elif widgets:
-                self.logger.debug(f"CLIPTextEncode (widgets) found text: {widgets[0]}")
-                return str(widgets[0])
-        elif class_type == "CLIPTextEncodeSDXL":
-            # For SDXL, we need to know if it's positive or negative branch
-            # This method is called from positive/negative links, so we assume the role
-            if (
-                "text_g" in inputs
-            ):  # Assuming text_g is for positive, text_l for negative
-                return str(inputs["text_g"])
-            if "text_l" in inputs:
-                return str(inputs["text_l"])
-        elif class_type == "T5TextEncode":
-            if "text" in inputs:
-                return str(inputs["text"])
-        elif class_type == "MZ_ChatGLM3_V2":  # New: ChatGLM3 text encoder
-            if widgets and widgets[0]:
-                return str(widgets[0])
-        elif class_type == "DPRandomGenerator":  # Dynamic Prompts
-            # DPRandomGenerator outputs a string, which is the template itself
-            if "text" in inputs:
-                return str(inputs["text"])
-            if widgets and widgets[0]:
-                return str(widgets[0])
-        elif class_type == "ConcatStringSingle":  # ConcatStringSingle
-            # Recursively trace all string inputs and concatenate them
-            concatenated_text = []
-            for input_name, input_value in inputs.items():
-                if input_name.startswith("string"):
-                    if isinstance(input_value, list) and len(input_value) >= 2:
-                        source_node_id = str(input_value[0])
-                        traced_text = self._trace_conditioning_source(
-                            nodes, links, source_node_id, depth + 1
-                        )
-                        if traced_text:
-                            concatenated_text.append(traced_text)
-                    elif isinstance(input_value, str):
-                        concatenated_text.append(input_value)
-            return " ".join(concatenated_text).strip()
+        node_type = source_node.get("type") or source_node.get("class_type")
+        widgets = source_node.get("widgets_values", [])
 
-        # Traverse through passthrough/reroute nodes or conditioning manipulators
-        if class_type in [
+        # --- Base Cases: Nodes that provide text ---
+        if node_type in ["CLIPTextEncode", "CLIPTextEncodeSDXL", "T5TextEncode"]:
+            # In modern formats, the text is often a linked input, not a widget
+            traced_text = self._trace_to_source_value(source_node_id, "text", "text", "STRING")
+            if traced_text:
+                return traced_text
+            return widgets[0] if widgets else None
+
+        # --- Impact Pack text processing nodes ---
+        if node_type == "ImpactWildcardProcessor":
+            # This node processes wildcard text - the processed text is in widgets[1] (populate mode result)
+            # widgets[0] = original text, widgets[1] = processed text
+            if len(widgets) >= 2:
+                return widgets[1]  # Return the processed text
+            if len(widgets) >= 1:
+                return widgets[0]  # Fallback to original text
+            return None
+
+        if node_type == "ImpactWildcardEncode":
+            # This node encodes wildcard text into conditioning
+            wildcard_text = self._trace_to_source_value(source_node_id, "wildcard", "wildcard", "STRING")
+            if wildcard_text:
+                return wildcard_text
+            return widgets[0] if widgets else None
+
+        if node_type == "Wildcard Prompt from String":
+            # This is the source of wildcard strings
+            return widgets[0] if widgets else None
+
+        if node_type == "AutoNegativePrompt":
+            # This node automatically generates negative prompts
+            # The output negative prompt is usually in widgets[1]
+            if len(widgets) >= 2:
+                return widgets[1]  # Return the generated negative prompt
+            return widgets[0] if widgets else None
+
+        if node_type in ["DPRandomGenerator", "Dynamic Prompts Text Generator"]:
+            # Dynamic prompt generators from various packs
+            return widgets[0] if widgets else None
+
+        if node_type == "String Literal":
+            return widgets[0] if widgets else None
+
+        # --- NEW: Handle string concatenation ---
+        if node_type == "ConcatString":
+            text_a = self._trace_to_source_value(source_node_id, "string_a", "string_a", "STRING") or ""
+            text_b = self._trace_to_source_value(source_node_id, "string_b", "string_b", "STRING") or ""
+            return text_a + text_b
+
+        # --- Recursive Cases: Nodes that pass conditioning through ---
+        # This list can be expanded
+        passthrough_nodes = [
             "Reroute",
             "ConditioningCombine",
-            "ConditioningConcat",
             "ConditioningSetArea",
-            "ConditioningSetTimestepRange",
-            "ConditioningAverage",
-            "ConditioningZeroOut",
-            "ConditioningSetAreaPercentage",
-            "ConditioningAlign",
-            "ConditioningSetAreaLite",
-            "ConditioningSetAreaByMask",
-            "ConditioningSetAreaByBoundingBox",
-            "ConditioningSetAreaByImage",
-            "ConditioningSetAreaByImageSize",
-            "ConditioningSetAreaByImageSizeRatio",
-            "ConditioningSetAreaByImageSizeRatioPercentage",
-            "ConditioningSetAreaByImageSizeRatioPercentageByMask",
-            "ConditioningSetAreaByImageSizeRatioPercentageByBoundingBox",
-            "ConditioningSetAreaByImageSizeRatioPercentageByImage",
-            "ConditioningSetAreaByImageSizeRatioPercentageByImageSizeRatio",
-            "ConditioningSetAreaByImageSizeRatioPercentageByImageSizeRatioPercentage",
-            "ConditioningSubtract",
-            "ConditioningAddConDelta",
-        ]:
-            # Find the incoming link for the conditioning
-            for input_name, input_value in inputs.items():
-                if isinstance(input_value, list) and len(input_value) >= 2:
-                    # This is a connection to another node
-                    source_node_id = str(input_value[0])
-                    # Recursively trace back
-                    result = self._trace_conditioning_source(
-                        nodes, links, source_node_id, depth + 1
-                    )
-                    if result:
-                        return result
+            "ConditioningConcat",
+            "ImpactSwitch",
+            "ImpactConditionalBranch",
+            "Switch any [Crystools]",
+        ]
+        if node_type in passthrough_nodes:
+            # Find the first conditioning input and trace it
+            for i in range(5):  # Check up to 5 inputs
+                cond_input_name = f"conditioning_{i}" if i > 0 else "conditioning"
+                traced = self._trace_conditioning_source(source_node_id, cond_input_name, depth + 1)
+                if traced:
+                    return traced
 
-        # Handle nodes that might pass through conditioning without direct text input
-        # e.g., LoraLoader, CheckpointLoaderSimple (if they output conditioning directly)
-        # This part might need more specific logic based on how these nodes are used
-        # in relation to conditioning in complex workflows.
+            # For switch nodes, also check common switch input names
+            if "Switch" in node_type or "ImpactSwitch" in node_type:
+                for switch_input in [
+                    "input1",
+                    "input2",
+                    "input_a",
+                    "input_b",
+                    "positive",
+                    "negative",
+                ]:
+                    traced = self._trace_conditioning_source(source_node_id, switch_input, depth + 1)
+                    if traced:
+                        return traced
 
         return None
 
-    def _extract_sampling_info(self, nodes: dict[str, NodeData]) -> dict[str, Any]:
-        """Extract sampling-related information from nodes."""
-        sampling_info = {
-            "steps": None,
-            "cfg": None,
-            "sampler_name": None,
-            "scheduler": None,
-            "denoise": None,
-        }
-        
-        # Find sampler nodes
-        for node in nodes.values():
-            node_type = node.get("type") or node.get("class_type", "")
-            
-            if "KSampler" in node_type or "Sampler" in node_type:
-                widgets = node.get("widgets_values", [])
-                if widgets:
-                    try:
-                        if len(widgets) >= 3:
-                            sampling_info["steps"] = widgets[2] if widgets[2] else None
-                            sampling_info["cfg"] = widgets[3] if len(widgets) > 3 and widgets[3] else None
-                        if len(widgets) >= 2:
-                            sampling_info["sampler_name"] = widgets[0] if widgets[0] else None
-                            sampling_info["scheduler"] = widgets[1] if widgets[1] else None
-                        if len(widgets) >= 5:
-                            sampling_info["denoise"] = widgets[4] if widgets[4] else None
-                    except (IndexError, TypeError):
-                        continue
-                break
-                
-        return sampling_info
-
-    def _analyze_workflow_chains(self, nodes: dict[str, NodeData], links: list[Any]) -> dict[str, Any]:
-        """Analyze workflow connection chains and patterns."""
-        chains = {
-            "model_chain": [],
-            "conditioning_chain": [],
-            "image_chain": [],
-            "total_nodes": len(nodes),
-            "total_links": len(links),
-        }
-        
-        # Basic chain analysis - find major node types in sequence
-        node_types = [node.get("type") or node.get("class_type", "") for node in nodes.values()]
-        
-        # Model loading chain
-        model_nodes = [nt for nt in node_types if "Loader" in nt or "Model" in nt]
-        chains["model_chain"] = model_nodes
-        
-        # Conditioning chain  
-        conditioning_nodes = [nt for nt in node_types if "CLIP" in nt or "Encode" in nt]
-        chains["conditioning_chain"] = conditioning_nodes
-        
-        # Image processing chain
-        image_nodes = [nt for nt in node_types if "Image" in nt or "Save" in nt or "Preview" in nt]
-        chains["image_chain"] = image_nodes
-        
-        return chains
-
-
-# Convenience function for easy access
-def analyze_comfyui_workflow(
-    workflow_data: WorkflowData, logger: logging.Logger | None = None
-) -> dict[str, Any]:
-    """Convenience function to analyze a ComfyUI workflow.
-
-    Args:
-        workflow_data: The parsed ComfyUI workflow JSON
-        logger: Optional logger instance
-
-    Returns:
-        Dictionary with extracted workflow metadata
-
-    """
-    if logger is None:
-        import logging
-
-        logger = logging.getLogger(__name__)
-
-    analyzer = ComfyUIWorkflowAnalyzer(logger)
-    return analyzer.analyze_workflow(workflow_data)
+    def _get_custom_node_types(self) -> dict[str, int]:
+        """Gets a summary of all non-standard node types used."""
+        standard_nodes = [
+            # Add a list of default ComfyUI nodes here from a config or hardcode
+            "KSampler",
+            "CheckpointLoaderSimple",
+            "CLIPTextEncode",
+            "VAELoader",
+            "VAEDecode",
+            "SaveImage",
+            "EmptyLatentImage",
+            "Reroute",
+        ]
+        custom_nodes: dict[str, int] = {}
+        for node in self.nodes.values():
+            node_type = node.get("type") or node.get("class_type")
+            if node_type and node_type not in standard_nodes:
+                custom_nodes[node_type] = custom_nodes.get(node_type, 0) + 1
+        return custom_nodes

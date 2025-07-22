@@ -1,0 +1,125 @@
+/*
+ * Mom's 2AM Fever Dreams: Pus Pockets Theme
+ *
+ * This theme celebrates the glorious, gooey, and often vibrant world of infection.
+ * Embrace the yellow, green, and the satisfying pop.
+ *
+ * Legal Disclaimer: Do not attempt to pop your UI. It is not a real pus pocket.
+ * We are not responsible for any medical emergencies or sudden urges to become a dermatologist.
+ */
+
+QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #FFFF00, /* Yellow - fresh pus */
+                               stop:0.3 #ADFF2F, /* GreenYellow - slightly infected */
+                               stop:0.6 #32CD32, /* LimeGreen - full-blown infection */
+                               stop:1 #228B22); /* ForestGreen - deep, festering */
+    color: #8B0000; /* DarkRed - inflamed skin */
+}
+
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #FFFF00, /* Yellow */
+                               stop:0.3 #ADFF2F, /* GreenYellow */
+                               stop:0.6 #32CD32, /* LimeGreen */
+                               stop:1 #228B22); /* ForestGreen */
+}
+
+QPushButton {
+    border: 3px solid #8B0000; /* DarkRed - inflamed border */
+    border-radius: 60px 20px 10px 50px; /* Irregular, like a swollen pustule */
+    background-color: #FFFF00; /* Yellow - main pus color */
+    color: #8B0000; /* DarkRed - for contrast */
+    padding: 15px 30px;
+    font-size: 20px;
+    transform: rotate(10deg); /* Slightly bulging */
+}
+
+QPushButton:hover {
+    background-color: #FFD700; /* Gold - more intense pus */
+    border: 3px solid #B22222; /* FireBrick */
+    transform: rotate(12deg) scale(1.03); /* More pronounced */
+}
+
+QPushButton:pressed {
+    background-color: #ADFF2F; /* GreenYellow - squished pus */
+    border: 3px solid #8B0000; /* DarkRed */
+    transform: rotate(8deg) scale(0.97); /* Impact */
+}
+
+/* Add more QSS elements as needed for a complete theme */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    border: 1px solid #32CD32; /* LimeGreen */
+    background-color: #F0FFF0; /* Honeydew - clean skin */
+    color: #8B0000; /* DarkRed text */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #FFFF00; /* Yellow - focused on the infection */
+}
+
+QTabWidget::pane {
+    border-top: 2px solid #32CD32; /* LimeGreen */
+}
+
+QTabBar::tab {
+    background: #ADFF2F; /* GreenYellow */
+    border: 1px solid #32CD32; /* LimeGreen */
+    border-bottom-color: #32CD32; /* Same as pane */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 8px;
+}
+
+QTabBar::tab:selected {
+    background: #FFFF00; /* Yellow */
+    border-color: #FFFF00;
+    border-bottom-color: #FFFF00; /* Selected tab blends with pane */
+}
+
+QScrollBar:vertical {
+    border: 1px solid #32CD32;
+    background: #F0FFF0;
+    width: 15px;
+    margin: 22px 0 22px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #FFFF00;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QMenuBar {
+    background-color: #32CD32; /* LimeGreen */
+    color: #8B0000; /* DarkRed */
+}
+
+QMenu {
+    background-color: #F0FFF0; /* Honeydew */
+    border: 1px solid #32CD32;
+}
+
+QMenu::item:selected {
+    background-color: #FFFF00; /* Yellow */
+}
+
+QStatusBar {
+    background-color: #228B22; /* ForestGreen */
+    color: #FFFFFF;
+}
+
+/* Custom QLabel elements with theme-specific IDs */
+QLabel#pusPocketsTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #8B0000; /* DarkRed */
+    text-align: center;
+}
+
+QLabel#pusPocketsDescription {
+    font-size: 14px;
+    color: #32CD32; /* LimeGreen */
+}

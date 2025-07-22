@@ -1,0 +1,58 @@
+/* SANGARIA RAMUNE PINK THEME */
+/* A vibrant, clear pink theme, like the drink. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFC0CB, stop: 0.5 #FFB6C1,
+                                stop: 1 #FFF0F5);
+    color: #8B008B;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFC0CB, stop: 0.5 #FFB6C1,
+                                stop: 1 #FFF0F5);
+    color: #8B008B;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF69B4, stop: 1 #FF1493);
+    border: 2px solid #8B008B;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF1493, stop: 1 #FF69B4);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #FFC0CB;
+    border-radius: 3px;
+    padding: 5px;
+    color: #8B008B;
+    selection-background-color: #FF69B4;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #FFC0CB;
+    border-radius: 3px;
+    alternate-background-color: #FFF0F5;
+    color: #8B008B;
+}
+
+QListWidget::item:selected {
+    background: #FF69B4;
+    color: #FFFFFF;
+}

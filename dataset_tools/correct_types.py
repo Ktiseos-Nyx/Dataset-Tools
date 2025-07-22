@@ -270,13 +270,7 @@ class ListOfDelineatedStr(BaseModel):
     @field_validator("convert")
     @classmethod
     def drop_tuple(cls, v: list[Any]) -> list[Any]:
-        if v and isinstance(
-            v[0], tuple
-        ):  # Simplified from original, assuming v is non-empty list if v[0] is accessed
+        if v and isinstance(v[0], tuple):  # Simplified from original, assuming v is non-empty list if v[0] is accessed
             first_tuple_first_element = next(iter(v[0]), None)
-            return (
-                [first_tuple_first_element]
-                if first_tuple_first_element is not None
-                else []
-            )
+            return [first_tuple_first_element] if first_tuple_first_element is not None else []
         return v

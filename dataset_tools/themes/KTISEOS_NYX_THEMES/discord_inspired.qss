@@ -1,0 +1,346 @@
+/* DISCORD INSPIRED THEME */
+/* Clean dark theme inspired by Discord's sleek interface */
+
+QMainWindow {
+    background-color: #36393f;
+    color: #dcddde;
+    border: none;
+}
+
+QWidget {
+    background-color: #36393f;
+    color: #dcddde;
+    font-size: 14px;
+}
+
+/* Discord-style buttons */
+QPushButton {
+    background-color: #5865f2;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    color: #ffffff;
+    font-weight: 500;
+    min-height: 18px;
+}
+
+QPushButton:hover {
+    background-color: #4752c4;
+}
+
+QPushButton:pressed {
+    background-color: #3c45a5;
+}
+
+QPushButton:disabled {
+    background-color: #4f545c;
+    color: #72767d;
+}
+
+/* Discord text areas */
+QTextEdit, QPlainTextEdit {
+    background-color: #40444b;
+    border: 1px solid #202225;
+    border-radius: 8px;
+    padding: 12px;
+    color: #dcddde;
+    selection-background-color: #5865f2;
+    selection-color: #ffffff;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #00b0f4;
+}
+
+/* Discord-style lists */
+QListWidget {
+    background-color: #2f3136;
+    border: 1px solid #202225;
+    border-radius: 8px;
+    alternate-background-color: #36393f;
+    color: #dcddde;
+    gridline-color: #40444b;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 8px 12px;
+    border-bottom: 1px solid #40444b;
+    border-radius: 4px;
+    margin: 1px;
+}
+
+QListWidget::item:selected {
+    background-color: #5865f2;
+    color: #ffffff;
+}
+
+QListWidget::item:hover {
+    background-color: #4f545c;
+}
+
+QListWidget::item:selected:hover {
+    background-color: #4752c4;
+}
+
+/* Discord menu styling */
+QMenuBar {
+    background-color: #202225;
+    color: #dcddde;
+    border-bottom: 1px solid #40444b;
+    font-weight: 500;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected {
+    background-color: #40444b;
+}
+
+QMenu {
+    background-color: #18191c;
+    border: 1px solid #202225;
+    border-radius: 8px;
+    padding: 6px;
+}
+
+QMenu::item {
+    padding: 8px 20px;
+    border-radius: 4px;
+    margin: 1px;
+}
+
+QMenu::item:selected {
+    background-color: #5865f2;
+    color: #ffffff;
+}
+
+/* Discord scrollbars */
+QScrollBar:vertical {
+    background: #2f3136;
+    width: 12px;
+    border-radius: 6px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #202225;
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #40444b;
+}
+
+QScrollBar::handle:vertical:pressed {
+    background: #5865f2;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: #2f3136;
+    height: 12px;
+    border-radius: 6px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: #202225;
+    border-radius: 6px;
+    min-width: 30px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #40444b;
+}
+
+QScrollBar::handle:horizontal:pressed {
+    background: #5865f2;
+}
+
+/* Discord tabs */
+QTabWidget::pane {
+    border: 1px solid #40444b;
+    background-color: #36393f;
+    border-radius: 8px;
+}
+
+QTabBar::tab {
+    background-color: #2f3136;
+    border: 1px solid #40444b;
+    padding: 8px 16px;
+    margin-right: 2px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: 500;
+}
+
+QTabBar::tab:selected {
+    background-color: #36393f;
+    border-bottom: none;
+    color: #00b0f4;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: #40444b;
+}
+
+/* Discord status bar */
+QStatusBar {
+    background-color: #202225;
+    border-top: 1px solid #40444b;
+    color: #72767d;
+    font-weight: 500;
+}
+
+/* Discord input fields */
+QLineEdit {
+    background-color: #40444b;
+    border: 1px solid #202225;
+    border-radius: 4px;
+    padding: 8px;
+    color: #dcddde;
+    selection-background-color: #5865f2;
+    selection-color: #ffffff;
+}
+
+QLineEdit:focus {
+    border: 1px solid #00b0f4;
+}
+
+/* Discord combo boxes */
+QComboBox {
+    background-color: #4f545c;
+    border: 1px solid #202225;
+    border-radius: 4px;
+    padding: 6px;
+    color: #dcddde;
+    min-width: 80px;
+    font-weight: 500;
+}
+
+QComboBox:hover {
+    background-color: #5865f2;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #202225;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid #dcddde;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #18191c;
+    border: 1px solid #202225;
+    selection-background-color: #5865f2;
+    selection-color: #ffffff;
+    color: #dcddde;
+}
+
+/* Discord splitter */
+QSplitter::handle {
+    background-color: #40444b;
+}
+
+QSplitter::handle:horizontal {
+    width: 2px;
+}
+
+QSplitter::handle:vertical {
+    height: 2px;
+}
+
+/* Discord progress bars */
+QProgressBar {
+    border: 1px solid #40444b;
+    border-radius: 4px;
+    background-color: #2f3136;
+    text-align: center;
+    color: #dcddde;
+    font-weight: 500;
+}
+
+QProgressBar::chunk {
+    background-color: #5865f2;
+    border-radius: 3px;
+}
+
+/* Discord tool tips */
+QToolTip {
+    background-color: #18191c;
+    border: 1px solid #202225;
+    color: #dcddde;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+/* Additional Discord styling */
+QLabel {
+    color: #dcddde;
+    font-weight: 500;
+}
+
+QGroupBox {
+    border: 1px solid #40444b;
+    border-radius: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    font-weight: 600;
+    color: #dcddde;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 8px 0 8px;
+    background-color: #36393f;
+    color: #00b0f4;
+    font-weight: 600;
+}
+
+/* Discord-style checkboxes */
+QCheckBox {
+    color: #dcddde;
+    font-weight: 500;
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 2px solid #72767d;
+    background-color: #40444b;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #5865f2;
+    border: 2px solid #5865f2;
+}
+
+QCheckBox::indicator:checked:hover {
+    background-color: #4752c4;
+    border: 2px solid #4752c4;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px solid #5865f2;
+}

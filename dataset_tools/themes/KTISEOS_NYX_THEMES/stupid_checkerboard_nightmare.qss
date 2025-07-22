@@ -1,0 +1,56 @@
+/* STUPID IDEA: CHECKERBOARD NIGHTMARE */
+/* A high-contrast, dizzying checkerboard pattern that assaults the eyes. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #000000, stop: 0.5 #FFFFFF,
+                                stop: 1 #000000);
+    color: #FF0000;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #000000, stop: 0.5 #FFFFFF,
+                                stop: 1 #000000);
+    color: #FF0000;
+    font-family: 'Impact', sans-serif;
+    font-size: 16px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF0000, stop: 1 #000000);
+    border: 5px solid #00FF00;
+    border-radius: 0px;
+    padding: 20px 30px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 1 #FF0000);
+    border: 5px solid #0000FF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    color: #000000;
+    border: 5px solid #FF0000;
+    border-radius: 0px;
+    padding: 15px;
+}
+
+QListWidget {
+    background-color: #000000;
+    color: #FFFFFF;
+    border: 5px solid #00FF00;
+    border-radius: 0px;
+}
+
+QListWidget::item:selected {
+    background-color: #FF0000;
+    color: #000000;
+}

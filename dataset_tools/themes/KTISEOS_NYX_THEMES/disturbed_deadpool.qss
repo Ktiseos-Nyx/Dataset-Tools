@@ -1,0 +1,284 @@
+/* DISTURBED IDEA: DEADPOOL INSPIRED */
+/* A bold, high-contrast theme with dominant reds and blacks, and white for text, reflecting Deadpool's costume and edgy humor. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 0.5 #000000,
+                                stop: 1 #B22222);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 0.5 #000000,
+                                stop: 1 #B22222);
+    color: #FFFFFF;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DC143C, stop: 1 #B22222);
+    border: 3px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 1 #DC143C);
+    border: 3px solid #FFD700;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 1 #B22222);
+    border: 3px inset #FFFFFF;
+}
+
+QPushButton:disabled {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #696969, stop: 1 #2F4F4F);
+    border: 3px solid #708090;
+    color: #DCDCDC;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #B22222;
+    border-radius: 5px;
+    padding: 8px;
+    color: #000000;
+    selection-background-color: #DC143C;
+    selection-color: #FFFFFF;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #000000;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #B22222;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #000000;
+    gridline-color: #DC143C;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 8px 10px;
+    border-bottom: 1px solid #D0D0D0;
+}
+
+QListWidget::item:selected {
+    background: #DC143C;
+    color: #FFFFFF;
+}
+
+QListWidget::item:hover {
+    background: #F0F0F0;
+}
+
+QMenuBar {
+    background: #000000;
+    color: #FFFFFF;
+    border-bottom: 1px solid #B22222;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 5px 10px;
+}
+
+QMenuBar::item:selected {
+    background: #B22222;
+}
+
+QMenu {
+    background: #000000;
+    border: 1px solid #B22222;
+    padding: 5px;
+}
+
+QMenu::item {
+    padding: 5px 15px;
+    color: #FFFFFF;
+}
+
+QMenu::item:selected {
+    background: #B22222;
+}
+
+QScrollBar:vertical {
+    background: #000000;
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #B22222;
+    border-radius: 5px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: #000000;
+    height: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #B22222;
+    border-radius: 5px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #B22222;
+    background: #FFFFFF;
+}
+
+QTabBar::tab {
+    background: #000000;
+    border: 1px solid #B22222;
+    padding: 8px 15px;
+    color: #FFFFFF;
+}
+
+QTabBar::tab:selected {
+    background: #FFFFFF;
+    color: #B22222;
+}
+
+QTabBar::tab:hover:!selected {
+    background: #DC143C;
+}
+
+QStatusBar {
+    background: #000000;
+    border-top: 1px solid #B22222;
+    color: #FFFFFF;
+}
+
+QLineEdit {
+    background: #FFFFFF;
+    border: 2px solid #B22222;
+    border-radius: 5px;
+    padding: 8px;
+    color: #000000;
+    selection-background-color: #DC143C;
+    selection-color: #FFFFFF;
+}
+
+QLineEdit:focus {
+    border: 2px solid #000000;
+}
+
+QComboBox {
+    background: #000000;
+    border: 2px solid #B22222;
+    border-radius: 5px;
+    padding: 5px;
+    color: #FFFFFF;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #B22222;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 8px solid #FFFFFF;
+}
+
+QComboBox QAbstractItemView {
+    background: #000000;
+    border: 1px solid #B22222;
+    selection-background-color: #B22222;
+    color: #FFFFFF;
+}
+
+QSplitter::handle {
+    background: #B22222;
+    border: 1px solid #FFFFFF;
+}
+
+QSplitter::handle:horizontal {
+    width: 5px;
+}
+
+QSplitter::handle:vertical {
+    height: 5px;
+}
+
+QProgressBar {
+    border: 2px solid #B22222;
+    border-radius: 5px;
+    background: #FFFFFF;
+    text-align: center;
+    color: #000000;
+}
+
+QProgressBar::chunk {
+    background: #B22222;
+    border-radius: 3px;
+}
+
+QToolTip {
+    background: #000000;
+    border: 1px solid #B22222;
+    color: #FFFFFF;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+QLabel {
+    color: #FFFFFF;
+}
+
+QGroupBox {
+    border: 2px solid #B22222;
+    border-radius: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    color: #FFFFFF;
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px 0 5px;
+    background: #B22222;
+    color: #FFFFFF;
+    border-radius: 3px;
+}
+
+QCheckBox {
+    color: #FFFFFF;
+}
+
+QCheckBox::indicator {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    border: 1px solid #B22222;
+    background: #FFFFFF;
+}
+
+QCheckBox::indicator:checked {
+    background: #B22222;
+}

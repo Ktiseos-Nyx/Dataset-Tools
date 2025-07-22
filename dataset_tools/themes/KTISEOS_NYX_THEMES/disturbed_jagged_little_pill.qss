@@ -1,0 +1,58 @@
+/* DISTURBED IDEA: JAGGED LITTLE PILL FEELING */
+/* A theme with angsty, raw, and slightly melancholic colors: muted purples, deep blues, grays, and sharp, jarring accents. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #483D8B, stop: 0.3 #6A5ACD,
+                                stop: 0.7 #708090, stop: 1 #483D8B);
+    color: #F0F8FF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #483D8B, stop: 0.3 #6A5ACD,
+                                stop: 0.7 #708090, stop: 1 #483D8B);
+    color: #F0F8FF;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DC143C, stop: 1 #B22222);
+    border: 3px solid #F0F8FF;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 1 #DC143C);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #483D8B;
+    border-radius: 5px;
+    padding: 8px;
+    color: #6A5ACD;
+    selection-background-color: #DC143C;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #483D8B;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #6A5ACD;
+}
+
+QListWidget::item:selected {
+    background: #DC143C;
+    color: #FFFFFF;
+}

@@ -1,0 +1,59 @@
+/* EARTHWORM JIM THEME */
+/* A quirky, cartoonish theme with vibrant, slightly off-kilter colors. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B0000, stop: 0.3 #00BFFF,
+                                stop: 0.7 #FFD700, stop: 1 #8B0000);
+    color: #000000;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B0000, stop: 0.3 #00BFFF,
+                                stop: 0.7 #FFD700, stop: 1 #8B0000);
+    color: #000000;
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00BFFF, stop: 1 #FFD700);
+    border: 3px solid #8B0000;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFD700, stop: 1 #00BFFF);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #8B0000;
+    border-radius: 5px;
+    padding: 8px;
+    color: #000000;
+    selection-background-color: #00BFFF;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #8B0000;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background: #00BFFF;
+    color: #FFFFFF;
+}

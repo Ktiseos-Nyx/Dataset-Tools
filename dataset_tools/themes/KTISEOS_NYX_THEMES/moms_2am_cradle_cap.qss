@@ -1,0 +1,123 @@
+/*
+ * Mom's 2AM Fever Dreams: Cradle Cap Theme
+ *
+ * This theme is dedicated to the crusty, yet oddly endearing, scalp condition of newborns.
+ * May your UI be as flaky and yellow-brown as a baby's head.
+ *
+ * Legal Disclaimer: No babies were harmed in the making of this theme.
+ * Any resemblance to actual cradle cap is purely coincidental and probably needs medical attention.
+ */
+
+QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #F5DEB3, /* Wheat */
+                               stop:0.5 #D2B48C, /* Tan */
+                               stop:1 #BC8F8F); /* Rosy Brown - for that irritated skin look */
+    color: #4B0082; /* Indigo - for a touch of despair */
+}
+
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #F5DEB3, /* Wheat */
+                               stop:0.5 #D2B48C, /* Tan */
+                               stop:1 #BC8F8F); /* Rosy Brown - for that irritated skin look */
+}
+
+QPushButton {
+    border: 2px solid #8B4513; /* Saddle Brown - crusty border */
+    border-radius: 20px 50px 10px 40px; /* Irregular, like a peeling scalp */
+    background-color: #DAA520; /* Goldenrod - for that yellowish flake */
+    color: #FFFFFF; /* White - for contrast */
+    padding: 10px 20px;
+    font-size: 16px;
+    transform: rotate(3deg); /* Slightly tilted, like a baby's head */
+}
+
+QPushButton:hover {
+    background-color: #B8860B; /* Dark Goldenrod - deeper crust */
+    border: 2px solid #A0522D; /* Sienna */
+    transform: rotate(5deg) scale(1.05); /* More agitated */
+}
+
+QPushButton:pressed {
+    background-color: #8B4513; /* Saddle Brown - really crusty */
+    border: 2px solid #5C4033; /* Darker brown */
+    transform: rotate(1deg) scale(0.95); /* Squished */
+}
+
+/* Add more QSS elements as needed for a complete theme */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    border: 1px solid #D2B48C; /* Tan */
+    background-color: #FFF8DC; /* Cornsilk - soft and baby-like */
+    color: #4B0082; /* Indigo */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #DAA520; /* Goldenrod - focused on the flakes */
+}
+
+QTabWidget::pane {
+    border-top: 2px solid #D2B48C; /* Tan */
+}
+
+QTabBar::tab {
+    background: #F5DEB3; /* Wheat */
+    border: 1px solid #D2B48C; /* Tan */
+    border-bottom-color: #D2B48C; /* Same as pane */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 8px;
+}
+
+QTabBar::tab:selected {
+    background: #DAA520; /* Goldenrod */
+    border-color: #DAA520;
+    border-bottom-color: #DAA520; /* Selected tab blends with pane */
+}
+
+QScrollBar:vertical {
+    border: 1px solid #D2B48C;
+    background: #F5DEB3;
+    width: 15px;
+    margin: 22px 0 22px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #DAA520;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QMenuBar {
+    background-color: #D2B48C; /* Tan */
+    color: #4B0082; /* Indigo */
+}
+
+QMenu {
+    background-color: #F5DEB3; /* Wheat */
+    border: 1px solid #D2B48C;
+}
+
+QMenu::item:selected {
+    background-color: #DAA520; /* Goldenrod */
+}
+
+QStatusBar {
+    background-color: #BC8F8F; /* Rosy Brown */
+    color: #FFFFFF;
+}
+
+/* Custom QLabel elements with theme-specific IDs */
+QLabel#cradleCapTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #8B4513; /* Saddle Brown */
+    text-align: center;
+}
+
+QLabel#cradleCapDescription {
+    font-size: 14px;
+    color: #4B0082; /* Indigo */
+}

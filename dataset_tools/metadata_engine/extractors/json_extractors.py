@@ -40,9 +40,7 @@ class JSONExtractor:
         """Parse JSON from a string stored in a variable."""
         source_var_key = method_def.get("source_variable_key")
         if not source_var_key:
-            self.logger.warning(
-                "json_from_string_variable missing 'source_variable_key'"
-            )
+            self.logger.warning("json_from_string_variable missing 'source_variable_key'")
             return None
 
         variable_name = source_var_key.replace(".", "_") + "_VAR_"
@@ -57,14 +55,10 @@ class JSONExtractor:
 
         try:
             result = json.loads(string_to_parse)
-            self.logger.debug(
-                f"Successfully parsed JSON from variable '{variable_name}'"
-            )
+            self.logger.debug(f"Successfully parsed JSON from variable '{variable_name}'")
             return result
         except json.JSONDecodeError as e:
-            self.logger.warning(
-                f"Failed to parse JSON from variable '{variable_name}': {e}"
-            )
+            self.logger.warning(f"Failed to parse JSON from variable '{variable_name}': {e}")
             return None
 
     def _json_path_exists_boolean(
@@ -81,9 +75,7 @@ class JSONExtractor:
         """
         json_path = method_def.get("json_path", method_def.get("path"))
         if not json_path:
-            self.logger.warning(
-                "json_path_exists_boolean missing 'json_path' or 'path' parameter"
-            )
+            self.logger.warning("json_path_exists_boolean missing 'json_path' or 'path' parameter")
             return False
 
         try:

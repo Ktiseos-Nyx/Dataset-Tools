@@ -1,0 +1,29 @@
+{
+    "parser_name": "XMP InvokeAI Direct",
+    "name": "XMP InvokeAI Direct Extractor", 
+    "version": "1.0",
+    "description": "Direct XMP extraction for InvokeAI metadata without fallback dependency",
+    "author": "Dataset-Tools",
+    "mime_types": ["image/png", "image/jpeg", "image/webp", "image/tiff"],
+    "rules": [
+        {
+            "id": "xmp_tool_detection",
+            "type": "python",
+            "method": "xmp_extractors.XMPExtractor.detect_ai_tool_from_xmp", 
+            "output_field": "tool_detection"
+        },
+        {
+            "id": "invokeai_extraction",
+            "type": "python",
+            "method": "xmp_extractors.XMPExtractor.extract_invokeai_from_xmp",
+            "output_field": "invokeai_metadata",
+            "condition": "tool_detection.detected_tool == 'InvokeAI'"
+        },
+        {
+            "id": "software_info",
+            "type": "python",
+            "method": "xmp_extractors.XMPExtractor.extract_software_info",
+            "output_field": "software_info"
+        }
+    ]
+}

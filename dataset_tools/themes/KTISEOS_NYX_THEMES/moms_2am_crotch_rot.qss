@@ -1,0 +1,122 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Crotch Rot"
+WARNING: This theme may cause psychological damage
+Created during a 2:30 AM Marvel Snap session
+*/
+
+QWidget {
+    background-color: #8B4513; /* Rusty brown base */
+    color: #F4A460; /* Sandy aftermath text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #8B4513, stop:0.5 #654321, stop:1 #8B4513);
+}
+
+QPushButton {
+    background-color: #654321; /* Dark brown */
+    color: #F4A460; /* Light brown text */
+    border: 2px solid #A0522D; /* Sienna border */
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #A0522D; /* Lighter brown hover */
+    border-color: #CD853F; /* Peru border */
+}
+
+QPushButton:pressed {
+    background-color: #5D4037; /* Darker press */
+    border-color: #8B4513;
+}
+
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #F5DEB3; /* Wheat background */
+    color: #8B4513; /* Brown text */
+    border: 2px solid #D2691E; /* Chocolate border */
+    border-radius: 4px;
+    padding: 4px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #CD853F; /* Peru focus */
+    background-color: #FFEFD5; /* Papaya whip */
+}
+
+QTabWidget::pane {
+    background-color: #DEB887; /* Burlywood */
+    border: 2px solid #CD853F;
+}
+
+QTabBar::tab {
+    background-color: #D2691E; /* Chocolate */
+    color: #F4A460;
+    padding: 8px 16px;
+    margin: 2px;
+    border-radius: 4px 4px 0px 0px;
+}
+
+QTabBar::tab:selected {
+    background-color: #F4A460; /* Sandy brown selected */
+    color: #8B4513;
+}
+
+QScrollBar:vertical {
+    background-color: #D2691E;
+    width: 16px;
+    border-radius: 8px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #8B4513;
+    border-radius: 8px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #A0522D;
+}
+
+QMenuBar {
+    background-color: #654321;
+    color: #F4A460;
+    border-bottom: 2px solid #8B4513;
+}
+
+QMenuBar::item:selected {
+    background-color: #8B4513;
+    border-radius: 4px;
+}
+
+QMenu {
+    background-color: #DEB887;
+    color: #8B4513;
+    border: 2px solid #CD853F;
+    border-radius: 4px;
+}
+
+QMenu::item:selected {
+    background-color: #CD853F;
+    color: #F4A460;
+}
+
+QStatusBar {
+    background-color: #654321;
+    color: #F4A460;
+    border-top: 2px solid #8B4513;
+}
+
+/* Warning message for when this theme is selected */
+QLabel#warning {
+    background-color: #FF6B6B;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 4px;
+    border: 2px solid #FF4757;
+}

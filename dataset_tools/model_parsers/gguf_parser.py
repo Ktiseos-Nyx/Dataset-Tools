@@ -61,9 +61,7 @@ class GGUFParser(BaseModelParser):
         try:
             value_type = GGUFValueType(value_type_enum_val)
         except ValueError as exc:
-            raise GGUFReadError(
-                f"Unknown GGUF metadata value type integer: {value_type_enum_val}"
-            ) from exc
+            raise GGUFReadError(f"Unknown GGUF metadata value type integer: {value_type_enum_val}") from exc
 
         type_size_map = {
             GGUFValueType.UINT8: ("<B", 1, "UINT8"),
@@ -135,9 +133,7 @@ class GGUFParser(BaseModelParser):
                 return f"[Array of {parsed_item_type_name}, len {array_len}, showing first {max_array_items_to_store_for_display} items: {items_for_display} ... (all items processed)]"
             return items_for_display
 
-        raise GGUFReadError(
-            f"Internal error: Unhandled GGUFValueType in _read_metadata_value: {value_type.name}"
-        )
+        raise GGUFReadError(f"Internal error: Unhandled GGUFValueType in _read_metadata_value: {value_type.name}")
 
     def _process(self) -> None:
         parsed_metadata_kv = {}
@@ -146,16 +142,12 @@ class GGUFParser(BaseModelParser):
             with open(self.file_path, "rb") as f:
                 magic = self._read_bytes_or_raise(f, 4, "Magic number")
                 if magic != b"GGUF":
-                    raise self.NotApplicableError(
-                        "Not a GGUF file (magic number mismatch)."
-                    )
+                    raise self.NotApplicableError("Not a GGUF file (magic number mismatch).")
 
                 version_bytes = self._read_bytes_or_raise(f, 4, "GGUF version")
                 self.gguf_version = struct.unpack("<I", version_bytes)[0]
                 file_summary_info["gguf.version"] = self.gguf_version
-                self.tool_name = (
-                    f"GGUF v{self.gguf_version} Model File"  # Refine tool name
-                )
+                self.tool_name = f"GGUF v{self.gguf_version} Model File"  # Refine tool name
 
                 if self.gguf_version not in [1, 2, 3]:  # Known versions
                     info_monitor(
@@ -189,9 +181,7 @@ class GGUFParser(BaseModelParser):
                     key = ""
                     try:
                         key = self._read_string(f)
-                        value_type_bytes = self._read_bytes_or_raise(
-                            f, 4, f"Value type for key '{key}'"
-                        )
+                        value_type_bytes = self._read_bytes_or_raise(f, 4, f"Value type for key '{key}'")
                         value_type_val = struct.unpack("<I", value_type_bytes)[0]
                         value = self._read_metadata_value(f, value_type_val)
                         parsed_metadata_kv[key] = value
@@ -203,22 +193,14 @@ class GGUFParser(BaseModelParser):
                             error_key_name,
                             e_kv,
                         )
-                        parsed_metadata_kv[error_key_name] = (
-                            f"[Error reading value: {e_kv}]"
-                        )
-                        self._error_message = (
-                            f"Failed reading GGUF KV pair '{error_key_name}': {e_kv}"
-                        )
-                        self.status = (
-                            ModelParserStatus.FAILURE
-                        )  # Mark as failure due to incomplete metadata
+                        parsed_metadata_kv[error_key_name] = f"[Error reading value: {e_kv}]"
+                        self._error_message = f"Failed reading GGUF KV pair '{error_key_name}': {e_kv}"
+                        self.status = ModelParserStatus.FAILURE  # Mark as failure due to incomplete metadata
                         break  # Stop processing further KVs
                     # struct.error should ideally be caught within _read_bytes_or_raise and turned into GGUFReadError
 
                 self.metadata_header = parsed_metadata_kv
-                self.main_header = (
-                    file_summary_info  # Contains version, tensor_count, kv_count
-                )
+                self.main_header = file_summary_info  # Contains version, tensor_count, kv_count
 
                 # If status is still UNATTEMPTED here, it means the KV loop completed without errors.
                 if self.status == ModelParserStatus.UNATTEMPTED:
@@ -229,9 +211,7 @@ class GGUFParser(BaseModelParser):
             raise
         except self.NotApplicableError:  # Let BaseModelParser handle this
             raise
-        except (
-            GGUFReadError
-        ) as e_gguf_critical:  # Errors in header or unrecoverable array type
+        except GGUFReadError as e_gguf_critical:  # Errors in header or unrecoverable array type
             self._error_message = f"Critical GGUF parsing error: {e_gguf_critical}"
             self.status = ModelParserStatus.FAILURE
             # Re-raise as ValueError for BaseModelParser's general error handling,

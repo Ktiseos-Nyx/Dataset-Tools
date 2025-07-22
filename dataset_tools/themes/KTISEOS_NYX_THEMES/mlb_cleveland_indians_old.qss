@@ -1,0 +1,219 @@
+/* MLB: CLEVELAND INDIANS (OLD COLORS) THEME */
+/* Solid colors inspired by the old Cleveland Indians: red, navy blue, and white. */
+
+QMainWindow {
+    background: #E31937; /* Red */
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: #E31937; /* Red */
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #0C2340; /* Navy Blue */
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #091A30; /* Darker Navy Blue */
+    border: 2px solid #E0E0E0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #E31937; /* Red */
+    border-radius: 3px;
+    padding: 5px;
+    color: #0C2340; /* Navy Blue */
+    selection-background-color: #E31937; /* Red */
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #E31937; /* Red */
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #0C2340; /* Navy Blue */
+}
+
+QListWidget::item:selected {
+    background: #E31937; /* Red */
+    color: #FFFFFF;
+}
+
+QMenuBar {
+    background: #0C2340; /* Navy Blue */
+    color: #FFFFFF;
+    border-bottom: 1px solid #E31937; /* Red */
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background: #E31937; /* Red */
+}
+
+QMenu {
+    background: #0C2340; /* Navy Blue */
+    border: 1px solid #E31937; /* Red */
+    padding: 3px;
+}
+
+QMenu::item {
+    padding: 5px 15px;
+    color: #FFFFFF;
+}
+
+QMenu::item:selected {
+    background: #E31937; /* Red */
+}
+
+QScrollBar:vertical {
+    background: #E31937; /* Red */
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #0C2340; /* Navy Blue */
+    border-radius: 5px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #E31937; /* Red */
+    background: #FFFFFF;
+}
+
+QTabBar::tab {
+    background: #0C2340; /* Navy Blue */
+    border: 1px solid #E31937; /* Red */
+    padding: 6px 10px;
+    color: #FFFFFF;
+}
+
+QTabBar::tab:selected {
+    background: #FFFFFF;
+    color: #0C2340; /* Navy Blue */
+}
+
+QStatusBar {
+    background: #E31937; /* Red */
+    border-top: 1px solid #0C2340; /* Navy Blue */
+    color: #FFFFFF;
+}
+
+QLineEdit {
+    background: #FFFFFF;
+    border: 2px solid #E31937; /* Red */
+    border-radius: 3px;
+    padding: 5px;
+    color: #0C2340; /* Navy Blue */
+    selection-background-color: #E31937; /* Red */
+    selection-color: #FFFFFF;
+}
+
+QComboBox {
+    background: #0C2340; /* Navy Blue */
+    border: 2px solid #E31937; /* Red */
+    border-radius: 3px;
+    padding: 4px;
+    color: #FFFFFF;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 18px;
+    border-left: 1px solid #E31937; /* Red */
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid #FFFFFF;
+}
+
+QComboBox QAbstractItemView {
+    background: #0C2340; /* Navy Blue */
+    border: 1px solid #E31937; /* Red */
+    selection-background-color: #E31937; /* Red */
+    color: #FFFFFF;
+}
+
+QSplitter::handle {
+    background: #E31937; /* Red */
+    border: 1px solid #FFFFFF;
+}
+
+QProgressBar {
+    border: 2px solid #E31937; /* Red */
+    border-radius: 3px;
+    background: #FFFFFF;
+    text-align: center;
+    color: #0C2340; /* Navy Blue */
+}
+
+QProgressBar::chunk {
+    background: #E31937; /* Red */
+    border-radius: 2px;
+}
+
+QToolTip {
+    background: #0C2340; /* Navy Blue */
+    border: 1px solid #E31937; /* Red */
+    color: #FFFFFF;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QLabel {
+    color: #FFFFFF;
+}
+
+QGroupBox {
+    border: 2px solid #E31937; /* Red */
+    border-radius: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    color: #FFFFFF;
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 8px;
+    padding: 0 4px 0 4px;
+    background: #E31937; /* Red */
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QCheckBox {
+    color: #FFFFFF;
+}
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid #0C2340; /* Navy Blue */
+    background: #FFFFFF;
+}
+
+QCheckBox::indicator:checked {
+    background: #E31937; /* Red */
+}

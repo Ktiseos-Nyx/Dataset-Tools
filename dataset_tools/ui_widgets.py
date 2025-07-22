@@ -6,11 +6,12 @@ This module contains all the custom UI widgets used in the application.
 Each widget has a specific purpose and clean interface
 """
 
+import sys
 from pathlib import Path
 
-from PIL import Image, ImageOps
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
+from PyQt6.QtWidgets import QApplication, QMainWindow, QSplitter
 
 from .logger import get_logger
 
@@ -53,9 +54,7 @@ class FileListWidget(Qw.QWidget):
         # File list
         self.list_widget = Qw.QListWidget()
         self.list_widget.setAlternatingRowColors(True)
-        self.list_widget.setSelectionMode(
-            Qw.QAbstractItemView.SelectionMode.SingleSelection
-        )
+        self.list_widget.setSelectionMode(Qw.QAbstractItemView.SelectionMode.SingleSelection)
         layout.addWidget(self.list_widget, 1)  # Give it most of the space
 
         # Sort controls
@@ -63,9 +62,7 @@ class FileListWidget(Qw.QWidget):
         sort_layout.addWidget(Qw.QLabel("Sort:"))
 
         self.sort_combo = Qw.QComboBox()
-        self.sort_combo.addItems(
-            ["Name (A-Z)", "Name (Z-A)", "Type", "Size", "Date Modified"]
-        )
+        self.sort_combo.addItems(["Name (A-Z)", "Name (Z-A)", "Type", "Size", "Date Modified"])
         sort_layout.addWidget(self.sort_combo)
         sort_layout.addStretch()
 
@@ -164,9 +161,7 @@ class FileListWidget(Qw.QWidget):
         # Apply filter
         filter_text = self.filter_edit.text().lower()
         if filter_text:
-            self._filtered_files = [
-                f for f in self._current_files if filter_text in f.lower()
-            ]
+            self._filtered_files = [f for f in self._current_files if filter_text in f.lower()]
         else:
             self._filtered_files = self._current_files.copy()
 
@@ -216,17 +211,23 @@ class FileListWidget(Qw.QWidget):
         if suffix in {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"}:
             return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileIcon)
         if suffix in {".txt", ".json", ".yaml", ".xml"}:
-            return style.standardIcon(
-                Qw.QStyle.StandardPixmap.SP_FileDialogDetailedView
-            )
+            return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileDialogDetailedView)
         if suffix in {".ckpt", ".safetensors", ".pt", ".pth"}:
             return style.standardIcon(Qw.QStyle.StandardPixmap.SP_ComputerIcon)
         return style.standardIcon(Qw.QStyle.StandardPixmap.SP_FileIcon)
 
     def _on_selection_changed(
-        self, current: Qw.QListWidgetItem, previous: Qw.QListWidgetItem
+        self,
+        current: Qw.QListWidgetItem,
+        previous: Qw.QListWidgetItem,
     ) -> None:
-        """Handle selection change."""
+        """Handle selection change.
+
+        Args:
+            current: Currently selected item
+            previous: Previously selected item (required by Qt but unused)
+
+        """
         if current:
             filename = current.text()
             self.file_selected.emit(filename)
@@ -407,7 +408,9 @@ class ImagePreviewWidget(Qw.QLabel):
 
             self.logger.debug(
                 "Loaded image: %s (%sx%s)",
-                Path(image_path).name, pixmap.width(), pixmap.height()
+                Path(image_path).name,
+                pixmap.width(),
+                pixmap.height(),
             )
             return True
 
@@ -435,9 +438,7 @@ class ImagePreviewWidget(Qw.QLabel):
 
                 # Use thumbnail() instead of resize() - it's memory efficient and safer
                 # thumbnail() modifies in-place and uses a good resampling filter
-                img.thumbnail(
-                    (max_size, max_size), Image.Resampling.BILINEAR
-                )  # Safer than LANCZOS
+                img.thumbnail((max_size, max_size), Image.Resampling.BILINEAR)  # Safer than LANCZOS
 
                 # Convert to Qt format with proper color channel handling
                 return self._pil_to_qpixmap(img)
@@ -468,15 +469,11 @@ class ImagePreviewWidget(Qw.QLabel):
             if pil_image.mode == "RGBA":
                 # Handle transparency
                 image_data = pil_image.tobytes("raw", "RGBA")
-                qimage = QtGui.QImage(
-                    image_data, width, height, QtGui.QImage.Format.Format_RGBA8888
-                )
+                qimage = QtGui.QImage(image_data, width, height, QtGui.QImage.Format.Format_RGBA8888)
             else:
                 # RGB mode
                 image_data = pil_image.tobytes("raw", "RGB")
-                qimage = QtGui.QImage(
-                    image_data, width, height, QtGui.QImage.Format.Format_RGB888
-                )
+                qimage = QtGui.QImage(image_data, width, height, QtGui.QImage.Format.Format_RGB888)
 
             return QtGui.QPixmap.fromImage(qimage)
 
@@ -646,7 +643,10 @@ class StatusInfoWidget(Qw.QWidget):
 
         self.logger.debug(
             "File counts updated: %si, %st, %sm = %s total",
-            images, texts, models, total
+            images,
+            texts,
+            models,
+            total,
         )
 
     def clear_counts(self) -> None:
@@ -700,9 +700,7 @@ class LeftPanelWidget(Qw.QWidget):
 
     def _connect_signals(self) -> None:
         """Connect internal widget signals to external signals."""
-        self.folder_control.open_folder_requested.connect(
-            self.open_folder_requested.emit
-        )
+        self.folder_control.open_folder_requested.connect(self.open_folder_requested.emit)
         self.folder_control.folder_path_changed.connect(self.folder_path_changed.emit)
         self.file_list.file_selected.connect(self.file_selected.emit)
         self.file_list.sort_changed.connect(self.sort_changed.emit)
@@ -744,10 +742,6 @@ class LeftPanelWidget(Qw.QWidget):
 
 def test_ui_widgets():
     """Test the UI widgets."""
-    import sys
-
-    from PyQt6.QtWidgets import QApplication, QMainWindow, QSplitter
-
     app = QApplication(sys.argv)
 
     # Create main window for testing

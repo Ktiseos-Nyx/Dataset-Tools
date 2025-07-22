@@ -1,0 +1,55 @@
+/* STUPID IDEA: EYE BLEED RED */
+/* An intense, overwhelming red theme with harsh, painful contrasts. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF0000, stop: 0.5 #8B0000,
+                                stop: 1 #FF0000);
+    color: #FFFF00;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF0000, stop: 0.5 #8B0000,
+                                stop: 1 #FF0000);
+    color: #FFFF00;
+    font-size: 16px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFFF00, stop: 1 #FF0000);
+    border: 5px solid #000000;
+    border-radius: 0px;
+    padding: 20px 30px;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF0000, stop: 1 #FFFF00);
+    border: 5px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #000000;
+    color: #FF0000;
+    border: 5px solid #FFFF00;
+    border-radius: 0px;
+    padding: 15px;
+}
+
+QListWidget {
+    background-color: #000000;
+    color: #FFFF00;
+    border: 5px solid #FF0000;
+    border-radius: 0px;
+}
+
+QListWidget::item:selected {
+    background-color: #FF0000;
+    color: #FFFF00;
+}

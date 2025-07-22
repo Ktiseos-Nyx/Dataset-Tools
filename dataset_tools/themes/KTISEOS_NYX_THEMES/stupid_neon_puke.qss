@@ -1,0 +1,56 @@
+/* STUPID IDEA: NEON PUKE */
+/* A truly obnoxious theme with clashing neon green and orange. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #39FF14, stop: 0.5 #FFD700,
+                                stop: 1 #FF4500);
+    color: #000000;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #39FF14, stop: 0.5 #FFD700,
+                                stop: 1 #FF4500);
+    color: #000000;
+    font-family: 'Impact', sans-serif;
+    font-size: 16px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF4500, stop: 1 #39FF14);
+    border: 5px dashed #000000;
+    border-radius: 0px;
+    padding: 20px 30px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #39FF14, stop: 1 #FF4500);
+    border: 5px dashed #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #000000;
+    color: #39FF14;
+    border: 5px solid #FF4500;
+    border-radius: 0px;
+    padding: 15px;
+}
+
+QListWidget {
+    background-color: #FFD700;
+    color: #FF4500;
+    border: 5px solid #39FF14;
+    border-radius: 0px;
+}
+
+QListWidget::item:selected {
+    background-color: #FF4500;
+    color: #39FF14;
+}

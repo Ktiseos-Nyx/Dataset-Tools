@@ -1,0 +1,49 @@
+/* LIBRARY ORANGE AND BLACK THEME */
+/* A simple, high-contrast theme with a black background and orange text. */
+
+QMainWindow {
+    background: #000000;
+    color: #FFA500;
+    border: none;
+}
+
+QWidget {
+    background: #000000;
+    color: #FFA500;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #FFA500;
+    border: 1px solid #000000;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: #000000;
+}
+
+QPushButton:hover {
+    background: #FF8C00;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 1px solid #FFA500;
+    border-radius: 3px;
+    padding: 5px;
+    color: #FFA500;
+    selection-background-color: #FF8C00;
+    selection-color: #000000;
+}
+
+QListWidget {
+    background: #000000;
+    border: 1px solid #FFA500;
+    border-radius: 3px;
+    alternate-background-color: #1A1A1A;
+    color: #FFA500;
+}
+
+QListWidget::item:selected {
+    background: #FF8C00;
+    color: #000000;
+}

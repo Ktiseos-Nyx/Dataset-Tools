@@ -1,0 +1,233 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Bed Bugs"
+When your mattress becomes a horror movie
+Exterminators everywhere just got PTSD
+*/
+
+QWidget {
+    background-color: #8B4513; /* Saddle brown base */
+    color: #F5DEB3; /* Wheat text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #DEB887, stop:0.2 #D2B48C, stop:0.4 #BC9A6A, 
+                stop:0.6 #8B0000, stop:0.8 #A0522D, stop:1 #DEB887);
+}
+
+/* BUG-INFESTED BUTTONS! */
+QPushButton {
+    background: qradial-gradient(ellipse at 60% 40%, #D2B48C 30%, #BC9A6A 60%, #A0522D 90%);
+    color: #654321;
+    border: 4px solid #8B4513;
+    border-radius: 8px 25px 12px 30px; /* Irregular bug bite shape! */
+    padding: 14px 20px;
+    font-weight: bold;
+    font-size: 13px;
+    box-shadow: inset 0px 0px 8px rgba(139,69,19,0.4);
+}
+
+QPushButton:hover {
+    background: qradial-gradient(ellipse at 40% 70%, #DC143C 20%, #B22222 50%, #8B0000 80%);
+    border-color: #654321;
+    border-radius: 15px 35px 20px 40px; /* Swollen bite on hover */
+    box-shadow: 0px 0px 18px rgba(220,20,60,0.6), inset 0px 0px 5px rgba(139,0,0,0.5);
+    color: #FFE4E1;
+    transform: scale(1.04); /* Swelling effect */
+}
+
+QPushButton:pressed {
+    background: qradial-gradient(ellipse at 50% 50%, #654321 40%, #2F1B14 80%);
+    border-radius: 5px 20px 8px 25px; /* Scratched bite */
+    border-color: #2F1B14;
+    transform: scale(0.92);
+    box-shadow: inset 0px 0px 15px rgba(47,27,20,0.8);
+}
+
+/* MATTRESS SEAM TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #F5F5DC, stop:0.2 #FFFACD, stop:0.4 #F5F5DC, 
+                stop:0.6 #FFF8DC, stop:0.8 #F5F5DC, stop:1 #FFFACD);
+    color: #8B4513;
+    border: 4px solid #CD853F;
+    border-radius: 30px 8px 35px 12px; /* Mattress seam pattern */
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #DC143C;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FFE4E1, stop:0.4 #FFC0CB, stop:0.8 #FFB6C1, stop:1 #FFE4E1);
+    border-radius: 40px 15px 45px 20px; /* Infested seam when focused */
+    box-shadow: 0px 0px 15px rgba(220,20,60,0.5);
+    color: #8B0000;
+}
+
+/* BOX SPRING TABS */
+QTabWidget::pane {
+    background: qradial-gradient(ellipse at 50% 50%, #F5DEB3 30%, #DEB887 60%, #D2B48C 90%);
+    border: 5px solid #8B4513;
+    border-radius: 40px 40px 10px 10px; /* Box spring shape! */
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFFACD, stop:0.4 #F5DEB3, stop:0.8 #DEB887, stop:1 #D2B48C);
+    color: #654321;
+    padding: 16px 24px;
+    margin: 4px;
+    border-radius: 25px 25px 0px 0px; /* Spring coil tops */
+    font-weight: bold;
+    font-size: 14px;
+    border: 3px solid #8B4513;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 50% 40%, #DC143C 40%, #B22222 80%);
+    color: #FFE4E1;
+    border-radius: 35px 35px 0px 0px; /* Infested selected spring */
+    border-color: #8B0000;
+    box-shadow: 0px 0px 12px rgba(220,20,60,0.4);
+}
+
+/* EXTERMINATOR SPRAY SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #DEB887, stop:0.3 #CD853F, stop:0.7 #A0522D, stop:1 #DEB887);
+    width: 24px;
+    border-radius: 12px;
+    border: 4px solid #8B4513;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(circle, #32CD32 40%, #228B22 80%);
+    border-radius: 10px;
+    min-height: 30px;
+    border: 3px solid #006400;
+    margin: 3px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(circle, #ADFF2F 30%, #32CD32 70%);
+    box-shadow: 0px 0px 12px rgba(50,205,50,0.6);
+}
+
+/* HOTEL HORROR MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #A0522D, stop:0.3 #CD853F, stop:0.7 #DEB887, stop:1 #A0522D);
+    color: #F5DEB3;
+    border-bottom: 5px solid #654321;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 0px 0px 25px 45px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #DC143C 40%, #B22222 80%);
+    color: #FFE4E1;
+    border-radius: 20px 40px 15px 35px;
+    padding: 12px 20px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F5F5DC, stop:0.25 #F5DEB3, stop:0.5 #DEB887, 
+                stop:0.75 #D2B48C, stop:1 #F5F5DC);
+    color: #654321;
+    border: 5px solid #8B4513;
+    border-radius: 30px 50px 25px 55px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #B22222 30%, #8B0000 70%);
+    color: #F5DEB3;
+    border-radius: 15px 35px 20px 40px;
+    margin: 3px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #654321, stop:0.4 #8B4513, stop:0.8 #A0522D, stop:1 #654321);
+    color: #F5DEB3;
+    border-top: 5px solid #2F1B14;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 45px 35px 0px 0px;
+}
+
+/* BED BUG INFESTATION PATTERN */
+QLabel#bedBugSwarm {
+    background: qradial-gradient(ellipse at 20% 30%, #8B0000 4%, transparent 5%),
+                qradial-gradient(ellipse at 60% 20%, #654321 3%, transparent 4%),
+                qradial-gradient(ellipse at 40% 70%, #8B0000 5%, transparent 6%),
+                qradial-gradient(ellipse at 80% 50%, #654321 3%, transparent 4%),
+                qradial-gradient(ellipse at 15% 80%, #8B0000 4%, transparent 5%),
+                qradial-gradient(ellipse at 70% 85%, #654321 3%, transparent 4%),
+                qradial-gradient(ellipse at 35% 15%, #8B0000 4%, transparent 5%),
+                qradial-gradient(ellipse at 85% 25%, #654321 3%, transparent 4%),
+                #DEB887;
+    color: #2F1B14;
+    border: 4px solid #8B4513;
+    border-radius: 25px 45px 30px 50px;
+    padding: 16px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* BITE MARK TRAIL EFFECT */
+QWidget#biteTrail {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #DEB887, stop:0.1 #DC143C, stop:0.15 #DEB887, 
+                stop:0.25 #B22222, stop:0.3 #DEB887, stop:0.4 #DC143C,
+                stop:0.45 #DEB887, stop:0.55 #B22222, stop:0.6 #DEB887, 
+                stop:0.7 #DC143C, stop:0.75 #DEB887, stop:0.85 #B22222, 
+                stop:0.9 #DEB887, stop:1 #DC143C);
+    border: 3px solid #8B4513;
+    border-radius: 15px 30px 20px 35px;
+}
+
+/* FUMIGATION WARNING */
+QLabel#fumigationWarning {
+    background: qradial-gradient(circle at 50% 50%, #FFFF00 20%, #FFD700 50%, #FFA500 80%);
+    color: #8B4513;
+    border: 6px solid #FF8C00;
+    border-radius: 20px 50px 30px 60px;
+    padding: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: "Impact", sans-serif;
+    text-align: center;
+}
+
+/* PESTICIDE SPRAY EFFECT */
+QLabel#pesticideSpray {
+    background: qradial-gradient(ellipse at 70% 30%, rgba(50,205,50,0.4) 15%, transparent 16%),
+                qradial-gradient(ellipse at 40% 60%, rgba(50,205,50,0.3) 20%, transparent 21%),
+                qradial-gradient(ellipse at 80% 80%, rgba(50,205,50,0.5) 12%, transparent 13%),
+                qradial-gradient(ellipse at 20% 20%, rgba(50,205,50,0.3) 18%, transparent 19%),
+                #F5DEB3;
+    border: 3px solid #32CD32;
+    border-radius: 30px 20px 40px 25px;
+    color: #006400;
+    font-weight: bold;
+    padding: 12px;
+}
+
+/* SLEEPLESS NIGHT INDICATOR */
+QWidget#sleeplessNight {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #2F2F2F, stop:0.3 #4A4A4A, stop:0.7 #696969, stop:1 #2F2F2F);
+    border: 4px solid #000000;
+    border-radius: 20px 60px 30px 70px;
+    color: #F5DEB3;
+    font-weight: bold;
+    font-size: 14px;
+}

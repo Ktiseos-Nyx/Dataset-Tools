@@ -1,0 +1,59 @@
+/* DISTURBED IDEA: EDDIE IZZARD - DID I LEAVE THE GAS ON ERA */
+/* A theme with a slightly disheveled, anxious, and chaotic feel, using muted, slightly off-kilter colors. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A9A9A9, stop: 0.3 #708090,
+                                stop: 0.7 #B0C4DE, stop: 1 #A9A9A9);
+    color: #2F4F4F;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A9A9A9, stop: 0.3 #708090,
+                                stop: 0.7 #B0C4DE, stop: 1 #A9A9A9);
+    color: #2F4F4F;
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DC143C, stop: 1 #B22222);
+    border: 3px solid #2F4F4F;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 1 #DC143C);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #A9A9A9;
+    border-radius: 5px;
+    padding: 8px;
+    color: #2F4F4F;
+    selection-background-color: #B0C4DE;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #A9A9A9;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #2F4F4F;
+}
+
+QListWidget::item:selected {
+    background: #B0C4DE;
+    color: #FFFFFF;
+}

@@ -1,0 +1,59 @@
+/* SUPER MARIO THEME */
+/* Classic Mario colors: red, blue, and brown. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF0000, stop: 0.3 #0000FF,
+                                stop: 0.7 #8B4513, stop: 1 #FF0000);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF0000, stop: 0.3 #0000FF,
+                                stop: 0.7 #8B4513, stop: 1 #FF0000);
+    color: #FFFFFF;
+    font-family: 'Super Mario 256', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #0000FF, stop: 1 #8B4513);
+    border: 3px solid #FF0000;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 1 #0000FF);
+    border: 3px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #FF0000;
+    border-radius: 5px;
+    padding: 8px;
+    color: #0000FF;
+    selection-background-color: #8B4513;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #FF0000;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #0000FF;
+}
+
+QListWidget::item:selected {
+    background: #8B4513;
+    color: #FFFFFF;
+}

@@ -4,7 +4,7 @@
 from pathlib import Path
 
 
-def show_font_status():
+def show_font_status() -> None:
     """Show current bundled font status."""
     fonts_dir = Path(__file__).parent
 
@@ -35,11 +35,7 @@ def show_font_status():
     print("  • No permissions required (app-level loading)")
     print("  • Works offline")
 
-    total_size = sum(
-        (fonts_dir / font).stat().st_size
-        for font in bundled_fonts
-        if (fonts_dir / font).exists()
-    )
+    total_size = sum((fonts_dir / font).stat().st_size for font in bundled_fonts if (fonts_dir / font).exists())
     print(f"\nTOTAL BUNDLE SIZE: {total_size // 1024} KB")
 
 

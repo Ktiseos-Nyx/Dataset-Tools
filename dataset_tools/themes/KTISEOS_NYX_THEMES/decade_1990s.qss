@@ -1,0 +1,58 @@
+/* 1990S THEME */
+/* A mix of neon, grunge, and early web aesthetics. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #00FFFF, stop: 0.25 #FF00FF,
+                                stop: 0.5 #FFFF00, stop: 0.75 #00FF00,
+                                stop: 1 #FF0000);
+    color: #000000;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #00FFFF, stop: 0.25 #FF00FF,
+                                stop: 0.5 #FFFF00, stop: 0.75 #00FF00,
+                                stop: 1 #FF0000);
+    color: #000000;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: #000000;
+    border: 3px solid #FFFFFF;
+    border-radius: 0px;
+    padding: 10px 15px;
+    color: #00FFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 3px;
+    padding: 8px;
+    color: #00FFFF;
+    selection-background-color: #FF00FF;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #FFFFFF;
+    border-radius: 3px;
+    alternate-background-color: #333333;
+    color: #00FFFF;
+}
+
+QListWidget::item:selected {
+    background: #FF00FF;
+    color: #FFFFFF;
+}
