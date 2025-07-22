@@ -203,12 +203,7 @@ class FileExtensionCategories:
             val_str = str(getattr(Ext, attr_name, "N/A"))
             val_display = val_str[:70] + "..." if len(val_str) > 70 else val_str
 
-            self.logger.debug(
-                "Ext.%s? %s. Value (first 70 chars): %s",
-                attr_name,
-                has_attr,
-                val_display,
-            )
+            self.logger.debug("Ext.%s? %s. Value (first 70 chars): %s", attr_name, has_attr, val_display,)
 
         self.logger.debug("--- END DEBUG WIDGETS ---")
 
@@ -261,11 +256,7 @@ class DirectoryScanner:
             images, texts, models, total_files = self._categorize_files(items, folder_path)
 
             self.logger.info(
-                "Scan completed for %s: %d images, %d texts, %d models",
-                folder_path,
-                len(images),
-                len(texts),
-                len(models),
+                "Scan completed for %s: %d images, %d texts, %d models", folder_path, len(images), len(texts), len(models)
             )
 
             return FileScanResult(
@@ -279,10 +270,7 @@ class DirectoryScanner:
 
         except Exception as e:
             self.logger.error(
-                "Unexpected error scanning directory '%s': %s",
-                folder_path,
-                e,
-                exc_info=True,
+                "Unexpected error scanning directory '%s': %s", folder_path, e, exc_info=True
             )
             return FileScanResult(
                 images=[],

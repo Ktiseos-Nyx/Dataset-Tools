@@ -50,12 +50,17 @@ class ComfyUIQuadMoonsExtractor:
         if not self._initialize_workflow_data(workflow):
             return
 
-        target_node_type = definition.get("target_node_type", "KSampler - Extra Outputs")
+        primary_ksampler_nodes = [
+            "KSampler (Efficient)",
+            "KSampler Adv. (Efficient)",
+            "KSampler SDXL (Eff.)",
+            "KSampler - Extra Outputs", # Keep this for backward compatibility if needed
+        ]
         mappings = definition.get("mappings", {})
 
         for node_id, node in self.nodes.items():
-            if node.get("type") == target_node_type:
-                self.logger.debug(f"[QuadMoons] Found target node '{target_node_type}' with ID: {node_id}")
+            if node.get("type") in primary_ksampler_nodes:
+                self.logger.debug(f"[QuadMoons] Found primary KSampler node '{node.get('type')}' with ID: {node_id}")
                 for field, input_name in mappings.items():
                     value = self._trace_input_value(node_id, input_name)
                     if value is not None:
@@ -122,6 +127,20 @@ class ComfyUIQuadMoonsExtractor:
             "KSampler - Extra Outputs",
             "Smart Negative",
             "BusNode",
+            "KSampler (Efficient)",
+            "KSampler Adv. (Efficient)",
+            "KSampler SDXL (Eff.)",
+            "Efficient Loader",
+            "Eff. Loader SDXL",
+            "LoRA Stacker",
+            "Control Net Stacker",
+            "Apply ControlNet Stack",
+            "Unpack SDXL Tuple",
+            "Pack SDXL Tuple",
+            "Noise Control Script",
+            "HighRes-Fix Script",
+            "Tiled Upscaler Script",
+            "LoRA Stack to String converter",
         ]:
             return self._trace_input_value(origin_id, output_name)
 
