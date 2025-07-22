@@ -1,0 +1,185 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Rotting Corpse of Garfield"
+RIP Orange Cat (1978-2024) - You deserved better
+The final Monday claimed him at last
+*/
+
+QWidget {
+    background-color: #2F1B14; /* Dark brown base */
+    color: #CD853F; /* Peru text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2F1B14, stop:0.2 #4A3C26, stop:0.4 #8B4513, 
+                stop:0.6 #654321, stop:0.8 #3D2914, stop:1 #2F1B14);
+}
+
+QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FF8C00, stop:0.2 #D2691E, stop:0.4 #8B4513, 
+                stop:0.6 #654321, stop:0.8 #4A3C26, stop:1 #2F1B14);
+    color: #FFFACD; /* Lemon chiffon text */
+    border: 3px solid #D2691E; /* Chocolate border */
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFA500, stop:0.3 #FF8C00, stop:0.7 #D2691E, stop:1 #8B4513);
+    border-color: #FF8C00;
+    box-shadow: 0px 0px 12px #D2691E;
+    color: #FFFFFF;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #654321, stop:0.5 #4A3C26, stop:1 #2F1B14);
+    border-color: #8B4513;
+    color: #CD853F;
+}
+
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #4A3C26; /* Dark olive background */
+    color: #FFDEAD; /* Navajo white text */
+    border: 3px solid #D2691E; /* Chocolate border */
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 13px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #FF8C00; /* Dark orange focus */
+    background-color: #3D2914;
+    box-shadow: 0px 0px 10px #D2691E;
+    color: #FFFACD;
+}
+
+QTabWidget::pane {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #4A3C26, stop:0.3 #654321, stop:0.7 #8B4513, stop:1 #4A3C26);
+    border: 4px solid #D2691E;
+    border-radius: 12px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FF8C00, stop:0.5 #D2691E, stop:1 #8B4513);
+    color: #FFFACD;
+    padding: 12px 20px;
+    margin: 3px;
+    border-radius: 10px 10px 0px 0px;
+    font-weight: bold;
+    font-size: 13px;
+    border: 2px solid #654321;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFA500, stop:0.5 #FF8C00, stop:1 #D2691E);
+    color: #FFFFFF;
+    border-color: #FF8C00;
+}
+
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #8B4513, stop:0.5 #654321, stop:1 #8B4513);
+    width: 18px;
+    border-radius: 9px;
+    border: 2px solid #D2691E;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FF8C00, stop:0.5 #D2691E, stop:1 #FF8C00);
+    border-radius: 7px;
+    min-height: 25px;
+    border: 2px solid #4A3C26;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FFA500, stop:0.5 #FF8C00, stop:1 #FFA500);
+    box-shadow: 0px 0px 8px #D2691E;
+}
+
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #654321, stop:0.5 #4A3C26, stop:1 #654321);
+    color: #FFDEAD;
+    border-bottom: 4px solid #8B4513;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #D2691E, stop:0.5 #A0522D, stop:1 #D2691E);
+    color: #FFFACD;
+    border-radius: 6px;
+    padding: 6px 12px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #4A3C26, stop:0.5 #654321, stop:1 #4A3C26);
+    color: #FFDEAD;
+    border: 4px solid #8B4513;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FF8C00, stop:0.5 #D2691E, stop:1 #FF8C00);
+    color: #FFFFFF;
+    border-radius: 5px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #4A3C26, stop:0.5 #654321, stop:1 #4A3C26);
+    color: #FFDEAD;
+    border-top: 4px solid #8B4513;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* Special "decay" pattern for headers */
+QLabel#decayHeader {
+    background: qradial-gradient(ellipse at 30% 40%, #FF8C00 20%, #D2691E 40%, #8B4513 60%, #654321 80%, #2F1B14 100%);
+    color: #FFFACD;
+    border: 3px solid #D2691E;
+    border-radius: 15px;
+    padding: 12px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Memorial effect for special elements */
+QWidget#memorial {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #2F1B14, stop:0.2 #4A3C26, stop:0.4 #654321, 
+                stop:0.6 #8B4513, stop:0.8 #D2691E, stop:1 #FF8C00);
+    border: 4px solid #CD853F;
+    border-radius: 20px;
+}
+
+/* RIP Garfield text styling */
+QLabel#ripGarfield {
+    background-color: #000000;
+    color: #FF8C00;
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    border: 5px solid #D2691E;
+    border-radius: 10px;
+}

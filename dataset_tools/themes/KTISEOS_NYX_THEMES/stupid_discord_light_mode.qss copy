@@ -1,0 +1,48 @@
+/* STUPID IDEA: DISCORD LIGHT MODE */
+/* A blindingly bright theme, designed to be jarring for dark mode users. */
+
+QMainWindow {
+    background: #FFFFFF;
+    color: #000000;
+    border: none;
+}
+
+QWidget {
+    background: #FFFFFF;
+    color: #000000;
+    font-family: 'Whitney', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: #7289DA;
+    border: 2px solid #99AAB5;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #677BC4;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #F6F6F7;
+    color: #000000;
+    border: 1px solid #E3E5E8;
+    border-radius: 3px;
+    padding: 8px;
+}
+
+QListWidget {
+    background-color: #F6F6F7;
+    color: #000000;
+    border: 1px solid #E3E5E8;
+    border-radius: 3px;
+}
+
+QListWidget::item:selected {
+    background-color: #7289DA;
+    color: #FFFFFF;
+}

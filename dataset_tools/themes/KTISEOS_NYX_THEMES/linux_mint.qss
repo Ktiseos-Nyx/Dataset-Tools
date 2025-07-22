@@ -1,0 +1,58 @@
+/* LINUX DISTRO: MINT THEME */
+/* Inspired by Linux Mint's green and gray branding. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3D9970, stop: 0.3 #4CAF50,
+                                stop: 0.7 #A9A9A9, stop: 1 #3D9970);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3D9970, stop: 0.3 #4CAF50,
+                                stop: 0.7 #A9A9A9, stop: 1 #3D9970);
+    color: #FFFFFF;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 12px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4CAF50, stop: 1 #3D9970);
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3D9970, stop: 1 #4CAF50);
+    border: 2px solid #E0E0E0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #4CAF50;
+    border-radius: 3px;
+    padding: 5px;
+    color: #3D9970;
+    selection-background-color: #4CAF50;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #4CAF50;
+    border-radius: 3px;
+    alternate-background-color: #F0FFF0;
+    color: #3D9970;
+}
+
+QListWidget::item:selected {
+    background: #4CAF50;
+    color: #FFFFFF;
+}

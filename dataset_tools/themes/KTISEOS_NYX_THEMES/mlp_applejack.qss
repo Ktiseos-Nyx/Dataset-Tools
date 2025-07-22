@@ -1,0 +1,58 @@
+/* MLP: APPLEJACK THEME */
+/* Inspired by Applejack - Earthy browns, reds, and yellows. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 0.3 #A0522D,
+                                stop: 0.7 #DAA520, stop: 1 #8B4513);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 0.3 #A0522D,
+                                stop: 0.7 #DAA520, stop: 1 #8B4513);
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DC143C, stop: 1 #B22222);
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 1 #DC143C);
+    border: 2px solid #FFD700;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #8B4513;
+    border-radius: 3px;
+    padding: 5px;
+    color: #A0522D;
+    selection-background-color: #DAA520;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #8B4513;
+    border-radius: 3px;
+    alternate-background-color: #F5F5DC;
+    color: #A0522D;
+}
+
+QListWidget::item:selected {
+    background: #DAA520;
+    color: #FFFFFF;
+}

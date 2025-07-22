@@ -1,0 +1,118 @@
+/* FUNKY RETRO THEME */
+
+/* Main window with gradient magic */
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF006E, stop: 0.3 #8338EC, 
+                                stop: 0.7 #3A86FF, stop: 1 #06FFA5);
+
+}
+
+/* Widget base styling */
+QWidget {
+
+    color: #FFFFFF;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Vaporwave buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #FF006E, stop: 1 #8338EC);
+    border: 2px solid #00FFFF;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 11pt;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #00FFFF, stop: 1 #FF006E);
+    border: 2px solid #FFFF00;
+    
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8338EC, stop: 1 #3A86FF);
+}
+
+/* Text areas with neon glow effect */
+QTextEdit, QPlainTextEdit {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #00FFFF;
+    border: 2px solid #FF006E;
+    border-radius: 10px;
+    padding: 10px;
+
+    font-size: 10pt;
+}
+
+/* List widget with neon styling */
+QListWidget {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #FFFFFF;
+    border: 2px solid #00FFFF;
+    border-radius: 10px;
+    padding: 5px;
+
+}
+
+QListWidget::item {
+    padding: 8px;
+    border-bottom: 1px solid rgba(255, 0, 110, 0.3);
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #FF006E, stop: 1 #8338EC);
+    border-radius: 5px;
+}
+
+QListWidget::item:hover {
+    background-color: rgba(0, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
+/* Menu bar with retro vibes */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8338EC, stop: 1 #3A86FF);
+    color: #FFFFFF;
+    padding: 5px;
+    font-weight: bold;
+
+}
+
+QMenuBar::item {
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+QMenuBar::item:selected {
+    background-color: #FF006E;
+}
+
+/* Scrollbars with neon treatment */
+QScrollBar:vertical {
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 15px;
+    border-radius: 7px;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #FF006E, stop: 1 #00FFFF);
+    border-radius: 7px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #00FFFF, stop: 1 #FFFF00);
+}

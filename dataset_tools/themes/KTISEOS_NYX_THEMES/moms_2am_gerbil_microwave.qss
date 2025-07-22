@@ -1,0 +1,233 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Gerbil in a Microwave"
+When curiosity meets kitchen appliances
+Richard Gere's publicist has blocked this theme
+*/
+
+QWidget {
+    background-color: #A9A9A9; /* Dark gray base */
+    color: #F5F5F5; /* White smoke text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #D3D3D3, stop:0.2 #C0C0C0, stop:0.4 #A9A9A9, 
+                stop:0.6 #FFD700, stop:0.8 #FFA500, stop:1 #D3D3D3);
+}
+
+/* MICROWAVE DOOR BUTTONS! */
+QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #F5F5F5, stop:0.3 #E0E0E0, stop:0.7 #C0C0C0, stop:1 #A9A9A9);
+    color: #2F4F4F;
+    border: 5px solid #696969;
+    border-radius: 15px 15px 15px 15px; /* Perfect microwave door! */
+    padding: 16px 22px;
+    font-weight: bold;
+    font-size: 13px;
+    box-shadow: inset 0px 0px 12px rgba(105,105,105,0.3);
+}
+
+QPushButton:hover {
+    background: qradial-gradient(ellipse at 50% 50%, #FFD700 20%, #FFA500 50%, #FF8C00 80%);
+    border-color: #B8860B;
+    border-radius: 20px 20px 20px 20px; /* Glowing microwave door */
+    box-shadow: 0px 0px 25px rgba(255,215,0,0.7), inset 0px 0px 8px rgba(184,134,11,0.4);
+    color: #8B4513;
+    transform: scale(1.05); /* Slightly expanded when heating */
+}
+
+QPushButton:pressed {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #696969, stop:0.5 #2F4F4F, stop:1 #696969);
+    border-radius: 10px 10px 10px 10px; /* Door slammed shut */
+    border-color: #2F4F4F;
+    transform: scale(0.92);
+    box-shadow: inset 0px 0px 18px rgba(47,79,79,0.8);
+}
+
+/* HAMSTER WHEEL TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qradial-gradient(circle at 50% 50%, #FFFACD 30%, #F0E68C 60%, #BDB76B 90%);
+    color: #556B2F;
+    border: 4px solid #8B7D6B;
+    border-radius: 50px; /* Perfect wheel shape! */
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #FF4500;
+    background: qradial-gradient(circle at 50% 50%, #FFF8DC 20%, #FFEBCD 50%, #DEB887 80%);
+    border-radius: 60px; /* Spinning wheel when focused */
+    box-shadow: 0px 0px 15px rgba(255,69,0,0.5);
+    color: #8B4513;
+}
+
+/* CAGE WIRE TABS */
+QTabWidget::pane {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #F5F5F5, stop:0.2 #E0E0E0, stop:0.4 #D3D3D3, 
+                stop:0.6 #C0C0C0, stop:0.8 #A9A9A9, stop:1 #F5F5F5);
+    border: 5px solid #696969;
+    border-radius: 25px 25px 80px 80px; /* Cage shape! */
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #DCDCDC, stop:0.4 #C0C0C0, stop:0.8 #A9A9A9, stop:1 #808080);
+    color: #2F4F4F;
+    padding: 14px 24px;
+    margin: 3px;
+    border-radius: 30px 30px 0px 0px; /* Cage bar tops */
+    font-weight: bold;
+    font-size: 14px;
+    border: 3px solid #696969;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 50% 30%, #FFFACD 40%, #F0E68C 80%);
+    color: #556B2F;
+    border-radius: 40px 40px 0px 0px; /* Selected cage section */
+    border-color: #8B7D6B;
+    box-shadow: 0px 0px 10px rgba(240,230,140,0.5);
+}
+
+/* MICROWAVE TURNTABLE SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #C0C0C0, stop:0.3 #A9A9A9, stop:0.7 #808080, stop:1 #C0C0C0);
+    width: 24px;
+    border-radius: 12px;
+    border: 4px solid #696969;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(circle, #FFD700 40%, #DAA520 80%);
+    border-radius: 10px;
+    min-height: 30px;
+    border: 3px solid #B8860B;
+    margin: 3px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(circle, #FFA500 30%, #FF8C00 70%);
+    box-shadow: 0px 0px 12px rgba(255,165,0,0.6);
+}
+
+/* KITCHEN APPLIANCE MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #A9A9A9, stop:0.3 #C0C0C0, stop:0.7 #D3D3D3, stop:1 #A9A9A9);
+    color: #2F4F4F;
+    border-bottom: 5px solid #696969;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 0px 0px 20px 40px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #FFD700 40%, #DAA520 80%);
+    color: #8B4513;
+    border-radius: 15px 35px 10px 25px;
+    padding: 10px 18px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F5F5F5, stop:0.25 #E0E0E0, stop:0.5 #D3D3D3, 
+                stop:0.75 #C0C0C0, stop:1 #F5F5F5);
+    color: #2F4F4F;
+    border: 5px solid #696969;
+    border-radius: 25px 40px 15px 50px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #FFA500 30%, #FF8C00 70%);
+    color: #F5F5F5;
+    border-radius: 10px 30px 20px 25px;
+    margin: 3px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #696969, stop:0.4 #808080, stop:0.8 #A9A9A9, stop:1 #696969);
+    color: #F5F5F5;
+    border-top: 5px solid #2F4F4F;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 40px 30px 0px 0px;
+}
+
+/* MICROWAVE RADIATION PATTERN */
+QLabel#radiationWaves {
+    background: qradial-gradient(ellipse at 50% 50%, rgba(255,215,0,0.3) 20%, transparent 21%),
+                qradial-gradient(ellipse at 50% 50%, rgba(255,215,0,0.2) 40%, transparent 41%),
+                qradial-gradient(ellipse at 50% 50%, rgba(255,215,0,0.1) 60%, transparent 61%),
+                qradial-gradient(ellipse at 50% 50%, rgba(255,215,0,0.05) 80%, transparent 81%),
+                #D3D3D3;
+    color: #2F4F4F;
+    border: 4px solid #696969;
+    border-radius: 30px;
+    padding: 18px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* TIMER DISPLAY EFFECT */
+QWidget#timerDisplay {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #000000, stop:0.1 #FF0000, stop:0.2 #000000, 
+                stop:0.3 #FF0000, stop:0.4 #000000, stop:0.5 #FF0000,
+                stop:0.6 #000000, stop:0.7 #FF0000, stop:0.8 #000000, 
+                stop:0.9 #FF0000, stop:1 #000000);
+    color: #FF0000;
+    border: 3px solid #8B0000;
+    border-radius: 15px;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* POWER LEVEL INDICATOR */
+QLabel#powerLevel {
+    background: qradial-gradient(circle at 50% 50%, #32CD32 20%, #228B22 50%, #006400 80%);
+    color: #F0FFF0;
+    border: 6px solid #2F4F2F;
+    border-radius: 20px 50px 30px 60px;
+    padding: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: "Impact", sans-serif;
+    text-align: center;
+}
+
+/* BEEPING SOUND VISUAL */
+QLabel#beepIndicator {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFFF00, stop:0.3 #FFD700, stop:0.7 #FFA500, stop:1 #FFFF00);
+    color: #8B4513;
+    border: 3px solid #B8860B;
+    border-radius: 25px 15px 35px 20px;
+    padding: 12px 18px;
+    font-weight: bold;
+    font-size: 12px;
+    text-decoration: blink; /* Blinking beep effect if supported */
+}
+
+/* SAFETY WARNING */
+QWidget#safetyWarning {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FF0000, stop:0.3 #FF4500, stop:0.7 #FF6347, stop:1 #FF0000);
+    border: 5px solid #8B0000;
+    border-radius: 30px;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 15px;
+}

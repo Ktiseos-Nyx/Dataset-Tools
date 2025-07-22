@@ -1,0 +1,219 @@
+/* MARMITE (SOLID) THEME */
+/* A very dark, almost black-brown, like Marmite, using solid colors. */
+
+QMainWindow {
+    background: #2F2F2F; /* Dark Brown */
+    color: #F5F5DC;
+    border: none;
+}
+
+QWidget {
+    background: #2F2F2F; /* Dark Brown */
+    color: #F5F5DC;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #3E2723; /* Slightly lighter brown */
+    border: 2px solid #F5F5DC;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #5D4037; /* Even lighter brown */
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #2F2F2F; /* Dark Brown */
+    border-radius: 3px;
+    padding: 5px;
+    color: #3E2723; /* Slightly lighter brown */
+    selection-background-color: #5D4037; /* Even lighter brown */
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #2F2F2F; /* Dark Brown */
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #3E2723; /* Slightly lighter brown */
+}
+
+QListWidget::item:selected {
+    background: #5D4037; /* Even lighter brown */
+    color: #FFFFFF;
+}
+
+QMenuBar {
+    background: #3E2723; /* Slightly lighter brown */
+    color: #F5F5DC;
+    border-bottom: 1px solid #2F2F2F; /* Dark Brown */
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background: #5D4037; /* Even lighter brown */
+}
+
+QMenu {
+    background: #3E2723; /* Slightly lighter brown */
+    border: 1px solid #2F2F2F; /* Dark Brown */
+    padding: 3px;
+}
+
+QMenu::item {
+    padding: 5px 15px;
+    color: #F5F5DC;
+}
+
+QMenu::item:selected {
+    background: #5D4037; /* Even lighter brown */
+}
+
+QScrollBar:vertical {
+    background: #2F2F2F; /* Dark Brown */
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #3E2723; /* Slightly lighter brown */
+    border-radius: 5px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #2F2F2F; /* Dark Brown */
+    background: #FFFFFF;
+}
+
+QTabBar::tab {
+    background: #3E2723; /* Slightly lighter brown */
+    border: 1px solid #2F2F2F; /* Dark Brown */
+    padding: 6px 10px;
+    color: #F5F5DC;
+}
+
+QTabBar::tab:selected {
+    background: #FFFFFF;
+    color: #2F2F2F; /* Dark Brown */
+}
+
+QStatusBar {
+    background: #2F2F2F; /* Dark Brown */
+    border-top: 1px solid #3E2723; /* Slightly lighter brown */
+    color: #F5F5DC;
+}
+
+QLineEdit {
+    background: #FFFFFF;
+    border: 2px solid #2F2F2F; /* Dark Brown */
+    border-radius: 3px;
+    padding: 5px;
+    color: #3E2723; /* Slightly lighter brown */
+    selection-background-color: #5D4037; /* Even lighter brown */
+    selection-color: #FFFFFF;
+}
+
+QComboBox {
+    background: #2F2F2F; /* Dark Brown */
+    border: 2px solid #3E2723; /* Slightly lighter brown */
+    border-radius: 3px;
+    padding: 4px;
+    color: #F5F5DC;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 18px;
+    border-left: 1px solid #3E2723; /* Slightly lighter brown */
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid #F5F5DC;
+}
+
+QComboBox QAbstractItemView {
+    background: #2F2F2F; /* Dark Brown */
+    border: 1px solid #3E2723; /* Slightly lighter brown */
+    selection-background-color: #5D4037; /* Even lighter brown */
+    color: #F5F5DC;
+}
+
+QSplitter::handle {
+    background: #3E2723; /* Slightly lighter brown */
+    border: 1px solid #F5F5DC;
+}
+
+QProgressBar {
+    border: 2px solid #2F2F2F; /* Dark Brown */
+    border-radius: 3px;
+    background: #FFFFFF;
+    text-align: center;
+    color: #3E2723; /* Slightly lighter brown */
+}
+
+QProgressBar::chunk {
+    background: #5D4037; /* Even lighter brown */
+    border-radius: 2px;
+}
+
+QToolTip {
+    background: #2F2F2F; /* Dark Brown */
+    border: 1px solid #3E2723; /* Slightly lighter brown */
+    color: #F5F5DC;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QLabel {
+    color: #F5F5DC;
+}
+
+QGroupBox {
+    border: 2px solid #3E2723; /* Slightly lighter brown */
+    border-radius: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    color: #F5F5DC;
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 8px;
+    padding: 0 4px 0 4px;
+    background: #3E2723; /* Slightly lighter brown */
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QCheckBox {
+    color: #F5F5DC;
+}
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid #2F2F2F; /* Dark Brown */
+    background: #FFFFFF;
+}
+
+QCheckBox::indicator:checked {
+    background: #3E2723; /* Slightly lighter brown */
+}

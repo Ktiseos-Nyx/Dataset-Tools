@@ -1,0 +1,58 @@
+/* GENSHIN IMPACT: PAIMON THEME */
+/* Whites, golds, and light blues, reflecting Paimon's design. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFFFFF, stop: 0.3 #FFD700,
+                                stop: 0.7 #ADD8E6, stop: 1 #FFFFFF);
+    color: #333333;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFFFFF, stop: 0.3 #FFD700,
+                                stop: 0.7 #ADD8E6, stop: 1 #FFFFFF);
+    color: #333333;
+    font-family: 'Genshin Impact', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFD700, stop: 1 #FFA500);
+    border: 2px solid #333333;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFA500, stop: 1 #FFD700);
+    border: 2px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #FFD700;
+    border-radius: 5px;
+    padding: 8px;
+    color: #FFFFFF;
+    selection-background-color: #ADD8E6;
+    selection-color: #000000;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #FFD700;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #FFFFFF;
+}
+
+QListWidget::item:selected {
+    background: #ADD8E6;
+    color: #000000;
+}

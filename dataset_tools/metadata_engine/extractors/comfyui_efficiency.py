@@ -237,9 +237,7 @@ class ComfyUIEfficiencyExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if any(
-                script_node in class_type for script_node in efficiency_script_nodes
-            ):
+            if any(script_node in class_type for script_node in efficiency_script_nodes):
                 widgets = node_data.get("widgets_values", [])
                 script_params[class_type] = {
                     "node_id": node_id,
@@ -308,9 +306,7 @@ class ComfyUIEfficiencyExtractor:
             return {}
 
         summary = {
-            "is_efficiency_workflow": self.detect_efficiency_workflow(
-                data, {}, {}, {}
-            ),
+            "is_efficiency_workflow": self.detect_efficiency_workflow(data, {}, {}, {}),
             "loader_params": self._extract_loader_params(data, {}, {}, {}),
             "sampler_params": self._extract_sampler_params(data, {}, {}, {}),
             "ksampler_params": self._extract_ksampler_params(data, {}, {}, {}),
@@ -372,6 +368,4 @@ class ComfyUIEfficiencyExtractor:
             "Efficient ControlNet Stack",
         ]
 
-        return any(
-            efficiency_type in class_type for efficiency_type in efficiency_node_types
-        )
+        return any(efficiency_type in class_type for efficiency_type in efficiency_node_types)

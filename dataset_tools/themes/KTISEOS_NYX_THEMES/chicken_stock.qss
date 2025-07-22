@@ -1,0 +1,57 @@
+/* CHICKEN STOCK THEME */
+/* Lighter, yellowish-browns and creamy whites, evoking the color of chicken stock. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F5DEB3, stop: 0.3 #FFFACD,
+                                stop: 0.7 #DAA520, stop: 1 #F5DEB3);
+    color: #8B4513;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F5DEB3, stop: 0.3 #FFFACD,
+                                stop: 0.7 #DAA520, stop: 1 #F5DEB3);
+    color: #8B4513;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B8860B, stop: 1 #DAA520);
+    border: 2px solid #8B4513;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DAA520, stop: 1 #B8860B);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #F5DEB3;
+    border-radius: 3px;
+    padding: 5px;
+    color: #8B4513;
+    selection-background-color: #DAA520;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #F5DEB3;
+    border-radius: 3px;
+    alternate-background-color: #FFFACD;
+    color: #8B4513;
+}
+
+QListWidget::item:selected {
+    background: #DAA520;
+    color: #FFFFFF;
+}

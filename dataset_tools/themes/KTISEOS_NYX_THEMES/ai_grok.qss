@@ -1,0 +1,51 @@
+/* GROK AI THEME */
+/* A bold, slightly edgy theme with dark colors and bright, almost neon accents. */
+
+QMainWindow {
+    background: #1A1A1A; /* Dark Gray */
+    color: #00FF00; /* Neon Green */
+    border: none;
+}
+
+QWidget {
+    background: #1A1A1A; /* Dark Gray */
+    color: #00FF00; /* Neon Green */
+    font-size: 14px;
+}
+
+QPushButton {
+    background: #00FF00; /* Neon Green */
+    border: 2px solid #FF00FF; /* Neon Magenta */
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #000000;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #FF00FF; /* Neon Magenta */
+    border: 2px solid #00FF00; /* Neon Green */
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #00FF00; /* Neon Green */
+    border-radius: 3px;
+    padding: 8px;
+    color: #FF00FF; /* Neon Magenta */
+    selection-background-color: #00FF00; /* Neon Green */
+    selection-color: #000000;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #00FF00; /* Neon Green */
+    border-radius: 3px;
+    alternate-background-color: #333333;
+    color: #FF00FF; /* Neon Magenta */
+}
+
+QListWidget::item:selected {
+    background: #00FF00; /* Neon Green */
+    color: #000000;
+}

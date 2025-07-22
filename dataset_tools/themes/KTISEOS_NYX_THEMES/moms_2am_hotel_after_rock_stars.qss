@@ -1,0 +1,171 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Hotel After Rock Stars"
+The aftermath of a legendary tour stop
+Inspired by questionable life choices and sticky surfaces
+*/
+
+QWidget {
+    background-color: #1a1a1a; /* Almost black base */
+    color: #FFD700; /* Gold text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #000000, stop:0.2 #1a1a1a, stop:0.4 #2d0a0a, 
+                stop:0.6 #1a0000, stop:0.8 #0a0a0a, stop:1 #000000);
+}
+
+QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #8B0000, stop:0.3 #654321, stop:0.7 #8B0000, stop:1 #654321);
+    color: #FFD700;
+    border: 3px solid #FF4500; /* Orange red border */
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #DC143C, stop:0.5 #B22222, stop:1 #DC143C);
+    border-color: #FFD700;
+    box-shadow: 0px 0px 15px #FF4500;
+    color: #FFFFFF;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #4A4A4A, stop:0.5 #2F2F2F, stop:1 #4A4A4A);
+    border-color: #8B0000;
+    color: #C0C0C0;
+}
+
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #2F2F2F; /* Dark gray background */
+    color: #FFD700; /* Gold text */
+    border: 3px solid #8B0000; /* Dark red border */
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #FF4500; /* Orange red focus */
+    background-color: #1a1a1a;
+    box-shadow: 0px 0px 12px #8B0000;
+    color: #FFFFFF;
+}
+
+QTabWidget::pane {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2F2F2F, stop:0.3 #654321, stop:0.7 #8B0000, stop:1 #2F2F2F);
+    border: 4px solid #FF4500;
+    border-radius: 12px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #654321, stop:0.5 #8B4513, stop:1 #654321);
+    color: #FFD700;
+    padding: 12px 24px;
+    margin: 4px;
+    border-radius: 10px 10px 0px 0px;
+    font-weight: bold;
+    font-size: 13px;
+    border: 2px solid #8B0000;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #DC143C, stop:0.5 #B22222, stop:1 #DC143C);
+    color: #FFFFFF;
+    border-color: #FFD700;
+}
+
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #654321, stop:0.5 #8B0000, stop:1 #654321);
+    width: 20px;
+    border-radius: 10px;
+    border: 2px solid #FF4500;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FFD700, stop:0.5 #FFA500, stop:1 #FFD700);
+    border-radius: 8px;
+    min-height: 30px;
+    border: 2px solid #8B0000;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FFFF00, stop:0.5 #FFD700, stop:1 #FFFF00);
+    box-shadow: 0px 0px 10px #FF4500;
+}
+
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #8B0000, stop:0.5 #654321, stop:1 #8B0000);
+    color: #FFD700;
+    border-bottom: 4px solid #FF4500;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #DC143C, stop:0.5 #B22222, stop:1 #DC143C);
+    color: #FFFFFF;
+    border-radius: 8px;
+    padding: 6px 12px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2F2F2F, stop:0.5 #654321, stop:1 #2F2F2F);
+    color: #FFD700;
+    border: 4px solid #8B0000;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FF4500, stop:0.5 #DC143C, stop:1 #FF4500);
+    color: #FFFFFF;
+    border-radius: 6px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #654321, stop:0.5 #8B0000, stop:1 #654321);
+    color: #FFD700;
+    border-top: 4px solid #FF4500;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+/* Special "damage" effect for warnings */
+QLabel#damageLabel {
+    background: qradial-gradient(circle, #8B0000 30%, #654321 70%, #2F2F2F 90%);
+    color: #FF4500;
+    border: 3px solid #DC143C;
+    border-radius: 15px;
+    padding: 12px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* "Stain" pattern for special backgrounds */
+QWidget#stainPattern {
+    background: qradial-gradient(ellipse at 20% 30%, #654321 20%, transparent 21%),
+                qradial-gradient(ellipse at 70% 60%, #8B4513 15%, transparent 16%),
+                qradial-gradient(ellipse at 40% 80%, #2F2F2F 25%, transparent 26%),
+                #1a1a1a;
+}

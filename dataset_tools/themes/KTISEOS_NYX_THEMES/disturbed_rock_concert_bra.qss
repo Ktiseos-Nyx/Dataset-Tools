@@ -1,0 +1,58 @@
+/* DISTURBED IDEA: SOMEONE'S BRA AT A ROCK CONCERT */
+/* A theme with a mix of dark, sweaty colors, with some bright, garish accents, reflecting the chaos and energy of a rock concert. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 0.3 #2F4F4F,
+                                stop: 0.7 #8B0000, stop: 1 #000000);
+    color: #FFD700;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #000000, stop: 0.3 #2F4F4F,
+                                stop: 0.7 #8B0000, stop: 1 #000000);
+    color: #FFD700;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF00FF, stop: 1 #00FFFF);
+    border: 3px solid #FFD700;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00FFFF, stop: 1 #FF00FF);
+    border: 3px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    padding: 8px;
+    color: #8B0000;
+    selection-background-color: #FFD700;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #8B0000;
+}
+
+QListWidget::item:selected {
+    background: #FFD700;
+    color: #000000;
+}

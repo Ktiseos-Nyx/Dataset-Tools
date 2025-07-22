@@ -21,9 +21,7 @@ from PyQt6.QtGui import QFont
 
 # from PyQt6.QtWidgets import QApplication
 from ..correct_types import EmptyField  # pylint: disable=relative-beyond-top-level
-from ..correct_types import (
-    ExtensionType as Ext,
-)  # pylint: disable=relative-beyond-top-level
+from ..correct_types import ExtensionType as Ext  # pylint: disable=relative-beyond-top-level
 from ..logger import debug_monitor  # pylint: disable=relative-beyond-top-level
 from ..logger import info_monitor as nfo  # pylint: disable=relative-beyond-top-level
 from ..metadata_parser import (
@@ -31,12 +29,9 @@ from ..metadata_parser import (
 )  # pylint: disable=relative-beyond-top-level
 from ..widgets import (
     FileLoader,  # pylint: disable=relative-beyond-top-level
-    FileLoadResult,
 )
 from .dialogs import SettingsDialog
-from .enhanced_theme_manager import (
-    get_enhanced_theme_manager,
-)  # pylint: disable=relative-beyond-top-level
+from .enhanced_theme_manager import get_enhanced_theme_manager  # pylint: disable=relative-beyond-top-level
 from .font_manager import (
     apply_fonts_to_app,  # pylint: disable=relative-beyond-top-level
     get_font_manager,  # pylint: disable=relative-beyond-top-level
@@ -47,6 +42,7 @@ from .managers import (
     MetadataDisplayManager,  # pylint: disable=relative-beyond-top-level
     ThemeManager,  # pylint: disable=relative-beyond-top-level
 )
+from .widgets import FileLoadResult
 
 # ============================================================================
 # CONSTANTS
@@ -189,9 +185,7 @@ class MainWindow(Qw.QMainWindow):
         self.setAcceptDrops(True)
 
         # File management
-        self.file_loader: FileLoader | None = (
-            None  # Ensure file_loader is always defined
-        )
+        self.file_loader: FileLoader | None = None  # Ensure file_loader is always defined
         self.current_files_in_list: list[str] = []
         self.current_folder: str = ""
 
@@ -302,12 +296,8 @@ class MainWindow(Qw.QMainWindow):
 
             # Connect signals
             self.image_loader_worker.image_loaded.connect(self._on_image_loaded)
-            self.image_loader_worker.loading_failed.connect(
-                self._on_image_loading_failed
-            )
-            self.image_loader_worker.loading_started.connect(
-                self._on_image_loading_started
-            )
+            self.image_loader_worker.loading_failed.connect(self._on_image_loading_failed)
+            self.image_loader_worker.loading_started.connect(self._on_image_loading_started)
 
             # Start the thread
             self.image_loader_thread.start()
@@ -340,12 +330,8 @@ class MainWindow(Qw.QMainWindow):
                 self.image_preview.setPixmap(pixmap)
 
             # Update status
-            self.show_status_message(
-                f"Image loaded: {pixmap.width()}x{pixmap.height()}"
-            )
-            nfo(
-                "[UI] Image loaded successfully: %dx%d", pixmap.width(), pixmap.height()
-            )
+            self.show_status_message(f"Image loaded: {pixmap.width()}x{pixmap.height()}")
+            nfo("[UI] Image loaded successfully: %dx%d", pixmap.width(), pixmap.height())
 
         except Exception as e:
             nfo("[UI] Error setting loaded image: %s", e)
@@ -370,9 +356,7 @@ class MainWindow(Qw.QMainWindow):
         time_string = current_time.toString(QtCore.Qt.DateFormat.RFC2822Date)
         self.datetime_label.setText(time_string)
 
-    def show_status_message(
-        self, message: str, timeout: int = STATUS_MESSAGE_TIMEOUT
-    ) -> None:
+    def show_status_message(self, message: str, timeout: int = STATUS_MESSAGE_TIMEOUT) -> None:
         """Show a message in the status bar."""
         self.main_status_bar.showMessage(message, timeout)
         nfo("[UI] Status: %s", message)
@@ -387,9 +371,7 @@ class MainWindow(Qw.QMainWindow):
         nfo("[UI] 'Open Folder' action triggered.")
 
         start_dir = self._get_start_directory()
-        folder_path = Qw.QFileDialog.getExistingDirectory(
-            self, "Select Folder to Load", start_dir
-        )
+        folder_path = Qw.QFileDialog.getExistingDirectory(self, "Select Folder to Load", start_dir)
 
         if folder_path:
             nfo("[UI] Folder selected via dialog: %s", folder_path)
@@ -414,9 +396,7 @@ class MainWindow(Qw.QMainWindow):
         self.show_status_message(message)
 
     @debug_monitor
-    def load_files(
-        self, folder_path: str, file_to_select_after_load: str | None = None
-    ) -> None:
+    def load_files(self, folder_path: str, file_to_select_after_load: str | None = None) -> None:
         """Load files from a folder in a background thread.
 
         Args:
@@ -449,9 +429,7 @@ class MainWindow(Qw.QMainWindow):
 
         if hasattr(self, "left_panel"):
             folder_name = Path(self.current_folder).name
-            self.left_panel.set_current_folder_text(
-                f"Current Folder: {self.current_folder}"
-            )
+            self.left_panel.set_current_folder_text(f"Current Folder: {self.current_folder}")
             self.left_panel.set_message_text(f"Loading files from {folder_name}...")
             self.left_panel.set_buttons_enabled(False)
 
@@ -520,9 +498,7 @@ class MainWindow(Qw.QMainWindow):
         # Set status message
         folder_name = Path(result.folder_path).name
         file_count = len(self.current_files_in_list)
-        self.left_panel.set_message_text(
-            f"Loaded {file_count} file(s) from {folder_name}."
-        )
+        self.left_panel.set_message_text(f"Loaded {file_count} file(s) from {folder_name}.")
 
         # Auto-select file
         self._auto_select_file(result)
@@ -616,9 +592,7 @@ class MainWindow(Qw.QMainWindow):
 
         if hasattr(self, "left_panel"):
             self.left_panel.clear_file_list_display()
-            self.left_panel.set_message_text(
-                "Select a folder or drop files/folder here."
-            )
+            self.left_panel.set_message_text("Select a folder or drop files/folder here.")
 
         self.current_files_in_list = []
         self.clear_selection()
@@ -677,11 +651,7 @@ class MainWindow(Qw.QMainWindow):
         """Update UI to reflect current file selection."""
         if hasattr(self, "left_panel"):
             count = len(self.current_files_in_list)
-            folder_name = (
-                Path(self.current_folder).name
-                if self.current_folder
-                else "Unknown Folder"
-            )
+            folder_name = Path(self.current_folder).name if self.current_folder else "Unknown Folder"
             self.left_panel.set_message_text(f"{count} file(s) in {folder_name}")
 
         self.show_status_message(f"Selected: {file_name}", 4000)
@@ -691,9 +661,7 @@ class MainWindow(Qw.QMainWindow):
         """Validate that we have proper file context."""
         if not self.current_folder or not file_name:
             nfo("[UI] Folder/file context missing.")
-            error_data = {
-                EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}
-            }
+            error_data = {EmptyField.PLACEHOLDER.value: {"Error": "Folder/file context missing."}}
             self.metadata_display.display_metadata(error_data)
             return False
         return True
@@ -723,10 +691,7 @@ class MainWindow(Qw.QMainWindow):
         # Check against image format sets
         if hasattr(Ext, "IMAGE") and isinstance(Ext.IMAGE, list):
             for image_format_set in Ext.IMAGE:
-                if (
-                    isinstance(image_format_set, set)
-                    and file_suffix in image_format_set
-                ):
+                if isinstance(image_format_set, set) and file_suffix in image_format_set:
                     nfo("[UI] File matches image format: '%s'", file_suffix)
                     return True
 
@@ -772,11 +737,7 @@ class MainWindow(Qw.QMainWindow):
         """
         if not self.current_folder or not file_name:
             nfo("[UI] Cannot load metadata: folder/file name missing.")
-            return {
-                EmptyField.PLACEHOLDER.value: {
-                    "Error": "Cannot load metadata, folder/file name missing."
-                }
-            }
+            return {EmptyField.PLACEHOLDER.value: {"Error": "Cannot load metadata, folder/file name missing."}}
 
         full_file_path = os.path.join(self.current_folder, file_name)
         nfo("[UI] Loading metadata from: %s", full_file_path)
@@ -830,7 +791,7 @@ class MainWindow(Qw.QMainWindow):
         try:
             # Memory-efficient thumbnail generation using Pillow
             max_preview_size = 1024
-            pixmap = self._create_safe_thumbnail(image_file_path, max_preview_size)
+            pixmap = create_safe_thumbnail(image_file_path, max_preview_size)
 
             if pixmap.isNull():
                 nfo("[UI] Failed to load image: '%s'", image_file_path)
@@ -843,9 +804,7 @@ class MainWindow(Qw.QMainWindow):
                 )
                 if hasattr(self, "image_preview"):
                     self.image_preview.setPixmap(pixmap)
-                self.show_status_message(
-                    f"Image loaded: {pixmap.width()}x{pixmap.height()}"
-                )
+                self.show_status_message(f"Image loaded: {pixmap.width()}x{pixmap.height()}")
 
         except Exception as e:
             nfo("[UI] Exception in synchronous image loading: %s", e)
@@ -906,9 +865,7 @@ class MainWindow(Qw.QMainWindow):
 
                 # Use thumbnail() instead of resize() - it's memory efficient and safer
                 # thumbnail() modifies in-place and uses a good resampling filter
-                img.thumbnail(
-                    (max_size, max_size), Image.Resampling.BILINEAR
-                )  # Safer than LANCZOS
+                img.thumbnail((max_size, max_size), Image.Resampling.BILINEAR)  # Safer than LANCZOS
 
                 # Convert to Qt format with proper color channel handling
                 return self._pil_to_qpixmap(img)
@@ -939,15 +896,11 @@ class MainWindow(Qw.QMainWindow):
             if pil_image.mode == "RGBA":
                 # Handle transparency
                 image_data = pil_image.tobytes("raw", "RGBA")
-                qimage = QtGui.QImage(
-                    image_data, width, height, QtGui.QImage.Format.Format_RGBA8888
-                )
+                qimage = QtGui.QImage(image_data, width, height, QtGui.QImage.Format.Format_RGBA8888)
             else:
                 # RGB mode
                 image_data = pil_image.tobytes("raw", "RGB")
-                qimage = QtGui.QImage(
-                    image_data, width, height, QtGui.QImage.Format.Format_RGB888
-                )
+                qimage = QtGui.QImage(image_data, width, height, QtGui.QImage.Format.Format_RGB888)
 
             return QtGui.QPixmap.fromImage(qimage)
 
@@ -987,9 +940,7 @@ class MainWindow(Qw.QMainWindow):
                 text_box.update()
                 # Verify the font was applied
                 current_font = text_box.font()
-                nfo(
-                    f"[FONT] Applied to {box_name}: {current_font.family()} {current_font.pointSize()}pt"
-                )
+                nfo(f"[FONT] Applied to {box_name}: {current_font.family()} {current_font.pointSize()}pt")
             else:
                 nfo(f"[FONT] WARNING: {box_name} not found on main window")
 
@@ -1154,3 +1105,54 @@ class MainWindow(Qw.QMainWindow):
         """
         self.resize(width, height)
         nfo("[UI] Window resized to: %dx%d", width, height)
+
+    # ========================================================================
+    # EASTER EGG - KONAMI CODE
+    # ========================================================================
+
+    def _initialize_konami_code(self) -> None:
+        """Initialize Konami code tracking."""
+        self.konami_code_sequence = [
+            QtCore.Qt.Key.Key_Up,
+            QtCore.Qt.Key.Key_Up,
+            QtCore.Qt.Key.Key_Down,
+            QtCore.Qt.Key.Key_Down,
+            QtCore.Qt.Key.Key_Left,
+            QtCore.Qt.Key.Key_Right,
+            QtCore.Qt.Key.Key_Left,
+            QtCore.Qt.Key.Key_Right,
+            QtCore.Qt.Key.Key_B,
+            QtCore.Qt.Key.Key_A,
+        ]
+        self.konami_code_progress = 0
+        self.chaos_unlocked_key = "chaosCollection/unlocked"
+
+    def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:
+        """Override key press event to check for Konami code."""
+        super().keyPressEvent(event)
+
+    def _check_konami_code(self, key: int) -> None:
+        """Check if the pressed key matches the Konami code sequence."""
+        if self.settings.value(self.chaos_unlocked_key, False, type=bool):
+            return  # Already unlocked
+
+        if key == self.konami_code_sequence[self.konami_code_progress]:
+            self.konami_code_progress += 1
+            if self.konami_code_progress == len(self.konami_code_sequence):
+                self._unlock_chaos_collection()
+                self.konami_code_progress = 0  # Reset after success
+        else:
+            self.konami_code_progress = 0  # Reset on incorrect key
+
+    def _unlock_chaos_collection(self) -> None:
+        """Unlock the chaos theme collection and notify user."""
+        self.settings.setValue(self.chaos_unlocked_key, True)
+        self.show_status_message("Chaos Collection Unlocked! Prepare for madness.", 5000)
+        nfo("Chaos Collection Unlocked via Konami Code!")
+
+        # Optionally, refresh theme manager to show new category immediately
+        if hasattr(self, "enhanced_theme_manager"):
+            self.enhanced_theme_manager.refresh_theme_categories()
+            # Re-open settings dialog if it's open to show new themes
+            # This would require a signal from theme manager to settings dialog
+            # For now, a simple status message is sufficient.

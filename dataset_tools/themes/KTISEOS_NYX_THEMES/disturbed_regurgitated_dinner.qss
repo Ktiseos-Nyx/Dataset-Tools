@@ -1,0 +1,384 @@
+/* DISTURBED REGURGITATED DINNER INSPIRED THEME */
+/* That chunky, multicolored mess that happens when dinner makes a return appearance */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 0.2 #daa520,
+                                stop: 0.4 #6b8e23, stop: 0.6 #b8860b,
+                                stop: 0.8 #cd853f, stop: 1 #a0522d);
+    color: #2f1b14;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 0.2 #daa520,
+                                stop: 0.4 #6b8e23, stop: 0.6 #b8860b,
+                                stop: 0.8 #cd853f, stop: 1 #a0522d);
+    color: #2f1b14;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Chunky food buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #f4a460, stop: 0.3 #daa520,
+                                stop: 0.7 #cd853f, stop: 1 #b8860b);
+    border: 3px outset #8b7355;
+    border-radius: 5px;
+    padding: 10px 16px;
+    color: #654321;
+    min-height: 16px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffb347, stop: 0.3 #f4a460,
+                                stop: 0.7 #daa520, stop: 1 #cd853f);
+    border: 3px outset #a0522d;
+    color: #2f1b14;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b7355, stop: 0.3 #8b6914,
+                                stop: 0.7 #654321, stop: 1 #2f1b14);
+    border: 3px inset #8b7355;
+}
+
+QPushButton:disabled {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #a9a9a9, stop: 1 #696969);
+    border: 3px outset #808080;
+    color: #2f2f2f;
+}
+
+/* Stomach acid text areas */
+QTextEdit, QPlainTextEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fff8dc, stop: 0.5 #ffefd5,
+                                stop: 1 #f5deb3);
+    border: 3px inset #8b4513;
+    border-radius: 6px;
+    padding: 12px;
+    color: #654321;
+    selection-background-color: #daa520;
+    selection-color: #2f1b14;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 3px inset #a0522d;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffaf0, stop: 0.5 #fff8dc,
+                                stop: 1 #ffefd5);
+}
+
+/* Undigested food lists */
+QListWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fff8dc, stop: 0.5 #ffefd5,
+                                stop: 1 #f5deb3);
+    border: 3px inset #8b4513;
+    border-radius: 6px;
+    alternate-background-color: #f4a460;
+    color: #654321;
+    gridline-color: #cd853f;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 8px 12px;
+    border-bottom: 2px solid #cd853f;
+    border-radius: 4px;
+    margin: 2px;
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #daa520, stop: 0.5 #b8860b,
+                                stop: 1 #8b6914);
+    color: #ffffff;
+    border-radius: 6px;
+    border: 2px solid #cd853f;
+    font-weight: bold;
+}
+
+QListWidget::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #f4a460, stop: 0.5 #daa520,
+                                stop: 1 #cd853f);
+    color: #2f1b14;
+    border-radius: 6px;
+}
+
+/* Bile-stained menu */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #cd853f, stop: 1 #8b4513);
+    color: #2f1b14;
+    border-bottom: 3px outset #daa520;
+    font-weight: bold;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 8px 14px;
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #daa520, stop: 1 #b8860b);
+    color: #ffffff;
+    border: 2px outset #cd853f;
+}
+
+QMenu {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fff8dc, stop: 1 #f5deb3);
+    border: 3px outset #8b4513;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+QMenu::item {
+    padding: 8px 20px;
+    border-radius: 4px;
+    margin: 2px;
+    color: #654321;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #daa520, stop: 1 #b8860b);
+    color: #ffffff;
+}
+
+/* Digestive tract scrollbars */
+QScrollBar:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #8b4513, stop: 1 #cd853f);
+    width: 16px;
+    border: 3px outset #654321;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #daa520, stop: 0.5 #f4a460,
+                                stop: 1 #b8860b);
+    border: 3px outset #cd853f;
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #f4a460, stop: 0.5 #ffb347,
+                                stop: 1 #daa520);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b4513, stop: 1 #cd853f);
+    height: 16px;
+    border: 3px outset #654321;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #daa520, stop: 0.5 #f4a460,
+                                stop: 1 #b8860b);
+    border: 3px outset #cd853f;
+    border-radius: 6px;
+    min-width: 30px;
+}
+
+/* Partially digested tabs */
+QTabWidget::pane {
+    border: 3px outset #8b4513;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fff8dc, stop: 1 #f5deb3);
+    border-radius: 6px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #cd853f, stop: 1 #8b4513);
+    border: 3px outset #654321;
+    padding: 10px 18px;
+    margin-right: 3px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    font-weight: bold;
+    color: #2f1b14;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #daa520, stop: 1 #b8860b);
+    border: 3px outset #cd853f;
+    border-bottom: none;
+    color: #ffffff;
+}
+
+QTabBar::tab:hover:!selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #f4a460, stop: 1 #cd853f);
+    border: 3px outset #daa520;
+    color: #2f1b14;
+}
+
+/* Nauseous status bar */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #cd853f, stop: 1 #8b4513);
+    border-top: 3px outset #daa520;
+    color: #2f1b14;
+    font-weight: bold;
+}
+
+/* Gastric input fields */
+QLineEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffaf0, stop: 1 #fff8dc);
+    border: 3px inset #8b4513;
+    border-radius: 4px;
+    padding: 8px;
+    color: #654321;
+    selection-background-color: #daa520;
+    selection-color: #2f1b14;
+}
+
+QLineEdit:focus {
+    border: 3px inset #a0522d;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffffff, stop: 1 #fffaf0);
+}
+
+/* Regurgitation combo boxes */
+QComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #cd853f, stop: 1 #8b4513);
+    border: 3px outset #654321;
+    border-radius: 4px;
+    padding: 8px;
+    color: #2f1b14;
+    min-width: 80px;
+    font-weight: bold;
+}
+
+QComboBox:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #f4a460, stop: 1 #cd853f);
+    border: 3px outset #daa520;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid #2f1b14;
+}
+
+QComboBox QAbstractItemView {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fff8dc, stop: 1 #f5deb3);
+    border: 3px outset #8b4513;
+    border-radius: 4px;
+    selection-background-color: #daa520;
+    selection-color: #2f1b14;
+    color: #654321;
+}
+
+/* Revolting progress bars */
+QProgressBar {
+    border: 3px inset #8b4513;
+    border-radius: 4px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fff8dc, stop: 1 #f5deb3);
+    text-align: center;
+    color: #654321;
+    font-weight: bold;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #daa520, stop: 0.3 #f4a460,
+                                stop: 0.7 #cd853f, stop: 1 #b8860b);
+    border-radius: 2px;
+    margin: 1px;
+}
+
+/* Disgusting tooltips */
+QToolTip {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fff8dc, stop: 1 #f5deb3);
+    border: 3px outset #daa520;
+    color: #654321;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* Additional nauseating styling */
+QLabel {
+    color: #2f1b14;
+    font-weight: bold;
+}
+
+QGroupBox {
+    border: 3px outset #8b4513;
+    border-radius: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    font-weight: bold;
+    color: #654321;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fff8dc, stop: 1 #f5deb3);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 15px;
+    padding: 0 12px 0 12px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #daa520, stop: 1 #cd853f);
+    color: #2f1b14;
+    font-weight: bold;
+    border-radius: 4px;
+    border: 2px outset #8b4513;
+}
+
+QCheckBox {
+    color: #2f1b14;
+    font-weight: bold;
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 2px inset #654321;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fff8dc, stop: 1 #f5deb3);
+}
+
+QCheckBox::indicator:checked {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #daa520, stop: 1 #cd853f);
+    border: 2px outset #8b4513;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px inset #a0522d;
+}

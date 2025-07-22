@@ -1,0 +1,57 @@
+/* DISTURBED IDEA: GRANDMA'S UNDIES */
+/* A theme with faded, floral patterns and dull, uncomfortable colors. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D8BFD8, stop: 0.3 #E6E6FA,
+                                stop: 0.7 #B0C4DE, stop: 1 #D8BFD8);
+    color: #6A5ACD;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D8BFD8, stop: 0.3 #E6E6FA,
+                                stop: 0.7 #B0C4DE, stop: 1 #D8BFD8);
+    color: #6A5ACD;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #9370DB, stop: 1 #8A2BE2);
+    border: 2px solid #6A5ACD;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8A2BE2, stop: 1 #9370DB);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #D8BFD8;
+    border-radius: 5px;
+    padding: 8px;
+    color: #6A5ACD;
+    selection-background-color: #9370DB;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #D8BFD8;
+    border-radius: 5px;
+    alternate-background-color: #F0F8FF;
+    color: #6A5ACD;
+}
+
+QListWidget::item:selected {
+    background: #9370DB;
+    color: #FFFFFF;
+}

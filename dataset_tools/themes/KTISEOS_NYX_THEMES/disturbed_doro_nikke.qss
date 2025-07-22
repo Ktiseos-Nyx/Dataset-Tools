@@ -1,0 +1,58 @@
+/* DISTURBED IDEA: DORO (NIKKE) */
+/* A theme with military green, black, and vibrant pink/purple accents, reflecting Doro's design. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4B5320, stop: 0.3 #2F4F4F,
+                                stop: 0.7 #8A2BE2, stop: 1 #4B5320);
+    color: #F0F0F0;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4B5320, stop: 0.3 #2F4F4F,
+                                stop: 0.7 #8A2BE2, stop: 1 #4B5320);
+    color: #F0F0F0;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF1493, stop: 1 #8A2BE2);
+    border: 2px solid #F0F0F0;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8A2BE2, stop: 1 #FF1493);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #4B5320;
+    border-radius: 3px;
+    padding: 5px;
+    color: #F0F0F0;
+    selection-background-color: #FF1493;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #4B5320;
+    border-radius: 3px;
+    alternate-background-color: #2F4F4F;
+    color: #F0F0F0;
+}
+
+QListWidget::item:selected {
+    background: #FF1493;
+    color: #FFFFFF;
+}

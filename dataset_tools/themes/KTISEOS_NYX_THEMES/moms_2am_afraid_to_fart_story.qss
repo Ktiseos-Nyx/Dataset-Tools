@@ -1,0 +1,183 @@
+/*
+Mom's 2AM Fever Dreams Collection - "I'm Afraid to Fart, A Story"
+A tragic memoir of intestinal anxiety
+Chapter 1: The Rumbling Begins
+*/
+
+QWidget {
+    background-color: #F5F5DC; /* Beige base */
+    color: #8B4513; /* Saddle brown text */
+    font-family: "Times New Roman", serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F5F5DC, stop:0.2 #DDD4AA, stop:0.4 #C5B358, 
+                stop:0.6 #A0935C, stop:0.8 #8B7355, stop:1 #F5F5DC);
+}
+
+/* FUNKY BUBBLE-SHAPED BUTTONS! */
+QPushButton {
+    background: qradial-gradient(circle at 30% 30%, #FFE4B5 30%, #DDB76F 60%, #CD853F 90%);
+    color: #8B4513;
+    border: 4px solid #D2B48C;
+    border-radius: 25px 15px 35px 20px; /* Irregular bubble shape! */
+    padding: 12px 20px;
+    font-weight: bold;
+    font-size: 13px;
+    font-style: italic;
+}
+
+QPushButton:hover {
+    background: qradial-gradient(circle at 70% 20%, #FFFACD 20%, #F0E68C 50%, #DAA520 80%);
+    border-color: #B8860B;
+    border-radius: 20px 30px 15px 40px; /* Shape shifts on hover! */
+    box-shadow: 0px 0px 15px #D2B48C;
+    transform: scale(1.05);
+}
+
+QPushButton:pressed {
+    background: qradial-gradient(circle at 50% 50%, #DDD4AA 40%, #A0935C 80%);
+    border-radius: 35px 10px 25px 30px; /* "Deflated" shape when pressed */
+    border-color: #8B7355;
+    transform: scale(0.95);
+}
+
+/* WAVY TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #FFFACD; /* Lemon chiffon */
+    color: #654321; /* Dark brown text */
+    border: 3px solid #DDB76F;
+    border-radius: 15px 25px 15px 25px; /* Wavy shape */
+    padding: 10px;
+    font-size: 13px;
+    font-family: "Courier New", monospace;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #B8860B;
+    background-color: #FFF8DC; /* Cornsilk */
+    border-radius: 25px 15px 25px 15px; /* Reverse wave on focus */
+    box-shadow: 0px 0px 12px #D2B48C;
+}
+
+/* WOBBLY TABS */
+QTabWidget::pane {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFF8DC, stop:0.5 #F5DEB3, stop:1 #DDD4AA);
+    border: 4px solid #CD853F;
+    border-radius: 20px 30px 20px 30px;
+}
+
+QTabBar::tab {
+    background: qradial-gradient(ellipse at 40% 60%, #F0E68C 30%, #DAA520 70%);
+    color: #8B4513;
+    padding: 15px 25px;
+    margin: 2px;
+    border-radius: 30px 10px 20px 40px; /* Super irregular tabs! */
+    font-weight: bold;
+    font-size: 13px;
+    border: 3px solid #B8860B;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 60% 40%, #FFFACD 20%, #FFE4B5 60%, #DDB76F 90%);
+    color: #654321;
+    border-radius: 40px 20px 30px 15px; /* Different shape when selected */
+    border-color: #CD853F;
+}
+
+/* INTESTINAL SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #F5DEB3, stop:0.3 #DDB76F, stop:0.7 #CD853F, stop:1 #F5DEB3);
+    width: 22px;
+    border-radius: 11px;
+    border: 3px solid #B8860B;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(circle, #DAA520 40%, #B8860B 80%);
+    border-radius: 8px;
+    min-height: 30px;
+    border: 2px solid #8B7355;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(circle, #FFD700 30%, #DAA520 70%);
+    box-shadow: 0px 0px 10px #CD853F;
+}
+
+/* NERVOUS MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #DDB76F, stop:0.5 #CD853F, stop:1 #DDB76F);
+    color: #8B4513;
+    border-bottom: 4px solid #B8860B;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 0px 0px 15px 25px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #FFFACD 30%, #F0E68C 70%);
+    color: #654321;
+    border-radius: 20px 10px 30px 15px;
+    padding: 8px 15px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFF8DC, stop:0.5 #F5DEB3, stop:1 #FFF8DC);
+    color: #8B4513;
+    border: 4px solid #CD853F;
+    border-radius: 25px 15px 35px 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #FFE4B5 40%, #DDB76F 80%);
+    color: #654321;
+    border-radius: 15px 25px 10px 30px;
+    margin: 2px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #CD853F, stop:0.5 #B8860B, stop:1 #CD853F);
+    color: #F5DEB3;
+    border-top: 4px solid #8B7355;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 25px 15px 0px 0px;
+}
+
+/* SPECIAL "GAS BUBBLE" EFFECT */
+QLabel#gasBubble {
+    background: qradial-gradient(circle at 30% 70%, #FFFACD 20%, #F0E68C 50%, #DAA520 80%);
+    color: #8B4513;
+    border: 4px solid #CD853F;
+    border-radius: 50px 30px 40px 35px; /* Irregular bubble */
+    padding: 15px;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 14px;
+}
+
+/* ANXIETY SHAKING EFFECT */
+QPushButton#anxietyButton {
+    background: qradial-gradient(circle, #FFE4B5 30%, #DDB76F 70%);
+    border-radius: 25px 15px 35px 20px;
+    animation: shake 0.5s infinite;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0px); }
+    25% { transform: translateX(-2px); }
+    50% { transform: translateX(2px); }
+    75% { transform: translateX(-1px); }
+    100% { transform: translateX(0px); }
+}

@@ -54,7 +54,7 @@ _log_level_map_internal = {
 }
 
 
-def set_package_log_level(level_input: str):
+def set_package_log_level(level_input: str) -> None:
     """Sets the global LOG_LEVEL for the package based on a string argument.
     Called by the main application entry point after parsing CLI args.
     The logger module should then re-read this or be explicitly reconfigured.

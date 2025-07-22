@@ -1,0 +1,379 @@
+/* CHRISTMAS INSPIRED THEME */
+/* Festive Christmas colors - deep reds, forest greens, and golden accents */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 0.5 #006400,
+                                stop: 1 #8b0000);
+    color: #f5f5dc;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 0.5 #006400,
+                                stop: 1 #8b0000);
+    color: #f5f5dc;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Holly and berry buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #dc143c, stop: 0.5 #b22222,
+                                stop: 1 #8b0000);
+    border: 3px ridge #ffd700;
+    border-radius: 10px;
+    padding: 10px 16px;
+    color: #ffffff;
+    min-height: 16px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff6347, stop: 0.5 #dc143c,
+                                stop: 1 #b22222);
+    border: 3px ridge #ffffff;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8b0000, stop: 0.5 #654321,
+                                stop: 1 #2f4f2f);
+    border: 3px inset #ffd700;
+}
+
+QPushButton:disabled {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #696969, stop: 1 #2f4f4f);
+    border: 3px ridge #808080;
+    color: #c0c0c0;
+}
+
+/* Wrapping paper text areas */
+QTextEdit, QPlainTextEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #228b22, stop: 1 #006400);
+    border: 4px ridge #ffd700;
+    border-radius: 10px;
+    padding: 12px;
+    color: #f5f5dc;
+    selection-background-color: #dc143c;
+    selection-color: #ffffff;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 4px ridge #ffffff;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #32cd32, stop: 1 #228b22);
+}
+
+/* Gift list styling */
+QListWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #228b22, stop: 1 #006400);
+    border: 4px ridge #ffd700;
+    border-radius: 10px;
+    alternate-background-color: #2e8b57;
+    color: #f5f5dc;
+    gridline-color: #8b0000;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 10px 12px;
+    border-bottom: 2px solid #8b0000;
+    border-radius: 6px;
+    margin: 2px;
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffd700, stop: 1 #daa520);
+    color: #8b0000;
+    border-radius: 8px;
+    border: 2px solid #dc143c;
+    font-weight: bold;
+}
+
+QListWidget::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #dc143c, stop: 1 #b22222);
+    color: #ffffff;
+    border-radius: 8px;
+}
+
+/* Santa's workshop menu */
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #b22222, stop: 1 #8b0000);
+    color: #f5f5dc;
+    border-bottom: 4px ridge #ffd700;
+    font-weight: bold;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 8px 14px;
+    border-radius: 6px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffd700, stop: 1 #daa520);
+    color: #8b0000;
+    border: 2px ridge #ffffff;
+}
+
+QMenu {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #006400, stop: 1 #2f4f2f);
+    border: 4px ridge #ffd700;
+    border-radius: 10px;
+    padding: 6px;
+}
+
+QMenu::item {
+    padding: 8px 20px;
+    border-radius: 6px;
+    margin: 2px;
+    color: #f5f5dc;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #dc143c, stop: 1 #b22222);
+    color: #ffffff;
+}
+
+/* Candy cane scrollbars */
+QScrollBar:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ffffff, stop: 0.5 #dc143c,
+                                stop: 1 #ffffff);
+    width: 16px;
+    border: 3px ridge #ffd700;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ffd700, stop: 0.5 #ffff00,
+                                stop: 1 #daa520);
+    border: 3px ridge #8b0000;
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ffff00, stop: 0.5 #fffacd,
+                                stop: 1 #ffd700);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffffff, stop: 0.5 #dc143c,
+                                stop: 1 #ffffff);
+    height: 16px;
+    border: 3px ridge #ffd700;
+    border-radius: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffd700, stop: 0.5 #ffff00,
+                                stop: 1 #daa520);
+    border: 3px ridge #8b0000;
+    border-radius: 6px;
+    min-width: 30px;
+}
+
+/* Presents tabs */
+QTabWidget::pane {
+    border: 4px ridge #ffd700;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #228b22, stop: 1 #006400);
+    border-radius: 10px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #b22222, stop: 1 #8b0000);
+    border: 4px ridge #ffd700;
+    padding: 10px 18px;
+    margin-right: 3px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-weight: bold;
+    color: #f5f5dc;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffd700, stop: 1 #daa520);
+    border: 4px ridge #dc143c;
+    border-bottom: none;
+    color: #8b0000;
+}
+
+QTabBar::tab:hover:!selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #dc143c, stop: 1 #b22222);
+    border: 4px ridge #ffffff;
+    color: #ffffff;
+}
+
+/* North Pole status bar */
+QStatusBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #006400, stop: 1 #2f4f2f);
+    border-top: 4px ridge #ffd700;
+    color: #f5f5dc;
+    font-weight: bold;
+}
+
+/* Elf workshop input fields */
+QLineEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fffacd, stop: 1 #f0e68c);
+    border: 4px ridge #8b0000;
+    border-radius: 8px;
+    padding: 8px;
+    color: #8b0000;
+    selection-background-color: #dc143c;
+    selection-color: #ffffff;
+}
+
+QLineEdit:focus {
+    border: 4px ridge #ffd700;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffffff, stop: 1 #fffacd);
+}
+
+/* Christmas ornament combo boxes */
+QComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #228b22, stop: 1 #006400);
+    border: 4px ridge #ffd700;
+    border-radius: 8px;
+    padding: 8px;
+    color: #f5f5dc;
+    min-width: 80px;
+    font-weight: bold;
+}
+
+QComboBox:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #32cd32, stop: 1 #228b22);
+    border: 4px ridge #ffffff;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid #f5f5dc;
+}
+
+QComboBox QAbstractItemView {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #228b22, stop: 1 #006400);
+    border: 4px ridge #ffd700;
+    border-radius: 8px;
+    selection-background-color: #dc143c;
+    selection-color: #ffffff;
+    color: #f5f5dc;
+}
+
+/* Christmas progress bars */
+QProgressBar {
+    border: 4px ridge #ffd700;
+    border-radius: 8px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #228b22, stop: 1 #006400);
+    text-align: center;
+    color: #f5f5dc;
+    font-weight: bold;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #dc143c, stop: 0.5 #ffd700,
+                                stop: 1 #dc143c);
+    border-radius: 6px;
+    margin: 2px;
+}
+
+/* Festive tooltips */
+QToolTip {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ffd700, stop: 1 #daa520);
+    border: 4px ridge #dc143c;
+    color: #8b0000;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* Additional Christmas styling */
+QLabel {
+    color: #f5f5dc;
+    font-weight: bold;
+}
+
+QGroupBox {
+    border: 4px ridge #ffd700;
+    border-radius: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    font-weight: bold;
+    color: #f5f5dc;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #228b22, stop: 1 #006400);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 15px;
+    padding: 0 12px 0 12px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #dc143c, stop: 1 #ffd700);
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 3px ridge #ffffff;
+}
+
+QCheckBox {
+    color: #f5f5dc;
+    font-weight: bold;
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 2px ridge #ffd700;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #228b22, stop: 1 #006400);
+}
+
+QCheckBox::indicator:checked {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #dc143c, stop: 1 #ffd700);
+    border: 2px ridge #ffffff;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px ridge #ffffff;
+}

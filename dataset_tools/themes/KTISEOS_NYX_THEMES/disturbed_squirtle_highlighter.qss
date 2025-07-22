@@ -1,0 +1,59 @@
+/* DISTURBED IDEA: SQUIRTLE (HIGHLIGHTER MURDERED) */
+/* Squirtle's cool blue, but assaulted by neon orange and pink highlighters. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00BFFF, stop: 0.5 #FF8C00,
+                                stop: 1 #FF69B4);
+    color: #000000;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00BFFF, stop: 0.5 #FF8C00,
+                                stop: 1 #FF69B4);
+    color: #000000;
+    font-family: 'Impact', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF8C00, stop: 1 #FF69B4);
+    border: 3px solid #00BFFF;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF69B4, stop: 1 #FF8C00);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #00BFFF;
+    border-radius: 5px;
+    padding: 8px;
+    color: #FF8C00;
+    selection-background-color: #FF69B4;
+    selection-color: #000000;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #00BFFF;
+    border-radius: 5px;
+    alternate-background-color: #FF8C00;
+    color: #FF69B4;
+}
+
+QListWidget::item:selected {
+    background: #00BFFF;
+    color: #000000;
+}

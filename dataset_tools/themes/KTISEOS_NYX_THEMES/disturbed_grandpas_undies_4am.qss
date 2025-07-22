@@ -1,0 +1,57 @@
+/* DISTURBED IDEA: GRANDPA'S UNDIES AT 4 AM */
+/* A theme with faded, dull, and slightly off-white colors, evoking a sense of old, worn fabric and early morning light. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F5F5DC, stop: 0.3 #E6E6FA,
+                                stop: 0.7 #D3D3D3, stop: 1 #F5F5DC);
+    color: #696969;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F5F5DC, stop: 0.3 #E6E6FA,
+                                stop: 0.7 #D3D3D3, stop: 1 #F5F5DC);
+    color: #696969;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B0C4DE, stop: 1 #A9A9A9);
+    border: 2px solid #696969;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A9A9A9, stop: 1 #B0C4DE);
+    border: 2px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #D3D3D3;
+    border-radius: 5px;
+    padding: 8px;
+    color: #696969;
+    selection-background-color: #B0C4DE;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #D3D3D3;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #696969;
+}
+
+QListWidget::item:selected {
+    background: #B0C4DE;
+    color: #FFFFFF;
+}

@@ -1,0 +1,223 @@
+{
+  "parser_name": "SDXL Base+Refiner Workflow",
+  "priority": 155,
+  "description": "SDXL two-stage workflows using base and refiner models with CLIPTextEncodeSDXLRefiner nodes",
+  "version": "1.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain CLIPTextEncodeSDXLRefiner nodes",
+      "source_type": "pil_info_key_json_path_query",
+      "source_key_options": [
+        "workflow",
+        "prompt"
+      ],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "CLIPTextEncodeSDXLRefiner"
+      ]
+    },
+    {
+      "comment": "Rule 3: Must contain KSamplerAdvanced for two-stage sampling",
+      "source_type": "pil_info_key_json_path_query",
+      "source_key_options": [
+        "workflow",
+        "prompt"
+      ],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "KSamplerAdvanced"
+      ]
+    },
+    {
+      "comment": "Rule 4: Must have multiple checkpoint loaders (base + refiner)",
+      "source_type": "pil_info_key_json_path_query",
+      "source_key_options": [
+        "workflow",
+        "prompt"
+      ],
+      "json_query_type": "count_nodes_of_type",
+      "operator": "greater_than",
+      "class_types_to_check": [
+        "CheckpointLoaderSimple"
+      ],
+      "threshold": 1
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfyui_extract_sdxl_refiner_prompt"
+      },
+      {
+        "target_key": "negative_prompt", 
+        "method": "comfyui_extract_sdxl_refiner_negative"
+      },
+      {
+        "target_key": "parameters.base_model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "CheckpointLoaderSimple"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string",
+        "node_filter": "first"
+      },
+      {
+        "target_key": "parameters.refiner_model",
+        "method": "comfy_find_input_of_node_type", 
+        "node_types": [
+          "CheckpointLoaderSimple"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string",
+        "node_filter": "second"
+      },
+      {
+        "target_key": "parameters.base_steps",
+        "method": "comfyui_extract_sdxl_base_steps"
+      },
+      {
+        "target_key": "parameters.refiner_steps",
+        "method": "comfyui_extract_sdxl_refiner_steps"
+      },
+      {
+        "target_key": "parameters.total_steps",
+        "method": "comfyui_extract_sdxl_total_steps"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSamplerAdvanced"
+        ],
+        "input_key": "cfg",
+        "value_type": "float",
+        "fallback": 6.0
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSamplerAdvanced"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "fallback": "dpmpp_2m_sde_gpu"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSamplerAdvanced"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "fallback": "karras"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 1024
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "SDXL Base+Refiner Workflow",
+      "tool": "ComfyUI (SDXL Base+Refiner)",
+      "format": "SDXL Two-Stage Generation",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "base_model": "$parameters.base_model",
+        "refiner_model": "$parameters.refiner_model",
+        "base_steps": "$parameters.base_steps",
+        "refiner_steps": "$parameters.refiner_steps", 
+        "total_steps": "$parameters.total_steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "architecture_info": {
+        "detected_as": "SDXL Base+Refiner",
+        "sampling_method": "Two-Stage Advanced Sampling",
+        "clip_encoding": "SDXLRefiner",
+        "workflow_type": "Base+Refiner Pipeline"
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 155,
+        "confidence": "high",
+        "two_stage_sampling": true,
+        "refiner_workflow": true
+      }
+    }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Specifically designed for SDXL workflows using base and refiner models",
+    "Handles CLIPTextEncodeSDXLRefiner nodes correctly to extract actual prompts",
+    "Extracts both base and refiner model information",
+    "Tracks two-stage sampling parameters accurately",
+    "Priority 155 puts it above generic ComfyUI parsers but below more specialized ones"
+  ]
+}

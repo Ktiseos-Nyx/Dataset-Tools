@@ -1,0 +1,58 @@
+/* DISTURBED IDEA: WINDOWS 8 METRO */
+/* A theme with flat, bold, and clashing colors, reminiscent of the early Metro UI. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00ABA9, stop: 0.2 #FF0097,
+                                stop: 0.4 #E51400, stop: 0.6 #1BA1E2,
+                                stop: 0.8 #A4C400, stop: 1 #00ABA9);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00ABA9, stop: 0.2 #FF0097,
+                                stop: 0.4 #E51400, stop: 0.6 #1BA1E2,
+                                stop: 0.8 #A4C400, stop: 1 #00ABA9);
+    color: #FFFFFF;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: #1BA1E2;
+    border: 2px solid #FFFFFF;
+    border-radius: 0px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: #00ABA9;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #E51400;
+    border-radius: 0px;
+    padding: 8px;
+    color: #000000;
+    selection-background-color: #FF0097;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #E51400;
+    border-radius: 0px;
+    alternate-background-color: #F0F0F0;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background: #FF0097;
+    color: #FFFFFF;
+}

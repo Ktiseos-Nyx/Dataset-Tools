@@ -73,9 +73,7 @@ class ComfyUIInspireExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if any(
-                regional_node in class_type for regional_node in inspire_regional_nodes
-            ):
+            if any(regional_node in class_type for regional_node in inspire_regional_nodes):
                 widgets = node_data.get("widgets_values", [])
                 regional_prompts[node_id] = {
                     "type": class_type,
@@ -196,9 +194,7 @@ class ComfyUIInspireExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if any(
-                utility_node in class_type for utility_node in inspire_utility_nodes
-            ):
+            if any(utility_node in class_type for utility_node in inspire_utility_nodes):
                 widgets = node_data.get("widgets_values", [])
                 utility_nodes[node_id] = {
                     "type": class_type,
@@ -251,9 +247,7 @@ class ComfyUIInspireExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if any(
-                sampler_node in class_type for sampler_node in inspire_sampler_nodes
-            ):
+            if any(sampler_node in class_type for sampler_node in inspire_sampler_nodes):
                 widgets = node_data.get("widgets_values", [])
                 sampler_nodes[node_id] = {
                     "type": class_type,
@@ -307,10 +301,7 @@ class ComfyUIInspireExtractor:
 
             class_type = node_data.get("class_type", "")
 
-            if any(
-                conditioning_node in class_type
-                for conditioning_node in inspire_conditioning_nodes
-            ):
+            if any(conditioning_node in class_type for conditioning_node in inspire_conditioning_nodes):
                 widgets = node_data.get("widgets_values", [])
                 conditioning_nodes[node_id] = {
                     "type": class_type,
@@ -482,8 +473,7 @@ class ComfyUIInspireExtractor:
             class_type = node_data.get("class_type", "")
 
             if self._is_inspire_node(class_type) and any(
-                keyword in class_type
-                for keyword in ["Prompt", "Regional", "Wildcard", "Text"]
+                keyword in class_type for keyword in ["Prompt", "Regional", "Wildcard", "Text"]
             ):
                 widgets = node_data.get("widgets_values", [])
                 for i, widget in enumerate(widgets):

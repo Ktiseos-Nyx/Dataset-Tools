@@ -1,0 +1,55 @@
+/* STUPID IDEA: RADIOACTIVE SLIME */
+/* A glowing green and sickly yellow theme, reminiscent of toxic waste. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #7FFF00, stop: 0.5 #ADFF2F,
+                                stop: 1 #FFFF00);
+    color: #006400;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #7FFF00, stop: 0.5 #ADFF2F,
+                                stop: 1 #FFFF00);
+    color: #006400;
+    font-size: 16px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFFF00, stop: 1 #7FFF00);
+    border: 5px solid #006400;
+    border-radius: 0px;
+    padding: 20px 30px;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #7FFF00, stop: 1 #FFFF00);
+    border: 5px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #000000;
+    color: #7FFF00;
+    border: 5px solid #FFFF00;
+    border-radius: 0px;
+    padding: 15px;
+}
+
+QListWidget {
+    background-color: #000000;
+    color: #FFFF00;
+    border: 5px solid #7FFF00;
+    border-radius: 0px;
+}
+
+QListWidget::item:selected {
+    background-color: #7FFF00;
+    color: #000000;
+}

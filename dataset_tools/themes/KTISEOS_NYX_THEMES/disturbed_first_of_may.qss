@@ -1,0 +1,58 @@
+/* DISTURBED IDEA: JONATHAN COULTON - FIRST OF MAY */
+/* A theme with light, airy, and whimsical colors, with a subtle underlying sense of awkwardness or inappropriateness. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F0F8FF, stop: 0.3 #ADD8E6,
+                                stop: 0.7 #FFFACD, stop: 1 #F0F8FF);
+    color: #4682B4;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F0F8FF, stop: 0.3 #ADD8E6,
+                                stop: 0.7 #FFFACD, stop: 1 #F0F8FF);
+    color: #4682B4;
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF69B4, stop: 1 #FF1493);
+    border: 2px solid #4682B4;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF1493, stop: 1 #FF69B4);
+    border: 2px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #ADD8E6;
+    border-radius: 5px;
+    padding: 8px;
+    color: #4682B4;
+    selection-background-color: #FF69B4;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #ADD8E6;
+    border-radius: 5px;
+    alternate-background-color: #F0F8FF;
+    color: #4682B4;
+}
+
+QListWidget::item:selected {
+    background: #FF69B4;
+    color: #FFFFFF;
+}

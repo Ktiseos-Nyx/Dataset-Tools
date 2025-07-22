@@ -1,0 +1,55 @@
+/* STUPID IDEA: BROKEN TV SCREEN */
+/* Distorted colors, lines, and static, simulating a malfunctioning television. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #808080, stop: 0.2 #FF0000,
+                                stop: 0.4 #00FF00, stop: 0.6 #0000FF,
+                                stop: 0.8 #808080, stop: 1 #000000);
+    color: #FFFFFF;
+    border: 5px solid #000000;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #808080, stop: 0.2 #FF0000,
+                                stop: 0.4 #00FF00, stop: 0.6 #0000FF,
+                                stop: 0.8 #808080, stop: 1 #000000);
+    color: #FFFFFF;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+}
+
+QPushButton {
+    background: #FF0000;
+    border: 5px solid #00FF00;
+    border-radius: 0px;
+    padding: 20px 30px;
+    color: #0000FF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: #00FF00;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #000000;
+    color: #FF0000;
+    border: 5px solid #00FF00;
+    border-radius: 0px;
+    padding: 15px;
+}
+
+QListWidget {
+    background-color: #FFFFFF;
+    color: #000000;
+    border: 5px solid #FF0000;
+    border-radius: 0px;
+}
+
+QListWidget::item:selected {
+    background-color: #0000FF;
+    color: #FFFFFF;
+}

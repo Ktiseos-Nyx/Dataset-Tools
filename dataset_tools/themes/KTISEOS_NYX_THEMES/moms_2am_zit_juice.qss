@@ -1,0 +1,163 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Zit Juice"
+The pus-tastic yellow experience you never asked for
+Squeezed fresh from a 2:30 AM skincare routine gone wrong
+*/
+
+QWidget {
+    background-color: #FFFACD; /* Light yellow base */
+    color: #8B4513; /* Saddle brown text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qradial-gradient(circle, #FFFACD 30%, #F0E68C 60%, #DAA520 90%);
+}
+
+QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFFF00, stop:0.3 #FFD700, stop:0.7 #F0E68C, stop:1 #FFFF00);
+    color: #8B4513;
+    border: 3px solid #B8860B; /* Dark goldenrod border */
+    border-radius: 15px;
+    padding: 10px 18px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFFFE0, stop:0.5 #FFFF00, stop:1 #FFFFE0);
+    border-color: #DAA520;
+    box-shadow: 0px 0px 12px #FFFF00;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #DAA520, stop:0.5 #B8860B, stop:1 #DAA520);
+    border-color: #8B7355;
+}
+
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #FFFFE0; /* Light yellow background */
+    color: #654321; /* Dark brown text */
+    border: 3px solid #FFD700; /* Gold border */
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 13px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #FFFF00; /* Bright yellow focus */
+    background-color: #FFFFF0; /* Ivory */
+    box-shadow: 0px 0px 10px #FFD700;
+}
+
+QTabWidget::pane {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F0E68C, stop:0.5 #DAA520, stop:1 #F0E68C);
+    border: 3px solid #B8860B;
+    border-radius: 10px;
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFD700, stop:0.5 #FFA500, stop:1 #FFD700);
+    color: #8B4513;
+    padding: 12px 20px;
+    margin: 3px;
+    border-radius: 8px 8px 0px 0px;
+    font-weight: bold;
+    border: 2px solid #B8860B;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFFF00, stop:0.5 #FFFFE0, stop:1 #FFFF00);
+    color: #654321;
+    border-color: #DAA520;
+}
+
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #F0E68C, stop:0.5 #DAA520, stop:1 #F0E68C);
+    width: 18px;
+    border-radius: 9px;
+    border: 2px solid #B8860B;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FFFF00, stop:0.5 #FFD700, stop:1 #FFFF00);
+    border-radius: 7px;
+    min-height: 25px;
+    border: 2px solid #8B4513;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #FFFFE0, stop:0.5 #FFFF00, stop:1 #FFFFE0);
+    box-shadow: 0px 0px 8px #DAA520;
+}
+
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #DAA520, stop:0.5 #B8860B, stop:1 #DAA520);
+    color: #FFFACD;
+    border-bottom: 3px solid #8B7355;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFFF00, stop:0.5 #FFD700, stop:1 #FFFF00);
+    color: #8B4513;
+    border-radius: 6px;
+    padding: 6px 12px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFFACD, stop:0.5 #F0E68C, stop:1 #FFFACD);
+    color: #8B4513;
+    border: 3px solid #DAA520;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFFF00, stop:0.5 #FFD700, stop:1 #FFFF00);
+    color: #654321;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #B8860B, stop:0.5 #DAA520, stop:1 #B8860B);
+    color: #FFFACD;
+    border-top: 3px solid #8B7355;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* Special "pus bubble" effect for special elements */
+QLabel#pusLabel {
+    background: qradial-gradient(circle, #FFFF00 20%, #FFD700 60%, #F0E68C 90%);
+    color: #8B4513;
+    border: 3px solid #DAA520;
+    border-radius: 20px;
+    padding: 10px;
+    font-weight: bold;
+}
+
+/* Gross highlight animation effect */
+QPushButton#grossButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFFF00, stop:0.2 #FFFFE0, stop:0.4 #FFD700, 
+                stop:0.6 #F0E68C, stop:0.8 #DAA520, stop:1 #FFFF00);
+    animation: pulse 2s infinite;
+}

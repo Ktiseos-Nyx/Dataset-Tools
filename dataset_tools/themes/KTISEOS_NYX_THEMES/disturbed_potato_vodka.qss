@@ -1,0 +1,54 @@
+/* DISTURBED IDEA: POTATO COLORED VODKA */
+/* A theme with dull, muted browns and grays, with a hint of clear/white, evoking the blandness of potato-based vodka. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 0.3 #A9A9A9,
+                                stop: 0.7 #D3D3D3, stop: 1 #8B4513);
+    color: #2F4F4F;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 0.3 #A9A9A9,
+                                stop: 0.7 #D3D3D3, stop: 1 #8B4513);
+    color: #2F4F4F;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: #D3D3D3;
+    border: 2px solid #8B4513;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #2F4F4F;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #A9A9A9;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #8B4513;
+    border-radius: 5px;
+    padding: 8px;
+    color: #2F4F4F;
+    selection-background-color: #A9A9A9;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #8B4513;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #2F4F4F;
+}
+
+QListWidget::item:selected {
+    background: #A9A9A9;
+    color: #2F4F4F;
+}

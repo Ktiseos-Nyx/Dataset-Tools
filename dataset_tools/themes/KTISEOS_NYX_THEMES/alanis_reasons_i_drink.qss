@@ -1,0 +1,58 @@
+/* ALANIS MORRISETTE: THE REASONS I DRINK THEME */
+/* A theme with a mix of raw, angsty, and slightly self-deprecating colors, reflecting the song's themes. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4A148C, stop: 0.3 #880E4F,
+                                stop: 0.7 #B71C1C, stop: 1 #4A148C);
+    color: #F0F0F0;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4A148C, stop: 0.3 #880E4F,
+                                stop: 0.7 #B71C1C, stop: 1 #4A148C);
+    color: #F0F0F0;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B71C1C, stop: 1 #880E4F);
+    border: 3px solid #F0F0F0;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #880E4F, stop: 1 #B71C1C);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #4A148C;
+    border-radius: 5px;
+    padding: 8px;
+    color: #F0F0F0;
+    selection-background-color: #880E4F;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #4A148C;
+    border-radius: 5px;
+    alternate-background-color: #1A1A1A;
+    color: #F0F0F0;
+}
+
+QListWidget::item:selected {
+    background: #880E4F;
+    color: #FFFFFF;
+}

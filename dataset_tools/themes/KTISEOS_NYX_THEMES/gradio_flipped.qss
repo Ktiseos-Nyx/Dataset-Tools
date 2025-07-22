@@ -1,0 +1,58 @@
+/* GRADIO BUT FLIPPED THEME */
+/* A dark mode version of the Gradio theme, with colors inverted. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #0F0D0A, stop: 0.3 #1F1A14,
+                                stop: 0.7 #4F3B21, stop: 1 #0F0D0A);
+    color: #D0D0D0;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #0F0D0A, stop: 0.3 #1F1A14,
+                                stop: 0.7 #4F3B21, stop: 1 #0F0D0A);
+    color: #D0D0D0;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B97300, stop: 1 #BE8C00);
+    border: 2px solid #D0D0D0;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #000000;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #BE8C00, stop: 1 #B97300);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #000000;
+    border: 2px solid #4F3B21;
+    border-radius: 3px;
+    padding: 5px;
+    color: #D0D0D0;
+    selection-background-color: #B97300;
+    selection-color: #000000;
+}
+
+QListWidget {
+    background: #000000;
+    border: 2px solid #4F3B21;
+    border-radius: 3px;
+    alternate-background-color: #1F1A14;
+    color: #D0D0D0;
+}
+
+QListWidget::item:selected {
+    background: #B97300;
+    color: #000000;
+}

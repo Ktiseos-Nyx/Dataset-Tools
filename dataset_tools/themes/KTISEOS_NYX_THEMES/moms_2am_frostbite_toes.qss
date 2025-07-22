@@ -1,0 +1,125 @@
+/*
+ * Mom's 2AM Fever Dreams: Frostbite Toes Theme
+ *
+ * This theme captures the chilling agony of frostbite – blue, purple, and numb.
+ * Embrace the icy grip and the eventual blackening.
+ *
+ * Legal Disclaimer: We are not responsible for any sudden urges to wear extra socks.
+ * If your UI turns black, please consult a medical professional or a debugger.
+ */
+
+QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #ADD8E6, /* LightBlue - initial chill */
+                               stop:0.3 #87CEEB, /* SkyBlue - getting colder */
+                               stop:0.6 #4682B4, /* SteelBlue - numb */
+                               stop:1 #191970); /* MidnightBlue - deep freeze */
+    color: #FFFFFF; /* White - for contrast */
+}
+
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #ADD8E6, /* LightBlue */
+                               stop:0.3 #87CEEB, /* SkyBlue */
+                               stop:0.6 #4682B4, /* SteelBlue */
+                               stop:1 #191970); /* MidnightBlue */
+}
+
+QPushButton {
+    border: 3px solid #000080; /* Navy - deep cold */
+    border-radius: 20px 10px 50px 30px; /* Irregular, like frozen toes */
+    background-color: #4682B4; /* SteelBlue - main frozen color */
+    color: #FFFFFF; /* White - snow */
+    padding: 12px 25px;
+    font-size: 18px;
+    transform: rotate(-8deg); /* Slightly tilted, like a stiff toe */
+}
+
+QPushButton:hover {
+    background-color: #191970; /* MidnightBlue - deeper freeze */
+    border: 3px solid #000033; /* Very dark blue */
+    transform: rotate(-10deg) scale(1.03); /* More pronounced */
+}
+
+QPushButton:pressed {
+    background-color: #000080; /* Navy */
+    border: 3px solid #00001A; /* Almost black */
+    transform: rotate(-5deg) scale(0.97); /* Squished */
+}
+
+/* Add more QSS elements as needed for a complete theme */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    border: 1px solid #4682B4; /* SteelBlue */
+    background-color: #E0FFFF; /* LightCyan - icy input */
+    color: #191970; /* MidnightBlue text */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #000080; /* Navy - focused on the cold */
+}
+
+QTabWidget::pane {
+    border-top: 2px solid #4682B4; /* SteelBlue */
+}
+
+QTabBar::tab {
+    background: #87CEEB; /* SkyBlue */
+    border: 1px solid #4682B4; /* SteelBlue */
+    border-bottom-color: #4682B4; /* Same as pane */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 8px;
+}
+
+QTabBar::tab:selected {
+    background: #191970; /* MidnightBlue */
+    border-color: #191970;
+    border-bottom-color: #191970; /* Selected tab blends with pane */
+}
+
+QScrollBar:vertical {
+    border: 1px solid #4682B4;
+    background: #E0FFFF;
+    width: 15px;
+    margin: 22px 0 22px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #191970;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QMenuBar {
+    background-color: #4682B4; /* SteelBlue */
+    color: #FFFFFF; /* White */
+}
+
+QMenu {
+    background-color: #E0FFFF; /* LightCyan */
+    border: 1px solid #4682B4;
+}
+
+QMenu::item:selected {
+    background-color: #191970; /* MidnightBlue */
+}
+
+QStatusBar {
+    background-color: #000080; /* Navy */
+    color: #FFFFFF;
+}
+
+/* Custom QLabel elements with theme-specific IDs */
+QLabel#frostbiteTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000080; /* Navy */
+    text-align: center;
+}
+
+QLabel#frostbiteDescription {
+    font-size: 14px;
+    color: #4682B4; /* SteelBlue */
+}

@@ -1,0 +1,61 @@
+/* DISTURBED IDEA: BEETLEJUICE BUT KAWAII */
+/* A strange mix of Beetlejuice's dark, gothic, and striped aesthetic with cute, pastel, and whimsical elements. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #2F4F4F, stop: 0.2 #FFFFFF,
+                                stop: 0.4 #2F4F4F, stop: 0.6 #FFFFFF,
+                                stop: 0.8 #2F4F4F, stop: 1 #FFFFFF);
+    color: #FF69B4;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #2F4F4F, stop: 0.2 #FFFFFF,
+                                stop: 0.4 #2F4F4F, stop: 0.6 #FFFFFF,
+                                stop: 0.8 #2F4F4F, stop: 1 #FFFFFF);
+    color: #FF69B4;
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFC0CB, stop: 1 #FF69B4);
+    border: 3px solid #8A2BE2;
+    border-radius: 10px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF69B4, stop: 1 #FFC0CB);
+    border: 3px solid #BA55D3;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #8A2BE2;
+    border-radius: 5px;
+    padding: 8px;
+    color: #2F4F4F;
+    selection-background-color: #FF69B4;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #8A2BE2;
+    border-radius: 5px;
+    alternate-background-color: #F0F8FF;
+    color: #2F4F4F;
+}
+
+QListWidget::item:selected {
+    background: #FF69B4;
+    color: #FFFFFF;
+}

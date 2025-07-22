@@ -1,0 +1,57 @@
+/* DISTURBED IDEA: GENSHIN IMPACT */
+/* A vibrant, fantasy-world theme with bright blues, greens, and golds, reflecting the game's aesthetic. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4CAF50, stop: 0.3 #2196F3,
+                                stop: 0.7 #FFD700, stop: 1 #4CAF50);
+    color: #333333;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4CAF50, stop: 0.3 #2196F3,
+                                stop: 0.7 #FFD700, stop: 1 #4CAF50);
+    color: #333333;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2196F3, stop: 1 #4CAF50);
+    border: 2px solid #FFD700;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4CAF50, stop: 1 #2196F3);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #FFD700;
+    border-radius: 5px;
+    padding: 8px;
+    color: #333333;
+    selection-background-color: #2196F3;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #FFD700;
+    border-radius: 5px;
+    alternate-background-color: #F0F8FF;
+    color: #333333;
+}
+
+QListWidget::item:selected {
+    background: #2196F3;
+    color: #FFFFFF;
+}

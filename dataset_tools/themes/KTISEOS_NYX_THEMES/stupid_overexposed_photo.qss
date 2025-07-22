@@ -1,0 +1,52 @@
+/* STUPID IDEA: OVEREXPOSED PHOTO */
+/* A theme with washed-out whites and barely visible details, like an overexposed photograph. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFFFFF, stop: 0.5 #F0F0F0,
+                                stop: 1 #E0E0E0);
+    color: #C0C0C0;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFFFFF, stop: 0.5 #F0F0F0,
+                                stop: 1 #E0E0E0);
+    color: #C0C0C0;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: #E0E0E0;
+    border: 2px solid #F0F0F0;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #C0C0C0;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #F0F0F0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    color: #C0C0C0;
+    border: 2px solid #E0E0E0;
+    border-radius: 3px;
+    padding: 8px;
+}
+
+QListWidget {
+    background-color: #FFFFFF;
+    color: #C0C0C0;
+    border: 2px solid #E0E0E0;
+    border-radius: 3px;
+}
+
+QListWidget::item:selected {
+    background-color: #F0F0F0;
+    color: #C0C0C0;
+}

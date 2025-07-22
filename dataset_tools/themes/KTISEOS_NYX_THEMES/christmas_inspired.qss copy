@@ -1,0 +1,58 @@
+/* CHRISTMAS INSPIRED THEME */
+/* A festive theme with reds, greens, and golds. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 0.3 #006400,
+                                stop: 0.7 #FFD700, stop: 1 #B22222);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 0.3 #006400,
+                                stop: 0.7 #FFD700, stop: 1 #B22222);
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #006400, stop: 1 #B22222);
+    border: 2px solid #FFD700;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 1 #006400);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #B22222;
+    border-radius: 3px;
+    padding: 5px;
+    color: #006400;
+    selection-background-color: #FFD700;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #B22222;
+    border-radius: 3px;
+    alternate-background-color: #F0FFF0;
+    color: #006400;
+}
+
+QListWidget::item:selected {
+    background: #FFD700;
+    color: #B22222;
+}

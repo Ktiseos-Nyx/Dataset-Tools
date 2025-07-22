@@ -1,0 +1,218 @@
+/* DOMINOS PIZZA (SOLID) THEME */
+/* Inspired by Dominos Pizza's logo colors: red, blue, and white, using solid colors. */
+
+QMainWindow {
+    background: #CC1427; /* Red */
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: #CC1427; /* Red */
+    color: #FFFFFF;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #006491; /* Blue */
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #0056B3; /* Darker Blue */
+    border: 2px solid #E0E0E0;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #CC1427; /* Red */
+    border-radius: 3px;
+    padding: 5px;
+    color: #000000;
+    selection-background-color: #006491; /* Blue */
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #CC1427; /* Red */
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background: #006491; /* Blue */
+    color: #FFFFFF;
+}
+
+QMenuBar {
+    background: #006491; /* Blue */
+    color: #FFFFFF;
+    border-bottom: 1px solid #CC1427; /* Red */
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background: #CC1427; /* Red */
+}
+
+QMenu {
+    background: #006491; /* Blue */
+    border: 1px solid #CC1427; /* Red */
+    padding: 3px;
+}
+
+QMenu::item {
+    padding: 5px 15px;
+    color: #FFFFFF;
+}
+
+QMenu::item:selected {
+    background: #CC1427; /* Red */
+}
+
+QScrollBar:vertical {
+    background: #CC1427; /* Red */
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #006491; /* Blue */
+    border-radius: 5px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #CC1427; /* Red */
+    background: #FFFFFF;
+}
+
+QTabBar::tab {
+    background: #006491; /* Blue */
+    border: 1px solid #CC1427; /* Red */
+    padding: 6px 10px;
+    color: #FFFFFF;
+}
+
+QTabBar::tab:selected {
+    background: #FFFFFF;
+    color: #CC1427; /* Red */
+}
+
+QStatusBar {
+    background: #CC1427; /* Red */
+    border-top: 1px solid #006491; /* Blue */
+    color: #FFFFFF;
+}
+
+QLineEdit {
+    background: #FFFFFF;
+    border: 2px solid #CC1427; /* Red */
+    border-radius: 3px;
+    padding: 5px;
+    color: #000000;
+    selection-background-color: #006491; /* Blue */
+    selection-color: #FFFFFF;
+}
+
+QComboBox {
+    background: #006491; /* Blue */
+    border: 2px solid #CC1427; /* Red */
+    border-radius: 3px;
+    padding: 4px;
+    color: #FFFFFF;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 18px;
+    border-left: 1px solid #CC1427; /* Red */
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid #FFFFFF;
+}
+
+QComboBox QAbstractItemView {
+    background: #006491; /* Blue */
+    border: 1px solid #CC1427; /* Red */
+    selection-background-color: #CC1427; /* Red */
+    color: #FFFFFF;
+}
+
+QSplitter::handle {
+    background: #CC1427; /* Red */
+    border: 1px solid #FFFFFF;
+}
+
+QProgressBar {
+    border: 2px solid #CC1427; /* Red */
+    border-radius: 3px;
+    background: #FFFFFF;
+    text-align: center;
+    color: #000000;
+}
+
+QProgressBar::chunk {
+    background: #006491; /* Blue */
+    border-radius: 2px;
+}
+
+QToolTip {
+    background: #CC1427; /* Red */
+    border: 1px solid #006491; /* Blue */
+    color: #FFFFFF;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QLabel {
+    color: #000000;
+}
+
+QGroupBox {
+    border: 2px solid #CC1427; /* Red */
+    border-radius: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    color: #000000;
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 8px;
+    padding: 0 4px 0 4px;
+    background: #CC1427; /* Red */
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QCheckBox {
+    color: #000000;
+}
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid #CC1427; /* Red */
+    background: #FFFFFF;
+}
+
+QCheckBox::indicator:checked {
+    background: #006491; /* Blue */
+}

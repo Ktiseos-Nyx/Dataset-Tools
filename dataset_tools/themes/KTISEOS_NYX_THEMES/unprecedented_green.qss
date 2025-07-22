@@ -1,0 +1,58 @@
+/* UNPRECEDENTED GREEN THEME */
+/* A shade of green that is intentionally unusual and hopefully unprecedented. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4F7942, stop: 0.3 #708238,
+                                stop: 0.7 #9ACD32, stop: 1 #4F7942);
+    color: #F0F8FF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4F7942, stop: 0.3 #708238,
+                                stop: 0.7 #9ACD32, stop: 1 #4F7942);
+    color: #F0F8FF;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #9ACD32, stop: 1 #708238);
+    border: 2px solid #F0F8FF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #000000;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #708238, stop: 1 #9ACD32);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #4F7942;
+    border-radius: 3px;
+    padding: 5px;
+    color: #4F7942;
+    selection-background-color: #9ACD32;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #4F7942;
+    border-radius: 3px;
+    alternate-background-color: #F0FFF0;
+    color: #4F7942;
+}
+
+QListWidget::item:selected {
+    background: #9ACD32;
+    color: #FFFFFF;
+}

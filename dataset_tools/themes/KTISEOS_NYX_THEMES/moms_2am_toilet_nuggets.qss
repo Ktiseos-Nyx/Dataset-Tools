@@ -1,0 +1,215 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Toilet Nuggets"
+The least appetizing nuggets in existence
+McDonald's lawyers have entered the chat
+*/
+
+QWidget {
+    background-color: #8B7355; /* Dark khaki base */
+    color: #F5F5DC; /* Beige text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F5F5DC, stop:0.2 #D2B48C, stop:0.4 #BC9A6A, 
+                stop:0.6 #A0522D, stop:0.8 #8B7355, stop:1 #F5F5DC);
+}
+
+/* NUGGET-SHAPED BUTTONS! */
+QPushButton {
+    background: qradial-gradient(ellipse at 35% 25%, #DEB887 30%, #D2B48C 60%, #BC9A6A 90%);
+    color: #654321;
+    border: 4px solid #A0522D;
+    border-radius: 35px 25px 40px 20px; /* Irregular nugget shape! */
+    padding: 14px 20px;
+    font-weight: bold;
+    font-size: 13px;
+    box-shadow: inset 0px 0px 8px #8B7355; /* Gives it depth */
+}
+
+QPushButton:hover {
+    background: qradial-gradient(ellipse at 60% 40%, #F4E4BC 20%, #E6D2AA 50%, #D2B48C 80%);
+    border-color: #CD853F;
+    border-radius: 40px 30px 35px 45px; /* Slightly different nugget shape */
+    box-shadow: 0px 0px 15px #BC9A6A, inset 0px 0px 5px #A0522D;
+    color: #8B4513;
+}
+
+QPushButton:pressed {
+    background: qradial-gradient(ellipse at 50% 60%, #BC9A6A 40%, #A0522D 80%);
+    border-radius: 30px 45px 25px 50px; /* Squished nugget */
+    border-color: #8B7355;
+    transform: scale(0.92);
+    box-shadow: inset 0px 0px 12px #654321;
+}
+
+/* PORCELAIN TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFFEF7, stop:0.3 #FAF7F0, stop:0.7 #F5F5DC, stop:1 #FFFEF7);
+    color: #654321;
+    border: 4px solid #D2B48C;
+    border-radius: 20px 45px 30px 50px; /* Bowl-like shape */
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #8B4513;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFF8E7, stop:0.5 #F5F5DC, stop:1 #FFF8E7);
+    border-radius: 45px 20px 50px 30px; /* Focus changes the bowl shape */
+    box-shadow: 0px 0px 12px #BC9A6A;
+    color: #8B4513;
+}
+
+/* TOILET SEAT TABS */
+QTabWidget::pane {
+    background: qradial-gradient(ellipse at 50% 40%, #F5F5DC 30%, #DEB887 60%, #D2B48C 90%);
+    border: 5px solid #8B7355;
+    border-radius: 60px 60px 20px 20px; /* Toilet seat shape! */
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFFEF7, stop:0.4 #F5F5DC, stop:0.8 #DEB887, stop:1 #D2B48C);
+    color: #654321;
+    padding: 16px 26px;
+    margin: 3px;
+    border-radius: 50px 50px 0px 0px; /* Rounded toilet seat tabs */
+    font-weight: bold;
+    font-size: 14px;
+    border: 3px solid #BC9A6A;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 50% 30%, #FFFEF7 40%, #F5F5DC 80%);
+    color: #8B4513;
+    border-radius: 60px 60px 0px 0px; /* Bigger toilet seat when selected */
+    border-color: #8B7355;
+    box-shadow: 0px 0px 10px #D2B48C;
+}
+
+/* PLUMBING SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #D2B48C, stop:0.3 #BC9A6A, stop:0.7 #A0522D, stop:1 #D2B48C);
+    width: 24px;
+    border-radius: 12px;
+    border: 4px solid #8B7355;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(circle, #8B4513 40%, #654321 80%);
+    border-radius: 10px;
+    min-height: 35px;
+    border: 3px solid #BC9A6A;
+    margin: 3px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(circle, #A0522D 30%, #8B4513 70%);
+    box-shadow: 0px 0px 10px #D2B48C;
+}
+
+/* BATHROOM STALL MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #A0522D, stop:0.3 #BC9A6A, stop:0.7 #D2B48C, stop:1 #A0522D);
+    color: #F5F5DC;
+    border-bottom: 5px solid #654321;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 0px 0px 30px 50px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #F5F5DC 40%, #DEB887 80%);
+    color: #654321;
+    border-radius: 25px 45px 20px 40px;
+    padding: 10px 16px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFFEF7, stop:0.25 #F5F5DC, stop:0.5 #DEB887, 
+                stop:0.75 #D2B48C, stop:1 #FFFEF7);
+    color: #654321;
+    border: 5px solid #8B7355;
+    border-radius: 30px 50px 25px 55px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #DEB887 30%, #BC9A6A 70%);
+    color: #F5F5DC;
+    border-radius: 20px 40px 30px 35px;
+    margin: 3px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #654321, stop:0.4 #8B7355, stop:0.8 #A0522D, stop:1 #654321);
+    color: #F5F5DC;
+    border-top: 5px solid #BC9A6A;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 50px 40px 0px 0px;
+}
+
+/* SUSPICIOUS NUGGET PATTERN */
+QLabel#suspiciousNuggets {
+    background: qradial-gradient(ellipse at 15% 25%, #DEB887 20%, transparent 21%),
+                qradial-gradient(ellipse at 65% 40%, #D2B48C 18%, transparent 19%),
+                qradial-gradient(ellipse at 35% 70%, #BC9A6A 22%, transparent 23%),
+                qradial-gradient(ellipse at 80% 15%, #A0522D 16%, transparent 17%),
+                qradial-gradient(ellipse at 20% 80%, #8B7355 24%, transparent 25%),
+                #F5F5DC;
+    color: #654321;
+    border: 4px solid #8B4513;
+    border-radius: 35px 25px 45px 30px;
+    padding: 16px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* TOILET PAPER DISPENSER EFFECT */
+QWidget#toiletPaper {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #FFFEF7, stop:0.1 #F5F5DC, stop:0.2 #FFFEF7, 
+                stop:0.3 #F5F5DC, stop:0.4 #FFFEF7, stop:0.5 #F5F5DC,
+                stop:0.6 #FFFEF7, stop:0.7 #F5F5DC, stop:0.8 #FFFEF7, 
+                stop:0.9 #F5F5DC, stop:1 #FFFEF7);
+    border: 3px solid #D2B48C;
+    border-radius: 80px; /* Perfect circle like TP roll */
+}
+
+/* HEALTH INSPECTOR FAIL NOTICE */
+QLabel#healthFail {
+    background: qradial-gradient(circle at 50% 50%, #DC143C 20%, #8B0000 50%, #654321 80%);
+    color: #FFFEF7;
+    border: 6px solid #FF0000;
+    border-radius: 10px 40px 15px 50px;
+    padding: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: "Impact", sans-serif;
+}
+
+/* NUGGET CRUMB TEXTURE */
+QLabel#crumbTexture {
+    background: qradial-gradient(ellipse at 30% 40%, #BC9A6A 8%, transparent 9%),
+                qradial-gradient(ellipse at 70% 20%, #A0522D 6%, transparent 7%),
+                qradial-gradient(ellipse at 50% 80%, #8B7355 10%, transparent 11%),
+                qradial-gradient(ellipse at 20% 60%, #D2B48C 12%, transparent 13%),
+                qradial-gradient(ellipse at 80% 70%, #DEB887 7%, transparent 8%),
+                #F5F5DC;
+    border: 3px solid #8B4513;
+    border-radius: 25px 35px 30px 40px;
+    padding: 12px;
+    font-weight: bold;
+}

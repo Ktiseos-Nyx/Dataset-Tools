@@ -1,0 +1,57 @@
+/* FFXIV: HYTHLODAEUS THEME */
+/* Light, ethereal blues, whites, and silvers, reflecting Hythlodaeus's gentle and wise character. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F0F8FF, stop: 0.3 #ADD8E6,
+                                stop: 0.7 #E0FFFF, stop: 1 #F0F8FF);
+    color: #4682B4;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #F0F8FF, stop: 0.3 #ADD8E6,
+                                stop: 0.7 #E0FFFF, stop: 1 #F0F8FF);
+    color: #4682B4;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B0C4DE, stop: 1 #A9A9A9);
+    border: 2px solid #4682B4;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A9A9A9, stop: 1 #B0C4DE);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #ADD8E6;
+    border-radius: 3px;
+    padding: 5px;
+    color: #4682B4;
+    selection-background-color: #B0C4DE;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #ADD8E6;
+    border-radius: 3px;
+    alternate-background-color: #F0F8FF;
+    color: #4682B4;
+}
+
+QListWidget::item:selected {
+    background: #B0C4DE;
+    color: #FFFFFF;
+}

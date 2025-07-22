@@ -1,0 +1,55 @@
+/* DISTURBED IDEA: LAG IN LIMSA LOMINSA */
+/* A chaotic, disjointed, and frustrating mix of colors, reflecting the visual experience of lag. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FF0000, stop: 0.2 #0000FF,
+                                stop: 0.4 #FFFF00, stop: 0.6 #800080,
+                                stop: 0.8 #00FF00, stop: 1 #FF0000);
+    color: #FFFFFF;
+    border: 5px solid #000000;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FF0000, stop: 0.2 #0000FF,
+                                stop: 0.4 #FFFF00, stop: 0.6 #800080,
+                                stop: 0.8 #00FF00, stop: 1 #FF0000);
+    color: #FFFFFF;
+    font-family: 'Impact', sans-serif;
+    font-size: 16px;
+}
+
+QPushButton {
+    background: #FF0000;
+    border: 5px solid #0000FF;
+    border-radius: 0px;
+    padding: 20px 30px;
+    color: #FFFF00;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: #0000FF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    color: #FF0000;
+    border: 5px solid #0000FF;
+    border-radius: 0px;
+    padding: 15px;
+}
+
+QListWidget {
+    background-color: #000000;
+    color: #FFFF00;
+    border: 5px solid #FF0000;
+    border-radius: 0px;
+}
+
+QListWidget::item:selected {
+    background-color: #0000FF;
+    color: #FFFFFF;
+}

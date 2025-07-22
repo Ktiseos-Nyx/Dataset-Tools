@@ -1,0 +1,295 @@
+/* STEAM DECK THEME */
+/* Gaming handheld inspired dark theme with Valve's design language */
+
+QMainWindow {
+    background-color: #0e141b;
+    color: #dcdedf;
+    border: none;
+}
+
+QWidget {
+    background-color: #0e141b;
+    color: #dcdedf;
+    font-size: 13px;
+}
+
+/* Steam-style gradient buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a4f5f, stop: 1 #1b2838);
+    border: 1px solid #3a4f5f;
+    border-radius: 6px;
+    padding: 8px 16px;
+    color: #dcdedf;
+    font-weight: bold;
+    min-height: 20px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a5f6f, stop: 1 #2b3848);
+    border: 1px solid #4a5f6f;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a2b3b, stop: 1 #0a1420);
+    border: 1px solid #2a3f4f;
+}
+
+QPushButton:disabled {
+    background: #1e2328;
+    border: 1px solid #3c3c41;
+    color: #666b73;
+}
+
+/* Steam blue accents */
+QTextEdit, QPlainTextEdit {
+    background-color: #1b2838;
+    border: 2px solid #3a4f5f;
+    border-radius: 4px;
+    padding: 8px;
+    color: #dcdedf;
+    selection-background-color: #006bb3;
+    selection-color: #ffffff;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #66c0f4;
+}
+
+/* Steam-style lists */
+QListWidget {
+    background-color: #1b2838;
+    border: 1px solid #3a4f5f;
+    border-radius: 4px;
+    alternate-background-color: #212b38;
+    color: #dcdedf;
+    gridline-color: #3a4f5f;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 8px;
+    border-bottom: 1px solid #2a3f4f;
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #66c0f4, stop: 1 #417a9b);
+    color: #ffffff;
+}
+
+QListWidget::item:hover {
+    background-color: #2a3f4f;
+}
+
+QListWidget::item:selected:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #76d0ff, stop: 1 #518aab);
+}
+
+/* Steam menu styling */
+QMenuBar {
+    background-color: #171a21;
+    color: #dcdedf;
+    border-bottom: 2px solid #3a4f5f;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 6px 12px;
+}
+
+QMenuBar::item:selected {
+    background-color: #66c0f4;
+    color: #ffffff;
+    border-radius: 3px;
+}
+
+QMenu {
+    background-color: #1b2838;
+    border: 1px solid #3a4f5f;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+QMenu::item {
+    padding: 8px 20px;
+    border-radius: 3px;
+}
+
+QMenu::item:selected {
+    background-color: #66c0f4;
+    color: #ffffff;
+}
+
+/* Scrollbars with Steam styling */
+QScrollBar:vertical {
+    background: #1b2838;
+    width: 12px;
+    border-radius: 6px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #3a4f5f;
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #4a5f6f;
+}
+
+QScrollBar::handle:vertical:pressed {
+    background: #66c0f4;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: #1b2838;
+    height: 12px;
+    border-radius: 6px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: #3a4f5f;
+    border-radius: 6px;
+    min-width: 30px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #4a5f6f;
+}
+
+QScrollBar::handle:horizontal:pressed {
+    background: #66c0f4;
+}
+
+/* Tabs with Steam style */
+QTabWidget::pane {
+    border: 1px solid #3a4f5f;
+    background-color: #1b2838;
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a4f5f, stop: 1 #1b2838);
+    border: 1px solid #3a4f5f;
+    padding: 8px 16px;
+    margin-right: 2px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #66c0f4, stop: 1 #417a9b);
+    color: #ffffff;
+    border-bottom: none;
+}
+
+QTabBar::tab:hover:!selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a5f6f, stop: 1 #2b3848);
+}
+
+/* Status bar */
+QStatusBar {
+    background-color: #171a21;
+    border-top: 1px solid #3a4f5f;
+    color: #dcdedf;
+}
+
+/* Input fields */
+QLineEdit {
+    background-color: #1b2838;
+    border: 2px solid #3a4f5f;
+    border-radius: 4px;
+    padding: 6px;
+    color: #dcdedf;
+    selection-background-color: #006bb3;
+}
+
+QLineEdit:focus {
+    border: 2px solid #66c0f4;
+}
+
+/* Combo boxes */
+QComboBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a4f5f, stop: 1 #1b2838);
+    border: 1px solid #3a4f5f;
+    border-radius: 4px;
+    padding: 6px;
+    color: #dcdedf;
+    min-width: 80px;
+}
+
+QComboBox:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a5f6f, stop: 1 #2b3848);
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #3a4f5f;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #dcdedf;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #1b2838;
+    border: 1px solid #3a4f5f;
+    selection-background-color: #66c0f4;
+    color: #dcdedf;
+}
+
+/* Splitter */
+QSplitter::handle {
+    background-color: #3a4f5f;
+}
+
+QSplitter::handle:horizontal {
+    width: 3px;
+}
+
+QSplitter::handle:vertical {
+    height: 3px;
+}
+
+/* Progress bars */
+QProgressBar {
+    border: 1px solid #3a4f5f;
+    border-radius: 4px;
+    background-color: #1b2838;
+    text-align: center;
+    color: #dcdedf;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #66c0f4, stop: 1 #417a9b);
+    border-radius: 3px;
+}
+
+/* Tool tips */
+QToolTip {
+    background-color: #171a21;
+    border: 1px solid #66c0f4;
+    color: #dcdedf;
+    padding: 6px;
+    border-radius: 4px;
+}

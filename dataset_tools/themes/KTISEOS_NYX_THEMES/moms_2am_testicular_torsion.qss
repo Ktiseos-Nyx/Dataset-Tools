@@ -1,0 +1,229 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Testicular Torsion"
+When anatomy decides to play Twister without asking
+Urologists everywhere just felt a disturbance in the force
+*/
+
+QWidget {
+    background-color: #4169E1; /* Royal blue base */
+    color: #F0F8FF; /* Alice blue text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #87CEEB, stop:0.2 #4169E1, stop:0.4 #0000CD, 
+                stop:0.6 #8B008B, stop:0.8 #4B0082, stop:1 #87CEEB);
+}
+
+/* TWISTED ANATOMY BUTTONS! */
+QPushButton {
+    background: qradial-gradient(ellipse at 70% 30%, #87CEFA 20%, #4169E1 50%, #0000CD 80%);
+    color: #F0F8FF;
+    border: 4px solid #191970;
+    border-radius: 60px 20px 50px 30px; /* Twisted elliptical shape! */
+    padding: 16px 24px;
+    font-weight: bold;
+    font-size: 13px;
+    transform: rotate(25deg); /* Twisted orientation */
+    box-shadow: inset 0px 0px 10px rgba(25,25,112,0.4);
+}
+
+QPushButton:hover {
+    background: qradial-gradient(ellipse at 30% 70%, #9932CC 30%, #8B008B 60%, #4B0082 90%);
+    border-color: #8B008B;
+    border-radius: 80px 15px 70px 25px; /* More extreme twist */
+    box-shadow: 0px 0px 22px rgba(139,0,139,0.7), inset 0px 0px 8px rgba(75,0,130,0.5);
+    color: #E6E6FA;
+    transform: rotate(45deg) scale(1.05); /* More twisted and bigger */
+}
+
+QPushButton:pressed {
+    background: qradial-gradient(ellipse at 50% 50%, #191970 40%, #000080 80%);
+    border-radius: 40px 10px 35px 15px; /* Emergency compression */
+    border-color: #000080;
+    transform: rotate(60deg) scale(0.88); /* Maximum twist, smallest size */
+    box-shadow: inset 0px 0px 18px rgba(0,0,128,0.8);
+}
+
+/* MEDICAL CHART TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F0F8FF, stop:0.3 #E6E6FA, stop:0.7 #D8BFD8, stop:1 #F0F8FF);
+    color: #191970;
+    border: 4px solid #4169E1;
+    border-radius: 25px 45px 35px 55px; /* Medical form shape */
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #DC143C;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FFE4E1, stop:0.4 #FFF0F5, stop:0.8 #E6E6FA, stop:1 #FFE4E1);
+    border-radius: 35px 55px 45px 65px; /* Emergency focus pattern */
+    box-shadow: 0px 0px 18px rgba(220,20,60,0.5);
+    color: #8B0000;
+}
+
+/* ULTRASOUND TABS */
+QTabWidget::pane {
+    background: qradial-gradient(ellipse at 50% 40%, #F0F8FF 30%, #E6E6FA 60%, #D8BFD8 90%);
+    border: 5px solid #191970;
+    border-radius: 70px 70px 30px 30px; /* Ultrasound probe shape! */
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #B0C4DE, stop:0.4 #87CEEB, stop:0.8 #4169E1, stop:1 #191970);
+    color: #F0F8FF;
+    padding: 14px 26px;
+    margin: 3px;
+    border-radius: 50px 25px 40px 35px; /* Medical equipment shape */
+    font-weight: bold;
+    font-size: 14px;
+    border: 3px solid #0000CD;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 50% 30%, #DC143C 40%, #B22222 80%);
+    color: #F0F8FF;
+    border-radius: 60px 30px 50px 40px; /* Emergency selected tab */
+    border-color: #8B0000;
+    box-shadow: 0px 0px 15px rgba(220,20,60,0.5);
+}
+
+/* ANATOMY DIAGRAM SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #87CEEB, stop:0.3 #4169E1, stop:0.7 #0000CD, stop:1 #87CEEB);
+    width: 28px;
+    border-radius: 14px;
+    border: 4px solid #191970;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(circle, #8B008B 40%, #4B0082 80%);
+    border-radius: 12px;
+    min-height: 40px;
+    border: 3px solid #9932CC;
+    margin: 4px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(circle, #DC143C 30%, #B22222 70%);
+    box-shadow: 0px 0px 15px rgba(220,20,60,0.6);
+}
+
+/* MEDICAL EMERGENCY MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #0000CD, stop:0.3 #4169E1, stop:0.7 #87CEEB, stop:1 #0000CD);
+    color: #F0F8FF;
+    border-bottom: 5px solid #191970;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 0px 0px 30px 60px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #DC143C 40%, #B22222 80%);
+    color: #F0F8FF;
+    border-radius: 25px 45px 20px 40px;
+    padding: 12px 22px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #F0F8FF, stop:0.25 #E6E6FA, stop:0.5 #D8BFD8, 
+                stop:0.75 #87CEEB, stop:1 #F0F8FF);
+    color: #191970;
+    border: 5px solid #4169E1;
+    border-radius: 35px 55px 30px 60px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #8B008B 30%, #4B0082 70%);
+    color: #F0F8FF;
+    border-radius: 20px 40px 25px 45px;
+    margin: 3px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #191970, stop:0.4 #0000CD, stop:0.8 #4169E1, stop:1 #191970);
+    color: #F0F8FF;
+    border-top: 5px solid #000080;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 50px 40px 0px 0px;
+}
+
+/* TWISTED CORD PATTERN */
+QLabel#twistedCord {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #4169E1, stop:0.1 #0000CD, stop:0.2 #4169E1, 
+                stop:0.3 #191970, stop:0.4 #4169E1, stop:0.5 #0000CD,
+                stop:0.6 #4169E1, stop:0.7 #191970, stop:0.8 #4169E1, 
+                stop:0.9 #0000CD, stop:1 #4169E1);
+    color: #F0F8FF;
+    border: 4px solid #000080;
+    border-radius: 10px 50px 20px 60px;
+    padding: 16px;
+    font-weight: bold;
+    font-size: 14px;
+    transform: rotate(30deg);
+}
+
+/* EMERGENCY SURGERY EFFECT */
+QWidget#emergencySurgery {
+    background: qradial-gradient(ellipse at 50% 50%, #DC143C 20%, #B22222 40%, #8B0000 60%, #4B0082 80%);
+    border: 5px solid #FF0000;
+    border-radius: 40px 60px 30px 70px;
+    color: #F0F8FF;
+    font-weight: bold;
+}
+
+/* PAIN LEVEL MAXIMUM */
+QLabel#painMaximum {
+    background: qradial-gradient(circle at 50% 50%, #FF0000 30%, #DC143C 60%, #8B0000 90%);
+    color: #FFFFFF;
+    border: 8px solid #B22222;
+    border-radius: 20px 60px 30px 70px;
+    padding: 25px;
+    font-weight: bold;
+    font-size: 20px;
+    font-family: "Impact", sans-serif;
+    text-align: center;
+    animation: pulse 1s infinite; /* Would pulse if animations worked */
+}
+
+/* MEDICAL DIAGRAM LINES */
+QLabel#medicalDiagram {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #F0F8FF, stop:0.2 #E6E6FA, stop:0.4 #D8BFD8, 
+                stop:0.6 #87CEEB, stop:0.8 #4169E1, stop:1 #F0F8FF);
+    color: #191970;
+    border: 3px solid #0000CD;
+    border-radius: 35px 25px 45px 30px;
+    padding: 14px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* EMERGENCY ROOM ALERT */
+QWidget#emergencyAlert {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #FF0000, stop:0.3 #FF4500, stop:0.7 #FF6347, stop:1 #FF0000);
+    border: 6px solid #8B0000;
+    border-radius: 25px 50px 35px 60px;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 20px;
+    text-decoration: blink; /* Emergency blinking if supported */
+}

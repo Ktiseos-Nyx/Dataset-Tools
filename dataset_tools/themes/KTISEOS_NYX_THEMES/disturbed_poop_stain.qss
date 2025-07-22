@@ -1,0 +1,59 @@
+/* DISTURBED IDEA: SHID (POOP) STAIN */
+/* A truly repulsive theme with a mix of browns and yellows, evoking the unpleasantness of a stain. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 0.3 #B8860B,
+                                stop: 0.7 #DAA520, stop: 1 #8B4513);
+    color: #4B3621;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 0.3 #B8860B,
+                                stop: 0.7 #DAA520, stop: 1 #8B4513);
+    color: #4B3621;
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A0522D, stop: 1 #8B4513);
+    border: 3px solid #4B3621;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 1 #A0522D);
+    border: 3px solid #000000;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #8B4513;
+    border-radius: 5px;
+    padding: 8px;
+    color: #4B3621;
+    selection-background-color: #DAA520;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #8B4513;
+    border-radius: 5px;
+    alternate-background-color: #FFFACD;
+    color: #4B3621;
+}
+
+QListWidget::item:selected {
+    background: #DAA520;
+    color: #FFFFFF;
+}

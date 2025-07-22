@@ -46,9 +46,7 @@ class RuinedFooocusFormat(BaseFormat):
             }
             self._populate_parameters_from_map(data, param_map, handled_keys_in_data)
 
-            self._extract_and_set_dimensions(
-                data, "width", "height", handled_keys_in_data
-            )
+            self._extract_and_set_dimensions(data, "width", "height", handled_keys_in_data)
 
             self._assign_param_or_add_to_custom_settings(
                 data,
@@ -106,9 +104,7 @@ class RuinedFooocusFormat(BaseFormat):
                 exc_info=True,  # Good to have for JSON errors
             )
             self.status = BaseFormat.Status.FORMAT_ERROR
-            self._error = (
-                f"Invalid JSON data: {e}"  # f-string for error message is fine
-            )
+            self._error = f"Invalid JSON data: {e}"  # f-string for error message is fine
         except KeyError as e_key:
             self._logger.error(
                 "Missing expected key in %s JSON data: %s",
@@ -117,7 +113,5 @@ class RuinedFooocusFormat(BaseFormat):
                 exc_info=True,  # Good to have for KeyErrors
             )
             self.status = BaseFormat.Status.FORMAT_ERROR
-            self._error = (
-                f"Missing data key: {e_key}"  # f-string for error message is fine
-            )
+            self._error = f"Missing data key: {e_key}"  # f-string for error message is fine
         # General Exception is handled by BaseFormat.parse() which uses % formatting

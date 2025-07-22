@@ -1,0 +1,228 @@
+/*
+Mom's 2AM Fever Dreams Collection - "Dead Babies"
+The darkest theme in the collection
+Recommended Age Rating: 666+
+*/
+
+QWidget {
+    background-color: #2C2C2C; /* Dark gray base */
+    color: #DCDCDC; /* Light gray text */
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+}
+
+QMainWindow {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #000000, stop:0.2 #1C1C1C, stop:0.4 #2C2C2C, 
+                stop:0.6 #8B0000, stop:0.8 #2C2C2C, stop:1 #000000);
+}
+
+/* COFFIN-SHAPED BUTTONS! */
+QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #4A4A4A, stop:0.3 #696969, stop:0.7 #2C2C2C, stop:1 #1C1C1C);
+    color: #DCDCDC;
+    border: 4px solid #8B0000;
+    border-radius: 15px 15px 40px 40px; /* Coffin shape! */
+    padding: 16px 24px;
+    font-weight: bold;
+    font-size: 13px;
+    box-shadow: inset 0px 0px 10px #000000;
+}
+
+QPushButton:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #8B0000, stop:0.4 #DC143C, stop:0.8 #4A4A4A, stop:1 #2C2C2C);
+    border-color: #DC143C;
+    border-radius: 20px 20px 50px 50px; /* Slightly bigger coffin */
+    box-shadow: 0px 0px 20px #8B0000, inset 0px 0px 8px #000000;
+    color: #FFFFFF;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #1C1C1C, stop:0.5 #000000, stop:1 #1C1C1C);
+    border-radius: 10px 10px 30px 30px; /* Pressed down coffin */
+    border-color: #4A0000;
+    transform: scale(0.9);
+    box-shadow: inset 0px 0px 15px #000000;
+}
+
+/* TOMBSTONE TEXT FIELDS */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #696969, stop:0.3 #4A4A4A, stop:0.7 #2C2C2C, stop:1 #1C1C1C);
+    color: #DCDCDC;
+    border: 4px solid #4A4A4A;
+    border-radius: 25px 25px 15px 15px; /* Tombstone shape */
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    font-family: "Georgia", serif;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border-color: #8B0000;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #4A4A4A, stop:0.5 #696969, stop:1 #2C2C2C);
+    border-radius: 30px 30px 10px 10px; /* Focus changes tombstone */
+    box-shadow: 0px 0px 15px #8B0000;
+    color: #FFFFFF;
+}
+
+/* MAUSOLEUM TABS */
+QTabWidget::pane {
+    background: qradial-gradient(ellipse at 50% 30%, #4A4A4A 20%, #2C2C2C 50%, #1C1C1C 80%);
+    border: 5px solid #8B0000;
+    border-radius: 40px 40px 10px 10px; /* Mausoleum dome shape! */
+}
+
+QTabBar::tab {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #696969, stop:0.4 #4A4A4A, stop:0.8 #2C2C2C, stop:1 #1C1C1C);
+    color: #DCDCDC;
+    padding: 18px 30px;
+    margin: 4px;
+    border-radius: 30px 30px 0px 0px; /* Dome-shaped tabs */
+    font-weight: bold;
+    font-size: 14px;
+    border: 3px solid #4A4A4A;
+}
+
+QTabBar::tab:selected {
+    background: qradial-gradient(ellipse at 50% 40%, #8B0000 30%, #DC143C 60%, #4A4A4A 90%);
+    color: #FFFFFF;
+    border-radius: 40px 40px 0px 0px; /* Bigger dome when selected */
+    border-color: #DC143C;
+    box-shadow: 0px 0px 12px #8B0000;
+}
+
+/* FUNERAL SCROLL BARS */
+QScrollBar:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #2C2C2C, stop:0.3 #4A4A4A, stop:0.7 #696969, stop:1 #2C2C2C);
+    width: 26px;
+    border-radius: 13px;
+    border: 4px solid #8B0000;
+}
+
+QScrollBar::handle:vertical {
+    background: qradial-gradient(circle, #8B0000 40%, #4A0000 80%);
+    border-radius: 11px;
+    min-height: 40px;
+    border: 3px solid #DC143C;
+    margin: 4px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qradial-gradient(circle, #DC143C 30%, #8B0000 70%);
+    box-shadow: 0px 0px 12px #8B0000;
+}
+
+/* FUNERAL HOME MENU BAR */
+QMenuBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #1C1C1C, stop:0.3 #2C2C2C, stop:0.7 #4A4A4A, stop:1 #1C1C1C);
+    color: #DCDCDC;
+    border-bottom: 5px solid #8B0000;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 0px 0px 20px 40px;
+}
+
+QMenuBar::item:selected {
+    background: qradial-gradient(ellipse, #8B0000 40%, #DC143C 80%);
+    color: #FFFFFF;
+    border-radius: 15px 35px 10px 25px;
+    padding: 12px 20px;
+}
+
+QMenu {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #4A4A4A, stop:0.25 #2C2C2C, stop:0.5 #1C1C1C, 
+                stop:0.75 #2C2C2C, stop:1 #4A4A4A);
+    color: #DCDCDC;
+    border: 5px solid #8B0000;
+    border-radius: 25px 40px 15px 50px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QMenu::item:selected {
+    background: qradial-gradient(ellipse, #DC143C 30%, #8B0000 70%);
+    color: #FFFFFF;
+    border-radius: 10px 30px 20px 25px;
+    margin: 3px;
+}
+
+QStatusBar {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #000000, stop:0.4 #1C1C1C, stop:0.8 #2C2C2C, stop:1 #000000);
+    color: #DCDCDC;
+    border-top: 5px solid #8B0000;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 40px 30px 0px 0px;
+}
+
+/* SKULL PATTERN */
+QLabel#skullPattern {
+    background: qradial-gradient(ellipse at 25% 25%, #696969 15%, transparent 16%),
+                qradial-gradient(ellipse at 75% 25%, #696969 15%, transparent 16%),
+                qradial-gradient(ellipse at 50% 60%, #4A4A4A 20%, transparent 21%),
+                qradial-gradient(ellipse at 40% 80%, #2C2C2C 12%, transparent 13%),
+                qradial-gradient(ellipse at 60% 80%, #2C2C2C 12%, transparent 13%),
+                #1C1C1C;
+    color: #DCDCDC;
+    border: 4px solid #8B0000;
+    border-radius: 40px 40px 20px 20px;
+    padding: 18px;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: "Gothic", serif;
+}
+
+/* GRAVEYARD MIST EFFECT */
+QWidget#graveyardMist {
+    background: qradial-gradient(ellipse at 20% 40%, rgba(169,169,169,0.3) 20%, transparent 21%),
+                qradial-gradient(ellipse at 70% 20%, rgba(169,169,169,0.2) 25%, transparent 26%),
+                qradial-gradient(ellipse at 40% 80%, rgba(169,169,169,0.4) 18%, transparent 19%),
+                qradial-gradient(ellipse at 80% 70%, rgba(169,169,169,0.3) 22%, transparent 23%),
+                #2C2C2C;
+    border: 3px solid #4A4A4A;
+    border-radius: 30px;
+}
+
+/* MOURNING NOTICE */
+QLabel#mourningNotice {
+    background: qradial-gradient(circle at 50% 50%, #000000 30%, #1C1C1C 60%, #2C2C2C 90%);
+    color: #DCDCDC;
+    border: 6px solid #8B0000;
+    border-radius: 20px 50px 30px 60px;
+    padding: 25px;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: "Times New Roman", serif;
+    text-align: center;
+}
+
+/* CASKET HANDLE EFFECT */
+QLabel#casketHandle {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                stop:0 #4A4A4A, stop:0.3 #696969, stop:0.7 #4A4A4A, stop:1 #2C2C2C);
+    color: #DCDCDC;
+    border: 3px solid #8B0000;
+    border-radius: 50px 10px 50px 10px; /* Handle shape */
+    padding: 10px 25px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* ETERNAL REST ELEMENT */
+QWidget#eternalRest {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                stop:0 #000000, stop:0.2 #1C1C1C, stop:0.4 #2C2C2C, 
+                stop:0.6 #4A4A4A, stop:0.8 #2C2C2C, stop:1 #000000);
+    border: 5px solid #8B0000;
+    border-radius: 60px 60px 20px 20px; /* Eternal dome */
+}

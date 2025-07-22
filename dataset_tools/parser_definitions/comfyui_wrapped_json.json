@@ -1,0 +1,78 @@
+{
+  "parser_name": "ComfyUI Wrapped JSON",
+  "priority": 200,
+  "description": "Parser for ComfyUI workflows wrapped in JSON format with SourceFile/Workflow/Prompt structure",
+  "version": "1.0",
+  "maintainer": "Dataset Tools",
+  "target_file_types": [
+    "JSON"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be valid JSON",
+      "source_type": "raw_file_content_text",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: Must have Workflow field in array",
+      "source_type": "raw_file_content_text",
+      "operator": "json_path_exists",
+      "json_path": "[0].Workflow"
+    },
+    {
+      "comment": "Rule 3: Must contain ComfyUI node signatures",
+      "source_type": "raw_file_content_text",
+      "operator": "contains",
+      "value": "class_type"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "raw_file_content_text"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "comment": "Extract workflow JSON from wrapped structure",
+        "target_key": "workflow_json",
+        "method": "direct_json_path",
+        "json_path": "[0].Workflow",
+        "value_type": "string"
+      },
+      {
+        "comment": "Extract positive prompt using workflow analyzer",
+        "target_key": "prompt",
+        "method": "comfyui_extract_prompt_from_workflow",
+        "value_type": "string"
+      },
+      {
+        "comment": "Extract negative prompt using workflow analyzer",
+        "target_key": "negative_prompt",
+        "method": "comfyui_extract_negative_prompt_from_workflow",
+        "value_type": "string"
+      },
+      {
+        "comment": "Extract workflow parameters using analyzer",
+        "target_key": "workflow_parameters",
+        "method": "comfyui_extract_workflow_parameters",
+        "value_type": "string"
+      }
+    ],
+    "output_template": {
+      "tool": "ComfyUI",
+      "format": "ComfyUI Workflow (Wrapped JSON)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": "$workflow_parameters",
+      "workflow": "$workflow_json"
+    }
+  }
+}

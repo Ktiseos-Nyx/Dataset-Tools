@@ -25,7 +25,6 @@ _version.py
 venv/
 .uufdadata/
 env/
-ENV/
 *venv*/
 
 # Test coverage reports (if you generate them)
@@ -38,3 +37,10 @@ htmlcov/
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+# Log files
+logs/
+
+# Documentation files
+CLAUDE.md
+DEVELOPMENT_ROADMAP.md

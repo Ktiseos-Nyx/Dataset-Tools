@@ -1,0 +1,57 @@
+/* POKEMON THEME: SNORLAX */
+/* Inspired by Snorlax - Blues and whites, with a touch of brown. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4682B4, stop: 0.3 #ADD8E6,
+                                stop: 0.7 #F5DEB3, stop: 1 #4682B4);
+    color: #2F4F4F;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4682B4, stop: 0.3 #ADD8E6,
+                                stop: 0.7 #F5DEB3, stop: 1 #4682B4);
+    color: #2F4F4F;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #8B4513, stop: 1 #A0522D);
+    border: 2px solid #2F4F4F;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #A0522D, stop: 1 #8B4513);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #4682B4;
+    border-radius: 3px;
+    padding: 5px;
+    color: #2F4F4F;
+    selection-background-color: #8B4513;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #4682B4;
+    border-radius: 3px;
+    alternate-background-color: #F0F8FF;
+    color: #2F4F4F;
+}
+
+QListWidget::item:selected {
+    background: #8B4513;
+    color: #FFFFFF;
+}

@@ -1,0 +1,218 @@
+/* NFL: MINNESOTA VIKINGS THEME */
+/* Solid colors inspired by the Minnesota Vikings: purple and gold. */
+
+QMainWindow {
+    background: #4F2683; /* Purple */
+    color: #FFC62F; /* Gold */
+    border: none;
+}
+
+QWidget {
+    background: #4F2683; /* Purple */
+    color: #FFC62F; /* Gold */
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #FFC62F; /* Gold */
+    border: 2px solid #4F2683; /* Purple */
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #4F2683; /* Purple */
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #FFD700; /* Brighter Gold */
+    border: 2px solid #6A3DAA; /* Darker Purple */
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #4F2683; /* Purple */
+    border-radius: 3px;
+    padding: 5px;
+    color: #4F2683; /* Purple */
+    selection-background-color: #FFC62F; /* Gold */
+    selection-color: #4F2683; /* Purple */
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #4F2683; /* Purple */
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #4F2683; /* Purple */
+}
+
+QListWidget::item:selected {
+    background: #FFC62F; /* Gold */
+    color: #4F2683; /* Purple */
+}
+
+QMenuBar {
+    background: #4F2683; /* Purple */
+    color: #FFC62F; /* Gold */
+    border-bottom: 1px solid #FFC62F; /* Gold */
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background: #FFC62F; /* Gold */
+}
+
+QMenu {
+    background: #4F2683; /* Purple */
+    border: 1px solid #FFC62F; /* Gold */
+    padding: 3px;
+}
+
+QMenu::item {
+    padding: 5px 15px;
+    color: #FFC62F; /* Gold */
+}
+
+QMenu::item:selected {
+    background: #FFC62F; /* Gold */
+}
+
+QScrollBar:vertical {
+    background: #4F2683; /* Purple */
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #FFC62F; /* Gold */
+    border-radius: 5px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #FFC62F; /* Gold */
+    background: #FFFFFF;
+}
+
+QTabBar::tab {
+    background: #4F2683; /* Purple */
+    border: 1px solid #FFC62F; /* Gold */
+    padding: 6px 10px;
+    color: #FFC62F; /* Gold */
+}
+
+QTabBar::tab:selected {
+    background: #FFFFFF;
+    color: #4F2683; /* Purple */
+}
+
+QStatusBar {
+    background: #4F2683; /* Purple */
+    border-top: 1px solid #FFC62F; /* Gold */
+    color: #FFC62F; /* Gold */
+}
+
+QLineEdit {
+    background: #FFFFFF;
+    border: 2px solid #4F2683; /* Purple */
+    border-radius: 3px;
+    padding: 5px;
+    color: #4F2683; /* Purple */
+    selection-background-color: #FFC62F; /* Gold */
+    selection-color: #4F2683; /* Purple */
+}
+
+QComboBox {
+    background: #4F2683; /* Purple */
+    border: 2px solid #FFC62F; /* Gold */
+    border-radius: 3px;
+    padding: 4px;
+    color: #FFC62F; /* Gold */
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 18px;
+    border-left: 1px solid #FFC62F; /* Gold */
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid #FFC62F; /* Gold */
+}
+
+QComboBox QAbstractItemView {
+    background: #4F2683; /* Purple */
+    border: 1px solid #FFC62F; /* Gold */
+    selection-background-color: #FFC62F; /* Gold */
+    color: #4F2683; /* Purple */
+}
+
+QSplitter::handle {
+    background: #FFC62F; /* Gold */
+    border: 1px solid #4F2683; /* Purple */
+}
+
+QProgressBar {
+    border: 2px solid #4F2683; /* Purple */
+    border-radius: 3px;
+    background: #FFFFFF;
+    text-align: center;
+    color: #4F2683; /* Purple */
+}
+
+QProgressBar::chunk {
+    background: #FFC62F; /* Gold */
+    border-radius: 2px;
+}
+
+QToolTip {
+    background: #4F2683; /* Purple */
+    border: 1px solid #FFC62F; /* Gold */
+    color: #FFC62F; /* Gold */
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QLabel {
+    color: #FFC62F; /* Gold */
+}
+
+QGroupBox {
+    border: 2px solid #FFC62F; /* Gold */
+    border-radius: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    color: #FFC62F; /* Gold */
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 8px;
+    padding: 0 4px 0 4px;
+    background: #FFC62F; /* Gold */
+    color: #4F2683; /* Purple */
+    border-radius: 2px;
+}
+
+QCheckBox {
+    color: #FFC62F; /* Gold */
+}
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid #4F2683; /* Purple */
+    background: #FFFFFF;
+}
+
+QCheckBox::indicator:checked {
+    background: #FFC62F; /* Gold */
+}

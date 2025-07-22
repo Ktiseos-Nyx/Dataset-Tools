@@ -1,0 +1,59 @@
+/* SONIC THE HEDGEHOG THEME */
+/* Vibrant blues, reds, and yellows, reflecting Sonic's iconic colors. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #0000FF, stop: 0.3 #DC143C,
+                                stop: 0.7 #FFD700, stop: 1 #0000FF);
+    color: #FFFFFF;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #0000FF, stop: 0.3 #DC143C,
+                                stop: 0.7 #FFD700, stop: 1 #0000FF);
+    color: #FFFFFF;
+    font-family: 'Impact', sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DC143C, stop: 1 #FFD700);
+    border: 3px solid #0000FF;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FFD700, stop: 1 #DC143C);
+    border: 3px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #0000FF;
+    border-radius: 5px;
+    padding: 8px;
+    color: #DC143C;
+    selection-background-color: #FFD700;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #0000FF;
+    border-radius: 5px;
+    alternate-background-color: #F0F0F0;
+    color: #DC143C;
+}
+
+QListWidget::item:selected {
+    background: #FFD700;
+    color: #0000FF;
+}

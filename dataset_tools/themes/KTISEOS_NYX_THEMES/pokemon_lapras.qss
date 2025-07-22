@@ -1,0 +1,57 @@
+/* POKEMON THEME: LAPRAS */
+/* Inspired by Lapras - Blues and whites, evoking water and ice. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4682B4, stop: 0.3 #87CEEB,
+                                stop: 0.7 #AFEEEE, stop: 1 #4682B4);
+    color: #191970;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4682B4, stop: 0.3 #87CEEB,
+                                stop: 0.7 #AFEEEE, stop: 1 #4682B4);
+    color: #191970;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #00BFFF, stop: 1 #1E90FF);
+    border: 2px solid #191970;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1E90FF, stop: 1 #00BFFF);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #4682B4;
+    border-radius: 3px;
+    padding: 5px;
+    color: #191970;
+    selection-background-color: #00BFFF;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #4682B4;
+    border-radius: 3px;
+    alternate-background-color: #F0F8FF;
+    color: #191970;
+}
+
+QListWidget::item:selected {
+    background: #00BFFF;
+    color: #FFFFFF;
+}

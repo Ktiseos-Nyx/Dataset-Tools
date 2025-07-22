@@ -1,0 +1,57 @@
+/* 2000S THEME */
+/* A mix of metallic, glossy, and early digital aesthetics. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #C0C0C0, stop: 0.3 #A9A9A9,
+                                stop: 0.7 #808080, stop: 1 #C0C0C0);
+    color: #000000;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #C0C0C0, stop: 0.3 #A9A9A9,
+                                stop: 0.7 #808080, stop: 1 #C0C0C0);
+    color: #000000;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4682B4, stop: 1 #4169E1);
+    border: 2px solid #000000;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4169E1, stop: 1 #4682B4);
+    border: 2px solid #FFFFFF;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #C0C0C0;
+    border-radius: 3px;
+    padding: 5px;
+    color: #000000;
+    selection-background-color: #4682B4;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #C0C0C0;
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #000000;
+}
+
+QListWidget::item:selected {
+    background: #4682B4;
+    color: #FFFFFF;
+}

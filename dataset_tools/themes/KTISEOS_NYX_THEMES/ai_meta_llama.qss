@@ -1,0 +1,55 @@
+/* META LLAMA THEME */
+/* A theme with a mix of blues, grays, and whites, reflecting Meta's branding and the open-source nature of LLaMA. */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1A73E8, stop: 0.3 #4285F4,
+                                stop: 0.7 #E0E0E0, stop: 1 #1A73E8);
+    color: #2F4F4F;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1A73E8, stop: 0.3 #4285F4,
+                                stop: 0.7 #E0E0E0, stop: 1 #1A73E8);
+    color: #2F4F4F;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #4285F4;
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #1A73E8;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #4285F4;
+    border-radius: 3px;
+    padding: 5px;
+    color: #2F4F4F;
+    selection-background-color: #4285F4;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #4285F4;
+    border-radius: 3px;
+    alternate-background-color: #F0F0F0;
+    color: #2F4F4F;
+}
+
+QListWidget::item:selected {
+    background: #4285F4;
+    color: #FFFFFF;
+}

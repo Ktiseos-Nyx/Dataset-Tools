@@ -70,9 +70,7 @@ class RuleOperators:
             return True
         return str(data).strip() == str(expected).strip()
 
-    def equals_case_insensitive(
-        self, data: Any, rule: RuleDict, context: ContextData
-    ) -> bool:
+    def equals_case_insensitive(self, data: Any, rule: RuleDict, context: ContextData) -> bool:
         """Check if data equals expected value (case insensitive)."""
         expected = rule.get("value")
         if data is None and expected is not None:
@@ -90,9 +88,7 @@ class RuleOperators:
         expected = rule.get("value")
         return str(expected) in data
 
-    def contains_case_insensitive(
-        self, data: Any, rule: RuleDict, context: ContextData
-    ) -> bool:
+    def contains_case_insensitive(self, data: Any, rule: RuleDict, context: ContextData) -> bool:
         """Check if data contains expected value (case insensitive)."""
         if not isinstance(data, str):
             return False
@@ -136,9 +132,7 @@ class RuleOperators:
             return False
         patterns = rule.get("regex_patterns")
         if not patterns or not isinstance(patterns, list):
-            self.logger.warning(
-                "regex_match_all operator missing 'regex_patterns' list"
-            )
+            self.logger.warning("regex_match_all operator missing 'regex_patterns' list")
             return False
         return all(re.search(pattern, data) for pattern in patterns)
 
@@ -148,9 +142,7 @@ class RuleOperators:
             return False
         patterns = rule.get("regex_patterns")
         if not patterns or not isinstance(patterns, list):
-            self.logger.warning(
-                "regex_match_any operator missing 'regex_patterns' list"
-            )
+            self.logger.warning("regex_match_any operator missing 'regex_patterns' list")
             return False
         return any(re.search(pattern, data) for pattern in patterns)
 
@@ -192,9 +184,7 @@ class RuleOperators:
         except json.JSONDecodeError:
             return False
 
-    def is_valid_json_structure(
-        self, data: Any, rule: RuleDict, context: ContextData
-    ) -> bool:
+    def is_valid_json_structure(self, data: Any, rule: RuleDict, context: ContextData) -> bool:
         """Check if context has valid JSON structure."""
         return isinstance(context.get("parsed_root_json_object"), (dict, list))
 
@@ -211,9 +201,7 @@ class RuleOperators:
 
         return json_path_get_utility(target_obj, json_path) is not None
 
-    def json_path_value_equals(
-        self, data: Any, rule: RuleDict, context: ContextData
-    ) -> bool:
+    def json_path_value_equals(self, data: Any, rule: RuleDict, context: ContextData) -> bool:
         """Check if value at JSON path equals expected value."""
         json_path = rule.get("json_path")
         expected = rule.get("value")
@@ -237,15 +225,11 @@ class RuleOperators:
 
         return str(value_at_path).strip() == str(expected).strip()
 
-    def json_contains_any_key(
-        self, data: Any, rule: RuleDict, context: ContextData
-    ) -> bool:
+    def json_contains_any_key(self, data: Any, rule: RuleDict, context: ContextData) -> bool:
         """Check if JSON object contains any of the expected keys."""
         expected_keys = rule.get("expected_keys")
         if not expected_keys or not isinstance(expected_keys, list):
-            self.logger.warning(
-                "json_contains_any_key operator missing 'expected_keys' list"
-            )
+            self.logger.warning("json_contains_any_key operator missing 'expected_keys' list")
             return False
 
         target_obj = self._get_json_object(data)
@@ -254,15 +238,11 @@ class RuleOperators:
 
         return any(key in target_obj for key in expected_keys)
 
-    def json_contains_all_keys(
-        self, data: Any, rule: RuleDict, context: ContextData
-    ) -> bool:
+    def json_contains_all_keys(self, data: Any, rule: RuleDict, context: ContextData) -> bool:
         """Check if JSON object contains all expected keys."""
         expected_keys = rule.get("expected_keys")
         if not expected_keys or not isinstance(expected_keys, list):
-            self.logger.warning(
-                "json_contains_all_keys operator missing 'expected_keys' list"
-            )
+            self.logger.warning("json_contains_all_keys operator missing 'expected_keys' list")
             return False
 
         target_obj = self._get_json_object(data)
@@ -275,20 +255,14 @@ class RuleOperators:
         """Check if data (expected to be a dict) contains all specified keys."""
         expected_keys = rule.get("value")  # Using 'value' as per the parser definition
         if not isinstance(data, dict):
-            self.logger.debug(
-                f"has_keys operator: data is not a dictionary (type: {type(data)})"
-            )
+            self.logger.debug(f"has_keys operator: data is not a dictionary (type: {type(data)})")
             return False
         if not isinstance(expected_keys, list) or not expected_keys:
-            self.logger.warning(
-                "has_keys operator: 'value' must be a non-empty list of keys"
-            )
+            self.logger.warning("has_keys operator: 'value' must be a non-empty list of keys")
             return False
         return all(key in data for key in expected_keys)
 
-    def exists_and_is_dictionary(
-        self, data: Any, rule: RuleDict, context: ContextData
-    ) -> bool:
+    def exists_and_is_dictionary(self, data: Any, rule: RuleDict, context: ContextData) -> bool:
         """Check if data exists and is a non-empty dictionary."""
         is_dict = isinstance(data, dict)
         is_not_empty = bool(data) if is_dict else False
@@ -299,9 +273,7 @@ class RuleOperators:
 
         return is_dict and is_not_empty
 
-    def not_strictly_simple_json_object_with_prompt_key(
-        self, data: Any, rule: RuleDict, context: ContextData
-    ) -> bool:
+    def not_strictly_simple_json_object_with_prompt_key(self, data: Any, rule: RuleDict, context: ContextData) -> bool:
         """Check if data is NOT a simple JSON object with prompt key."""
         if not isinstance(data, str):
             return False
@@ -309,10 +281,7 @@ class RuleOperators:
         try:
             parsed_json = json.loads(data)
             if isinstance(parsed_json, dict):
-                has_prompt_key = any(
-                    key in parsed_json
-                    for key in ["prompt", "Prompt", "positive_prompt"]
-                )
+                has_prompt_key = any(key in parsed_json for key in ["prompt", "Prompt", "positive_prompt"])
                 if has_prompt_key:
                     return False  # It IS a simple JSON with prompt, so return False
         except json.JSONDecodeError:
@@ -342,9 +311,7 @@ class RuleOperators:
     def _handle_json_path_query(self, data: Any, rule: RuleDict) -> bool:
         """Handle complex JSON path queries for is_true operator."""
         if not isinstance(data, str):
-            self.logger.debug(
-                f"Expected string data for JSON path query, got {type(data)}"
-            )
+            self.logger.debug(f"Expected string data for JSON path query, got {type(data)}")
             return False
 
         json_query_type = rule.get("json_query_type")
@@ -356,16 +323,12 @@ class RuleOperators:
             json_obj = json.loads(data)
 
             if json_query_type == "has_numeric_string_keys":
-                return isinstance(json_obj, dict) and any(
-                    key.isdigit() for key in json_obj
-                )
+                return isinstance(json_obj, dict) and any(key.isdigit() for key in json_obj)
 
             if json_query_type == "has_any_node_class_type":
                 class_types = rule.get("class_types_to_check")
                 if not class_types or not isinstance(class_types, list):
-                    self.logger.warning(
-                        "Query 'has_any_node_class_type' missing 'class_types_to_check'"
-                    )
+                    self.logger.warning("Query 'has_any_node_class_type' missing 'class_types_to_check'")
                     return False
 
                 if not isinstance(json_obj, dict):
@@ -433,9 +396,7 @@ class DataSourceHandler:
             "direct_context_key": lambda: context.get(source_key),
             "pil_info_pil_mode": lambda: context.get("pil_mode"),
             "pil_info_object": lambda: context.get("pil_info"),
-            "context_iptc_field_value": lambda: context.get("parsed_iptc", {}).get(
-                rule.get("iptc_field_name")
-            ),
+            "context_iptc_field_value": lambda: context.get("parsed_iptc", {}).get(rule.get("iptc_field_name")),
         }
 
         if source_type in simple_sources:
@@ -462,10 +423,7 @@ class DataSourceHandler:
         if source_type == "any_metadata_source":
             return self._handle_any_metadata_source(rule, context)
 
-        if (
-            source_type == "pil_info_key_json_path"
-            or source_type == "pil_info_key_json_path_string_is_json"
-        ):
+        if source_type == "pil_info_key_json_path" or source_type == "pil_info_key_json_path_string_is_json":
             return self._handle_pil_info_json_path(rule, context)
 
         # TODO: Implement these complex types when needed
@@ -483,9 +441,7 @@ class DataSourceHandler:
             self.logger.debug("Rule missing 'source_type'")
         return None, False
 
-    def _handle_pil_info_or_exif_json_path(
-        self, rule: RuleDict, context: ContextData
-    ) -> tuple[Any, bool]:
+    def _handle_pil_info_or_exif_json_path(self, rule: RuleDict, context: ContextData) -> tuple[Any, bool]:
         """Handle PIL info or EXIF user comment JSON path extraction."""
         json_path = rule.get("json_path")
         source_key = rule.get("source_key")
@@ -522,20 +478,14 @@ class DataSourceHandler:
         # Check if it's wrapped in JSON
         try:
             wrapper = json.loads(param_str)
-            if (
-                isinstance(wrapper, dict)
-                and "parameters" in wrapper
-                and isinstance(wrapper["parameters"], str)
-            ):
+            if isinstance(wrapper, dict) and "parameters" in wrapper and isinstance(wrapper["parameters"], str):
                 return wrapper["parameters"], True
         except json.JSONDecodeError:
             pass
 
         return param_str, True
 
-    def _handle_pil_info_json_path(
-        self, rule: RuleDict, context: ContextData
-    ) -> tuple[Any, bool]:
+    def _handle_pil_info_json_path(self, rule: RuleDict, context: ContextData) -> tuple[Any, bool]:
         """Handle PIL info JSON path extraction."""
         source_keys = rule.get("source_key_options") or [rule.get("source_key")]
         json_path = rule.get("json_path")
@@ -558,9 +508,7 @@ class DataSourceHandler:
             self.logger.debug("Could not parse JSON for JSON path rule")
             return None, False
 
-    def _handle_any_metadata_source(
-        self, rule: RuleDict, context: ContextData
-    ) -> tuple[Any, bool]:
+    def _handle_any_metadata_source(self, rule: RuleDict, context: ContextData) -> tuple[Any, bool]:
         """Handle any metadata source - checks PNG chunks, EXIF UserComment, etc."""
         # Try PNG chunks first (for PNG files)
         png_chunks = context.get("pil_info", {})
@@ -647,9 +595,7 @@ class RuleEngine:
             self.logger.info(f"Loaded {len(self.rules)} rules from {config_path}")
 
         except Exception as e:
-            self.logger.error(
-                f"Failed to load rules from {config_path}: {e}", exc_info=True
-            )
+            self.logger.error(f"Failed to load rules from {config_path}: {e}", exc_info=True)
 
     def evaluate_rule(self, rule: RuleDict, context: ContextData) -> RuleResult:
         """Evaluate a single rule against context data.
@@ -671,17 +617,11 @@ class RuleEngine:
             return self._evaluate_simple_rule(rule, context)
 
         except Exception as e:
-            rule_comment = rule.get(
-                "comment", f"source_type: {rule.get('source_type')}"
-            )
-            self.logger.error(
-                f"Error evaluating rule '{rule_comment}': {e}", exc_info=True
-            )
+            rule_comment = rule.get("comment", f"source_type: {rule.get('source_type')}")
+            self.logger.error(f"Error evaluating rule '{rule_comment}': {e}", exc_info=True)
             return False
 
-    def _evaluate_complex_rule(
-        self, rule: RuleDict, context: ContextData
-    ) -> RuleResult:
+    def _evaluate_complex_rule(self, rule: RuleDict, context: ContextData) -> RuleResult:
         """Evaluate a complex rule with AND/OR conditions."""
         condition = rule.get("condition", "").upper()
         sub_rules = rule.get("rules", [])
@@ -706,23 +646,17 @@ class RuleEngine:
 
         # Check if source was found for operators that require it
         if not source_found and operator not in ["not_exists", "is_none"]:
-            rule_comment = rule.get(
-                "comment", f"source_type: {rule.get('source_type')}"
-            )
+            rule_comment = rule.get("comment", f"source_type: {rule.get('source_type')}")
             self.logger.debug(f"Source data not found for rule: {rule_comment}")
             return False
 
         # Apply operator
         return self._apply_operator(operator, data, rule, context)
 
-    def _apply_operator(
-        self, operator: str, data: Any, rule: RuleDict, context: ContextData
-    ) -> RuleResult:
+    def _apply_operator(self, operator: str, data: Any, rule: RuleDict, context: ContextData) -> RuleResult:
         """Apply the specified operator to the data."""
         # Get operator method
-        self.logger.debug(
-            f"_apply_operator: Checking for operator '{operator}' on {type(self.operators)}"
-        )
+        self.logger.debug(f"_apply_operator: Checking for operator '{operator}' on {type(self.operators)}")
         operator_method = getattr(self.operators, operator, None)
 
         if operator_method is None:
@@ -788,9 +722,7 @@ class RuleEngine:
 
         """
         matching_parsers = []
-        parser_names = set(
-            rule.get("parser_name") for rule in self.rules if rule.get("parser_name")
-        )
+        parser_names = set(rule.get("parser_name") for rule in self.rules if rule.get("parser_name"))
 
         for parser_name in parser_names:
             if self.evaluate_parser_rules(parser_name, context):
@@ -809,13 +741,7 @@ class RuleEngine:
 
     def get_parser_names(self) -> list[str]:
         """Get list of all parser names that have rules."""
-        return list(
-            set(
-                rule.get("parser_name")
-                for rule in self.rules
-                if rule.get("parser_name")
-            )
-        )
+        return list(set(rule.get("parser_name") for rule in self.rules if rule.get("parser_name")))
 
 
 # ============================================================================
@@ -836,9 +762,7 @@ def create_rule_engine(config_path: Path | None = None) -> RuleEngine:
     return RuleEngine(config_path)
 
 
-def evaluate_detection_rules(
-    rules: list[RuleDict], context: ContextData, logger=None
-) -> bool:
+def evaluate_detection_rules(rules: list[RuleDict], context: ContextData, logger=None) -> bool:
     """Evaluate a list of detection rules against context data.
 
     Args:
@@ -935,9 +859,7 @@ class RuleBuilder:
         return cls()
 
     @classmethod
-    def exists_rule(
-        cls, source_type: str, source_key: str = None, comment: str = None
-    ) -> RuleDict:
+    def exists_rule(cls, source_type: str, source_key: str = None, comment: str = None) -> RuleDict:
         """Create a simple exists rule."""
         builder = cls().source_type(source_type).operator("exists")
         if source_key:
@@ -947,9 +869,7 @@ class RuleBuilder:
         return builder.build()
 
     @classmethod
-    def equals_rule(
-        cls, source_type: str, value: Any, source_key: str = None, comment: str = None
-    ) -> RuleDict:
+    def equals_rule(cls, source_type: str, value: Any, source_key: str = None, comment: str = None) -> RuleDict:
         """Create a simple equals rule."""
         builder = cls().source_type(source_type).operator("equals").value(value)
         if source_key:
@@ -959,16 +879,9 @@ class RuleBuilder:
         return builder.build()
 
     @classmethod
-    def regex_rule(
-        cls, source_type: str, pattern: str, source_key: str = None, comment: str = None
-    ) -> RuleDict:
+    def regex_rule(cls, source_type: str, pattern: str, source_key: str = None, comment: str = None) -> RuleDict:
         """Create a simple regex rule."""
-        builder = (
-            cls()
-            .source_type(source_type)
-            .operator("regex_match")
-            .regex_pattern(pattern)
-        )
+        builder = cls().source_type(source_type).operator("regex_match").regex_pattern(pattern)
         if source_key:
             builder.source_key(source_key)
         if comment:
@@ -984,12 +897,7 @@ class RuleBuilder:
         comment: str = None,
     ) -> RuleDict:
         """Create a JSON path exists rule."""
-        builder = (
-            cls()
-            .source_type(source_type)
-            .operator("json_path_exists")
-            .json_path(json_path)
-        )
+        builder = cls().source_type(source_type).operator("json_path_exists").json_path(json_path)
         if source_key:
             builder.source_key(source_key)
         if comment:
@@ -1014,9 +922,7 @@ class RuleValidator:
         self.errors: list[str] = []
         self.warnings: list[str] = []
         self.operators = (
-            operators_instance
-            if operators_instance is not None
-            else RuleOperators(self.logger)
+            operators_instance if operators_instance is not None else RuleOperators(self.logger)
         )  # Initialize RuleOperators
 
     def validate_rule(self, rule: RuleDict) -> bool:
@@ -1049,13 +955,9 @@ class RuleValidator:
         self.logger.debug(f"RuleValidator: Validating operator: {operator}")
 
         # Validate operator exists
-        if operator and not hasattr(
-            self.operators, operator
-        ):  # Check operator existence on instance
+        if operator and not hasattr(self.operators, operator):  # Check operator existence on instance
             self.errors.append(f"Unknown operator: '{operator}'")
-            self.logger.error(
-                "RuleValidator: Operator '%s' not found in RuleOperators.", operator
-            )
+            self.logger.error("RuleValidator: Operator '%s' not found in RuleOperators.", operator)
             return False
 
         # Validate operator-specific requirements
@@ -1070,23 +972,17 @@ class RuleValidator:
         ]:
             if operator == "is_in_list":
                 if "value_list" not in rule:
-                    self.errors.append(
-                        f"Operator '{operator}' requires 'value_list' field"
-                    )
+                    self.errors.append(f"Operator '{operator}' requires 'value_list' field")
             elif "value" not in rule:
                 self.errors.append(f"Operator '{operator}' requires 'value' field")
 
         elif operator == "regex_match":
             if "regex_pattern" not in rule:
-                self.errors.append(
-                    f"Operator '{operator}' requires 'regex_pattern' field"
-                )
+                self.errors.append(f"Operator '{operator}' requires 'regex_pattern' field")
 
         elif operator in ["regex_match_all", "regex_match_any"]:
             if "regex_patterns" not in rule:
-                self.errors.append(
-                    f"Operator '{operator}' requires 'regex_patterns' field"
-                )
+                self.errors.append(f"Operator '{operator}' requires 'regex_patterns' field")
 
         # elif operator == "has_keys":
         #     if "value" not in rule or not isinstance(rule["value"], list):
@@ -1098,16 +994,12 @@ class RuleValidator:
 
         elif operator in ["json_contains_any_key", "json_contains_all_keys"]:
             if "expected_keys" not in rule:
-                self.errors.append(
-                    f"Operator '{operator}' requires 'expected_keys' field"
-                )
+                self.errors.append(f"Operator '{operator}' requires 'expected_keys' field")
 
         # Validate source type
         source_type = rule.get("source_type")
         if not source_type and operator not in ["not_exists", "is_none"]:
-            self.warnings.append(
-                "Rule missing 'source_type' - may not work as expected"
-            )
+            self.warnings.append("Rule missing 'source_type' - may not work as expected")
 
         # Log validation results
         if self.errors:
@@ -1126,9 +1018,7 @@ class RuleValidator:
         sub_rules = rule.get("rules", [])
 
         if condition not in ["AND", "OR"]:
-            self.errors.append(
-                f"Invalid condition '{condition}'. Must be 'AND' or 'OR'"
-            )
+            self.errors.append(f"Invalid condition '{condition}'. Must be 'AND' or 'OR'")
 
         if not sub_rules:
             self.errors.append("Complex rule has no sub-rules")
@@ -1142,19 +1032,10 @@ class RuleValidator:
                     continue
 
                 # Recursively validate sub-rules
-                sub_validator = RuleValidator(
-                    self.logger, operators_instance=self.operators
-                )
+                sub_validator = RuleValidator(self.logger, operators_instance=self.operators)
                 if not sub_validator.validate_rule(sub_rule):
-                    self.errors.extend(
-                        [f"Sub-rule {i}: {error}" for error in sub_validator.errors]
-                    )
-                    self.warnings.extend(
-                        [
-                            f"Sub-rule {i}: {warning}"
-                            for warning in sub_validator.warnings
-                        ]
-                    )
+                    self.errors.extend([f"Sub-rule {i}: {error}" for error in sub_validator.errors])
+                    self.warnings.extend([f"Sub-rule {i}: {warning}" for warning in sub_validator.warnings])
 
         return len(self.errors) == 0
 
@@ -1205,15 +1086,9 @@ def test_rule_engine():
 
     # Create test rules
     rules = [
-        RuleBuilder.exists_rule(
-            "pil_info_key", "parameters", "PNG parameters chunk exists"
-        ),
-        RuleBuilder.equals_rule(
-            "software_tag", "AUTOMATIC1111", comment="EXIF software tag is A1111"
-        ),
-        RuleBuilder.regex_rule(
-            "raw_user_comment_str", r"Steps:", comment="UserComment has Steps parameter"
-        ),
+        RuleBuilder.exists_rule("pil_info_key", "parameters", "PNG parameters chunk exists"),
+        RuleBuilder.equals_rule("software_tag", "AUTOMATIC1111", comment="EXIF software tag is A1111"),
+        RuleBuilder.regex_rule("raw_user_comment_str", r"Steps:", comment="UserComment has Steps parameter"),
     ]
 
     # Create test context

@@ -1,0 +1,125 @@
+/*
+ * Mom's 2AM Fever Dreams: Lactating Lady Nugs Theme
+ *
+ * This theme celebrates the milky, nurturing, and sometimes messy, side of motherhood.
+ * Embrace the pinks, whites, and the occasional spray.
+ *
+ * Legal Disclaimer: This theme is not a substitute for actual lactation consultation.
+ * We are not responsible for any unexpected milk production or sudden cravings for breast pumps.
+ */
+
+QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #FFC0CB, /* Pink - rosy skin */
+                               stop:0.3 #F0F8FF, /* AliceBlue - milky white */
+                               stop:0.6 #FFF0F5, /* LavenderBlush - gentle flush */
+                               stop:1 #FFE4E1); /* MistyRose - warm and soft */
+    color: #4B0082; /* Indigo - for contrast */
+}
+
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                               stop:0 #FFC0CB, /* Pink */
+                               stop:0.3 #F0F8FF, /* AliceBlue */
+                               stop:0.6 #FFF0F5, /* LavenderBlush */
+                               stop:1 #FFE4E1); /* MistyRose */
+}
+
+QPushButton {
+    border: 2px solid #FF69B4; /* HotPink - nipple border */
+    border-radius: 50px 20px 40px 10px; /* Irregular, like a nursing breast */
+    background-color: #F0F8FF; /* AliceBlue - main milk color */
+    color: #FF69B4; /* HotPink - for contrast */
+    padding: 15px 30px;
+    font-size: 20px;
+    transform: rotate(5deg); /* Slightly tilted, like a baby's head */
+}
+
+QPushButton:hover {
+    background-color: #FFF0F5; /* LavenderBlush - warmer milk */
+    border: 2px solid #FF1493; /* DeepPink */
+    transform: rotate(7deg) scale(1.03); /* More pronounced */
+}
+
+QPushButton:pressed {
+    background-color: #FFC0CB; /* Pink */
+    border: 2px solid #C71585; /* MediumVioletRed */
+    transform: rotate(3deg) scale(0.97); /* Squished */
+}
+
+/* Add more QSS elements as needed for a complete theme */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    border: 1px solid #FFC0CB; /* Pink */
+    background-color: #F0F8FF; /* AliceBlue - clean surface */
+    color: #4B0082; /* Indigo text */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #FF69B4; /* HotPink - focused on the milk */
+}
+
+QTabWidget::pane {
+    border-top: 2px solid #FFC0CB; /* Pink */
+}
+
+QTabBar::tab {
+    background: #FFF0F5; /* LavenderBlush */
+    border: 1px solid #FFC0CB; /* Pink */
+    border-bottom-color: #FFC0CB; /* Same as pane */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 8px;
+}
+
+QTabBar::tab:selected {
+    background: #F0F8FF; /* AliceBlue */
+    border-color: #F0F8FF;
+    border-bottom-color: #F0F8FF; /* Selected tab blends with pane */
+}
+
+QScrollBar:vertical {
+    border: 1px solid #FFC0CB;
+    background: #F0F8FF;
+    width: 15px;
+    margin: 22px 0 22px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #FF69B4;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QMenuBar {
+    background-color: #FFC0CB; /* Pink */
+    color: #4B0082; /* Indigo */
+}
+
+QMenu {
+    background-color: #F0F8FF; /* AliceBlue */
+    border: 1px solid #FFC0CB;
+}
+
+QMenu::item:selected {
+    background-color: #FF69B4; /* HotPink */
+}
+
+QStatusBar {
+    background-color: #FFE4E1; /* MistyRose */
+    color: #4B0082;
+}
+
+/* Custom QLabel elements with theme-specific IDs */
+QLabel#lactatingTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF69B4; /* HotPink */
+    text-align: center;
+}
+
+QLabel#lactatingDescription {
+    font-size: 14px;
+    color: #4B0082; /* Indigo */
+}
