@@ -27,9 +27,6 @@ from ..logger import info_monitor as nfo  # pylint: disable=relative-beyond-top-
 from ..metadata_parser import (
     parse_metadata,
 )  # pylint: disable=relative-beyond-top-level
-from ..widgets import (
-    FileLoader,  # pylint: disable=relative-beyond-top-level
-)
 from .dialogs import SettingsDialog
 from .enhanced_theme_manager import get_enhanced_theme_manager  # pylint: disable=relative-beyond-top-level
 from .font_manager import (
@@ -42,7 +39,7 @@ from .managers import (
     MetadataDisplayManager,  # pylint: disable=relative-beyond-top-level
     ThemeManager,  # pylint: disable=relative-beyond-top-level
 )
-from .widgets import FileLoadResult
+from .widgets import FileLoader, FileLoadResult
 
 # ============================================================================
 # CONSTANTS
@@ -791,7 +788,7 @@ class MainWindow(Qw.QMainWindow):
         try:
             # Memory-efficient thumbnail generation using Pillow
             max_preview_size = 1024
-            pixmap = create_safe_thumbnail(image_file_path, max_preview_size)
+            pixmap = self._create_safe_thumbnail(image_file_path, max_preview_size)
 
             if pixmap.isNull():
                 nfo("[UI] Failed to load image: '%s'", image_file_path)
