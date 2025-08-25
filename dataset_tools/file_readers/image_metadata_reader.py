@@ -314,9 +314,22 @@ class ImageMetadataReader:
             self.logger.error(f"Unexpected error reading image {file_path}: {e}", exc_info=True)
             return None
 
-    def _decode_usercomment_bytes(self, data: bytes) -> str:
+def _decode_usercomment_bytes(self, data: bytes) -> str:
         """Try various decoding strategies for UserComment bytes."""
-        # Strategy 1: Unicode prefix with UTF-16
+
+        # NEW STRATEGY: Handle the SwarmUI-style UNICODE header
+        # This checks for the UTF-16LE encoding of "UNICODE { "
+        swarmui_prefix = b'U\x00N\x00I\x00C\x00O\x00D\x00E\x00 \x00{\x00'
+        if data.startswith(swarmui_prefix):
+            try:
+                # Decode the rest of the data, starting after the prefix
+                json_part_bytes = data[len(swarmui_prefix):]
+                # The rest of the string is separated by null bytes, so treat as utf-16le
+                return json_part_bytes.decode("utf-16le").strip()
+            except Exception as e:
+                self.logger.debug(f"Failed to decode UserComment bytes with SwarmUI prefix: {e}")
+
+        # Strategy 1: Standard Unicode prefix with UTF-16 (for other generators)
         if data.startswith(b"UNICODE\x00\x00"):
             try:
                 utf16_data = data[9:]  # Skip "UNICODE\0\0"
