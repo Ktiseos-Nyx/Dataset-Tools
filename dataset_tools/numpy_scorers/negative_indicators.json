@@ -1,0 +1,134 @@
+{
+  "version": "1.2",
+  "last_updated": "2025-09-02",
+  "categories": {
+    "quality_issues": {
+      "description": "General quality problems and artifacts",
+      "indicators": [
+        "bad quality",
+        "low quality",
+        "worst quality",
+        "blurry",
+        "jpeg artifacts",
+        "bad anatomy",
+        "bad proportions",
+        "gross proportions",
+        "mutation",
+        "deformed",
+        "nsfw"
+      ]
+    },
+    "technical_artifacts": {
+      "description": "Technical rendering issues",
+      "indicators": [
+        "watermark",
+        "signature",
+        "text overlay",
+        "jpeg",
+        "noise",
+        "extra dot",
+        "bad colors",
+        "flat colors",
+        "bad eyes",
+        "bad perspective",
+        "bad angle",
+        "bad lighting"
+      ]
+    },
+    "content_warnings": {
+      "description": "NSFW and inappropriate content indicators",
+      "indicators": [
+        "explicit",
+        "nude",
+        "naked",
+        "pussy",
+        "penis",
+        "vagina",
+        "anus",
+        "cum",
+        "bad cum"
+      ]
+    },
+    "anatomical_issues": {
+      "description": "Missing or incorrect body parts",
+      "indicators": [
+        "amputee",
+        "missing limbs",
+        "extra limbs",
+        "extra fingers",
+        "extra arms",
+        "extra legs",
+        "crossed eyes",
+        "fused fingers",
+        "bad hands",
+        "bad feet",
+        "bad face",
+        "deformed face",
+        "bad teeth",
+        "bad anatomy",
+        "anatomically incorrect"
+      ]
+    },
+    "negative_aesthetics": {
+      "description": "Generally undesirable visual qualities",
+      "indicators": [
+        "disgusting",
+        "displeasing",
+        "gross",
+        "nasty",
+        "uncomfortable",
+        "ugly",
+        "broken"
+      ]
+    },
+    "age_inappropriate": {
+      "description": "Age-related content that should be flagged",
+      "indicators": [
+        "child",
+        "children",
+        "loli",
+        "shota"
+      ]
+    },
+    "gender_specific": {
+      "description": "Potentially problematic gender-related terms (use with caution)",
+      "indicators": [
+        "cuntboy",
+        "trap"
+      ]
+    },
+    "embedding_negatives": {
+      "description": "Patterns that indicate negative embeddings",
+      "patterns": [
+        "embedding:.*neg",
+        "embedding:.*negative",
+        "embedding:.*bad",
+        "embedding:.*ugly"
+      ]
+    }
+  },
+  "detection_rules": {
+    "minimum_matches_for_negative": 2,
+    "strong_negative_single_match": [
+      "watermark",
+      "signature",
+      "bad quality",
+      "child",
+      "loli",
+      "shota"
+    ],
+    "positive_context_overrides": [
+      "chopper",
+      "cute face",
+      "mischievous",
+      "vibrant glow",
+      "signature blue hat",
+      "antlers",
+      "canvas",
+      "monochrome",
+      "black and white",
+      "sketch"
+    ],
+    "embedding_detection_enabled": true
+  }
+}

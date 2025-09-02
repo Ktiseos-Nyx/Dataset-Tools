@@ -14,6 +14,8 @@ import logging
 from pathlib import Path
 from typing import Any
 
+from .comfyui_node_dictionary_manager import ComfyUINodeDictionaryManager
+
 # Assume utils is in a sibling directory or accessible via python path
 
 # Type aliases
@@ -30,6 +32,10 @@ class ComfyUIWorkflowAnalyzer:
         """Initialize the workflow analyzer."""
         self.logger = logger
         self.node_dictionary = self._load_node_dictionary(dictionary_path)
+
+        # Initialize enhanced dictionary manager
+        self.dictionary_manager = ComfyUINodeDictionaryManager(logger, dictionary_path)
+
         # Store workflow data for access during recursive calls
         self.nodes: dict[str, NodeData] = {}
         self.links: list[Link] = []
@@ -98,7 +104,14 @@ class ComfyUIWorkflowAnalyzer:
             if node_type in sampler_types:
                 found_samplers.append(node)
         # Sort by vertical position as a heuristic for execution order
-        return sorted(found_samplers, key=lambda n: n.get("pos", [0, 0])[1])
+        def _get_y(n):
+            pos = n.get("pos")
+            if isinstance(pos, list) and len(pos) > 1:
+                return pos[1]
+            if isinstance(pos, dict):
+                return pos.get(1, 0)
+            return 0
+        return sorted(found_samplers, key=_get_y)
 
     def _analyze_generation_pass(self, sampler_node: NodeData) -> dict[str, Any]:
         """Analyzes a single generation pass starting from a sampler node."""

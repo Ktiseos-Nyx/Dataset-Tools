@@ -9,6 +9,8 @@ import traceback
 from pathlib import Path
 from typing import Any
 
+# Import numpy scorer for enhanced analysis
+from . import numpy_scorer
 from .correct_types import DownField, UpField
 from .logger import info_monitor as nfo
 from .metadata_engine.engine import create_metadata_engine
@@ -46,7 +48,7 @@ def _register_vendored_parsers():
 _register_vendored_parsers()
 
 
-def parse_metadata(file_path_named: str) -> dict[str, Any]:
+def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]:
     """Parses metadata from a given file using the modular metadata engine.
 
     This function initializes the metadata engine, processes the file,
@@ -73,6 +75,40 @@ def parse_metadata(file_path_named: str) -> dict[str, Any]:
         nfo(f"[DT.metadata_parser]: get_parser_for_file returned: {type(result)} - {bool(result)}")
 
         if result and isinstance(result, dict) and result:
+            # This is the robust, architecturally correct fix.
+            # First, ensure the raw_metadata is a dictionary before proceeding.
+            raw_meta = result.get("raw_metadata")
+            if isinstance(raw_meta, str):
+                try:
+                    import json
+                    # First try standard JSON parsing (handles escaped quotes properly)
+                    result["raw_metadata"] = json.loads(raw_meta)
+                    nfo("[DT.metadata_parser]: Successfully parsed raw_metadata string as JSON.")
+                except json.JSONDecodeError as e:
+                    try:
+                        # Fallback: try ast.literal_eval for Python dict strings
+                        import ast
+                        result["raw_metadata"] = ast.literal_eval(raw_meta)
+                        nfo("[DT.metadata_parser]: Successfully parsed raw_metadata string as Python literal.")
+                    except (ValueError, SyntaxError) as e2:
+                        nfo(f"[DT.metadata_parser]: Could not parse raw_metadata string (JSON error: {e}, AST error: {e2})")
+                        # If parsing fails, we cannot proceed with numpy enhancement.
+                        result["raw_metadata"] = {"error": "unparseable_string", "original_string": raw_meta}
+
+            # Apply numpy enhancement to ALL parsing results (no longer conditional)
+            try:
+                if status_callback:
+                    status_callback("Analyzing workflow with numpy enhancement...")
+                nfo("[DT.metadata_parser]: Applying numpy enhancement to all parsing results")
+                enhanced_result = numpy_scorer.enhance_result(result, file_path_named, status_callback)
+                result = enhanced_result
+                if status_callback:
+                    status_callback("Numpy enhancement completed")
+                nfo(f"[DT.metadata_parser]: Numpy enhancement completed. Enhanced: {enhanced_result.get('numpy_analysis', {}).get('enhancement_applied', False)}")
+            except Exception as numpy_error:
+                nfo(f"[DT.metadata_parser]: Numpy enhancement failed: {numpy_error}, using original result")
+                # Continue with original result if numpy fails
+
             # Transform the engine result to UI format
             _transform_engine_result_to_ui_dict(result, final_ui_dict)
             potential_ai_parsed = True

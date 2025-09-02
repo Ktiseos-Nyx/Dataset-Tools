@@ -20,6 +20,7 @@ def format_metadata_for_display(metadata_dict: dict[str, Any] | None) -> dict[st
             "positive": "",
             "negative": "",
             "details": "Info/Error:\nNo metadata to display.",
+            "parameters": "",
         }
 
     # Check for empty/error states - handle both old and new formats
@@ -32,6 +33,7 @@ def format_metadata_for_display(metadata_dict: dict[str, Any] | None) -> dict[st
                 "positive": "",
                 "negative": "",
                 "details": f"Info/Error:\n{error_msg}",
+                "parameters": "",
             }
 
         # New format: info
@@ -42,13 +44,20 @@ def format_metadata_for_display(metadata_dict: dict[str, Any] | None) -> dict[st
                 "positive": "",
                 "negative": "",
                 "details": f"Info/Error:\n{error_msg}",
+                "parameters": "",
             }
 
     # If we are here, metadata_dict is valid.
     positive, negative = _format_prompts(metadata_dict)
     details = _build_details_string(metadata_dict)
+    parameters = _format_parameters(metadata_dict)
 
-    return {"positive": positive, "negative": negative, "details": details}
+    return {
+        "positive": positive,
+        "negative": negative,
+        "details": details,
+        "parameters": parameters
+    }
 
 
 # --- Private Helper Functions for this Module ---
@@ -70,6 +79,31 @@ def _format_prompts(metadata_dict: dict[str, Any]) -> tuple[str, str]:
     positive = str(metadata_dict.get("prompt", "")).strip()
     negative = str(metadata_dict.get("negative_prompt", "")).strip()
     return positive, negative
+
+
+
+def _format_parameters(metadata_dict: dict[str, Any]) -> str:
+    """Extract and format parameters field for display."""
+    parameters = metadata_dict.get(DownField.GENERATION_DATA.value)
+    if not parameters:
+        return ""
+
+    if isinstance(parameters, dict):
+        # Format the dictionary for display
+        parts = []
+        for key, value in sorted(parameters.items()):
+            if isinstance(value, (dict, list)):
+                # Pretty format JSON-like structures
+                import json
+                try:
+                    formatted_value = json.dumps(value, indent=2, ensure_ascii=False)
+                    parts.append(f"{key}:\n{formatted_value}")
+                except (TypeError, ValueError):
+                    parts.append(f"{key}: {value!s}")
+            else:
+                parts.append(f"{key}: {value}")
+        return "\n\n".join(parts)
+    return str(parameters)
 
 
 def _build_details_string(metadata_dict: dict[str, Any]) -> str:

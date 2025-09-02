@@ -1,0 +1,255 @@
+{
+  "parser_name": "SwarmUI",
+  "priority": 160,
+  "description": "Stable Swarm UI - Advanced diffusion interface with extensive parameter control",
+  "version": "1.0",
+  "maintainer": "DuskFall Crew",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have valid JSON in either PNG parameters chunk or EXIF UserComment",
+      "operator": "OR",
+      "rules": [
+        {
+          "operator": "AND",
+          "rules": [
+            {
+              "source_type": "pil_info_key",
+              "source_key": "parameters",
+              "operator": "is_valid_json"
+            },
+            {
+              "operator": "OR",
+              "rules": [
+                {
+                  "source_type": "pil_info_key",
+                  "source_key": "parameters",
+                  "operator": "contains",
+                  "value": "comfyuisampler"
+                },
+                {
+                  "source_type": "pil_info_key",
+                  "source_key": "parameters",
+                  "operator": "contains",
+                  "value": "autowebuisampler"
+                },
+                {
+                  "source_type": "pil_info_key",
+                  "source_key": "parameters",
+                  "operator": "contains",
+                  "value": "cfgscale"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "operator": "AND",
+          "rules": [
+            {
+              "source_type": "exif_user_comment",
+              "operator": "is_valid_json"
+            },
+            {
+              "operator": "OR",
+              "rules": [
+                {
+                  "source_type": "exif_user_comment",
+                  "operator": "contains",
+                  "value": "comfyuisampler"
+                },
+                {
+                  "source_type": "exif_user_comment",
+                  "operator": "contains",
+                  "value": "autowebuisampler"
+                },
+                {
+                  "source_type": "exif_user_comment",
+                  "operator": "contains",
+                  "value": "cfgscale"
+                },
+                {
+                  "source_type": "exif_user_comment",
+                  "operator": "contains",
+                  "value": "sui_image_params"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Exclude known non-SwarmUI software",
+      "operator": "NOT",
+      "rules": [
+        {
+          "operator": "OR",
+          "rules": [
+            {
+              "source_type": "exif_software",
+              "operator": "regex_match",
+              "regex_patterns": ["adobe|photoshop|gimp|paint\\.net|affinity|canva|figma|sketch|procreate|clip studio"]
+            },
+            {
+              "source_type": "png_chunk",
+              "source_key": "workflow",
+              "operator": "exists"
+            },
+            {
+              "source_type": "exif_user_comment",
+              "operator": "contains",
+              "value": "\"class_type\""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "parameters"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        },
+        {
+          "type": "extract_nested_key",
+          "key": "sui_image_params",
+          "fallback_to_root": true
+        }
+      ]
+    },
+    "extraction_strategy": "json_field_extraction",
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "direct_json_field",
+        "field_name": "prompt",
+        "value_type": "string"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "direct_json_field",
+        "field_name": "negativeprompt",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "direct_json_field",
+        "field_name": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "direct_json_field",
+        "field_name": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "direct_json_field",
+        "field_name": "cfgscale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "direct_json_field",
+        "field_name": "width",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "direct_json_field",
+        "field_name": "height",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "direct_json_field",
+        "field_name": "model",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "swarmui_extract_sampler",
+        "comfyui_field": "comfyuisampler",
+        "autoweb_field": "autowebuisampler",
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "tool": "StableSwarmUI",
+      "parser_version": "1.0_json_ruleset",
+      "detection_confidence": "high",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "model": "$parameters.model",
+        "sampler_name": "$parameters.sampler_name"
+      },
+      "swarmui_specific": {
+        "supports_comfyui_backend": true,
+        "supports_autoweb_backend": true,
+        "advanced_parameter_control": true
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true,
+        "unicode_decoding_enhanced": true
+      }
+    }
+  },
+  "engineering_notes": {
+    "design_goals": [
+      "Support SwarmUI's dual ComfyUI/AutoWebUI backend architecture",
+      "Handle nested JSON structures with sui_image_params",
+      "Reliable detection using SwarmUI-specific parameter names",
+      "Unicode decoding compatibility for EXIF UserComment fields"
+    ],
+    "technical_features": [
+      "Dual sampler support (comfyuisampler/autowebuisampler)",
+      "Nested JSON extraction with fallback to root",
+      "SwarmUI-specific parameter naming (cfgscale vs cfg_scale)",
+      "Enhanced Unicode decoding for metadata extraction"
+    ],
+    "implementation": [
+      "Works with enhanced Unicode decoding in image_metadata_reader.py",
+      "Complements existing SwarmUI Python parser",
+      "Standardized JSON-based parameter extraction",
+      "Future-proof for SwarmUI feature additions"
+    ]
+  },
+  "supported_features": [
+    "ComfyUI backend workflows",
+    "AutoWebUI backend workflows",
+    "Custom parameter configurations",
+    "Advanced sampling techniques",
+    "Multi-backend compatibility"
+  ],
+  "status": "production_ready",
+  "creation_date": "2025-08-26",
+  "notes": [
+    "Created to complement SwarmUI Python parser with JSON-based rule definitions",
+    "Enhanced with Unicode decoding improvements for better metadata extraction",
+    "Supports SwarmUI's unique dual-backend architecture"
+  ]
+}

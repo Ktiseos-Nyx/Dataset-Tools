@@ -47,6 +47,15 @@
         }
       ]
     },
+    "text_node_fields": {
+        "Note": "text",
+        "ShowText|pysssss": "text",
+        "String Literal": "string",
+        "CR Text": "text",
+        "SeargeTextInputV2": "text",
+        "ZenkaiPromptV2": "text",
+        "DF_Text_Box": "text"
+    },
     "fields": [
       {
         "target_key": "prompt",
@@ -75,6 +84,18 @@
           "CLIPTextEncode",
           "BNK_CLIPTextEncodeAdvanced"
         ]
+      },
+      {
+        "target_key": "prompt",
+        "method": "comfyui_simple_dfs_prompt",
+        "comment": "DFS fallback for complex workflows (FLUX, SDXL, custom routing)",
+        "target_input": "positive"
+      },
+      {
+        "target_key": "negative_prompt", 
+        "method": "comfyui_simple_dfs_prompt",
+        "comment": "DFS fallback for complex workflows (FLUX, SDXL, custom routing)",
+        "target_input": "negative"
       },
       {
         "target_key": "parameters.seed",

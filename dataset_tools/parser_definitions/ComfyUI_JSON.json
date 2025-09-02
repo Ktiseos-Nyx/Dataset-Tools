@@ -1,0 +1,69 @@
+{
+  "parser_name": "ComfyUI_JSON",
+  "priority": 150,
+  "description": "ComfyUI parser specifically for standalone JSON workflow files",
+  "version": "1.0",
+  "maintainer": "Claude Code",
+  "target_file_types": [
+    "JSON"
+  ],
+  "tool_name": "ComfyUI",
+  "detection_rules": [
+    {
+      "comment": "Check if root JSON contains ComfyUI workflow structure",
+      "source_type": "parsed_root_json_object",
+      "operator": "has_keys",
+      "value": ["nodes", "links"]
+    },
+    {
+      "comment": "Verify nodes array contains ComfyUI node types",
+      "operator": "OR",
+      "rules": [
+        {
+          "source_type": "parsed_root_json_object",
+          "operator": "contains",
+          "value": "CLIPTextEncode"
+        },
+        {
+          "source_type": "parsed_root_json_object", 
+          "operator": "contains",
+          "value": "KSampler"
+        },
+        {
+          "source_type": "parsed_root_json_object",
+          "operator": "contains",
+          "value": "VAEDecode"
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "parsed_root_json_object"
+        }
+      ]
+    },
+    "extraction_strategy": "comfyui_workflow_parsing",
+    "format_description": "ComfyUI workflow stored as standalone JSON file",
+    "fields": [
+      {
+        "target_key": "prompt", 
+        "method": "comfyui_extract_prompt_from_workflow"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_extract_negative_prompt_from_workflow"
+      },
+      {
+        "target_key": "parameters",
+        "method": "comfyui_extract_workflow_parameters"
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
+      }
+    ]
+  }
+}

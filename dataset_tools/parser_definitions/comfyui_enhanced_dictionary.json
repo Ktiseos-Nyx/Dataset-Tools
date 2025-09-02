@@ -1,0 +1,132 @@
+{
+  "parser_name": "ComfyUI Enhanced Dictionary",
+  "priority": 200,
+  "description": "ComfyUI workflows using intelligent dictionary-based node extraction with comprehensive node coverage and priority-based parameter extraction",
+  "version": "2.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain recognizable ComfyUI node types",
+      "source_type": "pil_info_key",
+      "source_key_options": [
+        "workflow",
+        "prompt"
+      ],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "CLIPTextEncode",
+        "CheckpointLoaderSimple",
+        "KSampler",
+        "UNETLoader",
+        "SaveImage",
+        "SamplerCustomAdvanced",
+        "ModelSamplingFlux",
+        "FluxGuidance",
+        "VAEDecode",
+        "EmptyLatentImage"
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfyui_smart_extract_prompt",
+        "target_field": "prompt"
+      },
+      {
+        "target_key": "negative_prompt", 
+        "method": "comfyui_smart_extract_negative_prompt",
+        "target_field": "negative_prompt"
+      },
+      {
+        "target_key": "parameters",
+        "method": "comfyui_smart_extract_parameters",
+        "target_field": "parameters"
+      },
+      {
+        "target_key": "model_info",
+        "method": "comfyui_smart_extract_model_info",
+        "target_field": "model_info"
+      },
+      {
+        "target_key": "workflow_analysis",
+        "method": "comfyui_analyze_workflow_intelligence",
+        "target_field": "workflow_analysis"
+      },
+      {
+        "target_key": "extraction_report",
+        "method": "comfyui_get_extraction_report",
+        "target_field": "extraction_report"
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI Enhanced Dictionary",
+      "tool": "ComfyUI",
+      "format": "Dictionary-Enhanced Workflow Analysis",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": "$parameters",
+      "model_info": "$model_info",
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 200,
+        "confidence": "very_high",
+        "extraction_method": "dictionary_enhanced",
+        "analysis": "$workflow_analysis",
+        "coverage_report": "$extraction_report"
+      }
+    }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "comprehensive"
+  },
+  "notes": [
+    "Enhanced ComfyUI parser using comprehensive node dictionary v1.0",
+    "Provides intelligent node detection and priority-based parameter extraction",
+    "Covers 36+ node types across 13 categories with precise extraction patterns", 
+    "Priority 200 puts it above all other ComfyUI parsers for maximum coverage",
+    "Addresses 'zero candidates extracted' and 'missing node types' issues",
+    "Includes comprehensive workflow analysis and extraction reporting",
+    "Fallback to traversal extraction for unknown nodes"
+  ]
+}

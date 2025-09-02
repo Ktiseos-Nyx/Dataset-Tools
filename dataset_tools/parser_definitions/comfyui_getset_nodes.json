@@ -1,0 +1,126 @@
+{
+  "parser_name": "ComfyUI GetNode/SetNode Parser",
+  "priority": 60,
+  "description": "Extracts prompts from ComfyUI GetNode/SetNode routing systems",
+  "version": "1.0", 
+  "maintainer": "DuskFall Crew",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+  "detection_rules": [
+    {
+      "comment": "Must have ComfyUI workflow with GetNode/SetNode patterns",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "json_path_exists_boolean",
+          "json_path": "$.nodes[?(@.class_type =~ /GetNode|SetNode/i)]"
+        },
+        {
+          "comment": "Should have at least 5 GetNode/SetNode instances (complex routing)",
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "json_path_count_gte",
+          "json_path": "$.nodes[?(@.class_type =~ /GetNode|SetNode/i)]",
+          "count": 5
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "png_chunk", 
+          "source_key": "workflow"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "comment": "Extract text from SetNode values using existing method",
+        "target_key": "prompt",
+        "method": "comfyui_find_node_input_or_widget_value",
+        "node_criteria": [
+          {"class_type": "SetNode"},
+          {"class_type": "GetNode"}
+        ],
+        "input_field": "widgets_values",
+        "widget_index": 0,
+        "value_type": "string"
+      },
+      {
+        "comment": "Find seed from sampler nodes",
+        "target_key": "parameters.seed",
+        "method": "comfyui_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "SamplerCustomAdvanced"],
+        "input_field": "seed",
+        "value_type": "integer"
+      },
+      {
+        "comment": "Find CFG from sampler nodes",
+        "target_key": "parameters.cfg_scale", 
+        "method": "comfyui_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "SamplerCustomAdvanced"],
+        "input_field": "cfg",
+        "value_type": "float"
+      },
+      {
+        "comment": "Find steps from sampler nodes",
+        "target_key": "parameters.steps",
+        "method": "comfyui_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler", "SamplerCustomAdvanced"],
+        "input_field": "steps",
+        "value_type": "integer"
+      }
+    ],
+    "output_template": {
+      "tool": "ComfyUI (Routing Parser)",
+      "parser_version": "1.0_getset_routing",
+      "detection_confidence": "medium",
+      "prompt": "$prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "cfg_scale": "$parameters.cfg_scale",
+        "steps": "$parameters.steps"
+      },
+      "workflow_info": {
+        "parser_type": "routing_node_extraction",
+        "notes": "Extracted through GetNode/SetNode routing analysis",
+        "routing_complexity": "high"
+      },
+      "raw_workflow": "$input_data"
+    }
+  },
+  "engineering_notes": {
+    "design_goals": [
+      "Handle complex GetNode/SetNode routing patterns",
+      "Trace parameter flow through routing nodes",
+      "Extract prompt text from routing values",
+      "Support advanced ComfyUI workflow architectures"
+    ],
+    "technical_features": [
+      "Path tracing through routing nodes",
+      "Text extraction from widget values",
+      "Parameter flow analysis to samplers",
+      "Complex workflow pattern recognition"
+    ],
+    "challenges": [
+      "Routing can be very complex and nested",
+      "GetNode/SetNode can contain any data type",
+      "May need custom extraction methods"
+    ]
+  },
+  "status": "experimental",
+  "creation_date": "2025-08-26"
+}

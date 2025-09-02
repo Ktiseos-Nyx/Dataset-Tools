@@ -26,7 +26,7 @@
     },
     {
       "comment": "Rule 2: Must contain SDXL text encoders",
-      "source_type": "pil_info_key_json_path_query",
+      "source_type": "pil_info_key",
       "source_key_options": [
         "workflow",
         "prompt"
@@ -40,7 +40,7 @@
     },
     {
       "comment": "Rule 3: Must contain PrimitiveNode widgets",
-      "source_type": "pil_info_key_json_path_query",
+      "source_type": "pil_info_key",
       "source_key_options": [
         "workflow",
         "prompt"
@@ -53,7 +53,7 @@
     },
     {
       "comment": "Rule 4: Must contain SDXL checkpoint or model loader",
-      "source_type": "pil_info_key_json_path_query",
+      "source_type": "pil_info_key",
       "source_key_options": [
         "workflow",
         "prompt"
@@ -218,7 +218,7 @@
     ],
     "output_template": {
       "parser_name_from_engine": "SDXL PrimitiveNode Workflow",
-      "tool": "ComfyUI (SDXL)",
+      "tool": "ComfyUI SDXL",
       "format": "SDXL Base+Refiner PrimitiveNode Workflow",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",

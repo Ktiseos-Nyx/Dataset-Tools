@@ -120,179 +120,145 @@ class ComfyUITraversalExtractor:
         return None
 
     def trace_text_flow(self, data: dict | list, start_node_id: str) -> str:
-        """Trace text flow from a node backwards through the workflow.
+        """Trace text flow from a node backwards, collecting all text fragments.
 
         Args:
             data: The full workflow data (containing nodes and links).
             start_node_id: ID of the node to start tracing from.
 
         Returns:
-            The traced text content or an empty string if not found.
+            The combined text content from all traced branches.
 
         """
         nodes = self.get_nodes_from_data(data)
         visited = set()
 
-        def trace_recursive(node_id: str, depth: int = 0) -> str:
-            if depth > 20 or node_id in visited:  # Prevent infinite loops
-                return ""
+        def trace_recursive(node_id: str, depth: int = 0) -> list[str]:
+            """Recursively trace inputs, returning a list of all found text fragments."""
+            if depth > 20 or node_id in visited:
+                return []
 
             visited.add(node_id)
             node = self.get_node_by_id(nodes, node_id)
             if not node:
-                return ""
+                return []
 
             node_type = node.get("class_type", node.get("type", ""))
             self.logger.debug(f"[TRAVERSAL] Tracing node {node_id} (Type: {node_type})")
 
-            # Base Case: If this node is a primitive string holder, return its value.
+            # Base Case: If this node holds a primitive string value.
             if "Primitive" in node_type and node.get("widgets_values"):
                 text_content = node["widgets_values"][0]
-                self.logger.debug(f"[TRAVERSAL] Found Primitive text: {text_content[:50]}...")
-                return text_content
+                if text_content and isinstance(text_content, str):
+                    self.logger.debug(f"[TRAVERSAL] Found Primitive text: {text_content[:50]}...")
+                    return [text_content]
 
-            # Handle text encoder nodes
-            if any(
-                encoder_type in node_type
-                for encoder_type in [
-                    "CLIPTextEncode",
-                    "T5TextEncode",
-                    "ImpactWildcardEncode",
-                    "BNK_CLIPTextEncodeAdvanced",
-                    "CLIPTextEncodeAdvanced",
-                    "PixArtT5TextEncode",
-                    "DPRandomGenerator",
-                ]
-            ):
+            # Handle various text encoder nodes.
+            text_encoder_types = [
+                "CLIPTextEncode", "T5TextEncode", "ImpactWildcardEncode",
+                "BNK_CLIPTextEncodeAdvanced", "CLIPTextEncodeAdvanced",
+                "PixArtT5TextEncode", "DPRandomGenerator",
+            ]
+            if any(encoder_type in node_type for encoder_type in text_encoder_types):
                 widgets = node.get("widgets_values", [])
-                if widgets and isinstance(widgets[0], str):
+                if widgets and isinstance(widgets[0], str) and widgets[0].strip():
                     text_content = widgets[0]
                     self.logger.debug(f"[TRAVERSAL] Found Text Encoder text: {text_content[:50]}...")
-                    return text_content
+                    return [text_content]
 
-            # Handle modern wildcard and prompt processing nodes
+            # Handle specific text processing nodes.
             if "ImpactWildcardProcessor" in node_type:
                 inputs = node.get("inputs", {})
                 if isinstance(inputs, dict):
-                    populated_text = inputs.get("populated_text", "")
-                    if isinstance(populated_text, str) and populated_text.strip():
-                        self.logger.debug(
-                            f"[TRAVERSAL] Found ImpactWildcardProcessor populated_text: {populated_text[:50]}..."
-                        )
-                        return populated_text
-                    wildcard_text = inputs.get("wildcard_text", "")
-                    if isinstance(wildcard_text, str) and wildcard_text.strip():
-                        self.logger.debug(
-                            f"[TRAVERSAL] Found ImpactWildcardProcessor wildcard_text: {wildcard_text[:50]}..."
-                        )
-                        return wildcard_text
+                    for key in ["populated_text", "wildcard_text"]:
+                        text = inputs.get(key, "")
+                        if isinstance(text, str) and text.strip():
+                            self.logger.debug(f"[TRAVERSAL] Found {node_type} text: {text[:50]}...")
+                            return [text]
 
             if "AutoNegativePrompt" in node_type:
                 inputs = node.get("inputs", {})
-                if isinstance(inputs, dict):
-                    base_negative = inputs.get("base_negative", "")
-                    if isinstance(base_negative, str) and base_negative.strip():
-                        self.logger.debug(
-                            f"[TRAVERSAL] Found AutoNegativePrompt base_negative: {base_negative[:50]}..."
-                        )
-                        return base_negative
+                if isinstance(inputs, dict) and "base_negative" in inputs:
+                    text = inputs["base_negative"]
+                    if isinstance(text, str) and text.strip():
+                        self.logger.debug(f"[TRAVERSAL] Found AutoNegativePrompt text: {text[:50]}...")
+                        return [text]
 
-            # Handle ConcatStringSingle nodes
+            # This is the main recursive logic.
+            # It collects text from all branches instead of returning early.
+            all_traced_fragments = []
+
+            # Handle ConcatStringSingle nodes by explicitly ordering inputs.
             if "ConcatStringSingle" in node_type:
-                concatenated_text = ""
                 for input_name in ["string_a", "string_b"]:
                     link_info = self.follow_input_link(nodes, node_id, input_name)
                     if link_info:
                         source_node_id, _ = link_info
-                        traced_part = trace_recursive(source_node_id, depth + 1)
-                        concatenated_text += traced_part
-                self.logger.debug(
-                    f"[TRAVERSAL] Found ConcatStringSingle concatenated_text: {concatenated_text[:50]}..."
-                )
-                return concatenated_text
+                        all_traced_fragments.extend(trace_recursive(source_node_id, depth + 1))
+                if all_traced_fragments:
+                    self.logger.debug(f"[TRAVERSAL] Concat result: {' '.join(all_traced_fragments)[:50]}...")
+                    return all_traced_fragments
 
-            # Handle intermediate nodes that pass through data
-            if node_type in [
-                "ConditioningConcat",
-                "ConditioningCombine",
-                "ConditioningAverage",
-                "ConditioningSetArea",
-                "ConditioningSetMask",
-                "ConditioningMultiply",
-                "ConditioningSubtract",
-                "ConditioningAddConDelta",
-                "CFGlessNegativePrompt",
-                "Reroute",
-                "LoraLoader",
-                "CheckpointLoaderSimple",
-                "UNETLoader",
-                "VAELoader",
-                "ModelSamplingFlux",
-                "BasicGuider",
-                "SamplerCustomAdvanced",
-                "FluxGuidance",
-                "ConditioningRecastFP64",
-                "ImpactConcatConditionings",
-                "ImpactCombineConditionings",
-                "ControlNetApplyAdvanced",
-                "ControlNetApply",
+            # Generic handling for intermediate nodes.
+            intermediate_node_types = [
+                "ConditioningConcat", "ConditioningCombine", "ConditioningAverage",
+                "ConditioningSetArea", "ConditioningSetMask", "ConditioningMultiply",
+                "ConditioningSubtract", "ConditioningAddConDelta", "CFGlessNegativePrompt",
+                "Reroute", "LoraLoader", "CheckpointLoaderSimple", "UNETLoader",
+                "VAELoader", "ModelSamplingFlux", "BasicGuider", "SamplerCustomAdvanced",
+                "FluxGuidance", "ConditioningRecastFP64", "ImpactConcatConditionings",
+                "ImpactCombineConditionings", "ControlNetApplyAdvanced", "ControlNetApply",
                 "ControlNetApplySD3",
-            ]:
-                self.logger.debug(
-                    f"[TRAVERSAL] Encountered intermediate node type: {node_type}. Attempting to follow inputs."
-                )
-                for input_name_candidate in [
-                    "conditioning",
-                    "model",
-                    "clip",
-                    "samples",
-                    "latent_image",
-                    "string_a",
-                    "string_b",
-                ]:
-                    link_info = self.follow_input_link(nodes, node_id, input_name_candidate)
+            ]
+            if node_type in intermediate_node_types:
+                self.logger.debug(f"[TRAVERSAL] Following inputs for intermediate node: {node_type}")
+                # Prioritize known input names for text-related data.
+                input_candidates = ["conditioning", "string_a", "string_b", "model", "clip", "samples", "latent_image"]
+                for input_name in input_candidates:
+                    link_info = self.follow_input_link(nodes, node_id, input_name)
                     if link_info:
                         source_node_id, _ = link_info
-                        self.logger.debug(
-                            f"[TRAVERSAL] Following input '{input_name_candidate}' from {node_id} to {source_node_id}"
-                        )
-                        traced_text = trace_recursive(source_node_id, depth + 1)
-                        if traced_text:
-                            return traced_text
+                        self.logger.debug(f"[TRAVERSAL] Following '{input_name}' from {node_id} to {source_node_id}")
+                        all_traced_fragments.extend(trace_recursive(source_node_id, depth + 1))
 
+                # Also check generic inputs just in case.
                 node_inputs = node.get("inputs", [])
                 if isinstance(node_inputs, list):
-                    for input_item in node_inputs:
-                        if isinstance(input_item, dict):
-                            input_link_id = input_item.get("link")
-                            if input_link_id:
-                                source_node_id = self._find_source_node_for_link(data, input_link_id)
-                                if source_node_id:
-                                    self.logger.debug(
-                                        f"[TRAVERSAL] Following generic input link {input_link_id} from {node_id} to {source_node_id}"
-                                    )
-                                    traced_text = trace_recursive(source_node_id, depth + 1)
-                                    if traced_text:
-                                        return traced_text
+                    for item in node_inputs:
+                        if isinstance(item, dict) and item.get("link"):
+                            source_node_id = self._find_source_node_for_link(data, item["link"])
+                            if source_node_id:
+                                self.logger.debug(f"[TRAVERSAL] Following generic link from {node_id} to {source_node_id}")
+                                all_traced_fragments.extend(trace_recursive(source_node_id, depth + 1))
 
-            # Fallback: Check for direct 'text' input or widget values
-            inputs = node.get("inputs", {})
-            if isinstance(inputs, dict) and "text" in inputs:
-                text_value = inputs["text"]
-                if isinstance(text_value, str):
-                    self.logger.debug(f"[TRAVERSAL] Found direct 'text' input: {text_value[:50]}...")
-                    return text_value
+            # Fallback for nodes that might have text in widgets or a direct 'text' input.
+            if not all_traced_fragments:
+                inputs = node.get("inputs", {})
+                if isinstance(inputs, dict) and "text" in inputs:
+                    text_value = inputs["text"]
+                    if isinstance(text_value, str) and text_value.strip():
+                        self.logger.debug(f"[TRAVERSAL] Found direct 'text' input: {text_value[:50]}...")
+                        all_traced_fragments.append(text_value)
 
-            widgets = node.get("widgets_values", [])
-            if widgets and isinstance(widgets[0], str):
-                text_content = widgets[0]
-                self.logger.debug(f"[TRAVERSAL] Found widget value: {text_content[:50]}...")
-                return text_content
+                widgets = node.get("widgets_values", [])
+                if widgets and isinstance(widgets[0], str) and widgets[0].strip():
+                    text_content = widgets[0]
+                    self.logger.debug(f"[TRAVERSAL] Found widget value: {text_content[:50]}...")
+                    all_traced_fragments.append(text_content)
 
-            self.logger.debug(f"[TRAVERSAL] No text found in node {node_id} after checking all methods.")
-            return ""
+            if not all_traced_fragments:
+                self.logger.debug(f"[TRAVERSAL] No text found in node {node_id}.")
 
-        return trace_recursive(start_node_id)
+            return all_traced_fragments
+
+        # Start the recursion.
+        text_fragments = trace_recursive(start_node_id)
+
+        # De-duplicate while preserving order as much as possible.
+        seen = set()
+        unique_fragments = [x for x in text_fragments if not (x in seen or seen.add(x))]
+
+        return " ".join(unique_fragments)
 
     def _find_source_node_for_link(self, data: dict | list, link_id: int) -> str | None:
         """Find the source node ID for a given link ID using global link data."""

@@ -1,0 +1,93 @@
+{
+  "parser_name": "ComfyUI Note Nodes Parser",
+  "priority": 70,
+  "description": "Extracts prompts from ComfyUI Note, MarkdownNote, and annotation nodes",
+  "version": "1.0",
+  "maintainer": "DuskFall Crew",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+  "detection_rules": [
+    {
+      "comment": "Must have ComfyUI workflow with Note-style nodes containing text",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "json_path_exists_boolean",
+          "json_path": "$.nodes[?(@.class_type =~ /Note|MarkdownNote/i)]"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "json_path_exists_boolean", 
+          "json_path": "$.nodes[?(@.widgets_values && @.widgets_values[0] && @.widgets_values[0] =~ /.{10,}/)]"
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "comment": "Extract text from Note nodes using existing method",
+        "target_key": "prompt",
+        "method": "comfyui_find_node_input_or_widget_value",
+        "node_criteria": [
+          {"class_type": "Note"},
+          {"class_type": "MarkdownNote"},
+          {"class_type": "Notepad"},
+          {"class_type": "TextNote"},
+          {"class_type": "CommentBox"}
+        ],
+        "input_field": "widgets_values",
+        "widget_index": 0,
+        "value_type": "string"
+      }
+    ],
+    "output_template": {
+      "tool": "ComfyUI (Note Parser)",
+      "parser_version": "1.0_note_extraction",
+      "detection_confidence": "medium",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "workflow_info": {
+        "parser_type": "note_annotation_extraction",
+        "notes": "Extracted from Note/MarkdownNote nodes in workflow"
+      },
+      "raw_workflow": "$input_data"
+    }
+  },
+  "engineering_notes": {
+    "design_goals": [
+      "Extract prompts from workflow annotation nodes",
+      "Handle Note and MarkdownNote variations",
+      "Filter for meaningful text content (min length)",
+      "Separate positive/negative based on keywords"
+    ],
+    "technical_features": [
+      "Multiple note node type support",
+      "Text length filtering to avoid empty notes",
+      "Keyword-based negative prompt detection",
+      "Robust workflow structure parsing"
+    ]
+  },
+  "status": "experimental",
+  "creation_date": "2025-08-26"
+}

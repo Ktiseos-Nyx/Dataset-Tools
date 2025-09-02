@@ -19,6 +19,11 @@ from PyQt6 import QtWidgets as Qw
 from PyQt6.QtCore import QObject, QSettings, QThread, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
 
+from ..background_operations import (  # pylint: disable=relative-beyond-top-level
+    TaskManager,
+    parse_metadata_in_background,
+)
+
 # from PyQt6.QtWidgets import QApplication
 from ..correct_types import EmptyField  # pylint: disable=relative-beyond-top-level
 from ..correct_types import ExtensionType as Ext  # pylint: disable=relative-beyond-top-level
@@ -212,6 +217,9 @@ class MainWindow(Qw.QMainWindow):
         self.menu_manager = MenuManager(self)
         self.layout_manager = LayoutManager(self, self.settings)
         self.metadata_display = MetadataDisplayManager(self)
+
+        # Background task manager for threading operations
+        self.task_manager = TaskManager(self)
 
     def _setup_window_properties(self) -> None:
         """Configure basic window properties."""
@@ -702,14 +710,21 @@ class MainWindow(Qw.QMainWindow):
         """Load metadata for a file and display it."""
         try:
             metadata_dict = self.load_metadata(file_name)
-            self.metadata_display.display_metadata(metadata_dict)
 
-            if metadata_dict:
+            # If background processing is enabled, metadata_dict will be None
+            # and the display will be updated asynchronously via callbacks
+            if metadata_dict is not None:
+                self.metadata_display.display_metadata(metadata_dict)
+
                 placeholder_key = EmptyField.PLACEHOLDER.value
                 if len(metadata_dict) == 1 and placeholder_key in metadata_dict:
                     nfo("No meaningful metadata for %s", file_name)
             else:
-                nfo("No metadata for %s (load_metadata returned None)", file_name)
+                # Check if we're using background processing
+                use_background = self.settings.value("use_background_processing", False, type=bool)
+                if not use_background:
+                    nfo("No metadata for %s (load_metadata returned None)", file_name)
+                # If background processing, don't log - it will be handled async
 
         except Exception as e:
             nfo(
@@ -742,11 +757,54 @@ class MainWindow(Qw.QMainWindow):
         full_file_path = os.path.join(self.current_folder, file_name)
         nfo("[UI] Loading metadata from: %s", full_file_path)
 
+        # Check if background processing is enabled
+        use_background = self.settings.value("use_background_processing", False, type=bool)
+
+        if use_background:
+            # Use background processing for complex workflows
+            self._load_metadata_in_background(full_file_path, file_name)
+            return None  # Will be handled asynchronously
+        # Use synchronous processing (original behavior)
         try:
-            return parse_metadata(full_file_path)
+            return parse_metadata(full_file_path, self.show_status_message)
         except OSError as e:
             nfo("Error parsing metadata for %s: %s", full_file_path, e, exc_info=True)
             return None
+
+    def _load_metadata_in_background(self, full_file_path: str, file_name: str) -> None:
+        """Load metadata in background thread."""
+        def on_progress(percentage: int, message: str):
+            if percentage >= 0:
+                nfo(f"[Background] Progress: {percentage}% - {message}")
+            else:
+                nfo(f"[Background] Status: {message}")
+
+            # Update status bar if we have a message
+            if message:
+                self.show_status_message(message)
+
+        def on_completion(result: dict):
+            nfo(f"[Background] Metadata loading completed for {file_name}")
+            # Display the result
+            self.metadata_display.display_metadata(result)
+
+        def on_error(error: str):
+            nfo(f"[Background] Metadata loading failed for {file_name}: {error}")
+            error_dict = {EmptyField.PLACEHOLDER.value: {"Error": f"Background parsing failed: {error}"}}
+            self.metadata_display.display_metadata(error_dict)
+
+        # Start the background task
+        task = parse_metadata_in_background(
+            full_file_path,
+            progress_callback=on_progress,
+            completion_callback=on_completion,
+            error_callback=on_error,
+            parent=self,
+        )
+
+        # Track the task with our manager
+        task_id = self.task_manager.start_task(task, f"parse_{file_name}")
+        nfo(f"[Background] Started metadata parsing task: {task_id}")
 
     # ========================================================================
     # IMAGE DISPLAY
@@ -930,6 +988,7 @@ class MainWindow(Qw.QMainWindow):
             "positive_prompt_box",
             "negative_prompt_box",
             "generation_data_box",
+            "parameters_box",
         ]
 
         for box_name in text_boxes:

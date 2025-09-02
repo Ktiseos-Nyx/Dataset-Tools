@@ -18,6 +18,7 @@ from PyQt6.QtWidgets import QApplication
 
 from .file_operations import FileOperations
 from .logger import get_logger
+from .metadata_parser import parse_metadata
 
 log = get_logger(__name__)
 
@@ -221,6 +222,67 @@ class FileLoaderResult:
         return None
 
 
+class MetadataParsingTask(BackgroundTask):
+    """Background task for parsing metadata from a single file.
+    
+    This handles the heavy numpy scoring and workflow analysis without
+    blocking the UI. Perfect for complex ComfyUI workflows that take
+    time to process! 🔍⚡
+    """
+
+    def __init__(self, file_path: str, parent=None):
+        """Initialize the metadata parsing task.
+        
+        Args:
+            file_path: Path to the file to parse
+            parent: Parent QObject
+
+        """
+        super().__init__(parent)
+        self.file_path = file_path
+        self._task_name = "MetadataParsing"
+
+    def run(self) -> None:
+        """Run the metadata parsing task."""
+        try:
+            self.emit_status(f"Loading metadata for {Path(self.file_path).name}...")
+            self.emit_progress(10, "Initializing metadata engine...")
+
+            if self.is_cancelled:
+                return
+
+            # Define a status callback that updates progress
+            def status_callback(message: str):
+                if self.is_cancelled:
+                    return
+
+                # Map status messages to progress percentages
+                progress_map = {
+                    "Analyzing workflow with numpy enhancement...": 50,
+                    "Numpy enhancement completed": 90,
+                }
+
+                progress = progress_map.get(message, -1)
+                if progress > 0:
+                    self.emit_progress(progress, message)
+                else:
+                    self.emit_status(message)
+
+            self.emit_progress(20, "Parsing metadata...")
+
+            # Parse the metadata with our callback
+            result = parse_metadata(self.file_path, status_callback)
+
+            if self.is_cancelled:
+                return
+
+            self.emit_progress(100, "Metadata parsing completed!")
+            self.emit_result(result)
+
+        except Exception as e:
+            self.emit_error(f"Metadata parsing failed: {e}")
+
+
 class MetadataLoaderTask(BackgroundTask):
     """Background task for loading metadata from multiple files.
 
@@ -386,6 +448,44 @@ class TaskManager(QtCore.QObject):
 # ============================================================================
 # CONVENIENCE FUNCTIONS
 # ============================================================================
+
+
+def parse_metadata_in_background(
+    file_path: str,
+    progress_callback: Callable[[int, str], None] | None = None,
+    completion_callback: Callable[[dict], None] | None = None,
+    error_callback: Callable[[str], None] | None = None,
+    parent: QtCore.QObject | None = None,
+) -> MetadataParsingTask:
+    """Convenience function to start metadata parsing in background.
+    
+    Args:
+        file_path: Path to file to parse
+        progress_callback: Optional progress callback (percentage, message)
+        completion_callback: Optional completion callback
+        error_callback: Optional error callback
+        parent: Parent QObject for the task
+    
+    Returns:
+        The MetadataParsingTask instance
+
+    """
+    task = MetadataParsingTask(file_path, parent)
+
+    # Connect callbacks if provided
+    if progress_callback:
+        task.progress_updated.connect(lambda p: progress_callback(p, ""))
+        task.status_updated.connect(lambda s: progress_callback(-1, s))
+
+    if completion_callback:
+        task.task_completed.connect(completion_callback)
+
+    if error_callback:
+        task.error_occurred.connect(error_callback)
+
+    # Start the task
+    task.start()
+    return task
 
 
 def load_files_in_background(

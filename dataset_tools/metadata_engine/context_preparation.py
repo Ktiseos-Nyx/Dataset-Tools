@@ -123,6 +123,12 @@ class ContextDataPreparer:
                 }
             )
 
+            # DEBUG: Log what's in PIL info
+            self.logger.info(f"[CONTEXT_PREP_DEBUG] PIL info keys: {list(img.info.keys()) if img.info else 'NO_INFO'}")
+            if img.info and "parameters" in img.info:
+                param_data = img.info["parameters"]
+                self.logger.info(f"[CONTEXT_PREP_DEBUG] Found 'parameters' in PIL info: {param_data[:200] if len(param_data) > 200 else param_data}")
+
             # Handle extremely large images by stopping early
             if img.width * img.height > MAX_IMAGE_PIXELS:
                 self.logger.warning(
@@ -178,7 +184,7 @@ class ContextDataPreparer:
                     if user_comment and user_comment.strip():
                         context["raw_user_comment_str"] = user_comment.strip()
                         self.logger.info(
-                            f"Successfully decoded UserComment: {len(user_comment)} chars - starts with: {user_comment[:100]}"
+                            f"[CONTEXT_PREP_DEBUG] Successfully decoded UserComment: {len(user_comment)} chars - starts with: {user_comment[:100]}"
                         )
                     else:
                         self.logger.debug("UserComment decoded but empty")
@@ -273,13 +279,18 @@ class ContextDataPreparer:
 
     def _extract_png_chunks(self, context: ContextData) -> None:
         """Extract PNG text chunks from PIL info."""
+        self.logger.info(f"[CONTEXT_PREP_DEBUG] _extract_png_chunks called, pil_info has {len(context.get('pil_info', {}))} items")
+
         for key, val in context["pil_info"].items():
             if isinstance(val, str):
                 context["png_chunks"][key] = val
+                self.logger.info(f"[CONTEXT_PREP_DEBUG] Added PNG chunk: {key} = {val[:100] if len(val) > 100 else val}")
 
         # Ensure UserComment is in png_chunks if it exists
         if "UserComment" in context["pil_info"] and "UserComment" not in context["png_chunks"]:
             context["png_chunks"]["UserComment"] = context["pil_info"]["UserComment"]
+
+        self.logger.info(f"[CONTEXT_PREP_DEBUG] Final png_chunks keys: {list(context['png_chunks'].keys())}")
 
     def _process_as_non_image(self, file_input: FileInput, context: ContextData) -> ContextData | None:
         """Process the input as a non-image file."""

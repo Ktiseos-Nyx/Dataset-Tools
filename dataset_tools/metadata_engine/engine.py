@@ -165,23 +165,29 @@ class MetadataEngine:
             return None
 
         # Prepare context data
-        self.logger.debug("About to call context_preparer.prepare_context")
+        print("DEBUG: About to call context_preparer.prepare_context")
         context_data = self.context_preparer.prepare_context(file_input)
-        self.logger.debug(f"prepare_context returned: {type(context_data)} - {bool(context_data)}")
+        print(f"DEBUG: prepare_context returned: {type(context_data)} - {bool(context_data)}")
         if not context_data:
-            self.logger.debug("Context data is None/empty, returning None")
-            self.logger.warning(f"Failed to prepare context data for {display_name}")
+            print("DEBUG: Context data is None/empty, returning None")
             return None
 
-        self.logger.debug("Context data looks good, continuing to find matching parser")
-        self.logger.debug(f"Context data keys: {list(context_data.keys())}")
-        self.logger.debug(
-            f"raw_user_comment_str: {context_data.get('raw_user_comment_str', 'NOT_FOUND')[:100] if context_data.get('raw_user_comment_str') else 'EMPTY'}"
-        )
+        print("DEBUG: Context data looks good, continuing to find matching parser")
+        print(f"DEBUG: Context data keys: {list(context_data.keys())}")
+        if "pil_info" in context_data:
+            pil_info = context_data["pil_info"]
+            print(f"DEBUG: pil_info type: {type(pil_info)}, content: {pil_info}")
+            if isinstance(pil_info, dict) and "parameters" in pil_info:
+                print(f"DEBUG: Found 'parameters' in pil_info: {pil_info['parameters'][:100] if len(pil_info['parameters']) > 100 else pil_info['parameters']}")
+        print(f"DEBUG: raw_user_comment_str: {context_data.get('raw_user_comment_str', 'NOT_FOUND')[:100] if context_data.get('raw_user_comment_str') else 'EMPTY'}")
+        print(f"DEBUG: File format: {context_data.get('file_format')}, extension: {context_data.get('file_extension')}")
+        print(f"DEBUG: Image size: {context_data.get('width')}x{context_data.get('height')}")
 
         # Find matching parser definition
+        print("DEBUG: About to call _find_matching_parser")
         chosen_parser_def = self._find_matching_parser(context_data)
-        self.logger.debug(f"_find_matching_parser returned: {chosen_parser_def}")
+        print(f"DEBUG: _find_matching_parser returned parser: {chosen_parser_def.get('parser_name', 'NONE') if chosen_parser_def else 'NONE'}")
+        print(f"DEBUG: Parser priority: {chosen_parser_def.get('priority', 'NONE') if chosen_parser_def else 'NONE'}")
         if not chosen_parser_def:
             self.logger.info(f"No suitable parser definition matched for {display_name}")
             return None
@@ -227,7 +233,16 @@ class MetadataEngine:
 
     def _sort_definitions_by_priority(self) -> list[ParserDefinition]:
         """Sort parser definitions by priority (highest first)."""
-        return sorted(self.parser_definitions, key=lambda p: p.get("priority", 0), reverse=True)
+        sorted_defs = sorted(self.parser_definitions, key=lambda p: p.get("priority", 0), reverse=True)
+
+        # Debug: Show A1111 parsers and their order
+        a1111_parsers = [p for p in sorted_defs if "a1111" in p.get("parser_name", "").lower() or "A1111" in p.get("parser_name", "")]
+        if a1111_parsers:
+            self.logger.info("=== A1111 PARSERS PRIORITY ORDER ===")
+            for parser in a1111_parsers:
+                self.logger.info(f"Priority {parser.get('priority', 0)}: {parser.get('parser_name', 'UNKNOWN')}")
+
+        return sorted_defs
 
     def _find_matching_parser(self, context_data: ContextData) -> ParserDefinition | None:
         """Find the first parser definition that matches the context data.
@@ -239,9 +254,21 @@ class MetadataEngine:
             Matching parser definition or None
 
         """
+        self.logger.info("=== PARSER MATCHING PROCESS ===")
         for parser_def in self.sorted_definitions:
+            parser_name = parser_def.get("parser_name", "UNKNOWN")
+            priority = parser_def.get("priority", 0)
+
+            # Only log A1111-related parsers to avoid spam
+            if "a1111" in parser_name.lower():
+                self.logger.info(f"Trying parser: {parser_name} (priority {priority})")
+
             if self._parser_matches_context(parser_def, context_data):
+                if "a1111" in parser_name.lower():
+                    self.logger.info(f"*** MATCHED: {parser_name} ***")
                 return parser_def
+            if "a1111" in parser_name.lower():
+                self.logger.info(f"Failed to match: {parser_name}")
 
         return None
 
@@ -368,25 +395,42 @@ class MetadataEngine:
     def _get_data_from_source(self, source_def: dict[str, Any], context_data: ContextData) -> Any:
         """Get data from a specific source definition."""
         source_type = source_def.get("source_type")
-        source_key = source_def.get("source_key")
 
-        source_map = {
-            "pil_info_key": lambda: context_data.get("pil_info", {}).get(source_key),
+        # Handle single source_key or multiple source_key_options
+        source_keys = []
+        if "source_key" in source_def:
+            source_keys.append(source_def["source_key"])
+        elif "source_key_options" in source_def:
+            source_keys.extend(source_def["source_key_options"])
+
+        # Handle source types that don't require a key
+        keyless_source_map = {
             "exif_user_comment": lambda: context_data.get("raw_user_comment_str"),
             "xmp_string_content": lambda: context_data.get("xmp_string"),
-            "file_content_raw_text": lambda: context_data.get("raw_file_content_text"),
-            "raw_file_content_text": lambda: context_data.get("raw_file_content_text"),  # Add alias
-            "file_content_json_object": lambda: context_data.get("parsed_root_json_object"),
-            "parsed_root_json_object": lambda: context_data.get("parsed_root_json_object"),  # Add alias
-            "direct_context_key": lambda: context_data.get(source_key),  # Add direct context access
-            "png_chunk": lambda: context_data.get("png_chunks", {}).get(source_key),
-            "exif_field": lambda: context_data.get("exif_data", {}).get(source_key),
+            "raw_file_content_text": lambda: context_data.get("raw_file_content_text"),
+            "parsed_root_json_object": lambda: context_data.get("parsed_root_json_object"),
         }
+        if source_type in keyless_source_map:
+            return keyless_source_map[source_type]()
 
-        if source_type in source_map:
-            return source_map[source_type]()
+        # Handle key-based source types, iterating through options if provided
+        if not source_keys:
+            self.logger.debug(f"No source_key(s) for source_type '{source_type}'")
+            return None
 
-        self.logger.warning(f"Unknown source type: {source_type}")
+        for source_key in source_keys:
+            source_map = {
+                "pil_info_key": lambda: context_data.get("pil_info", {}).get(source_key),
+                "direct_context_key": lambda: context_data.get(source_key),
+                "png_chunk": lambda: context_data.get("png_chunks", {}).get(source_key),
+                "exif_field": lambda: context_data.get("exif_data", {}).get(source_key),
+            }
+            if source_type in source_map:
+                data = source_map[source_type]()
+                if data is not None:
+                    return data  # Return the first one found
+
+        self.logger.warning(f"Unknown or unhandled source type: {source_type}")
         return None
 
     def _transform_input_data(self, input_data: Any, instructions: dict[str, Any], original_input: Any) -> Any:
@@ -447,23 +491,45 @@ class MetadataEngine:
                 from defusedxml.minidom import parseString  # type: ignore
 
                 xmp_dom = parseString(data)
-                description_nodes = xmp_dom.getElementsByTagName("rdf:Description")
-                for desc_node in description_nodes:
-                    uc_nodes = desc_node.getElementsByTagName("exif:UserComment")
-                    if not uc_nodes or not uc_nodes[0].childNodes:
-                        continue
-                    first_child = uc_nodes[0].childNodes[0]
-                    if first_child.nodeType == first_child.TEXT_NODE:
-                        return first_child.data.strip()
-                    if first_child.nodeName == "rdf:Alt":
-                        alt_node = first_child
+
+                # Look for exif:UserComment nodes anywhere in the document
+                uc_nodes = xmp_dom.getElementsByTagName("exif:UserComment")
+                for uc_node in uc_nodes:
+                    # Check for direct text content first
+                    for child in uc_node.childNodes:
+                        if child.nodeType == child.TEXT_NODE:
+                            text_content = child.data.strip()
+                            if text_content.startswith("{") and text_content.endswith("}"):
+                                return text_content
+
+                    # Look for rdf:Alt structure
+                    alt_nodes = uc_node.getElementsByTagName("rdf:Alt")
+                    for alt_node in alt_nodes:
                         li_nodes = alt_node.getElementsByTagName("rdf:li")
-                        if (
-                            li_nodes
-                            and li_nodes[0].childNodes
-                            and li_nodes[0].childNodes[0].nodeType == li_nodes[0].TEXT_NODE
-                        ):
-                            return li_nodes[0].childNodes[0].data.strip()
+                        for li_node in li_nodes:
+                            # Check if this li node contains JSON-like content
+                            for li_child in li_node.childNodes:
+                                if li_child.nodeType == li_child.TEXT_NODE:
+                                    text_content = li_child.data.strip()
+                                    if text_content.startswith("{") and text_content.endswith("}"):
+                                        return text_content
+
+                # Fallback: Look for any text node that looks like JSON anywhere in the document
+                def find_json_in_node(node):
+                    if node.nodeType == node.TEXT_NODE:
+                        text = node.data.strip()
+                        if text.startswith("{") and text.endswith("}") and len(text) > 10:
+                            return text
+                    for child in node.childNodes:
+                        result = find_json_in_node(child)
+                        if result:
+                            return result
+                    return None
+
+                json_content = find_json_in_node(xmp_dom)
+                if json_content:
+                    return json_content
+
                 return None
             except Exception as e:
                 self.logger.debug(f"Failed to extract JSON from XMP UserComment: {e}")

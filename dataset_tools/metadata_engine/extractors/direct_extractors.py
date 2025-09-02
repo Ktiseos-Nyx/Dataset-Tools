@@ -30,7 +30,23 @@ class DirectValueExtractor:
             "static_value": self._extract_static_value,
             "direct_context_value": self._extract_direct_context_value,
             "direct_string_value": self._extract_direct_string_value,
+            "direct_input_data_as_string": self.direct_input_data_as_string,
         }
+
+    def direct_input_data_as_string(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> str | None:
+        """Return the entire input data as a string."""
+        self.logger.debug("Executing direct_input_data_as_string")
+        if isinstance(data, (str, bytes)):
+            return str(data)
+        # For dicts or lists, it's better to use a json-specific method.
+        # This is a fallback for simple, non-structured text.
+        return str(data) if data is not None else None
 
     def _extract_direct_json_path(
         self,

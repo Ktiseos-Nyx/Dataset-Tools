@@ -335,13 +335,22 @@ class RuleOperators:
                     return False
 
                 nodes_container = json_obj.get("nodes", json_obj)
-                if not isinstance(nodes_container, dict):
-                    return False
 
-                return any(
-                    isinstance(node_val, dict) and node_val.get("type") in class_types
-                    for node_val in nodes_container.values()
-                )
+                # Handle both dictionary format (node_id: node_data) and list format [node_data, ...]
+                if isinstance(nodes_container, dict):
+                    # Dictionary format: iterate over values
+                    return any(
+                        isinstance(node_val, dict) and node_val.get("type") in class_types
+                        for node_val in nodes_container.values()
+                    )
+                if isinstance(nodes_container, list):
+                    # List format: iterate over list items
+                    return any(
+                        isinstance(node_item, dict) and node_item.get("type") in class_types
+                        for node_item in nodes_container
+                    )
+                # Neither dict nor list - can't process
+                return False
 
             self.logger.warning(f"Unknown json_query_type: {json_query_type}")
             return False
@@ -467,22 +476,35 @@ class DataSourceHandler:
 
     def _handle_a1111_parameter_string(self, context: ContextData) -> tuple[Any, bool]:
         """Handle A1111 parameter string extraction."""
+        self.logger.info("=== A1111 PARAMETER STRING DEBUG ===")
+        self.logger.info(f"Context keys available: {list(context.keys())}")
+
+        # Check what's in pil_info
+        pil_info = context.get("pil_info", {})
+        self.logger.info(f"pil_info keys: {list(pil_info.keys()) if isinstance(pil_info, dict) else 'NOT_DICT'}")
+
         # Try parameters chunk first
-        param_str = context.get("pil_info", {}).get("parameters")
-        if param_str is None:
-            param_str = context.get("raw_user_comment_str")
+        param_str = pil_info.get("parameters") if isinstance(pil_info, dict) else None
+        self.logger.info(f"param_str from pil_info['parameters']: {repr(param_str)[:100] if param_str else 'NONE'}")
 
         if param_str is None:
+            param_str = context.get("raw_user_comment_str")
+            self.logger.info(f"param_str from raw_user_comment_str: {repr(param_str)[:100] if param_str else 'NONE'}")
+
+        if param_str is None:
+            self.logger.info("=== FINAL RESULT: None, False ===")
             return None, False
 
         # Check if it's wrapped in JSON
         try:
             wrapper = json.loads(param_str)
             if isinstance(wrapper, dict) and "parameters" in wrapper and isinstance(wrapper["parameters"], str):
+                self.logger.info("=== UNWRAPPED JSON PARAMETERS ===")
                 return wrapper["parameters"], True
         except json.JSONDecodeError:
             pass
 
+        self.logger.info(f"=== FINAL RESULT: param_str (length: {len(param_str)}), True ===")
         return param_str, True
 
     def _handle_pil_info_json_path(self, rule: RuleDict, context: ContextData) -> tuple[Any, bool]:

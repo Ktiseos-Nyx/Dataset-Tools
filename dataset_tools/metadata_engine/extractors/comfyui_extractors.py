@@ -88,6 +88,9 @@ class ComfyUIExtractor:
         # Merge methods, with new methods taking precedence
         methods.update(legacy_methods)
 
+        # Add simple DFS traversal method
+        methods["comfyui_simple_dfs_prompt"] = self._simple_dfs_prompt_extraction
+
         return methods
 
     def _find_legacy_input_of_node_type(
@@ -242,7 +245,6 @@ class ComfyUIExtractor:
         """Find text from sampler input by following workflow connections."""
         # Find the sampler node (support multiple sampler types)
         sampler_node = None
-        sampler_id = None
 
         # List of all supported sampler types
         sampler_types = [
@@ -257,7 +259,6 @@ class ComfyUIExtractor:
                 class_type = node_data.get("class_type", node_data.get("type", ""))
                 if any(sampler_type in class_type for sampler_type in sampler_types):
                     sampler_node = node_data
-                    sampler_id = node_data.get("id", node_id)
                     break
 
         if not sampler_node:
@@ -450,7 +451,6 @@ class ComfyUIExtractor:
             "sampler_node_types",
             ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
         )
-        text_input_name_in_encoder = method_def.get("text_input_name_in_encoder", "text")
         text_encoder_types = method_def.get("text_encoder_node_types", ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"])
 
         # Determine which input to follow (positive or negative)
@@ -524,7 +524,7 @@ class ComfyUIExtractor:
                             connection = inputs["guider"]
                             if isinstance(connection, list) and len(connection) >= 1:
                                 source_node_id = str(connection[0])
-                                print(f"FLUX guider connection found: {source_node_id}")
+                                # print(f"FLUX guider connection found: {source_node_id}")
                         elif isinstance(inputs, list):
                             for inp in inputs:
                                 if isinstance(inp, dict) and inp.get("name") == "guider":
@@ -571,7 +571,7 @@ class ComfyUIExtractor:
                                         return found_text
                                 break
                     else:
-                        print(f"No connection found for {target_input_name}")
+                        self.logger.debug(f"No connection found for {target_input_name} in sampler node {node_id}")
 
                     break  # Found the sampler, stop looking
 
@@ -847,11 +847,9 @@ class ComfyUIExtractor:
 
         # Find BasicGuider node
         guider_node = None
-        guider_id = None
         for node in nodes:
             if node.get("class_type") == "BasicGuider":
                 guider_node = node
-                guider_id = node.get("id")
                 break
 
         if not guider_node:
@@ -904,11 +902,9 @@ class ComfyUIExtractor:
 
         # Find BasicGuider node
         guider_node = None
-        guider_id = None
         for node in nodes:
             if node.get("class_type") == "BasicGuider":
                 guider_node = node
-                guider_id = node.get("id")
                 break
 
         if not guider_node:
@@ -1133,30 +1129,30 @@ class ComfyUIExtractor:
         context: ContextData,
         fields: ExtractedFields,
     ) -> str:
-        """Legacy prompt from workflow - FIXED TO USE PROPER LINK TRAVERSAL."""
-        self.logger.info("[ComfyUI EXTRACTOR] === EXTRACTING POSITIVE PROMPT ===")
+        """Dispatcher for prompt extraction based on detected workflow type."""
+        self.logger.info("[ComfyUI EXTRACTOR] === DISPATCHING POSITIVE PROMPT EXTRACTION ===")
+        data = self._parse_json_data(data)
+        if not isinstance(data, dict):
+            return ""
 
-        # Use the same traversal logic as the main method, but specifically for positive
+        # Auto-detect workflow type to use the best extraction strategy
+        workflow_types = self.manager._auto_detect_workflow(data, method_def, context, fields)
+        self.logger.info(f"[ComfyUI EXTRACTOR] Detected workflow types: {workflow_types}")
+
+        # Use modern, direct extraction for modern architectures
+        if any(wt in workflow_types for wt in ["pixart", "flux", "sd3"]):
+            self.logger.info(f"Using modern text extraction for {workflow_types}")
+            return self._extract_from_workflow_text_nodes(data, "positive")
+
+        # Fallback to legacy traversal for standard/unknown workflows
+        self.logger.info("Using legacy traversal for positive prompt extraction.")
         fake_method_def = {
-            "sampler_node_types": [
-                "KSampler",
-                "KSamplerAdvanced",
-                "SamplerCustomAdvanced",
-                "KSampler_A1111",
-            ],
+            "sampler_node_types": ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
             "positive_input_name": "positive",
-            "text_input_name_in_encoder": "text",
-            "text_encoder_node_types": [
-                "CLIPTextEncode",
-                "BNK_CLIPTextEncodeAdvanced",
-                "CLIPTextEncodeAdvanced",
-                "PixArtT5TextEncode",
-            ],
+            "text_encoder_node_types": ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"],
         }
-
-        # Call the fixed traversal method
         result = self._find_legacy_text_from_main_sampler_input(data, fake_method_def, context, fields)
-        self.logger.info(f"[ComfyUI EXTRACTOR] Positive prompt result: {result[:100]}...")
+        self.logger.info(f"[ComfyUI EXTRACTOR] Legacy positive prompt result: {result[:100]}...")
         return result
 
     def _extract_legacy_negative_prompt_from_workflow(
@@ -1166,30 +1162,30 @@ class ComfyUIExtractor:
         context: ContextData,
         fields: ExtractedFields,
     ) -> str:
-        """Legacy negative prompt from workflow - FIXED TO USE PROPER LINK TRAVERSAL."""
-        self.logger.info("[ComfyUI EXTRACTOR] === EXTRACTING NEGATIVE PROMPT ===")
+        """Dispatcher for negative prompt extraction based on detected workflow type."""
+        self.logger.info("[ComfyUI EXTRACTOR] === DISPATCHING NEGATIVE PROMPT EXTRACTION ===")
+        data = self._parse_json_data(data)
+        if not isinstance(data, dict):
+            return ""
 
-        # Use the same traversal logic as the main method, but specifically for negative
+        # Auto-detect workflow type to use the best extraction strategy
+        workflow_types = self.manager._auto_detect_workflow(data, method_def, context, fields)
+        self.logger.info(f"[ComfyUI EXTRACTOR] Detected workflow types: {workflow_types}")
+
+        # Use modern, direct extraction for modern architectures
+        if any(wt in workflow_types for wt in ["pixart", "flux", "sd3"]):
+            self.logger.info(f"Using modern text extraction for {workflow_types}")
+            return self._extract_from_workflow_text_nodes(data, "negative")
+
+        # Fallback to legacy traversal for standard/unknown workflows
+        self.logger.info("Using legacy traversal for negative prompt extraction.")
         fake_method_def = {
-            "sampler_node_types": [
-                "KSampler",
-                "KSamplerAdvanced",
-                "SamplerCustomAdvanced",
-                "KSampler_A1111",
-            ],
+            "sampler_node_types": ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
             "negative_input_name": "negative",
-            "text_input_name_in_encoder": "text",
-            "text_encoder_node_types": [
-                "CLIPTextEncode",
-                "BNK_CLIPTextEncodeAdvanced",
-                "CLIPTextEncodeAdvanced",
-                "PixArtT5TextEncode",
-            ],
+            "text_encoder_node_types": ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"],
         }
-
-        # Call the fixed traversal method
         result = self._find_legacy_text_from_main_sampler_input(data, fake_method_def, context, fields)
-        self.logger.info(f"[ComfyUI EXTRACTOR] Negative prompt result: {result[:100]}...")
+        self.logger.info(f"[ComfyUI EXTRACTOR] Legacy negative prompt result: {result[:100]}...")
         return result
 
     def _extract_legacy_workflow_parameters(
@@ -1242,9 +1238,22 @@ class ComfyUIExtractor:
         fields: ExtractedFields,
     ) -> dict[str, Any]:
         """Legacy raw workflow."""
+        from ...logger import get_logger
+        logger = get_logger(__name__)
+
+        print(f"[DEBUG] _extract_legacy_raw_workflow called with data type: {type(data)}")
+        logger.info(f"_extract_legacy_raw_workflow called with data type: {type(data)}")
+
         data = self._parse_json_data(data)
+        print(f"[DEBUG] After parsing, data type: {type(data)}, is_dict: {isinstance(data, dict)}")
+        logger.info(f"After parsing, data type: {type(data)}, is_dict: {isinstance(data, dict)}")
+
         if isinstance(data, dict):
+            print(f"[DEBUG] Raw workflow extracted successfully with {len(data)} keys: {list(data.keys())[:10]}")
+            logger.info(f"Raw workflow extracted successfully with {len(data)} keys: {list(data.keys())[:10]}")
             return data
+        print(f"[DEBUG] Raw workflow extraction failed - data is not a dict: {data}")
+        logger.info("Raw workflow extraction failed - data is not a dict")
         return {}
 
     def _detect_legacy_custom_nodes(
@@ -1535,3 +1544,125 @@ class ComfyUIExtractor:
     def clear_cache(self) -> None:
         """Clear the workflow detection cache."""
         self.manager.clear_cache()
+
+    # --- Simple DFS Traversal (New Method) ---
+    def _simple_dfs_prompt_extraction(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields
+    ) -> str:
+        """Simple DFS traversal to find prompt text.
+        
+        Uses depth-first search to follow links backwards from samplers
+        until we find nodes that output STRING data.
+        
+        This is node-type agnostic - works with any ComfyUI workflow.
+        """
+        try:
+            workflow = self._parse_json_data(data)
+            if not workflow or "nodes" not in workflow:
+                return ""
+
+            nodes = workflow["nodes"]
+            if not nodes:
+                return ""
+
+            # Build lookup dictionary
+            node_lookup = {str(node.get("id", i)): node for i, node in enumerate(nodes)}
+
+            # Find sampler nodes (common types)
+            sampler_types = [
+                "KSampler", "SamplerCustomAdvanced", "UltimateSDUpscale",
+                "KSamplerAdvanced", "SamplerCustom"
+            ]
+
+            target_input = method_def.get("target_input", "positive")  # positive or negative
+
+            # Find a sampler node
+            for node_id, node in node_lookup.items():
+                node_type = node.get("class_type", "")
+                if any(sampler_type in node_type for sampler_type in sampler_types):
+                    # Found a sampler, now DFS backwards to find text
+                    result = self._dfs_follow_links(node, target_input, node_lookup, visited=set(), depth=0)
+                    if result:
+                        self.logger.info(f"[DFS] Found {target_input} prompt: {result[:100]}...")
+                        return result
+
+            return ""
+
+        except Exception as e:
+            self.logger.error(f"[DFS] Error in simple DFS extraction: {e}")
+            return ""
+
+    def _dfs_follow_links(self, node: dict, target_input: str, node_lookup: dict, visited: set, depth: int) -> str:
+        """DFS recursive function to follow links backwards."""
+        if depth > 10:  # Prevent infinite loops
+            return ""
+
+        node_id = str(node.get("id", ""))
+        if node_id in visited:
+            return ""
+        visited.add(node_id)
+
+        # Check if this node has the target input
+        inputs = node.get("inputs", [])
+
+        # Handle both list and dict input formats
+        for inp in inputs:
+            if isinstance(inp, dict):
+                input_name = inp.get("name", "")
+                if input_name == target_input:
+                    # Found the target input, follow its link
+                    link_id = inp.get("link")
+                    if link_id:
+                        # Find the source node for this link
+                        source_node = self._find_source_node_by_link(link_id, node_lookup)
+                        if source_node:
+                            # Check if source node outputs STRING
+                            text_result = self._extract_string_from_node(source_node)
+                            if text_result:
+                                return text_result
+                            # Otherwise, continue DFS on source node
+                            return self._dfs_follow_links(source_node, "STRING", node_lookup, visited, depth + 1)
+
+        return ""
+
+    def _find_source_node_by_link(self, link_id: int, node_lookup: dict) -> dict:
+        """Find the node that outputs to this link."""
+        for node in node_lookup.values():
+            outputs = node.get("outputs", [])
+            for output in outputs:
+                if isinstance(output, dict):
+                    links = output.get("links", [])
+                    if link_id in links:
+                        return node
+        return None
+
+    def _extract_string_from_node(self, node: dict) -> str:
+        """Extract string data from a node if it has any."""
+        # Check widget_values first (most common location for text)
+        widgets = node.get("widgets_values", [])
+        if widgets:
+            for widget in widgets:
+                if isinstance(widget, str) and widget.strip():
+                    return widget.strip()
+                if isinstance(widget, list) and widget:
+                    # Handle nested arrays (like ShowText)
+                    for item in widget:
+                        if isinstance(item, str) and item.strip():
+                            return item.strip()
+
+        # Check inputs for hardcoded strings
+        inputs = node.get("inputs", [])
+        for inp in inputs:
+            if isinstance(inp, dict):
+                widget = inp.get("widget", {})
+                if isinstance(widget, dict):
+                    name = widget.get("name", "")
+                    if "text" in name.lower():
+                        # This might have text data
+                        pass  # Could add more extraction logic here
+
+        return ""

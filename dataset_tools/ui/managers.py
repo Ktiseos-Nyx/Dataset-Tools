@@ -415,6 +415,7 @@ class LayoutManager:
             ("positive_prompt", "Positive Prompt"),
             ("negative_prompt", "Negative Prompt"),
             ("generation_data", "Generation Details & Metadata"),
+            ("parameters", "Parameters"),
         ]
 
         for box_name, label_text in text_box_configs:
@@ -590,6 +591,7 @@ class MetadataDisplayManager:
         self._update_text_box("positive_prompt_box", formatted_data["positive"])
         self._update_text_box("negative_prompt_box", formatted_data["negative"])
         self._update_text_box("generation_data_box", formatted_data["details"])
+        self._update_text_box("parameters_box", formatted_data["parameters"])
 
         # Set placeholders for empty fields
         self._set_placeholders()
@@ -607,6 +609,7 @@ class MetadataDisplayManager:
             ("positive_prompt_box", EmptyField.PLACEHOLDER_POSITIVE.value),
             ("negative_prompt_box", EmptyField.PLACEHOLDER_NEGATIVE.value),
             ("generation_data_box", EmptyField.PLACEHOLDER_DETAILS.value),
+            ("parameters_box", "Parameters will appear here..."),
         ]
 
         for box_attr, placeholder_text in placeholder_configs:
@@ -622,6 +625,7 @@ class MetadataDisplayManager:
             "positive_prompt_box",
             "negative_prompt_box",
             "generation_data_box",
+            "parameters_box",
         ]
 
         for box_attr in text_boxes:
@@ -650,6 +654,7 @@ class MetadataDisplayManager:
                 "generation_data_label",
                 "Generation Details & Metadata",
             ),
+            ("parameters_box", "parameters_label", "Parameters"),
         ]
 
         for box_attr, label_attr, default_label in box_configs:

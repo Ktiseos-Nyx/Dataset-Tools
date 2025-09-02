@@ -26,7 +26,7 @@
     },
     {
       "comment": "Rule 2: Must contain FLUX-specific nodes",
-      "source_type": "pil_info_key_json_path_query",
+      "source_type": "pil_info_key",
       "source_key_options": [
         "workflow",
         "prompt"
@@ -41,7 +41,7 @@
     },
     {
       "comment": "Rule 3: Must contain UNETLoader or model loading",
-      "source_type": "pil_info_key_json_path_query",
+      "source_type": "pil_info_key",
       "source_key_options": [
         "workflow",
         "prompt"
@@ -50,6 +50,7 @@
       "operator": "is_true",
       "class_types_to_check": [
         "UNETLoader",
+        "UnetLoaderGGUF",
         "CheckpointLoaderSimple"
       ]
     }
@@ -196,7 +197,7 @@
     ],
     "output_template": {
       "parser_name_from_engine": "FLUX Workflow",
-      "tool": "ComfyUI (FLUX)",
+      "tool": "ComfyUI FLUX",
       "format": "FLUX Model Workflow",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",

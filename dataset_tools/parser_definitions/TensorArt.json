@@ -18,8 +18,20 @@
 
   "parsing_instructions": {
     "input_data": {
-      "comment": "Extract workflow data from PNG chunks or ComfyUI workflow format",
+      "comment": "Extract workflow data from PNG chunks or PIL info ComfyUI workflow format",
       "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "transformations": [
+            {
+              "type": "json_decode_string_itself"
+            },
+            {
+              "type": "filter_dict_nodes_only"
+            }
+          ]
+        },
         {
           "source_type": "png_chunk",
           "source_key": "workflow",
@@ -94,7 +106,8 @@
         "platform": "TensorArt",
         "backend_engine": "ComfyUI",
         "filename": "$FILE_NAME"
-      }
+      },
+      "raw_metadata": "$raw_metadata"
     }
   },
 

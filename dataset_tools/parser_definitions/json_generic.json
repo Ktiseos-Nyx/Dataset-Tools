@@ -26,16 +26,21 @@
     },
     "fields": [
       {
-        "target_key": "raw_json_content",
+        "target_key": "raw_metadata",
         "method": "direct_json_path",
         "json_path": "$",
         "value_type": "object"
+      },
+      {
+        "target_key": "tool",
+        "method": "static_value",
+        "value": "JSON Parser"
+      },
+      {
+        "target_key": "format",
+        "method": "static_value",
+        "value": "Generic JSON"
       }
-    ],
-    "output_template": {
-      "tool": "JSON Parser",
-      "format": "Generic JSON",
-      "raw_metadata": "$raw_json_content"
-    }
+    ]
   }
 }
