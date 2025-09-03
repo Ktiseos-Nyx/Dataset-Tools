@@ -40,7 +40,8 @@ dependencies = [
     "toml",
     "typing-extensions", # Good for broader Python 3.x compatibility for newer typing features
     "pyexiv2",
-    # "exif", # Consider if this is still needed with piexif and pyexiv2
+    "exif", # Consider if this is still needed with piexif and pyexiv2
+    "numpy", #advanced algorithms
     # "sd-prompt-reader", # REMOVE - You have vendored this.
     "qt-material",
     "piexif",
@@ -49,8 +50,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest", 
-    "mypy", 
+    "pytest",
+    "mypy",
     "types-toml",       # Stubs for toml
     "types-defusedxml", # Stubs for defusedxml
     # PyQt6 aims to ship with its own stubs, so no separate types-PyQt6 or PyQt6-stubs from pip usually
@@ -177,8 +178,8 @@ ignore = [
 "dataset_tools/widgets.py" = [
     "PTH118", # BECAUSE WHY NOT
     "PLR2004", # ugh
-    "C901", # mega ugh 
-    "PLR0912", "PLR0913", "PLR0915", "PLW0603", "PTH208", 
+    "C901", # mega ugh
+    "PLR0912", "PLR0913", "PLR0915", "PLW0603", "PTH208",
     "ANN201", "ANN202", "ANN204", "ANN205", "ANN401",
     "B007",   # Unused loop variable (if it's being picky about your error handlers)
     "D203", # Missing docstring in public function
@@ -195,10 +196,10 @@ ignore = [
     "ARG002", # Allow unused arguments
     "N803", # Allow case mismatches because i'm a dumbass
     "PTH118", # Allow errors with pathlib because i'm a dumbass dum!
-    "BLE001", # blegh 
+    "BLE001", # blegh
     "SIM102", # If you don't like its nested if simplification everywhere
     "D415", # because emet selch said so
-    "D205", # because i have a shark! 
+    "D205", # because i have a shark!
     ]
 # For debug/test files that legitimately use print statements
 "debug-analysis/*" = ["T201"] # Ignore print statements in debug analysis files
@@ -276,6 +277,28 @@ ignore = [
 "dataset_tools/ui/enhanced_theme_manager.py" = ["PLC0415"]
 "dataset_tools/ui/main_window.py" = ["PLC0415"]
 "dataset_tools/ui/managers.py" = ["PLC0415"]
+"dataset_tools/numpy_scorers/advanced_comfyui_numpy_scorer.py" = [
+    "T201",    # Print statements (debug output) - cleaned up
+    "E501",    # Line too long (complex parsing logic)
+    "C901",    # Complex functions (graph traversal algorithms)
+    "PLR0915", # Too many statements (detailed parsing)
+    "PLR0912", # Too many branches (workflow analysis)
+    "PLR0911", # Too many return statements
+    "ANN001", "ANN201", "ANN202", "ANN204", # Missing type annotations
+    "BLE001",  # Blind except (error recovery patterns)
+    "S112",    # Try-except-continue (expected in parsing)
+    "ARG001", "ARG002", # Unused arguments (helper methods)
+    "D400", "D415", "D205", # Docstring formatting
+    "RET505", "RET503", # Return statement issues
+    "SIM110", "SIM102", # Simplification suggestions
+    "PLW0602", "PLW0603", # Global variable usage (caching)
+    "UP007", "UP035", # Type hint modernization
+    "F541", # F-string without placeholders
+    "PTH123", # Path.open() vs open() (gradual migration)
+    "F811", # Function redefinition (refactoring in progress)
+    "B015", # Pointless comparison (debug code)
+    "D401", # Docstring imperative mood
+]
 
 
 [tool.ruff.format] # Formatter specific settings
@@ -376,7 +399,7 @@ module = [
 ignore_missing_imports = true
 
 # PyQt6 should provide its own stubs. If MyPy still has issues with it
-# specifically for 'no attribute' errors that are false positives, 
+# specifically for 'no attribute' errors that are false positives,
 # you might need to add ignores for those specific attributes in code using `# type: ignore[attr-defined]`
 # Or, if there are many, consider:
 # [[tool.mypy.overrides]]

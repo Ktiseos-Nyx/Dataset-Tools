@@ -12,11 +12,15 @@ from typing import Any
 from ..logger import get_logger
 from .extractors.a1111_extractors import A1111Extractor
 from .extractors.civitai_extractors import CivitaiExtractor
+from .extractors.comfyui_enhanced_extractor import ComfyUIEnhancedExtractor
 from .extractors.comfyui_extractors import ComfyUIExtractor
 
 # Import extraction modules
 from .extractors.direct_extractors import DirectValueExtractor
+from .extractors.drawthings_extractors import DrawThingsExtractor
+from .extractors.invokeai_extractors import InvokeAIExtractor
 from .extractors.json_extractors import JSONExtractor
+from .extractors.model_extractors import ModelExtractor
 from .extractors.regex_extractors import RegexExtractor
 
 # Type aliases
@@ -41,7 +45,11 @@ class FieldExtractor:
         self.a1111_extractor = A1111Extractor(self.logger)
         self.civitai_extractor = CivitaiExtractor(self.logger)
         self.comfyui_extractor = ComfyUIExtractor(self.logger)
+        self.comfyui_enhanced_extractor = ComfyUIEnhancedExtractor(self.logger)
+        self.drawthings_extractor = DrawThingsExtractor(self.logger)
+        self.invokeai_extractor = InvokeAIExtractor(self.logger)
         self.json_extractor = JSONExtractor(self.logger)
+        self.model_extractor = ModelExtractor(self.logger)
         self.regex_extractor = RegexExtractor(self.logger)
 
         # Build method registry from all extractors
@@ -62,8 +70,20 @@ class FieldExtractor:
         # ComfyUI methods
         self._method_registry.update(self.comfyui_extractor.get_methods())
 
+        # Enhanced ComfyUI methods (priority over standard)
+        self._method_registry.update(self.comfyui_enhanced_extractor.get_methods())
+
+        # DrawThings methods
+        self._method_registry.update(self.drawthings_extractor.get_methods())
+
+        # InvokeAI methods
+        self._method_registry.update(self.invokeai_extractor.get_methods())
+
         # JSON methods
         self._method_registry.update(self.json_extractor.get_methods())
+
+        # Model methods
+        self._method_registry.update(self.model_extractor.get_methods())
 
         # Regex methods
         self._method_registry.update(self.regex_extractor.get_methods())

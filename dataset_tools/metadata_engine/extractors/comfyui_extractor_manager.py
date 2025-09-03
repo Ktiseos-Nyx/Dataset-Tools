@@ -16,6 +16,7 @@ from .comfyui_controlnet import ComfyUIControlNetExtractor
 from .comfyui_dynamicprompts import ComfyUIDynamicPromptsExtractor
 from .comfyui_efficiency import ComfyUIEfficiencyExtractor
 from .comfyui_flux import ComfyUIFluxExtractor
+from .comfyui_griptape import ComfyUIGriptapeExtractor
 from .comfyui_impact import ComfyUIImpactExtractor
 from .comfyui_inspire import ComfyUIInspireExtractor
 from .comfyui_pixart import ComfyUIPixArtExtractor
@@ -23,6 +24,7 @@ from .comfyui_quadmoons import ComfyUIQuadMoonsExtractor
 from .comfyui_rgthree import ComfyUIRGthreeExtractor
 from .comfyui_sdxl import ComfyUISDXLExtractor
 from .comfyui_searge import ComfyUISeargeExtractor
+from .comfyui_traversal import ComfyUITraversalExtractor
 from .comfyui_was import ComfyUIWASExtractor
 from .comfyui_workflow_analyzer import ComfyUIWorkflowAnalyzer  # New Analyzer
 
@@ -42,6 +44,9 @@ class ComfyUIExtractorManager:
         # Initialize the new comprehensive workflow analyzer
         self.workflow_analyzer = ComfyUIWorkflowAnalyzer(logger)
 
+        # Initialize traversal extractor
+        self.traversal = ComfyUITraversalExtractor(logger)
+
         # Initialize other specialized extractors (some might become redundant later)
         self.complexity = ComfyUIComplexityExtractor(logger)
         self.flux = ComfyUIFluxExtractor(logger)
@@ -56,6 +61,7 @@ class ComfyUIExtractorManager:
         self.rgthree = ComfyUIRGthreeExtractor(logger)
         self.inspire = ComfyUIInspireExtractor(logger)
         self.dynamicprompts = ComfyUIDynamicPromptsExtractor(logger)
+        self.griptape = ComfyUIGriptapeExtractor(logger)
         self.quadmoons = ComfyUIQuadMoonsExtractor(logger)
 
         # Cache for detected workflow types (might be managed by analyzer now)
@@ -79,6 +85,7 @@ class ComfyUIExtractorManager:
         methods.update(self.rgthree.get_methods())
         methods.update(self.inspire.get_methods())
         methods.update(self.dynamicprompts.get_methods())
+        methods.update(self.griptape.get_methods())
         methods.update(self.quadmoons.get_methods())
 
         # Add workflow analyzer methods if needed
@@ -408,6 +415,9 @@ class ComfyUIExtractorManager:
         workflow_types = self._auto_detect_workflow(data, {}, {}, {})
 
         # Return the most specific extractor
+        # Check for Griptape AI first (high priority)
+        if self._has_griptape_nodes(data):
+            return self.griptape
         if "flux" in workflow_types:
             return self.flux
         if "sdxl" in workflow_types:
@@ -448,6 +458,8 @@ class ComfyUIExtractorManager:
             "rgthree",
             "inspire",
             "dynamicprompts",
+            "griptape",
+            "quadmoons",
         ]
 
     def get_extractor_stats(self) -> dict[str, Any]:
@@ -466,6 +478,8 @@ class ComfyUIExtractorManager:
                 "rgthree",
                 "inspire",
                 "dynamicprompts",
+                "griptape",
+                "quadmoons",
             ],
             "utility_extractors": ["traversal", "node_checker", "complexity"],
         }
@@ -484,7 +498,6 @@ class ComfyUIExtractorManager:
         if not isinstance(data, dict):
             return False
 
-        prompt_data = data.get("prompt", data)
         # Use workflow analyzer to get nodes
         analysis_result = self.workflow_analyzer.analyze_workflow(data)
         if not analysis_result.get("is_valid_workflow", False):
@@ -729,9 +742,42 @@ class ComfyUIExtractorManager:
             try:
                 import json
                 return json.loads(data)
-            except:
+            except json.JSONDecodeError:
                 return {}
         return data
+
+    def _has_griptape_nodes(self, data: dict[str, Any]) -> bool:
+        """Check if workflow contains Griptape AI framework nodes."""
+        nodes = self.traversal.get_nodes_from_data(data)
+        if not nodes:
+            return False
+
+        griptape_node_types = [
+            "Griptape Display: Text",
+            "Griptape Create: Agent",
+            "Griptape Agent Config: Custom Structure",
+            "Griptape Create: Rules",
+            "Griptape Combine: Rules List",
+            "Griptape Tool: WebSearch",
+            "Griptape Prompt Driver: OpenAI Compatible",
+            "Griptape Prompt Driver: LM Studio",
+            "Griptape Prompt Driver: Anthropic",
+            "Griptape Tool: Calculator",
+            "Griptape Tool: DateTime"
+        ]
+
+        node_iterator = (
+            nodes.items() if isinstance(nodes, dict) else enumerate(nodes)
+        )
+
+        for node_id, node_data in node_iterator:
+            if isinstance(node_data, dict):
+                class_type = node_data.get("class_type", node_data.get("type", ""))
+                if any(griptape_type in class_type for griptape_type in griptape_node_types):
+                    self.logger.debug(f"Found Griptape node: {class_type}")
+                    return True
+
+        return False
 
     def _detect_tensorart_signatures(
         self,

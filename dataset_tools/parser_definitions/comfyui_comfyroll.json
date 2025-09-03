@@ -1,0 +1,186 @@
+{
+  "parser_name": "ComfyUI ComfyRoll",
+  "priority": 150,
+  "description": "ComfyUI workflows using ComfyRoll Studio node pack",
+  "version": "1.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain ComfyRoll Studio nodes",
+      "source_type": "pil_info_key",
+      "source_key_options": [
+        "workflow",
+        "prompt"
+      ],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "CR LoRA Stack",
+        "CR Apply LoRA Stack",
+        "CR Aspect Ratio",
+        "CR VAE Input Switch",
+        "CR Text List",
+        "CR Seed",
+        "CR Image Input Switch",
+        "CR Model Input Switch"
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfyui_simple_dfs_prompt",
+        "target_input": "positive"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_simple_dfs_prompt",
+        "target_input": "negative"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "steps",
+        "value_type": "integer",
+        "fallback": 30
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "cfg",
+        "value_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "CheckpointLoaderSimple",
+          "UNETLoader"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string",
+        "fallback": "Unknown Model"
+      },
+      {
+        "target_key": "parameters.aspect_ratio",
+        "method": "comfy_get_node_by_class",
+        "class_type": "CR Aspect Ratio",
+        "field_name": "aspect_ratio",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI ComfyRoll",
+      "tool": "ComfyUI ComfyRoll",
+      "format": "ComfyRoll Studio Workflow",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "model": "$parameters.model",
+        "aspect_ratio": "$parameters.aspect_ratio"
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 150,
+        "confidence": "high",
+        "node_pack": "ComfyRoll Studio",
+        "enhanced_workflow": true
+      }
+    }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Detects ComfyUI workflows using ComfyRoll Studio node pack",
+    "Identifies CR LoRA Stack, CR Apply LoRA Stack, CR Aspect Ratio, and other CR nodes",
+    "Priority 150 puts it above generic ComfyUI parsers but below specialized architecture parsers",
+    "Extracts aspect ratio settings from CR nodes when available"
+  ]
+}

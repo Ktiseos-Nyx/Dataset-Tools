@@ -160,9 +160,37 @@
       }
     ]
   },
-  "template_instructions": {
-    "output_format": "comprehensive",
-    "include_advanced_metadata": true,
-    "include_raw_data": false
+  "output_template": {
+    "tool": "ComfyUI (Advanced Node Discovery)",
+    "parser_version": "advanced_v2.0",
+    "prompt": "$prompt",
+    "negative_prompt": "$negative_prompt",
+    "parameters": {
+      "steps": "$steps",
+      "cfg_scale": "$cfg_scale",
+      "seed": "$seed",
+      "sampler_name": "$sampler_name",
+      "scheduler": "$scheduler"
+    },
+    "workflow_analysis": {
+      "tipo_enhancement": "$tipo_enhancement",
+      "workflow_complexity": "$workflow_complexity",
+      "advanced_upscaling": "$advanced_upscaling",
+      "multi_stage_conditioning": "$multi_stage_conditioning",
+      "post_processing_effects": "$post_processing_effects",
+      "custom_node_ecosystems": "$custom_node_ecosystems",
+      "workflow_techniques": "$workflow_techniques"
+    },
+    "raw_metadata": "$INPUT_STRING_ORIGINAL_CHUNK",
+    "_metadata": {
+      "processed_at": "$CURRENT_TIMESTAMP",
+      "processor": "MetadataEngine",
+      "template_processed": true
+    }
+  },
+  "error_handling": {
+    "missing_required_fields": "return_partial_with_error_flag",
+    "malformed_metadata": "attempt_fuzzy_parsing",
+    "unknown_keys": "store_in_extra_fields"
   }
 }

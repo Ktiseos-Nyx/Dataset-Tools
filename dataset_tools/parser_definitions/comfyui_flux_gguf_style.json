@@ -136,7 +136,7 @@
       }
     ],
     "output_template": {
-      "tool": "ComfyUI (FLUX/GGUF)",
+      "tool": "ComfyUI FLUX GGUF",
       "parser_version": "flux_specific_enhanced",
       "prompt": "$prompt",
       "parameters": {

@@ -9,48 +9,60 @@
   ],
   "detection_rules": [
     {
-      "comment": "Rule 1: Must be a valid ComfyUI workflow",
-      "condition": "OR",
+      "comment": "Rule 1: Must be a valid ComfyUI workflow with JSON structure",
+      "operator": "AND",
       "rules": [
         {
-          "source_type": "pil_info_key",
-          "source_key": "workflow",
-          "operator": "is_valid_json"
+          "condition": "OR",
+          "rules": [
+            {
+              "source_type": "pil_info_key",
+              "source_key": "workflow",
+              "operator": "is_valid_json"
+            },
+            {
+              "source_type": "pil_info_key",
+              "source_key": "prompt",
+              "operator": "is_valid_json"
+            }
+          ]
         },
         {
-          "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "is_valid_json"
+          "comment": "Rule 2: Must contain DPRandomGenerator for dynamic prompts",
+          "condition": "OR",
+          "rules": [
+            {
+              "source_type": "pil_info_key",
+              "source_key": "workflow",
+              "operator": "contains",
+              "value": "DPRandomGenerator"
+            },
+            {
+              "source_type": "pil_info_key",
+              "source_key": "prompt",
+              "operator": "contains",
+              "value": "DPRandomGenerator"
+            }
+          ]
+        },
+        {
+          "comment": "Rule 3: Must contain ConDelta conditioning nodes", 
+          "condition": "OR",
+          "rules": [
+            {
+              "source_type": "pil_info_key",
+              "source_key": "workflow",
+              "operator": "regex_match",
+              "value": "ConditioningSubtract|ConditioningAddConDelta|QuickConDelta|CFGlessNegativePrompt"
+            },
+            {
+              "source_type": "pil_info_key",
+              "source_key": "prompt",
+              "operator": "regex_match",
+              "value": "ConditioningSubtract|ConditioningAddConDelta|QuickConDelta|CFGlessNegativePrompt"
+            }
+          ]
         }
-      ]
-    },
-    {
-      "comment": "Rule 2: Must contain DPRandomGenerator for dynamic prompts",
-      "source_type": "pil_info_key_json_path_query",
-      "source_key_options": [
-        "workflow",
-        "prompt"
-      ],
-      "json_query_type": "has_any_node_class_type",
-      "operator": "is_true",
-      "class_types_to_check": [
-        "DPRandomGenerator"
-      ]
-    },
-    {
-      "comment": "Rule 3: Must contain ConDelta conditioning nodes",
-      "source_type": "pil_info_key_json_path_query",
-      "source_key_options": [
-        "workflow",
-        "prompt"
-      ],
-      "json_query_type": "has_any_node_class_type",
-      "operator": "is_true",
-      "class_types_to_check": [
-        "ConditioningSubtract",
-        "ConditioningAddConDelta",
-        "QuickConDelta",
-        "CFGlessNegativePrompt"
       ]
     }
   ],

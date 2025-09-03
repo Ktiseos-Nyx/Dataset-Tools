@@ -28,8 +28,8 @@ class FileScanResult(NamedTuple):
     models: list[str]
     folder_path: str
     total_files: int
-    scan_duration: float = 0.0
     scan_success: bool
+    scan_duration: float = 0.0
     error_message: str | None = None
 
 
@@ -203,7 +203,7 @@ class FileExtensionCategories:
             val_str = str(getattr(Ext, attr_name, "N/A"))
             val_display = val_str[:70] + "..." if len(val_str) > 70 else val_str
 
-            self.logger.debug("Ext.%s? %s. Value (first 70 chars): %s", attr_name, has_attr, val_display,)
+            self.logger.debug("Ext.%s? %s. Value (first 70 chars): %s", attr_name, has_attr, val_display)
 
         self.logger.debug("--- END DEBUG WIDGETS ---")
 

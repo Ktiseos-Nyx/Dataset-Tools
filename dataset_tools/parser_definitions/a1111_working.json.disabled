@@ -5,17 +5,44 @@
 
   "detection_rules": [
     {
-      "comment": "Rule 1: Must have parameters PNG chunk with data",
-      "source_type": "pil_info_key",
-      "source_key": "parameters",
-      "operator": "exists"
-    },
-    {
-      "comment": "Rule 2: Must contain A1111 format signatures",
-      "source_type": "pil_info_key",
-      "source_key": "parameters",
-      "operator": "contains",
-      "value": "Steps:"
+      "comment": "Must have A1111 data AND NOT be a ComfyUI workflow",
+      "operator": "AND",
+      "rules": [
+        {
+          "comment": "Rule 1: Must have parameters PNG chunk with data",
+          "source_type": "pil_info_key",
+          "source_key": "parameters",
+          "operator": "exists"
+        },
+        {
+          "comment": "Rule 2: Must contain A1111 format signatures",
+          "source_type": "pil_info_key",
+          "source_key": "parameters",
+          "operator": "contains",
+          "value": "Steps:"
+        },
+        {
+          "comment": "Rule 3: Must NOT contain ComfyUI workflow data (exclude ComfyUI with A1111 compatibility)",
+          "operator": "NOT",
+          "rules": [
+            {
+              "condition": "OR",
+              "rules": [
+                {
+                  "source_type": "pil_info_key",
+                  "source_key": "workflow",
+                  "operator": "is_valid_json"
+                },
+                {
+                  "source_type": "pil_info_key",
+                  "source_key": "prompt",
+                  "operator": "is_valid_json"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
 

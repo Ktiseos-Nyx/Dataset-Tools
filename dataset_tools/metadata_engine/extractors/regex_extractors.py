@@ -32,7 +32,35 @@ class RegexExtractor:
             "regex_extract_between_patterns": self._extract_between_patterns,
             "regex_replace_pattern": self._replace_pattern,
             "regex_split_on_pattern": self._split_on_pattern,
+            "regex_on_input_data_string": self.regex_on_input_data_string,
         }
+
+    def regex_on_input_data_string(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> str | None:
+        """Run a regex pattern on the full input data string."""
+        self.logger.debug("Executing regex_on_input_data_string")
+        pattern = method_def.get("pattern")
+        if not pattern:
+            self.logger.warning("Method 'regex_on_input_data_string' requires a 'pattern'")
+            return None
+
+        # Ensure data is a string
+        data_str = str(data)
+
+        try:
+            match = re.search(pattern, data_str, re.DOTALL)
+            if match:
+                # Return the first capturing group if it exists, otherwise the full match.
+                return match.group(1) if match.groups() else match.group(0)
+        except re.error as e:
+            self.logger.error(f"Invalid regex pattern '{pattern}': {e}")
+
+        return None
 
     def _extract_regex_group(
         self,

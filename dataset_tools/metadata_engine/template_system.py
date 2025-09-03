@@ -83,6 +83,26 @@ class TemplateProcessor:
         if isinstance(template, list):
             return [self._process_recursive(item, extracted_fields, context_data) for item in template]
         if isinstance(template, str):
+            # Check if this is a single variable reference (like "$raw_json_content")
+            # In this case, preserve the original object type instead of converting to string
+            single_var_match = re.fullmatch(r"\$(\w+(?:\.\w+)*)", template)
+            if single_var_match:
+                var_path = single_var_match.group(1)
+                # Handle special variables
+                if var_path in self._special_handlers:
+                    return self._special_handlers[var_path]()
+                # Handle context variables
+                if var_path.startswith("CONTEXT."):
+                    context_path = var_path.replace("CONTEXT.", "", 1)
+                    value = json_path_get_utility(context_data, context_path)
+                    return value if value is not None else ""
+                # Handle regular field variables - preserve original type
+                value = json_path_get_utility(extracted_fields, var_path)
+                if value is not None:
+                    return value  # Return actual object, not str(value)
+                self.logger.debug(f"Template variable '${var_path}' not found, returning empty string")
+                return ""
+            # Normal string with embedded variables - use string substitution
             return self._substitute_variables(template, extracted_fields, context_data)
         return template
 

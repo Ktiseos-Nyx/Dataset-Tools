@@ -350,8 +350,6 @@ class ComfyUIFluxExtractor:
         if not isinstance(data, dict):
             return {}
 
-        prompt_data = data.get("prompt", data)
-
         summary = {
             "is_flux_workflow": self.detect_flux_workflow(data, {}, {}, {}),
             "t5_prompt": self.extract_t5_prompt(data, {}, {}, {}),
