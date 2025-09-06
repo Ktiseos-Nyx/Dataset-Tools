@@ -16,6 +16,10 @@ logger = get_logger(__name__)
 
 # ComfyUI Node type scoring with domain knowledge
 NODE_TYPE_SCORES = {
+    # Final resolved content display nodes (absolute highest priority)
+    "ShowText|pysssss": 5.0,  # ShowText nodes contain final resolved content - CRITICAL
+    "Show Text": 5.0,  # Alternative ShowText format
+
     # Dynamic content generators (highest priority)
     "DPRandomGenerator": 3.0,  # Dynamic Prompts Random Generator - highest priority
     "ImpactWildcardEncode": 2.9,  # Impact wildcard encode - very high priority
@@ -26,6 +30,7 @@ NODE_TYPE_SCORES = {
     "WildCardProcessor": 2.5,
     "Power Prompt (rgthree)": 2.8,  # rgthree power prompt with wildcards - very high priority
     "MZ_ChatGLM3_V2": 3.0,  # ChatGLM3 LLM integration - highest priority
+    "TIPO": 6.0,  # TIPO AI prompt generator - prioritize base input over random ShowText output
 
     # Standard prompt nodes (medium priority)
     "ChatGptPrompt": 2.0,  # ChatGPT prompt integration - high priority
@@ -57,6 +62,11 @@ NODE_TYPE_SCORES = {
     "ModelLoader": 0.1,
     "VAELoader": 0.1,
     "SchedulerLoader": 0.1,
+
+    # PixArt and T5 architecture loaders
+    "T5v11Loader": 0.2,  # T5 v1.1 text encoder loader for PixArt workflows
+    "PixArtCheckpointLoader": 0.2,  # PixArt model checkpoint loader
+    "PixArtResolutionSelect": 0.1,  # PixArt resolution selector utility
 }
 
 # Workflow classification system
@@ -85,7 +95,8 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         self.IRRELEVANT_NODE_TYPES = {
             "Note", "Reroute", "ImageSave", "LoadImage", "PreviewImage",
             "SaveImage", "ModelLoader", "VAELoader", "CheckpointLoaderSimple",
-            "LoraLoader", "SchedulerLoader", "EmptyLatentImage"
+            "LoraLoader", "SchedulerLoader", "EmptyLatentImage",
+            "T5v11Loader", "PixArtCheckpointLoader", "PixArtResolutionSelect"
         }
 
         # ComfyUI-specific template indicators
@@ -360,6 +371,10 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                 # FLUX-style CLIP text encoding
                 if len(widgets_values) >= 1 and isinstance(widgets_values[0], str):
                     text = widgets_values[0]
+            elif class_type == "TIPO":
+                # TIPO AI prompt generator - extract base input tags, not random output
+                if len(widgets_values) >= 1 and isinstance(widgets_values[0], str):
+                    text = widgets_values[0]  # Usually the "tags" input
             elif class_type == "ShowText|pysssss":
                 # ShowText display node - often shows AI-generated content
                 # widgets_values is usually a nested array like [["generated text here"]]
@@ -404,6 +419,9 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             elif class_type == "CLIPTextEncodeFlux":
                 # FLUX CLIP encoding
                 text = inputs.get("text", "")
+            elif class_type == "TIPO":
+                # TIPO AI prompt generator - check for tags input
+                text = inputs.get("tags", inputs.get("text", ""))
             else:
                 text = inputs.get("text", inputs.get("prompt", inputs.get("input_text", "")))
 
@@ -490,7 +508,10 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                         "node_title": node.get("title", ""),  # Add node title for negative/positive detection
                         "workflow_type": workflow_type,
                         "extraction_method": "comfyui_workflow_analysis",
-                        "is_connected": is_connected
+                        "is_connected": is_connected,
+                        # NEW: Add graph analysis data
+                        "workflow_data": workflow_data,
+                        "node_id": node_id
                     }
 
                     # Score the candidate
@@ -560,6 +581,16 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         if "positive prompt" in node_title:
             confidence += 10.0  # Large additive bonus to ensure it wins
 
+        # TensorArt LoRA/Checkpoint naming penalty - CRITICAL for flat format
+        if self._is_tensorart_technical_naming(text):
+            confidence *= 0.01  # Heavy penalty for LoRA technical names
+            print(f"[DEBUG] TensorArt technical naming penalty applied: {text[:50]}...")
+
+        # Wildcard template pattern penalty - CRITICAL for complex workflows
+        if self._is_wildcard_template_pattern(text):
+            confidence *= 0.02  # Heavy penalty for unresolved wildcard templates
+            print(f"[DEBUG] Wildcard template pattern penalty applied: {text[:50]}...")
+
         # ComfyUI template detection penalty - APPLY THIS LAST AND STRONGLY
         if self._is_comfyui_template_text(text):
             confidence *= 0.01  # Much heavier penalty for templates
@@ -573,28 +604,289 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         return scored_candidate
 
     def _get_connection_bonus(self, candidate: dict[str, Any]) -> float:
-        """Calculate connection-based bonus for prompt candidates.
+        """Calculate connection-based bonus using intelligent graph traversal.
         
-        Gives additive bonus for connections to important workflow components:
-        - Main samplers (KSampler, etc.) get highest bonus
-        - Upscaling samplers get medium bonus  
-        - Unconnected or unclear connections get no bonus
+        Uses workflow graph analysis to determine actual importance:
+        - Direct connections to samplers get highest bonus
+        - Nodes in main execution path get high bonus
+        - Utility/intermediate nodes get lower bonus
+        - Disconnected nodes get no bonus
         """
-        # This is a simple version - could be enhanced with actual connection tracing
-        # For now, we'll use heuristics based on the candidate's connection info
+        # Enhanced graph-aware connection scoring
+        return self._calculate_graph_centrality(candidate)
 
-        is_connected = candidate.get("is_connected", False)
+    def _calculate_graph_centrality(self, candidate: dict[str, Any]) -> float:
+        """Calculate node importance using graph centrality analysis.
+        
+        This is the ADVANCED SYSTEM that does intelligent graph traversal:
+        - Analyzes workflow execution paths
+        - Calculates node centrality in the graph
+        - Prioritizes nodes based on their role in the workflow
+        """
+        # Get candidate's workflow context
+        workflow_data = candidate.get("workflow_data")
+        node_id = candidate.get("node_id")
 
-        # Base bonus for being connected to any sampler
-        if is_connected:
-            return 0.2  # Small additive bonus for connected nodes
+        if not workflow_data or node_id is None:
+            return 0.1  # Small fallback bonus
 
-        # Could add more sophisticated connection analysis here:
-        # - Trace to main vs upscaling samplers
-        # - Check connection depth/path
-        # - Identify primary vs secondary workflows
+        # Build execution graph
+        execution_graph = self._build_execution_graph(workflow_data)
 
-        return 0.0  # No bonus for unconnected nodes
+        # Calculate centrality score
+        centrality_score = self._calculate_node_centrality(execution_graph, node_id)
+
+        # Convert to bonus (0.0 to 2.0 range)
+        bonus = min(centrality_score * 0.5, 2.0)
+
+        print(f"[DEBUG] Graph centrality for node {node_id}: {centrality_score:.3f} -> bonus {bonus:.3f}")
+
+        return bonus
+
+    def _build_execution_graph(self, workflow_data: dict[str, Any]) -> dict[str, Any]:
+        """Build an execution graph showing actual workflow paths.
+        
+        This creates a graph representation showing:
+        - Which nodes feed into samplers (high priority paths)
+        - Execution order and dependencies
+        - Workflow topology for centrality analysis
+        """
+        nodes = workflow_data.get("nodes", [])
+        links = workflow_data.get("links", [])
+
+        # Create adjacency lists
+        graph = {
+            "nodes": {},
+            "edges": {},  # node_id -> [connected_node_ids]
+            "reverse_edges": {},  # For backward tracing
+            "samplers": [],
+            "prompt_nodes": []
+        }
+
+        # Index nodes by ID
+        for node in nodes:
+            if isinstance(node, dict):
+                node_id = node.get("id")
+                if node_id is not None:
+                    graph["nodes"][node_id] = node
+                    graph["edges"][node_id] = []
+                    graph["reverse_edges"][node_id] = []
+
+                    # Identify critical node types
+                    class_type = node.get("class_type", "")
+                    if "sampler" in class_type.lower() or class_type in ["KSampler", "SamplerCustomAdvanced"]:
+                        graph["samplers"].append(node_id)
+                    elif class_type in ["CLIPTextEncode", "Text Multiline", "DPRandomGenerator"]:
+                        graph["prompt_nodes"].append(node_id)
+
+        # Build edges from links
+        for link in links:
+            if isinstance(link, list) and len(link) >= 4:
+                # [link_id, output_node, output_slot, input_node, input_slot, ...]
+                output_node = link[1]
+                input_node = link[3]
+
+                if output_node in graph["edges"] and input_node in graph["reverse_edges"]:
+                    graph["edges"][output_node].append(input_node)
+                    graph["reverse_edges"][input_node].append(output_node)
+
+        return graph
+
+    def _calculate_node_centrality(self, execution_graph: dict[str, Any], node_id: int) -> float:
+        """Calculate how central/important a node is in the workflow execution.
+        
+        Uses multiple centrality measures:
+        - Distance to samplers (closer = higher score)
+        - Number of paths through this node  
+        - Betweenness centrality (how many paths go through this node)
+        """
+        if node_id not in execution_graph["nodes"]:
+            return 0.0
+
+        centrality_score = 0.0
+
+        # 1. Distance to samplers (most important factor)
+        sampler_distance_score = self._calculate_sampler_distance_score(execution_graph, node_id)
+        centrality_score += sampler_distance_score * 2.0  # Weight this heavily
+
+        # 2. Betweenness centrality (how many execution paths go through this node)
+        betweenness_score = self._calculate_betweenness_centrality(execution_graph, node_id)
+        centrality_score += betweenness_score * 1.0
+
+        # 3. Node type importance
+        node_type_score = self._get_node_type_centrality(execution_graph, node_id)
+        centrality_score += node_type_score * 1.5
+
+        print(f"[DEBUG] Node {node_id} centrality: sampler_dist={sampler_distance_score:.2f}, betweenness={betweenness_score:.2f}, type={node_type_score:.2f}")
+
+        return centrality_score
+
+    def _calculate_sampler_distance_score(self, execution_graph: dict[str, Any], node_id: int) -> float:
+        """Calculate score based on distance to sampler nodes (closer = better)."""
+        samplers = execution_graph["samplers"]
+        if not samplers:
+            return 0.0
+
+        min_distance = float("inf")
+
+        # BFS to find shortest path to any sampler
+        from collections import deque
+        queue = deque([(node_id, 0)])
+        visited = {node_id}
+
+        while queue:
+            current_node, distance = queue.popleft()
+
+            if current_node in samplers:
+                min_distance = min(min_distance, distance)
+                continue
+
+            # Explore connected nodes
+            for next_node in execution_graph["edges"].get(current_node, []):
+                if next_node not in visited:
+                    visited.add(next_node)
+                    queue.append((next_node, distance + 1))
+
+        # Convert distance to score (closer = higher score)
+        if min_distance == float("inf"):
+            return 0.0
+        if min_distance == 0:
+            return 1.0  # Direct sampler connection
+        if min_distance == 1:
+            return 0.8  # One hop from sampler
+        if min_distance == 2:
+            return 0.6  # Two hops
+        return max(0.1, 1.0 / min_distance)
+
+    def _calculate_betweenness_centrality(self, execution_graph: dict[str, Any], node_id: int) -> float:
+        """Calculate betweenness centrality (how many paths go through this node)."""
+        # Simplified betweenness: count paths from prompt nodes to samplers that go through this node
+        prompt_nodes = execution_graph["prompt_nodes"]
+        samplers = execution_graph["samplers"]
+
+        if not prompt_nodes or not samplers:
+            return 0.0
+
+        paths_through_node = 0
+        total_paths = 0
+
+        # For each prompt->sampler pair, check if path goes through our node
+        for prompt_node in prompt_nodes:
+            for sampler_node in samplers:
+                path_exists, goes_through = self._path_goes_through_node(execution_graph, prompt_node, sampler_node, node_id)
+                if path_exists:
+                    total_paths += 1
+                    if goes_through:
+                        paths_through_node += 1
+
+        return paths_through_node / max(1, total_paths)
+
+    def _get_node_type_centrality(self, execution_graph: dict[str, Any], node_id: int) -> float:
+        """Get centrality score based on node type importance."""
+        node = execution_graph["nodes"].get(node_id)
+        if not node:
+            return 0.0
+
+        class_type = node.get("class_type", "")
+
+        # High importance node types
+        if class_type in ["CLIPTextEncode", "Text Multiline"]:
+            return 1.0
+        if class_type in ["DPRandomGenerator", "WildcardProcessor"]:
+            return 1.2
+        if "Sampler" in class_type:
+            return 0.8  # Samplers are important but not for text content
+        return 0.5
+
+    def _path_goes_through_node(self, execution_graph: dict[str, Any], start_node: int, end_node: int, target_node: int) -> tuple[bool, bool]:
+        """Check if a path from start to end exists, and if it goes through target_node."""
+        if start_node == end_node:
+            return True, start_node == target_node
+
+        # BFS to find if path exists
+        from collections import deque
+        queue = deque([(start_node, [start_node])])
+        visited = {start_node}
+
+        while queue:
+            current_node, path = queue.popleft()
+
+            if current_node == end_node:
+                return True, target_node in path
+
+            for next_node in execution_graph["edges"].get(current_node, []):
+                if next_node not in visited:
+                    visited.add(next_node)
+                    queue.append((next_node, path + [next_node]))
+
+        return False, False
+
+    def _is_tensorart_technical_naming(self, text: str) -> bool:
+        """Detect TensorArt LoRA/checkpoint technical naming that should be deprioritized.
+        
+        Simple, non-over-engineered detection for TA flat format issues.
+        """
+        text_lower = text.lower().strip()
+
+        # LoRA patterns - the most common issue
+        lora_patterns = [
+            "<lora:", ".safetensors", "ems-", "-ems.safetensors",
+            "lora:ems", "modelfilename", "modelhash"
+        ]
+
+        # Checkpoint/model patterns
+        checkpoint_patterns = [
+            ".ckpt", "checkpoint", "model.safetensors",
+            "basemodel", "modelid", "vae_name"
+        ]
+
+        # Check for LoRA technical patterns
+        if any(pattern in text_lower for pattern in lora_patterns):
+            return True
+
+        # Check for checkpoint technical patterns
+        if any(pattern in text_lower for pattern in checkpoint_patterns):
+            return True
+
+        # Additional check: if text is mostly technical IDs/hashes
+        if len(text) > 50 and text.count("-") > 3 and text.count(".") > 1:
+            return True
+
+        return False
+
+    def _is_wildcard_template_pattern(self, text: str) -> bool:
+        """Detect wildcard template patterns that haven't been resolved yet.
+        
+        Patterns like {word|}, {word1,word2|}, __wildcard__ indicate templates.
+        """
+        # Check for common wildcard syntax patterns
+        wildcard_patterns = [
+            "{", "}|",  # {vaporwave,|} style patterns
+            "__", "__",  # __location__ style patterns
+            "|",  # Multiple choice patterns
+        ]
+
+        # Count wildcard indicators
+        wildcard_count = 0
+        if "{" in text and "}" in text:
+            wildcard_count += text.count("{")
+        if "__" in text:
+            wildcard_count += text.count("__") // 2  # Pairs
+        if "|" in text and ("{" in text or "__" in text):
+            wildcard_count += text.count("|")
+
+        # If we have 3+ wildcard indicators, it's likely a template
+        if wildcard_count >= 3:
+            return True
+
+        # Specific problematic patterns
+        template_indicators = [
+            "{vaporwave,|}", "{sharp details,|}", "{realistic,|}",
+            "{muted colors|}", "__test2_location__", "__random_waifu_xl__",
+            "__any_location__", "__rpg_character_m_sexy__"
+        ]
+
+        return any(indicator in text for indicator in template_indicators)
 
     def enhance_engine_result(self, engine_result: dict[str, Any], original_file_path: str | None = None) -> dict[str, Any]:
         """Enhance engine results with ComfyUI-specific numpy analysis."""

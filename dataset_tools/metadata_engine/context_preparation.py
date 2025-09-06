@@ -198,6 +198,14 @@ class ContextDataPreparer:
             else:
                 self.logger.debug("No UserComment found in EXIF data")
 
+            # Fallback: Check if raw EXIF bytes contain embedded JSON workflow
+            # This handles cases where ComfyUI workflows are stored directly in EXIF without UserComment
+            if not context.get("raw_user_comment_str") and exif_bytes:
+                json_workflow = self._extract_json_from_raw_exif(exif_bytes)
+                if json_workflow:
+                    context["raw_user_comment_str"] = json_workflow
+                    self.logger.info(f"Extracted JSON workflow from raw EXIF: {len(json_workflow)} chars")
+
         except Exception as e:
             self.logger.debug(f"Could not load EXIF data with piexif: {e}. Some metadata might be missing.")
 
@@ -243,6 +251,79 @@ class ContextDataPreparer:
 
         # Final Fallback: Decode with replacement characters to salvage what we can
         return data.decode("utf-8", errors="replace").strip().strip("\x00")
+
+    def _extract_json_from_raw_exif(self, exif_bytes: bytes) -> str:
+        """Extract JSON workflow from raw EXIF bytes when not stored in UserComment.
+        
+        Some ComfyUI workflows are embedded directly in EXIF data after headers,
+        as seen in certain JPEG files where the workflow appears after JFIF/MM headers.
+        """
+        if not exif_bytes or len(exif_bytes) < 50:
+            return ""
+
+        try:
+            # Convert to string and look for JSON patterns
+            exif_str = exif_bytes.decode("utf-8", errors="ignore")
+
+            # Look for ComfyUI JSON patterns - workflows typically start with {"prompt": {
+            json_patterns = [
+                '{"prompt":',
+                '{"workflow":',
+                '{"1":',  # Node IDs often start with "1"
+                '{"nodes":',
+            ]
+
+            for pattern in json_patterns:
+                json_start = exif_str.find(pattern)
+                if json_start >= 0:
+                    # Found potential JSON, try to extract it
+                    potential_json = exif_str[json_start:]
+
+                    # Find the end of the JSON by counting braces
+                    brace_count = 0
+                    json_end = -1
+                    in_string = False
+                    escaped = False
+
+                    for i, char in enumerate(potential_json):
+                        if escaped:
+                            escaped = False
+                            continue
+                        if char == "\\" and in_string:
+                            escaped = True
+                            continue
+                        if char == '"' and not escaped:
+                            in_string = not in_string
+                            continue
+                        if not in_string:
+                            if char == "{":
+                                brace_count += 1
+                            elif char == "}":
+                                brace_count -= 1
+                                if brace_count == 0:
+                                    json_end = i + 1
+                                    break
+
+                    if json_end > 0:
+                        json_candidate = potential_json[:json_end]
+                        # Validate it's actually valid JSON
+                        try:
+                            import json
+                            parsed = json.loads(json_candidate)
+                            # Check if it looks like a ComfyUI workflow
+                            if (isinstance(parsed, dict) and
+                                (any(key in parsed for key in ["prompt", "workflow", "nodes"]) or
+                                 any(isinstance(v, dict) and "class_type" in v for v in parsed.values()))):
+                                self.logger.debug(f"Found valid ComfyUI JSON in raw EXIF: {len(json_candidate)} chars")
+                                return json_candidate
+                        except json.JSONDecodeError:
+                            continue  # Try next pattern
+
+            return ""
+
+        except Exception as e:
+            self.logger.debug(f"Failed to extract JSON from raw EXIF: {e}")
+            return ""
 
     def _find_and_parse_comfyui_json(self, context: ContextData) -> None:
         """After all metadata is extracted, find the most likely source of ComfyUI
