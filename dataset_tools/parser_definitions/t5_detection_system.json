@@ -12,323 +12,88 @@
   ],
   "detection_rules": [
     {
-      "comment": "Rule 1: PNG format - Must have prompt chunk with valid JSON and T5 signatures",
-      "operator": "AND",
-      "rules": [
-        {
-          "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "is_valid_json"
-        },
-        {
-          "comment": "Must contain T5 architecture signatures",
-          "operator": "OR",
-          "rules": [
-            {
-              "comment": "FLUX/SD3: Uses DualCLIPLoader for T5+CLIP",
-              "source_type": "pil_info_key",
-              "source_key": "prompt",
-              "operator": "contains",
-              "value": "DualCLIPLoader"
-            },
-            {
-              "comment": "PixArt: Uses PixArt-specific T5 components",
-              "source_type": "pil_info_key",
-              "source_key": "prompt",
-              "operator": "contains",
-              "value": "PixArtT5TextEncode"
-            },
-            {
-              "comment": "General T5: Uses dedicated T5 loaders",
-              "source_type": "pil_info_key",
-              "source_key": "prompt",
-              "operator": "contains",
-              "value": "T5v11Loader"
-            },
-            {
-              "comment": "T5 Text Encoding: Direct T5 text encoding",
-              "source_type": "pil_info_key",
-              "source_key": "prompt",
-              "operator": "contains",
-              "value": "T5TextEncode"
-            },
-            {
-              "comment": "PixArt Checkpoint: PixArt models with embedded T5",
-              "source_type": "pil_info_key",
-              "source_key": "prompt",
-              "operator": "contains",
-              "value": "PixArtCheckpointLoader"
-            }
-          ]
-        }
-      ]
+      "comment": "EXIF UserComment must exist",
+      "source_type": "exif_user_comment",
+      "operator": "exists"
     },
     {
-      "comment": "Rule 2: JPEG format - Must have EXIF UserComment with T5 signatures (for A1111-style T5/FLUX)",
-      "operator": "AND",
-      "rules": [
-        {
-          "source_type": "exif_user_comment",
-          "operator": "exists"
-        },
-        {
-          "comment": "Must contain T5/FLUX model signatures in EXIF",
-          "operator": "OR",
-          "rules": [
-            {
-              "comment": "FLUX model signatures",
-              "source_type": "exif_user_comment",
-              "operator": "contains",
-              "value": "flux"
-            },
-            {
-              "comment": "T5 model signatures",
-              "source_type": "exif_user_comment",
-              "operator": "contains",
-              "value": "t5"
-            },
-            {
-              "comment": "DualCLIP signatures",
-              "source_type": "exif_user_comment",
-              "operator": "contains",
-              "value": "clip_l"
-            }
-          ]
-        }
-      ]
+      "comment": "Must contain FLUX model signatures in EXIF - case insensitive",
+      "source_type": "exif_user_comment",
+      "operator": "contains_case_insensitive",
+      "value": "flux"
     }
   ],
   "parsing_instructions": {
     "input_data": {
       "source_options": [
         {
-          "source_type": "pil_info_key",
-          "source_key": "workflow"
-        },
-        {
-          "source_type": "pil_info_key",
-          "source_key": "prompt"
+          "source_type": "a1111_parameter_string_content"
         },
         {
           "source_type": "exif_user_comment"
         }
-      ],
-      "transformations": [
-        {
-          "type": "json_decode_string_itself"
-        }
       ]
     },
+    "extraction_strategy": "a1111_text_parsing",
+    "format_description": "A1111-style FLUX/T5 images use text format with prompts and key-value parameters in EXIF",
     "fields": [
       {
         "target_key": "prompt",
-        "method": "comfy_find_text_from_main_sampler_input",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
-        ],
-        "positive_input_name": "positive",
-        "text_input_name_in_encoder": "text",
-        "text_encoder_node_types": [
-          "CLIPTextEncode",
-          "BNK_CLIPTextEncodeAdvanced",
-          "CLIPTextEncodeAdvanced",
-          "T5TextEncode",
-          "PixArtT5TextEncode",
-          "PixArtTextEncode",
-          "PixArtAlphaTextEncode",
-          "PixArtSigmaTextEncode"
-        ],
-        "comment": "Extract prompt using traditional ComfyUI traversal (most T5 workflows use this)"
+        "method": "a1111_extract_prompt_positive",
+        "comment": "Extract positive prompt from A1111-style parameter string"
       },
       {
-        "target_key": "negative_prompt",
-        "method": "comfy_find_text_from_main_sampler_input",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
-        ],
-        "negative_input_name": "negative",
-        "text_input_name_in_encoder": "text",
-        "text_encoder_node_types": [
-          "CLIPTextEncode",
-          "BNK_CLIPTextEncodeAdvanced",
-          "CLIPTextEncodeAdvanced",
-          "T5TextEncode",
-          "PixArtT5TextEncode",
-          "PixArtTextEncode",
-          "PixArtAlphaTextEncode",
-          "PixArtSigmaTextEncode"
-        ],
-        "comment": "Extract negative prompt using traditional ComfyUI traversal"
+        "target_key": "negative_prompt", 
+        "method": "a1111_extract_prompt_negative",
+        "comment": "Extract negative prompt from A1111-style parameter string"
       },
       {
         "target_key": "parameters.seed",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
-        ],
-        "input_key": "seed",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Seed",
         "value_type": "integer",
-        "comment": "Extract seed from sampler node (handles both seed and noise_seed)"
+        "comment": "Extract seed parameter"
       },
       {
         "target_key": "parameters.steps",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
-        ],
-        "input_key": "steps",
+        "method": "key_value_extract_from_a1111_block", 
+        "key_name": "Steps",
         "value_type": "integer",
-        "comment": "Extract steps from sampler node"
+        "comment": "Extract steps parameter"
       },
       {
         "target_key": "parameters.cfg_scale",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
-        ],
-        "input_key": "cfg",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG scale", 
         "value_type": "float",
-        "comment": "Extract CFG scale from sampler node"
+        "comment": "Extract CFG scale parameter"
       },
       {
         "target_key": "parameters.sampler_name",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
-        ],
-        "input_key": "sampler_name",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Sampler",
+        "value_type": "string", 
+        "comment": "Extract sampler parameter"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model",
         "value_type": "string",
-        "comment": "Extract sampler name from sampler node"
+        "comment": "Extract model parameter (FLUX model)"
       },
       {
-        "target_key": "parameters.scheduler",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
-        ],
-        "input_key": "scheduler",
+        "target_key": "parameters.size",
+        "method": "key_value_extract_from_a1111_block", 
+        "key_name": "Size",
         "value_type": "string",
-        "comment": "Extract scheduler from sampler node"
-      },
-      {
-        "target_key": "parameters.t5_model",
-        "method": "comfy_find_input_of_node_type",
-        "node_types": [
-          "DualCLIPLoader",
-          "DualCLIPLoaderGGUF",
-          "CheckpointLoaderSimple",
-          "PixArtCheckpointLoader",
-          "T5v11Loader"
-        ],
-        "input_field": "clip_name1",
-        "fallback_fields": [
-          "ckpt_name",
-          "pytorch_model-00001-of-00002.bin"
-        ],
-        "data_type": "string",
-        "fallback": "Unknown T5 Model",
-        "comment": "Extract T5 model name from various T5-capable loaders"
-      },
-      {
-        "target_key": "parameters.clip_model",
-        "method": "comfy_find_input_of_node_type",
-        "node_types": [
-          "DualCLIPLoader",
-          "DualCLIPLoaderGGUF",
-          "CheckpointLoaderSimple"
-        ],
-        "input_field": "clip_name2",
-        "data_type": "string",
-        "fallback": "Unknown CLIP Model",
-        "comment": "Extract CLIP model name from DualCLIPLoader or checkpoint"
-      },
-      {
-        "target_key": "parameters.width",
-        "method": "comfy_find_input_of_node_type",
-        "node_types": [
-          "EmptyLatentImage",
-          "EmptyLatentImageFromPresetsSDXL",
-          "EmptySD3LatentImage"
-        ],
-        "input_field": "width",
-        "data_type": "integer",
-        "fallback": 1024,
-        "comment": "Extract width from latent image node"
-      },
-      {
-        "target_key": "parameters.height",
-        "method": "comfy_find_input_of_node_type",
-        "node_types": [
-          "EmptyLatentImage",
-          "EmptyLatentImageFromPresetsSDXL",
-          "EmptySD3LatentImage"
-        ],
-        "input_field": "height",
-        "data_type": "integer",
-        "fallback": 1024,
-        "comment": "Extract height from latent image node"
+        "comment": "Extract size parameter"
       },
       {
         "target_key": "parameters.architecture_type",
         "method": "direct_value",
-        "value": "T5 Architecture",
-        "comment": "Mark this as T5 architecture (could be SD3, FLUX, PixArt, etc.)"
-      },
-      {
-        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
-        "target_key": "tipo_enhancement",
-        "method": "comfyui_detect_tipo_enhancement"
-      },
-      {
-        "comment": "📊 Workflow Complexity Analysis",
-        "target_key": "workflow_complexity",
-        "method": "comfyui_calculate_workflow_complexity"
-      },
-      {
-        "comment": "🚀 Advanced Upscaling Detection",
-        "target_key": "advanced_upscaling",
-        "method": "comfyui_detect_advanced_upscaling"
-      },
-      {
-        "comment": "🎨 Multi-Stage Conditioning Detection",
-        "target_key": "multi_stage_conditioning",
-        "method": "comfyui_detect_multi_stage_conditioning"
-      },
-      {
-        "comment": "✨ Post-Processing Effects Detection",
-        "target_key": "post_processing_effects",
-        "method": "comfyui_detect_post_processing_effects"
-      },
-      {
-        "comment": "🔌 Custom Node Ecosystem Detection",
-        "target_key": "custom_node_ecosystems",
-        "method": "comfyui_detect_custom_node_ecosystems"
-      },
-      {
-        "comment": "🎯 High-Level Workflow Techniques",
-        "target_key": "workflow_techniques",
-        "method": "comfyui_extract_workflow_techniques"
+        "value": "FLUX T5 Architecture", 
+        "comment": "Mark this as FLUX T5 architecture detected from A1111-style metadata"
       }
     ],
     "output_template": {
