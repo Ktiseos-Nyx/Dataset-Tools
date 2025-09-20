@@ -1,0 +1,59 @@
+00038-2025-03-24-SDXLFaetastic_v24.jpg
+File Metadata
+
+File Type: image/jpeg
+Error: 0
+Upload Size: 521393
+exiftool:
+Name
+Value
+ExifTool Version Number
+12.25
+File Name
+phpkQG0L4
+Directory
+/tmp
+File Size
+509 KiB
+File Modification Date/Time
+2025:09:19 08:32:39+00:00
+File Access Date/Time
+2025:09:19 08:32:38+00:00
+File Inode Change Date/Time
+2025:09:19 08:32:39+00:00
+File Permissions
+-rw-------
+File Type
+JPEG
+File Type Extension
+jpg
+MIME Type
+image/jpeg
+JFIF Version
+1.01
+Resolution Unit
+None
+X Resolution
+1
+Y Resolution
+1
+Exif Byte Order
+Big-endian (Motorola, MM)
+User Comment
+wl_lemons,an old man, wearing thick glasses with yellow lemon lenses, on a beach, portrait, head partially turned, looking away, candid, .Negative prompt: .Steps: 30, Size: 832x1216, Sampler: DPM++ 2M, Seed: 3873706916, CFG scale: 6, CFG rescale: 0.7, Model: SDXLFaetastic_v24, Model hash: 07b985d12f, App: SD.Next, Version: cb0eb55, Backend: Diffusers, Pipeline: StableDiffusionXLImg2ImgPipeline, Parser: native, Operations: upscale; img2img, Refine: True, Hires force: False, Hires steps: 20, HiRes mode: 1, Hires upscaler: ESRGAN 4x Remacri, Hires scale: 2, Hires size: 1664x2432, Hires strength: 0.3, Hires sampler: DPM2++ 3M SDE FlowMatch, Hires CFG scale: 6, Init image size: 832x1216, Init image hash: f33bac7b, Image CFG scale: 6, Resize scale: 1, Denoising strength: 0.3, Resize mode: Fixed, Sampler sigma: karras, Sampler dynamic shift: False, LoRA networks: "When_Life_Gives_You_Lemons-000005, DetailTweakerXL"
+Image Width
+1664
+Image Height
+2432
+Encoding Process
+Baseline DCT, Huffman coding
+Bits Per Sample
+8
+Color Components
+3
+Y Cb Cr Sub Sampling
+YCbCr4:2:0 (2 2)
+Image Size
+1664x2432
+Megapixels
+4.0

@@ -1,0 +1,23 @@
+{
+    "parser_name": "ComfyUI DynamicPrompts",
+    "name": "ComfyUI DynamicPrompts Extractor",
+    "version": "1.0",
+    "description": "A parser for ComfyUI workflows that use DynamicPrompts nodes.",
+    "author": "Gemini",
+    "mime_types": ["image/png", "image/jpeg"],
+    "rules": [
+        {
+            "id": "dynamicprompts_detection",
+            "type": "python",
+            "method": "comfyui_dynamicprompts.ComfyUIDynamicPromptsExtractor.detect_dynamicprompts_workflow",
+            "output_field": "is_dynamicprompts_workflow"
+        },
+        {
+            "id": "dynamicprompts_summary",
+            "type": "python",
+            "method": "comfyui_dynamicprompts.ComfyUIDynamicPromptsExtractor.extract_dynamicprompts_workflow_summary",
+            "output_field": "dynamicprompts_data",
+            "condition": "is_dynamicprompts_workflow"
+        }
+    ]
+}

@@ -1,0 +1,179 @@
+{
+  "parser_name": "ComfyUI FLUX Advanced Workflows",
+  "priority": 80,
+  "description": "Advanced FLUX workflows with complex text processing, wildcards, and modern sampling techniques",
+  "version": "1.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Must have ComfyUI prompt chunk with valid JSON",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Must contain FLUX-specific content (CLIPTextEncodeFlux node)",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "contains",
+      "value": "CLIPTextEncodeFlux"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "flux_extract_complex_prompt",
+        "fallback_methods": [
+          "flux_extract_wildcard_prompt",
+          "flux_extract_t5_prompt",
+          "comfy_find_text_from_main_sampler_input"
+        ]
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "flux_extract_clip_prompt",
+        "fallback_methods": [
+          "comfy_find_text_from_main_sampler_input"
+        ]
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "SamplerCustomAdvanced",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "SamplerCustomAdvanced",
+          "KSampler", 
+          "KSamplerAdvanced"
+        ],
+        "input_key": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.guidance_scale",
+        "method": "flux_extract_guidance_scale",
+        "fallback": 3.5
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "SamplerCustomAdvanced",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler", 
+        "sampler_node_types": [
+          "SamplerCustomAdvanced",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "ImageScale"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "ImageScale"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "model_info",
+        "method": "flux_extract_model_info"
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI FLUX Advanced Workflows",
+      "tool": "ComfyUI (FLUX Advanced)",
+      "format": "FLUX Text-to-Image",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps", 
+        "guidance_scale": "$parameters.guidance_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "model_info": "$model_info",
+      "architecture_info": {
+        "detected_as": "FLUX",
+        "sampling_method": "Advanced FLUX Sampling",
+        "text_encoding": "Dual CLIP + T5",
+        "workflow_type": "Complex Text Processing"
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI FLUX workflow",
+        "parser_priority": 160,
+        "confidence": "high",
+        "flux_workflow": true,
+        "advanced_features": true
+      }
+    }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Specifically designed for advanced FLUX workflows with complex text processing",
+    "Handles CLIPTextEncodeFlux, ModelSamplingFlux, and SamplerCustomAdvanced patterns",
+    "Extracts prompts from text concatenation, AI generation, and wildcard systems",
+    "Priority 160 puts it above generic ComfyUI parsers for FLUX workflows",
+    "Supports both direct and fallback extraction methods for robustness"
+  ]
+}

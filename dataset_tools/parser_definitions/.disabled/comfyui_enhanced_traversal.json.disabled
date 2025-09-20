@@ -1,0 +1,170 @@
+{
+  "parser_name": "ComfyUI (Enhanced Graph Traversal)",
+  "priority": 175,
+  "description": "Uses full graph traversal from final nodes to robustly find parameters in complex workflows.",
+  "target_file_types": [
+    "PNG",
+    "JSON"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have a parsable ComfyUI workflow in a known location.",
+      "source_type": "any_metadata_source",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: The JSON must contain sampler nodes (various types).",
+      "source_type": "any_metadata_source",
+      "operator": "regex_match_any",
+      "regex_patterns": ["KSampler", "SamplerCustom", "SamplerDPMPP", "SamplerEuler", "CLIPTextEncode", "CheckpointLoader"]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        },
+        {
+          "source_type": "raw_file_content_text"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "CLIPTextEncode",
+          "extract_from_input": "text"
+        }
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "CLIPTextEncode",
+          "extract_from_input": "text",
+          "comment": "This will find the first text encoder. In many workflows, a second traversal targeting a node titled 'Negative' might be needed, or rely on numpy scoring to differentiate."
+        }
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "KSampler",
+          "extract_from_input": "seed"
+        }
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "KSampler",
+          "extract_from_input": "steps"
+        }
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "KSampler",
+          "extract_from_input": "cfg"
+        }
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "KSampler",
+          "extract_from_input": "sampler_name"
+        }
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "KSampler",
+          "extract_from_input": "scheduler"
+        }
+      },
+      {
+        "target_key": "parameters.denoise",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "KSampler",
+          "extract_from_input": "denoise"
+        }
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "CheckpointLoaderSimple",
+          "extract_from_input": "ckpt_name"
+        }
+      },
+      {
+        "target_key": "parameters.vae_model",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "VAELoader",
+          "extract_from_input": "vae_name"
+        }
+      },
+      {
+        "target_key": "parameters.clip_skip",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "CLIPSetLastLayer",
+          "extract_from_input": "stop_at_clip_layer"
+        }
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "EmptyLatentImage",
+          "extract_from_input": "width"
+        }
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "extract_by_graph_traversal",
+        "config": {
+          "target_node_type": "EmptyLatentImage",
+          "extract_from_input": "height"
+        }
+      }
+    ],
+    "output_template": {
+      "tool": "ComfyUI (Enhanced Graph Traversal)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "denoise": "$parameters.denoise",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "model": "$parameters.model",
+        "vae_model": "$parameters.vae_model",
+        "clip_skip": "$parameters.clip_skip"
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING"
+    }
+  }
+}

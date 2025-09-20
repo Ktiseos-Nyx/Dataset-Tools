@@ -1,0 +1,88 @@
+---- ExifTool ----
+ExifTool Version Number         : 12.62
+---- System ----
+File Name                       : 01.jpg
+Directory                       : //Users/duskfall/Desktop/image-tests/images_with_metadata_but_unknown_format
+File Size                       : 1854 kB
+File Modification Date/Time     : 2025:07:06 16:42:29+12:00
+File Access Date/Time           : 2025:09:19 20:09:07+12:00
+File Inode Change Date/Time     : 2025:09:19 17:43:06+12:00
+File Permissions                : -rw-r--r--
+---- File ----
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+Exif Byte Order                 : Big-endian (Motorola, MM)
+Image Width                     : 1536
+Image Height                    : 1152
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:4:4 (1 1)
+---- JFIF ----
+JFIF Version                    : 1.01
+Resolution Unit                 : inches
+X Resolution                    : 72
+Y Resolution                    : 72
+---- IFD0 ----
+X Resolution                    : 72
+Y Resolution                    : 72
+Resolution Unit                 : inches
+Modify Date                     : 2025:07:06 11:25:35
+---- ExifIFD ----
+Color Space                     : sRGB
+Exif Image Width                : 1536
+Exif Image Height               : 1152
+---- XMP-x ----
+XMP Toolkit                     : XMP Core 5.5.0
+---- XMP-xmp ----
+Create Date                     : 2025:07:06 11:23:15+0900
+Modify Date                     : 2025:07:06 11:25:35+09:00
+Metadata Date                   : 2025:07:06 11:25:35+09:00
+---- XMP-photoshop ----
+Date Created                    : 2025:07:06 11:23:15+0900
+Color Mode                      : RGB
+ICC Profile Name                : sRGB IEC61966-2.1
+---- XMP-xmpMM ----
+History Action                  : produced
+History Software Agent          : Affinity Photo 2 2.6.3
+History When                    : 2025:07:06 11:25:35+09:00
+---- Photoshop ----
+IPTC Digest                     : d41d8cd98f00b204e9800998ecf8427e
+---- ICC-header ----
+Profile CMM Type                : Little CMS
+Profile Version                 : 4.3.0
+Profile Class                   : Display Device Profile
+Color Space Data                : RGB
+Profile Connection Space        : XYZ
+Profile Date Time               : 2025:07:06 02:18:11
+Profile File Signature          : acsp
+Primary Platform                : Apple Computer Inc.
+CMM Flags                       : Not Embedded, Independent
+Device Manufacturer             : 
+Device Model                    : 
+Device Attributes               : Reflective, Glossy, Positive, Color
+Rendering Intent                : Perceptual
+Connection Space Illuminant     : 0.9642 1 0.82491
+Profile Creator                 : Little CMS
+Profile ID                      : 0
+---- ICC_Profile ----
+Profile Description             : sRGB IEC61966-2.1
+Profile Copyright               : No copyright, use freely
+Media White Point               : 0.9642 1 0.82491
+Chromatic Adaptation            : 1.04788 0.02292 -0.05022 0.02959 0.99048 -0.01707 -0.00925 0.01508 0.75168
+Red Matrix Column               : 0.43604 0.22249 0.01392
+Blue Matrix Column              : 0.14305 0.06061 0.71391
+Green Matrix Column             : 0.38512 0.7169 0.09706
+Red Tone Reproduction Curve     : (Binary data 32 bytes, use -b option to extract)
+Green Tone Reproduction Curve   : (Binary data 32 bytes, use -b option to extract)
+Blue Tone Reproduction Curve    : (Binary data 32 bytes, use -b option to extract)
+---- ICC-chrm ----
+Chromaticity Channels           : 3
+Chromaticity Colorant           : Unknown
+Chromaticity Channel 1          : 0.64 0.33
+Chromaticity Channel 2          : 0.3 0.60001
+Chromaticity Channel 3          : 0.14999 0.06
+---- Composite ----
+Image Size                      : 1536x1152
+Megapixels                      : 1.8

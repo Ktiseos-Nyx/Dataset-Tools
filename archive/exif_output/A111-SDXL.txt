@@ -1,0 +1,51 @@
+test_img_sdxl.png
+File Metadata
+
+File Type: image/png
+Error: 0
+Upload Size: 2390975
+exiftool:
+Name
+Value
+ExifTool Version Number
+12.25
+File Name
+phpoSfURr
+Directory
+/tmp
+File Size
+2.3 MiB
+File Modification Date/Time
+2025:09:19 08:36:54+00:00
+File Access Date/Time
+2025:09:19 08:36:53+00:00
+File Inode Change Date/Time
+2025:09:19 08:36:54+00:00
+File Permissions
+-rw-------
+File Type
+PNG
+File Type Extension
+png
+MIME Type
+image/png
+Image Width
+1248
+Image Height
+1824
+Bit Depth
+8
+Color Type
+RGB
+Compression
+Deflate/Inflate
+Filter
+Adaptive
+Interlace
+Noninterlaced
+Parameters
+Hell4ineXLPOS solo, long hair, looking at viewer, 1boy, jewelry, closed mouth, upper body, white hair, male focus, wings, necklace, border, cross, black wings, .Negative prompt: XL_Neg .Steps: 30, Sampler: Euler a, Schedule type: Automatic, CFG scale: 7, Seed: 970527942, Size: 832x1216, Model hash: 238ffac319, Model: HellaineMixXL-FIX.fp16, VAE hash: 63aeecb90f, VAE: sdxl_vae.safetensors, Denoising strength: 0.35, Clip skip: 2, Hashes: {"model": "238ffac319", "embed:Hell4ineXLPOS": "23f5e3fc03", "vae": "63aeecb90f"}, Hires upscale: 1.5, Hires steps: 30, Hires upscaler: 4x_foolhardy_Remacri, TI hashes: "Hell4ineXLPOS: 23f5e3fc030a, Hell4ineXLPOS: 23f5e3fc030a", Hardware Info: "RTX 4090 24GB, Threadripper PRO 5975WX 32-s, 252GB RAM", Time taken: 18.0 sec., Version: v1.10.0
+Image Size
+1248x1824
+Megapixels
+2.3
