@@ -1,0 +1,61 @@
+486 (1).png
+File Metadata
+
+File Type: image/png
+Error: 0
+Upload Size: 5059680
+exiftool:
+Name
+Value
+ExifTool Version Number
+12.25
+File Name
+phpD5grfR
+Directory
+/tmp
+File Size
+4.8 MiB
+File Modification Date/Time
+2025:09:19 08:38:04+00:00
+File Access Date/Time
+2025:09:19 08:38:03+00:00
+File Inode Change Date/Time
+2025:09:19 08:38:04+00:00
+File Permissions
+-rw-------
+File Type
+PNG
+File Type Extension
+png
+MIME Type
+image/png
+Image Width
+2048
+Image Height
+2048
+Bit Depth
+8
+Color Type
+RGB
+Compression
+Deflate/Inflate
+Filter
+Adaptive
+Interlace
+Noninterlaced
+Creation Time
+2025:06:30 08:28:07+00:00
+Author
+u2816893666
+Description
+An underwater surreal scene of whales swimming through a sky above a cityscape, the city lights shimmering through the translucent ocean above, cinematic lighting, hyper-detailed, volumetric lighting, 8k resolution --chaos 15 --raw --stylize 150 --v 7 Job ID: 31b4cc6a-32c8-4b17-9aef-15c0f405f6f6
+XMP Toolkit
+XMP Core 4.4.0-Exiv2
+Digital Image GUID
+31b4cc6a-32c8-4b17-9aef-15c0f405f6f6
+Digital Source Type
+http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia
+Image Size
+2048x2048
+Megapixels
+4.2

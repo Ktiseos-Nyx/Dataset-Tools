@@ -1,0 +1,188 @@
+{
+  "parser_name": "A1111_Wildcard_Template",
+  "priority": 112,
+  "description": "A1111 WebUI with advanced wildcard/template systems (EnvyXL, HOLY SPAGHETTI, etc.)",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must first look like a standard A1111 text block.",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_all",
+      "regex_patterns": ["Steps:", "Sampler:", "Seed:"]
+    },
+    {
+      "comment": "Rule 2: Must contain wildcard/template syntax patterns.",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_any",
+      "regex_patterns": [
+        "__\\w+__",
+        "\\{[^}]*\\|[^}]*\\}",
+        "Template:",
+        "Negative Template:",
+        "__random_\\w+__",
+        "__\\w+_with_\\w+__"
+      ]
+    },
+    {
+      "comment": "Rule 3: Must have standard A1111 version (v-prefix, not f-prefix).",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_any",
+      "regex_patterns": ["Version: v\\d+\\.\\d+\\.\\d+"]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "pil_info_key", "source_key": "parameters"},
+        {"source_type": "exif_user_comment"}
+      ]
+    },
+    "extraction_strategy": "a1111_text_parsing_with_template_handling",
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "a1111_extract_prompt_positive_with_template_cleanup"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "a1111_extract_prompt_negative_with_template_cleanup"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.sampler",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Sampler",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG scale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.size",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Size",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.version",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Version",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.template_positive",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Template",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.template_negative",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Negative Template",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.lora_hashes",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Lora hashes",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.adetailer_version",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "ADetailer version",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.sag_guidance_enabled",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "SAG Guidance Enabled",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.negpip_active",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "NegPiP Active",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.cdt",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CDT",
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "tool": "A1111 WebUI (Wildcard/Template)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "sampler": "$parameters.sampler",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "size": "$parameters.size",
+        "model": "$parameters.model",
+        "version": "$parameters.version",
+        "lora_hashes": "$parameters.lora_hashes",
+        "adetailer_version": "$parameters.adetailer_version",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height"
+      },
+      "template_system": {
+        "positive_template": "$parameters.template_positive",
+        "negative_template": "$parameters.template_negative",
+        "sag_guidance": "$parameters.sag_guidance_enabled",
+        "negpip_active": "$parameters.negpip_active",
+        "cdt_settings": "$parameters.cdt",
+        "supports_wildcards": true,
+        "template_engine": "EnvyXL_compatible"
+      },
+      "raw_metadata": "$INPUT_STRING_ORIGINAL_CHUNK",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+  "notes": [
+    "Handles complex wildcard syntax like {option1|option2|option3}",
+    "Supports nested templates and dynamic LoRA weights",
+    "Recognizes __wildcard_file__ syntax",
+    "Compatible with EnvyXL, HOLY SPAGHETTI, and similar systems",
+    "Extracts Template and Negative Template fields",
+    "Handles advanced extensions like SAG Guidance, NegPiP, CDT"
+  ]
+}

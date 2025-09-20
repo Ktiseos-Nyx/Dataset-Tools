@@ -1,0 +1,257 @@
+P1010939.JPG
+File Metadata
+
+File Type: image/jpeg
+Error: 0
+Upload Size: 753513
+exiftool:
+Name
+Value
+ExifTool Version Number
+12.25
+File Name
+phpUYiPxf
+Directory
+/tmp
+File Size
+736 KiB
+File Modification Date/Time
+2025:09:19 08:28:27+00:00
+File Access Date/Time
+2025:09:19 08:28:26+00:00
+File Inode Change Date/Time
+2025:09:19 08:28:27+00:00
+File Permissions
+-rw-------
+File Type
+JPEG
+File Type Extension
+jpg
+MIME Type
+image/jpeg
+Exif Byte Order
+Little-endian (Intel, II)
+Make
+Panasonic
+Camera Model Name
+DMC-F2
+Orientation
+Horizontal (normal)
+X Resolution
+180
+Y Resolution
+180
+Resolution Unit
+inches
+Software
+Ver.1.0
+Modify Date
+2010:06:19 07:42:24
+Y Cb Cr Positioning
+Co-sited
+Exposure Time
+1/25
+F Number
+2.8
+Exposure Program
+Program AE
+ISO
+1600
+Exif Version
+0221
+Date/Time Original
+2010:06:19 07:42:24
+Create Date
+2010:06:19 07:42:24
+Components Configuration
+Y, Cb, Cr, -
+Compressed Bits Per Pixel
+4
+Exposure Compensation
+0
+Max Aperture Value
+2.8
+Metering Mode
+Multi-segment
+Light Source
+Shade
+Flash
+Off, Did not fire
+Focal Length
+5.5 mm
+Image Quality
+High
+Firmware Version
+0.1.0.0
+White Balance
+Shade
+Focus Mode
+Auto
+AF Area Mode
+9-area
+Image Stabilization
+Off
+Macro Mode
+Off
+Shooting Mode
+Normal
+Audio
+No
+Data Dump
+(Binary data 8200 bytes, use -b option to extract)
+White Balance Bias
+0
+Flash Bias
+0
+Internal Serial Number
+(X34) 2010:03:14 no. 0271
+Panasonic Exif Version
+0290
+Video Frame Rate
+n/a
+Color Effect
+Off
+Time Since Power On
+00:04:39.14
+Burst Mode
+Off
+Sequence Number
+0
+Contrast Mode
+Normal
+Noise Reduction
+Standard
+Self Timer
+Off
+Rotation
+Horizontal (normal)
+AF Assist Lamp
+Fired
+Color Mode
+Normal
+Optical Zoom Mode
+Extended
+Conversion Lens
+Off
+Travel Day
+n/a
+Battery Level
+Low
+World Time Location
+Home
+Program ISO
+1600
+Advanced Scene Type
+1
+Faces Detected
+0
+AF Point Position
+0.5 0.5
+Num Face Positions
+0
+Flash Warning
+Yes (flash required but disabled)
+Maker Note Version
+0131
+Scene Mode
+Off
+Highlight Warning
+Yes
+Dark Focus Environment
+Yes
+WB Red Level
+1718
+WB Green Level
+1054
+WB Blue Level
+1807
+Text Stamp
+Off
+Baby Age
+(not set)
+Transform
+Off
+Flashpix Version
+0100
+Color Space
+sRGB
+Exif Image Width
+2048
+Exif Image Height
+1360
+Interoperability Index
+R98 - DCF basic file (sRGB)
+Interoperability Version
+0100
+Sensing Method
+One-chip color area
+File Source
+Digital Camera
+Scene Type
+Directly photographed
+Custom Rendered
+Normal
+Exposure Mode
+Auto
+Digital Zoom Ratio
+0
+Focal Length In 35mm Format
+62 mm
+Scene Capture Type
+Standard
+Gain Control
+High gain up
+Contrast
+Normal
+Saturation
+Normal
+Sharpness
+Normal
+PrintIM Version
+0250
+Compression
+JPEG (old-style)
+Thumbnail Offset
+10752
+Thumbnail Length
+4758
+Image Width
+2048
+Image Height
+1360
+Encoding Process
+Baseline DCT, Huffman coding
+Bits Per Sample
+8
+Color Components
+3
+Y Cb Cr Sub Sampling
+YCbCr4:2:2 (2 1)
+Aperture
+2.8
+Blue Balance
+1.714421
+Image Size
+2048x1360
+Megapixels
+2.8
+Red Balance
+1.629981
+Scale Factor To 35 mm Equivalent
+11.3
+Shutter Speed
+1/25
+Thumbnail Image
+(Binary data 4758 bytes, use -b option to extract)
+Advanced Scene Mode
+Off
+Circle Of Confusion
+0.003 mm
+Field Of View
+32.4 deg
+Focal Length
+5.5 mm (35 mm equivalent: 62.0 mm)
+Hyperfocal Distance
+4.05 m
+Light Value
+3.6

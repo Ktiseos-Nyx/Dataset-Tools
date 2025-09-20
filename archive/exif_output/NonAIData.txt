@@ -1,0 +1,190 @@
+non_AI_camera-test.jpg
+File Metadata
+
+File Type: image/jpeg
+Error: 0
+Upload Size: 1529192
+exiftool:
+Name
+Value
+ExifTool Version Number
+12.25
+File Name
+phpl6Lv1k
+Directory
+/tmp
+File Size
+1493 KiB
+File Modification Date/Time
+2025:09:19 08:24:48+00:00
+File Access Date/Time
+2025:09:19 08:24:46+00:00
+File Inode Change Date/Time
+2025:09:19 08:24:48+00:00
+File Permissions
+-rw-------
+File Type
+JPEG
+File Type Extension
+jpg
+MIME Type
+image/jpeg
+Exif Byte Order
+Big-endian (Motorola, MM)
+Y Resolution
+72
+X Resolution
+72
+Camera Model Name
+moto g play - 2024
+Make
+motorola
+Y Cb Cr Positioning
+Centered
+Exif Version
+0220
+Aperture Value
+1.8
+Scene Type
+Directly photographed
+Exposure Compensation
+0
+Exposure Program
+Program AE
+Color Space
+sRGB
+Max Aperture Value
+1.8
+Exif Image Height
+1836
+Brightness Value
+-2.66
+Date/Time Original
+2025:06:18 09:08:45
+Flashpix Version
+0100
+Build Number
+U1TFS34.100-35-4-8
+Sensor
+back-main-mot_s5kjns
+Manufacture Date
+2023/10/30
+Sub Sec Time Original
+471723
+White Balance
+Auto
+Interoperability Index
+R98 - DCF basic file (sRGB)
+Exposure Mode
+Auto
+Exposure Time
+1/30
+Flash
+Off, Did not fire
+Sub Sec Time
+471723
+F Number
+1.8
+ISO
+1094
+Exif Image Width
+4080
+Components Configuration
+Y, Cb, Cr, -
+Focal Length In 35mm Format
+28 mm
+Sub Sec Time Digitized
+471723
+Digital Zoom Ratio
+1
+Create Date
+2025:06:18 09:08:45
+Shutter Speed Value
+1/30
+Metering Mode
+Center-weighted average
+Focal Length
+4.3 mm
+Scene Capture Type
+Standard
+Light Source
+D65
+Sensing Method
+Not defined
+Orientation
+Rotate 90 CW
+Resolution Unit
+inches
+Modify Date
+2025:06:18 09:08:45
+GPS Latitude Ref
+North
+GPS Altitude Ref
+Above Sea Level
+GPS Processing Method
+GPS
+GPS Longitude Ref
+West
+GPS Time Stamp
+14:08:44
+GPS Date Stamp
+2025:06:18
+Compression
+JPEG (old-style)
+Thumbnail Offset
+2507
+Thumbnail Length
+15416
+JFIF Version
+1.01
+Image Width
+4080
+Image Height
+1836
+Encoding Process
+Baseline DCT, Huffman coding
+Bits Per Sample
+8
+Color Components
+3
+Y Cb Cr Sub Sampling
+YCbCr4:2:0 (2 2)
+Aperture
+1.8
+Image Size
+4080x1836
+Megapixels
+7.5
+Scale Factor To 35 mm Equivalent
+6.6
+Shutter Speed
+1/30
+Create Date
+2025:06:18 09:08:45.471723
+Date/Time Original
+2025:06:18 09:08:45.471723
+Modify Date
+2025:06:18 09:08:45.471723
+Thumbnail Image
+(Binary data 15416 bytes, use -b option to extract)
+GPS Altitude
+257.9 m Above Sea Level
+GPS Date/Time
+2025:06:18 14:08:44Z
+GPS Latitude
+44º 56' 58.73" N
+GPS Longitude
+93º 11' 7.98" W
+Circle Of Confusion
+0.005 mm
+Field Of View
+65.5 deg
+Focal Length
+4.3 mm (35 mm equivalent: 28.0 mm)
+GPS Position
+44º 56' 58.73" N, 93º 11' 7.98" W
+
+Hyperfocal Distance
+2.21 m
+Light Value
+3.2

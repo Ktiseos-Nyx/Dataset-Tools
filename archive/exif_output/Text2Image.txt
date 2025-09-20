@@ -1,0 +1,53 @@
+txt2img-basic-sdca-wsn.png
+File Metadata
+
+File Type: image/png
+Error: 0
+Upload Size: 876658
+exiftool:
+Name
+Value
+ExifTool Version Number
+12.25
+File Name
+phpNWfuQr
+Directory
+/tmp
+File Size
+856 KiB
+File Modification Date/Time
+2025:09:19 08:33:55+00:00
+File Access Date/Time
+2025:09:19 08:33:54+00:00
+File Inode Change Date/Time
+2025:09:19 08:33:55+00:00
+File Permissions
+-rw-------
+File Type
+PNG
+File Type Extension
+png
+MIME Type
+image/png
+Image Width
+2751
+Image Height
+1487
+Bit Depth
+8
+Color Type
+RGB with Alpha
+Compression
+Deflate/Inflate
+Filter
+Adaptive
+Interlace
+Noninterlaced
+Workflow
+{"last_node_id":68,"last_link_id":170,"nodes":[{"id":65,"type":"Bookmark (rgthree)","pos":{"0":450,"1":170},"size":{"0":210,"1":62},"flags":{"collapsed":true},"order":0,"mode":0,"inputs":[],"outputs":[],"title":"ðŸ”–3 prompt","properties":{},"widgets_values":["3",0.8],"shape":1},{"id":62,"type":"Reroute","pos":{"0":450,"1":110},"size":[75,26],"flags":{},"order":12,"mode":0,"inputs":[{"name":"","type":"*","link":147}],"outputs":[{"name":"","type":"MODEL","links":[148],"slot_index":0}],"properties":{"showOutputText":false,"horizontal":false}},{"id":63,"type":"Reroute","pos":{"0":730,"1":110},"size":[75,26],"flags":{},"order":16,"mode":0,"inputs":[{"name":"","type":"*","link":148}],"outputs":[{"name":"","type":"MODEL","links":[149],"slot_index":0}],"properties":{"showOutputText":false,"horizontal":false}},{"id":48,"type":"Reroute","pos":{"0":1140,"1":110},"size":[75,26],"flags":{},"order":14,"mode":0,"inputs":[{"name":"","type":"*","link":125}],"outputs":[{"name":"","type":"LATENT","links":[120],"slot_index":0}],"properties":{"showOutputText":false,"horizontal":false}},{"id":50,"type":"Reroute","pos":{"0":1140,"1":80},"size":[75,26],"flags":{},"order":15,"mode":0,"inputs":[{"name":"","type":"*","link":123}],"outputs":[{"name":"","type":"CONDITIONING","links":[124],"slot_index":0}],"properties":{"showOutputText":false,"horizontal":false}},{"id":64,"type":"Bookmark (rgthree)","pos":{"0":50,"1":170},"size":{"0":210,"1":62},"flags":{"collapsed":true},"order":1,"mode":0,"inputs":[],"outputs":[],"title":"ðŸ”–2 checkpoint","properties":{},"widgets_values":["2",0.8],"shape":1},{"id":34,"type":"StableCascade_EmptyLatentImage","pos":{"0":450,"1":690},"size":{"0":350,"1":150},"flags":{},"order":2,"mode":0,"inputs":[],"outputs":[{"name":"stage_c","type":"LATENT","links":[82],"slot_index":0,"shape":3},{"name":"stage_b","type":"LATENT","links":[158],"slot_index":1,"shape":3}],"title":"latent_image","properties":{"Node name for S&R":"StableCascade_EmptyLatentImage"},"widgets_values":[1024,1024,42,1],"color":"#323","bgcolor":"#535"},{"id":36,"type":"StableCascade_StageB_Conditioning","pos":{"0":850,"1":230},"size":{"0":350,"1":50},"flags":{},"order":19,"mode":0,"inputs":[{"name":"conditioning","type":"CONDITIONING","link":134,"slot_index":0},{"name":"stage_c","type":"LATENT","link":88}],"outputs":[{"name":"CONDITIONING","type":"CONDITIONING","links":[86],"slot_index":0,"shape":3}],"title":"cascade_b","properties":{"Node name for S&R":"StableCascade_StageB_Conditioning"},"widgets_values":[]},{"id":66,"type":"Bookmark (rgthree)","pos":{"0":850,"1":170},"size":{"0":210,"1":62},"flags":{"collapsed":true},"order":3,"mode":0,"inputs":[],"outputs":[],"title":"ðŸ”–4 sampler","properties":{},"widgets_values":["4",0.8],"shape":1},{"id":47,"type":"Reroute","pos":{"0":850,"1":110},"size":[75,26],"flags":{},"order":10,"mode":0,"inputs":[{"name":"","type":"*","link":158}],"outputs":[{"name":"","type":"LATENT","links":[125],"slot_index":0}],"properties":{"showOutputText":false,"horizontal":false}},{"id":49,"type":"Reroute","pos":{"0":850,"1":80},"size":[75,26],"flags":{},"order":11,"mode":0,"inputs":[{"name":"","type":"*","link":156}],"outputs":[{"name":"","type":"CONDITIONING","links":[123],"slot_index":0}],"properties":{"showOutputText":false,"horizontal":false}},{"id":8,"type":"VAEDecode","pos":{"0":1650,"1":230},"size":{"0":210,"1":46},"flags":{"collapsed":true},"order":21,"mode":0,"inputs":[{"name":"samples","type":"LATENT","link":98},{"name":"vae","type":"VAE","link":null,"slot_index":1}],"outputs":[{"name":"IMAGE","type":"IMAGE","links":[9],"slot_index":0}],"title":"vae_decode","properties":{"Node name for S&R":"VAEDecode"},"widgets_values":[],"color":"#323","bgcolor":"#535"},{"id":67,"type":"Bookmark (rgthree)","pos":{"0":0,"1":-110},"size":{"0":210,"1":62},"flags":{"collapsed":true},"order":4,"mode":0,"inputs":[],"outputs":[],"title":"ðŸ”–workflow","properties":{},"widgets_values":["0",0.6],"shape":1},{"id":9,"type":"SaveImage","pos":{"0":1650,"1":290},"size":{"0":350,"1":400},"flags":{},"order":22,"mode":0,"inputs":[{"name":"images","type":"IMAGE","link":9}],"outputs":[],"title":"output_image","properties":{"Node name for S&R":"SaveImage"},"widgets_values":["%date:yyMMdd%/%date:yyMMdd-hhmmss%_T2I-BAS_SDCA_WSN_%ksampler_b.seed%"],"color":"#323","bgcolor":"#535"},{"id":7,"type":"CLIPTextEncode","pos":{"0":450,"1":460},"size":{"0":350,"1":170},"flags":{},"order":7,"mode":0,"inputs":[{"name":"clip","type":"CLIP","link":null}],"outputs":[{"name":"CONDITIONING","type":"CONDITIONING","links":[108,156],"slot_index":0}],"title":"prompt_negative","properties":{"Node name for S&R":"CLIPTextEncode"},"widgets_values":[""],"color":"#322","bgcolor":"#533"},{"id":68,"type":"Power Lora Loader (rgthree)","pos":{"0":50,"1":550},"size":{"0":350,"1":120},"flags":{},"order":13,"mode":0,"inputs":[{"name":"model","type":"MODEL","link":167,"dir":3},{"name":"clip","type":"CLIP","link":165,"dir":3}],"outputs":[{"name":"MODEL","type":"MODEL","links":[168],"slot_index":0,"shape":3,"dir":4},{"name":"CLIP","type":"CLIP","links":[169],"slot_index":1,"shape":3,"dir":4}],"title":"lora_stack","properties":{"Show Strengths":"Separate Model & Clip"},"widgets_values":[null,{"type":"PowerLoraLoaderHeaderWidget"},null,""],"color":"#223","bgcolor":"#335"},{"id":60,"type":"Anything Everywhere3","pos":{"0":450,"1":100},"size":{"0":252,"1":66},"flags":{"collapsed":true},"order":17,"mode":0,"inputs":[{"name":"VAE","type":"*","link":170,"color_on":"#FF6E6E","shape":7},{"name":"MODEL","type":"*","link":168,"shape":7,"color_on":"#B39DDB"},{"name":"CLIP","type":"*","link":169,"color_on":"#FFD500","shape":7}],"outputs":[],"title":"vmc","properties":{"Node name for S&R":"Anything Everywhere3","group_restricted":0,"color_restricted":0},"widgets_values":[]},{"id":42,"type":"CheckpointLoaderSimple","pos":{"0":50,"1":390},"size":{"0":350,"1":100},"flags":{},"order":8,"mode":0,"inputs":[],"outputs":[{"name":"MODEL","type":"MODEL","links":[167],"slot_index":0,"shape":3},{"name":"CLIP","type":"CLIP","links":null,"shape":3},{"name":"VAE","type":"VAE","links":[170],"slot_index":2,"shape":3}],"title":"checkpoint_model_b","properties":{"Node name for S&R":"CheckpointLoaderSimple"},"widgets_values":["sdca-sai-cascade b-p-comfyui.safetensors"],"color":"#223","bgcolor":"#335"},{"id":41,"type":"CheckpointLoaderSimple","pos":{"0":50,"1":230},"size":[350,100],"flags":{},"order":9,"mode":0,"inputs":[],"outputs":[{"name":"MODEL","type":"MODEL","links":[147],"slot_index":0,"shape":3},{"name":"CLIP","type":"CLIP","links":[165],"slot_index":1,"shape":3},{"name":"VAE","type":"VAE","links":null,"slot_index":2,"shape":3}],"title":"checkpoint_model_c","properties":{"Node name for S&R":"CheckpointLoaderSimple"},"widgets_values":["sdca-sai-cascade c-p-comfyui.safetensors"],"color":"#223","bgcolor":"#335"},{"id":6,"type":"CLIPTextEncode","pos":{"0":450,"1":230},"size":{"0":350,"1":170},"flags":{},"order":6,"mode":0,"inputs":[{"name":"clip","type":"CLIP","link":null}],"outputs":[{"name":"CONDITIONING","type":"CONDITIONING","links":[107,134],"slot_index":0}],"title":"prompt_positive","properties":{"Node name for S&R":"CLIPTextEncode"},"widgets_values":["cinematic photograph of an astronaut riding a horse in space"],"color":"#232","bgcolor":"#353"},{"id":33,"type":"KSampler","pos":{"0":1250,"1":340},"size":{"0":350,"1":262},"flags":{},"order":20,"mode":0,"inputs":[{"name":"model","type":"MODEL","link":null,"slot_index":0},{"name":"positive","type":"CONDITIONING","link":86},{"name":"negative","type":"CONDITIONING","link":124},{"name":"latent_image","type":"LATENT","link":120}],"outputs":[{"name":"LATENT","type":"LATENT","links":[98],"slot_index":0}],"title":"ksampler_b","properties":{"Node name for S&R":"KSampler"},"widgets_values":[25191512,"randomize",10,1.1,"euler_ancestral","simple",1]},{"id":3,"type":"KSampler","pos":{"0":850,"1":340},"size":{"0":350,"1":262},"flags":{},"order":18,"mode":0,"inputs":[{"name":"model","type":"MODEL","link":149,"slot_index":0},{"name":"positive","type":"CONDITIONING","link":107},{"name":"negative","type":"CONDITIONING","link":108},{"name":"latent_image","type":"LATENT","link":82}],"outputs":[{"name":"LATENT","type":"LATENT","links":[88],"slot_index":0}],"title":"ksampler_c","properties":{"Node name for S&R":"KSampler"},"widgets_values":[25191512,"randomize",20,4,"euler_ancestral","simple",1]},{"id":55,"type":"Note","pos":{"0":1650,"1":750},"size":{"0":350,"1":100},"flags":{},"order":5,"mode":0,"inputs":[],"outputs":[],"properties":{"text":""},"widgets_values":["txt2img-basic-sdca-wsn\n==========================================================\nSDCA : SD Cascade\nWSN : WÃ¼rstchen\nCSD : Clip Standard\nID : T2I-BAS_SDCA_WSN"],"color":"#432","bgcolor":"#653"}],"links":[[9,8,0,9,0,"IMAGE"],[82,34,0,3,3,"LATENT"],[86,36,0,33,1,"CONDITIONING"],[88,3,0,36,1,"LATENT"],[98,33,0,8,0,"LATENT"],[107,6,0,3,1,"CONDITIONING"],[108,7,0,3,2,"CONDITIONING"],[120,48,0,33,3,"LATENT"],[123,49,0,50,0,"*"],[124,50,0,33,2,"CONDITIONING"],[125,47,0,48,0,"*"],[134,6,0,36,0,"CONDITIONING"],[147,41,0,62,0,"*"],[148,62,0,63,0,"*"],[149,63,0,3,0,"MODEL"],[156,7,0,49,0,"*"],[158,34,1,47,0,"*"],[159,42,2,8,1,"VAE"],[160,42,0,33,0,"MODEL"],[161,42,2,8,1,"VAE"],[162,42,0,33,0,"MODEL"],[163,42,2,8,1,"VAE"],[164,42,0,33,0,"MODEL"],[165,41,1,68,1,"CLIP"],[167,42,0,68,0,"MODEL"],[168,68,0,60,1,"MODEL"],[169,68,1,60,2,"CLIP"],[170,42,2,60,0,"VAE"]],"groups":[{"title":" Txt2Img","bounding":[50,-80,260,80],"color":"#ffffff","font_size":60,"flags":{}},{"title":" SDCA WSN","bounding":[320,-40,190,40],"color":"#00ffff","font_size":30,"flags":{}}],"config":{},"extra":{"ds":{"scale":1,"offset":[100,210]}},"version":0.4}
+SRGB Rendering
+Perceptual
+Image Size
+2751x1487
+Megapixels
+4.1

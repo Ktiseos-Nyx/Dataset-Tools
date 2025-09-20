@@ -1,0 +1,258 @@
+OurArt000157.jpg
+File Metadata
+
+File Type: image/jpeg
+Error: 0
+Upload Size: 2308428
+exiftool:
+Name
+Value
+ExifTool Version Number
+12.25
+File Name
+phpywJwQH
+Directory
+/tmp
+File Size
+2.2 MiB
+File Modification Date/Time
+2025:09:19 08:27:30+00:00
+File Access Date/Time
+2025:09:19 08:27:28+00:00
+File Inode Change Date/Time
+2025:09:19 08:27:30+00:00
+File Permissions
+-rw-------
+File Type
+JPEG
+File Type Extension
+jpg
+MIME Type
+image/jpeg
+JFIF Version
+1.01
+Exif Byte Order
+Big-endian (Motorola, MM)
+Make
+Apple
+Camera Model Name
+iPhone 7 Plus
+X Resolution
+72
+Y Resolution
+72
+Resolution Unit
+inches
+Software
+13.0
+Modify Date
+2019:12:04 14:36:48
+Exposure Time
+1/20
+F Number
+1.8
+Exposure Program
+Program AE
+ISO
+40
+Exif Version
+0231
+Date/Time Original
+2019:12:04 14:36:48
+Create Date
+2019:12:04 14:36:48
+Offset Time
++13:00
+Offset Time Original
++13:00
+Offset Time Digitized
++13:00
+Components Configuration
+Y, Cb, Cr, -
+Shutter Speed Value
+1/20
+Aperture Value
+1.8
+Brightness Value
+3.195888457
+Exposure Compensation
+0
+Metering Mode
+Multi-segment
+Flash
+Auto, Did not fire
+Focal Length
+4.0 mm
+Subject Area
+1751 1625 899 898
+Run Time Flags
+Valid
+Run Time Value
+1672491378659375
+Run Time Scale
+1000000000
+Run Time Epoch
+0
+Acceleration Vector
+0.102909699 -0.1465774776 -0.9829156396
+Sub Sec Time Original
+687
+Sub Sec Time Digitized
+687
+Flashpix Version
+0100
+Exif Image Width
+2443
+Exif Image Height
+3405
+Sensing Method
+One-chip color area
+Scene Type
+Directly photographed
+Exposure Mode
+Auto
+White Balance
+Auto
+Focal Length In 35mm Format
+28 mm
+Scene Capture Type
+Standard
+Lens Info
+3.99000001-6.6mm f/1.8-2.8
+Lens Make
+Apple
+Lens Model
+iPhone 7 Plus back dual camera 3.99mm f/1.8
+GPS Latitude Ref
+South
+GPS Longitude Ref
+East
+GPS Altitude Ref
+Above Sea Level
+GPS Speed Ref
+km/h
+GPS Speed
+0.1792869717
+GPS Img Direction Ref
+True North
+GPS Img Direction
+242.6831512
+GPS Dest Bearing Ref
+True North
+GPS Dest Bearing
+242.6831512
+GPS Horizontal Positioning Error
+16.00241655 m
+XMP Toolkit
+XMP Core 5.4.0
+Creator Tool
+13.0
+Date Created
+2019:12:04 14:36:48
+Current IPTC Digest
+d41d8cd98f00b204e9800998ecf8427e
+IPTC Digest
+d41d8cd98f00b204e9800998ecf8427e
+Profile CMM Type
+Apple Computer Inc.
+Profile Version
+4.0.0
+Profile Class
+Display Device Profile
+Color Space Data
+RGB
+Profile Connection Space
+XYZ
+Profile Date Time
+2017:07:07 13:22:32
+Profile File Signature
+acsp
+Primary Platform
+Apple Computer Inc.
+CMM Flags
+Not Embedded, Independent
+Device Manufacturer
+Apple Computer Inc.
+Device Model
+
+Device Attributes
+Reflective, Glossy, Positive, Color
+Rendering Intent
+Perceptual
+Connection Space Illuminant
+0.9642 1 0.82491
+Profile Creator
+Apple Computer Inc.
+Profile ID
+ca1a9582257f104d389913d5d1ea1582
+Profile Description
+Display P3
+Profile Copyright
+Copyright Apple Inc., 2017
+Media White Point
+0.95045 1 1.08905
+Red Matrix Column
+0.51512 0.2412 -0.00105
+Green Matrix Column
+0.29198 0.69225 0.04189
+Blue Matrix Column
+0.1571 0.06657 0.78407
+Red Tone Reproduction Curve
+(Binary data 32 bytes, use -b option to extract)
+Chromatic Adaptation
+1.04788 0.02292 -0.0502 0.02959 0.99048 -0.01706 -0.00923 0.01508 0.75168
+Blue Tone Reproduction Curve
+(Binary data 32 bytes, use -b option to extract)
+Green Tone Reproduction Curve
+(Binary data 32 bytes, use -b option to extract)
+Image Width
+2443
+Image Height
+3405
+Encoding Process
+Baseline DCT, Huffman coding
+Bits Per Sample
+8
+Color Components
+3
+Y Cb Cr Sub Sampling
+YCbCr4:2:0 (2 2)
+Run Time Since Power Up
+19 days 8:34:51
+Aperture
+1.8
+Image Size
+2443x3405
+Megapixels
+8.3
+Scale Factor To 35 mm Equivalent
+7.0
+Shutter Speed
+1/20
+Create Date
+2019:12:04 14:36:48.687+13:00
+Date/Time Original
+2019:12:04 14:36:48.687+13:00
+Modify Date
+2019:12:04 14:36:48+13:00
+GPS Altitude
+14.3 m Above Sea Level
+GPS Latitude
+45º 53' 42.07" S
+GPS Longitude
+170º 29' 0.73" E
+Circle Of Confusion
+0.004 mm
+Field Of View
+65.5 deg
+Focal Length
+4.0 mm (35 mm equivalent: 28.0 mm)
+GPS Position
+45º 53' 42.07" S, 170º 29' 0.73" E
+
+Hyperfocal Distance
+2.07 m
+Light Value
+7.3
+Lens ID
+iPhone 7 Plus back dual camera 3.99mm f/1.8

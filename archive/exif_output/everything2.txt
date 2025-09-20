@@ -1,0 +1,23 @@
+---- ExifTool ----
+ExifTool Version Number         : 12.62
+---- System ----
+File Name                       : redshift-mochi-diffusion-on-m2-macbook-air-grimdark-v0-g54xl9ar6c9a1.webp
+Directory                       : /Users/duskfall/Desktop/image-tests/images_with_metadata_but_unknown_format
+File Size                       : 39 kB
+File Modification Date/Time     : 2025:06:23 10:39:17+12:00
+File Access Date/Time           : 2025:09:19 20:04:38+12:00
+File Inode Change Date/Time     : 2025:09:19 17:43:06+12:00
+File Permissions                : -rw-r--r--
+---- File ----
+File Type                       : WEBP
+File Type Extension             : webp
+MIME Type                       : image/webp
+---- RIFF ----
+VP8 Version                     : 0 (bicubic reconstruction, normal loop)
+Image Width                     : 640
+Horizontal Scale                : 0
+Image Height                    : 640
+Vertical Scale                  : 0
+---- Composite ----
+Image Size                      : 640x640
+Megapixels                      : 0.410

@@ -1,0 +1,421 @@
+NDS_3341.JPG
+File Metadata
+
+File Type: image/jpeg
+Error: 0
+Upload Size: 5728659
+exiftool:
+Name
+Value
+ExifTool Version Number
+12.25
+File Name
+phpDr5nnd
+Directory
+/tmp
+File Size
+5.5 MiB
+File Modification Date/Time
+2025:09:19 08:29:33+00:00
+File Access Date/Time
+2025:09:19 08:29:31+00:00
+File Inode Change Date/Time
+2025:09:19 08:29:33+00:00
+File Permissions
+-rw-------
+File Type
+JPEG
+File Type Extension
+jpg
+MIME Type
+image/jpeg
+Exif Byte Order
+Little-endian (Intel, II)
+Make
+NIKON CORPORATION
+Camera Model Name
+NIKON D3400
+Orientation
+Horizontal (normal)
+X Resolution
+300
+Y Resolution
+300
+Resolution Unit
+inches
+Software
+Ver.1.12
+Modify Date
+2018:06:08 09:50:48
+Artist
+SOMERVILLE
+Y Cb Cr Positioning
+Co-sited
+Copyright
+
+Exposure Time
+1/4000
+F Number
+20.0
+Exposure Program
+Shutter speed priority AE
+ISO
+25600
+Sensitivity Type
+Recommended Exposure Index
+Recommended Exposure Index
+25600
+Exif Version
+0230
+Date/Time Original
+2018:06:08 09:50:48
+Create Date
+2018:06:08 09:50:48
+Components Configuration
+Y, Cb, Cr, -
+Compressed Bits Per Pixel
+2
+Exposure Compensation
+0
+Max Aperture Value
+5.1
+Metering Mode
+Center-weighted average
+Light Source
+Unknown
+Flash
+Off, Did not fire
+Focal Length
+16.0 mm
+Maker Note Version
+2.11
+Quality
+Normal
+White Balance
+Auto
+Focus Mode
+AF-S
+Flash Setting
+
+Flash Type
+
+White Balance Fine Tune
+0 0
+WB RB Levels
+2.69921875 1.37890625 1 1
+Program Shift
+0
+Exposure Difference
+0
+Flash Exposure Compensation
+0
+Image Boundary
+0 0 6000 4000
+External Flash Exposure Comp
+0
+Flash Exposure Bracket Value
+0.0
+Exposure Bracket Value
+0
+Crop Hi Speed
+DX Uncropped (6016x4016 cropped to 6016x4016 at pixel 0,0)
+Exposure Tuning
+0
+Serial Number
+8441450
+VR Info Version
+0100
+Vibration Reduction
+Off
+VR Mode
+Normal
+Active D-Lighting
+Off
+Picture Control Version
+0200
+Picture Control Name
+Landscape
+Picture Control Base
+Landscape
+Picture Control Adjust
+Default Settings
+Picture Control Quick Adjust
+Normal
+Clarity
+1.00
+Brightness
+Normal
+Hue
+None
+Filter Effect
+n/a
+Toning Effect
+n/a
+Toning Saturation
+n/a
+Time Zone
++12:00
+Daylight Savings
+No
+Date Display Format
+D/M/Y
+ISO Expansion
+Off
+ISO2
+25600
+ISO Expansion 2
+Off
+Vignette Control
+Normal
+Auto Distortion Control
+Off
+Image Size RAW
+Large
+Lens Type
+G
+Lens
+10-20mm f/4-5.6
+Flash Mode
+Did Not Fire
+Shooting Mode
+Single-Frame, [9]
+Shot Info Version
+0240
+Firmware Version
+1.12
+Noise Reduction
+Off
+Color Balance Version
+0224
+Lens Data Version
+0204
+Exit Pupil Position
+85.3 mm
+AF Aperture
+5.2
+Focus Position
+0x33
+Focus Distance
+1.41 m
+Lens ID Number
+249
+Lens F Stops
+5.00
+Min Focal Length
+10.3 mm
+Max Focal Length
+20.6 mm
+Max Aperture At Min Focal
+4.0
+Max Aperture At Max Focal
+5.7
+MCU Version
+75
+Effective Max Aperture
+5.2
+Date Stamp Mode
+Off
+Retouch History
+None
+Image Data Size
+4921128
+Shutter Count
+3483
+Flash Info Version
+0108
+Flash Source
+None
+External Flash Firmware
+n/a
+External Flash Zoom Override
+No
+External Flash Status
+Flash Not Attached
+External Flash Ready State
+n/a
+Flash Compensation
+0
+Flash GN Distance
+0
+Flash Group A Control Mode
+Off
+Flash Group B Control Mode
+Off
+Flash Group C Control Mode
+Off
+Flash Group A Compensation
+0
+Flash Group B Compensation
+0
+Flash Group C Compensation
+0
+Vari Program
+
+Multi Exposure Version
+0100
+Multi Exposure Mode
+Off
+Multi Exposure Shots
+0
+Multi Exposure Auto Gain
+Off
+High ISO Noise Reduction
+Normal
+Power Up Time
+0000:00:00 00:00:00
+AF Info 2 Version
+0101
+Contrast Detect AF
+Off
+AF Area Mode
+Single Area
+Phase Detect AF
+On (11-point)
+AF Points Used
+Center
+Primary AF Point
+Center
+File Info Version
+0100
+Memory Card Number
+0
+Directory Number
+100
+File Number
+3341
+Retouch Info Version
+0200
+Retouch NEF Processing
+Off
+User Comment
+
+Sub Sec Time
+24
+Sub Sec Time Original
+24
+Sub Sec Time Digitized
+24
+Flashpix Version
+0100
+Color Space
+sRGB
+Exif Image Width
+6000
+Exif Image Height
+4000
+Interoperability Index
+R98 - DCF basic file (sRGB)
+Interoperability Version
+0100
+Sensing Method
+One-chip color area
+File Source
+Digital Camera
+Scene Type
+Directly photographed
+CFA Pattern
+[Red,Green][Green,Blue]
+Custom Rendered
+Normal
+Exposure Mode
+Auto
+Focal Length In 35mm Format
+24 mm
+Scene Capture Type
+Landscape
+Gain Control
+High gain up
+Contrast
+Normal
+Saturation
+Normal
+Sharpness
+Normal
+Subject Distance Range
+Unknown
+GPS Version ID
+2.3.0.0
+Compression
+JPEG (old-style)
+Thumbnail Offset
+15560
+Thumbnail Length
+9094
+Creator Tool
+NIKON D3400 Ver.1.12
+Rating
+0
+MPF Version
+0100
+Number Of Images
+3
+MP Image Flags
+Dependent child image
+MP Image Format
+JPEG
+MP Image Type
+Large Thumbnail (full HD equivalent)
+MP Image Length
+621459
+MP Image Start
+5107200
+Dependent Image 1 Entry Number
+0
+Dependent Image 2 Entry Number
+0
+Image Width
+6000
+Image Height
+4000
+Encoding Process
+Baseline DCT, Huffman coding
+Bits Per Sample
+8
+Color Components
+3
+Y Cb Cr Sub Sampling
+YCbCr4:2:2 (2 1)
+Aperture
+20.0
+Blue Balance
+1.378906
+Image Size
+6000x4000
+Megapixels
+24.0
+Red Balance
+2.699219
+Scale Factor To 35 mm Equivalent
+1.5
+Shutter Speed
+1/4000
+Create Date
+2018:06:08 09:50:48.24
+Date/Time Original
+2018:06:08 09:50:48.24
+Modify Date
+2018:06:08 09:50:48.24
+Thumbnail Image
+(Binary data 9094 bytes, use -b option to extract)
+Preview Image
+(Binary data 102143 bytes, use -b option to extract)
+MP Image 3
+(Binary data 621459 bytes, use -b option to extract)
+Auto Focus
+On
+Lens ID
+Sigma 10-20mm F4-5.6 EX DC HSM
+Lens Spec
+10-20mm f/4-5.6 G
+Circle Of Confusion
+0.020 mm
+Depth Of Field
+inf (0.44 m - inf)
+Field Of View
+73.1º (2.09 m)
+Focal Length
+16.0 mm (35 mm equivalent: 24.0 mm)
+Hyperfocal Distance
+0.64 m
+Light Value
+12.6

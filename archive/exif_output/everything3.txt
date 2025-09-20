@@ -1,0 +1,34 @@
+---- ExifTool ----
+ExifTool Version Number         : 12.62
+---- System ----
+File Name                       : a-dynamic-illustration-depicting-remy-le_9fbNpPdNRR6QPmIhD-vCGQ_6NMB49cbQ3Orrh9wHlG8iQ.jpeg
+Directory                       : /Users/duskfall/Desktop/image-tests/images_with_metadata_but_unknown_format
+File Size                       : 202 kB
+File Modification Date/Time     : 2025:06:19 12:23:34+12:00
+File Access Date/Time           : 2025:09:19 20:05:01+12:00
+File Inode Change Date/Time     : 2025:09:19 17:43:06+12:00
+File Permissions                : -rw-r--r--
+---- File ----
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+Exif Byte Order                 : Big-endian (Motorola, MM)
+Image Width                     : 1024
+Image Height                    : 1024
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:2:0 (2 2)
+---- JFIF ----
+JFIF Version                    : 1.01
+Resolution Unit                 : None
+X Resolution                    : 1
+Y Resolution                    : 1
+---- IFD0 ----
+Make                            : Ideogram AI
+Modify Date                     : 2025:06:19 00:23:27
+Date/Time Original              : 2025:06:19 00:23:27
+Create Date                     : 2025:06:19 00:23:27
+---- Composite ----
+Image Size                      : 1024x1024
+Megapixels                      : 1.0

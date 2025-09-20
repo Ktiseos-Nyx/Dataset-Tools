@@ -1,0 +1,234 @@
+{
+  "parser_name": "A1111 webUI",
+  "priority": 110,
+  "description": "Parses Automatic1111 WebUI image metadata - the sane version",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "A1111 images always have 'Steps:' and 'Seed:' in their metadata",
+      "method": "contains_required_text",
+      "source": "image_metadata_text",
+      "required_patterns": ["Steps:", "Seed:"],
+      "match_type": "all"
+    },
+    {
+      "comment": "Rule to prevent misidentification of ComfyUI workflows: Must NOT contain ComfyUI workflow JSON",
+      "source_type": "png_chunk",
+      "source_key": "workflow",
+      "operator": "does_not_exist"
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_source": {
+      "comment": "A1111 stores data in PNG 'parameters' field or EXIF UserComment",
+      "primary": "pil_info.parameters",
+      "fallback": "exif.usercomment",
+      "preprocessing": "unwrap_json_if_needed"
+    },
+
+    "extraction_strategy": "a1111_key_value_parsing",
+    "format": "A1111 uses 'Key: value, Key2: value2' format with special prompt handling",
+
+    "fields": [
+      {
+        "name": "prompt",
+        "method": "extract_before_negative",
+        "description": "Everything before 'Negative prompt:' line"
+      },
+
+      {
+        "name": "negative_prompt",
+        "method": "extract_after_negative",
+        "marker": "Negative prompt:",
+        "fallback": ""
+      },
+
+      {
+        "name": "steps",
+        "method": "find_key_value",
+        "key": "Steps",
+        "type": "integer",
+        "required": true
+      },
+
+      {
+        "name": "cfg_scale",
+        "method": "find_key_value",
+        "key": "CFG scale",
+        "type": "float",
+        "required": true
+      },
+
+      {
+        "name": "seed",
+        "method": "find_key_value",
+        "key": "Seed",
+        "type": "integer",
+        "required": true
+      },
+
+      {
+        "name": "sampler_name",
+        "method": "find_key_value",
+        "key": "Sampler",
+        "type": "string",
+        "required": true
+      },
+
+      {
+        "name": "scheduler",
+        "method": "find_key_value",
+        "key": "Schedule type",
+        "type": "string",
+        "optional": true
+      },
+
+      {
+        "name": "model",
+        "method": "find_key_value",
+        "key": "Model",
+        "type": "string",
+        "optional": true
+      },
+
+      {
+        "name": "model_hash",
+        "method": "find_key_value",
+        "key": "Model hash",
+        "type": "string",
+        "optional": true
+      },
+
+      {
+        "name": "size",
+        "method": "find_key_value",
+        "key": "Size",
+        "type": "string",
+        "parser": "split_dimensions",
+        "comment": "Converts '512x768' to width=512, height=768"
+      },
+
+      {
+        "name": "vae_model",
+        "method": "find_key_value",
+        "key": "VAE",
+        "type": "string",
+        "optional": true
+      },
+
+      {
+        "name": "clip_skip",
+        "method": "find_key_value",
+        "key": "Clip skip",
+        "type": "integer",
+        "optional": true
+      },
+
+      {
+        "name": "denoising_strength",
+        "method": "find_key_value",
+        "key": "Denoising strength",
+        "type": "float",
+        "optional": true
+      },
+
+      {
+        "name": "hires_upscale",
+        "method": "find_key_value",
+        "key": "Hires upscale",
+        "type": "string",
+        "optional": true
+      },
+
+      {
+        "name": "hires_upscaler",
+        "method": "find_key_value",
+        "key": "Hires upscaler",
+        "type": "string",
+        "optional": true
+      },
+
+      {
+        "name": "version",
+        "method": "find_key_value",
+        "key": "Version",
+        "type": "string",
+        "optional": true
+      }
+    ],
+
+    "advanced_fields": {
+      "comment": "These are optional and might not exist in all images",
+
+      "lora_info": {
+        "method": "parse_lora_hashes",
+        "source_key": "Lora hashes",
+        "format": "json_string"
+      },
+
+      "textual_inversions": {
+        "method": "parse_ti_hashes",
+        "source_key": "TI hashes",
+        "format": "json_string"
+      },
+
+      "adetailer": {
+        "model": "ADetailer model",
+        "confidence": "ADetailer confidence",
+        "version": "ADetailer version"
+      }
+    }
+  },
+
+  "output_format": {
+    "tool": "Automatic1111 WebUI",
+    "parser_version": "unfudged_v1",
+    "prompt": "{prompt}",
+    "negative_prompt": "{negative_prompt}",
+
+    "parameters": {
+      "steps": "{steps}",
+      "cfg_scale": "{cfg_scale}",
+      "seed": "{seed}",
+      "sampler_name": "{sampler_name}",
+      "scheduler": "{scheduler}",
+      "model": "{model}",
+      "model_hash": "{model_hash}",
+      "width": "{width_from_size}",
+      "height": "{height_from_size}",
+      "vae_model": "{vae_model}",
+      "clip_skip": "{clip_skip}",
+      "denoising_strength": "{denoising_strength}"
+    },
+
+    "advanced_parameters": {
+      "hires_upscale": "{hires_upscale}",
+      "hires_upscaler": "{hires_upscaler}",
+      "lora_info": "{lora_info}",
+      "textual_inversions": "{textual_inversions}",
+      "adetailer": "{adetailer}",
+      "version": "{version}"
+    },
+
+    "raw_metadata": "{original_metadata_string}"
+  },
+
+  "error_handling": {
+    "missing_required_fields": "return_partial_with_error_flag",
+    "malformed_metadata": "attempt_fuzzy_parsing",
+    "unknown_keys": "store_in_extra_fields"
+  },
+
+  "notes": [
+    "A1111 format is basically: 'prompt text\\nNegative prompt: negative text\\nSteps: 20, CFG: 7, etc'",
+    "Much simpler than ComfyUI - just key:value pairs after the prompts",
+    "Size field needs special handling: '512x768' -> width=512, height=768",
+    "Some fields like Lora hashes are JSON strings that need parsing",
+    "This parser handles 95% of A1111 images without the Gemini complexity"
+  ]
+}
