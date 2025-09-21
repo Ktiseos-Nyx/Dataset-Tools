@@ -66,3 +66,7 @@ theme_backup/
 
 # EXIF output and test data
 exif_output/
+
+# Disabled/experimental files
+*.disabled
+.disabled/
