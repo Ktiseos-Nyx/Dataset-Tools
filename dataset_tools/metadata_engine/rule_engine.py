@@ -435,14 +435,15 @@ class DataSourceHandler:
         if source_type == "pil_info_key_json_path" or source_type == "pil_info_key_json_path_string_is_json":
             return self._handle_pil_info_json_path(rule, context)
 
-        # TODO: Implement these complex types when needed
-        if source_type in [
-            "json_from_xmp_exif_user_comment",
-            "json_from_usercomment_or_png_chunk",
-            "pil_info_key_json_path_query",
-        ]:
-            self.logger.warning(f"Source type '{source_type}' is not yet implemented")
-            return None, False
+        # Complex source type implementations
+        if source_type == "json_from_xmp_exif_user_comment":
+            return self._handle_json_from_xmp_exif_user_comment(rule, context)
+
+        if source_type == "json_from_usercomment_or_png_chunk":
+            return self._handle_json_from_usercomment_or_png_chunk(rule, context)
+
+        if source_type == "pil_info_key_json_path_query":
+            return self._handle_pil_info_key_json_path_query(rule, context)
 
         if source_type is not None:
             self.logger.warning(f"Unknown source_type: '{source_type}'")
@@ -551,6 +552,177 @@ class DataSourceHandler:
 
         # No metadata found
         return None, False
+
+    def _handle_json_from_xmp_exif_user_comment(self, rule: RuleDict, context: ContextData) -> tuple[Any, bool]:
+        """Handle JSON extraction from XMP or EXIF User Comment.
+
+        Based on DrawThings and Mochi patterns - extracts JSON from:
+        1. XMP string content (exif:UserComment field)
+        2. EXIF User Comment field
+        """
+        # Try XMP string first (DrawThings pattern)
+        xmp_string = context.get("xmp_string")
+        if xmp_string:
+            # Look for exif:UserComment in XMP data
+            # Pattern: <exif:UserComment>JSON_DATA</exif:UserComment>
+            import re
+            xmp_pattern = r"<exif:UserComment[^>]*>(.*?)</exif:UserComment>"
+            match = re.search(xmp_pattern, xmp_string, re.DOTALL)
+            if match:
+                json_candidate = match.group(1).strip()
+                if json_candidate:
+                    try:
+                        parsed_json = json.loads(json_candidate)
+                        return parsed_json, True
+                    except json.JSONDecodeError:
+                        self.logger.debug("XMP exif:UserComment content is not valid JSON")
+
+        # Fallback to raw EXIF User Comment (Mochi IPTC pattern)
+        user_comment = context.get("raw_user_comment_str")
+        if user_comment:
+            # Try direct JSON parsing first
+            try:
+                parsed_json = json.loads(user_comment)
+                return parsed_json, True
+            except json.JSONDecodeError:
+                # Try key-value parsing (Mochi style: "Key1: Value1; Key2: Value2")
+                if ":" in user_comment and (";" in user_comment or "\n" in user_comment):
+                    metadata_dict = self._parse_key_value_string(user_comment)
+                    if metadata_dict:
+                        return metadata_dict, True
+
+        return None, False
+
+    def _handle_json_from_usercomment_or_png_chunk(self, rule: RuleDict, context: ContextData) -> tuple[Any, bool]:
+        """Handle JSON extraction from EXIF UserComment or PNG chunks.
+
+        Based on InvokeAI and SwarmUI patterns - flexible source detection.
+        """
+        source_key = rule.get("source_key", "invokeai_metadata")
+
+        # Try PNG chunks first (InvokeAI pattern)
+        pil_info = context.get("pil_info", {})
+        if isinstance(pil_info, dict):
+            # Check specific PNG chunk
+            chunk_data = pil_info.get(source_key)
+            if chunk_data:
+                try:
+                    if isinstance(chunk_data, str):
+                        parsed_json = json.loads(chunk_data)
+                        return parsed_json, True
+                    if isinstance(chunk_data, (dict, list)):
+                        return chunk_data, True
+                except json.JSONDecodeError:
+                    self.logger.debug(f"PNG chunk '{source_key}' is not valid JSON")
+
+            # Try common InvokeAI chunk names
+            for chunk_name in ["invokeai_metadata", "invokeai_graph", "workflow", "prompt"]:
+                chunk_data = pil_info.get(chunk_name)
+                if chunk_data:
+                    try:
+                        if isinstance(chunk_data, str):
+                            parsed_json = json.loads(chunk_data)
+                            return parsed_json, True
+                        if isinstance(chunk_data, (dict, list)):
+                            return chunk_data, True
+                    except json.JSONDecodeError:
+                        continue
+
+        # Fallback to EXIF User Comment (SwarmUI pattern)
+        user_comment = context.get("raw_user_comment_str")
+        if user_comment:
+            try:
+                parsed_json = json.loads(user_comment)
+                return parsed_json, True
+            except json.JSONDecodeError:
+                self.logger.debug("EXIF User Comment is not valid JSON")
+
+        return None, False
+
+    def _handle_pil_info_key_json_path_query(self, rule: RuleDict, context: ContextData) -> tuple[Any, bool]:
+        """Handle advanced JSON path queries on PIL info data.
+
+        Enhanced version of existing JSON path handling with query capabilities.
+        """
+        source_key = rule.get("source_key")
+        json_path = rule.get("json_path")
+        json_query_type = rule.get("json_query_type")
+
+        if not source_key:
+            self.logger.warning("pil_info_key_json_path_query missing 'source_key'")
+            return None, False
+
+        # Get data from PIL info
+        pil_info = context.get("pil_info", {})
+        if not isinstance(pil_info, dict) or source_key not in pil_info:
+            return None, False
+
+        data_str = pil_info.get(source_key)
+        if not isinstance(data_str, str):
+            return None, False
+
+        try:
+            json_obj = json.loads(data_str)
+        except json.JSONDecodeError:
+            self.logger.debug(f"PIL info key '{source_key}' is not valid JSON")
+            return None, False
+
+        # Apply JSON path if specified
+        if json_path:
+            from .utils import json_path_get_utility
+            json_obj = json_path_get_utility(json_obj, json_path)
+            if json_obj is None:
+                return None, False
+
+        # Apply query type if specified (from existing _handle_json_path_query logic)
+        if json_query_type:
+            if json_query_type == "has_numeric_string_keys":
+                if isinstance(json_obj, dict):
+                    result = any(key.isdigit() for key in json_obj)
+                    return result, True
+
+            elif json_query_type == "has_any_node_class_type":
+                class_types = rule.get("class_types_to_check", [])
+                if isinstance(json_obj, dict):
+                    nodes_container = json_obj.get("nodes", json_obj)
+                    if isinstance(nodes_container, dict):
+                        result = any(
+                            isinstance(node_val, dict) and node_val.get("type") in class_types
+                            for node_val in nodes_container.values()
+                        )
+                        return result, True
+                    if isinstance(nodes_container, list):
+                        result = any(
+                            isinstance(node_item, dict) and node_item.get("type") in class_types
+                            for node_item in nodes_container
+                        )
+                        return result, True
+
+        return json_obj, True
+
+    def _parse_key_value_string(self, data_str: str) -> dict[str, str]:
+        """Parse key-value string like 'Key1: Value1; Key2: Value2' (Mochi style)."""
+        metadata_dict = {}
+
+        # Clean up the string
+        cleaned_str = data_str.replace("\n", " ").strip()
+
+        # Split by semicolon, then by first colon
+        parts = cleaned_str.split(";")
+        for part in parts:
+            part = part.strip()
+            if not part:
+                continue
+
+            # Split only on the first occurrence of ":"
+            kv = part.split(":", 1)
+            if len(kv) == 2:
+                key = kv[0].strip()
+                value = kv[1].strip()
+                if key and value:
+                    metadata_dict[key] = value
+
+        return metadata_dict
 
 
 # ============================================================================

@@ -230,6 +230,16 @@ class MainWindow(Qw.QMainWindow):
         """Configure the status bar."""
         self.main_status_bar.showMessage("Ready", STATUS_MESSAGE_TIMEOUT)
 
+        # Add current folder label (initially empty)
+        self.current_folder_status_label = Qw.QLabel("No folder selected")
+        self.current_folder_status_label.setMinimumWidth(200)
+        self.main_status_bar.addPermanentWidget(self.current_folder_status_label)
+
+        # Add file count label (initially empty)
+        self.file_count_label = Qw.QLabel("")
+        self.file_count_label.setMinimumWidth(100)
+        self.main_status_bar.addPermanentWidget(self.file_count_label)
+
         # Add progress bar (initially hidden)
         self.progress_bar.setMaximumWidth(200)
         self.progress_bar.setTextVisible(False)
@@ -267,6 +277,7 @@ class MainWindow(Qw.QMainWindow):
         """Connect UI component signals to handlers."""
         if hasattr(self, "left_panel"):
             self.left_panel.open_folder_requested.connect(self.open_folder)
+            self.left_panel.refresh_folder_requested.connect(self.refresh_current_folder)
             self.left_panel.sort_files_requested.connect(self.sort_files_list)
             self.left_panel.list_item_selected.connect(self.on_file_selected)
 
@@ -288,8 +299,9 @@ class MainWindow(Qw.QMainWindow):
     def _show_empty_folder_state(self) -> None:
         """Show UI state when no folder is loaded."""
         if hasattr(self, "left_panel"):
-            self.left_panel.set_current_folder_text("Current Folder: None")
-            self.left_panel.set_message_text("Please select folder.")
+            # Current folder info now in status bar
+            self.current_folder_status_label.setText("No folder selected")
+            # Left panel stays clean - status only in status bar
         self.clear_selection()
 
     def _setup_image_loading_thread(self) -> None:
@@ -388,6 +400,16 @@ class MainWindow(Qw.QMainWindow):
         else:
             self._handle_folder_selection_cancelled()
 
+    def refresh_current_folder(self) -> None:
+        """Refresh the current folder by reloading its files."""
+        nfo("[UI] 'Refresh Folder' action triggered.")
+
+        if self.current_folder and Path(self.current_folder).is_dir():
+            nfo("[UI] Refreshing folder: %s", self.current_folder)
+            self.load_files(self.current_folder)
+        else:
+            nfo("[UI] No current folder to refresh.")
+
     def _get_start_directory(self) -> str:
         """Get the starting directory for folder selection dialog."""
         if self.current_folder and Path(self.current_folder).is_dir():
@@ -400,7 +422,8 @@ class MainWindow(Qw.QMainWindow):
         nfo("[UI] %s", message)
 
         if hasattr(self, "left_panel"):
-            self.left_panel.set_message_text(message)
+            # Left panel stays clean - status only in status bar
+            pass  # self.left_panel.set_message_text(message)
         self.show_status_message(message)
 
     @debug_monitor
@@ -429,16 +452,18 @@ class MainWindow(Qw.QMainWindow):
         """Handle when file loading is already in progress."""
         nfo("[UI] File loading is already in progress.")
         if hasattr(self, "left_panel"):
-            self.left_panel.set_message_text("Loading in progress... Please wait.")
+            # Left panel stays clean - status only in status bar
+            pass  # self.left_panel.set_message_text("Loading in progress... Please wait.")
 
     def _setup_loading_state(self, folder_path: str) -> None:
         """Setup UI state for file loading."""
         self.current_folder = str(Path(folder_path).resolve())
 
         if hasattr(self, "left_panel"):
-            folder_name = Path(self.current_folder).name
-            self.left_panel.set_current_folder_text(f"Current Folder: {self.current_folder}")
-            self.left_panel.set_message_text(f"Loading files from {folder_name}...")
+            # Current folder info now in status bar
+            folder_name = Path(self.current_folder).name if self.current_folder else "Unknown"
+            self.current_folder_status_label.setText(f"Folder: {folder_name}")
+            # Status info moved to status bar - keep left panel clean
             self.left_panel.set_buttons_enabled(False)
 
     def _start_file_loading(self, file_to_select: str | None) -> None:
@@ -503,10 +528,12 @@ class MainWindow(Qw.QMainWindow):
         self.left_panel.clear_file_list_display()
         self.left_panel.add_items_to_file_list(self.current_files_in_list)
 
-        # Set status message
+        # Update status bar with file count info
         folder_name = Path(result.folder_path).name
         file_count = len(self.current_files_in_list)
-        self.left_panel.set_message_text(f"Loaded {file_count} file(s) from {folder_name}.")
+        self.file_count_label.setText(f"{file_count} files in {folder_name}")
+
+        # Keep left panel clean - all status info moved to status bar
 
         # Auto-select file
         self._auto_select_file(result)
@@ -533,7 +560,10 @@ class MainWindow(Qw.QMainWindow):
         folder_name = Path(result.folder_path).name
         message = f"No compatible files found in {folder_name}."
 
-        self.left_panel.set_message_text(message)
+        # Update status bar to show 0 files
+        self.file_count_label.setText(f"0 files in {folder_name}")
+
+        # Keep left panel clean - status info in status bar only
         self.show_status_message(message, 5000)
 
         nfo(
@@ -568,8 +598,12 @@ class MainWindow(Qw.QMainWindow):
         current_item = list_widget.currentItem()
         current_selection = current_item.text() if current_item else None
 
-        # Sort and repopulate case-insensitively
-        self.current_files_in_list.sort(key=str.lower)
+        # Sort naturally (handles numbers properly: IMG_2.jpg before IMG_10.jpg)
+        import re
+        def natural_sort_key(text):
+            return [int(x) if x.isdigit() else x.lower() for x in re.split(r"(\d+)", text)]
+
+        self.current_files_in_list.sort(key=natural_sort_key)
         self.left_panel.clear_file_list_display()
         self.left_panel.add_items_to_file_list(self.current_files_in_list)
 
@@ -579,10 +613,9 @@ class MainWindow(Qw.QMainWindow):
         elif list_widget.count() > 0:
             self.left_panel.set_current_file_by_row(0)
 
-        # Update status
+        # Update status bar
         file_count = len(self.current_files_in_list)
         message = f"Files sorted ({file_count} items)."
-        self.left_panel.set_message_text(message)
         self.show_status_message(message)
 
         nfo("[UI] Files list re-sorted and repopulated.")
@@ -590,7 +623,6 @@ class MainWindow(Qw.QMainWindow):
     def _handle_no_files_to_sort(self) -> None:
         """Handle when there are no files to sort."""
         message = "No files to sort."
-        self.left_panel.set_message_text(message)
         self.show_status_message(message)
         nfo("[UI] %s", message)
 
@@ -600,7 +632,8 @@ class MainWindow(Qw.QMainWindow):
 
         if hasattr(self, "left_panel"):
             self.left_panel.clear_file_list_display()
-            self.left_panel.set_message_text("Select a folder or drop files/folder here.")
+            # Left panel stays clean - status only in status bar
+            pass  # self.left_panel.set_message_text("Select a folder or drop files/folder here.")
 
         self.current_files_in_list = []
         self.clear_selection()
@@ -652,7 +685,8 @@ class MainWindow(Qw.QMainWindow):
         self.clear_selection()
 
         if hasattr(self, "left_panel"):
-            self.left_panel.set_message_text("No file selected.")
+            # Left panel stays clean - status only in status bar
+            pass  # self.left_panel.set_message_text("No file selected.")
         self.show_status_message("No file selected.")
 
     def _update_selection_status(self, file_name: str) -> None:
@@ -660,7 +694,8 @@ class MainWindow(Qw.QMainWindow):
         if hasattr(self, "left_panel"):
             count = len(self.current_files_in_list)
             folder_name = Path(self.current_folder).name if self.current_folder else "Unknown Folder"
-            self.left_panel.set_message_text(f"{count} file(s) in {folder_name}")
+            # Left panel stays clean - status only in status bar
+            pass  # self.left_panel.set_message_text(f"{count} file(s) in {folder_name}")
 
         self.show_status_message(f"Selected: {file_name}", 4000)
         nfo("[UI] File selected: '%s'", file_name)
