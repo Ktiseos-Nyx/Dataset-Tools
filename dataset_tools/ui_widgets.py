@@ -300,10 +300,10 @@ class FolderControlWidget(Qw.QWidget):
         layout.addWidget(self.up_button)
 
         # Refresh button
-        self.refresh_button = Qw.QPushButton("⟳")
-        self.refresh_button.setMaximumWidth(30)
+        self.refresh_button = Qw.QPushButton("Refresh")
+        self.refresh_button.setMinimumWidth(80)  # Match style of Open button
         self.refresh_button.setToolTip("Refresh current folder")
-        self.refresh_button.setEnabled(False)
+        self.refresh_button.setEnabled(True)  # Start enabled for testing
         layout.addWidget(self.refresh_button)
 
     def _connect_signals(self) -> None:
@@ -346,8 +346,10 @@ class FolderControlWidget(Qw.QWidget):
     def _refresh_folder(self) -> None:
         """Refresh the current folder."""
         if self._current_folder:
+            self.logger.info("UI: Refresh button clicked - refreshing folder: %s", self._current_folder)
             self.folder_path_changed.emit(self._current_folder)
-            self.logger.debug("Refreshing folder: %s", self._current_folder)
+        else:
+            self.logger.warning("UI: Refresh button clicked but no folder selected")
 
 
 # ============================================================================

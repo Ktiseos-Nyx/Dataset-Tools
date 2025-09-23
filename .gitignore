@@ -45,3 +45,28 @@ dev_logs/
 # Documentation files
 CLAUDE.md
 DEVELOPMENT_ROADMAP.md
+
+# Archive and backup directories (should never be committed)
+archive/
+ARCHIVE/
+*_backup/
+backup/
+*backup/
+
+# Development screenshots and research (should never be committed)
+dev-screenshots/
+dev_screenshots/
+screenshots/
+ui-ux_research/
+research/
+
+# Theme backup directories
+font_backup/
+theme_backup/
+
+# EXIF output and test data
+exif_output/
+
+# Disabled/experimental files
+*.disabled
+.disabled/
