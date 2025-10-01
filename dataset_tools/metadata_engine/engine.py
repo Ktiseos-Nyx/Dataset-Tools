@@ -419,18 +419,38 @@ class MetadataEngine:
             return None
 
         for source_key in source_keys:
+            # Debug logging for troubleshooting
+            self.logger.debug(f"Trying source_key '{source_key}' for source_type '{source_type}'")
+
             source_map = {
-                "pil_info_key": lambda: context_data.get("pil_info", {}).get(source_key),
-                "direct_context_key": lambda: context_data.get(source_key),
-                "png_chunk": lambda: context_data.get("png_chunks", {}).get(source_key),
-                "exif_field": lambda: context_data.get("exif_data", {}).get(source_key),
+                "pil_info_key": (
+                    lambda sk=source_key: context_data.get("pil_info", {}).get(sk)
+                ),
+                "direct_context_key": (
+                    lambda sk=source_key: context_data.get(sk)
+                ),
+                "png_chunk": (
+                    lambda sk=source_key: context_data.get(
+                        "png_chunks", {}
+                    ).get(sk)
+                ),
+                "exif_field": (
+                    lambda sk=source_key: context_data.get(
+                        "exif_data", {}
+                    ).get(sk)
+                ),
             }
             if source_type in source_map:
                 data = source_map[source_type]()
+                self.logger.debug(f"Data from {source_type}['{source_key}']: {data is not None}")
                 if data is not None:
                     return data  # Return the first one found
 
-        self.logger.warning(f"Unknown or unhandled source type: {source_type}")
+        # If we get here, either no source_key had valid data or source_type not in source_map
+        if source_type in ["pil_info_key", "direct_context_key", "png_chunk", "exif_field"]:
+            self.logger.debug(f"Source type '{source_type}' found in source_map but no valid data found for any source_key: {source_keys}")
+        else:
+            self.logger.warning(f"Unknown or unhandled source type: {source_type}")
         return None
 
     def _transform_input_data(self, input_data: Any, instructions: dict[str, Any], original_input: Any) -> Any:

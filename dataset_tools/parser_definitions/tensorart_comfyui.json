@@ -1,210 +1,138 @@
 {
-  "parser_name": "TensorArt ComfyUI (Unfudged)",
-  "priority": 145,
-  "description": "Parses TensorArt's ComfyUI workflows - now with 90% less insanity",
-  "version": "1.0",
-  "maintainer": "unfudging_team",
-
-  "target_file_types": ["PNG"],
-
+  "parser_name": "TensorArt_ComfyUI",
+  "priority": 160,
+  "description": "Parses modern TensorArt ComfyUI workflows.",
+  "version": "2.0",
+  "maintainer": "Gemini",
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
   "detection_rules": [
     {
-      "comment": "TensorArt uses specific ComfyUI nodes that give it away",
-      "method": "detect_signature_nodes",
-      "condition": "ANY",
-      "signatures": [
-        {
-          "node_type": "ECHOCheckpointLoaderSimple",
-          "confidence": "high",
-          "comment": "TensorArt's custom checkpoint loader"
-        },
-        {
-          "node_type": "LoraTagLoader",
-          "confidence": "medium",
-          "comment": "TensorArt's LoRA loading system"
-        },
-        {
-          "pattern": "EMS-\\d+-EMS\\.safetensors",
-          "confidence": "high",
-          "comment": "TensorArt's model naming pattern"
-        },
-        {
-          "node_type": "BNK_CLIPTextEncodeAdvanced",
-          "confidence": "low",
-          "comment": "Often used with TensorArt workflows"
-        }
-      ]
+      "comment": "Rule 1: Must be a valid ComfyUI workflow in the 'prompt' field",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "is_valid_json"
     },
-
     {
-      "comment": "Make sure it's not another ComfyUI variant",
-      "exclusions": [
-        {
-          "field": "extra.extraMetadata",
-          "exists": false,
-          "comment": "Not Civitai ComfyUI"
-        }
-      ]
+        "comment": "Rule 2: Must contain TensorArt specific node names as substrings",
+        "source_type": "pil_info_key",
+        "source_key": "prompt",
+        "operator": "regex_match_any",
+        "regex_patterns": [
+            "KolorsCheckpointLoaderSimple",
+            "TensorArtLoadChatGLM3",
+            "LoraTagLoader",
+            "ECHOCheckpointLoaderSimple"
+        ]
     }
   ],
-
   "parsing_instructions": {
-    "input_source": {
-      "primary": "workflow",
-      "fallback": "prompt",
-      "format": "comfyui_json"
+    "input_data": {
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "transformations": [{ "type": "json_decode_string_itself" }]
     },
-
-    "extraction_strategy": "tensorart_comfyui_nodes",
-    "description": "TensorArt uses mostly standard ComfyUI with custom loaders",
-
-    "core_fields": [
+    "fields": [
       {
-        "name": "prompt",
-        "method": "find_text_encoder_input",
-        "node_types": ["BNK_CLIPTextEncodeAdvanced", "CLIPTextEncode"],
-        "connected_from": "sampler.positive",
-        "field": "text"
+        "target_key": "prompt",
+        "method": "comfyui_extract_prompt_from_workflow"
       },
-
       {
-        "name": "negative_prompt",
-        "method": "find_text_encoder_input",
-        "node_types": ["BNK_CLIPTextEncodeAdvanced", "CLIPTextEncode"],
-        "connected_from": "sampler.negative",
-        "field": "text",
-        "fallback": ""
+        "target_key": "negative_prompt",
+        "method": "comfyui_extract_negative_prompt_from_workflow"
       },
-
       {
-        "name": "steps",
-        "method": "find_sampler_input",
-        "sampler_types": ["KSampler_A1111", "KSampler"],
-        "field": "steps",
-        "type": "integer"
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["KolorsCheckpointLoaderSimple", "ECHOCheckpointLoaderSimple"],
+        "input_field": "ckpt_name",
+        "value_type": "string"
       },
-
       {
-        "name": "cfg_scale",
-        "method": "find_sampler_input",
-        "sampler_types": ["KSampler_A1111", "KSampler"],
-        "field": "cfg",
-        "type": "float"
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler"],
+        "input_field": "steps",
+        "value_type": "integer"
       },
-
       {
-        "name": "seed",
-        "method": "find_sampler_input",
-        "sampler_types": ["KSampler_A1111", "KSampler"],
-        "field": "seed",
-        "type": "integer"
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler"],
+        "input_field": "cfg",
+        "value_type": "float"
       },
-
       {
-        "name": "sampler_name",
-        "method": "find_sampler_input",
-        "sampler_types": ["KSampler_A1111", "KSampler"],
-        "field": "sampler_name",
-        "type": "string"
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler"],
+        "input_field": "seed",
+        "value_type": "integer"
       },
-
       {
-        "name": "scheduler",
-        "method": "find_sampler_input",
-        "sampler_types": ["KSampler_A1111", "KSampler"],
-        "field": "scheduler",
-        "type": "string",
-        "optional": true
-      }
-    ],
-
-    "tensorart_specific_fields": [
-      {
-        "name": "model",
-        "method": "find_checkpoint_loader",
-        "node_type": "ECHOCheckpointLoaderSimple",
-        "field": "ckpt_name",
-        "comment": "TensorArt's custom loader"
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler"],
+        "input_field": "sampler_name",
+        "value_type": "string"
       },
-
       {
-        "name": "loras",
-        "method": "find_lora_loaders",
-        "node_types": ["LoraTagLoader", "LoraLoader"],
-        "extract_fields": ["lora_name", "text", "strength_model", "strength_clip"],
-        "comment": "TensorArt supports tag-based LoRA loading"
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler"],
+        "input_field": "scheduler",
+        "value_type": "string"
       },
-
       {
-        "name": "dimensions",
-        "method": "find_latent_image_size",
-        "node_type": "EmptyLatentImage",
-        "fields": ["width", "height"]
-      }
-    ],
-
-    "advanced_features": {
-      "comment": "TensorArt sometimes has advanced workflow features",
-
-      "adetailer": {
-        "method": "detect_inpainting_workflow",
-        "indicators": ["InpaintModelConditioning", "KSampler with denoise"],
-        "extract": "secondary_sampler_denoise_strength",
+        "target_key": "parameters.denoise",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": ["KSampler"],
+        "input_field": "denoise",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["EmptyLatentImage"],
+        "input_field": "width",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["EmptyLatentImage"],
+        "input_field": "height",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.vae",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["VAELoader"],
+        "input_field": "vae_name",
+        "value_type": "string",
         "optional": true
       },
-
-      "vae_model": {
-        "method": "find_vae_loader",
-        "node_type": "VAELoader",
-        "field": "vae_name",
-        "optional": true,
-        "fallback": "built_into_checkpoint"
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
       }
+    ],
+    "output_template": {
+      "tool": "TensorArt",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "denoise": "$parameters.denoise",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "vae": "$parameters.vae"
+      },
+      "raw_metadata": "$raw_metadata"
     }
-  },
-
-  "output_format": {
-    "tool": "TensorArt (ComfyUI)",
-    "parser_version": "unfudged_v1",
-    "workflow_type": "tensorart_comfyui",
-
-    "prompt": "{prompt}",
-    "negative_prompt": "{negative_prompt}",
-
-    "parameters": {
-      "steps": "{steps}",
-      "cfg_scale": "{cfg_scale}",
-      "seed": "{seed}",
-      "sampler_name": "{sampler_name}",
-      "scheduler": "{scheduler}",
-      "model": "{model}",
-      "width": "{width}",
-      "height": "{height}",
-      "loras": "{loras_array}"
-    },
-
-    "tensorart_specific": {
-      "uses_echo_loader": true,
-      "model_format": "tensorart_ems_or_standard",
-      "adetailer_strength": "{adetailer_denoise}",
-      "vae_model": "{vae_model}"
-    },
-
-    "raw_workflow": "{original_workflow_json}"
-  },
-
-  "error_handling": {
-    "missing_echo_loader": "fallback_to_standard_comfyui_detection",
-    "unknown_nodes": "extract_what_we_can",
-    "malformed_workflow": "return_partial_data_with_warnings"
-  },
-
-  "notes": [
-    "TensorArt is basically ComfyUI with custom nodes for their platform",
-    "Key identifier: ECHOCheckpointLoaderSimple instead of CheckpointLoaderSimple",
-    "They use EMS-XXXXX-EMS.safetensors naming for models",
-    "LoraTagLoader lets users reference LoRAs by tags instead of filenames",
-    "Otherwise follows standard ComfyUI workflow patterns",
-    "Much simpler than Gemini made it sound!"
-  ]
+  }
 }

@@ -1,0 +1,139 @@
+{
+  "parser_name": "Qwen_Image_ComfyUI",
+  "priority": 210,
+  "description": "Parses ComfyUI workflows created for Qwen Image models. This parser identifies specific Qwen model files and custom nodes.",
+  "version": "1.0",
+  "maintainer": "Gemini",
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be a valid ComfyUI workflow",
+      "source_type": "any_metadata_source",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: Must contain Qwen specific model names or nodes",
+      "source_type": "any_metadata_source",
+      "operator": "regex_match_any",
+      "regex_patterns": [
+        "qwen_image_fp8_e4m3fn.safetensors",
+        "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+        "ModelSamplingAuraFlow"
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        { "source_type": "exif_user_comment" },
+        { "source_type": "pil_info_key", "source_key": "workflow" },
+        { "source_type": "pil_info_key", "source_key": "prompt" }
+      ],
+      "transformations": [
+        { "type": "json_decode_string_itself" }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_widget_value_of_node_type",
+        "node_types": ["PCLazyTextEncode"],
+        "widget_name_or_index": 0,
+        "value_type": "string"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": ["KSampler"],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": ["CLIPTextEncode"],
+        "fallback": ""
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_widget_value_of_node_type",
+        "node_types": ["UNETLoader"],
+        "widget_name_or_index": 0,
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_widget_value_of_node_type",
+        "node_types": ["KSampler"],
+        "widget_name_or_index": 2,
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_widget_value_of_node_type",
+        "node_types": ["ModelSamplingAuraFlow"],
+        "widget_name_or_index": 0,
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_widget_value_of_node_type",
+        "node_types": ["KSampler"],
+        "widget_name_or_index": 0,
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_widget_value_of_node_type",
+        "node_types": ["KSampler"],
+        "widget_name_or_index": 4,
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_widget_value_of_node_type",
+        "node_types": ["KSampler"],
+        "widget_name_or_index": 5,
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_widget_value_of_node_type",
+        "node_types": ["EmptySD3LatentImage"],
+        "widget_name_or_index": 0,
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_widget_value_of_node_type",
+        "node_types": ["EmptySD3LatentImage"],
+        "widget_name_or_index": 1,
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.vae",
+        "method": "comfy_find_widget_value_of_node_type",
+        "node_types": ["VAELoader"],
+        "widget_name_or_index": 0,
+        "value_type": "string"
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
+      }
+    ],
+    "output_template": {
+      "tool": "Qwen Image (ComfyUI)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "vae": "$parameters.vae"
+      },
+      "raw_metadata": "$raw_metadata"
+    }
+  }
+}
