@@ -27,6 +27,7 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
 
     # Signals
     open_folder_requested = QtCore.pyqtSignal()
+    refresh_folder_requested = QtCore.pyqtSignal()
     sort_files_requested = QtCore.pyqtSignal()
     list_item_selected = QtCore.pyqtSignal(object, object)  # current, previous
 
@@ -41,20 +42,18 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
         layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(8)
 
-        # Current folder display
-        self.current_folder_label = Qw.QLabel("Current Folder: None")
-        self.current_folder_label.setWordWrap(True)
-        # self.current_folder_label.setStyleSheet("font-weight: bold; color: #666;")
-        layout.addWidget(self.current_folder_label)
+        # Clean instructional message at top - left aligned
+        self.message_label = Qw.QLabel("Select a folder to view its contents.")
+        self.message_label.setWordWrap(True)
+        self.message_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
+        layout.addWidget(self.message_label)
 
         # Action buttons
         self._setup_action_buttons(layout)
 
-        # Status/message display
-        self.message_label = Qw.QLabel("Select a folder to view its contents.")
-        self.message_label.setWordWrap(True)
-        self.message_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.message_label)
+        # Current folder display - moved to status bar, keep reference for compatibility
+        self.current_folder_label = Qw.QLabel("")  # Hidden, folder info now in status bar
+        self.current_folder_label.setVisible(False)
 
         # File list
         self.files_list_widget = Qw.QListWidget()
@@ -100,6 +99,17 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
         )
         button_layout.addWidget(self.open_folder_button)
 
+        # Refresh button
+        self.refresh_button = Qw.QPushButton("Refresh")
+        icon_manager.add_icon_to_button(self.refresh_button, "rotate-solid", "primary", QSize(16, 16))
+        self.refresh_button.setToolTip(
+            "<b>Refresh Folder</b><br/>"
+            "Reload files from the current folder.<br/>"
+            "Use this when new files are added to the folder.<br/>"
+            "<i>Shows updated file count</i>"
+        )
+        button_layout.addWidget(self.refresh_button)
+
         self.sort_button = Qw.QPushButton("Sort Files")
         # Add Font Awesome icon to button
         icon_manager.add_icon_to_button(self.sort_button, "arrow-up-a-z-solid", "primary", QSize(16, 16))
@@ -116,6 +126,7 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
     def _connect_signals(self) -> None:
         """Connect internal signals to handlers."""
         self.open_folder_button.clicked.connect(self.open_folder_requested.emit)
+        self.refresh_button.clicked.connect(self.refresh_folder_requested.emit)
         self.sort_button.clicked.connect(self.sort_files_requested.emit)
         self.files_list_widget.currentItemChanged.connect(self.list_item_selected.emit)
 
