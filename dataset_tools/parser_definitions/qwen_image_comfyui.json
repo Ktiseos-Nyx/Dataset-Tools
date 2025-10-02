@@ -1,6 +1,6 @@
 {
   "parser_name": "Qwen_Image_ComfyUI",
-  "priority": 210,
+  "priority": 190,
   "description": "Parses ComfyUI workflows created for Qwen Image models. This parser identifies specific Qwen model files and custom nodes.",
   "version": "1.0",
   "maintainer": "Gemini",
@@ -35,83 +35,68 @@
     },
     "fields": [
       {
+        "comment": "BEST METHOD: Use the high-level dispatcher for prompts.",
         "target_key": "prompt",
-        "method": "comfy_find_widget_value_of_node_type",
-        "node_types": ["PCLazyTextEncode"],
-        "widget_name_or_index": 0,
-        "value_type": "string"
+        "method": "comfyui_extract_prompt_from_workflow"
       },
       {
         "target_key": "negative_prompt",
-        "method": "comfy_find_text_from_main_sampler_input",
-        "sampler_node_types": ["KSampler"],
-        "negative_input_name": "negative",
-        "text_input_name_in_encoder": "text",
-        "text_encoder_node_types": ["CLIPTextEncode"],
-        "fallback": ""
-      },
-      {
-        "target_key": "parameters.model",
-        "method": "comfy_find_widget_value_of_node_type",
-        "node_types": ["UNETLoader"],
-        "widget_name_or_index": 0,
-        "value_type": "string"
-      },
-      {
-        "target_key": "parameters.steps",
-        "method": "comfy_find_widget_value_of_node_type",
-        "node_types": ["KSampler"],
-        "widget_name_or_index": 2,
-        "value_type": "integer"
-      },
-      {
-        "target_key": "parameters.cfg_scale",
-        "method": "comfy_find_widget_value_of_node_type",
-        "node_types": ["ModelSamplingAuraFlow"],
-        "widget_name_or_index": 0,
-        "value_type": "float"
+        "method": "comfyui_extract_negative_prompt_from_workflow"
       },
       {
         "target_key": "parameters.seed",
-        "method": "comfy_find_widget_value_of_node_type",
-        "node_types": ["KSampler"],
-        "widget_name_or_index": 0,
-        "value_type": "integer"
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": "$_sampler_node_types_var",
+        "input_name": "seed"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": "$_sampler_node_types_var",
+        "input_name": "steps"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": "$_sampler_node_types_var",
+        "input_name": "cfg"
       },
       {
         "target_key": "parameters.sampler_name",
-        "method": "comfy_find_widget_value_of_node_type",
-        "node_types": ["KSampler"],
-        "widget_name_or_index": 4,
-        "value_type": "string"
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": "$_sampler_node_types_var",
+        "input_name": "sampler_name"
       },
       {
         "target_key": "parameters.scheduler",
-        "method": "comfy_find_widget_value_of_node_type",
-        "node_types": ["KSampler"],
-        "widget_name_or_index": 5,
-        "value_type": "string"
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": "$_sampler_node_types_var",
+        "input_name": "scheduler"
+      },
+      {
+        "comment": "ROBUST GENERIC FINDER: Use comfy_get_node_by_class for disconnected data.",
+        "target_key": "parameters.model",
+        "method": "comfy_get_node_by_class",
+        "class_type": "UNETLoader",
+        "field_name": "unet_name"
       },
       {
         "target_key": "parameters.width",
-        "method": "comfy_find_widget_value_of_node_type",
-        "node_types": ["EmptySD3LatentImage"],
-        "widget_name_or_index": 0,
-        "value_type": "integer"
+        "method": "comfy_get_node_by_class",
+        "class_type": "EmptyLatentImage",
+        "field_name": "width"
       },
       {
         "target_key": "parameters.height",
-        "method": "comfy_find_widget_value_of_node_type",
-        "node_types": ["EmptySD3LatentImage"],
-        "widget_name_or_index": 1,
-        "value_type": "integer"
+        "method": "comfy_get_node_by_class",
+        "class_type": "EmptyLatentImage",
+        "field_name": "height"
       },
       {
         "target_key": "parameters.vae",
-        "method": "comfy_find_widget_value_of_node_type",
-        "node_types": ["VAELoader"],
-        "widget_name_or_index": 0,
-        "value_type": "string"
+        "method": "comfy_get_node_by_class",
+        "class_type": "VAEAutoencoderLoader",
+        "field_name": "vae_name"
       },
       {
         "target_key": "raw_metadata",

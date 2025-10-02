@@ -1,0 +1,78 @@
+/*
+ * THEME: Disturbed Math Class (Refactored)
+ * PALETTE: Based on the original, with improved button styling and readability.
+ * STRUCTURE: Uses border-style for 3D effects.
+*/
+
+/* Using a solid dark color for the main background for better contrast */
+QMainWindow, QDialog {
+    background-color: #2F4F4F;
+}
+
+QWidget {
+    color: #FFFFFF; /* White text on dark background */
+    border: none;
+}
+
+/* Buttons use outset/inset borders for a 3D, pressable feel */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #DC143C, stop: 1 #B22222);
+    border: 2px solid #2F4F4F;
+    border-style: outset; /* This creates the raised 3D effect */
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #FFFFFF;
+    /* Removed font-weight and text-transform */
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #B22222, stop: 1 #DC143C);
+    border: 2px solid #000000;
+    border-style: outset;
+}
+
+QPushButton:pressed {
+    border-style: inset; /* This creates the pressed-in 3D effect */
+}
+
+/* Standard robust styling for other widgets */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 1px solid #A9A9A9;
+    border-radius: 4px;
+    padding: 8px;
+    color: #2F4F4F;
+    selection-background-color: #DC143C;
+    selection-color: #FFFFFF;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 1px solid #A9A9A9;
+    border-radius: 4px;
+    alternate-background-color: #F0F0F0;
+    color: #2F4F4F;
+}
+
+QListWidget::item:selected {
+    background: #DC143C;
+    color: #FFFFFF;
+}
+
+QComboBox {
+    background-color: #B0C4DE;
+    color: #2F4F4F;
+    border: 1px solid #778899;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #FFFFFF;
+    color: #2F4F4F;
+    border: 1px solid #A9A9A9;
+    selection-background-color: #DC143C;
+    selection-color: #FFFFFF;
+}

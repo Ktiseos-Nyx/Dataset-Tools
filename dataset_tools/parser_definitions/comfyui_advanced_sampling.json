@@ -1,6 +1,6 @@
 {
   "parser_name": "ComfyUI_Advanced_Sampling",
-  "priority": 146,
+  "priority": 196,
   "description": "Workflows with advanced sampling, custom nodes, and specialized models (Kolors, FLUX, etc.)",
   "version": "1.0_expanded",
   "maintainer": "Ktiseos Nyx",
@@ -87,7 +87,7 @@
           "operator": "is_true",
           "class_types_to_check": [
             "VHS_SplitLatents",
-            "VHS_MergeLatents", 
+            "VHS_MergeLatents",
             "VHS_SplitImages",
             "VHS_MergeImages",
             "VHS_SelectEveryNthImage",

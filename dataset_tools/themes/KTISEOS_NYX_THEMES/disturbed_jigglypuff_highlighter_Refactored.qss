@@ -1,0 +1,80 @@
+/*
+ * THEME: Disturbed Jigglypuff Highlighter (Refactored)
+ * PALETTE: Based on the original, reinterpreted for professionalism.
+ * STRUCTURE: Solid widgets on a gradient background.
+*/
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FF69B4, stop: 0.5 #39FF14,
+                                stop: 1 #00BFFF);
+}
+
+QWidget { border: none; }
+
+QPushButton, QLineEdit, QTextEdit, QPlainTextEdit, QListWidget, QComboBox {
+    background-color: #3d0f2b; /* Very dark pink */
+    color: #ffc0cb; /* Light pink text */
+    border: 1px solid #6d1f4b; /* Neutral pink border */
+    border-radius: 4px;
+    padding: 8px;
+}
+
+QPushButton:hover, QComboBox:hover {
+    background-color: #6d1f4b;
+    border: 1px solid #39FF14; /* Accent color: neon green */
+}
+
+QPushButton:pressed {
+    background-color: #39FF14;
+    color: #3d0f2b;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #39FF14;
+}
+
+QLabel, QCheckBox, QRadioButton {
+    background-color: transparent;
+    color: #201015; /* Softened dark text */
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #6d1f4b;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #ffc0cb;
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #3d0f2b;
+    color: #ffc0cb;
+    border: 1px solid #6d1f4b;
+    selection-background-color: #39FF14;
+    selection-color: #3d0f2b;
+    outline: none;
+}
+
+QListWidget::item:hover {
+    background-color: #6d1f4b;
+}
+
+QListWidget::item:selected {
+    background-color: #39FF14;
+    color: #3d0f2b;
+}
+
+/* Dialog box styling */
+QDialog {
+    background-color: #3d0f2b;
+}
