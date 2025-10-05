@@ -1,3 +1,0 @@
-qtpy
-Pillow
-qt-material
