@@ -1,0 +1,263 @@
+{
+  "parser_name": "ComfyUI (A1111 Sampler Style)",
+  "priority": 140,
+  "target_file_types": [
+    "PNG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have prompt PNG chunk with valid JSON (primary ComfyUI format)",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: Must contain A1111-style sampler signatures",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "contains",
+      "value": "KSampler_A1111"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_sampler_input",
+        "sampler_node_types_to_target": [
+          "KSampler_A1111"
+        ],
+        "sampler_positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "BNK_CLIPTextEncodeAdvanced",
+          "CLIPTextEncode"
+        ]
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_sampler_input",
+        "sampler_node_types_to_target": [
+          "KSampler_A1111"
+        ],
+        "sampler_negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "BNK_CLIPTextEncodeAdvanced",
+          "CLIPTextEncode"
+        ]
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "KSampler_A1111"
+          }
+        ],
+        "input_key": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "KSampler_A1111"
+          }
+        ],
+        "input_key": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "KSampler_A1111"
+          }
+        ],
+        "input_key": "cfg",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "KSampler_A1111"
+          }
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "KSampler_A1111"
+          }
+        ],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.denoise",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "KSampler_A1111"
+          }
+        ],
+        "input_key": "denoise",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.a1111_ksampler_seed_mode",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "KSampler_A1111"
+          }
+        ],
+        "input_key": "seed_mode",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.a1111_ksampler_ensd",
+        "method": "comfy_find_node_input",
+        "node_criteria": [
+          {
+            "class_type": "KSampler_A1111"
+          }
+        ],
+        "input_key": "ensd",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_ancestor_node_input_value",
+        "start_node_types": [
+          "KSampler_A1111"
+        ],
+        "start_node_input_name": "model",
+        "target_ancestor_types": [
+          "CheckpointLoaderSimple"
+        ],
+        "target_input_key_in_ancestor": "ckpt_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_ancestor_node_input_value",
+        "start_node_types": [
+          "KSampler_A1111"
+        ],
+        "start_node_input_name": "latent_image",
+        "target_ancestor_types": [
+          "EmptyLatentImage"
+        ],
+        "target_input_key_in_ancestor": "width",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_ancestor_node_input_value",
+        "start_node_types": [
+          "KSampler_A1111"
+        ],
+        "start_node_input_name": "latent_image",
+        "target_ancestor_types": [
+          "EmptyLatentImage"
+        ],
+        "target_input_key_in_ancestor": "height",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.loras",
+        "method": "comfy_extract_loras_from_linked_loaders",
+        "sampler_node_types_to_target": [
+          "KSampler_A1111"
+        ],
+        "model_input_name_in_sampler": "model",
+        "lora_loader_node_types": [
+          "LoraTagLoader",
+          "LoraLoader"
+        ],
+        "lora_text_input_key_in_loader": "text",
+        "lora_name_input_key_in_loader": "lora_name",
+        "strength_model_key_in_loader": "strength_model",
+        "strength_clip_key_in_loader": "strength_clip"
+      },
+      {
+        "target_key": "parameters.vae_model",
+        "method": "comfy_find_vae_from_checkpoint_loader",
+        "checkpoint_loader_types": [
+          "CheckpointLoaderSimple"
+        ],
+        "optional": true
+      },
+      {
+        "target_key": "parameters.clip_skip",
+        "method": "comfy_find_clip_skip_in_path",
+        "sampler_node_types_to_target": [
+          "KSampler_A1111"
+        ],
+        "clip_input_name_in_sampler": "clip",
+        "clip_set_last_layer_node_type": "CLIPSetLastLayer",
+        "stop_at_layer_input_key": "stop_at_clip_layer",
+        "value_type": "integer",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI (A1111 Sampler Style)",
+      "tool": "ComfyUI (A1111 Sampler)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "denoise": "$parameters.denoise",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height",
+        "model": "$parameters.model",
+        "vae_model": "$parameters.vae_model",
+        "loras": "$parameters.loras",
+        "clip_skip": "$parameters.clip_skip",
+        "tool_specific": {
+          "a1111_ksampler_seed_mode": "$parameters.tool_specific.a1111_ksampler_seed_mode",
+          "a1111_ksampler_ensd": "$parameters.tool_specific.a1111_ksampler_ensd"
+        }
+      },
+      "workflow": "$INPUT_JSON_OBJECT_AS_STRING"
+    }
+  }
+}

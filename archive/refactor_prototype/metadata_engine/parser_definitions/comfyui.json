@@ -1,0 +1,344 @@
+{
+  "parser_name": "ComfyUI Universal Parser",
+  "priority": 195,
+  "description": "Advanced ComfyUI parser that handles any workflow type with robust detection and extraction",
+  "version": "2.0_universal_edition",
+  "maintainer": "DuskFall Crew",
+  "target_file_types": [
+    "PNG",
+    "JPEG",
+    "JPG",
+    "WEBP"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have 'workflow' PNG chunk with valid JSON and ComfyUI node signatures",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "exists"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "json_path_exists_boolean",
+          "json_path": "$.nodes[?(@.class_type =~ /KSampler|SamplerCustomAdvanced|CLIPTextEncode/i)]"
+        },
+        {
+          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "extraMetadata"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: OR, must have 'prompt' pil_info_key with valid JSON and ComfyUI node signatures (for older/different formats)",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "json_path_exists_boolean",
+          "json_path": "$.nodes[?(@.class_type =~ /KSampler|SamplerCustomAdvanced|CLIPTextEncode/i)]"
+        },
+        {
+          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "does_not_contain",
+          "value": "extraMetadata"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 3: Must NOT be a Civitai JPEG ComfyUI file (exclude EXIF UserComment with extraMetadata)",
+      "operator": "NOT",
+      "rules": [
+        {
+          "operator": "AND",
+          "rules": [
+            {
+              "source_type": "exif_user_comment",
+              "operator": "is_valid_json"
+            },
+            {
+              "source_type": "exif_user_comment",
+              "operator": "contains",
+              "value": "extraMetadata"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "comment": "Extract positive prompt from text encoding nodes",
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced",
+          "CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PixArtT5TextEncode",
+          "CLIPTextEncodeSDXL",
+          "CLIPTextEncodeSDXLRefiner",
+          "smZ CLIPTextEncode"
+        ]
+      },
+      {
+        "comment": "Extract negative prompt from text encoding nodes",
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced",
+          "CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PixArtT5TextEncode",
+          "CLIPTextEncodeSDXL",
+          "CLIPTextEncodeSDXLRefiner",
+          "smZ CLIPTextEncode"
+        ]
+      },
+      {
+        "comment": "Extract seed from sampler",
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_field": "seed",
+        "value_type": "integer"
+      },
+      {
+        "comment": "Extract steps from sampler",
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_field": "steps",
+        "value_type": "integer"
+      },
+      {
+        "comment": "Extract cfg_scale from sampler",
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_field": "cfg",
+        "value_type": "float"
+      },
+      {
+        "comment": "Extract sampler name",
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_field": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "comment": "Extract width from latent image nodes",
+        "target_key": "parameters.width",
+        "method": "comfy_find_node_input_or_widget_value",
+        "node_criteria": [
+          {
+            "class_type": "EmptyLatentImage"
+          },
+          {
+            "class_type": "LatentUpscale"
+          },
+          {
+            "class_type": "EmptyLatentImageFromPresetsSDXL"
+          },
+          {
+            "class_type": "EmptySD3LatentImage"
+          }
+        ],
+        "input_field": "width",
+        "value_type": "integer"
+      },
+      {
+        "comment": "Extract height from latent image nodes",
+        "target_key": "parameters.height",
+        "method": "comfy_find_node_input_or_widget_value",
+        "node_criteria": [
+          {
+            "class_type": "EmptyLatentImage"
+          },
+          {
+            "class_type": "LatentUpscale"
+          },
+          {
+            "class_type": "EmptyLatentImageFromPresetsSDXL"
+          },
+          {
+            "class_type": "EmptySD3LatentImage"
+          }
+        ],
+        "input_field": "height",
+        "value_type": "integer"
+      },
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis",
+        "target_key": "workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "multi_stage_conditioning",
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
+      }
+    ],
+    "output_template": {
+      "tool": "ComfyUI (Universal Parser)",
+      "parser_version": "2.0_universal",
+      "detection_confidence": "high",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "workflow_info": {
+        "parser_used": "Universal ComfyUI Parser",
+        "notes": "Handles SDXL, FLUX, and other ComfyUI workflow variants",
+        "supports": [
+          "KSampler",
+          "SamplerCustomAdvanced",
+          "BasicGuider",
+          "DualCLIPLoader",
+          "All ComfyUI variants"
+        ]
+      },
+      "raw_workflow": "$input_data"
+    }
+  },
+  "engineering_notes": {
+    "design_goals": [
+      "Built for reliability and broad ComfyUI support",
+      "Handles both legacy SDXL and modern FLUX workflows",
+      "Robust detection prevents conflicts with specialized parsers",
+      "Uses proven extraction methods instead of placeholders",
+      "Designed for extensibility as ComfyUI evolves"
+    ],
+    "technical_features": [
+      "SamplerCustomAdvanced support for FLUX workflows",
+      "DualCLIPLoader detection for advanced text encoding",
+      "Fallback model detection (checkpoint OR FLUX unet)",
+      "Flexible prompt extraction from any CLIP encoder variant",
+      "Future-proof node type detection"
+    ],
+    "implementation": [
+      "Real metadata extraction instead of placeholder text",
+      "Handles workflow complexity without breaking",
+      "Clean, maintainable architecture",
+      "Ready for new ComfyUI node types"
+    ]
+  },
+  "supported_workflows": [
+    "SDXL with KSampler",
+    "FLUX with SamplerCustomAdvanced + BasicGuider",
+    "Any ComfyUI workflow with CLIPTextEncode variants",
+    "Complex multi-node workflows",
+    "Custom sampling setups",
+    "Future ComfyUI developments"
+  ],
+  "status": "production_ready",
+  "enhanced_with_node_discovery": true,
+  "enhancement_date": "2025-07-08"
+}

@@ -1,0 +1,149 @@
+{
+  "parser_name": "Forge_WebUI",
+  "priority": 180,
+  "description": "Forge WebUI - Enhanced fork of Automatic1111 with advanced features and better performance",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must first look like a standard A1111 text block.",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_all",
+      "regex_patterns": ["Steps:", "Sampler:", "Seed:"]
+    },
+    {
+      "comment": "Rule 2: AND must contain a Forge-specific signature, like the version string 'Version: f...'",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_any",
+      "regex_patterns": [
+        "Version: f\\d+\\.\\d+\\.\\d+.*"
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "parameters"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ]
+    },
+    "extraction_strategy": "a1111_text_parsing",
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "a1111_extract_prompt_positive"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "a1111_extract_prompt_negative"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.sampler",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Sampler",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG scale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.size",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Size",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.forge_version",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Version",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.schedule_type",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Schedule type",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.hires_upscale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Hires upscale",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.hires_cfg_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Hires CFG Scale",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.hires_module_1",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Hires Module 1",
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "tool": "Forge WebUI",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "sampler": "$parameters.sampler",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "size": "$parameters.size",
+        "model": "$parameters.model",
+        "forge_version": "$parameters.forge_version",
+        "schedule_type": "$parameters.schedule_type",
+        "hires_upscale": "$parameters.hires_upscale",
+        "hires_cfg_scale": "$parameters.hires_cfg_scale",
+        "hires_module_1": "$parameters.hires_module_1",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height"
+      },
+      "raw_metadata": "$INPUT_STRING_ORIGINAL_CHUNK"
+    }
+  },
+  "notes": [
+    "Converted to new MetadataEngine format",
+    "Forge WebUI enhanced fork with advanced features",
+    "Detection focuses on Forge-specific version strings (f1.2.3)",
+    "Includes advanced scheduling and modular upscaling features"
+  ]
+}

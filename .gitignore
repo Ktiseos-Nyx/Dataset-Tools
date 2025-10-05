@@ -45,3 +45,13 @@ dev_logs/
 # Documentation files
 CLAUDE.md
 DEVELOPMENT_ROADMAP.md
+
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
+
+# Added by Gemini
+ROADMAP.md
+archive/
+docs/
+themes_backup/

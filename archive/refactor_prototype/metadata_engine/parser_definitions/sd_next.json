@@ -1,0 +1,181 @@
+{
+  "parser_name": "SD_Next",
+  "priority": 175,
+  "description": "SD.Next - Modern Stable Diffusion WebUI with Diffusers backend",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must first look like a standard A1111 text block.",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_all",
+      "regex_patterns": ["Steps:", "Sampler:", "Seed:"]
+    },
+    {
+      "comment": "Rule 2: Must contain the SD.Next app signature.",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_any",
+      "regex_patterns": ["App: SD\\.Next"]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "pil_info_key", "source_key": "parameters"},
+        {"source_type": "exif_user_comment"}
+      ]
+    },
+    "extraction_strategy": "a1111_text_parsing",
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "a1111_extract_prompt_positive"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "a1111_extract_prompt_negative"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.sampler",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Sampler",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG scale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.size",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Size",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.app_version",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Version",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.app_name",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "App",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.backend",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Backend",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.pipeline",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Pipeline",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.operations",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Operations",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.cfg_rescale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG rescale",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.hires_upscaler",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Hires upscaler",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.hires_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Hires scale",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.lora_networks",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "LoRA networks",
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "tool": "SD.Next",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "sampler": "$parameters.sampler",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "size": "$parameters.size",
+        "model": "$parameters.model",
+        "app_version": "$parameters.app_version",
+        "backend": "$parameters.backend",
+        "pipeline": "$parameters.pipeline",
+        "operations": "$parameters.operations",
+        "cfg_rescale": "$parameters.cfg_rescale",
+        "hires_upscaler": "$parameters.hires_upscaler",
+        "hires_scale": "$parameters.hires_scale",
+        "lora_networks": "$parameters.lora_networks",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height"
+      },
+      "sd_next_specific": {
+        "app_name": "$parameters.app_name",
+        "uses_diffusers": true,
+        "modern_architecture": true
+      },
+      "raw_metadata": "$INPUT_STRING_ORIGINAL_CHUNK",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+  "notes": [
+    "SD.Next is a modern WebUI fork using Diffusers backend",
+    "Characterized by 'App: SD.Next' signature",
+    "Uses git hash versions (e.g., cb0eb55)",
+    "Supports advanced features like CFG rescale and multiple pipelines"
+  ]
+}

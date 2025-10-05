@@ -1,0 +1,154 @@
+{
+  "parser_name": "ComfyUI Simple Parser",
+  "priority": 90,
+  "description": "Handles basic ComfyUI workflows - covers 80% of common cases",
+  "target_file_types": ["PNG"],
+  
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have workflow PNG chunk with valid JSON",
+      "source_type": "pil_info_key",
+      "source_key": "workflow",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: Must contain KSampler nodes",
+      "source_type": "pil_info_key",
+      "source_key": "workflow",
+      "operator": "contains",
+      "value": "KSampler"
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source": "pil_info_key",
+      "key": "workflow",
+      "format": "json"
+    },
+    
+    "extraction_rules": [
+      {
+        "target_field": "prompt",
+        "method": "find_in_nodes",
+        "node_type": "CLIPTextEncode",
+        "connection_from": "KSampler.positive",
+        "extract_field": "inputs.text",
+        "fallback": "Could not extract prompt"
+      },
+      
+      {
+        "target_field": "negative_prompt", 
+        "method": "find_in_nodes",
+        "node_type": "CLIPTextEncode",
+        "connection_from": "KSampler.negative", 
+        "extract_field": "inputs.text",
+        "fallback": ""
+      },
+      
+      {
+        "target_field": "steps",
+        "method": "find_in_nodes",
+        "node_type": "KSampler",
+        "extract_field": "inputs.steps",
+        "data_type": "integer",
+        "fallback": 20
+      },
+      
+      {
+        "target_field": "cfg_scale",
+        "method": "find_in_nodes", 
+        "node_type": "KSampler",
+        "extract_field": "inputs.cfg",
+        "data_type": "float",
+        "fallback": 7.0
+      },
+      
+      {
+        "target_field": "seed",
+        "method": "find_in_nodes",
+        "node_type": "KSampler", 
+        "extract_field": "inputs.seed",
+        "data_type": "integer",
+        "fallback": -1
+      },
+      
+      {
+        "target_field": "sampler_name",
+        "method": "find_in_nodes",
+        "node_type": "KSampler",
+        "extract_field": "inputs.sampler_name", 
+        "data_type": "string",
+        "fallback": "euler"
+      },
+      
+      {
+        "target_field": "scheduler",
+        "method": "find_in_nodes",
+        "node_type": "KSampler",
+        "extract_field": "inputs.scheduler",
+        "data_type": "string", 
+        "fallback": "normal"
+      },
+      
+      {
+        "target_field": "model_name",
+        "method": "find_in_nodes",
+        "node_type": "CheckpointLoaderSimple",
+        "extract_field": "inputs.ckpt_name",
+        "data_type": "string",
+        "fallback": "Unknown Model"
+      },
+      
+      {
+        "target_field": "width",
+        "method": "find_in_nodes",
+        "node_type": "EmptyLatentImage", 
+        "extract_field": "inputs.width",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      
+      {
+        "target_field": "height",
+        "method": "find_in_nodes",
+        "node_type": "EmptyLatentImage",
+        "extract_field": "inputs.height", 
+        "data_type": "integer",
+        "fallback": 512
+      }
+    ],
+    
+    "output_format": {
+      "tool": "ComfyUI",
+      "parser_version": "simple_v1",
+      "prompt": "{prompt}",
+      "negative_prompt": "{negative_prompt}",
+      "parameters": {
+        "steps": "{steps}",
+        "cfg_scale": "{cfg_scale}", 
+        "seed": "{seed}",
+        "sampler_name": "{sampler_name}",
+        "scheduler": "{scheduler}",
+        "model": "{model_name}",
+        "width": "{width}",
+        "height": "{height}"
+      },
+      "raw_workflow": "{input_data}"
+    }
+  },
+  
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "fallback_parser": "generic_metadata_parser"
+  },
+  
+  "notes": [
+    "This is the 'training wheels' version - handles basic KSampler workflows",
+    "Covers ~80% of common ComfyUI use cases", 
+    "Falls back gracefully when it can't find expected nodes",
+    "Does NOT handle advanced samplers, custom nodes, or complex workflows",
+    "For advanced workflows, use the 'ComfyUI Advanced Parser' instead"
+  ]
+}

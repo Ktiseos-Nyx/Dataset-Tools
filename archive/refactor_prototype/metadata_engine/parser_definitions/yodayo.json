@@ -1,0 +1,199 @@
+{
+  "parser_name": "Yodayo/Moescape (Unfudged)",
+  "priority": 180,
+  "description": "Parses Yodayo and Moescape AI image metadata - A1111 format with anime flair",
+  "version": "1.0",
+  "maintainer": "unfudging_team",
+
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must contain A1111-style parameter structure",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_all",
+      "regex_patterns": ["Steps:", "Sampler:", "CFG scale:", "Seed:", "Size:"]
+    },
+    {
+      "comment": "Rule 2: Must contain Yodayo's unique NGMS parameter (highest confidence marker)",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "contains",
+      "value": "NGMS:"
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "pil_info_key", "source_key": "parameters"},
+        {"source_type": "exif_user_comment"}
+      ]
+    },
+    
+    "extraction_strategy": "a1111_text_parsing",
+    
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "a1111_extract_prompt_positive"
+      },
+      {
+        "target_key": "negative_prompt", 
+        "method": "a1111_extract_prompt_negative"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Sampler",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG scale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.size",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Size",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.model_hash",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model hash", 
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "comment": "Yodayo-specific NGMS parameter",
+        "target_key": "parameters.ngms",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "NGMS",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "comment": "Yodayo-specific emphasis mode",
+        "target_key": "parameters.emphasis",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Emphasis",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "comment": "Schedule type for Yodayo",
+        "target_key": "parameters.scheduler",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Schedule type",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "comment": "VAE model",
+        "target_key": "parameters.vae",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "VAE",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "comment": "Clip skip",
+        "target_key": "parameters.clip_skip",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Clip skip",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "comment": "Version info",
+        "target_key": "parameters.version",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Version",
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+
+    "output_template": {
+      "tool": "Yodayo/Moescape", 
+      "parser_version": "unfudged_v1",
+      "detection_confidence": "high",
+
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+
+      "parameters": {
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale", 
+        "seed": "$parameters.seed",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "model": "$parameters.model",
+        "model_hash": "$parameters.model_hash",
+        "size": "$parameters.size",
+        "vae": "$parameters.vae",
+        "clip_skip": "$parameters.clip_skip",
+        "version": "$parameters.version",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height"
+      },
+
+      "yodayo_specific": {
+        "ngms": "$parameters.ngms",
+        "emphasis": "$parameters.emphasis",
+        "platform_type": "anime_ai_generator",
+        "uses_anime_optimized_settings": true
+      },
+
+      "raw_metadata": "$INPUT_STRING_ORIGINAL_CHUNK",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine", 
+        "template_processed": true
+      }
+    }
+  },
+
+  "platform_notes": {
+    "yodayo": {
+      "description": "Anime-focused AI art platform with content filtering",
+      "special_features": ["NGMS content filter", "Emphasis modes", "GUID model names"],
+      "common_models": ["Various anime/manga style checkpoints"],
+      "target_audience": "Anime art creators"
+    },
+
+    "moescape": {
+      "description": "Related platform with similar A1111-based workflow",
+      "shared_features": "Uses same metadata format as Yodayo"
+    }
+  },
+
+  "notes": [
+    "Yodayo is basically A1111 WebUI with anime-specific tweaks",
+    "NGMS = their content filter strength (higher = more filtering)",
+    "Model names are often GUIDs instead of readable names",
+    "Emphasis field controls how prompt emphasis is handled",
+    "Otherwise standard A1111 format - much simpler than it looks!"
+  ]
+}

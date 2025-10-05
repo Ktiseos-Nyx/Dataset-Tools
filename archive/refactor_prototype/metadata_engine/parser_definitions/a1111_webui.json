@@ -1,0 +1,240 @@
+{
+  "parser_name": "a1111_webui",
+  "priority": 170,
+  "description": "Parses Automatic1111 WebUI image metadata",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must contain A1111 format signatures (works for PNG parameters and JPEG EXIF)",
+      "source_type": "a1111_parameter_string_content",
+      "operator": "regex_match_all",
+      "regex_patterns": ["Steps:", "Sampler:"]
+    },
+    {
+      "comment": "Rule 2: Must NOT contain ComfyUI workflow indicators",
+      "source_type": "pil_info_key", 
+      "source_key": "workflow",
+      "operator": "not_exists"
+    },
+    {
+      "comment": "Rule 3: Must NOT have ComfyUI prompt chunk",
+      "source_type": "pil_info_key",
+      "source_key": "prompt", 
+      "operator": "not_exists"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "a1111_parameter_string_content"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "parameters"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ]
+    },
+    "extraction_strategy": "a1111_text_parsing",
+    "format_description": "A1111 uses text format with prompts and key-value parameters",
+    "fields": [
+  {
+    "target_key": "prompt",
+    "method": "a1111_extract_prompt_positive"
+  },
+  {
+    "target_key": "negative_prompt",
+    "method": "a1111_extract_prompt_negative"
+  },
+  {
+    "target_key": "steps",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Steps",
+    "value_type": "integer"
+  },
+  {
+    "target_key": "cfg_scale",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "CFG scale",
+    "value_type": "float"
+  },
+  {
+    "target_key": "seed",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Seed",
+    "value_type": "integer"
+  },
+  {
+    "target_key": "sampler_name",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Sampler",
+    "value_type": "string"
+  },
+  {
+    "target_key": "model",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Model",
+    "value_type": "string"
+  },
+  {
+    "target_key": "model_hash",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Model hash",
+    "value_type": "string"
+  },
+  {
+    "target_key": "width",
+    "method": "key_value_extract_transform_from_a1111_block",
+    "key_name": "Size",
+    "transform_regex": "^(\\d+)x\\d+$",
+    "transform_group": 1,
+    "value_type": "integer"
+  },
+  {
+    "target_key": "height",
+    "method": "key_value_extract_transform_from_a1111_block",
+    "key_name": "Size",
+    "transform_regex": "^\\d+x(\\d+)$",
+    "transform_group": 1,
+    "value_type": "integer"
+  },
+  {
+    "target_key": "schedule_type",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Schedule type",
+    "value_type": "string"
+  },
+  {
+    "target_key": "denoising_strength",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Denoising strength",
+    "value_type": "float"
+  },
+  {
+    "target_key": "clip_skip",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Clip skip",
+    "value_type": "integer"
+  },
+  {
+    "target_key": "hires_upscale",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Hires upscale",
+    "value_type": "float"
+  },
+  {
+    "target_key": "hires_steps",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Hires steps",
+    "value_type": "integer"
+  },
+  {
+    "target_key": "hires_upscaler",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Hires upscaler",
+    "value_type": "string"
+  },
+  {
+    "target_key": "adetailer_model",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "ADetailer model",
+    "value_type": "string"
+  },
+  {
+    "target_key": "adetailer_confidence",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "ADetailer confidence",
+    "value_type": "float"
+  },
+  {
+    "target_key": "adetailer_dilate_erode",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "ADetailer dilate erode",
+    "value_type": "integer"
+  },
+  {
+    "target_key": "adetailer_mask_blur",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "ADetailer mask blur",
+    "value_type": "integer"
+  },
+  {
+    "target_key": "adetailer_denoising_strength",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "ADetailer denoising strength",
+    "value_type": "float"
+  },
+  {
+    "target_key": "adetailer_inpaint_only_masked",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "ADetailer inpaint only masked",
+    "value_type": "boolean"
+  },
+  {
+    "target_key": "adetailer_inpaint_padding",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "ADetailer inpaint padding",
+    "value_type": "integer"
+  },
+  {
+    "target_key": "adetailer_version",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "ADetailer version",
+    "value_type": "string"
+  },
+  {
+    "target_key": "version",
+    "method": "key_value_extract_from_a1111_block",
+    "key_name": "Version",
+    "value_type": "string"
+  }
+]
+  },
+  "output_template": {
+  "tool": "Automatic1111 WebUI",
+  "parser_version": "unfudged_v1",
+  "prompt": "$prompt",
+  "negative_prompt": "$negative_prompt",
+  "parameters": {
+    "steps": "$steps",
+    "cfg_scale": "$cfg_scale",
+    "seed": "$seed",
+    "sampler_name": "$sampler_name",
+    "model": "$model",
+    "model_hash": "$model_hash",
+    "width": "$width",
+    "height": "$height",
+    "schedule_type": "$schedule_type",
+    "denoising_strength": "$denoising_strength",
+    "clip_skip": "$clip_skip",
+    "hires_upscale": "$hires_upscale",
+    "hires_steps": "$hires_steps",
+    "hires_upscaler": "$hires_upscaler",
+    "adetailer_model": "$adetailer_model",
+    "adetailer_confidence": "$adetailer_confidence",
+    "adetailer_dilate_erode": "$adetailer_dilate_erode",
+    "adetailer_mask_blur": "$adetailer_mask_blur",
+    "adetailer_denoising_strength": "$adetailer_denoising_strength",
+    "adetailer_inpaint_only_masked": "$adetailer_inpaint_only_masked",
+    "adetailer_inpaint_padding": "$adetailer_inpaint_padding",
+    "adetailer_version": "$adetailer_version",
+    "version": "$version"
+  },
+  "raw_metadata": "$INPUT_STRING_ORIGINAL_CHUNK",
+  "_metadata": {
+    "processed_at": "$CURRENT_TIMESTAMP",
+    "processor": "MetadataEngine",
+    "template_processed": true
+  }
+  },
+  "error_handling": {
+    "missing_required_fields": "return_partial_with_error_flag",
+    "malformed_metadata": "attempt_fuzzy_parsing",
+    "unknown_keys": "store_in_extra_fields"
+  }
+}

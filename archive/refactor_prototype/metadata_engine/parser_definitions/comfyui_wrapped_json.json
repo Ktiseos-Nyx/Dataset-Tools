@@ -1,0 +1,189 @@
+{
+  "parser_name": "ComfyUI Wrapped JSON",
+  "priority": 200,
+  "description": "Parser for ComfyUI workflows wrapped in JSON format with SourceFile/Workflow/Prompt structure",
+  "version": "1.0",
+  "maintainer": "Dataset Tools",
+  "target_file_types": [
+    "JSON"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be valid JSON",
+      "source_type": "raw_file_content_text",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: Must have Workflow field in array",
+      "source_type": "raw_file_content_text",
+      "operator": "json_path_exists",
+      "json_path": "[0].Workflow"
+    },
+    {
+      "comment": "Rule 3: Must contain ComfyUI node signatures",
+      "source_type": "raw_file_content_text",
+      "operator": "contains",
+      "value": "class_type"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "raw_file_content_text"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "comment": "Extract workflow JSON from wrapped structure",
+        "target_key": "workflow_json",
+        "method": "direct_json_path",
+        "json_path": "[0].Workflow",
+        "value_type": "string"
+      },
+      {
+        "comment": "Extract positive prompt from text encoding nodes",
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "CLIPTextEncodeSDXL",
+          "T5TextEncode"
+        ]
+      },
+      {
+        "comment": "Extract negative prompt from text encoding nodes", 
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "CLIPTextEncodeSDXL",
+          "T5TextEncode"
+        ]
+      },
+      {
+        "comment": "Extract seed from sampler",
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_field": "seed",
+        "value_type": "integer"
+      },
+      {
+        "comment": "Extract steps from sampler",
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_field": "steps",
+        "value_type": "integer"
+      },
+      {
+        "comment": "Extract cfg_scale from sampler",
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_field": "cfg",
+        "value_type": "float"
+      },
+      {
+        "comment": "Extract sampler name",
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_field": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "comment": "Extract scheduler",
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_field": "scheduler",
+        "value_type": "string"
+      },
+      {
+        "comment": "Extract width from latent image nodes",
+        "target_key": "parameters.width",
+        "method": "comfy_find_node_input_or_widget_value",
+        "node_criteria": [
+          {"class_type": "EmptyLatentImage"},
+          {"class_type": "EmptySD3LatentImage"}
+        ],
+        "input_field": "width",
+        "value_type": "integer"
+      },
+      {
+        "comment": "Extract height from latent image nodes",
+        "target_key": "parameters.height",
+        "method": "comfy_find_node_input_or_widget_value",
+        "node_criteria": [
+          {"class_type": "EmptyLatentImage"},
+          {"class_type": "EmptySD3LatentImage"}
+        ],
+        "input_field": "height",
+        "value_type": "integer"
+      }
+    ],
+    "output_template": {
+      "tool": "ComfyUI",
+      "format": "ComfyUI Workflow (Wrapped JSON)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "raw_workflow": "$workflow_json",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  }
+}

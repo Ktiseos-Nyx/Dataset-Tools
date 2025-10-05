@@ -1,0 +1,101 @@
+{
+  "parser_name": "ComfyUI_Simple",
+  "priority": 100,
+  "description": "Simple ComfyUI workflow parser for basic PNG files",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": [
+    "PNG"
+  ],
+  "tool_name": "ComfyUI",
+  "detection_rules": [
+    {
+      "comment": "Check if prompt PNG chunk exists and contains JSON (primary ComfyUI format)",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "is_valid_json"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ]
+    },
+    "extraction_strategy": "comfyui_workflow_parsing",
+    "format_description": "ComfyUI workflow stored in PNG chunks",
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfyui_extract_prompt_from_workflow"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_extract_negative_prompt_from_workflow"
+      },
+      {
+        "target_key": "parameters",
+        "method": "comfyui_extract_workflow_parameters"
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
+      },
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis",
+        "target_key": "workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "multi_stage_conditioning",
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
+      }
+    ],
+    "output_template": {
+      "tool": "ComfyUI",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": "$parameters",
+      "raw_metadata": "$raw_metadata"
+    }
+  },
+  "primary_data_source_for_raw": {
+    "source_type": "png_chunk",
+    "source_key": "workflow"
+  },
+  "enhanced_with_node_discovery": true,
+  "enhancement_date": "2025-07-08"
+}

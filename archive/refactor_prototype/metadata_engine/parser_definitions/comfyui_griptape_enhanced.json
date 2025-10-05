@@ -1,0 +1,185 @@
+{
+  "parser_name": "ComfyUI Griptape Enhanced",
+  "priority": 160,
+  "description": "ComfyUI workflows using Griptape AI framework with numpy-enhanced candidate scoring for optimal prompt extraction",
+  "version": "1.1",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain Griptape AI framework nodes",
+      "source_type": "pil_info_key",
+      "source_key_options": [
+        "workflow",
+        "prompt"
+      ],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "Griptape Display: Text",
+        "Griptape Create: Agent",
+        "Griptape Agent Config: Custom Structure",
+        "Griptape Create: Rules",
+        "Griptape Combine: Rules List",
+        "Griptape Tool: WebSearch",
+        "Griptape Prompt Driver: OpenAI Compatible",
+        "Griptape Prompt Driver: LM Studio",
+        "Griptape Prompt Driver: Anthropic",
+        "Griptape Tool: Calculator",
+        "Griptape Tool: DateTime"
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "extract_griptape_smart_prompt",
+        "target_field": "prompt"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_simple_dfs_prompt",
+        "target_input": "negative"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "steps",
+        "value_type": "integer",
+        "fallback": 30
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "cfg",
+        "value_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "CheckpointLoaderSimple",
+          "CheckpointLoader|pysssss",
+          "UNETLoader"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string",
+        "fallback": "Unknown Model"
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI Griptape Enhanced",
+      "tool": "ComfyUI Griptape",
+      "format": "Griptape AI-Enhanced Workflow (Numpy Scoring)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "model": "$parameters.model"
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 160,
+        "confidence": "high",
+        "ai_framework": "Griptape",
+        "intelligent_prompting": true,
+        "agent_based": true,
+        "numpy_enhanced": true
+      }
+    }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Enhanced Griptape AI workflow parser with numpy-based candidate scoring",
+    "Prioritizes Text Multiline content over template CLIPTextEncode in Griptape workflows",
+    "Uses advanced scoring algorithm to identify the best prompt candidates",
+    "Priority 160 puts it above generic ComfyUI parsers and original Griptape parser",
+    "Designed to solve the NSFW template vs clean prompt prioritization issue"
+  ]
+}

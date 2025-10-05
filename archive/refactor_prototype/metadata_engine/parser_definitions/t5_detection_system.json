@@ -1,0 +1,140 @@
+{
+  "parser_name": "ComfyUI_T5_Architecture",
+  "priority": 200,
+  "description": "Advanced T5-based model architecture detection for SD3, Flux, PixArt, AuraFlow, and HunyuanDiT",
+  "version": "3.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": [
+    "PNG",
+    "JPEG",
+    "JPG",
+    "WEBP"
+  ],
+  "detection_rules": [
+    {
+      "comment": "EXIF UserComment must exist",
+      "source_type": "exif_user_comment",
+      "operator": "exists"
+    },
+    {
+      "comment": "Must contain FLUX model signatures in EXIF - case insensitive",
+      "source_type": "exif_user_comment",
+      "operator": "contains_case_insensitive",
+      "value": "flux"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "a1111_parameter_string_content"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ]
+    },
+    "extraction_strategy": "a1111_text_parsing",
+    "format_description": "A1111-style FLUX/T5 images use text format with prompts and key-value parameters in EXIF",
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "a1111_extract_prompt_positive",
+        "comment": "Extract positive prompt from A1111-style parameter string"
+      },
+      {
+        "target_key": "negative_prompt", 
+        "method": "a1111_extract_prompt_negative",
+        "comment": "Extract negative prompt from A1111-style parameter string"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Seed",
+        "value_type": "integer",
+        "comment": "Extract seed parameter"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "key_value_extract_from_a1111_block", 
+        "key_name": "Steps",
+        "value_type": "integer",
+        "comment": "Extract steps parameter"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG scale", 
+        "value_type": "float",
+        "comment": "Extract CFG scale parameter"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Sampler",
+        "value_type": "string", 
+        "comment": "Extract sampler parameter"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model",
+        "value_type": "string",
+        "comment": "Extract model parameter (FLUX model)"
+      },
+      {
+        "target_key": "parameters.size",
+        "method": "key_value_extract_from_a1111_block", 
+        "key_name": "Size",
+        "value_type": "string",
+        "comment": "Extract size parameter"
+      },
+      {
+        "target_key": "parameters.architecture_type",
+        "method": "direct_value",
+        "value": "FLUX T5 Architecture", 
+        "comment": "Mark this as FLUX T5 architecture detected from A1111-style metadata"
+      }
+    ],
+    "output_template": {
+      "tool": "ComfyUI (T5 Architecture)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "t5_model": "$parameters.t5_model",
+        "clip_model": "$parameters.clip_model",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "architecture_info": {
+        "detected_as": "T5-based architecture",
+        "supports": [
+          "SD3",
+          "Flux",
+          "PixArt",
+          "Dual CLIP",
+          "T5 text encoding"
+        ]
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+  "notes": [
+    "Updated to current MetadataEngine format",
+    "Detects T5-based architectures like SD3, Flux, PixArt",
+    "Handles dual CLIP loaders and T5 text encoding",
+    "Modern multi-encoder architecture support"
+  ],
+  "enhanced_with_node_discovery": true,
+  "enhancement_date": "2025-07-08"
+}

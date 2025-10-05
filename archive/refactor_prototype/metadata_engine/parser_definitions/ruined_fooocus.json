@@ -1,0 +1,173 @@
+{
+  "parser_name": "RuinedFooocus",
+  "priority": 163,
+  "target_file_types": [
+    "PNG",
+    "JPEG",
+    "WEBP"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have JSON data in PNG parameters chunk",
+      "source_type": "pil_info_key",
+      "source_key": "parameters",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: Must contain RuinedFooocus software identifier in the JSON",
+      "source_type": "pil_info_key",
+      "source_key": "parameters",
+      "operator": "contains",
+      "value": "RuinedFooocus"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "parameters"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "Comment"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_value",
+          "path": "parameters"
+        },
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "direct_json_path",
+        "json_path": "Prompt",
+        "value_type": "string"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "direct_json_path",
+        "json_path": "Negative",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "direct_json_path",
+        "json_path": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "direct_json_path",
+        "json_path": "cfg",
+        "value_type": "float_or_integer"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "direct_json_path",
+        "json_path": "width",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "direct_json_path",
+        "json_path": "height",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "direct_json_path",
+        "json_path": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "direct_json_path",
+        "json_path": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "direct_json_path",
+        "json_path": "scheduler",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "direct_json_path",
+        "json_path": "base_model_name",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.model_hash",
+        "method": "direct_json_path",
+        "json_path": "base_model_hash",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.denoise",
+        "method": "direct_json_path",
+        "json_path": "denoise",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.start_step",
+        "method": "direct_json_path",
+        "json_path": "start_step",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.loras_string",
+        "method": "direct_json_path",
+        "json_path": "loras",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.loras",
+        "method": "parse_a1111_lora_string_to_array",
+        "source_variable_key": "parameters.tool_specific.loras_string_VAR_",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "RuinedFooocus",
+      "tool": "RuinedFooocus",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height",
+        "model": "$parameters.model",
+        "model_hash": "$parameters.model_hash",
+        "denoise": "$parameters.denoise",
+        "loras": "$parameters.loras",
+        "tool_specific": {
+          "ruinedfooocus_start_step": "$parameters.tool_specific.start_step",
+          "ruinedfooocus_loras_raw_string": "$parameters.tool_specific.loras_string"
+        }
+      },
+      "workflow": "$INPUT_JSON_OBJECT_AS_STRING"
+    }
+  }
+}

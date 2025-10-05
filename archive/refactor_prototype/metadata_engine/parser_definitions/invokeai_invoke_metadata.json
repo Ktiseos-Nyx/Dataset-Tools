@@ -1,0 +1,129 @@
+{
+  "parser_name": "InvokeAI (invokeai_metadata format)",
+  "priority": 118,
+  "target_file_types": [
+    "PNG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have invokeai_metadata PNG chunk with valid JSON",
+      "source_type": "pil_info_key",
+      "source_key": "invokeai_metadata",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: Must contain InvokeAI format signatures",
+      "source_type": "pil_info_key",
+      "source_key": "invokeai_metadata",
+      "operator": "contains",
+      "value": "positive_prompt"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_type": "pil_info_key",
+      "source_key": "invokeai_metadata",
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "direct_json_path",
+        "json_path": "positive_prompt",
+        "value_type": "string"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "direct_json_path",
+        "json_path": "negative_prompt",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.positive_style_prompt",
+        "method": "direct_json_path",
+        "json_path": "positive_style_prompt",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.negative_style_prompt",
+        "method": "direct_json_path",
+        "json_path": "negative_style_prompt",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.is_sdxl_style",
+        "method": "json_path_exists_boolean",
+        "json_path": "positive_style_prompt",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "direct_json_path",
+        "json_path": "model.model_name",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.model_hash",
+        "method": "direct_json_path",
+        "json_path": "model.hash",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "direct_json_path",
+        "json_path": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "direct_json_path",
+        "json_path": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "direct_json_path",
+        "json_path": "cfg_scale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "direct_json_path",
+        "json_path": "scheduler",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "direct_json_path",
+        "json_path": "width",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "direct_json_path",
+        "json_path": "height",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.tool_specific.refiner_steps",
+        "method": "direct_json_path",
+        "json_path": "refiner_steps",
+        "value_type": "integer",
+        "optional": true
+      }
+    ],
+    "output_template": {}
+  }
+}

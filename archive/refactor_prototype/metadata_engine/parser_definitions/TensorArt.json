@@ -1,0 +1,128 @@
+{
+  "parser_name": "TensorArt",
+  "priority": 210,
+  "description": "Parser for TensorArt generated images using ComfyUI backend workflows",
+  "version": "1.0",
+  "maintainer": "Dataset Tools",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Detect ECHOCheckpointLoaderSimple OR EMS pattern (TensorArt signatures)",
+      "source_type": "pil_info_key",
+      "source_key": "prompt",
+      "operator": "regex_match_any",
+      "regex_patterns": ["ECHOCheckpointLoaderSimple", "EMS-\\d+-EMS"]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "comment": "Extract workflow data from PNG chunks or PIL info ComfyUI workflow format",
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "transformations": [
+            {
+              "type": "json_decode_string_itself"
+            },
+            {
+              "type": "filter_dict_nodes_only"
+            }
+          ]
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "transformations": [
+            {
+              "type": "json_decode_string_itself"
+            },
+            {
+              "type": "filter_dict_nodes_only"
+            }
+          ]
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "prompt",
+          "transformations": [
+            {
+              "type": "json_decode_string_itself"
+            },
+            {
+              "type": "filter_dict_nodes_only"
+            }
+          ]
+        }
+      ]
+    },
+
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfyui_extract_prompt_from_workflow"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_extract_negative_prompt_from_workflow"
+      },
+      {
+        "target_key": "parameters",
+        "method": "comfyui_extract_workflow_parameters"
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
+      },
+      {
+        "target_key": "tensorart_signatures", 
+        "method": "comfyui_detect_tensorart_signatures"
+      }
+    ],
+
+    "output_template": {
+      "tool": "TensorArt",
+      "format": "ComfyUI Workflow (TensorArt)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "denoising_strength": "$parameters.denoising_strength"
+      },
+      "workflow_metadata": {
+        "parser": "TensorArt v1.0",
+        "source": "ComfyUI Workflow JSON",
+        "parser_priority": 210,
+        "confidence": "high",
+        "platform": "TensorArt",
+        "backend_engine": "ComfyUI",
+        "filename": "$FILE_NAME"
+      },
+      "raw_metadata": "$raw_metadata"
+    }
+  },
+
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "moderate"
+  },
+
+  "notes": [
+    "Simplified TensorArt parser focusing on core signatures",
+    "Primary: ECHOCheckpointLoaderSimple detection (TensorArt infrastructure)",
+    "Secondary: EMS-NUMBER-EMS pattern detection (universal TensorArt signature)", 
+    "Priority 210 - detects before generic ComfyUI parsers",
+    "Uses standard ComfyUI extraction methods for compatibility",
+    "Works with both A1111-style and pure ComfyUI frontend modes"
+  ]
+}

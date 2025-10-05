@@ -1,0 +1,235 @@
+{
+  "parser_name": "Easy_Diffusion",
+  "priority": 70,
+  "description": "Easy Diffusion - User-friendly AI art platform with verbose field naming 🎨✨",
+  "version": "2.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have parameters PNG chunk with data",
+      "source_type": "pil_info_key",
+      "source_key": "parameters",
+      "operator": "exists"
+    },
+    {
+      "comment": "Rule 2: Must contain Easy Diffusion verbose field signatures",
+      "source_type": "pil_info_key",
+      "source_key": "parameters",
+      "operator": "contains",
+      "value": "num_inference_steps"
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "exif_user_comment"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "parameters"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "Comment"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "direct_json_path_with_fallbacks",
+        "json_path_options": ["prompt", "Prompt"],
+        "value_type": "string",
+        "fallback": "Could not extract prompt"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "direct_json_path_with_fallbacks",
+        "json_path_options": ["negative_prompt", "Negative Prompt", "negative"],
+        "value_type": "string",
+        "fallback": ""
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "direct_json_path",
+        "json_path": "num_inference_steps",
+        "value_type": "integer",
+        "fallback": 20
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "direct_json_path",
+        "json_path": "guidance_scale",
+        "value_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "direct_json_path",
+        "json_path": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "direct_json_path_with_fallbacks",
+        "json_path_options": ["sampler_name", "sampler"],
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "direct_json_path",
+        "json_path": "scheduler",
+        "value_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "easydiffusion_extract_model_name",
+        "json_path": "use_stable_diffusion_model",
+        "value_type": "string",
+        "fallback": "Unknown Model"
+      },
+      {
+        "target_key": "parameters.vae_model",
+        "method": "easydiffusion_extract_model_name",
+        "json_path": "use_vae_model",
+        "value_type": "string",
+        "fallback": "Unknown VAE"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "direct_json_path_with_fallbacks",
+        "json_path_options": ["width", "W", "image_width"],
+        "value_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "direct_json_path_with_fallbacks",
+        "json_path_options": ["height", "H", "image_height"],
+        "value_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "parameters.clip_skip",
+        "method": "direct_json_path",
+        "json_path": "clip_skip",
+        "value_type": "integer",
+        "fallback": 1
+      },
+      {
+        "target_key": "parameters.use_face_correction",
+        "method": "direct_json_path",
+        "json_path": "use_face_correction",
+        "value_type": "boolean",
+        "fallback": false
+      },
+      {
+        "target_key": "parameters.use_upscale",
+        "method": "direct_json_path",
+        "json_path": "use_upscale",
+        "value_type": "string",
+        "fallback": "none"
+      },
+      {
+        "target_key": "parameters.upscale_amount",
+        "method": "direct_json_path",
+        "json_path": "upscale_amount",
+        "value_type": "string",
+        "fallback": "1x"
+      }
+    ],
+
+    "output_template": {
+      "parser_name_from_engine": "Easy_Diffusion",
+      "tool": "Easy Diffusion",
+      "format": "JSON with verbose field names",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "model": "$parameters.model",
+        "vae_model": "$parameters.vae_model",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "clip_skip": "$parameters.clip_skip"
+      },
+      "easydiffusion_features": {
+        "face_correction": "$parameters.use_face_correction",
+        "upscale_method": "$parameters.use_upscale",
+        "upscale_amount": "$parameters.upscale_amount",
+        "user_friendly": true,
+        "verbose_naming": true
+      },
+      "workflow_metadata": {
+        "source": "PNG chunk or EXIF UserComment",
+        "parser_priority": 70,
+        "confidence": "high",
+        "naming_convention": "verbose_descriptive"
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING"
+    }
+  },
+
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "moderate"
+  },
+
+  "notes": [
+    "Easy Diffusion: The 'training wheels' AI art platform - beginner-friendly! 🎨",
+    "Uses verbose field names like 'num_inference_steps' instead of just 'steps'",
+    "Inconsistent capitalization: 'prompt' vs 'Prompt' vs 'Negative Prompt'",
+    "Model fields contain full file paths that need extraction",
+    "Priority 70 runs after specialized parsers but before basic ones",
+    "Includes Easy Diffusion-specific features like face correction and upscaling",
+    "Perfect for users who want descriptive parameter names",
+    "The 'easy' approach to AI art with helpful UI and clear naming! ✨"
+  ],
+
+  "test_cases": [
+    {
+      "description": "Basic Easy Diffusion generation with verbose fields",
+      "expected_fields": ["parameters.steps", "easydiffusion_features.verbose_naming"]
+    },
+    {
+      "description": "Generation with face correction and upscaling",
+      "expected_fields": ["easydiffusion_features.face_correction", "easydiffusion_features.upscale_method"]
+    },
+    {
+      "description": "Capitalization chaos handling",
+      "expected_fields": ["prompt", "negative_prompt", "workflow_metadata.naming_convention"]
+    }
+  ],
+
+  "field_mapping_reference": {
+    "verbose_to_standard": {
+      "num_inference_steps": "steps",
+      "guidance_scale": "cfg_scale",
+      "use_stable_diffusion_model": "model (extract filename)",
+      "use_vae_model": "vae_model (extract filename)"
+    },
+    "capitalization_variants": {
+      "prompt": ["prompt", "Prompt"],
+      "negative_prompt": ["negative_prompt", "Negative Prompt", "negative"],
+      "sampler": ["sampler_name", "sampler"]
+    }
+  }
+}

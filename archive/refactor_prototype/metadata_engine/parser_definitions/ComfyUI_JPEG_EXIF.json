@@ -1,0 +1,355 @@
+{
+  "parser_name": "ComfyUI_JPEG_EXIF",
+  "priority": 124,
+  "description": "Handles ComfyUI workflows stored in JPEG EXIF UserComment - your JPEG workflow rescuer! ⚔️",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": [
+    "JPEG",
+    "JPG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: EXIF UserComment must exist and be valid JSON",
+      "source_type": "exif_user_comment",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: Must contain ComfyUI class_type signatures",
+      "source_type": "exif_user_comment",
+      "operator": "contains",
+      "value": "\"class_type\""
+    },
+    {
+      "comment": "Rule 3: Must NOT contain Civitai extra.extraMetadata structure (defer to Civitai ComfyUI parser)",
+      "source_type": "exif_user_comment",
+      "operator": "does_not_contain",
+      "value": "\"extra\":{\"extraMetadata\""
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_type": "exif_user_comment",
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        },
+        {
+          "type": "filter_dict_nodes_only"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111",
+          "SamplerCustom",
+          "SamplerCustomAdvanced",
+          "ClownsharKSampler_Beta",
+          "SamplerLCMDuoFusion",
+          "GlobalSampler //Inspire"
+        ],
+        "positive_input_name": "positive",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "CLIPTextEncodeSDXL",
+          "BNK_CLIPTextEncodeAdvanced",
+          "PixArtT5TextEncode",
+          "T5TextEncode",
+          "CLIPTextEncodeSDXLRefiner",
+          "smZ CLIPTextEncode"
+        ],
+        "fallback": "Could not extract prompt"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfy_find_text_from_main_sampler_input",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111",
+          "SamplerCustom",
+          "SamplerCustomAdvanced",
+          "ClownsharKSampler_Beta",
+          "SamplerLCMDuoFusion",
+          "GlobalSampler //Inspire"
+        ],
+        "negative_input_name": "negative",
+        "text_input_name_in_encoder": "text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "CLIPTextEncodeSDXL",
+          "BNK_CLIPTextEncodeAdvanced",
+          "PixArtT5TextEncode",
+          "T5TextEncode",
+          "CLIPTextEncodeSDXLRefiner",
+          "smZ CLIPTextEncode"
+        ],
+        "fallback": ""
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111",
+          "SamplerCustom",
+          "SamplerCustomAdvanced",
+          "ClownsharKSampler_Beta",
+          "SamplerLCMDuoFusion",
+          "GlobalSampler //Inspire"
+        ],
+        "input_field": "steps",
+        "data_type": "integer",
+        "fallback": 20
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111",
+          "SamplerCustom",
+          "SamplerCustomAdvanced",
+          "ClownsharKSampler_Beta",
+          "SamplerLCMDuoFusion",
+          "GlobalSampler //Inspire"
+        ],
+        "input_field": "cfg",
+        "data_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111",
+          "SamplerCustom",
+          "SamplerCustomAdvanced",
+          "ClownsharKSampler_Beta",
+          "SamplerLCMDuoFusion",
+          "GlobalSampler //Inspire"
+        ],
+        "input_field": "seed",
+        "data_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111",
+          "SamplerCustom",
+          "SamplerCustomAdvanced",
+          "ClownsharKSampler_Beta",
+          "SamplerLCMDuoFusion",
+          "GlobalSampler //Inspire"
+        ],
+        "input_field": "sampler_name",
+        "data_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "KSampler_A1111",
+          "SamplerCustom",
+          "SamplerCustomAdvanced",
+          "ClownsharKSampler_Beta",
+          "SamplerLCMDuoFusion",
+          "GlobalSampler //Inspire"
+        ],
+        "input_field": "scheduler",
+        "data_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "CheckpointLoaderSimple",
+          "UNETLoader",
+          "UnetLoaderGGUF",
+          "DualCLIPLoader",
+          "DualCLIPLoaderGGUF",
+          "PixArtCheckpointLoader",
+          "MZ_KolorsUNETLoaderV2"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string",
+        "fallback": "Unknown Model"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptyLatentImageFromPresetsSDXL",
+          "EmptySD3LatentImage",
+          "Empty Latent Ratio Select SDXL",
+          "SDXL Empty Latent Image (rgthree)",
+          "StableCascade_EmptyLatentImage"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptyLatentImageFromPresetsSDXL",
+          "EmptySD3LatentImage",
+          "Empty Latent Ratio Select SDXL",
+          "SDXL Empty Latent Image (rgthree)",
+          "StableCascade_EmptyLatentImage"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "parameters.loras",
+        "method": "comfy_find_all_lora_nodes",
+        "lora_node_types": [
+          "LoraLoader",
+          "LoraLoaderModelOnly",
+          "LoraTagLoader",
+          "Power Lora Loader (rgthree)"
+        ],
+        "extract_fields": [
+          "lora_name",
+          "strength_model",
+          "strength_clip"
+        ],
+        "fallback": []
+      },
+      {
+        "target_key": "parameters.vae_model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "VAELoader"
+        ],
+        "input_field": "vae_name",
+        "data_type": "string",
+        "fallback": "Unknown VAE"
+      },
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis",
+        "target_key": "workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "multi_stage_conditioning",
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI_JPEG_EXIF",
+      "tool": "ComfyUI (JPEG)",
+      "format": "ComfyUI Workflow (EXIF)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "model": "$parameters.model",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "loras": "$parameters.loras",
+        "vae_model": "$parameters.vae_model"
+      },
+      "workflow_metadata": {
+        "source": "EXIF UserComment",
+        "parser_priority": 115,
+        "confidence": "high"
+      }
+    }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Specifically designed to handle ComfyUI workflows stored in JPEG EXIF UserComment fields",
+    "Priority 115 puts it between A1111 JPEG parsers (110) and ComfyUI PNG parsers (120)",
+    "Includes all the new node types discovered in the forensic analysis of 1066 files",
+    "Should rescue those 621 JPEG files that were failing detection!",
+    "Uses the new MetadataEngine system instead of vendored classes - future-proof! ✨",
+    "Supports advanced samplers, custom nodes, and complex workflows",
+    "Falls back gracefully with partial data if some fields can't be extracted"
+  ],
+  "test_cases": [
+    {
+      "description": "Basic KSampler workflow in JPEG EXIF",
+      "expected_fields": [
+        "prompt",
+        "parameters.steps",
+        "parameters.seed"
+      ]
+    },
+    {
+      "description": "Advanced workflow with custom samplers",
+      "expected_fields": [
+        "prompt",
+        "negative_prompt",
+        "parameters.sampler_name"
+      ]
+    },
+    {
+      "description": "Flux/GGUF workflow with specialized loaders",
+      "expected_fields": [
+        "parameters.model",
+        "parameters.width",
+        "parameters.height"
+      ]
+    }
+  ],
+  "enhanced_with_node_discovery": true,
+  "enhancement_date": "2025-07-08"
+}

@@ -1,0 +1,158 @@
+{
+  "parser_name": "Fooocus",
+  "priority": 100,
+  "description": "Fooocus - AI art generation made simple with user-friendly abstractions",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["PNG"],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have parameters PNG chunk with valid JSON",
+      "source_type": "pil_info_key",
+      "source_key": "parameters",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: Must contain Fooocus signature",
+      "source_type": "pil_info_key",
+      "source_key": "parameters",
+      "operator": "contains",
+      "value": "performance_selection"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "png_chunk", "source_key": "Comment"},
+        {"source_type": "png_chunk", "source_key": "parameters"}
+      ],
+      "transformations": [{"type": "json_decode_string_itself"}]
+    },
+    "extraction_strategy": "json_field_extraction",
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "direct_json_field",
+        "field_name": "prompt",
+        "value_type": "string"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "direct_json_field",
+        "field_name": "negative_prompt",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "direct_json_field",
+        "field_name": "seed",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "direct_json_field",
+        "field_name": "steps",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.guidance_scale",
+        "method": "direct_json_field",
+        "field_name": "guidance_scale",
+        "value_type": "float"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "direct_json_field",
+        "field_name": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "direct_json_field",
+        "field_name": "scheduler",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "direct_json_field",
+        "field_name": "width",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "direct_json_field",
+        "field_name": "height",
+        "value_type": "integer"
+      },
+      {
+        "target_key": "parameters.base_model_name",
+        "method": "direct_json_field",
+        "field_name": "base_model_name",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.base_model_hash",
+        "method": "direct_json_field",
+        "field_name": "base_model_hash",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.loras",
+        "method": "direct_json_field",
+        "field_name": "loras",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.performance_selection",
+        "method": "direct_json_field",
+        "field_name": "performance_selection",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.aspect_ratios_selection",
+        "method": "direct_json_field",
+        "field_name": "aspect_ratios_selection",
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "tool": "Fooocus",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "guidance_scale": "$parameters.guidance_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "base_model_name": "$parameters.base_model_name",
+        "base_model_hash": "$parameters.base_model_hash",
+        "loras": "$parameters.loras"
+      },
+      "fooocus_specific": {
+        "performance_selection": "$parameters.performance_selection",
+        "aspect_ratios_selection": "$parameters.aspect_ratios_selection",
+        "user_friendly_abstractions": true
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+  "notes": [
+    "This parser definition has been unfudged and standardized.",
+    "Detection now uses specific keys instead of descriptive text."
+  ]
+}

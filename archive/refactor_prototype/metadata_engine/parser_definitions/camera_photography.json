@@ -1,0 +1,171 @@
+{
+  "parser_name": "Camera_Photography",
+  "priority": 65,
+  "description": "Camera and smartphone photography with EXIF data",
+  "version": "1.0",
+  "maintainer": "Ktiseos Nyx",
+  "target_file_types": ["JPEG", "JPG", "TIFF", "PNG"],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have camera manufacturer and model.",
+      "condition": "AND",
+      "rules": [
+        { "source_type": "exif_field", "source_key": "Make", "operator": "exists" },
+        { "source_type": "exif_field", "source_key": "Model", "operator": "exists" }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must NOT have AI generation metadata.",
+      "condition": "AND",
+      "rules": [
+        { "source_type": "pil_info_key", "source_key": "parameters", "operator": "not_exists" },
+        { "source_type": "exif_user_comment", "operator": "not_contains_text", "text": "Steps:" },
+        { "source_type": "png_chunk", "source_key": "workflow", "operator": "not_exists" }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "exif_all_fields"},
+        {"source_type": "xmp_all_fields"}
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "camera_make",
+        "method": "direct_exif_field",
+        "field_name": "Make",
+        "value_type": "string"
+      },
+      {
+        "target_key": "camera_model",
+        "method": "direct_exif_field",
+        "field_name": "Model",
+        "value_type": "string"
+      },
+      {
+        "target_key": "date_taken",
+        "method": "direct_exif_field",
+        "field_name": "DateTimeOriginal",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "photographer",
+        "method": "direct_exif_field",
+        "field_name": "Artist",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "aperture",
+        "method": "direct_exif_field",
+        "field_name": "FNumber",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "shutter_speed",
+        "method": "direct_exif_field",
+        "field_name": "ExposureTime",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "iso",
+        "method": "direct_exif_field",
+        "field_name": "ISO",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "focal_length",
+        "method": "direct_exif_field",
+        "field_name": "FocalLength",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "lens_model",
+        "method": "direct_exif_field",
+        "field_name": "LensModel",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "flash",
+        "method": "direct_exif_field",
+        "field_name": "Flash",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "gps_latitude",
+        "method": "direct_exif_field",
+        "field_name": "GPSLatitude",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "gps_longitude",
+        "method": "direct_exif_field",
+        "field_name": "GPSLongitude",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "orientation",
+        "method": "direct_exif_field",
+        "field_name": "Orientation",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "software",
+        "method": "direct_exif_field",
+        "field_name": "Software",
+        "value_type": "string",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "tool": "Camera/Photography",
+      "creation_type": "Photographed",
+      "camera_info": {
+        "make": "$camera_make",
+        "model": "$camera_model",
+        "lens": "$lens_model",
+        "software": "$software"
+      },
+      "capture_settings": {
+        "aperture": "$aperture",
+        "shutter_speed": "$shutter_speed",
+        "iso": "$iso",
+        "focal_length": "$focal_length",
+        "flash": "$flash",
+        "orientation": "$orientation"
+      },
+      "capture_details": {
+        "date_taken": "$date_taken",
+        "photographer": "$photographer",
+        "gps_location": {
+          "latitude": "$gps_latitude",
+          "longitude": "$gps_longitude"
+        }
+      },
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "detection_confidence": "High - Camera EXIF data present"
+      }
+    }
+  },
+  "notes": [
+    "Handles DSLR cameras, mirrorless cameras, and smartphones",
+    "Extracts camera settings, lens info, and capture details",
+    "Includes GPS location data when available",
+    "Excludes files with AI generation metadata",
+    "Useful for photography collections and metadata analysis"
+  ]
+}

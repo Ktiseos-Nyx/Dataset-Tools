@@ -1,0 +1,139 @@
+{
+  "parser_name": "InvokeAI (sd-metadata format)",
+  "priority": 117,
+  "target_file_types": [
+    "PNG"
+  ],
+  "detection_rules": [
+    {
+      "source_type": "png_chunk",
+      "source_key": "sd-metadata",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Ensure 'image' sub-object exists and contains a 'prompt' key (string or list).",
+      "source_type": "json_from_png_chunk_options",
+      "chunk_source_key_options": [
+        "sd-metadata"
+      ],
+      "json_path": "image.prompt",
+      "operator": "exists"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_type": "pil_info_key",
+      "source_key": "sd-metadata",
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "_internal.full_prompt_str",
+        "method": "direct_json_path_coalesce_complex",
+        "comment": "Tries to get prompt string. 'image.prompt' can be a string OR a list like [{'prompt': 'actual_prompt_text'}] or [{'text': 'actual_prompt_text'}]",
+        "paths_to_try": [
+          "image.prompt[0].prompt",
+          "image.prompt[0].text",
+          "image.prompt"
+        ],
+        "value_type": "string",
+        "optional": false
+      },
+      {
+        "target_key": "prompt",
+        "method": "invokeai_split_prompt_positive",
+        "source_variable_key": "_internal.full_prompt_str_VAR_"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "invokeai_split_prompt_negative",
+        "source_variable_key": "_internal.full_prompt_str_VAR_"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "direct_json_path",
+        "json_path": "model_weights",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "direct_json_path",
+        "json_path": "image.sampler",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "direct_json_path",
+        "json_path": "image.seed",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "direct_json_path",
+        "json_path": "image.cfg_scale",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "direct_json_path",
+        "json_path": "image.steps",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "direct_json_path",
+        "json_path": "image.width",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "direct_json_path",
+        "json_path": "image.height",
+        "value_type": "integer",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "InvokeAI (sd-metadata format)",
+      "tool": "InvokeAI (sd-metadata)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "sampler_name": "$parameters.sampler_name",
+        "seed": "$parameters.seed",
+        "cfg_scale": "$parameters.cfg_scale",
+        "steps": "$parameters.steps",
+        "width": "$CONTEXT.width",
+        "height": "$CONTEXT.height"
+      },
+      "tool_specific_parameters_json": {
+        "method": "collect_remaining_json_fields",
+        "source_data_is_nested": true,
+        "nested_object_path": "image",
+        "exclude_paths": [
+          "prompt",
+          "sampler",
+          "seed",
+          "cfg_scale",
+          "steps",
+          "width",
+          "height"
+        ]
+      },
+      "workflow": {
+        "sd_metadata_chunk": "$INPUT_JSON_OBJECT_AS_STRING"
+      }
+    }
+  }
+}

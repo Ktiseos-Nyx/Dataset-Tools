@@ -1,0 +1,194 @@
+{
+  "parser_name": "GGUF Model Metadata",
+  "priority": 195,
+  "target_file_types": [
+    "GGUF"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have GGUF metadata in context",
+      "source_type": "direct_context_key",
+      "source_key": "gguf_metadata",
+      "operator": "exists_and_is_dictionary"
+    },
+    {
+      "comment": "Rule 2: Must have general.architecture field (standard GGUF)",
+      "source_type": "direct_context_key",
+      "source_key": "gguf_metadata",
+      "operator": "json_contains_any_key",
+      "expected_keys": ["general.architecture", "general.name", "general.type"]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "direct_context_key",
+          "source_key": "gguf_metadata"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "model_name",
+        "method": "direct_json_path",
+        "json_path": "general.name",
+        "value_type": "string",
+        "fallback": "Unknown GGUF Model"
+      },
+      {
+        "target_key": "model_architecture",
+        "method": "direct_json_path",
+        "json_path": "general.architecture",
+        "value_type": "string",
+        "fallback": "Unknown"
+      },
+      {
+        "target_key": "model_type",
+        "method": "direct_json_path",
+        "json_path": "general.type",
+        "value_type": "string",
+        "fallback": "model"
+      },
+      {
+        "target_key": "model_basename",
+        "method": "direct_json_path",
+        "json_path": "general.basename",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "model_size_label",
+        "method": "direct_json_path",
+        "json_path": "general.size_label",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "model_license",
+        "method": "direct_json_path",
+        "json_path": "general.license",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "finetune_type",
+        "method": "direct_json_path",
+        "json_path": "general.finetune",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "adapter_type",
+        "method": "direct_json_path",
+        "json_path": "adapter.type",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "lora_alpha",
+        "method": "direct_json_path",
+        "json_path": "adapter.lora.alpha",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "base_model_count",
+        "method": "direct_json_path",
+        "json_path": "general.base_model.count",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "base_model_name",
+        "method": "direct_json_path",
+        "json_path": "general.base_model.0.name",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "base_model_organization",
+        "method": "direct_json_path",
+        "json_path": "general.base_model.0.organization",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "base_model_repo_url",
+        "method": "direct_json_path",
+        "json_path": "general.base_model.0.repo_url",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "model_tags",
+        "method": "direct_json_path",
+        "json_path": "general.tags",
+        "value_type": "array",
+        "optional": true
+      },
+      {
+        "target_key": "quantization_version",
+        "method": "direct_json_path",
+        "json_path": "general.quantization_version",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "gguf_version",
+        "method": "direct_json_path",
+        "json_path": "gguf.version",
+        "value_type": "integer",
+        "fallback": 0
+      },
+      {
+        "target_key": "tensor_count",
+        "method": "direct_json_path",
+        "json_path": "gguf.tensor_count",
+        "value_type": "integer",
+        "fallback": 0
+      },
+      {
+        "target_key": "metadata_kv_count",
+        "method": "direct_json_path",
+        "json_path": "gguf.metadata_kv_count",
+        "value_type": "integer",
+        "fallback": 0
+      }
+    ],
+    "output_template": {
+      "tool": "GGUF Model Parser",
+      "format": "GGUF Model Metadata",
+      "prompt": "GGUF Model: $model_name ($model_architecture)\nType: $model_type | Size: $model_size_label | License: $model_license\nBase Model: $base_model_name ($base_organization)\nAdapter: $adapter_type | LoRA Alpha: $lora_alpha | Finetune: $finetune_type\nTags: $model_tags\nTechnical: GGUF v$gguf_version, $tensor_count tensors, $metadata_kv_count metadata keys\nRepo: $base_repo_url",
+      "negative_prompt": "",
+      "parameters": {
+        "model_name": "$model_name",
+        "architecture": "$model_architecture",
+        "model_type": "$model_type",
+        "basename": "$model_basename",
+        "size_label": "$model_size_label",
+        "license": "$model_license",
+        "finetune": "$finetune_type",
+        "adapter_type": "$adapter_type",
+        "lora_alpha": "$lora_alpha",
+        "base_model": "$base_model_name",
+        "base_organization": "$base_model_organization",
+        "base_repo": "$base_model_repo_url",
+        "tags": "$model_tags",
+        "quantization_version": "$quantization_version"
+      },
+      "technical_info": {
+        "gguf_version": "$gguf_version",
+        "tensor_count": "$tensor_count",
+        "metadata_kv_count": "$metadata_kv_count",
+        "base_model_count": "$base_model_count"
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  }
+}
