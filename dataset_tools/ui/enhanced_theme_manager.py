@@ -138,17 +138,6 @@ class EnhancedThemeManager:
         # Custom QSS themes from subfolders
         custom_themes = self._load_custom_qss_themes_from_subfolders()
 
-        # Filter KTISEOS_NYX_THEMES based on chaos unlock status
-        if "KTISEOS_NYX_THEMES" in custom_themes:
-            chaos_unlocked = self.settings.value("chaosCollection/unlocked", False, type=bool)
-            if not chaos_unlocked:
-                # Remove 'moms_2am_' themes if not unlocked
-                custom_themes["KTISEOS_NYX_THEMES"] = [
-                    theme for theme in custom_themes["KTISEOS_NYX_THEMES"] if not theme.startswith("moms_2am_")
-                ]
-                if not custom_themes["KTISEOS_NYX_THEMES"]:
-                    del custom_themes["KTISEOS_NYX_THEMES"]
-
         themes.update(custom_themes)
 
         return themes

@@ -19,10 +19,16 @@ from PyQt6.QtWidgets import (
     QFormLayout,
     QGridLayout,
     QLabel,
+    QLineEdit,
+    QListWidget,
+    QListWidgetItem,
     QMessageBox,
+    QPushButton,
     QSpinBox,
     QTabWidget,
     QTextEdit,
+    QTreeWidget,
+    QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
 )
@@ -43,7 +49,6 @@ class SettingsDialog(QDialog):
         super().__init__(parent)
         self.parent_window = parent
         self.settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
-        self.theme_combos: dict[str, QComboBox] = {}
 
         self._setup_dialog()
         self._create_tabs()
@@ -62,65 +67,51 @@ class SettingsDialog(QDialog):
         self.tab_widget = QTabWidget()
         self.layout.addWidget(self.tab_widget)
 
-        # Create tabs
         self._create_theme_tab()
         self._create_appearance_tab()
         self._create_font_tab()
-        self._create_chaos_tab()
 
     def _create_theme_tab(self) -> None:
-        """Create the Themes tab with multiple dropdowns."""
+        """Create the Themes tab with buttons for each theme pack."""
         theme_widget = QWidget()
-        layout = QGridLayout(theme_widget)
-        layout.setSpacing(15)
+        layout = QVBoxLayout(theme_widget)
+        layout.setSpacing(10)
 
         if hasattr(self.parent_window, "enhanced_theme_manager"):
             enhanced_manager = self.parent_window.enhanced_theme_manager
-            available_themes = enhanced_manager.get_available_themes()
+            available_themes_by_cat = enhanced_manager.get_available_themes()
 
-            row = 0
-            for category, themes in available_themes.items():
-                if not themes:
+            description = QLabel("Select a theme pack to browse:")
+            description.setWordWrap(True)
+            layout.addWidget(description)
+
+            for category_id, themes_in_cat in available_themes_by_cat.items():
+                if not themes_in_cat:
                     continue
 
-                category_name = enhanced_manager.THEME_CATEGORIES.get(category, category.title())
-
-                label = QLabel(f"<b>{category_name}:</b>")
-                combo = QComboBox()
-                combo.addItem("Select a theme...", "none")
-
-                for theme_name in themes:
-                    theme_id = f"{category}:{theme_name}"
-                    display_name = theme_name.replace("_", " ").replace(".xml", "").title()
-                    combo.addItem(display_name, theme_id)
-
-                combo.activated.connect(self._on_theme_selected)
-
-                layout.addWidget(label, row, 0)
-                layout.addWidget(combo, row, 1)
-
-                self.theme_combos[category] = combo
-                row += 1
+                category_name = enhanced_manager.THEME_CATEGORIES.get(category_id, category_id.title())
+                
+                button = QPushButton(f"Browse {category_name} ({len(themes_in_cat)} themes)")
+                button.setToolTip(f"Open a new dialog to browse themes in the '{category_name}' collection.")
+                button.clicked.connect(
+                    lambda checked=False, cat_id=category_id, cat_name=category_name, th=themes_in_cat: self._open_theme_pack_dialog(cat_id, cat_name, th)
+                )
+                layout.addWidget(button)
         else:
-            layout.addWidget(QLabel("No themes available."), 0, 0)
+            layout.addWidget(QLabel("Theme manager not available."))
 
+        layout.addStretch(1)
         self.tab_widget.addTab(theme_widget, "Themes")
 
-    def _on_theme_selected(self, index: int) -> None:
-        """Handle theme selection in one of the dropdowns."""
-        sender_combo = self.sender()
-        if not isinstance(sender_combo, QComboBox):
+    def _open_theme_pack_dialog(self, category_id: str, category_name: str, themes: list[str]) -> None:
+        """Opens a dedicated dialog for a specific theme pack."""
+        if not hasattr(self.parent_window, "enhanced_theme_manager"):
             return
-
-        selected_theme_id = sender_combo.itemData(index)
-
-        # Deselect other dropdowns
-        for category, combo in self.theme_combos.items():
-            if combo is not sender_combo:
-                combo.setCurrentIndex(0)
-
-        if selected_theme_id and selected_theme_id != "none":
-            self.theme_changed.emit(selected_theme_id)
+            
+        enhanced_manager = self.parent_window.enhanced_theme_manager
+        
+        dialog = ThemeBrowserDialog(category_id, category_name, themes, enhanced_manager, self)
+        dialog.exec()
 
     def _create_appearance_tab(self) -> None:
         """Create the Appearance tab with window size options."""
@@ -128,22 +119,18 @@ class SettingsDialog(QDialog):
         layout = QVBoxLayout(appearance_widget)
         layout.setSpacing(20)
 
-        # Window Size Section
         size_label = QLabel("<b>Window Size:</b>")
         self.size_combo = QComboBox()
         self._populate_size_combo()
         layout.addWidget(size_label)
         layout.addWidget(self.size_combo)
 
-        # NEW: File View Mode Section
         view_label = QLabel("<b>File View Mode:</b>")
         self.view_mode_combo = QComboBox()
         self.view_mode_combo.addItem("List View (Default)", "list")
         self.view_mode_combo.addItem("Thumbnail Grid (Images Only)", "grid")
         layout.addWidget(view_label)
-        layout.addWidget(self.view_mode_combo)
         
-        # Add helpful description
         view_help = QLabel(
             "<i>Thumbnail Grid shows image previews with lazy loading.<br/>"
             "First load may be slow, but thumbnails are cached for instant loading after.</i>"
@@ -160,13 +147,11 @@ class SettingsDialog(QDialog):
         layout = QFormLayout(font_widget)
         layout.setSpacing(15)
 
-        # Font Family - Only bundled fonts
         self.font_combo = QComboBox()
         self.font_combo.setEditable(False)
         self._populate_font_combo()
         layout.addRow("Font Family:", self.font_combo)
 
-        # Font Size
         self.font_size_spinbox = QSpinBox()
         self.font_size_spinbox.setRange(8, 24)
         self.font_size_spinbox.setSuffix(" pt")
@@ -174,67 +159,7 @@ class SettingsDialog(QDialog):
 
         self.tab_widget.addTab(font_widget, "Fonts")
 
-    def _create_chaos_tab(self) -> None:
-        """Create the Chaos Collection tab with warning and unlock buttons."""
-        chaos_widget = QWidget()
-        layout = QVBoxLayout(chaos_widget)
-        layout.setSpacing(15)
 
-        warning_message = """
-        You are about to enter Mom's 2AM Fever Dreams Collection.
-        This theme collection contains mature content that may cause:
-
-        • Uncontrollable laughter
-        • Questioning of your life choices
-        • Sudden urge to call your mother
-        • Permanent changes to your theme preferences
-        • Loss of innocence regarding UI design
-        • Spontaneous snorting while using the application
-
-        Content Warning: These themes were conceived during a late-night
-        Marvel Snap session and contain references to bodily functions,
-        medical conditions, and general chaos.
-        """
-        label = QLabel(warning_message)
-        label.setWordWrap(True)
-        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(label)
-
-        self.chaos_unlocked_checkbox = QCheckBox("Enable Mom's 2AM Fever Dreams Themes")
-        layout.addWidget(self.chaos_unlocked_checkbox)
-
-        self.chaos_unlocked_checkbox.stateChanged.connect(self._on_chaos_checkbox_changed)
-
-        layout.addStretch(1)
-        self.tab_widget.addTab(chaos_widget, "Chaos Collection")
-
-    def _on_chaos_checkbox_changed(self, state: int) -> None:
-        """Handle the state change of the chaos unlock checkbox."""
-        is_checked = bool(state == Qt.CheckState.Checked.value)
-        self.settings.setValue("chaosCollection/unlocked", is_checked)
-        nfo(f"Chaos Collection unlocked status set to: {is_checked}")
-
-        # Refresh theme categories in the parent window's theme manager
-        if hasattr(self.parent_window, "enhanced_theme_manager"):
-            self.parent_window.enhanced_theme_manager.refresh_theme_categories()
-
-        # If themes are enabled, and the warning was not previously dismissed, show it.
-        if is_checked and not self.settings.value("chaosCollection/dontShowWarningAgain", False, type=bool):
-            # This is a simplified warning for the settings dialog context.
-            # The full modal warning is no longer needed as a separate dialog.
-            QMessageBox.information(
-                self,
-                "Chaos Collection Enabled",
-                "Mom's 2AM Fever Dreams themes are now enabled. \n\n"
-                "You can find them in the Themes tab. Prepare for visual chaos!\n\n"
-                "To disable this warning in the future, check the 'Don't show this warning again' checkbox in this tab.",
-            )
-            self.settings.setValue("chaosCollection/dontShowWarningAgain", True)
-
-    def _load_chaos_setting(self) -> None:
-        """Load and set the current chaos collection setting."""
-        unlocked = self.settings.value("chaosCollection/unlocked", False, type=bool)
-        self.chaos_unlocked_checkbox.setChecked(unlocked)
 
     def _populate_size_combo(self) -> None:
         """Populate the size combo box."""
@@ -252,42 +177,33 @@ class SettingsDialog(QDialog):
         """Populate combo box with ONLY bundled fonts."""
         try:
             from ..ui.font_manager import get_font_manager
-
             font_manager = get_font_manager()
             bundled_font_names = list(font_manager.BUNDLED_FONTS.keys())
-
             if bundled_font_names:
-                # Add only bundled fonts - no system fonts at all
                 for family in sorted(bundled_font_names):
                     self.font_combo.addItem(family)
-
                 nfo(f"Added {len(bundled_font_names)} bundled fonts to combo box (no system fonts)")
             else:
                 nfo("No bundled fonts found - adding fallback option")
-                self.font_combo.addItem("Open Sans")  # Fallback
-
+                self.font_combo.addItem("Open Sans")
         except Exception as e:
             nfo(f"Could not load bundled fonts for combo: {e}")
-            self.font_combo.addItem("Open Sans")  # Fallback
+            self.font_combo.addItem("Open Sans")
 
     def _create_button_box(self) -> None:
         """Create the dialog button box."""
         self.button_box = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok
             | QDialogButtonBox.StandardButton.Cancel
-            | QDialogButtonBox.StandardButton.Apply
         )
         self.button_box.accepted.connect(self.accept_settings)
         self.button_box.rejected.connect(self.reject)
-        self.button_box.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.apply_all_settings)
         self.layout.addWidget(self.button_box)
 
     def _load_current_settings(self) -> None:
         """Load and display current settings for all tabs."""
-        self._load_theme_setting()
         self._load_window_size_setting()
         self._load_font_setting()
-        self._load_chaos_setting()
         self._load_view_mode_setting()
 
     def _load_view_mode_setting(self) -> None:
@@ -296,21 +212,6 @@ class SettingsDialog(QDialog):
         index = self.view_mode_combo.findData(view_mode)
         if index >= 0:
             self.view_mode_combo.setCurrentIndex(index)
-
-    def _load_theme_setting(self) -> None:
-        """Load and set current theme setting."""
-        if hasattr(self.parent_window, "enhanced_theme_manager"):
-            current_theme_id = self.parent_window.enhanced_theme_manager.current_theme
-            try:
-                category, name = current_theme_id.split(":", 1)
-                if category in self.theme_combos:
-                    combo = self.theme_combos[category]
-                    for i in range(combo.count()):
-                        if combo.itemData(i) == current_theme_id:
-                            combo.setCurrentIndex(i)
-                            return
-            except ValueError:
-                pass
 
     def _load_window_size_setting(self) -> None:
         """Load and set current window size setting."""
@@ -325,24 +226,18 @@ class SettingsDialog(QDialog):
         """Load and set current font family and size."""
         font_family = self.settings.value("fontFamily", "Open Sans", type=str)
         font_size = self.settings.value("fontSize", 10, type=int)
-
-        # Find and select the font in our bundled fonts combo
         index = self.font_combo.findText(font_family)
         if index >= 0:
             self.font_combo.setCurrentIndex(index)
         else:
-            # Default to first item (usually Open Sans) if not found
             self.font_combo.setCurrentIndex(0)
-
         self.font_size_spinbox.setValue(font_size)
 
     def apply_all_settings(self) -> None:
         """Apply all settings without closing the dialog."""
-        self._apply_theme_settings()
         self._apply_window_settings()
         self._apply_font_settings()
         self._apply_view_mode_settings()
-        # Re-apply fonts after theme to ensure they override any theme font settings
         if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
             self.parent_window.apply_global_font()
         nfo("All settings applied.")
@@ -351,21 +246,8 @@ class SettingsDialog(QDialog):
         """Apply the selected view mode."""
         view_mode = self.view_mode_combo.currentData()
         self.settings.setValue("fileViewMode", view_mode)
-        
-        # Signal parent window to switch view
         if hasattr(self.parent_window, 'set_file_view_mode'):
             self.parent_window.set_file_view_mode(view_mode)
-
-    def _apply_theme_settings(self) -> None:
-        """Apply the selected theme."""
-        selected_theme_id = None
-        for combo in self.theme_combos.values():
-            if combo.currentIndex() > 0:
-                selected_theme_id = combo.currentData()
-                break
-
-        if selected_theme_id and hasattr(self.parent_window, "enhanced_theme_manager"):
-            self.parent_window.enhanced_theme_manager.apply_theme(selected_theme_id)
 
     def _apply_window_settings(self) -> None:
         """Apply the selected window size settings."""
@@ -382,12 +264,8 @@ class SettingsDialog(QDialog):
         """Apply the selected font family and size globally."""
         font_family = self.font_combo.currentText()
         font_size = self.font_size_spinbox.value()
-
-        # Save settings
         self.settings.setValue("fontFamily", font_family)
         self.settings.setValue("fontSize", font_size)
-
-        # Apply globally
         if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
             self.parent_window.apply_global_font()
             nfo(f"Applied global font: {font_family}, {font_size}pt")
@@ -396,6 +274,157 @@ class SettingsDialog(QDialog):
         """Apply all settings and close the dialog."""
         self.apply_all_settings()
         self.accept()
+
+
+# ============================================================================
+# THEME BROWSER DIALOG
+# ============================================================================
+
+
+class ThemeBrowserDialog(QDialog):
+    """A dialog for browsing and selecting themes from a categorized list."""
+
+    def __init__(self, category_id: str, category_name: str, themes: list[str], theme_manager, parent: QWidget | None = None):
+        super().__init__(parent)
+        self.category_id = category_id
+        self.themes = themes
+        self.theme_manager = theme_manager
+
+        self.setWindowTitle(f"Theme Browser: {category_name}")
+        self.setMinimumSize(500, 600)
+
+        layout = QVBoxLayout(self)
+
+        # Add a search bar
+        self.search_bar = QLineEdit()
+        self.search_bar.setPlaceholderText("Search themes...")
+        self.search_bar.textChanged.connect(self._filter_tree)
+        layout.addWidget(self.search_bar)
+
+        # Add the tree widget for all theme packs
+        if category_id == "KTISEOS_NYX_THEMES":
+            self.tree_widget = QTreeWidget()
+            self.tree_widget.setHeaderHidden(True)
+            self.tree_widget.itemDoubleClicked.connect(self._on_item_double_clicked)
+            layout.addWidget(self.tree_widget)
+            self._populate_tree()
+        else:
+            self.list_widget = QListWidget()
+            self.list_widget.itemDoubleClicked.connect(self._on_item_double_clicked_list)
+            layout.addWidget(self.list_widget)
+            self._populate_list()
+
+        # Add Apply and Close buttons
+        self.button_box = QDialogButtonBox()
+        self.apply_button = self.button_box.addButton("Apply", QDialogButtonBox.ButtonRole.ApplyRole)
+        self.close_button = self.button_box.addButton(QDialogButtonBox.StandardButton.Close)
+        
+        self.apply_button.clicked.connect(self.apply_selected_theme)
+        self.close_button.clicked.connect(self.reject)
+        
+        layout.addWidget(self.button_box)
+
+    def _populate_tree(self):
+        """Populate the tree widget with categorized themes."""
+        categorized = self._categorize_themes()
+        
+        for category, theme_list in sorted(categorized.items()):
+            parent_item = QTreeWidgetItem(self.tree_widget)
+            parent_item.setText(0, f"{category.replace('_', ' ').title()} ({len(theme_list)}))")
+            parent_item.setFlags(parent_item.flags() & ~Qt.ItemFlag.ItemIsSelectable)
+
+            for theme_name in sorted(theme_list):
+                child_item = QTreeWidgetItem(parent_item)
+                display_name = theme_name.replace("_", " ").replace(".xml", "").title()
+                if ' ' in display_name and display_name.split(' ')[0].lower() + '_' in category.lower() + '_':
+                    display_name = ' '.join(display_name.split(' ')[1:])
+
+                child_item.setText(0, display_name)
+                child_item.setData(0, Qt.ItemDataRole.UserRole, f"{self.category_id}:{theme_name}")
+
+        self.tree_widget.expandAll()
+
+    def _populate_list(self):
+        """Populate the list widget with themes."""
+        for theme_name in self.themes:
+            display_name = theme_name.replace("_", " ").replace(".xml", "").title()
+            item = QListWidgetItem(display_name)
+            item.setData(Qt.ItemDataRole.UserRole, f"{self.category_id}:{theme_name}")
+            self.list_widget.addItem(item)
+
+    def _categorize_themes(self) -> dict[str, list[str]]:
+        """Categorize themes based on filename prefixes."""
+        categorized_themes = {}
+        prefixes = ["disturbed_", "moms_2am_", "mlp_", "pokemon_", "food_", "stupid_", "ffxiv_", "mlb_", "nfl_", "decade_", "ai_", "linux_", "windows_"]
+        
+        for theme in self.themes:
+            found_category = "Uncategorized"
+            for prefix in prefixes:
+                if theme.startswith(prefix):
+                    found_category = prefix.strip("_")
+                    break
+            
+            if found_category not in categorized_themes:
+                categorized_themes[found_category] = []
+            categorized_themes[found_category].append(theme)
+            
+        return categorized_themes
+
+    def apply_selected_theme(self):
+        """Apply the currently selected theme."""
+        if hasattr(self, 'tree_widget'):
+            selected_items = self.tree_widget.selectedItems()
+            if selected_items:
+                self._apply_theme(selected_items[0])
+        elif hasattr(self, 'list_widget'):
+            selected_items = self.list_widget.selectedItems()
+            if selected_items:
+                self._apply_theme(selected_items[0])
+
+    def _on_item_double_clicked(self, item: QTreeWidgetItem, column: int):
+        """Handle when a theme is double-clicked in the tree."""
+        self._apply_theme(item)
+        self.accept()
+
+    def _on_item_double_clicked_list(self, item: QListWidgetItem):
+        """Handle when a theme is double-clicked in the list."""
+        self._apply_theme(item)
+        self.accept()
+
+    def _apply_theme(self, item: QTreeWidgetItem | QListWidgetItem):
+        """Helper to apply the theme from a given item."""
+        if isinstance(item, QTreeWidgetItem):
+            theme_id = item.data(0, Qt.ItemDataRole.UserRole)
+        else:
+            theme_id = item.data(Qt.ItemDataRole.UserRole)
+
+        if theme_id:
+            self.theme_manager.apply_theme(theme_id)
+            if hasattr(self.parent(), 'show_status_message'):
+                if isinstance(item, QTreeWidgetItem):
+                    self.parent().show_status_message(f"Applied theme: {item.text(0)}")
+                else:
+                    self.parent().show_status_message(f"Applied theme: {item.text()}")
+
+    def _filter_tree(self, text: str):
+        """Filter the tree widget based on the search text."""
+        if hasattr(self, 'tree_widget'):
+            root = self.tree_widget.invisibleRootItem()
+            for i in range(root.childCount()):
+                category_item = root.child(i)
+                has_visible_child = False
+                for j in range(category_item.childCount()):
+                    theme_item = category_item.child(j)
+                    is_match = text.lower() in theme_item.text(0).lower()
+                    theme_item.setHidden(not is_match)
+                    if is_match:
+                        has_visible_child = True
+                category_item.setHidden(not has_visible_child)
+        elif hasattr(self, 'list_widget'):
+            for i in range(self.list_widget.count()):
+                item = self.list_widget.item(i)
+                is_match = text.lower() in item.text().lower()
+                item.setHidden(not is_match)
 
 
 # ============================================================================
@@ -425,10 +454,8 @@ class AboutDialog(QDialog):
         """Display the about information using QMessageBox."""
         about_text = self._build_about_text()
 
-        # Use QMessageBox.about for consistent styling
         QMessageBox.about(self, "About Dataset Viewer", about_text)
 
-        # Close this dialog since QMessageBox.about is modal
         self.accept()
 
     def _build_about_text(self) -> str:
@@ -440,8 +467,9 @@ class AboutDialog(QDialog):
         return (
             f"<b>Dataset Viewer</b><br><br>"
             f"{version_text}<br>"
-            f"An ultralight metadata viewer for AI-generated content.<br>"
-            f"Developed by KTISEOS NYX.<br><br>"
+            f"An ultralight metadata viewer for AI-generated content."
+            f"Developed by KTISEOS NYX."
+            f"<br><br>"
             f"{contributors_text}<br><br>"
             f"{license_text}"
         )
@@ -477,56 +505,25 @@ class AboutDialog(QDialog):
 
 
 def show_error_dialog(parent: QWidget | None, title: str, message: str) -> None:
-    """Show a standardized error dialog.
-
-    Args:
-        parent: Parent widget for the dialog
-        title: Dialog title
-        message: Error message to display
-
-    """
+    """Show a standardized error dialog."""
     QMessageBox.critical(parent, title, message)
     nfo("Error dialog shown: %s - %s", title, message)
 
 
 def show_warning_dialog(parent: QWidget | None, title: str, message: str) -> None:
-    """Show a standardized warning dialog.
-
-    Args:
-        parent: Parent widget for the dialog
-        title: Dialog title
-        message: Warning message to display
-
-    """
+    """Show a standardized warning dialog."""
     QMessageBox.warning(parent, title, message)
     nfo("Warning dialog shown: %s - %s", title, message)
 
 
 def show_info_dialog(parent: QWidget | None, title: str, message: str) -> None:
-    """Show a standardized information dialog.
-
-    Args:
-        parent: Parent widget for the dialog
-        title: Dialog title
-        message: Information message to display
-
-    """
+    """Show a standardized information dialog."""
     QMessageBox.information(parent, title, message)
     nfo("Info dialog shown: %s - %s", title, message)
 
 
 def ask_yes_no_question(parent: QWidget | None, title: str, question: str) -> bool:
-    """Ask a yes/no question using a dialog.
-
-    Args:
-        parent: Parent widget for the dialog
-        title: Dialog title
-        question: Question to ask the user
-
-    Returns:
-        True if user clicked Yes, False if No or Cancel
-
-    """
+    """Ask a yes/no question using a dialog."""
     result = QMessageBox.question(
         parent,
         title,
@@ -557,7 +554,6 @@ class TextEditDialog(QDialog):
 
         self.text_edit = QTextEdit()
         self.text_edit.setPlainText(initial_text)
-        # Use a monospace font for better editing of structured text
         font = QFont("Courier New")
         font.setStyleHint(QFont.StyleHint.Monospace)
         self.text_edit.setFont(font)
@@ -589,58 +585,26 @@ class TextEditDialog(QDialog):
 
 
 class DialogFactory:
-    """Factory class for creating and managing application dialogs.
-
-    Provides a centralized way to create dialogs with consistent
-    styling and behavior across the application.
-    """
+    """Factory class for creating and managing application dialogs."""
 
     @staticmethod
     def create_settings_dialog(parent: QWidget, current_theme: str = "") -> SettingsDialog:
-        """Create a settings dialog.
-
-        Args:
-            parent: Parent widget
-            current_theme: Current theme name
-
-        Returns:
-            Configured SettingsDialog instance
-
-        """
+        """Create a settings dialog."""
         return SettingsDialog(parent)
 
     @staticmethod
     def create_about_dialog(parent: QWidget) -> AboutDialog:
-        """Create an about dialog.
-
-        Args:
-            parent: Parent widget
-
-        Returns:
-            Configured AboutDialog instance
-
-        """
+        """Create an about dialog."""
         return AboutDialog(parent)
 
     @staticmethod
     def show_settings(parent: QWidget, current_theme: str = "") -> None:
-        """Show the settings dialog.
-
-        Args:
-            parent: Parent widget
-            current_theme: Current theme name
-
-        """
+        """Show the settings dialog."""
         dialog = DialogFactory.create_settings_dialog(parent, current_theme)
         dialog.exec()
 
     @staticmethod
     def show_about(parent: QWidget) -> None:
-        """Show the about dialog.
-
-        Args:
-            parent: Parent widget
-
-        """
+        """Show the about dialog."""
         dialog = DialogFactory.create_about_dialog(parent)
         dialog.exec()
