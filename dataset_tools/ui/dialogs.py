@@ -130,6 +130,7 @@ class SettingsDialog(QDialog):
         self.view_mode_combo.addItem("List View (Default)", "list")
         self.view_mode_combo.addItem("Thumbnail Grid (Images Only)", "grid")
         layout.addWidget(view_label)
+        layout.addWidget(self.view_mode_combo)
         
         view_help = QLabel(
             "<i>Thumbnail Grid shows image previews with lazy loading.<br/>"

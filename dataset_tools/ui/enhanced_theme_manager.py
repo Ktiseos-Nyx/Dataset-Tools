@@ -24,13 +24,6 @@ from ..logger import info_monitor as nfo
 
 # Import theme libraries with fallbacks
 try:
-    import qt_themes
-
-    QT_THEMES_AVAILABLE = True
-except ImportError:
-    QT_THEMES_AVAILABLE = False
-
-try:
     import unreal_stylesheet
 
     UNREAL_STYLESHEET_AVAILABLE = True
@@ -61,7 +54,6 @@ class EnhancedThemeManager:
 
     THEME_CATEGORIES = {
         "qt_material": "Material Design",
-        "qt_themes": "Color Palettes",
         "unreal": "Unreal Style",
         "GTRONICK_QSS": "GTRONICK's Themes",
         "KTISEOS_NYX_THEMES": "Ktiseos Nyx's Themes",
@@ -76,48 +68,12 @@ class EnhancedThemeManager:
         self.current_palette_theme: str | None = None
         self.current_qt_material_theme: str | None = None
 
-        # Load qt-themes palettes dynamically
-        self._load_qt_themes_palettes()
-
         nfo("Enhanced ThemeManager initialized")
         nfo(
-            "Available systems: qt-material=%s, qt-themes=%s, unreal=%s",
+            "Available systems: qt-material=%s, unreal=%s",
             QT_MATERIAL_AVAILABLE,
-            QT_THEMES_AVAILABLE,
             UNREAL_STYLESHEET_AVAILABLE,
         )
-
-    def _load_qt_themes_palettes(self) -> None:
-        """Load available qt-themes palettes dynamically."""
-        if QT_THEMES_AVAILABLE:
-            try:
-                # Get themes using the get_themes function
-                if hasattr(qt_themes, "get_themes"):
-                    themes_dict = qt_themes.get_themes()
-                    # Extract theme names from the dictionary
-                    self.QT_THEMES_PALETTES = list(themes_dict.keys())
-                else:
-                    # Fallback to hardcoded list if get_themes not available
-                    self.QT_THEMES_PALETTES = [
-                        "one_dark_two",
-                        "monokai",
-                        "nord",
-                        "catppuccin_mocha",
-                        "catppuccin_macchiato",
-                        "catppuccin_frappe",
-                        "catppuccin_latte",
-                        "atom_one",
-                        "github_dark",
-                        "github_light",
-                        "dracula",
-                        "blender",
-                    ]
-                nfo("Loaded %d qt-themes palettes", len(self.QT_THEMES_PALETTES))
-            except Exception as e:
-                nfo("Error loading qt-themes palettes: %s", e)
-                self.QT_THEMES_PALETTES = []
-        else:
-            self.QT_THEMES_PALETTES = []
 
     def get_available_themes(self) -> dict[str, list[str]]:
         """Get all available themes organized by category."""
@@ -126,10 +82,6 @@ class EnhancedThemeManager:
         # qt-material themes
         if QT_MATERIAL_AVAILABLE:
             themes["qt_material"] = sorted(list_themes(), key=self._natural_sort_key)
-
-        # qt-themes color palettes
-        if QT_THEMES_AVAILABLE:
-            themes["qt_themes"] = sorted(self.QT_THEMES_PALETTES.copy(), key=self._natural_sort_key)
 
         # Unreal stylesheet
         if UNREAL_STYLESHEET_AVAILABLE:
@@ -216,9 +168,6 @@ class EnhancedThemeManager:
         if category == "qt_material" and QT_MATERIAL_AVAILABLE:
             success = self._apply_qt_material_theme(name, app)
 
-        elif category == "qt_themes" and QT_THEMES_AVAILABLE:
-            success = self._apply_qt_themes_palette(name, app)
-
         elif category == "unreal" and UNREAL_STYLESHEET_AVAILABLE:
             success = self._apply_unreal_theme(app)
 
@@ -267,16 +216,7 @@ class EnhancedThemeManager:
             nfo("Error applying qt-material theme %s: %s", theme_name, e)
             return False
 
-    def _apply_qt_themes_palette(self, palette_name: str, app: QApplication) -> bool:
-        """Apply a qt-themes color palette."""
-        try:
-            # qt-themes uses set_theme(app, theme_name) format
-            qt_themes.set_theme(app, palette_name)
-            self.current_palette_theme = palette_name
-            return True
-        except Exception as e:
-            nfo("Error applying qt-themes palette %s: %s", palette_name, e)
-            return False
+
 
     def _apply_custom_qss_theme(self, theme_id: str, app: QApplication) -> bool:
         """Apply a custom QSS theme from the 'themes' directory."""
@@ -499,7 +439,6 @@ class EnhancedThemeManager:
             "current_palette": self.current_palette_theme,
             "available_systems": {
                 "qt_material": QT_MATERIAL_AVAILABLE,
-                "qt_themes": QT_THEMES_AVAILABLE,
                 "unreal_stylesheet": UNREAL_STYLESHEET_AVAILABLE,
                 "custom_qss": True,
             },
