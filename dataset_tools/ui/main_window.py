@@ -48,6 +48,7 @@ from .managers import (
     ThemeManager,  # pylint: disable=relative-beyond-top-level
 )
 from .widgets import FileLoadResult
+from .thumbnail_grid import ThumbnailGridWidget
 
 # ============================================================================
 # CONSTANTS
@@ -281,10 +282,46 @@ class MainWindow(Qw.QMainWindow):
             self.left_panel.sort_files_requested.connect(self.sort_files_list)
             self.left_panel.list_item_selected.connect(self.on_file_selected)
 
+    def set_file_view_mode(self, mode: str) -> None:
+        """Set the file view mode (list or grid).
+        
+        Args:
+            mode: Either 'list' or 'grid'
+        """
+        if mode == "grid":
+            if not hasattr(self, 'thumbnail_grid'):
+                # Lazy init - only create grid when first needed
+                self._initialize_thumbnail_grid()
+            
+            self.left_panel.file_view_stack.setCurrentWidget(self.thumbnail_grid)
+            
+            # Populate with current images
+            if self.current_folder and self.current_files_in_list:
+                image_files = [f for f in self.current_files_in_list 
+                               if self._should_display_as_image(os.path.join(self.current_folder, f))]
+                self.thumbnail_grid.set_folder(self.current_folder, image_files)
+        else:
+            self.left_panel.file_view_stack.setCurrentWidget(self.left_panel.files_list_widget)
+        
+        nfo(f"[UI] File view mode set to: {mode}")
+
+    def _initialize_thumbnail_grid(self):
+        """Lazy initialization of thumbnail grid."""
+        self.thumbnail_grid = ThumbnailGridWidget(parent=self)
+        self.thumbnail_grid.file_selected.connect(self.on_file_selected)
+        self.left_panel.file_view_stack.addWidget(self.thumbnail_grid)
+        
+        nfo("[UI] Thumbnail grid initialized")
+
     def _restore_application_state(self) -> None:
         """Restore window geometry and load initial folder."""
         self.theme_manager.restore_window_geometry()
         self._load_initial_folder()
+
+        # Apply saved view mode
+        view_mode = self.settings.value("fileViewMode", "list", type=str)
+        if view_mode == "grid":
+            self.set_file_view_mode("grid")
 
     def _load_initial_folder(self) -> None:
         """Load the last used folder or show empty state."""
@@ -538,6 +575,12 @@ class MainWindow(Qw.QMainWindow):
         # Auto-select file
         self._auto_select_file(result)
 
+        # If grid view is active, update it too
+        if hasattr(self, 'thumbnail_grid') and self.settings.value("fileViewMode", "list") == "grid":
+            image_files = [f for f in self.current_files_in_list 
+                           if self._should_display_as_image(os.path.join(self.current_folder, f))]
+            self.thumbnail_grid.set_folder(self.current_folder, image_files)
+
     def _auto_select_file(self, result: FileLoadResult) -> None:
         """Auto-select a file after loading."""
         selected = False
@@ -652,17 +695,19 @@ class MainWindow(Qw.QMainWindow):
     @debug_monitor
     def on_file_selected(
         self,
-        current_item: Qw.QListWidgetItem | None,
+        current_item: Qw.QListWidgetItem | str | None,
         _previous_item: Qw.QListWidgetItem | None = None,
     ) -> None:
-        """Handle file selection from the file list.
+        """Handle file selection from either the list view or the grid view."""
+        file_name: str | None = None
 
-        Args:
-            current_item: Currently selected list item
-            _previous_item: Previously selected item (unused)
+        if isinstance(current_item, str):
+            file_name = current_item
+        elif hasattr(current_item, "text"):
+            # It's likely a QListWidgetItem
+            file_name = current_item.text()
 
-        """
-        if not current_item:
+        if not file_name:
             self._handle_no_file_selected()
             return
 
@@ -670,7 +715,6 @@ class MainWindow(Qw.QMainWindow):
         self.clear_selection()
 
         # Get file information
-        file_name = current_item.text()
         self._update_selection_status(file_name)
 
         # Validate context
@@ -1169,6 +1213,10 @@ class MainWindow(Qw.QMainWindow):
 
         # Clean up image loading thread
         self._cleanup_image_loading_thread()
+
+        # Clean up thumbnail worker thread
+        if hasattr(self, 'thumbnail_grid'):
+            self.thumbnail_grid.cleanup()
 
         super().closeEvent(event)
 

@@ -78,7 +78,11 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
             "<i>Use arrow keys to navigate between files</i>"
         )
 
-        layout.addWidget(self.files_list_widget, 1)
+        # Create the stacked widget for view switching
+        self.file_view_stack = Qw.QStackedWidget()
+        self.file_view_stack.addWidget(self.files_list_widget)
+
+        layout.addWidget(self.file_view_stack, 1)
 
     def _setup_action_buttons(self, layout: Qw.QVBoxLayout) -> None:
         """Setup the action button row."""

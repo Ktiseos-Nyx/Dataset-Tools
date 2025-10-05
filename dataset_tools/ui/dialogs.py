@@ -133,6 +133,22 @@ class SettingsDialog(QDialog):
         layout.addWidget(size_label)
         layout.addWidget(self.size_combo)
 
+        # NEW: File View Mode Section
+        view_label = QLabel("<b>File View Mode:</b>")
+        self.view_mode_combo = QComboBox()
+        self.view_mode_combo.addItem("List View (Default)", "list")
+        self.view_mode_combo.addItem("Thumbnail Grid (Images Only)", "grid")
+        layout.addWidget(view_label)
+        layout.addWidget(self.view_mode_combo)
+        
+        # Add helpful description
+        view_help = QLabel(
+            "<i>Thumbnail Grid shows image previews with lazy loading.<br/>"
+            "First load may be slow, but thumbnails are cached for instant loading after.</i>"
+        )
+        view_help.setWordWrap(True)
+        layout.addWidget(view_help)
+
         layout.addStretch(1)
         self.tab_widget.addTab(appearance_widget, "Appearance")
 
@@ -270,6 +286,14 @@ class SettingsDialog(QDialog):
         self._load_window_size_setting()
         self._load_font_setting()
         self._load_chaos_setting()
+        self._load_view_mode_setting()
+
+    def _load_view_mode_setting(self) -> None:
+        """Load and set current view mode setting."""
+        view_mode = self.settings.value("fileViewMode", "list", type=str)
+        index = self.view_mode_combo.findData(view_mode)
+        if index >= 0:
+            self.view_mode_combo.setCurrentIndex(index)
 
     def _load_theme_setting(self) -> None:
         """Load and set current theme setting."""
@@ -315,10 +339,20 @@ class SettingsDialog(QDialog):
         self._apply_theme_settings()
         self._apply_window_settings()
         self._apply_font_settings()
+        self._apply_view_mode_settings()
         # Re-apply fonts after theme to ensure they override any theme font settings
         if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
             self.parent_window.apply_global_font()
         nfo("All settings applied.")
+
+    def _apply_view_mode_settings(self) -> None:
+        """Apply the selected view mode."""
+        view_mode = self.view_mode_combo.currentData()
+        self.settings.setValue("fileViewMode", view_mode)
+        
+        # Signal parent window to switch view
+        if hasattr(self.parent_window, 'set_file_view_mode'):
+            self.parent_window.set_file_view_mode(view_mode)
 
     def _apply_theme_settings(self) -> None:
         """Apply the selected theme."""
