@@ -482,6 +482,12 @@ class LayoutManager:
                 "clipboard<br/><i>Shortcut: Ctrl+C</i>",
             ),
             (
+                "edit_metadata_button",
+                "Edit Metadata",
+                "open_edit_dialog",
+                "<b>Edit Metadata</b><br/>Edit the metadata for the selected file.<br/><i>Currently supports .txt files.</i>",
+            ),
+            (
                 "settings_button",
                 "Settings",
                 "open_settings_dialog",

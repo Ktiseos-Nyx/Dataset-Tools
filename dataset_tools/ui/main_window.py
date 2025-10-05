@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, PngImagePlugin
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
 from PyQt6.QtCore import QObject, QSettings, QThread, QTimer, pyqtSignal
@@ -35,7 +35,7 @@ from ..metadata_parser import (
 from ..widgets import (
     FileLoader,  # pylint: disable=relative-beyond-top-level
 )
-from .dialogs import SettingsDialog
+from .dialogs import SettingsDialog, TextEditDialog
 from .enhanced_theme_manager import get_enhanced_theme_manager  # pylint: disable=relative-beyond-top-level
 from .font_manager import (
     apply_fonts_to_app,  # pylint: disable=relative-beyond-top-level
@@ -761,9 +761,23 @@ class MainWindow(Qw.QMainWindow):
         # Check if file exists and display image if applicable
         if self._should_display_as_image(full_file_path):
             self.display_image_of(full_file_path)
+            # Load and display metadata for images
+            self._load_and_display_metadata(file_name)
 
-        # Load and display metadata
-        self._load_and_display_metadata(file_name)
+        elif self._should_display_as_text(full_file_path):
+            # Handle text files by displaying their content
+            try:
+                with open(full_file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                self.metadata_display.clear_all_displays()
+                self.generation_data_box.setText(content)
+                self.show_status_message(f"Displayed content of {file_name}")
+            except Exception as e:
+                self.show_status_message(f"Error reading text file: {e}")
+                nfo(f"Error reading text file: {e}")
+        else:
+            # For other file types like models, just load metadata
+            self._load_and_display_metadata(file_name)
 
     def _should_display_as_image(self, file_path: str) -> bool:
         """Check if file should be displayed as an image."""
@@ -783,6 +797,26 @@ class MainWindow(Qw.QMainWindow):
                     return True
 
         nfo("[UI] File is not a supported image format: '%s'", file_suffix)
+        return False
+
+    def _should_display_as_text(self, file_path: str) -> bool:
+        """Check if file should be treated as a displayable text file."""
+        path_obj = Path(file_path)
+
+        if not path_obj.is_file():
+            return False
+
+        file_suffix = path_obj.suffix.lower()
+
+        # Check against plain text and schema file types
+        text_exts = {ext for ext_set in getattr(Ext, "PLAIN_TEXT_LIKE", []) for ext in ext_set}
+        schema_exts = {ext for ext_set in getattr(Ext, "SCHEMA_FILES", []) for ext in ext_set}
+        all_text_like_exts = text_exts.union(schema_exts)
+
+        if file_suffix in all_text_like_exts:
+            nfo("[UI] File matches text format: '%s'", file_suffix)
+            return True
+
         return False
 
     def _load_and_display_metadata(self, file_name: str) -> None:
@@ -955,6 +989,93 @@ class MainWindow(Qw.QMainWindow):
     # ========================================================================
     # USER ACTIONS
     # ========================================================================
+
+    def open_edit_dialog(self) -> None:
+        """Open the dialog to edit metadata for the selected file."""
+        nfo("Edit Metadata button clicked.")
+
+        if not self.current_folder or not self.left_panel.get_selected_file_name():
+            self.show_status_message("No file selected to edit.")
+            return
+
+        file_name = self.left_panel.get_selected_file_name()
+        full_path = os.path.join(self.current_folder, file_name)
+
+        # --- Text File Handling ---
+        if file_name.lower().endswith('.txt'):
+            try:
+                with open(full_path, 'r', encoding='utf-8') as f:
+                    initial_text = f.read()
+            except Exception as e:
+                self.show_status_message(f"Error reading file: {e}")
+                return
+
+            accepted, new_text = TextEditDialog.get_edited_text(self, initial_text)
+
+            if accepted:
+                try:
+                    with open(full_path, 'w', encoding='utf-8') as f:
+                        f.write(new_text)
+                    self.show_status_message(f"Successfully saved changes to {file_name}.")
+                    # Refresh the display to show new content
+                    self.on_file_selected(self.left_panel.get_files_list_widget().currentItem())
+                except Exception as e:
+                    self.show_status_message(f"Error saving file: {e}")
+            return  # End of text file logic
+
+        # --- PNG File Handling ---
+        elif file_name.lower().endswith('.png'):
+            try:
+                img = Image.open(full_path)
+                # Ensure it's a PNG and has metadata
+                if img.format != 'PNG' or not img.info:
+                    self.show_status_message("Not a valid PNG file or no metadata found.")
+                    return
+
+                # Find the primary metadata key
+                raw_key = None
+                priority_keys = ['parameters', 'prompt', 'invokeai_metadata', 'Dream', 'sd-metadata']
+                for key in priority_keys:
+                    if key in img.info:
+                        raw_key = key
+                        break
+                
+                if not raw_key:
+                    self.show_status_message("No recognized raw metadata block found to edit.")
+                    return
+
+                initial_text = img.info[raw_key]
+                
+                # Show the dialog
+                accepted, new_text = TextEditDialog.get_edited_text(self, initial_text)
+
+                if accepted:
+                    # Save the new metadata
+                    new_meta = PngImagePlugin.PngInfo()
+                    # Copy all other metadata first
+                    for key, value in img.info.items():
+                        if key != raw_key:
+                            new_meta.add_text(key, value)
+                    
+                    # Add the edited metadata
+                    new_meta.add_text(raw_key, new_text)
+
+                    # Save safely
+                    temp_path = full_path + ".tmp"
+                    img.save(temp_path, "PNG", pnginfo=new_meta)
+                    os.replace(temp_path, full_path)
+
+                    self.show_status_message(f"Successfully saved metadata to {file_name}.")
+                    # Refresh the view
+                    self.on_file_selected(self.left_panel.get_files_list_widget().currentItem())
+
+            except Exception as e:
+                self.show_status_message(f"Error processing PNG: {e}")
+                nfo(f"Error during PNG edit process: {e}")
+            return  # End of PNG logic
+
+        else:
+            self.show_status_message("Editing is currently only supported for .txt and .png files.")
 
     def copy_metadata_to_clipboard(self) -> None:
         """Copy all displayed metadata to clipboard."""

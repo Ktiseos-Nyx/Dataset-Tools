@@ -10,6 +10,7 @@ including settings configuration and about information dialogs.
 """
 
 from PyQt6.QtCore import QSettings, Qt, pyqtSignal
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -21,6 +22,7 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QSpinBox,
     QTabWidget,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
 )
@@ -536,6 +538,49 @@ def ask_yes_no_question(parent: QWidget | None, title: str, question: str) -> bo
     answer = result == QMessageBox.StandardButton.Yes
     nfo("Yes/No question: %s - Answer: %s", title, "Yes" if answer else "No")
     return answer
+
+
+# ============================================================================
+# TEXT EDIT DIALOG
+# ============================================================================
+
+
+class TextEditDialog(QDialog):
+    """A simple dialog for editing a block of text."""
+
+    def __init__(self, initial_text: str, parent: QWidget | None = None):
+        super().__init__(parent)
+        self.setWindowTitle("Edit Text")
+        self.setMinimumSize(600, 500)
+
+        layout = QVBoxLayout(self)
+
+        self.text_edit = QTextEdit()
+        self.text_edit.setPlainText(initial_text)
+        # Use a monospace font for better editing of structured text
+        font = QFont("Courier New")
+        font.setStyleHint(QFont.StyleHint.Monospace)
+        self.text_edit.setFont(font)
+        layout.addWidget(self.text_edit)
+
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
+        )
+        button_box.accepted.connect(self.accept)
+        button_box.rejected.connect(self.reject)
+        layout.addWidget(button_box)
+
+    def get_text(self) -> str:
+        """Return the edited text from the text edit widget."""
+        return self.text_edit.toPlainText()
+
+    @staticmethod
+    def get_edited_text(parent: QWidget, initial_text: str) -> tuple[bool, str]:
+        """Static method to show the dialog and get the result."""
+        dialog = TextEditDialog(initial_text, parent)
+        if dialog.exec():
+            return True, dialog.get_text()
+        return False, initial_text
 
 
 # ============================================================================
