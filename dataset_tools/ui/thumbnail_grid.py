@@ -55,65 +55,54 @@ class ThumbnailCache:
         self._access_order.clear()
 
 
-class ThumbnailWorker(QtCore.QObject):
-    """Worker for loading thumbnails in background thread."""
-    
+class WorkerSignals(QtCore.QObject):
+    """Defines signals available from a worker thread. Supports success and error cases."""
     thumbnail_ready = QtCore.pyqtSignal(str, QtGui.QPixmap)  # file_path, pixmap
-    load_requested = QtCore.pyqtSignal(str, str, int)  # file_name, folder, thumb_size
+    error = QtCore.pyqtSignal(str, str)  # file_path, error_message
+
+
+class ThumbnailWorker(QtCore.QRunnable):
+    """Worker task for loading a single thumbnail in a thread pool."""
     
-    def __init__(self):
+    def __init__(self, file_path: str, thumb_size: int):
         super().__init__()
-        self._cancelled_paths: set[str] = set()
-        self.load_requested.connect(self._load_thumbnail)
-    
-    def _load_thumbnail(self, file_name: str, folder_path: str, thumb_size: int):
-        """Load a thumbnail in the background thread."""
-        full_path = str(Path(folder_path) / file_name)
-        
-        # Check if cancelled
-        if full_path in self._cancelled_paths:
-            self._cancelled_paths.discard(full_path)
-            return
-        
+        self.file_path = file_path
+        self.thumb_size = thumb_size
+        self.signals = WorkerSignals()
+
+    def run(self):
+        """Execute the worker task."""
         try:
             # Check disk cache first
-            pixmap = self._load_cached_thumbnail(full_path, thumb_size)
+            pixmap = self._load_cached_thumbnail(self.file_path, self.thumb_size)
             
             if pixmap is None:
                 # Generate new thumbnail
-                pixmap = self._generate_thumbnail(full_path, thumb_size)
+                pixmap = self._generate_thumbnail(self.file_path, self.thumb_size)
                 
                 # Save to disk cache
                 if pixmap and not pixmap.isNull():
-                    self._save_thumbnail_to_cache(full_path, pixmap, thumb_size)
+                    self._save_thumbnail_to_cache(self.file_path, pixmap, self.thumb_size)
             
-            if pixmap and not pixmap.isNull() and full_path not in self._cancelled_paths:
-                self.thumbnail_ready.emit(file_name, pixmap)
-        
+            if pixmap and not pixmap.isNull():
+                self.signals.thumbnail_ready.emit(self.file_path, pixmap)
+
         except Exception as e:
-            log.error(f"Error loading thumbnail for {file_name}: {e}")
-    
-    def cancel_path(self, file_path: str):
-        """Cancel loading for a specific path."""
-        self._cancelled_paths.add(file_path)
-    
-    def clear_cancelled(self):
-        """Clear cancelled paths."""
-        self._cancelled_paths.clear()
-    
+            log.error(f"Error loading thumbnail for {self.file_path}: {e}")
+            self.signals.error.emit(self.file_path, str(e))
+
     def _get_cache_path(self, image_path: str, thumb_size: int) -> Path:
         """Get the path where thumbnail should be cached."""
         folder = Path(image_path).parent
         cache_dir = folder / ".thumbnails"
         cache_dir.mkdir(exist_ok=True)
         
-        # Create hash of path + size to handle different thumbnail sizes
         path_str = f"{image_path}_{thumb_size}"
         path_hash = hashlib.md5(path_str.encode()).hexdigest()[:8]
         original_name = Path(image_path).stem
         
         return cache_dir / f"{path_hash}_{original_name}.jpg"
-    
+
     def _load_cached_thumbnail(self, image_path: str, thumb_size: int) -> Optional[QtGui.QPixmap]:
         """Load thumbnail from disk cache if available and fresh."""
         try:
@@ -122,50 +111,40 @@ class ThumbnailWorker(QtCore.QObject):
             if not cache_path.exists():
                 return None
             
-            # Check if source is newer than cache
             source_mtime = Path(image_path).stat().st_mtime
             cache_mtime = cache_path.stat().st_mtime
             
             if source_mtime > cache_mtime:
                 return None  # Cache is stale
             
-            # Load cached thumbnail
             pixmap = QtGui.QPixmap(str(cache_path))
             if not pixmap.isNull():
-                log.debug(f"Loaded cached thumbnail for {Path(image_path).name}")
                 return pixmap
             
         except Exception as e:
             log.debug(f"Cache load failed for {image_path}: {e}")
         
         return None
-    
+
     def _generate_thumbnail(self, image_path: str, thumb_size: int) -> Optional[QtGui.QPixmap]:
         """Generate a new thumbnail."""
         try:
             with Image.open(image_path) as img:
-                # Fix rotation
                 img = ImageOps.exif_transpose(img)
-                
-                # Create thumbnail (in-place, memory efficient)
                 img.thumbnail((thumb_size, thumb_size), Image.Resampling.BILINEAR)
-                
-                # Convert to QPixmap
                 return self._pil_to_qpixmap(img)
-        
         except Exception as e:
             log.error(f"Failed to generate thumbnail for {image_path}: {e}")
             return None
-    
+
     def _save_thumbnail_to_cache(self, image_path: str, pixmap: QtGui.QPixmap, thumb_size: int):
         """Save thumbnail to disk cache."""
         try:
             cache_path = self._get_cache_path(image_path, thumb_size)
             pixmap.save(str(cache_path), "JPEG", quality=85)
-            log.debug(f"Saved thumbnail to cache: {cache_path.name}")
         except Exception as e:
             log.debug(f"Failed to save thumbnail cache: {e}")
-    
+
     def _pil_to_qpixmap(self, pil_image: Image.Image) -> QtGui.QPixmap:
         """Convert PIL Image to QPixmap."""
         if pil_image.mode != "RGB":
@@ -207,12 +186,9 @@ class ThumbnailGridWidget(Qw.QListWidget):
         self.resize_timer.setSingleShot(True)
         self.resize_timer.timeout.connect(self._update_thumbnail_size)
         
-        # Setup worker thread
-        self.worker_thread = QtCore.QThread()
-        self.worker = ThumbnailWorker()
-        self.worker.moveToThread(self.worker_thread)
-        self.worker.thumbnail_ready.connect(self._on_thumbnail_ready)
-        self.worker_thread.start()
+        # Use the global thread pool for concurrent thumbnail loading
+        self.thread_pool = QtCore.QThreadPool.globalInstance()
+        log.info(f"Thumbnail pool configured with max {self.thread_pool.maxThreadCount()} threads.")
         
         self._setup_ui()
         self._connect_signals()
@@ -305,11 +281,12 @@ class ThumbnailGridWidget(Qw.QListWidget):
         """Set the folder and file list to display."""
         log.info(f"Setting folder: {folder_path} with {len(files)} files")
         
-        # Clear everything
+        # Cancel all pending thumbnail tasks from the previous folder
+        self.thread_pool.clear()
+
         self.clear()
         self.thumbnail_cache.clear()
         self.requested_thumbnails.clear()
-        self.worker.clear_cancelled()
         
         self.folder_path = folder_path
         self.file_list = files
@@ -356,27 +333,33 @@ class ThumbnailGridWidget(Qw.QListWidget):
             # Only load if visible and not already requested
             if item_rect.intersects(viewport_rect):
                 file_name = item.text()
+                full_path = str(Path(self.folder_path) / file_name)
                 
                 # Skip if already requested
-                if file_name in self.requested_thumbnails:
+                if full_path in self.requested_thumbnails:
                     continue
                 
                 # Check memory cache
-                cached = self.thumbnail_cache.get(file_name)
+                cached = self.thumbnail_cache.get(full_path)
                 if cached:
                     item.setIcon(QtGui.QIcon(cached))
                     continue
                 
                 # Request from worker thread
-                self.requested_thumbnails.add(file_name)
-                self.worker.load_requested.emit(file_name, self.folder_path, self.current_thumb_size)
+                self.requested_thumbnails.add(full_path)
+                
+                # Create and run a worker task in the thread pool
+                worker = ThumbnailWorker(full_path, self.current_thumb_size)
+                worker.signals.thumbnail_ready.connect(self._on_thumbnail_ready)
+                self.thread_pool.start(worker)
     
-    def _on_thumbnail_ready(self, file_name: str, pixmap: QtGui.QPixmap):
-        """Handle thumbnail loaded from worker thread."""
+    def _on_thumbnail_ready(self, file_path: str, pixmap: QtGui.QPixmap):
+        """Handle thumbnail loaded from a worker thread."""
         # Add to memory cache
-        self.thumbnail_cache.put(file_name, pixmap)
+        self.thumbnail_cache.put(file_path, pixmap)
         
-        # Update the item's icon
+        # Find the item and update its icon
+        file_name = Path(file_path).name
         for i in range(self.count()):
             item = self.item(i)
             if item and item.text() == file_name:
@@ -390,9 +373,5 @@ class ThumbnailGridWidget(Qw.QListWidget):
     
     def cleanup(self):
         """Cleanup resources on shutdown."""
-        log.info("Cleaning up thumbnail grid worker thread")
-        if self.worker_thread.isRunning():
-            self.worker_thread.quit()
-            if not self.worker_thread.wait(3000):
-                self.worker_thread.terminate()
-                self.worker_thread.wait()
+        log.info("Clearing thumbnail thread pool.")
+        self.thread_pool.clear()
