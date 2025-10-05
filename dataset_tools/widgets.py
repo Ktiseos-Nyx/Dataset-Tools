@@ -156,10 +156,7 @@ class FileLoader(QtCore.QThread):
             nfo("[FileLoader] WARNING: Ext.IGNORE is not a list. Using empty ignore list.")
             ignore_list = []
 
-        # Progress calculation and emission REMOVED
-        # total_items = len(folder_item_paths)
-        # processed_count = 0
-        # current_progress_percent = 0
+        nfo(f"[FileLoader] DEBUG: Text-like extensions being checked: {all_text_like_exts}")
 
         for f_path_str in folder_item_paths:
             try:
@@ -170,6 +167,7 @@ class FileLoader(QtCore.QThread):
                     if suffix in all_image_exts:
                         local_images.append(file_name_only)
                     elif suffix in all_text_like_exts:
+                        nfo(f"[FileLoader] DEBUG: Matched as TEXT file: {file_name_only}")
                         local_text_files.append(file_name_only)
                     elif suffix in all_model_exts:
                         local_model_files.append(file_name_only)
