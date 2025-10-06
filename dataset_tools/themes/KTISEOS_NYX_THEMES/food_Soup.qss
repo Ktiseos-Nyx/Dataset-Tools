@@ -2,7 +2,7 @@
 QWidget {
     background-color: #A62B22;
     color: #FCEBE1;
-    border: 1px solid #D77C61;
+    border: none; /* Removed global border for cleaner look */
 }
 
 /* Buttons */
@@ -25,10 +25,12 @@ QPushButton:pressed {
 /* LineEdit and TextEdit */
 QLineEdit, QTextEdit {
     background-color: #DFF39D;
-    color: #A62B22;
+    color: #564946; /* Changed to dark brown for contrast */
     border: 1px solid #D77C61;
     padding: 3px;
     border-radius: 3px;
+    selection-background-color: #D77C61; /* Adjusted for better contrast */
+    selection-color: #FCEBE1; /* Adjusted for better contrast */
 }
 
 /* Labels */
@@ -45,16 +47,16 @@ QGroupBox {
 
 QGroupBox::title {
     subcontrol-origin: margin;
-    subcontrol-position: top left; /* position at the top left */
+    subcontrol-position: top center; /* Changed from top left to top center for better aesthetics */
     padding: 0 3px;
     background-color: #80BC8D;
-    color: #FCEBE1;
+    color: #564946; /* Changed to dark brown for contrast */
 }
 
 /* ComboBox */
 QComboBox {
     background-color: #DFF39D;
-    color: #A62B22;
+    color: #564946; /* Changed to dark brown for contrast */
     border: 1px solid #D77C61;
     padding: 1px 0px 1px 3px; /* top, right, bottom, left */
     border-radius: 3px;
@@ -72,7 +74,13 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: url(down_arrow.png); /* Placeholder for an arrow icon */
+    image: none; /* Removed image dependency */
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #564946; /* Custom arrow using borders, dark brown color */
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
 }
 
 /* ScrollBar */
@@ -92,7 +100,7 @@ QScrollBar::add-line:vertical {
     border: 1px solid #D77C61;
     background: #DFF39D;
     height: 15px;
-    subcontrol-origin: bottom;
+    subcontrol-origin: margin; /* Changed from bottom to margin for consistency */
     subcontrol-position: bottom;
 }
 
@@ -100,12 +108,12 @@ QScrollBar::sub-line:vertical {
     border: 1px solid #D77C61;
     background: #DFF39D;
     height: 15px;
-    subcontrol-origin: top;
+    subcontrol-origin: margin; /* Changed from top to margin for consistency */
     subcontrol-position: top;
 }
 
 QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
-    background: #FCEBE1;
+    background: #564946; /* Changed to dark brown */
 }
 
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
@@ -154,12 +162,12 @@ QTabWidget::pane {
 QTabBar::tab {
     background: #DFF39D;
     border: 1px solid #D77C61;
-    border-bottom-color: #D77C61; /* same as pane color */
+    border-bottom: none; /* Removed border-bottom-color for cleaner look */
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     min-width: 8ex;
     padding: 2px;
-    color: #A62B22;
+    color: #564946; /* Changed to dark brown for readability */
 }
 
 QTabBar::tab:selected, QTabBar::tab:hover {
@@ -174,7 +182,7 @@ QTabBar::tab:selected {
 /* MenuBar */
 QMenuBar {
     background-color: #DFF39D;
-    color: #A62B22;
+    color: #564946; /* Changed to dark brown for readability */
 }
 
 QMenuBar::item {
@@ -206,7 +214,7 @@ QMenu::item {
 
 QMenu::item:selected {
     background-color: #80BC8D;
-    color: #FCEBE1;
+    color: #FCEBE1; /* Changed to light color for readability */
 }
 
 QMenu::separator {

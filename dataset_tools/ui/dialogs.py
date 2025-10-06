@@ -90,7 +90,7 @@ class SettingsDialog(QDialog):
                     continue
 
                 category_name = enhanced_manager.THEME_CATEGORIES.get(category_id, category_id.title())
-                
+
                 button = QPushButton(f"Browse {category_name} ({len(themes_in_cat)} themes)")
                 button.setToolTip(f"Open a new dialog to browse themes in the '{category_name}' collection.")
                 button.clicked.connect(
@@ -107,9 +107,9 @@ class SettingsDialog(QDialog):
         """Opens a dedicated dialog for a specific theme pack."""
         if not hasattr(self.parent_window, "enhanced_theme_manager"):
             return
-            
+
         enhanced_manager = self.parent_window.enhanced_theme_manager
-        
+
         dialog = ThemeBrowserDialog(category_id, category_name, themes, enhanced_manager, self)
         dialog.exec()
 
@@ -131,7 +131,7 @@ class SettingsDialog(QDialog):
         self.view_mode_combo.addItem("Thumbnail Grid (Images Only)", "grid")
         layout.addWidget(view_label)
         layout.addWidget(self.view_mode_combo)
-        
+
         view_help = QLabel(
             "<i>Thumbnail Grid shows image previews with lazy loading.<br/>"
             "First load may be slow, but thumbnails are cached for instant loading after.</i>"
@@ -319,16 +319,16 @@ class ThemeBrowserDialog(QDialog):
         self.button_box = QDialogButtonBox()
         self.apply_button = self.button_box.addButton("Apply", QDialogButtonBox.ButtonRole.ApplyRole)
         self.close_button = self.button_box.addButton(QDialogButtonBox.StandardButton.Close)
-        
+
         self.apply_button.clicked.connect(self.apply_selected_theme)
         self.close_button.clicked.connect(self.reject)
-        
+
         layout.addWidget(self.button_box)
 
     def _populate_tree(self):
         """Populate the tree widget with categorized themes."""
         categorized = self._categorize_themes()
-        
+
         for category, theme_list in sorted(categorized.items()):
             parent_item = QTreeWidgetItem(self.tree_widget)
             parent_item.setText(0, f"{category.replace('_', ' ').title()} ({len(theme_list)}))")
@@ -356,19 +356,32 @@ class ThemeBrowserDialog(QDialog):
     def _categorize_themes(self) -> dict[str, list[str]]:
         """Categorize themes based on filename prefixes."""
         categorized_themes = {}
-        prefixes = ["disturbed_", "moms_2am_", "mlp_", "pokemon_", "food_", "stupid_", "ffxiv_", "mlb_", "nfl_", "decade_", "ai_", "linux_", "windows_"]
-        
+        prefixes = ["immature_", "sports_", "pop_culture_",
+                    "pokemon_", "food_",
+                    "ffxiv_", "decade_", "aesthetic_",
+                    "ai_", "memes_", "games_", "crafts",
+                    "movies_", "tv_", "anime_", "comics_",
+                    "fantasy_", "horror_", "scifi_", "cyberpunk_",
+                    "steampunk_", "vaporwave_", "retro_",
+                    "vtubers_", "holiday_", "streamers_",
+                    "artists_", "musicians_", "bands_",
+                    "nature_", "space_", "weather_",
+                    "assaulted_", "ui_", "music_",
+                    "food_", "movies", "comics", "cartoons",
+                    "color_theme_", "crafts_", "weird_colors_",
+                    "pokemon_inspired_"]
+
         for theme in self.themes:
             found_category = "Uncategorized"
             for prefix in prefixes:
                 if theme.startswith(prefix):
                     found_category = prefix.strip("_")
                     break
-            
+
             if found_category not in categorized_themes:
                 categorized_themes[found_category] = []
             categorized_themes[found_category].append(theme)
-            
+
         return categorized_themes
 
     def apply_selected_theme(self):

@@ -1,14 +1,14 @@
 /* General Styles */
 QWidget {
     background-color: #4B463B;
-    color: #921513;
-    border: 1px solid #632F23;
+    color: #F5DEB3; /* Changed from #921513 (dark red) to a light beige for readability */
+    border: none; /* Removed global border for cleaner look */
 }
 
 /* Buttons */
 QPushButton {
     background-color: #964A32;
-    color: #921513;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white for readability */
     border: 1px solid #632F23;
     padding: 5px;
     border-radius: 3px;
@@ -25,15 +25,17 @@ QPushButton:pressed {
 /* LineEdit and TextEdit */
 QLineEdit, QTextEdit {
     background-color: #CE5636;
-    color: #921513;
+    color: #1A1A1A; /* Changed from #921513 (dark red) to a dark color for contrast */
     border: 1px solid #632F23;
     padding: 3px;
     border-radius: 3px;
+    selection-background-color: #632F23; /* Adjusted for better contrast */
+    selection-color: #F5DEB3; /* Adjusted for better contrast */
 }
 
 /* Labels */
 QLabel {
-    color: #921513;
+    color: #F5DEB3; /* Changed from #921513 (dark red) to a light beige for readability */
 }
 
 /* GroupBox */
@@ -45,16 +47,16 @@ QGroupBox {
 
 QGroupBox::title {
     subcontrol-origin: margin;
-    subcontrol-position: top left; /* position at the top left */
+    subcontrol-position: top center; /* Changed from top left to top center for better aesthetics */
     padding: 0 3px;
     background-color: #964A32;
-    color: #921513;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white for readability */
 }
 
 /* ComboBox */
 QComboBox {
     background-color: #CE5636;
-    color: #921513;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white for readability */
     border: 1px solid #632F23;
     padding: 1px 0px 1px 3px; /* top, right, bottom, left */
     border-radius: 3px;
@@ -72,7 +74,13 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: url(down_arrow.png); /* Placeholder for an arrow icon */
+    image: none; /* Removed image dependency */
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #F5DEB3; /* Custom arrow using borders, light beige color */
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
 }
 
 /* ScrollBar */
@@ -92,7 +100,7 @@ QScrollBar::add-line:vertical {
     border: 1px solid #632F23;
     background: #CE5636;
     height: 15px;
-    subcontrol-origin: bottom;
+    subcontrol-origin: margin; /* Changed from bottom to margin for consistency */
     subcontrol-position: bottom;
 }
 
@@ -100,12 +108,12 @@ QScrollBar::sub-line:vertical {
     border: 1px solid #632F23;
     background: #CE5636;
     height: 15px;
-    subcontrol-origin: top;
+    subcontrol-origin: margin; /* Changed from top to margin for consistency */
     subcontrol-position: top;
 }
 
 QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
-    background: #921513;
+    background: #F5DEB3; /* Changed from #921513 (dark red) to light beige */
 }
 
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
@@ -114,7 +122,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 
 /* CheckBox */
 QCheckBox {
-    color: #921513;
+    color: #F5DEB3; /* Changed from #921513 (dark red) to light beige */
 }
 
 QCheckBox::indicator {
@@ -130,7 +138,7 @@ QCheckBox::indicator:checked {
 
 /* RadioButton */
 QRadioButton {
-    color: #921513;
+    color: #F5DEB3; /* Changed from #921513 (dark red) to light beige */
 }
 
 QRadioButton::indicator {
@@ -154,12 +162,12 @@ QTabWidget::pane {
 QTabBar::tab {
     background: #CE5636;
     border: 1px solid #632F23;
-    border-bottom-color: #632F23; /* same as pane color */
+    border-bottom: none; /* Removed border-bottom-color for cleaner look */
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     min-width: 8ex;
     padding: 2px;
-    color: #921513;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white */
 }
 
 QTabBar::tab:selected, QTabBar::tab:hover {
@@ -174,7 +182,7 @@ QTabBar::tab:selected {
 /* MenuBar */
 QMenuBar {
     background-color: #CE5636;
-    color: #921513;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white */
 }
 
 QMenuBar::item {
@@ -206,7 +214,7 @@ QMenu::item {
 
 QMenu::item:selected {
     background-color: #964A32;
-    color: #921513;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white */
 }
 
 QMenu::separator {
