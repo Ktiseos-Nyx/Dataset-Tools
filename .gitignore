@@ -82,3 +82,6 @@ docs/
 # Gemini/Claude conversation logs
 dataset_tools/ui/QSS App code for Gemini/
 dataset_tools/ui/claude_messages/
+
+# Wiki export directory
+wiki_export/
