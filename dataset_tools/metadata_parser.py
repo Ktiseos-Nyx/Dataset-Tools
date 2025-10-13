@@ -101,7 +101,7 @@ def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]
                 if status_callback:
                     status_callback("Analyzing workflow with numpy enhancement...")
                 nfo("[DT.metadata_parser]: Applying numpy enhancement to all parsing results")
-                enhanced_result = numpy_scorer.enhance_result(result, file_path_named, status_callback)
+                enhanced_result = numpy_scorer.enhance_result(result, file_path_named)
                 result = enhanced_result
                 if status_callback:
                     status_callback("Numpy enhancement completed")
@@ -217,3 +217,9 @@ def _transform_engine_result_to_ui_dict(result: dict[str, Any], ui_dict: dict[st
 
     if workflow_analysis_data:
         ui_dict[UpField.WORKFLOW_ANALYSIS.value] = workflow_analysis_data
+
+    # --- Civitai API Info (from Safetensors) ---
+    if hasattr(result, 'civitai_api_info') and result.civitai_api_info:
+        if "unclassified" not in ui_dict:
+            ui_dict["unclassified"] = {}
+        ui_dict["unclassified"]["civitai_api_info"] = result.civitai_api_info

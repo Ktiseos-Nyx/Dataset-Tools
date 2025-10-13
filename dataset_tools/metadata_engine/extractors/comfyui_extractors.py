@@ -108,10 +108,10 @@ class ComfyUIExtractor:
         Phase 1: Scans all nodes to find text sources, including traversing back from encoders.
         Phase 2: Traces forward from only those sources to validate their connection to a sampler.
         """
-        self.logger.info("[TARGETED EXTRACTOR v2.4] Starting targeted prompt extraction.")
+        self.logger.info("[TARGETED EXTRACTOR v2.7 DEBUG] Starting targeted prompt extraction.")
 
         target_input = method_def.get("target_input", "positive")
-        self.logger.info(f"[TARGETED EXTRACTOR v2.4] Target input: {target_input}")
+        self.logger.info(f"[TARGETED EXTRACTOR v2.7 DEBUG] Target input: {target_input}")
 
         try:
             workflow = self._parse_json_data(data)
@@ -119,8 +119,10 @@ class ComfyUIExtractor:
             links_list = workflow.get("links", [])
 
             if not isinstance(nodes_list, list) or not nodes_list:
-                self.logger.warning("[TARGETED EXTRACTOR v2.4] No valid workflow nodes found.")
+                self.logger.warning("[TARGETED EXTRACTOR v2.7 DEBUG] No valid workflow nodes found.")
                 return ""
+            
+            self.logger.info(f"[TARGETED EXTRACTOR v2.7 DEBUG] Workflow has {len(nodes_list)} nodes and {len(links_list)} links.")
 
             # --- BUILD GRAPH UTILITIES (ONCE) ---
             node_lookup = {str(node.get("id", i)): node for i, node in enumerate(nodes_list)}
@@ -137,18 +139,45 @@ class ComfyUIExtractor:
                     dest_input_name = dest_node["inputs"][dest_slot_index].get("name")
                     forward_graph.setdefault(source_id, []).append((dest_id, dest_input_name))
                     reverse_graph.setdefault(dest_id, []).append((source_id, dest_input_name))
+            
+            self.logger.info(f"[TARGETED EXTRACTOR v2.7 DEBUG] Graph built with {len(forward_graph)} nodes.")
 
-            # --- PHASE 1: CANDIDATE IDENTIFICATION (Find all needles - UPGRADED) ---
+            # --- PHASE 1: CANDIDATE IDENTIFICATION (Find all needles - UPGRADED v2.6) ---
             text_candidates = []
             sampler_nodes = []
-            text_encoder_types = ["CLIPTextEncode", "Text Multiline", "DPRandomGenerator", "ShowText|pysssss"]
+            text_encoder_types = ["CLIPTextEncode", "Text Multiline", "DPRandomGenerator", "ShowText|pysssss", "ChatGptPrompt"]
 
             for node_id, node in node_lookup.items():
                 node_type = node.get("class_type", node.get("type", ""))
+                self.logger.debug(f"[TARGETED EXTRACTOR v2.7 DEBUG] Phase 1: Processing node {node_id} (Type: {node_type})")
 
-                # If this node IS a text source, extract its text directly.
+                # --- Dynamic Prompt Handling ---
+                if "DPRandomGenerator" in node_type:
+                    resolved_text = ""
+                    self.logger.debug(f"[TARGETED EXTRACTOR v2.7 DEBUG]   Node {node_id} is DPRandomGenerator. Checking for ShowText connection.")
+                    # Search for a connected ShowText node to get the resolved prompt
+                    for dest_node_id, dest_input_name in forward_graph.get(node_id, []):
+                        dest_node = node_lookup.get(dest_node_id)
+                        if dest_node and "ShowText|pysssss" in dest_node.get("class_type", ""):
+                            showtext_widgets = dest_node.get("widgets_values", [])
+                            if len(showtext_widgets) > 1 and isinstance(showtext_widgets[1], str):
+                                resolved_text = showtext_widgets[1].strip()
+                                self.logger.info(f"[TARGETED EXTRACTOR v2.7 DEBUG] Found resolved dynamic prompt via ShowText: '{resolved_text[:100]}...'")
+                                break
+                    
+                    if resolved_text:
+                        # Use the resolved text, but keep the ID of the generator for path validation
+                        text_candidates.append({
+                            "id": node_id,
+                            "text": resolved_text,
+                            "type": node_type,
+                            "title": node.get("title", "").lower()
+                        })
+                        self.logger.debug(f"[TARGETED EXTRACTOR v2.7 DEBUG]   Added dynamic prompt candidate: {node_id}")
+                        continue # Skip to next node
+
+                # --- Standard Text Source Handling ---
                 if any(t_type in node_type for t_type in text_encoder_types):
-                    # For CLIPTextEncode, the text is inside its 'widgets_values'
                     widgets = node.get("widgets_values", [])
                     if widgets and isinstance(widgets[0], str) and widgets[0].strip():
                         text_candidates.append({
@@ -157,47 +186,65 @@ class ComfyUIExtractor:
                             "type": node_type,
                             "title": node.get("title", "").lower()
                         })
+                        self.logger.debug(f"[TARGETED EXTRACTOR v2.7 DEBUG]   Added text candidate: {node_id} (Type: {node_type})")
 
                 # Identify samplers for Phase 2
                 sampler_types = ["KSampler", "SamplerCustomAdvanced", "KSamplerAdvanced", "SamplerCustom"]
                 if any(s_type in node_type for s_type in sampler_types):
                     sampler_nodes.append(node)
+                    self.logger.debug(f"[TARGETED EXTRACTOR v2.7 DEBUG]   Identified sampler node: {node_id} (Type: {node_type})")
 
             if not text_candidates or not sampler_nodes:
-                self.logger.info(f"[TARGETED EXTRACTOR v2.4] Phase 1 failed: Candidates={len(text_candidates)}, Samplers={len(sampler_nodes)}")
+                self.logger.info(f"[TARGETED EXTRACTOR v2.7 DEBUG] Phase 1 failed: Candidates={len(text_candidates)}, Samplers={len(sampler_nodes)}")
                 return ""
-            self.logger.info(f"[TARGETED EXTRACTOR v2.4] Phase 1: Found {len(text_candidates)} text candidates and {len(sampler_nodes)} samplers.")
+            
+            self.logger.info(f"[TARGETED EXTRACTOR v2.7 DEBUG] Phase 1 Results:")
+            for c in text_candidates: self.logger.info(f"  [CANDIDATE] id: {c['id']}, type: {c['type']}, text: '{c['text'][:50]}...'")
+            for s in sampler_nodes: self.logger.info(f"  [SAMPLER] id: {s.get('id')}, type: {s.get('class_type')}")
 
             # --- PHASE 2: PATH VALIDATION (Check which needles connect) ---
             scored_candidates = []
             from collections import deque
 
+            primary_sampler_type = sampler_nodes[0].get("class_type", "") if sampler_nodes else ""
+            if "SamplerCustomAdvanced" in primary_sampler_type and target_input == "positive":
+                effective_target_input = "guider"
+                self.logger.info(f"[TARGETED EXTRACTOR v2.7 DEBUG] Switched target input to '{effective_target_input}' for FLUX-style sampler.")
+            else:
+                effective_target_input = target_input
+            self.logger.info(f"[TARGETED EXTRACTOR v2.7 DEBUG] Using effective target input: '{effective_target_input}'")
+
             for candidate in text_candidates:
-                queue = deque([(candidate["id"], 0)]) # (node_id, depth)
+                self.logger.info(f"--- Starting Path Validation for Candidate ID: {candidate['id']} ---")
+                queue = deque([(candidate["id"], [candidate["id"]])]) # (node_id, path_list)
                 visited = {candidate["id"]}
                 path_found = False
 
-                if target_input in candidate["title"]:
+                if effective_target_input in candidate["title"]:
                     self.logger.info(f"High confidence match on title for candidate {candidate['id']}.")
                     scored_candidates.append({"text": candidate["text"], "score": 100})
                     continue
 
                 while queue:
-                    current_node_id, depth = queue.popleft()
-                    if depth > 20: continue  # Increased depth for complex graphs
+                    current_node_id, path = queue.popleft()
+                    if len(path) > 20: continue
+
+                    self.logger.info(f"  [TRAVERSAL] Path: {' -> '.join(path)}")
 
                     for dest_node_id, dest_input_name in forward_graph.get(current_node_id, []):
+                        self.logger.info(f"    [TRAVERSAL] Checking edge: {current_node_id} -> {dest_node_id} (input: '{dest_input_name}')")
                         dest_node = node_lookup.get(dest_node_id)
-                        if dest_node in sampler_nodes and dest_input_name == target_input:
-                            self.logger.info(f"Path FOUND for candidate {candidate['id']} -> Sampler {dest_node_id} ('{target_input}') at depth {depth}.")
-                            score = 100 - depth # Prioritize shorter paths
+                        
+                        if dest_node in sampler_nodes and dest_input_name == effective_target_input:
+                            self.logger.info(f"    [SUCCESS] Path FOUND for candidate {candidate['id']} -> Sampler {dest_node_id} ('{effective_target_input}') at depth {len(path)}.")
+                            score = 100 - len(path)
                             scored_candidates.append({"text": candidate["text"], "score": score})
                             path_found = True
                             break
 
                         if dest_node_id not in visited:
                             visited.add(dest_node_id)
-                            queue.append((dest_node_id, depth + 1))
+                            queue.append((dest_node_id, path + [dest_node_id]))
 
                     if path_found:
                         break
@@ -211,7 +258,7 @@ class ComfyUIExtractor:
             return best_candidate["text"]
 
         except Exception as e:
-            self.logger.error(f"[TARGETED EXTRACTOR v2.4] An exception occurred: {e}", exc_info=True)
+            self.logger.error(f"[TARGETED EXTRACTOR v2.7 DEBUG] An exception occurred: {e}", exc_info=True)
             return ""
 
     def _find_legacy_input_of_node_type(
@@ -572,7 +619,7 @@ class ComfyUIExtractor:
             "sampler_node_types",
             ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
         )
-        text_encoder_types = method_def.get("text_encoder_node_types", ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"])
+        text_encoder_types = method_def.get("text_encoder_node_types", ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "Text Multiline"])
 
         # Determine which input to follow (positive or negative)
         if method_def.get("positive_input_name"):

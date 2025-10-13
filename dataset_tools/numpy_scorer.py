@@ -101,6 +101,9 @@ def enhance_result(
         # Return original result if scoring fails
         return engine_result
 
+    # If no specific scorer was matched, return the original result
+    return engine_result
+
 
 # Re-export utility functions
 __all__ = [

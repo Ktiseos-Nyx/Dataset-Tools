@@ -17,7 +17,7 @@ logger = get_logger(__name__)
 # ComfyUI Node type scoring with domain knowledge
 NODE_TYPE_SCORES = {
     # Final resolved content display nodes (absolute highest priority)
-    "ShowText|pysssss": 5.0,  # ShowText nodes contain final resolved content - CRITICAL
+    "ShowText|pysssss": 2.0,  # ShowText nodes contain final resolved content - CRITICAL
     "Show Text": 5.0,  # Alternative ShowText format
 
     # Dynamic content generators (highest priority)
@@ -34,10 +34,9 @@ NODE_TYPE_SCORES = {
 
     # Standard prompt nodes (medium priority)
     "ChatGptPrompt": 2.0,  # ChatGPT prompt integration - high priority
-    "Text Multiline": 2.2,  # Griptape Text Multiline - high priority for clean content
+    "Text Multiline": 6.0,  # Griptape Text Multiline - high priority for clean content
     "easy positive": 2.1,  # Easy positive nodes - high priority for clean content
     "Florence2Run": 2.8,  # AI vision model generated captions - very high priority
-    "ShowText|pysssss": 2.9,  # Display node often shows AI-generated content - highest priority
     "OllamaVision": 2.8,  # Ollama vision model generated prompts - high priority
     "Text to Conditioning": 2.3,  # Text to conditioning converter - high priority
     "Text Find and Replace": 1.8,  # Text processing node - medium-high priority
@@ -237,7 +236,8 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline",
             "easy positive", "T5TextEncode", "Florence2Run", "Text to Conditioning",
             "Text Find and Replace", "OllamaVision", "Text Concatenate",
-            "CLIPTextEncodeFlux", "PixArtT5TextEncode", "ChatGptPrompt", "ShowText|pysssss"
+            "CLIPTextEncodeFlux", "PixArtT5TextEncode", "ChatGptPrompt", "ShowText|pysssss",
+            "JjkText", "CLIPTextEncodeLumina2"
         ]
 
         # Handle both list of nodes and TensorArt-style dict of nodes
@@ -370,6 +370,11 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                 # TIPO AI prompt generator - extract base input tags, not random output
                 if len(widgets_values) >= 1 and isinstance(widgets_values[0], str):
                     text = widgets_values[0]  # Usually the "tags" input
+            elif class_type == "CLIPTextEncodeLumina2":
+                if len(widgets_values) > 1 and isinstance(widgets_values[1], str):
+                    text = widgets_values[1] # The prompt is the second element
+                elif len(widgets_values) > 0 and isinstance(widgets_values[0], str):
+                    text = widgets_values[0] # Fallback to the first
             elif class_type == "ShowText|pysssss":
                 # ShowText display node - often shows AI-generated content
                 # widgets_values is usually a nested array like [["generated text here"]]

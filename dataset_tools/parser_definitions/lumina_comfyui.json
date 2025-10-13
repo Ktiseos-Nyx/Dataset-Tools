@@ -1,7 +1,8 @@
+
 {
-  "parser_name": "Qwen_Image_ComfyUI",
-  "priority": 190,
-  "description": "Parses ComfyUI workflows created for Qwen Image models. This parser identifies specific Qwen model files and custom nodes.",
+  "parser_name": "Lumina_ComfyUI",
+  "priority": 195,
+  "description": "Parses ComfyUI workflows for Lumina / SD3 DiT models, which often use AuraFlow sampling.",
   "version": "1.0",
   "maintainer": "Gemini",
   "target_file_types": ["PNG", "JPEG", "WEBP"],
@@ -12,12 +13,11 @@
       "operator": "is_valid_json"
     },
     {
-      "comment": "Rule 2: Must contain Qwen specific model names or nodes",
+      "comment": "Rule 2: Must contain the Lumina-specific text encoder.",
       "source_type": "any_metadata_source",
       "operator": "regex_match_any",
       "regex_patterns": [
-        "qwen_image_fp8_e4m3fn.safetensors",
-        "qwen_2.5_vl_7b_fp8_scaled.safetensors"
+        "CLIPTextEncodeLumina2"
       ]
     }
   ],
@@ -73,49 +73,20 @@
         "input_name": "scheduler"
       },
       {
-        "comment": "ROBUST GENERIC FINDER: Use comfy_get_node_by_class for disconnected data.",
-        "target_key": "parameters.model",
-        "method": "comfy_get_node_by_class",
-        "class_type": "UNETLoader",
-        "field_name": "unet_name"
-      },
-      {
-        "target_key": "parameters.width",
-        "method": "comfy_get_node_by_class",
-        "class_type": "EmptyLatentImage",
-        "field_name": "width"
-      },
-      {
-        "target_key": "parameters.height",
-        "method": "comfy_get_node_by_class",
-        "class_type": "EmptyLatentImage",
-        "field_name": "height"
-      },
-      {
-        "target_key": "parameters.vae",
-        "method": "comfy_get_node_by_class",
-        "class_type": "VAEAutoencoderLoader",
-        "field_name": "vae_name"
-      },
-      {
         "target_key": "raw_metadata",
         "method": "comfyui_extract_raw_workflow"
       }
     ],
     "output_template": {
-      "tool": "Qwen Image (ComfyUI)",
+      "tool": "Lumina (ComfyUI)",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
       "parameters": {
-        "model": "$parameters.model",
         "steps": "$parameters.steps",
         "cfg_scale": "$parameters.cfg_scale",
         "seed": "$parameters.seed",
         "sampler_name": "$parameters.sampler_name",
-        "scheduler": "$parameters.scheduler",
-        "width": "$parameters.width",
-        "height": "$parameters.height",
-        "vae": "$parameters.vae"
+        "scheduler": "$parameters.scheduler"
       },
       "raw_metadata": "$raw_metadata"
     }

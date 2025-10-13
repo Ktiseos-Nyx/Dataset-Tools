@@ -1,9 +1,10 @@
+
 {
-  "parser_name": "Qwen_Image_ComfyUI",
-  "priority": 190,
-  "description": "Parses ComfyUI workflows created for Qwen Image models. This parser identifies specific Qwen model files and custom nodes.",
+  "parser_name": "ComfyUI_Flux_Kontext_v2",
+  "priority": 185,
+  "description": "Parses ComfyUI workflows for Flux/SD3 models that use ModelSamplingAuraFlow, often for img2img/Kontext tasks.",
   "version": "1.0",
-  "maintainer": "Gemini",
+  "maintainer": "Gemini & Duskfall",
   "target_file_types": ["PNG", "JPEG", "WEBP"],
   "detection_rules": [
     {
@@ -12,14 +13,21 @@
       "operator": "is_valid_json"
     },
     {
-      "comment": "Rule 2: Must contain Qwen specific model names or nodes",
+      "comment": "Rule 2: Must contain an SD3-era text encoder.",
       "source_type": "any_metadata_source",
       "operator": "regex_match_any",
       "regex_patterns": [
-        "qwen_image_fp8_e4m3fn.safetensors",
-        "qwen_2.5_vl_7b_fp8_scaled.safetensors"
+        "CLIPTextEncodeSD3"
       ]
-    }
+    },
+    {
+        "comment": "Rule 3: And it must also contain the AuraFlow sampler.",
+        "source_type": "any_metadata_source",
+        "operator": "regex_match_any",
+        "regex_patterns": [
+          "ModelSamplingAuraFlow"
+        ]
+      }
   ],
   "parsing_instructions": {
     "input_data": {
@@ -34,13 +42,16 @@
     },
     "fields": [
       {
-        "comment": "BEST METHOD: Use the high-level dispatcher for prompts.",
+        "comment": "Use the targeted dispatcher to find the real positive prompt.",
         "target_key": "prompt",
-        "method": "comfyui_extract_prompt_from_workflow"
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "positive"
       },
       {
+        "comment": "Use the targeted dispatcher to find the real negative prompt.",
         "target_key": "negative_prompt",
-        "method": "comfyui_extract_negative_prompt_from_workflow"
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "negative"
       },
       {
         "target_key": "parameters.seed",
@@ -73,49 +84,20 @@
         "input_name": "scheduler"
       },
       {
-        "comment": "ROBUST GENERIC FINDER: Use comfy_get_node_by_class for disconnected data.",
-        "target_key": "parameters.model",
-        "method": "comfy_get_node_by_class",
-        "class_type": "UNETLoader",
-        "field_name": "unet_name"
-      },
-      {
-        "target_key": "parameters.width",
-        "method": "comfy_get_node_by_class",
-        "class_type": "EmptyLatentImage",
-        "field_name": "width"
-      },
-      {
-        "target_key": "parameters.height",
-        "method": "comfy_get_node_by_class",
-        "class_type": "EmptyLatentImage",
-        "field_name": "height"
-      },
-      {
-        "target_key": "parameters.vae",
-        "method": "comfy_get_node_by_class",
-        "class_type": "VAEAutoencoderLoader",
-        "field_name": "vae_name"
-      },
-      {
         "target_key": "raw_metadata",
         "method": "comfyui_extract_raw_workflow"
       }
     ],
     "output_template": {
-      "tool": "Qwen Image (ComfyUI)",
+      "tool": "Flux Kontext (ComfyUI)",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
       "parameters": {
-        "model": "$parameters.model",
         "steps": "$parameters.steps",
         "cfg_scale": "$parameters.cfg_scale",
         "seed": "$parameters.seed",
         "sampler_name": "$parameters.sampler_name",
-        "scheduler": "$parameters.scheduler",
-        "width": "$parameters.width",
-        "height": "$parameters.height",
-        "vae": "$parameters.vae"
+        "scheduler": "$parameters.scheduler"
       },
       "raw_metadata": "$raw_metadata"
     }

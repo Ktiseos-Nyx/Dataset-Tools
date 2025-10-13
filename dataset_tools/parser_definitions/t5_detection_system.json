@@ -91,7 +91,7 @@
       },
       {
         "target_key": "parameters.architecture_type",
-        "method": "direct_value",
+        "method": "static_value",
         "value": "FLUX T5 Architecture", 
         "comment": "Mark this as FLUX T5 architecture detected from A1111-style metadata"
       }

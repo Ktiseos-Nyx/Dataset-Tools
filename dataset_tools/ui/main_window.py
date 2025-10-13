@@ -10,6 +10,7 @@ application interface, handling file management, metadata display, and user inte
 """
 
 import os
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -27,7 +28,7 @@ from ..background_operations import (  # pylint: disable=relative-beyond-top-lev
 # from PyQt6.QtWidgets import QApplication
 from ..correct_types import EmptyField  # pylint: disable=relative-beyond-top-level
 from ..correct_types import ExtensionType as Ext  # pylint: disable=relative-beyond-top-level
-from ..logger import debug_monitor  # pylint: disable=relative-beyond-top-level
+from ..logger import debug_message, debug_monitor  # pylint: disable=relative-beyond-top-level
 from ..logger import info_monitor as nfo  # pylint: disable=relative-beyond-top-level
 from ..metadata_parser import (
     parse_metadata,
@@ -557,28 +558,33 @@ class MainWindow(Qw.QMainWindow):
 
     def _populate_file_list(self, result: FileLoadResult) -> None:
         """Populate the file list with loaded files."""
-        # Combine and sort all files case-insensitively
-        all_files = result.images + result.texts + result.models
-        self.current_files_in_list = sorted(list(set(all_files)), key=str.lower)
+        all_files = sorted(list(set(result.images + result.texts + result.models)), key=str.lower)
+        self.current_files_in_list = all_files
 
-        # Update UI
         self.left_panel.clear_file_list_display()
         self.left_panel.add_items_to_file_list(self.current_files_in_list)
 
-        # Update status bar with file count info
         folder_name = Path(result.folder_path).name
-        file_count = len(self.current_files_in_list)
+        file_count = len(all_files)
         self.file_count_label.setText(f"{file_count} files in {folder_name}")
 
-        # Keep left panel clean - all status info moved to status bar
-
-        # Auto-select file
         self._auto_select_file(result)
 
-        # If grid view is active, update it too
         if hasattr(self, 'thumbnail_grid') and self.settings.value("fileViewMode", "list") == "grid":
-            image_files = [f for f in self.current_files_in_list 
-                           if self._should_display_as_image(os.path.join(self.current_folder, f))]
+            nfo("[UI] Populating thumbnail grid...")
+            image_files = []
+            total_files = len(self.current_files_in_list)
+            for i, file_name in enumerate(self.current_files_in_list):
+                if self._should_display_as_image(os.path.join(self.current_folder, file_name)):
+                    image_files.append(file_name)
+                
+                # Update progress every 25 files
+                if (i + 1) % 25 == 0 or (i + 1) == total_files:
+                    percent = ((i + 1) / total_files) * 100
+                    sys.stdout.write(f"\r[UI] Filtering image files for grid: {percent:.0f}%")
+                    sys.stdout.flush()
+            
+            sys.stdout.write("\n") # Newline after loop finishes
             self.thumbnail_grid.set_folder(self.current_folder, image_files)
 
     def _auto_select_file(self, result: FileLoadResult) -> None:
@@ -793,7 +799,7 @@ class MainWindow(Qw.QMainWindow):
         if hasattr(Ext, "IMAGE") and isinstance(Ext.IMAGE, list):
             for image_format_set in Ext.IMAGE:
                 if isinstance(image_format_set, set) and file_suffix in image_format_set:
-                    nfo("[UI] File matches image format: '%s'", file_suffix)
+                    debug_message("[UI] File matches image format: '%s'", file_suffix)
                     return True
 
         nfo("[UI] File is not a supported image format: '%s'", file_suffix)

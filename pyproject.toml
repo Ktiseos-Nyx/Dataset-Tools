@@ -46,6 +46,7 @@ dependencies = [
     "qt-material",
     "piexif",
     "defusedxml",
+    "requests",
 ]
 
 [project.optional-dependencies]

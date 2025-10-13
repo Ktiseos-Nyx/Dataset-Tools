@@ -1,6 +1,6 @@
 {
   "parser_name": "ComfyUI Universal Parser",
-  "priority": 195,
+  "priority": 125,
   "description": "Advanced ComfyUI parser that handles any workflow type with robust detection and extraction",
   "version": "2.0_universal_edition",
   "maintainer": "DuskFall Crew",

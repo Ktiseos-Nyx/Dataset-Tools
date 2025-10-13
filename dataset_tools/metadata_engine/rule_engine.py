@@ -340,13 +340,13 @@ class RuleOperators:
                 if isinstance(nodes_container, dict):
                     # Dictionary format: iterate over values
                     return any(
-                        isinstance(node_val, dict) and node_val.get("type") in class_types
+                        isinstance(node_val, dict) and (node_val.get("class_type") or node_val.get("type")) in class_types
                         for node_val in nodes_container.values()
                     )
                 if isinstance(nodes_container, list):
                     # List format: iterate over list items
                     return any(
-                        isinstance(node_item, dict) and node_item.get("type") in class_types
+                        isinstance(node_item, dict) and (node_item.get("class_type") or node_item.get("type")) in class_types
                         for node_item in nodes_container
                     )
                 # Neither dict nor list - can't process

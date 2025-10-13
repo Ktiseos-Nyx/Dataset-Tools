@@ -1,17 +1,35 @@
 # dataset_tools/model_parsers/safetensors_parser.py
 import json
 import struct
-from pathlib import Path  # Used for Path object, not strictly necessary for current logic but good practice
+import hashlib
+from pathlib import Path
 
 from .base_model_parser import BaseModelParser, ModelParserStatus
+from ..civitai_api import get_model_info_by_hash
+from ..logger import info_monitor
 
 
 class SafetensorsParser(BaseModelParser):
     def __init__(self, file_path: str):
         super().__init__(file_path)
-        # self.tool_name will be set by BaseModelParser
-        # It can be refined in _process.
-        self.tool_name = "Safetensors Model File"  # Default before refinement
+        self.tool_name = "Safetensors Model File"
+        self.parameters = {}
+        self.full_hash = None
+        self.autov2_hash = None
+        self.civitai_api_info = None  # To store results from Civitai API
+
+    def _calculate_hashes(self) -> None:
+        """Calculate the full SHA256 hash and the Civitai AutoV2 hash."""
+        sha256_hash = hashlib.sha256()
+        try:
+            with open(self.file_path, "rb") as f:
+                for byte_block in iter(lambda: f.read(4096), b""):
+                    sha256_hash.update(byte_block)
+            self.full_hash = sha256_hash.hexdigest()
+            self.autov2_hash = self.full_hash[:10]
+            info_monitor(f"[%s] Calculated Hashes for {self.file_path}: AutoV2={self.autov2_hash}", self._logger_name)
+        except Exception as e:
+            info_monitor(f"[%s] Error calculating hash for {self.file_path}: {e}", self._logger_name)
 
     def _process(self) -> None:
         # BaseModelParser's parse() method handles FileNotFoundError.
@@ -52,23 +70,40 @@ class SafetensorsParser(BaseModelParser):
                 header_json_str = header_json_bytes.decode("utf-8", errors="strict")
                 header_data = json.loads(header_json_str)  # Don't strip, spec implies no leading/trailing whitespace
 
+            # Store the entire header as raw metadata before modifying it
+            self.raw_metadata = header_data.copy()
+
             # Successfully parsed header JSON
             if "__metadata__" in header_data:
                 self.metadata_header = header_data.pop("__metadata__")
-                # Refine tool_name based on metadata if present
-                if "ss_sd_model_name" in self.metadata_header:  # Kohya SS specific key
-                    self.tool_name = f"Safetensors ({self.metadata_header['ss_sd_model_name']})"
-                elif "format" in self.metadata_header:  # Generic format key
-                    self.tool_name = f"Safetensors (format: {self.metadata_header['format']})"
-                elif self.metadata_header:  # Has some metadata
+                # NEW: Explicitly parse training parameters
+                self.parameters = {}
+                for key, value in self.metadata_header.items():
+                    if key.startswith('ss_') or key.startswith('modelspec.'):
+                        self.parameters[key] = value
+
+                if self.parameters:
+                    self.tool_name = "Safetensors (LoRA Training Meta)"
+                elif self.metadata_header:
                     self.tool_name = "Safetensors (with metadata)"
-                else:  # __metadata__ was present but empty
+                else:
                     self.tool_name = "Safetensors (empty __metadata__)"
             else:
                 self.metadata_header = {}  # Ensure it's a dict
                 self.tool_name = "Safetensors (no __metadata__ section)"
 
             self.main_header = header_data  # The rest of the header (tensor index)
+
+            # Calculate file hashes for API lookup
+            self._calculate_hashes()
+
+            # If we have a hash, query the Civitai API
+            if self.autov2_hash:
+                try:
+                    self.civitai_api_info = get_model_info_by_hash(self.autov2_hash)
+                except Exception as e:
+                    self.logger.error(f"Civitai API lookup failed within SafetensorsParser: {e}")
+
             self.status = ModelParserStatus.SUCCESS  # Explicitly set success
 
         except struct.error as e_struct:

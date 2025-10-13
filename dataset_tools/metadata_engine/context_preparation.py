@@ -176,6 +176,28 @@ class ContextDataPreparer:
 
             self._extract_exif_data(context)
             self._extract_xmp_data(context)
+
+            # --- IPTC Data Extraction ---
+            try:
+                from PIL import IptcImagePlugin
+                iptc_data = IptcImagePlugin.getiptcinfo(img)
+                if iptc_data:
+                    self.logger.info(f"[CONTEXT_PREP] Found {len(iptc_data)} IPTC fields.")
+                    context['iptc_data'] = {}
+                    for key, value in iptc_data.items():
+                        if isinstance(value, bytes):
+                            decoded_value = value.decode('utf-8', errors='ignore').strip()
+                            context['iptc_data'][key] = decoded_value
+                            # Mochi parser needs these specifically
+                            if key == (2, 120): # Caption-Abstract
+                                context['raw_user_comment_str'] = decoded_value
+                            if key == (2, 105): # OriginatingProgram
+                                context['iptc_originating_program'] = decoded_value
+                        else:
+                            context['iptc_data'][key] = value
+            except Exception as e:
+                self.logger.debug(f"Could not process IPTC data: {e}")
+
             self._extract_png_chunks(context)
             self._find_and_parse_comfyui_json(context)
 

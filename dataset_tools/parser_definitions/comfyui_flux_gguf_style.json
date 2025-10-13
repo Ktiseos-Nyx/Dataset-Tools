@@ -39,11 +39,16 @@
     },
     "fields": [
       {
-        "comment": "Extract prompt from CLIPTextEncode node",
+        "comment": "Extract positive prompt using targeted traversal",
         "target_key": "prompt",
-        "method": "comfy_get_node_by_class",
-        "class_type": "CLIPTextEncode",
-        "field_name": "text"
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "positive"
+      },
+      {
+        "comment": "Extract negative prompt using targeted traversal",
+        "target_key": "negative_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "negative"
       },
       {
         "comment": "Extract FLUX model name",
