@@ -41,6 +41,7 @@ htmlcov/
 # Log files
 logs/
 dev_logs/
+logs_for_gemini/
 
 # Documentation files
 CLAUDE.md
@@ -84,5 +85,4 @@ dataset_tools/ui/QSS App code for Gemini/
 dataset_tools/ui/claude_messages/
 
 # Wiki export directory
-wiki_export/logs_for_gemini/
 wiki_export/
