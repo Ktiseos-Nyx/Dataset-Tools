@@ -85,3 +85,4 @@ dataset_tools/ui/claude_messages/
 
 # Wiki export directory
 wiki_export/logs_for_gemini/
+wiki_export/
