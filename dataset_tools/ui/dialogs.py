@@ -29,6 +29,7 @@ from PyQt6.QtWidgets import (
     QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
+    QSizePolicy,
 )
 
 from ..logger import info_monitor as nfo
@@ -143,20 +144,38 @@ class SettingsDialog(QDialog):
     def _create_font_tab(self) -> None:
         """Create the Font tab with font family and size options."""
         font_widget = QWidget()
-        layout = QFormLayout(font_widget)
-        layout.setSpacing(15)
+        main_layout = QVBoxLayout(font_widget)
+        main_layout.setSpacing(15)
+
+        form_layout = QFormLayout()
+        form_layout.setSpacing(15)
 
         self.font_combo = QComboBox()
         self.font_combo.setEditable(False)
         self._populate_font_combo()
-        layout.addRow("Font Family:", self.font_combo)
+        form_layout.addRow("Font Family:", self.font_combo)
 
         self.font_size_spinbox = QSpinBox()
         self.font_size_spinbox.setRange(8, 24)
         self.font_size_spinbox.setSuffix(" pt")
-        layout.addRow("Font Size:", self.font_size_spinbox)
+        form_layout.addRow("Font Size:", self.font_size_spinbox)
+
+        main_layout.addLayout(form_layout)
+
+        self.font_preview = QLabel("A flock of fluffy, feathery fowls flew fast.")
+        self.font_preview.setWordWrap(True)
+        self.font_preview.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        main_layout.addWidget(self.font_preview)
+        main_layout.addStretch(1)
+
+        # Connect signals to update the preview
+        self.font_combo.currentTextChanged.connect(self._update_font_preview)
+        self.font_size_spinbox.valueChanged.connect(self._update_font_preview)
 
         self.tab_widget.addTab(font_widget, "Fonts")
+
+        # Set initial preview
+        self._update_font_preview()
 
 
 
@@ -188,6 +207,14 @@ class SettingsDialog(QDialog):
         except Exception as e:
             nfo(f"Could not load bundled fonts for combo: {e}")
             self.font_combo.addItem("Open Sans")
+
+    def _update_font_preview(self) -> None:
+        """Update the font preview label with the selected font and size."""
+        font_family = self.font_combo.currentText()
+        font_size = self.font_size_spinbox.value()
+
+        font = QFont(font_family, font_size)
+        self.font_preview.setFont(font)
 
     def _create_button_box(self) -> None:
         """Create the dialog button box."""

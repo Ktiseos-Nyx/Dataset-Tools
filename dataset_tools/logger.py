@@ -238,39 +238,129 @@ def debug_monitor(func):
 
 
 # --- CORRECTED WRAPPER FUNCTIONS ---
+
+
 def debug_message(msg: str, *args, **kwargs):
+
+
     """Logs a message with DEBUG level using the main app logger.
+
+
     'msg' is the primary message string, potentially with format specifiers.
+
+
     '*args' are the arguments for the format specifiers in 'msg'.
+
+
     '**kwargs' can include 'exc_info', 'stack_info', etc., for the underlying logger.
+
+
     """
+
+
     logger.debug(msg, *args, **kwargs)
 
 
+
+
+
 def info_monitor(msg: str, *args, **kwargs):  # Renamed from nfo for clarity
+
+
     """Logs a message with INFO level using the main app logger.
+
+
     'msg' is the primary message string, potentially with format specifiers.
+
+
     '*args' are the arguments for the format specifiers in 'msg'.
+
+
     '**kwargs' can include 'exc_info', 'stack_info', etc.
 
+
+
+
+
     If 'exc_info' is not explicitly passed in kwargs, it will be automatically
+
+
     set to True if an exception is active AND the initial log level was DEBUG/TRACE.
+
+
     """
+
+
     # Check if exc_info is explicitly passed by the caller
+
+
     if "exc_info" not in kwargs:
+
+
         # Default exc_info behavior: add it if an exception is active and log level is permissive
+
+
         should_add_exc_info_automatically = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in [
+
+
             "DEBUG",
+
+
             "TRACE",
+
+
             "NOTSET",  # Usually means log everything
+
+
             "ALL",  # Custom "ALL" level if you define it
+
+
         ]
+
+
         # Check if there's an active exception
+
+
         current_exception = sys.exc_info()[0]
+
+
         if should_add_exc_info_automatically and current_exception is not None:
+
+
             kwargs["exc_info"] = True
 
+
+
+
+
     logger.info(msg, *args, **kwargs)
+
+
+
+
+
+def warning_message(msg: str, *args, **kwargs):
+
+
+    """Logs a message with WARNING level using the main app logger."""
+
+
+    logger.warning(msg, *args, **kwargs)
+
+
+
+
+
+def error_message(msg: str, *args, **kwargs):
+
+
+    """Logs a message with ERROR level using the main app logger."""
+
+
+    logger.error(msg, *args, **kwargs)
+
+
+
 
 
 # --- END OF CORRECTED WRAPPER FUNCTIONS ---

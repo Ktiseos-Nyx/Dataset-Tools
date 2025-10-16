@@ -933,6 +933,7 @@ class ComfyUIExtractor:
                     "BNK_CLIPTextEncodeAdvanced",
                     "CLIPTextEncodeAdvanced",
                     "DPRandomGenerator",
+                    "MZ_ChatGLM3_V2", # Add this line
                 ]
             ):
                 widgets = node.get("widgets_values", [])
@@ -1320,7 +1321,7 @@ class ComfyUIExtractor:
         fake_method_def = {
             "sampler_node_types": ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
             "positive_input_name": "positive",
-            "text_encoder_node_types": ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"],
+            "text_encoder_node_types": ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "Text Multiline", "MZ_ChatGLM3_V2"],
         }
         result = self._find_legacy_text_from_main_sampler_input(data, fake_method_def, context, fields)
         self.logger.info("[ComfyUI EXTRACTOR] Legacy positive prompt result: %s...", result[:100])
@@ -1353,7 +1354,7 @@ class ComfyUIExtractor:
         fake_method_def = {
             "sampler_node_types": ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
             "negative_input_name": "negative",
-            "text_encoder_node_types": ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"],
+            "text_encoder_node_types": ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "Text Multiline", "MZ_ChatGLM3_V2"],
         }
         result = self._find_legacy_text_from_main_sampler_input(data, fake_method_def, context, fields)
         self.logger.info("[ComfyUI EXTRACTOR] Legacy negative prompt result: %s...", result[:100])

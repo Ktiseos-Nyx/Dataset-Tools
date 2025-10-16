@@ -9,7 +9,7 @@ from typing import Any
 
 import requests
 
-from dataset_tools.logger import error, info_monitor, warning
+from dataset_tools.logger import error_message, info_monitor, warning_message
 
 
 def get_model_info_by_hash(model_hash: str) -> dict[str, Any] | None:
@@ -51,7 +51,7 @@ def get_model_info_by_hash(model_hash: str) -> dict[str, Any] | None:
                 "previewImageUrl": first_image.get("url"),
             }
             return model_info
-        warning(
+        warning_message(
             "[Civitai API] Model hash not found on Civitai (Status: %s): %s",
             response.status_code,
             model_hash,
@@ -59,11 +59,11 @@ def get_model_info_by_hash(model_hash: str) -> dict[str, Any] | None:
         return None
 
     except requests.exceptions.RequestException as e:
-        error("[Civitai API] Error fetching data: %s", e)
+        error_message("[Civitai API] Error fetching data: %s", e)
         return None
     except json.JSONDecodeError:
-        error("[Civitai API] Failed to decode JSON response.")
+        error_message("[Civitai API] Failed to decode JSON response.")
         return None
     except Exception as e:
-        error("[Civitai API] An unexpected error occurred: %s", e)
+        error_message("[Civitai API] An unexpected error occurred: %s", e)
         return None

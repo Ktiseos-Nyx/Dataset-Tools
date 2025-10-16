@@ -1178,8 +1178,8 @@ class MainWindow(Qw.QMainWindow):
         if not app:
             return
 
-        # Use Open Sans as default if no font preference is saved
-        font_family = self.settings.value("fontFamily", "Open Sans", type=str)
+        # Use JetBrains Mono as default if no font preference is saved
+        font_family = self.settings.value("fontFamily", "JetBrains Mono", type=str)
         font_size = self.settings.value("fontSize", 10, type=int)
 
         # Create font with bundled Open Sans as fallback
