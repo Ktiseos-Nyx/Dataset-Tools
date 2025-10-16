@@ -233,7 +233,7 @@ class TensorArtSignatureDetector:
                 if isinstance(metadata, dict):
                     # Look for TensorArt-specific metadata keys
                     tensorart_keys = []
-                    for key in metadata.keys():
+                    for key in metadata:
                         if self.config.IDENTIFICATION_PATTERNS["tensorart_prefix"].search(str(key)):
                             tensorart_keys.append(key)
 
@@ -466,10 +466,7 @@ class TensorArtWorkflowParser:
             return ""
 
         # Remove path and extension
-        name = model_name.split("/")[-1]  # Get filename
-        name = name.replace(".safetensors", "").replace(".ckpt", "")
-
-        return name
+        return model_name.split("/")[-1].replace(".safetensors", "").replace(".ckpt", "")
 
 
 class TensorArtFormat(BaseFormat):

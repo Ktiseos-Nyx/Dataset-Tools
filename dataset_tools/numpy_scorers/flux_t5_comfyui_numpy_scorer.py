@@ -21,7 +21,7 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
 
     def __init__(self):
         super().__init__()
-        self.logger = get_logger(f"{__name__}.FluxT5ComfyUINumpyScorer")
+        self.logger = get_logger("%s.FluxT5ComfyUINumpyScorer" % __name__)
 
         # FLUX-specific node types
         self.FLUX_SAMPLER_NODES = {
@@ -90,11 +90,11 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
 
             # Build link mapping for backwards tracing
             link_map = self._build_link_map(workflow_data)
-            self.logger.debug(f"Built link map with {len(link_map)} connections")
+            self.logger.debug("Built link map with %s connections", len(link_map))
 
             # STEP 1: Find FLUX samplers as entry points
             flux_samplers = self._find_flux_samplers(nodes)
-            self.logger.debug(f"Found {len(flux_samplers)} FLUX samplers")
+            self.logger.debug("Found %s FLUX samplers", len(flux_samplers))
 
             # STEP 2: Trace from samplers through guiders to conditioning
             for sampler in flux_samplers:
@@ -119,11 +119,11 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
             processing_time = time.time() - start_time
             self._track_analytics("extract_flux_candidates", True, processing_time, "flux_t5")
 
-            self.logger.debug(f"FLUX extraction completed: {len(scored_candidates)} candidates in {processing_time:.3f}s")
+            self.logger.debug("FLUX extraction completed: %s candidates in %.3fs", len(scored_candidates), processing_time)
             return scored_candidates[:self.MAX_CANDIDATES]
 
         except Exception as e:
-            self.logger.error(f"Error in FLUX workflow extraction: {e}")
+            self.logger.error("Error in FLUX workflow extraction: %s", e)
             processing_time = time.time() - start_time
             self._track_analytics("extract_flux_candidates", False, processing_time, "flux_t5")
             return []
@@ -186,24 +186,24 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
         sampler_id = sampler_node.get("id")
         sampler_type = sampler_node.get("type") or sampler_node.get("class_type", "")
 
-        self.logger.debug(f"Tracing FLUX sampler {sampler_id} ({sampler_type})")
+        self.logger.debug("Tracing FLUX sampler %s (%s)", sampler_id, sampler_type)
 
         for input_def in inputs:
             input_name = input_def.get("name", "")
             input_type = input_def.get("type", "")
             link_id = input_def.get("link")
 
-            self.logger.debug(f"  Input: {input_name} ({input_type}) -> link {link_id}")
+            self.logger.debug("  Input: %s (%s) -> link %s", input_name, input_type, link_id)
 
             # FLUX samplers use "guider" input instead of direct conditioning
             if input_type == "GUIDER" and input_name == "guider":
                 self.logger.debug("  Found GUIDER input, tracing guider chain")
                 if isinstance(link_id, int) and link_id in link_map:
                     guider_candidates = self._trace_guider_chain(link_id, link_map, all_nodes)
-                    self.logger.debug(f"  Guider chain returned {len(guider_candidates)} candidates")
+                    self.logger.debug("  Guider chain returned %s candidates", len(guider_candidates))
                     candidates.extend(guider_candidates)
                 else:
-                    self.logger.debug(f"  Guider link {link_id} not found in link_map")
+                    self.logger.debug("  Guider link %s not found in link_map", link_id)
 
         return candidates
 
@@ -211,10 +211,10 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
         """Trace through FLUX guider chain to find conditioning."""
         candidates = []
 
-        self.logger.debug(f"Tracing guider chain from link {link_id}")
+        self.logger.debug("Tracing guider chain from link %s", link_id)
 
         if link_id not in link_map:
-            self.logger.debug(f"Link {link_id} not found in link_map")
+            self.logger.debug("Link %s not found in link_map", link_id)
             return candidates
 
         source_info = link_map[link_id]
@@ -222,25 +222,25 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
         source_node_type = source_info["source_node_type"]
         source_node_id = source_node.get("id")
 
-        self.logger.debug(f"Found source node {source_node_id} ({source_node_type})")
+        self.logger.debug("Found source node %s (%s)", source_node_id, source_node_type)
 
         # BasicGuider has conditioning input
         if source_node_type == "BasicGuider":
             source_inputs = source_node.get("inputs", [])
-            self.logger.debug(f"BasicGuider has {len(source_inputs)} inputs")
+            self.logger.debug("BasicGuider has %s inputs", len(source_inputs))
             for input_def in source_inputs:
                 input_name = input_def.get("name")
                 input_type = input_def.get("type")
-                self.logger.debug(f"  BasicGuider input: {input_name} ({input_type})")
+                self.logger.debug("  BasicGuider input: %s (%s)", input_name, input_type)
                 if input_def.get("name") == "conditioning" and input_def.get("type") == "CONDITIONING":
                     conditioning_link_id = input_def.get("link")
-                    self.logger.debug(f"  Found conditioning link {conditioning_link_id}, tracing...")
+                    self.logger.debug("  Found conditioning link %s, tracing...", conditioning_link_id)
                     if isinstance(conditioning_link_id, int):
                         conditioning_candidates = self._trace_conditioning_chain(conditioning_link_id, link_map, all_nodes, "positive")
-                        self.logger.debug(f"  Conditioning chain returned {len(conditioning_candidates)} candidates")
+                        self.logger.debug("  Conditioning chain returned %s candidates", len(conditioning_candidates))
                         candidates.extend(conditioning_candidates)
         else:
-            self.logger.debug(f"Expected BasicGuider, got {source_node_type}")
+            self.logger.debug("Expected BasicGuider, got %s", source_node_type)
 
         return candidates
 
@@ -289,7 +289,7 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
         class_type = node.get("class_type") or node.get("type", "")
         widgets_values = node.get("widgets_values", [])
 
-        self.logger.debug(f"Extracting T5 text from {class_type}")
+        self.logger.debug("Extracting T5 text from %s", class_type)
 
         # T5 nodes typically use "text" input
         if isinstance(inputs, dict) and "text" in inputs:
@@ -339,7 +339,7 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
         dp_node_id = dp_node.get("id")
         dp_node_type = dp_node.get("type", "")
 
-        self.logger.debug(f"Tracing dynamic prompt outputs from {dp_node_type} node {dp_node_id} (depth: {depth})")
+        self.logger.debug("Tracing dynamic prompt outputs from %s node %s (depth: %s)", dp_node_type, dp_node_id, depth)
 
         # Find all links where this node is the source
         dp_output_links = []
@@ -348,7 +348,7 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
             if source_node.get("id") == dp_node_id:
                 dp_output_links.append((link_id, link_info))
                 target_node_type = link_info.get("source_node_type", "unknown")
-                self.logger.debug(f"Found output link {link_id} from DPRandomGenerator → {target_node_type}")
+                self.logger.debug("Found output link %s from DPRandomGenerator → %s", link_id, target_node_type)
 
         # Follow each output
         for link_id, link_info in dp_output_links:
@@ -364,11 +364,11 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
                     break
 
             if not target_node:
-                self.logger.debug(f"Could not find target node {target_node_id}")
+                self.logger.debug("Could not find target node %s", target_node_id)
                 continue
 
             target_node_type = target_node.get("type", "")
-            self.logger.debug(f"Following DPRandomGenerator output to {target_node_type} node {target_node_id}")
+            self.logger.debug("Following DPRandomGenerator output to %s node %s", target_node_type, target_node_id)
 
             # Handle different target node types in the dynamic prompt chain
             if target_node_type == "ConcatStringSingle":
@@ -392,11 +392,11 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
                         "target_node_type": target_node_type,
                         "target_node_id": target_node_id
                     })
-                    self.logger.debug(f"Extracted dynamic prompt result: '{display_content[:60]}...'")
+                    self.logger.debug("Extracted dynamic prompt result: '%s...'", display_content[:60])
 
             elif target_node_type in self.T5_ENCODER_NODES:
                 # This is the final destination - the T5 text encoder
-                self.logger.debug(f"Found final T5 encoder {target_node_type}, checking for generated content")
+                self.logger.debug("Found final T5 encoder %s, checking for generated content", target_node_type)
 
                 # FIRST: Try to get content from the target encoder node (if it has widgets)
                 encoder_content = self._extract_t5_text_from_node(target_node, link_info)
@@ -416,7 +416,7 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
 
                     if dp_content and len(dp_content.strip()) > 20:
                         encoder_content = dp_content
-                        self.logger.debug(f"Using DPRandomGenerator content: '{encoder_content[:60]}...'")
+                        self.logger.debug("Using DPRandomGenerator content: '%s...'", encoder_content[:60])
 
                 if encoder_content and len(encoder_content.strip()) > 20:  # Substantial content, likely generated
                     candidates.append({
@@ -429,15 +429,15 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
                         "target_node_type": target_node_type,
                         "target_node_id": target_node_id
                     })
-                    self.logger.debug(f"Found final generated content: '{encoder_content[:60]}...'")
+                    self.logger.debug("Found final generated content: '%s...'", encoder_content[:60])
 
             else:
                 # Unknown node type in the chain - continue tracing
-                self.logger.debug(f"Unknown node type {target_node_type} in dynamic prompt chain, continuing trace")
+                self.logger.debug("Unknown node type %s in dynamic prompt chain, continuing trace", target_node_type)
                 unknown_candidates = self._trace_dynamic_prompt_outputs(target_node, link_map, all_nodes, depth + 1)
                 candidates.extend(unknown_candidates)
 
-        self.logger.debug(f"Dynamic prompt tracing from node {dp_node_id} found {len(candidates)} candidates")
+        self.logger.debug("Dynamic prompt tracing from node %s found %s candidates", dp_node_id, len(candidates))
         return candidates
 
     def _extract_all_concatenation_inputs(self, concat_node: dict[str, Any], link_map: dict[int, dict[str, Any]], depth: int = 0) -> list[str]:
@@ -448,10 +448,10 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
 
         # Performance optimization: limit recursion depth for concatenation tracing
         if depth > self.MAX_DEPTH:
-            self.logger.debug(f"Concatenation tracing depth limit reached at node {concat_id}")
+            self.logger.debug("Concatenation tracing depth limit reached at node %s", concat_id)
             return texts
 
-        self.logger.debug(f"Extracting concatenation inputs from node {concat_id} with {len(inputs)} inputs (depth: {depth})")
+        self.logger.debug("Extracting concatenation inputs from node %s with %s inputs (depth: %s)", concat_id, len(inputs), depth)
 
         # Performance optimization: limit number of inputs processed
         max_inputs = min(len(inputs), 10)  # Process at most 10 inputs
@@ -461,7 +461,7 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
             input_type = input_def.get("type", "")
             link_id = input_def.get("link")
 
-            self.logger.debug(f"Checking input {i+1}/{max_inputs} '{input_name}' (type: {input_type}, link: {link_id})")
+            self.logger.debug("Checking input %s/%s '%s' (type: %s, link: %s)", i+1, max_inputs, input_name, input_type, link_id)
 
             # Only process STRING inputs (text content)
             if input_type == "STRING" and isinstance(link_id, int) and link_id in link_map:
@@ -472,22 +472,22 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
                 # Extract text from this input source (use T5 extraction method)
                 text_content = self._extract_t5_text_from_node(source_node, source_info)
                 if text_content:
-                    self.logger.debug(f"Found input text from node {source_node.get('id')} ({source_node_type}): '{text_content[:60]}...'")
+                    self.logger.debug("Found input text from node %s (%s): '%s...'", source_node.get("id"), source_node_type, text_content[:60])
                     texts.append(text_content)
 
                     # Performance optimization: early exit if we have enough good content
                     if len(texts) >= 5 and len(text_content) > 50:  # 5 substantial inputs is plenty
-                        self.logger.debug(f"Early exit from concatenation - have {len(texts)} substantial inputs")
+                        self.logger.debug("Early exit from concatenation - have %s substantial inputs", len(texts))
                         break
                 else:
-                    self.logger.debug(f"No text content from node {source_node.get('id')} ({source_node_type})")
+                    self.logger.debug("No text content from node %s (%s)", source_node.get("id"), source_node_type)
             else:
-                self.logger.debug(f"Skipping non-STRING input '{input_name}' or no link")
+                self.logger.debug("Skipping non-STRING input '%s' or no link", input_name)
 
         if len(inputs) > max_inputs:
-            self.logger.debug(f"Concatenation node {concat_id} had {len(inputs)} inputs but only processed {max_inputs} for performance")
+            self.logger.debug("Concatenation node %s had %s inputs but only processed %s for performance", concat_id, len(inputs), max_inputs)
 
-        self.logger.debug(f"Concatenation node {concat_id} collected {len(texts)} text inputs")
+        self.logger.debug("Concatenation node %s collected %s text inputs", concat_id, len(texts))
         return texts
 
     def score_text_candidate(self, candidate: dict[str, Any], workflow_type: str = "flux_t5") -> dict[str, Any]:
@@ -505,7 +505,7 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
             score -= 10
             reasons.append("TEMPLATE/DEFAULT DETECTED")
             confidence_modifier = -3
-            self.logger.info(f"TEMPLATE DETECTED in FLUX candidate: '{text[:50]}...' - applying -10 penalty")
+            self.logger.info("TEMPLATE DETECTED in FLUX candidate: '%s...' - applying -10 penalty", text[:50])
 
         # Length heuristics
         text_len = len(text)
@@ -649,17 +649,17 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
         global WORKFLOW_CACHE, RUNTIME_ANALYTICS
 
         # Debug the engine_result structure
-        self.logger.debug(f"engine_result keys: {list(engine_result.keys())}")
+        self.logger.debug("engine_result keys: %s", list(engine_result.keys()))
         for key, value in engine_result.items():
             if isinstance(value, dict):
-                self.logger.debug(f"engine_result[{key}] is dict with keys: {list(value.keys())}")
+                self.logger.debug("engine_result[%s] is dict with keys: %s", key, list(value.keys()))
             else:
-                self.logger.debug(f"engine_result[{key}] type: {type(value)}")
+                self.logger.debug("engine_result[%s] type: %s", key, type(value))
 
         # Extract raw workflow data
         raw_metadata = engine_result.get("raw_metadata")
         workflow_data = None
-        self.logger.debug(f"raw_metadata type: {type(raw_metadata)}")
+        self.logger.debug("raw_metadata type: %s", type(raw_metadata))
 
         if raw_metadata:
             if isinstance(raw_metadata, dict):
@@ -674,14 +674,14 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
             file_ext = Path(original_file_path).suffix.lower() if original_file_path else ""
             if file_ext in [".json", ".txt"] or not file_ext:
                 try:
-                    self.logger.debug(f"Reading workflow data directly from JSON file: {original_file_path}")
+                    self.logger.debug("Reading workflow data directly from JSON file: %s", original_file_path)
                     with open(original_file_path, encoding="utf-8") as f:
                         workflow_data = json.load(f)
                     self.logger.debug("Successfully loaded workflow data from JSON file")
                 except (FileNotFoundError, json.JSONDecodeError, UnicodeDecodeError) as e:
-                    self.logger.debug(f"Could not read workflow from {original_file_path}: {e}")
+                    self.logger.debug("Could not read workflow from %s: %s", original_file_path, e)
             else:
-                self.logger.debug(f"Skipping direct file read for non-JSON file: {file_ext}")
+                self.logger.debug("Skipping direct file read for non-JSON file: %s", file_ext)
 
         # Try alternative metadata sources if still no workflow data
         if not workflow_data:
@@ -689,7 +689,7 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
             for field in ["workflow", "raw_workflow", "comfyui_workflow", "_raw_data"]:
                 if engine_result.get(field):
                     workflow_data = engine_result[field]
-                    self.logger.debug(f"Found workflow data in engine_result.{field}")
+                    self.logger.debug("Found workflow data in engine_result.%s", field)
                     break
 
         # Handle nested workflow structure (common in ComfyUI JSON files)
@@ -699,11 +699,11 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
 
         # Debug output for workflow structure
         if workflow_data:
-            self.logger.debug(f"Workflow data keys: {list(workflow_data.keys())}")
-            self.logger.debug(f"Workflow data type: {type(workflow_data)}")
+            self.logger.debug("Workflow data keys: %s", list(workflow_data.keys()))
+            self.logger.debug("Workflow data type: %s", type(workflow_data))
             nodes = workflow_data.get("nodes")
             if nodes is not None:
-                self.logger.debug(f"Nodes found: {len(nodes) if isinstance(nodes, list) else 'not a list'}")
+                self.logger.debug("Nodes found: %s", len(nodes) if isinstance(nodes, list) else "not a list")
             else:
                 self.logger.debug("No 'nodes' key in workflow_data")
 
@@ -721,7 +721,7 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
         cache_key = f"{workflow_hash}:flux_t5:{workflow_type}"
         if cache_key in WORKFLOW_CACHE:
             RUNTIME_ANALYTICS["cache_hits"] += 1
-            self.logger.debug(f"Cache hit for FLUX/T5 workflow {workflow_hash}")
+            self.logger.debug("Cache hit for FLUX/T5 workflow %s", workflow_hash)
             cached_result = WORKFLOW_CACHE[cache_key].copy()
             # Apply cached enhancements to current result
             enhanced_result = engine_result.copy()
@@ -737,11 +737,11 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
 
         # Extract all text candidates from workflow with FLUX/T5 specialization
         candidates = self.extract_text_candidates_from_workflow(workflow_data)
-        print(f"[DEBUG] Found {len(candidates)} text candidates in FLUX/T5 {workflow_type} workflow")
+        self.logger.debug("Found %s text candidates in FLUX/T5 %s workflow", len(candidates), workflow_type)
 
         if not candidates:
-            print("[DEBUG] No text candidates found in FLUX/T5 workflow, enhancement failed")
-            self.logger.info(f"No text candidates found in FLUX/T5 {workflow_type} workflow")
+            self.logger.debug("[DEBUG] No text candidates found in FLUX/T5 workflow, enhancement failed")
+            self.logger.info("No text candidates found in FLUX/T5 %s workflow", workflow_type)
             processing_time = time.time() - self.start_time
             self._track_analytics("flux_t5_enhance", False, processing_time, workflow_type)
             return engine_result
@@ -753,7 +753,7 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
         for candidate in candidates:
             # Performance optimization: limit total candidates processed
             if len(scored_candidates) >= self.MAX_CANDIDATES:
-                print(f"[DEBUG] Reached maximum candidates limit ({self.MAX_CANDIDATES}), stopping processing")
+                self.logger.debug("Reached maximum candidates limit (%s), stopping processing", self.MAX_CANDIDATES)
                 break
 
             scored = self.score_text_candidate(candidate, "flux_t5")  # Use FLUX/T5 scoring
@@ -762,18 +762,18 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
                 # Performance optimization: early exit if we find high-quality candidates
                 if scored["final_score"] >= self.EARLY_EXIT_SCORE:
                     high_quality_found = True
-                    print(f"[DEBUG] Found high-quality FLUX/T5 candidate (score: {scored['final_score']:.1f})")
+                    self.logger.debug("Found high-quality FLUX/T5 candidate (score: %.1f)", scored["final_score"])
 
             # Performance optimization: if we found high-quality candidates, limit further processing
             if high_quality_found and len(scored_candidates) >= self.MAX_CANDIDATES:
-                print(f"[DEBUG] Reached maximum candidates ({self.MAX_CANDIDATES}), stopping processing")
+                self.logger.debug("Reached maximum candidates (%s), stopping processing", self.MAX_CANDIDATES)
                 break
 
-        print(f"[DEBUG] {len(scored_candidates)} viable FLUX/T5 candidates after scoring")
+        self.logger.debug("%s viable FLUX/T5 candidates after scoring", len(scored_candidates))
 
         if not scored_candidates:
-            print("[DEBUG] No viable FLUX/T5 candidates after scoring, enhancement failed")
-            self.logger.info(f"No viable candidates after scoring in FLUX/T5 {workflow_type} workflow")
+            self.logger.debug("[DEBUG] No viable FLUX/T5 candidates after scoring, enhancement failed")
+            self.logger.info("No viable candidates after scoring in FLUX/T5 %s workflow", workflow_type)
             processing_time = time.time() - self.start_time
             self._track_analytics("flux_t5_enhance", False, processing_time, workflow_type)
             return engine_result
@@ -782,36 +782,36 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
         scored_candidates.sort(key=lambda x: x["final_score"], reverse=True)
 
         # Log all candidates for debugging
-        self.logger.info(f"FLUX/T5 candidate scoring results (workflow: {workflow_type}):")
+        self.logger.info("FLUX/T5 candidate scoring results (workflow: %s):", workflow_type)
         for i, candidate in enumerate(scored_candidates[:5]):  # Show top 5
             text_preview = candidate["text"][:40].replace("\n", " ") + "..." if len(candidate["text"]) > 40 else candidate["text"]
-            self.logger.info(f"  {i+1}. Score: {candidate['final_score']:.1f} | Type: {candidate['prompt_type']} | Source: {candidate.get('source', 'unknown')} | Text: '{text_preview}'")
-            self.logger.info(f"     Reasons: {', '.join(candidate.get('reasons', []))}")
+            self.logger.info("  %s. Score: %.1f | Type: %s | Source: %s | Text: '%s'", i+1, candidate["final_score"], candidate["prompt_type"], candidate.get("source", "unknown"), text_preview)
+            self.logger.info("     Reasons: %s", ", ".join(candidate.get("reasons", [])))
 
         # Enhanced candidate selection with fallback chain
         best_positive = None
         best_negative = None
         best_content = None  # Fallback for unknown types
 
-        print(f"[DEBUG] Selecting FLUX/T5 candidates from {len(scored_candidates)} viable options:")
+        self.logger.debug("Selecting FLUX/T5 candidates from %s viable options:", len(scored_candidates))
         for i, candidate in enumerate(scored_candidates):
             prompt_type = candidate["prompt_type"]
             text_preview = candidate["text"][:40] + "..." if len(candidate["text"]) > 40 else candidate["text"]
-            print(f"[DEBUG] Candidate {i+1}: type='{prompt_type}', score={candidate['final_score']:.1f}, text='{text_preview}'")
+            self.logger.debug("Candidate %s: type='%s', score=%.1f, text='%s'", i+1, prompt_type, candidate["final_score"], text_preview)
 
             # Select the HIGHEST scoring candidate for each type
             if prompt_type == "positive":
                 if not best_positive or candidate["final_score"] > best_positive["final_score"]:
                     best_positive = candidate
-                    print(f"[DEBUG] Selected as best_positive (score: {candidate['final_score']:.1f})")
+                    self.logger.debug("Selected as best_positive (score: %.1f)", candidate["final_score"])
             elif prompt_type == "negative":
                 if not best_negative or candidate["final_score"] > best_negative["final_score"]:
                     best_negative = candidate
-                    print(f"[DEBUG] Selected as best_negative (score: {candidate['final_score']:.1f})")
+                    self.logger.debug("Selected as best_negative (score: %.1f)", candidate["final_score"])
             elif prompt_type == "content":
                 if not best_content or candidate["final_score"] > best_content["final_score"]:
                     best_content = candidate
-                    print(f"[DEBUG] Selected as best_content (score: {candidate['final_score']:.1f})")
+                    self.logger.debug("Selected as best_content (score: %.1f)", candidate["final_score"])
 
         # Enhanced result with comprehensive metadata
         enhanced_result = engine_result.copy()
@@ -832,12 +832,12 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
 
             if is_t5_generated and best_score >= 10.0 and (len(best_positive["text"]) > len(original_prompt) * 1.2 or is_complex_vs_simple):
                 should_replace_positive = True
-                print(f"[DEBUG] Will replace with superior T5/guider content (score: {best_score:.1f})")
+                self.logger.debug("Will replace with superior T5/guider content (score: %.1f)", best_score)
 
         if best_positive and should_replace_positive:
             enhanced_result["prompt"] = best_positive["text"]
             enhancement_applied = True
-            print("[DEBUG] REPLACED original positive prompt with FLUX/T5 numpy enhancement")
+            self.logger.debug("REPLACED original positive prompt with FLUX/T5 numpy enhancement")
 
         # Similar logic for negative prompts
         original_negative_empty = (not engine_result.get("negative_prompt") or
@@ -846,7 +846,7 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
         if best_negative and original_negative_empty:
             enhanced_result["negative_prompt"] = best_negative["text"]
             enhancement_applied = True
-            print("[DEBUG] REPLACED original negative prompt with FLUX/T5 numpy enhancement")
+            self.logger.debug("REPLACED original negative prompt with FLUX/T5 numpy enhancement")
 
         # Add comprehensive numpy analysis metadata
         processing_time = time.time() - self.start_time
@@ -887,5 +887,5 @@ class FluxT5ComfyUINumpyScorer(BaseNumpyScorer):
         # Track analytics
         self._track_analytics("flux_t5_enhance", enhancement_applied, processing_time, workflow_type)
 
-        self.logger.info(f"FLUX/T5 numpy enhancement completed for {workflow_type} workflow in {processing_time:.3f}s (enhancement: {enhancement_applied})")
+        self.logger.info("FLUX/T5 numpy enhancement completed for %s workflow in %.3fs (enhancement: %s)", workflow_type, processing_time, enhancement_applied)
         return enhanced_result

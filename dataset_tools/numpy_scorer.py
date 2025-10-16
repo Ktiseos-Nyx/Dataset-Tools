@@ -67,16 +67,12 @@ def enhance_result(
     This is the main entry point that selects and applies the right scorer.
     """
     try:
-        print(f"[DEBUG] numpy scorer called with engine_result keys: "
-              f"{list(engine_result.keys())}")
-        print(f"[DEBUG] Tool: {engine_result.get('tool', 'NONE')}, "
-              f"Format: {engine_result.get('format', 'NONE')}")
-        print(f"[DEBUG] Has raw_metadata: {'raw_metadata' in engine_result}")
-        logger.info(f"numpy scorer called with engine_result keys: "
-                    f"{list(engine_result.keys())}")
-        logger.info(f"Tool: {engine_result.get('tool', 'NONE')}, "
-                    f"Format: {engine_result.get('format', 'NONE')}")
-        logger.info(f"Has raw_metadata: {'raw_metadata' in engine_result}")
+        logger.debug("numpy scorer called with engine_result keys: %s",
+                     list(engine_result.keys()))
+        logger.debug("Tool: %s, Format: %s",
+                     engine_result.get("tool", "NONE"),
+                     engine_result.get("format", "NONE"))
+        logger.debug("Has raw_metadata: %s", "raw_metadata" in engine_result)
 
         # Always apply numpy scoring, but choose the right scorer
         # Advanced ComfyUI functionality (like Griptape) is now handled by
@@ -97,7 +93,7 @@ def enhance_result(
                 engine_result, original_file_path)
 
     except Exception as e:
-        logger.error(f"Error in numpy scoring coordination: {e}")
+        logger.error("Error in numpy scoring coordination: %s", e)
         # Return original result if scoring fails
         return engine_result
 

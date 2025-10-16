@@ -5,10 +5,14 @@ metadata for models, LORAs, and other resources.
 """
 
 import json
-import requests
-from typing import Any, Dict, Optional
+from typing import Any
 
-def get_model_info_by_hash(model_hash: str) -> Optional[Dict[str, Any]]:
+import requests
+
+from dataset_tools.logger import error, info_monitor, warning
+
+
+def get_model_info_by_hash(model_hash: str) -> dict[str, Any] | None:
     """Fetches model version information from Civitai using a model hash.
 
     Args:
@@ -16,15 +20,16 @@ def get_model_info_by_hash(model_hash: str) -> Optional[Dict[str, Any]]:
 
     Returns:
         A dictionary containing the model information, or None if not found or an error occurs.
+
     """
     if not model_hash or not isinstance(model_hash, str):
         return None
 
     api_url = f"https://civitai.com/api/v1/model-versions/by-hash/{model_hash}"
-    print(f"[Civitai API] Fetching model info from: {api_url}")
+    info_monitor("[Civitai API] Fetching model info from: %s", api_url)
 
     try:
-        response = requests.get(api_url, timeout=10) # Add a timeout
+        response = requests.get(api_url, timeout=10)  # Add a timeout
 
         if response.status_code == 200:
             data = response.json()
@@ -43,19 +48,22 @@ def get_model_info_by_hash(model_hash: str) -> Optional[Dict[str, Any]]:
                 "description": model_data.get("description"),
                 "tags": model_data.get("tags", []),
                 "downloadUrl": data.get("downloadUrl"),
-                "previewImageUrl": first_image.get("url")
+                "previewImageUrl": first_image.get("url"),
             }
             return model_info
-        else:
-            print(f"[Civitai API] Model hash not found on Civitai (Status: {response.status_code}): {model_hash}")
-            return None
+        warning(
+            "[Civitai API] Model hash not found on Civitai (Status: %s): %s",
+            response.status_code,
+            model_hash,
+        )
+        return None
 
     except requests.exceptions.RequestException as e:
-        print(f"[Civitai API] Error fetching data: {e}")
+        error("[Civitai API] Error fetching data: %s", e)
         return None
     except json.JSONDecodeError:
-        print(f"[Civitai API] Failed to decode JSON response.")
+        error("[Civitai API] Failed to decode JSON response.")
         return None
     except Exception as e:
-        print(f"[Civitai API] An unexpected error occurred: {e}")
+        error("[Civitai API] An unexpected error occurred: %s", e)
         return None

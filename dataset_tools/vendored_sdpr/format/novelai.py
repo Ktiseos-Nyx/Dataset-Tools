@@ -8,11 +8,15 @@ __email__ = "receyuki@gmail.com"
 
 import gzip
 import json
-from typing import Any  # Added Optional
+from typing import Any
 
-from PIL import Image  # PIL.Image is used directly
+from PIL import Image
+
+from dataset_tools.logger import get_logger
 
 from .base_format import BaseFormat
+
+logger = get_logger(__name__)
 
 NAI_PARAMETER_MAP: dict[str, str | list[str]] = {
     "sampler": "sampler_name",
@@ -59,7 +63,7 @@ class NovelAI(BaseFormat):
             except Exception as e_getdata:  # Catch potential errors from getdata() itself
                 # If a logger was available here, it would be good to log this.
                 # For now, if getdata() fails, LSB extraction is not possible.
-                print(f"Warning: Could not get pixel data for LSBExtractor: {e_getdata}")  # Basic print
+                logger.warning(f"Could not get pixel data for LSBExtractor: {e_getdata}")  # Basic print
                 self.data = []
                 self.width, self.height = 0, 0  # Or img_pil_object.size if it's safe
                 self.lsb_bytes_list = bytearray()
@@ -141,7 +145,7 @@ class NovelAI(BaseFormat):
             if not self._error:
                 self._error = f"{self.tool}: Failed to parse metadata."
 
-    def _parse_common_nai_json(self, data_json: dict[str, Any], source_description: str) -> bool:
+    def _parse_common_nai_json(self, data_json: dict[str, Any], _source_description: str) -> bool:
         handled_keys_in_data_json = set()
         custom_settings_for_display: dict[str, str] = {}
 

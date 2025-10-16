@@ -82,8 +82,8 @@ def _update_status_for_selection(main_window: "MainWindow", file_name: str):
     if hasattr(main_window, "left_panel"):
         count = len(main_window.current_files_in_list)
         folder_name = Path(main_window.current_folder).name if main_window.current_folder else "Unknown"
-        main_window.left_panel.set_message_text(f"{count} file(s) in {folder_name}")
-    main_window.main_status_bar.showMessage(f"Selected: {file_name}", 4000)
+        main_window.left_panel.set_message_text("%d file(s) in %s" % (count, folder_name))
+    main_window.main_status_bar.showMessage("Selected: %s" % file_name, 4000)
     log.info("File selected: '%s' in folder '%s'", file_name, main_window.current_folder)
 
 

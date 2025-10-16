@@ -48,8 +48,8 @@ from .managers import (
     MetadataDisplayManager,  # pylint: disable=relative-beyond-top-level
     ThemeManager,  # pylint: disable=relative-beyond-top-level
 )
-from .widgets import FileLoadResult
 from .thumbnail_grid import ThumbnailGridWidget
+from .widgets import FileLoadResult
 
 # ============================================================================
 # CONSTANTS
@@ -288,22 +288,23 @@ class MainWindow(Qw.QMainWindow):
         
         Args:
             mode: Either 'list' or 'grid'
+
         """
         if mode == "grid":
-            if not hasattr(self, 'thumbnail_grid'):
+            if not hasattr(self, "thumbnail_grid"):
                 # Lazy init - only create grid when first needed
                 self._initialize_thumbnail_grid()
-            
+
             self.left_panel.file_view_stack.setCurrentWidget(self.thumbnail_grid)
-            
+
             # Populate with current images
             if self.current_folder and self.current_files_in_list:
-                image_files = [f for f in self.current_files_in_list 
+                image_files = [f for f in self.current_files_in_list
                                if self._should_display_as_image(os.path.join(self.current_folder, f))]
                 self.thumbnail_grid.set_folder(self.current_folder, image_files)
         else:
             self.left_panel.file_view_stack.setCurrentWidget(self.left_panel.files_list_widget)
-        
+
         nfo(f"[UI] File view mode set to: {mode}")
 
     def _initialize_thumbnail_grid(self):
@@ -311,7 +312,7 @@ class MainWindow(Qw.QMainWindow):
         self.thumbnail_grid = ThumbnailGridWidget(parent=self)
         self.thumbnail_grid.file_selected.connect(self.on_file_selected)
         self.left_panel.file_view_stack.addWidget(self.thumbnail_grid)
-        
+
         nfo("[UI] Thumbnail grid initialized")
 
     def _restore_application_state(self) -> None:
@@ -570,20 +571,20 @@ class MainWindow(Qw.QMainWindow):
 
         self._auto_select_file(result)
 
-        if hasattr(self, 'thumbnail_grid') and self.settings.value("fileViewMode", "list") == "grid":
+        if hasattr(self, "thumbnail_grid") and self.settings.value("fileViewMode", "list") == "grid":
             nfo("[UI] Populating thumbnail grid...")
             image_files = []
             total_files = len(self.current_files_in_list)
             for i, file_name in enumerate(self.current_files_in_list):
                 if self._should_display_as_image(os.path.join(self.current_folder, file_name)):
                     image_files.append(file_name)
-                
+
                 # Update progress every 25 files
                 if (i + 1) % 25 == 0 or (i + 1) == total_files:
                     percent = ((i + 1) / total_files) * 100
                     sys.stdout.write(f"\r[UI] Filtering image files for grid: {percent:.0f}%")
                     sys.stdout.flush()
-            
+
             sys.stdout.write("\n") # Newline after loop finishes
             self.thumbnail_grid.set_folder(self.current_folder, image_files)
 
@@ -773,7 +774,7 @@ class MainWindow(Qw.QMainWindow):
         elif self._should_display_as_text(full_file_path):
             # Handle text files by displaying their content
             try:
-                with open(full_file_path, 'r', encoding='utf-8') as f:
+                with open(full_file_path, encoding="utf-8") as f:
                     content = f.read()
                 self.metadata_display.clear_all_displays()
                 self.generation_data_box.setText(content)
@@ -1008,9 +1009,9 @@ class MainWindow(Qw.QMainWindow):
         full_path = os.path.join(self.current_folder, file_name)
 
         # --- Text File Handling ---
-        if file_name.lower().endswith('.txt'):
+        if file_name.lower().endswith(".txt"):
             try:
-                with open(full_path, 'r', encoding='utf-8') as f:
+                with open(full_path, encoding="utf-8") as f:
                     initial_text = f.read()
             except Exception as e:
                 self.show_status_message(f"Error reading file: {e}")
@@ -1020,7 +1021,7 @@ class MainWindow(Qw.QMainWindow):
 
             if accepted:
                 try:
-                    with open(full_path, 'w', encoding='utf-8') as f:
+                    with open(full_path, "w", encoding="utf-8") as f:
                         f.write(new_text)
                     self.show_status_message(f"Successfully saved changes to {file_name}.")
                     # Refresh the display to show new content
@@ -1030,28 +1031,28 @@ class MainWindow(Qw.QMainWindow):
             return  # End of text file logic
 
         # --- PNG File Handling ---
-        elif file_name.lower().endswith('.png'):
+        if file_name.lower().endswith(".png"):
             try:
                 img = Image.open(full_path)
                 # Ensure it's a PNG and has metadata
-                if img.format != 'PNG' or not img.info:
+                if img.format != "PNG" or not img.info:
                     self.show_status_message("Not a valid PNG file or no metadata found.")
                     return
 
                 # Find the primary metadata key
                 raw_key = None
-                priority_keys = ['parameters', 'prompt', 'invokeai_metadata', 'Dream', 'sd-metadata']
+                priority_keys = ["parameters", "prompt", "invokeai_metadata", "Dream", "sd-metadata"]
                 for key in priority_keys:
                     if key in img.info:
                         raw_key = key
                         break
-                
+
                 if not raw_key:
                     self.show_status_message("No recognized raw metadata block found to edit.")
                     return
 
                 initial_text = img.info[raw_key]
-                
+
                 # Show the dialog
                 accepted, new_text = TextEditDialog.get_edited_text(self, initial_text)
 
@@ -1062,7 +1063,7 @@ class MainWindow(Qw.QMainWindow):
                     for key, value in img.info.items():
                         if key != raw_key:
                             new_meta.add_text(key, value)
-                    
+
                     # Add the edited metadata
                     new_meta.add_text(raw_key, new_text)
 
@@ -1080,8 +1081,7 @@ class MainWindow(Qw.QMainWindow):
                 nfo(f"Error during PNG edit process: {e}")
             return  # End of PNG logic
 
-        else:
-            self.show_status_message("Editing is currently only supported for .txt and .png files.")
+        self.show_status_message("Editing is currently only supported for .txt and .png files.")
 
     def copy_metadata_to_clipboard(self) -> None:
         """Copy all displayed metadata to clipboard."""
@@ -1135,7 +1135,7 @@ class MainWindow(Qw.QMainWindow):
                 return self._pil_to_qpixmap(img)
 
         except Exception as e:
-            nfo("[UI] Error creating thumbnail for '%s': %s", image_path, e)
+            nfo("[UI] Error creating thumbnail for '%s': %s", image_path, e, exc_info=True)
             # Return empty pixmap on error
             return QtGui.QPixmap()
 
@@ -1169,7 +1169,7 @@ class MainWindow(Qw.QMainWindow):
             return QtGui.QPixmap.fromImage(qimage)
 
         except Exception as e:
-            nfo("[UI] Error converting PIL to QPixmap: %s", e)
+            nfo("[UI] Error converting PIL to QPixmap: %s", e, exc_info=True)
             return QtGui.QPixmap()
 
     def apply_global_font(self) -> None:
@@ -1240,7 +1240,7 @@ class MainWindow(Qw.QMainWindow):
     # DRAG & DROP SUPPORT
     # ========================================================================
 
-    def dragEnterEvent(self, event: QtGui.QDragEnterEvent) -> None:
+    def dragEnterEvent(self, event: QtGui.QDragEnterEvent) -> None:  # noqa: N802
         """Handle drag enter events."""
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
@@ -1249,14 +1249,14 @@ class MainWindow(Qw.QMainWindow):
             event.ignore()
             nfo("[UI] Drag enter ignored (not URLs).")
 
-    def dragMoveEvent(self, event: QtGui.QDragMoveEvent) -> None:
+    def dragMoveEvent(self, event: QtGui.QDragMoveEvent) -> None:  # noqa: N802
         """Handle drag move events."""
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
         else:
             event.ignore()
 
-    def dropEvent(self, event: QtGui.QDropEvent) -> None:
+    def dropEvent(self, event: QtGui.QDropEvent) -> None:  # noqa: N802
         """Handle drop events for files and folders."""
         mime_data = event.mimeData()
 
@@ -1325,7 +1325,7 @@ class MainWindow(Qw.QMainWindow):
     # WINDOW LIFECYCLE
     # ========================================================================
 
-    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:  # noqa: N802
         """Handle window close event and save settings."""
         nfo("[UI] Close event triggered. Saving settings.")
 
@@ -1342,7 +1342,7 @@ class MainWindow(Qw.QMainWindow):
         self._cleanup_image_loading_thread()
 
         # Clean up thumbnail worker thread
-        if hasattr(self, 'thumbnail_grid'):
+        if hasattr(self, "thumbnail_grid"):
             self.thumbnail_grid.cleanup()
 
         super().closeEvent(event)
@@ -1362,7 +1362,7 @@ class MainWindow(Qw.QMainWindow):
             nfo("[UI] Image loading thread cleaned up successfully")
 
         except Exception as e:
-            nfo("[UI] Error cleaning up image loading thread: %s", e)
+            nfo("[UI] Error cleaning up image loading thread: %s", e, exc_info=True)
 
     def resize_window(self, width: int, height: int) -> None:
         """Resize the window to specified dimensions.

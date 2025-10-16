@@ -61,18 +61,18 @@ def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]
         A dictionary containing the parsed metadata, formatted for the UI.
 
     """
-    nfo(f"[DT.metadata_parser]: >>> ENTERING parse_metadata for: {file_path_named}")
+    nfo("[DT.metadata_parser]: >>> ENTERING parse_metadata for: %s", file_path_named)
     final_ui_dict: dict[str, Any] = {}
 
     try:
         # Create the metadata engine
-        nfo(f"[DT.metadata_parser]: Creating metadata engine with path: {PARSER_DEFINITIONS_PATH}")
+        nfo("[DT.metadata_parser]: Creating metadata engine with path: %s", PARSER_DEFINITIONS_PATH)
         engine = create_metadata_engine(PARSER_DEFINITIONS_PATH)
         nfo("[DT.metadata_parser]: Engine created successfully, calling get_parser_for_file")
 
         # Process the file
         result = engine.get_parser_for_file(file_path_named)
-        nfo(f"[DT.metadata_parser]: get_parser_for_file returned: {type(result)} - {bool(result)}")
+        nfo("[DT.metadata_parser]: get_parser_for_file returned: %s - %s", type(result), bool(result))
 
         if result and isinstance(result, dict) and result:
             # This is the robust, architecturally correct fix.
@@ -92,7 +92,7 @@ def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]
                         result["raw_metadata"] = ast.literal_eval(raw_meta)
                         nfo("[DT.metadata_parser]: Successfully parsed raw_metadata string as Python literal.")
                     except (ValueError, SyntaxError) as e2:
-                        nfo(f"[DT.metadata_parser]: Could not parse raw_metadata string (JSON error: {e}, AST error: {e2})")
+                        nfo("[DT.metadata_parser]: Could not parse raw_metadata string (JSON error: %s, AST error: %s)", e, e2)
                         # If parsing fails, we cannot proceed with numpy enhancement.
                         result["raw_metadata"] = {"error": "unparseable_string", "original_string": raw_meta}
 
@@ -105,24 +105,24 @@ def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]
                 result = enhanced_result
                 if status_callback:
                     status_callback("Numpy enhancement completed")
-                nfo(f"[DT.metadata_parser]: Numpy enhancement completed. Enhanced: {enhanced_result.get('numpy_analysis', {}).get('enhancement_applied', False)}")
+                nfo("[DT.metadata_parser]: Numpy enhancement completed. Enhanced: %s", enhanced_result.get("numpy_analysis", {}).get("enhancement_applied", False))
             except Exception as numpy_error:
-                nfo(f"[DT.metadata_parser]: Numpy enhancement failed: {numpy_error}, using original result")
+                nfo("[DT.metadata_parser]: Numpy enhancement failed: %s, using original result", numpy_error)
                 # Continue with original result if numpy fails
 
             # Transform the engine result to UI format
             _transform_engine_result_to_ui_dict(result, final_ui_dict)
             potential_ai_parsed = True
-            nfo(f"[DT.metadata_parser]: Successfully parsed metadata with engine. Keys: {list(result.keys())}")
+            nfo("[DT.metadata_parser]: Successfully parsed metadata with engine. Keys: %s", list(result.keys()))
         else:
             nfo("[DT.metadata_parser]: Engine found no matching parser or returned invalid data.")
             potential_ai_parsed = False
 
     except Exception as e:
-        nfo(f"[DT.metadata_parser]: ❌ MetadataEngine failed: {e}")
+        nfo("[DT.metadata_parser]: ❌ MetadataEngine failed: %s", e)
         traceback.print_exc()
         final_ui_dict["error"] = {
-            "Error": f"Metadata Engine failed: {e}",
+            "Error": "Metadata Engine failed: %s" % e,
         }
         potential_ai_parsed = False
 
@@ -135,9 +135,9 @@ def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]
         final_ui_dict["info"] = {
             "Info": "No processable metadata found.",
         }
-        nfo(f"Failed to find/load any metadata for file: {file_path_named}")
+        nfo("Failed to find/load any metadata for file: %s", file_path_named)
 
-    nfo(f"[DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: {list(final_ui_dict.keys())}")
+    nfo("[DT.metadata_parser]: <<< EXITING parse_metadata. Returning keys: %s", list(final_ui_dict.keys()))
     return final_ui_dict
 
 
@@ -219,7 +219,7 @@ def _transform_engine_result_to_ui_dict(result: dict[str, Any], ui_dict: dict[st
         ui_dict[UpField.WORKFLOW_ANALYSIS.value] = workflow_analysis_data
 
     # --- Civitai API Info (from Safetensors) ---
-    if hasattr(result, 'civitai_api_info') and result.civitai_api_info:
+    if hasattr(result, "civitai_api_info") and result.civitai_api_info:
         if "unclassified" not in ui_dict:
             ui_dict["unclassified"] = {}
         ui_dict["unclassified"]["civitai_api_info"] = result.civitai_api_info

@@ -12,12 +12,10 @@ including settings configuration and about information dialogs.
 from PyQt6.QtCore import QSettings, Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
-    QCheckBox,
     QComboBox,
     QDialog,
     QDialogButtonBox,
     QFormLayout,
-    QGridLayout,
     QLabel,
     QLineEdit,
     QListWidget,
@@ -247,7 +245,7 @@ class SettingsDialog(QDialog):
         """Apply the selected view mode."""
         view_mode = self.view_mode_combo.currentData()
         self.settings.setValue("fileViewMode", view_mode)
-        if hasattr(self.parent_window, 'set_file_view_mode'):
+        if hasattr(self.parent_window, "set_file_view_mode"):
             self.parent_window.set_file_view_mode(view_mode)
 
     def _apply_window_settings(self) -> None:
@@ -337,8 +335,8 @@ class ThemeBrowserDialog(QDialog):
             for theme_name in sorted(theme_list):
                 child_item = QTreeWidgetItem(parent_item)
                 display_name = theme_name.replace("_", " ").replace(".xml", "").title()
-                if ' ' in display_name and display_name.split(' ')[0].lower() + '_' in category.lower() + '_':
-                    display_name = ' '.join(display_name.split(' ')[1:])
+                if " " in display_name and display_name.split(" ")[0].lower() + "_" in category.lower() + "_":
+                    display_name = " ".join(display_name.split(" ")[1:])
 
                 child_item.setText(0, display_name)
                 child_item.setData(0, Qt.ItemDataRole.UserRole, f"{self.category_id}:{theme_name}")
@@ -386,11 +384,11 @@ class ThemeBrowserDialog(QDialog):
 
     def apply_selected_theme(self):
         """Apply the currently selected theme."""
-        if hasattr(self, 'tree_widget'):
+        if hasattr(self, "tree_widget"):
             selected_items = self.tree_widget.selectedItems()
             if selected_items:
                 self._apply_theme(selected_items[0])
-        elif hasattr(self, 'list_widget'):
+        elif hasattr(self, "list_widget"):
             selected_items = self.list_widget.selectedItems()
             if selected_items:
                 self._apply_theme(selected_items[0])
@@ -414,7 +412,7 @@ class ThemeBrowserDialog(QDialog):
 
         if theme_id:
             self.theme_manager.apply_theme(theme_id)
-            if hasattr(self.parent(), 'show_status_message'):
+            if hasattr(self.parent(), "show_status_message"):
                 if isinstance(item, QTreeWidgetItem):
                     self.parent().show_status_message(f"Applied theme: {item.text(0)}")
                 else:
@@ -422,7 +420,7 @@ class ThemeBrowserDialog(QDialog):
 
     def _filter_tree(self, text: str):
         """Filter the tree widget based on the search text."""
-        if hasattr(self, 'tree_widget'):
+        if hasattr(self, "tree_widget"):
             root = self.tree_widget.invisibleRootItem()
             for i in range(root.childCount()):
                 category_item = root.child(i)
@@ -434,7 +432,7 @@ class ThemeBrowserDialog(QDialog):
                     if is_match:
                         has_visible_child = True
                 category_item.setHidden(not has_visible_child)
-        elif hasattr(self, 'list_widget'):
+        elif hasattr(self, "list_widget"):
             for i in range(self.list_widget.count()):
                 item = self.list_widget.item(i)
                 is_match = text.lower() in item.text().lower()

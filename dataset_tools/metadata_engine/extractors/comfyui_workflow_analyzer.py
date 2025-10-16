@@ -50,7 +50,7 @@ class ComfyUIWorkflowAnalyzer:
             with open(dictionary_path, encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
-            self.logger.error(f"Failed to load ComfyUI node dictionary: {e}")
+            self.logger.error("Failed to load ComfyUI node dictionary: %s", e)
             return {}
 
     def analyze_workflow(self, workflow_data: WorkflowData) -> dict[str, Any]:
@@ -318,7 +318,7 @@ class ComfyUIWorkflowAnalyzer:
         if node_type in passthrough_nodes:
             # Find the first conditioning input and trace it
             for i in range(5):  # Check up to 5 inputs
-                cond_input_name = f"conditioning_{i}" if i > 0 else "conditioning"
+                cond_input_name = "conditioning_%d" % i if i > 0 else "conditioning"
                 traced = self._trace_conditioning_source(source_node_id, cond_input_name, depth + 1)
                 if traced:
                     return traced

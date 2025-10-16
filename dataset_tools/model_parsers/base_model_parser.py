@@ -105,15 +105,15 @@ class BaseModelParser(ABC):
         if self.parameters:
             ui_data[DownField.GENERATION_DATA.value] = self.parameters
 
-        if hasattr(self, 'raw_metadata') and self.raw_metadata:
+        if hasattr(self, "raw_metadata") and self.raw_metadata:
             ui_data[DownField.RAW_DATA.value] = self.raw_metadata
         elif self.main_header:
             # Fallback for older parsers that only populate main_header
             ui_data[DownField.JSON_DATA.value] = self.main_header
 
         # Add Civitai API info if it exists
-        if hasattr(self, 'civitai_api_info') and self.civitai_api_info:
-            ui_data.setdefault(UpField.METADATA.value, {})['Civitai API Info'] = self.civitai_api_info
+        if hasattr(self, "civitai_api_info") and self.civitai_api_info:
+            ui_data.setdefault(UpField.METADATA.value, {})["Civitai API Info"] = self.civitai_api_info
 
         # Add Detected Model Format to the metadata section
         ui_data[UpField.METADATA.value]["Detected Model Format"] = self.tool_name

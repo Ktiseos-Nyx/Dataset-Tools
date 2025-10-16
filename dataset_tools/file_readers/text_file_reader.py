@@ -68,17 +68,17 @@ class TextFileReader:
 
         """
         if not self.can_read_file(file_path):
-            self.logger.warning(f"Unsupported text file format: {file_path}")
+            self.logger.warning("Unsupported text file format: %s", file_path)
             return None
 
-        nfo(f"[TextReader] Reading text file: {Path(file_path).name}")
+        nfo("[TextReader] Reading text file: %s", Path(file_path).name)
 
         # Try each encoding until one works
         for encoding in self.encodings_to_try:
             try:
                 content = self._read_with_encoding(file_path, encoding)
                 if content is not None:
-                    nfo(f"[TextReader] Successfully read with encoding: {encoding}")
+                    nfo("[TextReader] Successfully read with encoding: %s", encoding)
 
                     # Analyze the content
                     analysis = self._analyze_content(content, file_path)
@@ -92,14 +92,14 @@ class TextFileReader:
                     }
 
             except UnicodeDecodeError:
-                self.logger.debug(f"Failed to decode {file_path} with {encoding}")
+                self.logger.debug("Failed to decode %s with %s", file_path, encoding)
                 continue
             except Exception as e:
-                self.logger.warning(f"Error reading {file_path} with {encoding}: {e}")
+                self.logger.warning("Error reading %s with %s: %s", file_path, encoding, e)
                 continue
 
         # If all encodings failed
-        nfo(f"[TextReader] Failed to decode {Path(file_path).name} with any supported encoding")
+        nfo("[TextReader] Failed to decode %s with any supported encoding", Path(file_path).name)
         return None
 
     def _read_with_encoding(self, file_path: str, encoding: str) -> str | None:
@@ -120,13 +120,13 @@ class TextFileReader:
             # Re-raise Unicode errors so we can try the next encoding
             raise
         except FileNotFoundError:
-            self.logger.error(f"Text file not found: {file_path}")
+            self.logger.error("Text file not found: %s", file_path)
             return None
         except PermissionError:
-            self.logger.error(f"Permission denied reading text file: {file_path}")
+            self.logger.error("Permission denied reading text file: %s", file_path)
             return None
         except OSError as e:
-            self.logger.error(f"OS error reading text file {file_path}: {e}")
+            self.logger.error("OS error reading text file %s: %s", file_path, e)
             return None
 
     def _analyze_content(self, content: str, file_path: str) -> dict[str, Any]:
@@ -159,7 +159,7 @@ class TextFileReader:
             analysis["has_metadata_markers"] = self._has_metadata_markers(content)
 
         except Exception as e:
-            self.logger.debug(f"Error analyzing content for {file_path}: {e}")
+            self.logger.debug("Error analyzing content for %s: %s", file_path, e)
 
         return analysis
 
@@ -305,7 +305,7 @@ class TextFileReader:
             extension = "." + extension
 
         self.supported_formats.add(extension.lower())
-        self.logger.debug(f"Added supported format: {extension}")
+        self.logger.debug("Added supported format: %s", extension)
 
 
 class TextContentAnalyzer:
@@ -360,7 +360,7 @@ class TextContentAnalyzer:
             }
 
         except Exception as e:
-            self.logger.debug(f"Error analyzing AI prompt: {e}")
+            self.logger.debug("Error analyzing AI prompt: %s", e)
 
         return analysis
 
@@ -572,7 +572,7 @@ class PromptFileReader:
 
         # Check if it's likely a prompt
         if not text_data.get("appears_to_be_prompt", False):
-            self.logger.debug(f"File doesn't appear to be an AI prompt: {file_path}")
+            self.logger.debug("File doesn't appear to be an AI prompt: %s", file_path)
             return text_data
 
         # Analyze as AI prompt
@@ -691,7 +691,7 @@ def test_text_file_reader():
     prompt_reader = PromptFileReader()
 
     logger.info("Testing TextFileReader...")
-    logger.info(f"Supported formats: {reader.get_supported_formats()}")
+    logger.info("Supported formats: %s", reader.get_supported_formats())
 
     # Test with sample content
     test_content = """masterpiece, best quality, 1girl, anime, beautiful detailed eyes, long hair, school uniform, cherry blossoms, spring, soft lighting, photorealistic
@@ -703,31 +703,31 @@ Steps: 20, Sampler: Euler a, CFG scale: 7, Seed: 12345, Model: animefull-final-p
     try:
         test_file.write_text(test_content, encoding="utf-8")
 
-        logger.info(f"\nTesting with temporary file: {test_file}")
+        logger.info("\nTesting with temporary file: %s", test_file)
 
         # Test basic text reading
         text_result = reader.read_file(str(test_file))
         if text_result:
             logger.info("Basic text reading successful")
-            logger.info(f"Detected content type: {text_result.get('content_type')}")
-            logger.info(f"Appears to be prompt: {text_result.get('appears_to_be_prompt')}")
-            logger.info(f"Character count: {text_result.get('character_count')}")
-            logger.info(f"Word count: {text_result.get('word_count')}")
+            logger.info("Detected content type: %s", text_result.get("content_type"))
+            logger.info("Appears to be prompt: %s", text_result.get("appears_to_be_prompt"))
+            logger.info("Character count: %s", text_result.get("character_count"))
+            logger.info("Word count: %s", text_result.get("word_count"))
 
         # Test prompt-specific reading
         prompt_result = prompt_reader.read_prompt_file(str(test_file))
         if prompt_result and "prompt_analysis" in prompt_result:
             analysis = prompt_result["prompt_analysis"]
             logger.info("\nPrompt analysis:")
-            logger.info(f"Has negative prompt: {analysis.get('has_negative_prompt')}")
-            logger.info(f"Has parameters: {analysis.get('has_parameters')}")
-            logger.info(f"Total tags: {analysis.get('total_tags')}")
-            logger.info(f"Style tags: {analysis.get('style_tags')}")
-            logger.info(f"Quality tags: {analysis.get('quality_tags')}")
+            logger.info("Has negative prompt: %s", analysis.get("has_negative_prompt"))
+            logger.info("Has parameters: %s", analysis.get("has_parameters"))
+            logger.info("Total tags: %s", analysis.get("total_tags"))
+            logger.info("Style tags: %s", analysis.get("style_tags"))
+            logger.info("Quality tags: %s", analysis.get("quality_tags"))
 
         # Test prompt summary
         summary = prompt_reader.extract_prompt_summary(str(test_file))
-        logger.info(f"\nPrompt summary: {summary}")
+        logger.info("\nPrompt summary: %s", summary)
 
     finally:
         # Clean up

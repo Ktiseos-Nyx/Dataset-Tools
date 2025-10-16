@@ -1,12 +1,12 @@
 # dataset_tools/model_parsers/safetensors_parser.py
+import hashlib
 import json
 import struct
-import hashlib
 from pathlib import Path
 
-from .base_model_parser import BaseModelParser, ModelParserStatus
 from ..civitai_api import get_model_info_by_hash
 from ..logger import info_monitor
+from .base_model_parser import BaseModelParser, ModelParserStatus
 
 
 class SafetensorsParser(BaseModelParser):
@@ -27,9 +27,9 @@ class SafetensorsParser(BaseModelParser):
                     sha256_hash.update(byte_block)
             self.full_hash = sha256_hash.hexdigest()
             self.autov2_hash = self.full_hash[:10]
-            info_monitor(f"[%s] Calculated Hashes for {self.file_path}: AutoV2={self.autov2_hash}", self._logger_name)
+            info_monitor("[%s] Calculated Hashes for %s: AutoV2=%s", self._logger_name, self.file_path, self.autov2_hash)
         except Exception as e:
-            info_monitor(f"[%s] Error calculating hash for {self.file_path}: {e}", self._logger_name)
+            info_monitor("[%s] Error calculating hash for %s: %s", self._logger_name, self.file_path, e)
 
     def _process(self) -> None:
         # BaseModelParser's parse() method handles FileNotFoundError.
@@ -58,13 +58,13 @@ class SafetensorsParser(BaseModelParser):
                     raise ValueError("Safetensors header length is zero.")
                 if length_of_header > MAX_HEADER_SIZE:
                     raise ValueError(
-                        f"Reported safetensors header size is excessively large: {length_of_header} bytes."
+                        "Reported safetensors header size is excessively large: %d bytes." % length_of_header
                     )
 
                 header_json_bytes = f.read(length_of_header)
                 if len(header_json_bytes) < length_of_header:
                     raise ValueError(
-                        f"Corrupted safetensors file: Expected header of {length_of_header} bytes, got {len(header_json_bytes)}."
+                        "Corrupted safetensors file: Expected header of %d bytes, got %d." % (length_of_header, len(header_json_bytes))
                     )
 
                 header_json_str = header_json_bytes.decode("utf-8", errors="strict")
@@ -79,7 +79,7 @@ class SafetensorsParser(BaseModelParser):
                 # NEW: Explicitly parse training parameters
                 self.parameters = {}
                 for key, value in self.metadata_header.items():
-                    if key.startswith('ss_') or key.startswith('modelspec.'):
+                    if key.startswith("ss_") or key.startswith("modelspec."):
                         self.parameters[key] = value
 
                 if self.parameters:
@@ -102,24 +102,24 @@ class SafetensorsParser(BaseModelParser):
                 try:
                     self.civitai_api_info = get_model_info_by_hash(self.autov2_hash)
                 except Exception as e:
-                    self.logger.error(f"Civitai API lookup failed within SafetensorsParser: {e}")
+                    self.logger.error("Civitai API lookup failed within SafetensorsParser: %s", e)
 
             self.status = ModelParserStatus.SUCCESS  # Explicitly set success
 
         except struct.error as e_struct:
             # This typically means the first 8 bytes weren't a valid u64, so not safetensors.
             self._error_message = (
-                f"Safetensors struct error (likely not safetensors or corrupted header length): {e_struct}"
+                "Safetensors struct error (likely not safetensors or corrupted header length): %s" % e_struct
             )
             raise self.NotApplicableError(self._error_message) from e_struct
         except (json.JSONDecodeError, UnicodeDecodeError) as e_decode:
             # This means it looked like safetensors (header length read), but header content was bad.
-            self._error_message = f"Safetensors header content error (JSON or UTF-8 invalid): {e_decode}"
+            self._error_message = "Safetensors header content error (JSON or UTF-8 invalid): %s" % e_decode
             # This is a FAILURE of a safetensors file, not "Not Applicable".
             self.status = ModelParserStatus.FAILURE  # Set status before raising ValueError
             raise ValueError(self._error_message) from e_decode
         except ValueError as e_val:  # Catches our "large header", "zero header", "corrupted header"
-            self._error_message = f"Safetensors format validation error: {e_val}"
+            self._error_message = "Safetensors format validation error: %s" % e_val
             self.status = ModelParserStatus.FAILURE
             raise ValueError(self._error_message) from e_val
         # FileNotFoundError is handled by BaseModelParser

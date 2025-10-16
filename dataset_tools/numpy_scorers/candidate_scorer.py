@@ -8,6 +8,10 @@ Includes specialized scoring for different workflow types and node ecosystems.
 import re  # noqa: F401
 from typing import Any
 
+from ..logger import get_logger
+
+logger = get_logger(__name__)
+
 # Advanced ComfyUI Node type scoring with domain knowledge
 ADVANCED_NODE_TYPE_SCORES = {
     # Dynamic content generators (highest priority)
@@ -141,7 +145,7 @@ class CandidateScorer:
             score += 8
             reasons.append("SUBSTANTIAL TEXT MULTILINE IN GRIPTAPE")
             confidence_modifier += 1
-            print(f"Griptape Text Multiline boost: '{text[:40]}...' -> score +8")
+            logger.debug(f"Griptape Text Multiline boost: '{text[:40]}...' -> score +8")
 
         # Enhanced ShowText|pysssss scoring - prioritize more detailed content
         if node_type == "ShowText|pysssss" and len(text) > 100:

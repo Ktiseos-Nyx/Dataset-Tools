@@ -53,7 +53,7 @@ class BaseNumpyScorer:
             workflow_str = str(sorted(workflow_data.items()))
             return hashlib.md5(workflow_str.encode()).hexdigest()
         except Exception as e:
-            self.logger.warning(f"Could not hash workflow data: {e}")
+            self.logger.warning("Could not hash workflow data: %s", e)
             return str(time.time())  # Fallback to timestamp
 
     def _is_template_text(self, text: str) -> bool:
@@ -202,7 +202,7 @@ class BaseNumpyScorer:
             return scored_candidate
 
         except Exception as e:
-            self.logger.error(f"Error scoring candidate: {e}")
+            self.logger.error("Error scoring candidate: %s", e)
             processing_time = time.time() - start_time
             self._track_analytics("score_candidate", False, processing_time, format_type)
 

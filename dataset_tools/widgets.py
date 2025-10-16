@@ -3,7 +3,7 @@
 # Copyright (c) 2025 [KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA]
 # SPDX-License-Identifier: GPL-3.0
 
-"""Widgets for Dataset-Tools UI"""
+"""Widgets for Dataset-Tools UI."""
 
 import os
 from pathlib import Path
@@ -284,10 +284,10 @@ class ImageLabel(Qw.QLabel):
             self.setText("No Image / Error Loading")  # Or clear it
 
     # Override resizeEvent to rescale the pixmap when the label is resized
-    def resizeEvent(self, event: QtGui.QResizeEvent):
-        if self.pixmap() and not self.pixmap().isNull():  # type: ignore
+    def resizeEvent(self, event: QtGui.QResizeEvent):  # noqa: N802
+        if self.pixmap() and not self.pixmap().isNull():  # type: ignore[union-attr]
             # Create a QPixmap from the current pixmap to avoid issues if it's None
-            current_pixmap = QtGui.QPixmap(self.pixmap())  # type: ignore
+            current_pixmap = QtGui.QPixmap(self.pixmap())  # type: ignore[union-attr]
             if not current_pixmap.isNull():
                 self.set_pixmap(current_pixmap)
         super().resizeEvent(event)
