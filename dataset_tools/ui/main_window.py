@@ -195,6 +195,7 @@ class MainWindow(Qw.QMainWindow):
         self.file_loader: FileLoader | None = None  # Ensure file_loader is always defined
         self.current_files_in_list: list[str] = []
         self.current_folder: str = ""
+        self.current_selected_file: str | None = None
 
         # UI state
         self.main_status_bar = self.statusBar()
@@ -718,6 +719,8 @@ class MainWindow(Qw.QMainWindow):
             self._handle_no_file_selected()
             return
 
+        self.current_selected_file = file_name
+
         # Clear previous displays
         self.clear_selection()
 
@@ -734,6 +737,7 @@ class MainWindow(Qw.QMainWindow):
     def _handle_no_file_selected(self) -> None:
         """Handle when no file is selected."""
         self.clear_selection()
+        self.current_selected_file = None
 
         if hasattr(self, "left_panel"):
             # Left panel stays clean - status only in status bar
@@ -1001,11 +1005,11 @@ class MainWindow(Qw.QMainWindow):
         """Open the dialog to edit metadata for the selected file."""
         nfo("Edit Metadata button clicked.")
 
-        if not self.current_folder or not self.left_panel.get_selected_file_name():
+        if not self.current_folder or not self.current_selected_file:
             self.show_status_message("No file selected to edit.")
             return
 
-        file_name = self.left_panel.get_selected_file_name()
+        file_name = self.current_selected_file
         full_path = os.path.join(self.current_folder, file_name)
 
         # --- Text File Handling ---
@@ -1025,7 +1029,7 @@ class MainWindow(Qw.QMainWindow):
                         f.write(new_text)
                     self.show_status_message(f"Successfully saved changes to {file_name}.")
                     # Refresh the display to show new content
-                    self.on_file_selected(self.left_panel.get_files_list_widget().currentItem())
+                    self.on_file_selected(self.current_selected_file)
                 except Exception as e:
                     self.show_status_message(f"Error saving file: {e}")
             return  # End of text file logic
@@ -1074,7 +1078,7 @@ class MainWindow(Qw.QMainWindow):
 
                     self.show_status_message(f"Successfully saved metadata to {file_name}.")
                     # Refresh the view
-                    self.on_file_selected(self.left_panel.get_files_list_widget().currentItem())
+                    self.on_file_selected(self.current_selected_file)
 
             except Exception as e:
                 self.show_status_message(f"Error processing PNG: {e}")
