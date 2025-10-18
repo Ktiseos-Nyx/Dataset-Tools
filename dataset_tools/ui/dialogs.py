@@ -69,6 +69,7 @@ class SettingsDialog(QDialog):
         self._create_theme_tab()
         self._create_appearance_tab()
         self._create_font_tab()
+        self._create_api_keys_tab()
 
     def _create_theme_tab(self) -> None:
         """Create the Themes tab with buttons for each theme pack."""
@@ -137,6 +138,11 @@ class SettingsDialog(QDialog):
         )
         view_help.setWordWrap(True)
         layout.addWidget(view_help)
+
+        self.clear_cache_button = QPushButton("Clear Thumbnail Cache")
+        self.clear_cache_button.setToolTip("Deletes all cached thumbnail files. Thumbnails will be regenerated on next view.")
+        self.clear_cache_button.clicked.connect(self._on_clear_cache_clicked)
+        layout.addWidget(self.clear_cache_button)
 
         layout.addStretch(1)
         self.tab_widget.addTab(appearance_widget, "Appearance")
@@ -216,6 +222,23 @@ class SettingsDialog(QDialog):
         font = QFont(font_family, font_size)
         self.font_preview.setFont(font)
 
+    def _create_api_keys_tab(self) -> None:
+        """Create the API Keys tab."""
+        api_keys_widget = QWidget()
+        layout = QFormLayout(api_keys_widget)
+        layout.setSpacing(15)
+
+        self.civitai_api_key_input = QLineEdit()
+        self.civitai_api_key_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.civitai_api_key_input.setPlaceholderText("Enter your Civitai API Key")
+        layout.addRow("Civitai API Key:", self.civitai_api_key_input)
+
+        help_text = QLabel("Providing an API key allows for higher rate limits and access to NSFW content if your account is configured for it.")
+        help_text.setWordWrap(True)
+        layout.addRow(help_text)
+
+        self.tab_widget.addTab(api_keys_widget, "API Keys")
+
     def _create_button_box(self) -> None:
         """Create the dialog button box."""
         self.button_box = QDialogButtonBox(
@@ -226,11 +249,19 @@ class SettingsDialog(QDialog):
         self.button_box.rejected.connect(self.reject)
         self.layout.addWidget(self.button_box)
 
+    def _on_clear_cache_clicked(self) -> None:
+        """Handle the clear cache button click."""
+        if hasattr(self.parent_window, "clear_thumbnail_cache"):
+            self.parent_window.clear_thumbnail_cache()
+        else:
+            nfo("Parent window does not have clear_thumbnail_cache method.")
+
     def _load_current_settings(self) -> None:
         """Load and display current settings for all tabs."""
         self._load_window_size_setting()
         self._load_font_setting()
         self._load_view_mode_setting()
+        self._load_api_key_setting()
 
     def _load_view_mode_setting(self) -> None:
         """Load and set current view mode setting."""
@@ -238,6 +269,11 @@ class SettingsDialog(QDialog):
         index = self.view_mode_combo.findData(view_mode)
         if index >= 0:
             self.view_mode_combo.setCurrentIndex(index)
+
+    def _load_api_key_setting(self) -> None:
+        """Load and set current API key setting."""
+        api_key = self.settings.value("civitai_api_key", "", type=str)
+        self.civitai_api_key_input.setText(api_key)
 
     def _load_window_size_setting(self) -> None:
         """Load and set current window size setting."""
@@ -264,6 +300,7 @@ class SettingsDialog(QDialog):
         self._apply_window_settings()
         self._apply_font_settings()
         self._apply_view_mode_settings()
+        self._apply_api_key_settings()
         if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
             self.parent_window.apply_global_font()
         nfo("All settings applied.")
@@ -274,6 +311,11 @@ class SettingsDialog(QDialog):
         self.settings.setValue("fileViewMode", view_mode)
         if hasattr(self.parent_window, "set_file_view_mode"):
             self.parent_window.set_file_view_mode(view_mode)
+
+    def _apply_api_key_settings(self) -> None:
+        """Apply the API key settings."""
+        api_key = self.civitai_api_key_input.text()
+        self.settings.setValue("civitai_api_key", api_key)
 
     def _apply_window_settings(self) -> None:
         """Apply the selected window size settings."""

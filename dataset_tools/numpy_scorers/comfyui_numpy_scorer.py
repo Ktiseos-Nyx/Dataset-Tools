@@ -987,9 +987,10 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                     logger.debug("Best negative candidate: confidence=%.3f, text='%s...'", best_negative.get("confidence", 0), best_negative.get("text", "")[:60])
                     enhanced_result["negative_prompt"] = best_negative["text"]
                 else:
-                    # Clear any existing negative_prompt if we didn't find negative candidates
-                    logger.debug("No negative candidates found, clearing negative_prompt")
-                    enhanced_result["negative_prompt"] = ""
+                    # Keep existing negative_prompt if parser already found one
+                    # Don't clear it - parser might have extracted embeddings/URNs that numpy doesn't recognize
+                    logger.debug("No negative candidates found, keeping existing negative_prompt from parser")
+                    # No-op: keep enhanced_result["negative_prompt"] = engine_result.get("negative_prompt", "")
 
                 # Only enhance if we found good candidates
                 if positive_candidates or negative_candidates:

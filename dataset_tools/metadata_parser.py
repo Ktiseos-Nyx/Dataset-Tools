@@ -9,7 +9,6 @@ import traceback
 from pathlib import Path
 from typing import Any
 
-# Import numpy scorer for enhanced analysis
 from . import numpy_scorer
 from .correct_types import DownField, UpField
 from .logger import info_monitor as nfo
@@ -218,8 +217,14 @@ def _transform_engine_result_to_ui_dict(result: dict[str, Any], ui_dict: dict[st
     if workflow_analysis_data:
         ui_dict[UpField.WORKFLOW_ANALYSIS.value] = workflow_analysis_data
 
-    # --- Civitai API Info (from Safetensors) ---
-    if hasattr(result, "civitai_api_info") and result.civitai_api_info:
-        if "unclassified" not in ui_dict:
-            ui_dict["unclassified"] = {}
-        ui_dict["unclassified"]["civitai_api_info"] = result.civitai_api_info
+    # --- Civitai API Info ---
+    # Check both top-level (from Safetensors) and parameters (from ComfyUI/A1111 parsers)
+    civitai_api_info = None
+    if "civitai_api_info" in result and result["civitai_api_info"]:
+        civitai_api_info = result["civitai_api_info"]
+    elif "parameters" in result and isinstance(result["parameters"], dict):
+        if "civitai_api_info" in result["parameters"] and result["parameters"]["civitai_api_info"]:
+            civitai_api_info = result["parameters"]["civitai_api_info"]
+
+    if civitai_api_info:
+        ui_dict[UpField.CIVITAI_INFO.value] = civitai_api_info

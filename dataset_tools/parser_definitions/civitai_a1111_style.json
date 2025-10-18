@@ -143,6 +143,12 @@
         "source_variable_key": "parameters.tool_specific.civitai_metadata_str",
         "value_type": "object",
         "optional": true
+      },
+      {
+        "target_key": "parameters.civitai_api_info",
+        "method": "civitai_extract_all_info",
+        "optional": true,
+        "comment": "Fetch model/version information from CivitAI API based on civitai_resources"
       }
     ],
     "output_template": {
@@ -159,6 +165,7 @@
         "clip_skip": "$parameters.clip_skip",
         "civitai_resources": "$parameters.civitai_resources_data",
         "civitai_metadata_obj": "$parameters.civitai_metadata",
+        "civitai_api_info": "$parameters.civitai_api_info",
         "tool_specific": {
           "a1111_model": "$parameters.model",
           "a1111_model_hash": "$parameters.model_hash",

@@ -514,6 +514,8 @@ class ContextDataPreparer:
             parser = SafetensorsParser(context["file_path_original"])
             if parser.parse():
                 context["safetensors_metadata"] = parser.metadata_header
+                if parser.civitai_api_info:
+                    context["civitai_api_info"] = parser.civitai_api_info
             else:
                 self.logger.warning(f"SafeTensors parser failed: {getattr(parser, 'error_message', 'Unknown error')}")
         except ImportError:

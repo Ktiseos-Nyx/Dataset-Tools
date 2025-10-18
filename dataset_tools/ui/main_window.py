@@ -11,14 +11,17 @@ application interface, handling file management, metadata display, and user inte
 
 import os
 import sys
+import shutil
 from pathlib import Path
 from typing import Any
 
 from PIL import Image, ImageOps, PngImagePlugin
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
-from PyQt6.QtCore import QObject, QSettings, QThread, QTimer, pyqtSignal
+from PyQt6.QtCore import QObject, QSettings, QThread, QThreadPool, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
+
+from .civitai_api_worker import CivitaiInfoWorker
 
 from ..background_operations import (  # pylint: disable=relative-beyond-top-level
     TaskManager,
@@ -26,7 +29,7 @@ from ..background_operations import (  # pylint: disable=relative-beyond-top-lev
 )
 
 # from PyQt6.QtWidgets import QApplication
-from ..correct_types import EmptyField  # pylint: disable=relative-beyond-top-level
+from ..correct_types import DownField, UpField, EmptyField  # pylint: disable=relative-beyond-top-level
 from ..correct_types import ExtensionType as Ext  # pylint: disable=relative-beyond-top-level
 from ..logger import debug_message, debug_monitor  # pylint: disable=relative-beyond-top-level
 from ..logger import info_monitor as nfo  # pylint: disable=relative-beyond-top-level
@@ -196,6 +199,9 @@ class MainWindow(Qw.QMainWindow):
         self.current_files_in_list: list[str] = []
         self.current_folder: str = ""
         self.current_selected_file: str | None = None
+        self.current_metadata: dict | None = None
+        self.civitai_api_worker: CivitaiInfoWorker | None = None
+        self.active_workers = []
 
         # UI state
         self.main_status_bar = self.statusBar()
@@ -208,6 +214,8 @@ class MainWindow(Qw.QMainWindow):
         self.image_loader_thread: QThread | None = None
         self.image_loader_worker: ImageLoaderWorker | None = None
         self._setup_image_loading_thread()
+
+        self.thread_pool = QThreadPool.globalInstance()
 
     def _initialize_managers(self) -> None:
         """Initialize UI and functionality managers."""
@@ -833,15 +841,16 @@ class MainWindow(Qw.QMainWindow):
     def _load_and_display_metadata(self, file_name: str) -> None:
         """Load metadata for a file and display it."""
         try:
-            metadata_dict = self.load_metadata(file_name)
+            self.current_metadata = self.load_metadata(file_name)
 
             # If background processing is enabled, metadata_dict will be None
             # and the display will be updated asynchronously via callbacks
-            if metadata_dict is not None:
-                self.metadata_display.display_metadata(metadata_dict)
+            if self.current_metadata is not None:
+                self.metadata_display.display_metadata(self.current_metadata)
+                self.fetch_civitai_info(self.current_metadata)
 
                 placeholder_key = EmptyField.PLACEHOLDER.value
-                if len(metadata_dict) == 1 and placeholder_key in metadata_dict:
+                if len(self.current_metadata) == 1 and placeholder_key in self.current_metadata:
                     nfo("No meaningful metadata for %s", file_name)
             else:
                 # Check if we're using background processing
@@ -858,6 +867,147 @@ class MainWindow(Qw.QMainWindow):
                 exc_info=True,
             )
             self.metadata_display.display_metadata(None)
+
+    def fetch_civitai_info(self, metadata_dict: dict) -> None:
+        """Fetch Civitai info in a background thread using pre-extracted IDs."""
+        # Check if the metadata engine already extracted CivitAI IDs for us
+        civitai_api_info = metadata_dict.get(UpField.CIVITAI_INFO.value, {})
+
+        nfo("[CIVITAI_DEBUG] civitai_api_info = %s", civitai_api_info)
+        nfo("[CIVITAI_DEBUG] UpField.CIVITAI_INFO.value = %s", UpField.CIVITAI_INFO.value)
+        nfo("[CIVITAI_DEBUG] metadata_dict keys = %s", list(metadata_dict.keys()))
+
+        if isinstance(civitai_api_info, dict) and "ids_to_fetch" in civitai_api_info:
+            # Use the IDs extracted by the metadata engine
+            ids_to_fetch = civitai_api_info.get("ids_to_fetch", [])
+        else:
+            # Fallback: parse IDs ourselves (shouldn't happen with updated extractors)
+            nfo("[CIVITAI] No pre-extracted IDs found, parsing from metadata")
+            nfo("[CIVITAI_DEBUG] civitai_api_info type: %s, has ids_to_fetch: %s",
+                type(civitai_api_info),
+                'ids_to_fetch' in civitai_api_info if isinstance(civitai_api_info, dict) else 'N/A')
+            return
+
+        if not ids_to_fetch:
+            return
+
+        nfo("[CIVITAI] Starting async fetch for %d CivitAI resources", len(ids_to_fetch))
+
+        if ids_to_fetch:
+            worker = CivitaiInfoWorker(ids_to_fetch)
+            worker.signals.finished.connect(self.on_civitai_info_fetched)
+            worker.signals.error.connect(self.on_civitai_info_error)
+            worker.signals.finished.connect(self.cleanup_worker)
+            self.thread_pool.start(worker)
+            self.active_workers.append(worker)
+
+    def on_civitai_info_fetched(self, civitai_info: dict) -> None:
+        """Update the UI with the fetched Civitai info."""
+        if civitai_info and self.current_metadata:
+            # Format CivitAI resources as human-readable parameter entries
+            resources = []
+            seen_resources = set()  # Track duplicates
+            urn_to_name = {}  # Map URN → display name for prompt replacement
+
+            for key, info in civitai_info.items():
+                if isinstance(info, dict):
+                    resource_type = info.get("type", "Unknown")
+                    model_name = info.get("modelName", "Unknown")
+                    version_name = info.get("versionName", "")
+                    base_model = info.get("baseModel", "")
+                    trained_words = info.get("trainedWords", [])
+
+                    # For embeddings, use the activation tag instead of model name
+                    if resource_type in ["TextualInversion", "Embedding"] and trained_words:
+                        # Use first trained word as the display name
+                        display_name = trained_words[0] if isinstance(trained_words, list) else str(trained_words)
+                    else:
+                        # Format: "ModelName v1.0 (Type - BaseModel)"
+                        display_name = model_name
+                        if version_name:
+                            display_name += f" {version_name}"
+
+                    if resource_type or base_model:
+                        details = []
+                        if resource_type:
+                            details.append(resource_type)
+                        if base_model:
+                            details.append(base_model)
+                        display_name += f" ({' - '.join(details)})"
+
+                    # Only add if we haven't seen this exact resource
+                    if display_name not in seen_resources:
+                        resources.append(display_name)
+                        seen_resources.add(display_name)
+
+            # Build URN to name mapping from civitai_airs in parameters
+            if DownField.GENERATION_DATA.value in self.current_metadata:
+                params = self.current_metadata[DownField.GENERATION_DATA.value]
+                civitai_airs = params.get("civitai_airs", [])
+
+                # Match URNs to fetched resource info by model/version IDs
+                import re
+                for urn in civitai_airs:
+                    if isinstance(urn, str):
+                        urn_match = re.search(r'urn:air:.*?civitai:([0-9]+)@([0-9]+)', urn)
+                        if urn_match:
+                            model_id, version_id = urn_match.groups()
+                            # Try to find matching resource info by ID
+                            for key, info in civitai_info.items():
+                                # Check if this info matches the URN's model_id or version_id
+                                if model_id in key or version_id in key:
+                                    if isinstance(info, dict):
+                                        resource_type = info.get("type", "")
+                                        info_model_name = info.get("modelName", "")
+                                        trained_words = info.get("trainedWords", [])
+
+                                        # For embeddings, use activation tag; otherwise use model name
+                                        if resource_type in ["TextualInversion", "Embedding"] and trained_words:
+                                            simple_name = trained_words[0] if isinstance(trained_words, list) else str(trained_words)
+                                        else:
+                                            simple_name = info_model_name
+
+                                        if simple_name:
+                                            urn_to_name[urn] = simple_name
+                                            break
+
+            # Replace URNs in prompt text with human-readable names
+            if UpField.PROMPT.value in self.current_metadata and urn_to_name:
+                prompt_data = self.current_metadata[UpField.PROMPT.value]
+                for prompt_type in ["Positive", "Negative"]:
+                    if prompt_type in prompt_data:
+                        prompt_text = prompt_data[prompt_type]
+                        for urn, name in urn_to_name.items():
+                            # Replace "embedding:urn:air:..." with activation tag
+                            prompt_text = prompt_text.replace(f"embedding:{urn}", name)
+                            # Also replace bare URNs just in case
+                            prompt_text = prompt_text.replace(urn, name)
+                        prompt_data[prompt_type] = prompt_text
+
+            # Add to parameters section as "CivitAI Resources" and reorder to show first
+            if resources and DownField.GENERATION_DATA.value in self.current_metadata:
+                params = self.current_metadata[DownField.GENERATION_DATA.value]
+
+                # Create new ordered dict with civitai_resources first
+                new_params = {"civitai_resources": resources}
+
+                # Add all other fields after
+                for key, value in params.items():
+                    if key != "civitai_resources":  # Skip if it already exists
+                        new_params[key] = value
+
+                # Replace the parameters dict with the reordered one
+                self.current_metadata[DownField.GENERATION_DATA.value] = new_params
+                self.metadata_display.display_metadata(self.current_metadata)
+
+    def cleanup_worker(self):
+        worker = self.sender()
+        if worker in self.active_workers:
+            self.active_workers.remove(worker)
+
+    def on_civitai_info_error(self, error_message: str) -> None:
+        """Show an error message in the status bar when Civitai info fetching fails."""
+        self.show_status_message(f"Civitai API Error: {error_message}")
 
     # ========================================================================
     # METADATA OPERATIONS
@@ -1239,6 +1389,37 @@ class MainWindow(Qw.QMainWindow):
     def show_theme_report(self) -> None:
         """Show enhanced theme system report in console."""
         self.enhanced_theme_manager.print_theme_report()
+
+    def clear_thumbnail_cache(self) -> None:
+        """Clear the thumbnail cache for the current folder and its subdirectories."""
+        if not self.current_folder:
+            self.show_status_message("No folder loaded, nothing to clear.")
+            return
+
+        nfo(f"[CACHE] Starting thumbnail cache clear for: {self.current_folder}")
+        deleted_count = 0
+        try:
+            for root, dirs, _files in os.walk(self.current_folder):
+                if ".thumbnails" in dirs:
+                    cache_dir = os.path.join(root, ".thumbnails")
+                    try:
+                        shutil.rmtree(cache_dir)
+                        nfo(f"[CACHE] Deleted thumbnail cache: {cache_dir}")
+                        deleted_count += 1
+                    except Exception as e:
+                        nfo(f"[CACHE] Error deleting cache directory {cache_dir}: {e}")
+
+            if deleted_count > 0:
+                self.show_status_message(f"Successfully cleared {deleted_count} thumbnail cache(s).")
+                # Refresh the view to show placeholders
+                if hasattr(self, "thumbnail_grid"):
+                    self.thumbnail_grid.set_folder(self.current_folder, self.current_files_in_list)
+            else:
+                self.show_status_message("No thumbnail caches found to clear.")
+
+        except Exception as e:
+            nfo(f"[CACHE] Error during cache clearing process: {e}")
+            self.show_status_message("An error occurred while clearing the cache.")
 
     # ========================================================================
     # DRAG & DROP SUPPORT

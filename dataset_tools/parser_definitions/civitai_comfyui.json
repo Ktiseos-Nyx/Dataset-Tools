@@ -195,6 +195,12 @@
         "optional": true
       },
       {
+        "target_key": "parameters.civitai_api_info",
+        "method": "civitai_extract_all_info",
+        "optional": true,
+        "comment": "Fetch model/version information from CivitAI API based on URN:AIR resources"
+      },
+      {
         "comment": "🎯 TIPO AI Prompt Enhancement Detection",
         "target_key": "tipo_enhancement",
         "method": "comfyui_detect_tipo_enhancement"
@@ -249,7 +255,8 @@
         "model": "$parameters.model",
         "loras": "$parameters.loras",
         "civitai_airs": "$parameters.civitai_airs",
-        "civitai_extraMetadata": "$parameters.civitai_extraMetadata"
+        "civitai_extraMetadata": "$parameters.civitai_extraMetadata",
+        "civitai_api_info": "$parameters.civitai_api_info"
       },
       "civitai_metadata": {
         "parser": "Civitai ComfyUI (PNG/JPEG extraMetadata)",

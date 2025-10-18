@@ -8,6 +8,8 @@ Think of it as your inventory grid in FFXIV but for images!
 """
 
 import hashlib
+import gc
+import time
 from pathlib import Path
 
 from PIL import Image, ImageOps
@@ -73,6 +75,7 @@ class ThumbnailWorker(QtCore.QRunnable):
 
     def run(self):
         """Execute the worker task."""
+        log.debug("[CACHE_DEBUG] Worker started for: %s", self.file_path)
         try:
             # Check disk cache first
             pixmap = self._load_cached_thumbnail(self.file_path, self.thumb_size)
@@ -91,6 +94,9 @@ class ThumbnailWorker(QtCore.QRunnable):
         except Exception as e:
             log.error("Error loading thumbnail for %s: %s", self.file_path, e, exc_info=True)
             self.signals.error.emit(self.file_path, str(e))
+        finally:
+            gc.collect()
+            log.debug("[CACHE_DEBUG] Worker finished for: %s", self.file_path)
 
     def _get_cache_path(self, image_path: str, thumb_size: int) -> Path:
         """Get the path where thumbnail should be cached."""
@@ -102,25 +108,32 @@ class ThumbnailWorker(QtCore.QRunnable):
         path_hash = hashlib.sha256(path_str.encode()).hexdigest()[:16]
         original_name = Path(image_path).stem
 
-        return cache_dir / f"{path_hash}_{original_name}.jpg"
+        return cache_dir / f"{path_hash}_{original_name}.webp"
 
     def _load_cached_thumbnail(self, image_path: str, thumb_size: int) -> QtGui.QPixmap | None:
         """Load thumbnail from disk cache if available and fresh."""
         try:
             cache_path = self._get_cache_path(image_path, thumb_size)
+            log.debug("[CACHE_DEBUG] Checking for cache file: %s", cache_path)
 
             if not cache_path.exists():
+                log.debug("[CACHE_DEBUG] Cache file does not exist.")
                 return None
 
             source_mtime = Path(image_path).stat().st_mtime
             cache_mtime = cache_path.stat().st_mtime
+            log.debug("[CACHE_DEBUG] Source mtime: %s, Cache mtime: %s", source_mtime, cache_mtime)
 
             if source_mtime > cache_mtime:
+                log.debug("[CACHE_DEBUG] Cache is stale.")
                 return None  # Cache is stale
 
             pixmap = QtGui.QPixmap(str(cache_path))
             if not pixmap.isNull():
+                log.debug("[CACHE_DEBUG] Loaded pixmap from cache.")
                 return pixmap
+            else:
+                log.debug("[CACHE_DEBUG] Failed to load pixmap from cache file.")
 
         except Exception as e:
             log.debug("Cache load failed for %s: %s", image_path, e, exc_info=True)
@@ -129,11 +142,16 @@ class ThumbnailWorker(QtCore.QRunnable):
 
     def _generate_thumbnail(self, image_path: str, thumb_size: int) -> QtGui.QPixmap | None:
         """Generate a new thumbnail."""
+        log.debug("[CACHE_DEBUG] Generating thumbnail for: %s", image_path)
+        start_time = time.time()
         try:
             with Image.open(image_path) as original_img:
                 processed_img = ImageOps.exif_transpose(original_img)
                 processed_img.thumbnail((thumb_size, thumb_size), Image.Resampling.BILINEAR)
-                return self._pil_to_qpixmap(processed_img)
+                pixmap = self._pil_to_qpixmap(processed_img)
+                end_time = time.time()
+                log.debug("[CACHE_DEBUG] Thumbnail generation took: %.4f seconds", end_time - start_time)
+                return pixmap
         except Exception as e:
             log.error("Failed to generate thumbnail for %s: %s", image_path, e, exc_info=True)
             return None
@@ -142,9 +160,14 @@ class ThumbnailWorker(QtCore.QRunnable):
         """Save thumbnail to disk cache."""
         try:
             cache_path = self._get_cache_path(image_path, thumb_size)
-            pixmap.save(str(cache_path), "JPEG", quality=85)
+            success = pixmap.save(str(cache_path), "WEBP", quality=85)
+            if success:
+                log.debug("[CACHE_DEBUG] Successfully saved cache file: %s", cache_path)
+            else:
+                log.debug("[CACHE_DEBUG] Failed to save cache file: %s", cache_path)
         except Exception as e:
             log.debug("Failed to save thumbnail cache: %s", e, exc_info=True)
+            # Exception already logged above
 
     def _pil_to_qpixmap(self, pil_image: Image.Image) -> QtGui.QPixmap:
         """Convert PIL Image to QPixmap."""

@@ -58,6 +58,8 @@ class FieldExtractor:
 
     def _register_extractor_methods(self):
         """Register all extraction methods from sub-extractors."""
+        self.logger.info("[FIELD_EXTRACTION] _register_extractor_methods CALLED!")
+
         # Direct value methods
         self._method_registry.update(self.direct_extractor.get_methods())
 
@@ -65,7 +67,9 @@ class FieldExtractor:
         self._method_registry.update(self.a1111_extractor.get_methods())
 
         # Civitai methods
-        self._method_registry.update(self.civitai_extractor.get_methods())
+        civitai_methods = self.civitai_extractor.get_methods()
+        self.logger.info("[FIELD_EXTRACTION_DEBUG] Registering Civitai methods: %s", list(civitai_methods.keys()))
+        self._method_registry.update(civitai_methods)
 
         # ComfyUI methods
         self._method_registry.update(self.comfyui_extractor.get_methods())
@@ -121,9 +125,17 @@ class FieldExtractor:
             self.logger.warning(f"Unknown extraction method: '{method_name}'")
             return None
 
+        if method_name == "civitai_extract_all_info":
+            # Debug logging already handled by logger
+            self.logger.info("[FIELD_EXTRACT_DEBUG] About to call civitai_extract_all_info!")
+
         try:
             # Execute the extraction
             value = extraction_method(data_for_method, method_def, context_data, extracted_fields)
+
+            if method_name == "civitai_extract_all_info":
+                # Debug logging already handled by logger
+                self.logger.info("[FIELD_EXTRACT_DEBUG] civitai_extract_all_info returned: %s", value)
 
             # Apply type conversion if specified
             return self._apply_type_conversion(value, method_def)
