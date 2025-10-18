@@ -98,9 +98,14 @@ class ThemeManager:
             action.setChecked(theme_key == theme_name)
 
         try:
-            # Apply the theme
-            invert_secondary = theme_name.startswith("dark_")
-            apply_stylesheet(app, theme=theme_name, invert_secondary=invert_secondary)
+            # Special handling for reset to default - clear all styling
+            if theme_name == "reset_to_default.qss":
+                app.setStyleSheet("")
+                nfo("Reset to OS default styling")
+            else:
+                # Apply qt-material theme
+                invert_secondary = theme_name.startswith("dark_")
+                apply_stylesheet(app, theme=theme_name, invert_secondary=invert_secondary)
 
             self.current_theme = theme_name
 
@@ -477,14 +482,14 @@ class LayoutManager:
         button_configs = [
             (
                 "copy_metadata_button",
-                "Copy All Metadata",
+                "Copy All",
                 "copy_metadata_to_clipboard",
                 "<b>Copy All Metadata</b><br/>Copy all metadata from the current file to "
                 "clipboard<br/><i>Shortcut: Ctrl+C</i>",
             ),
             (
                 "edit_metadata_button",
-                "Edit Metadata",
+                "Edit",
                 "open_edit_dialog",
                 "<b>Edit Metadata</b><br/>Edit the metadata for the selected file.<br/>"\
                 "<i>Currently supports .txt files.</i>",
@@ -498,7 +503,7 @@ class LayoutManager:
             ),
             (
                 "exit_button",
-                "Exit Application",
+                "Exit",
                 "close",
                 "<b>Exit Application</b><br/>Close the Dataset Tools application<br/><i>Shortcut: Ctrl+Q</i>",
             ),
