@@ -323,6 +323,9 @@ class ThumbnailGridWidget(Qw.QListWidget):
             item.setIcon(QtGui.QIcon(placeholder))
             self.addItem(item)
 
+        # Pre-load cached thumbnails from disk into memory
+        self._preload_disk_cache()
+
         # Load visible thumbnails after a short delay
         QtCore.QTimer.singleShot(100, self._request_visible_thumbnails)
 
@@ -339,6 +342,54 @@ class ThumbnailGridWidget(Qw.QListWidget):
         painter.end()
 
         return pixmap
+
+    def _preload_disk_cache(self):
+        """Pre-load existing disk cache into memory for instant display."""
+        if not self.folder_path:
+            return
+
+        cache_dir = Path(self.folder_path) / ".thumbnails"
+        if not cache_dir.exists():
+            return
+
+        log.info("Pre-loading disk cache from: %s", cache_dir)
+        loaded_count = 0
+
+        for file_name in self.file_list:
+            full_path = str(Path(self.folder_path) / file_name)
+
+            # Generate cache path (same logic as worker)
+            path_str = f"{full_path}_{self.current_thumb_size}"
+            path_hash = hashlib.sha256(path_str.encode()).hexdigest()[:16]
+            original_name = Path(full_path).stem
+            cache_path = cache_dir / f"{path_hash}_{original_name}.webp"
+
+            # Check if cached thumbnail exists and is fresh
+            if cache_path.exists():
+                try:
+                    source_mtime = Path(full_path).stat().st_mtime
+                    cache_mtime = cache_path.stat().st_mtime
+
+                    # Only use cache if it's newer than source
+                    if cache_mtime >= source_mtime:
+                        pixmap = QtGui.QPixmap(str(cache_path))
+                        if not pixmap.isNull():
+                            # Add to memory cache
+                            self.thumbnail_cache.put(full_path, pixmap)
+                            loaded_count += 1
+
+                            # Update the list item immediately
+                            for i in range(self.count()):
+                                item = self.item(i)
+                                if item and item.text() == file_name:
+                                    item.setIcon(QtGui.QIcon(pixmap))
+                                    break
+
+                except Exception as e:
+                    log.debug("Failed to preload cache for %s: %s", file_name, e)
+
+        if loaded_count > 0:
+            log.info("Pre-loaded %s thumbnails from disk cache", loaded_count)
 
     def _request_visible_thumbnails(self):
         """Request thumbnails for visible items only (lazy loading)."""

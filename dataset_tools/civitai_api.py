@@ -5,12 +5,91 @@ metadata for models, LORAs, and other resources.
 """
 
 import json
+import time
+from pathlib import Path
 from typing import Any
 
 import requests
 from PyQt6.QtCore import QSettings
 
 from dataset_tools.logger import error_message, info_monitor, warning_message
+
+# Cache configuration
+CACHE_DIR = Path.home() / ".cache" / "dataset-tools" / "civitai"
+CACHE_EXPIRY_DAYS = 7
+
+
+def _get_cache_path(cache_key: str) -> Path:
+    """Get the cache file path for a given key."""
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    return CACHE_DIR / f"{cache_key}.json"
+
+
+def _load_from_cache(cache_key: str) -> dict[str, Any] | None:
+    """Load cached API response if it exists and isn't expired."""
+    cache_path = _get_cache_path(cache_key)
+
+    if not cache_path.exists():
+        return None
+
+    try:
+        # Check if cache is expired
+        cache_age_seconds = time.time() - cache_path.stat().st_mtime
+        cache_age_days = cache_age_seconds / 86400
+
+        if cache_age_days > CACHE_EXPIRY_DAYS:
+            info_monitor("[Civitai Cache] Cache expired for %s (%.1f days old)", cache_key, cache_age_days)
+            return None
+
+        # Load cached data
+        with open(cache_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            info_monitor("[Civitai Cache] Loaded from cache: %s", cache_key)
+            return data
+
+    except Exception as e:
+        error_message("[Civitai Cache] Failed to load cache for %s: %s", cache_key, e)
+        return None
+
+
+def _save_to_cache(cache_key: str, data: dict[str, Any]) -> None:
+    """Save API response to cache."""
+    try:
+        cache_path = _get_cache_path(cache_key)
+        with open(cache_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        info_monitor("[Civitai Cache] Saved to cache: %s", cache_key)
+    except Exception as e:
+        error_message("[Civitai Cache] Failed to save cache for %s: %s", cache_key, e)
+
+
+def clear_cache() -> tuple[int, int]:
+    """Clear all cached CivitAI API responses.
+
+    Returns:
+        Tuple of (files_deleted, bytes_freed)
+    """
+    if not CACHE_DIR.exists():
+        return (0, 0)
+
+    files_deleted = 0
+    bytes_freed = 0
+
+    try:
+        for cache_file in CACHE_DIR.glob("*.json"):
+            try:
+                bytes_freed += cache_file.stat().st_size
+                cache_file.unlink()
+                files_deleted += 1
+            except Exception as e:
+                error_message("[Civitai Cache] Failed to delete %s: %s", cache_file, e)
+
+        info_monitor("[Civitai Cache] Cleared %s files (%.2f KB)", files_deleted, bytes_freed / 1024)
+        return (files_deleted, bytes_freed)
+
+    except Exception as e:
+        error_message("[Civitai Cache] Error clearing cache: %s", e)
+        return (0, 0)
 
 
 def get_model_info_by_hash(model_hash: str) -> dict[str, Any] | None:
@@ -25,6 +104,12 @@ def get_model_info_by_hash(model_hash: str) -> dict[str, Any] | None:
     """
     if not model_hash or not isinstance(model_hash, str):
         return None
+
+    # Check cache first
+    cache_key = f"hash_{model_hash}"
+    cached_data = _load_from_cache(cache_key)
+    if cached_data:
+        return cached_data
 
     api_url = f"https://civitai.com/api/v1/model-versions/by-hash/{model_hash}"
     info_monitor("[Civitai API] Fetching model info from: %s", api_url)
@@ -62,6 +147,8 @@ def get_model_info_by_hash(model_hash: str) -> dict[str, Any] | None:
                 "downloadUrl": data.get("downloadUrl"),
                 "previewImageUrl": first_image.get("url"),
             }
+            # Save to cache
+            _save_to_cache(cache_key, model_info)
             return model_info
         warning_message(
             "[Civitai API] Model hash not found on Civitai (Status: %s): %s",
@@ -93,6 +180,12 @@ def get_model_info_by_id(model_id: str) -> dict[str, Any] | None:
     if not model_id or not isinstance(model_id, str):
         return None
 
+    # Check cache first
+    cache_key = f"model_{model_id}"
+    cached_data = _load_from_cache(cache_key)
+    if cached_data:
+        return cached_data
+
     api_url = f"https://civitai.com/api/v1/models/{model_id}"
     info_monitor("[Civitai API] Fetching model info from: %s", api_url)
 
@@ -118,6 +211,8 @@ def get_model_info_by_id(model_id: str) -> dict[str, Any] | None:
                 "baseModel": first_version.get("baseModel"),
                 "trainedWords": first_version.get("trainedWords", []),
             }
+            # Save to cache
+            _save_to_cache(cache_key, model_info)
             return model_info
         warning_message(
             "[Civitai API] Model ID not found on Civitai (Status: %s): %s",
@@ -149,6 +244,12 @@ def get_model_version_info_by_id(version_id: str) -> dict[str, Any] | None:
     if not version_id or not isinstance(version_id, str):
         return None
 
+    # Check cache first
+    cache_key = f"version_{version_id}"
+    cached_data = _load_from_cache(cache_key)
+    if cached_data:
+        return cached_data
+
     api_url = f"https://civitai.com/api/v1/model-versions/{version_id}"
     info_monitor("[Civitai API] Fetching model version info from: %s", api_url)
 
@@ -179,6 +280,8 @@ def get_model_version_info_by_id(version_id: str) -> dict[str, Any] | None:
                 "description": model_data.get("description"),
                 "downloadUrl": data.get("downloadUrl"),
             }
+            # Save to cache
+            _save_to_cache(cache_key, version_info)
             return version_info
         warning_message(
             "[Civitai API] Model version ID not found on Civitai (Status: %s): %s",

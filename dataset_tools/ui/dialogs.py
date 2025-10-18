@@ -16,6 +16,7 @@ from PyQt6.QtWidgets import (
     QDialog,
     QDialogButtonBox,
     QFormLayout,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
     QListWidget,
@@ -32,6 +33,7 @@ from PyQt6.QtWidgets import (
     QSizePolicy,
 )
 
+from .. import civitai_api
 from ..logger import info_monitor as nfo
 
 # ============================================================================
@@ -237,6 +239,15 @@ class SettingsDialog(QDialog):
         help_text.setWordWrap(True)
         layout.addRow(help_text)
 
+        # Cache management
+        cache_layout = QHBoxLayout()
+        clear_cache_btn = QPushButton("Clear CivitAI Cache")
+        clear_cache_btn.setToolTip("Clear all cached API responses. They will be re-fetched on next use.")
+        clear_cache_btn.clicked.connect(self._clear_civitai_cache)
+        cache_layout.addWidget(clear_cache_btn)
+        cache_layout.addStretch()
+        layout.addRow("Cache:", cache_layout)
+
         self.tab_widget.addTab(api_keys_widget, "API Keys")
 
     def _create_button_box(self) -> None:
@@ -337,6 +348,33 @@ class SettingsDialog(QDialog):
         if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
             self.parent_window.apply_global_font()
             nfo(f"Applied global font: {font_family}, {font_size}pt")
+
+    def _clear_civitai_cache(self) -> None:
+        """Clear the CivitAI API cache."""
+        reply = QMessageBox.question(
+            self,
+            "Clear Cache",
+            "Are you sure you want to clear the CivitAI cache?\n\nAll cached API responses will be deleted and re-fetched on next use.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            files_deleted, bytes_freed = civitai_api.clear_cache()
+            kb_freed = bytes_freed / 1024
+
+            if files_deleted > 0:
+                QMessageBox.information(
+                    self,
+                    "Cache Cleared",
+                    "Cleared %s cached files (%.2f KB)" % (files_deleted, kb_freed)
+                )
+            else:
+                QMessageBox.information(
+                    self,
+                    "Cache Empty",
+                    "No cached files found."
+                )
 
     def accept_settings(self) -> None:
         """Apply all settings and close the dialog."""
