@@ -61,6 +61,7 @@ kn  = ["ruff", "pylint"] # For your personal linting/tooling
 
 [project.scripts]
 dataset-tools = "dataset_tools.main:main"
+dataset-tools-parse = "dataset_tools.cli_parse:cli_parse"  # Headless CLI parser for bots/serverless
 
 [tool.setuptools.packages.find]
 include = ["dataset_tools*"]

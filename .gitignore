@@ -86,3 +86,9 @@ dataset_tools/ui/claude_messages/
 
 # Wiki export directory
 wiki_export/
+
+# API keys and secrets (CRITICAL - NEVER COMMIT THESE!)
+secrets.json
+.env
+*.secret
+*_secrets.json
