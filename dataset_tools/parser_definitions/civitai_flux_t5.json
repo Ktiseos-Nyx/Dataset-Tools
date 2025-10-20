@@ -1,0 +1,202 @@
+{
+  "parser_name": "Civitai_FLUX_T5",
+  "priority": 210,
+  "description": "Civitai-generated FLUX/T5 images with A1111-style metadata in EXIF including CivitAI resources",
+  "version": "1.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG",
+    "JPEG",
+    "JPG",
+    "WEBP"
+  ],
+  "detection_rules": [
+    {
+      "comment": "EXIF UserComment must exist",
+      "source_type": "exif_user_comment",
+      "operator": "exists"
+    },
+    {
+      "comment": "Must contain FLUX model signatures in EXIF - case insensitive",
+      "source_type": "exif_user_comment",
+      "operator": "contains_case_insensitive",
+      "value": "flux"
+    },
+    {
+      "comment": "Must contain Civitai resources field",
+      "source_type": "exif_user_comment",
+      "operator": "contains",
+      "value": "Civitai resources"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "a1111_parameter_string_content"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ]
+    },
+    "extraction_strategy": "a1111_text_parsing",
+    "format_description": "Civitai-generated FLUX/T5 images use A1111-style text format with CivitAI metadata in EXIF",
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "a1111_extract_prompt_positive",
+        "comment": "Extract positive prompt from A1111-style parameter string"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "a1111_extract_prompt_negative",
+        "comment": "Extract negative prompt from A1111-style parameter string"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Seed",
+        "value_type": "integer",
+        "comment": "Extract seed parameter"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Steps",
+        "value_type": "integer",
+        "comment": "Extract steps parameter"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG scale",
+        "value_type": "float",
+        "comment": "Extract CFG scale parameter"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Sampler",
+        "value_type": "string",
+        "comment": "Extract sampler parameter"
+      },
+      {
+        "target_key": "parameters.clip_skip",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Clip skip",
+        "value_type": "integer",
+        "optional": true,
+        "comment": "Extract clip skip parameter"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model",
+        "value_type": "string",
+        "optional": true,
+        "comment": "Extract model parameter (FLUX model)"
+      },
+      {
+        "target_key": "parameters.size",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Size",
+        "value_type": "string",
+        "optional": true,
+        "comment": "Extract size parameter"
+      },
+      {
+        "target_key": "parameters.tool_specific.civitai_created_date",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Created Date",
+        "value_type": "string",
+        "optional": true,
+        "comment": "Extract Civitai creation date"
+      },
+      {
+        "target_key": "parameters.tool_specific.civitai_resources_str",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Civitai resources",
+        "value_type": "string",
+        "optional": true,
+        "comment": "Extract raw Civitai resources JSON string"
+      },
+      {
+        "target_key": "parameters.civitai_resources_data",
+        "method": "json_from_string_variable",
+        "source_variable_key": "parameters.tool_specific.civitai_resources_str",
+        "value_type": "array",
+        "optional": true,
+        "comment": "Parse Civitai resources JSON into array"
+      },
+      {
+        "target_key": "parameters.tool_specific.civitai_metadata_str",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Civitai metadata",
+        "value_type": "string",
+        "optional": true,
+        "comment": "Extract raw Civitai metadata JSON string"
+      },
+      {
+        "target_key": "parameters.civitai_metadata",
+        "method": "json_from_string_variable",
+        "source_variable_key": "parameters.tool_specific.civitai_metadata_str",
+        "value_type": "object",
+        "optional": true,
+        "comment": "Parse Civitai metadata JSON into object"
+      },
+      {
+        "target_key": "parameters.civitai_api_info",
+        "method": "civitai_extract_all_info",
+        "optional": true,
+        "comment": "Extract CivitAI resource IDs for async API fetching"
+      },
+      {
+        "target_key": "parameters.architecture_type",
+        "method": "static_value",
+        "value": "FLUX T5 Architecture",
+        "comment": "Mark this as FLUX T5 architecture detected from Civitai A1111-style metadata"
+      }
+    ],
+    "output_template": {
+      "tool": "Civitai FLUX",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "clip_skip": "$parameters.clip_skip",
+        "model": "$parameters.model",
+        "size": "$parameters.size",
+        "civitai_resources": "$parameters.civitai_resources_data",
+        "civitai_metadata": "$parameters.civitai_metadata",
+        "civitai_api_info": "$parameters.civitai_api_info",
+        "tool_specific": {
+          "civitai_created_date": "$parameters.tool_specific.civitai_created_date"
+        }
+      },
+      "architecture_info": {
+        "detected_as": "FLUX T5 (Civitai)",
+        "supports": [
+          "Flux",
+          "T5 text encoding",
+          "Civitai resources"
+        ]
+      },
+      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+  "notes": [
+    "Specialized parser for Civitai-generated FLUX images",
+    "Higher priority (210) than generic T5 parser (200)",
+    "Extracts all Civitai-specific fields including resources and metadata",
+    "Falls back to generic T5 parser if Civitai resources not present"
+  ]
+}

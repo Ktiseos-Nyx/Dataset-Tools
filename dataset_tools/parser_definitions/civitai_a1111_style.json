@@ -114,14 +114,22 @@
         "method": "key_value_extract_from_a1111_block",
         "key_name": "Civitai resources",
         "value_type": "string",
-        "optional": true
+        "optional": true,
+        "comment": "Extract raw Civitai resources JSON string"
+      },
+      {
+        "target_key": "parameters.civitai_version_ids",
+        "method": "civitai_extract_version_ids_from_raw_string",
+        "optional": true,
+        "comment": "Extract version IDs directly from A1111 parameter string using regex (bypasses JSON parsing issues)"
       },
       {
         "target_key": "parameters.civitai_resources_data",
         "method": "json_from_string_variable",
         "source_variable_key": "parameters.tool_specific.civitai_resources_str",
         "value_type": "array",
-        "optional": true
+        "optional": true,
+        "comment": "Try to parse full JSON (may fail with escaped unicode)"
       },
       {
         "target_key": "parameters.tool_specific.civitai_metadata_str",

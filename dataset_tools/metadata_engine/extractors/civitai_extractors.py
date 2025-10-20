@@ -40,6 +40,7 @@ class CivitaiExtractor:
         return {
             "extract_from_extraMetadata": self._extract_from_extraMetadata,
             "civitai_extract_all_info": self.extract_all_info,
+            "civitai_extract_version_ids_from_raw_string": self._extract_version_ids_from_raw_string,
         }
 
     def _extract_from_extraMetadata(
@@ -108,6 +109,50 @@ class CivitaiExtractor:
 
         return None
 
+    def _extract_version_ids_from_raw_string(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> list[dict[str, str]]:
+        """Extract modelVersionId values directly from A1111 parameter string using regex.
+
+        Bypasses JSON parsing issues with escaped unicode characters.
+        Receives the raw A1111 parameter string and extracts all "modelVersionId":<number> patterns.
+
+        Works with the full A1111 parameter string, e.g.:
+        "...Steps: 25, Sampler: Euler a, ..., Civitai resources: [{"modelVersionId":123}]..."
+        """
+        self.logger.info("[CIVITAI_REGEX_EXTRACT] Extracting version IDs from A1111 parameter string")
+        self.logger.debug("[CIVITAI_REGEX_EXTRACT] Input data type: %s", type(data).__name__)
+
+        if not isinstance(data, str):
+            self.logger.debug("[CIVITAI_REGEX_EXTRACT] Input is not a string, got: %s", type(data))
+            return []
+
+        # Find all modelVersionId values using regex
+        version_id_pattern = r'"modelVersionId"\s*:\s*(\d+)'
+
+        # Check if "Civitai resources" is in the string
+        if "Civitai resources" in data:
+            civitai_start = data.find("Civitai resources")
+            self.logger.debug("[CIVITAI_REGEX_EXTRACT] Found Civitai resources at position %d", civitai_start)
+        else:
+            self.logger.debug("[CIVITAI_REGEX_EXTRACT] No 'Civitai resources' field found in string (length: %d)", len(data))
+            return []
+
+        matches = re.findall(version_id_pattern, data)
+
+        if matches:
+            ids_to_fetch = [{"version_id": version_id} for version_id in matches]
+            self.logger.info("[CIVITAI_REGEX_EXTRACT] Extracted %d version IDs via regex: %s",
+                           len(ids_to_fetch), ids_to_fetch)
+            return ids_to_fetch
+
+        self.logger.debug("[CIVITAI_REGEX_EXTRACT] No modelVersionId patterns found in Civitai resources section")
+        return []
+
     def extract_all_info(
         self,
         data: Any,
@@ -172,8 +217,9 @@ class CivitaiExtractor:
         negative_prompt_text = context.get(UpField.PROMPT.value, {}).get("Negative", "")
         full_prompt = f"{prompt_text} {negative_prompt_text}"
 
-        # Safety check: only search prompts up to 100KB to avoid regex issues
-        if len(full_prompt) < 100000:
+        # Safety check: only search prompts up to 10MB to avoid regex issues
+        # (URN:AIR regex is fast, but we still want a sanity check for extremely large data)
+        if len(full_prompt) < 10000000:
             civitai_urns.extend(re.findall(r'urn:air:.*?civitai:[0-9]+@[0-9]+', full_prompt))
         else:
             self.logger.warning("[CIVITAI] Prompt too large (%d chars), skipping URN search", len(full_prompt))
@@ -187,16 +233,44 @@ class CivitaiExtractor:
                     model_id, version_id = urn_match.groups()
                     ids_to_fetch.append({"model_id": model_id, "version_id": version_id})
 
-        # A1111 civitai_resources parsing
-        tool_specific = context.get("unclassified", {}).get("tool_specific", {})
-        if "civitai_resources" in tool_specific and isinstance(tool_specific["civitai_resources"], str):
-            try:
-                resources = json.loads(tool_specific["civitai_resources"])
-                for resource in resources:
-                    if "modelVersionId" in resource:
-                        ids_to_fetch.append({"version_id": str(resource["modelVersionId"])})
-            except json.JSONDecodeError:
-                pass
+        # A1111 civitai_resources parsing - check multiple sources
+        self.logger.debug("[CIVITAI_EXTRACTOR] Checking extracted fields for Civitai resources")
+
+        # First: Check if regex extraction already found version IDs
+        civitai_version_ids = (
+            fields.get("parameters_VAR_civitai_version_ids") or
+            fields.get("civitai_version_ids")
+        )
+
+        if civitai_version_ids and isinstance(civitai_version_ids, list):
+            self.logger.info("[CIVITAI_EXTRACTOR] Found %d version IDs from regex extraction", len(civitai_version_ids))
+            ids_to_fetch.extend(civitai_version_ids)
+
+        # Second: Try JSON-parsed data (may not exist if JSON parsing failed)
+        civitai_resources_data = (
+            fields.get("parameters_VAR_civitai_resources_data") or
+            fields.get("civitai_resources_data")
+        )
+
+        if civitai_resources_data and isinstance(civitai_resources_data, list):
+            # Already parsed as array
+            self.logger.info("[CIVITAI_EXTRACTOR] Processing %d resources from JSON parsing", len(civitai_resources_data))
+            for resource in civitai_resources_data:
+                if isinstance(resource, dict) and "modelVersionId" in resource:
+                    ids_to_fetch.append({"version_id": str(resource["modelVersionId"])})
+
+        # Third: Fallback to context (shouldn't happen but keep for safety)
+        if not ids_to_fetch:
+            # Fallback: check context for raw string
+            tool_specific = context.get("unclassified", {}).get("tool_specific", {})
+            if "civitai_resources" in tool_specific and isinstance(tool_specific["civitai_resources"], str):
+                try:
+                    resources = json.loads(tool_specific["civitai_resources"])
+                    for resource in resources:
+                        if "modelVersionId" in resource:
+                            ids_to_fetch.append({"version_id": str(resource["modelVersionId"])})
+                except json.JSONDecodeError:
+                    pass
 
         self.logger.info("[CIVITAI_EXTRACTOR] Found IDs to fetch: %s", ids_to_fetch)
 

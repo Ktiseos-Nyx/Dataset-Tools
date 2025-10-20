@@ -104,11 +104,12 @@ class A1111Extractor:
             return None
 
         # Create pattern to find the key and its value
+        # Note: (?:\]?),? handles cases where values end with ] (like JSON arrays) before the comma
         lookahead_pattern = (
-            r"(?:,\s*(?:Steps:|Sampler:|CFG scale:|Seed:|Size:|Model hash:|Model:|"
+            r"(?:(?:\]?),\s*(?:Steps:|Sampler:|CFG scale:|Seed:|Size:|Model hash:|Model:|"
             r"Version:|Clip skip:|Denoising strength:|Hires upscale:|Hires steps:|"
             r"Hires upscaler:|Lora hashes:|TI hashes:|Emphasis:|NGMS:|ADetailer model:|"
-            r"Schedule type:))|$"
+            r"Schedule type:|Created Date:|Civitai resources:|Civitai metadata:))|$"
         )
 
         key_pattern = re.escape(key_name)
