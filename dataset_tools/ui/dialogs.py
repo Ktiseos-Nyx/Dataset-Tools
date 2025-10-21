@@ -16,6 +16,7 @@ from PyQt6.QtWidgets import (
     QDialog,
     QDialogButtonBox,
     QFormLayout,
+    QFrame,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -23,6 +24,7 @@ from PyQt6.QtWidgets import (
     QListWidgetItem,
     QMessageBox,
     QPushButton,
+    QSizePolicy,
     QSpinBox,
     QTabWidget,
     QTextEdit,
@@ -30,7 +32,6 @@ from PyQt6.QtWidgets import (
     QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
-    QSizePolicy,
 )
 
 from .. import civitai_api
@@ -158,6 +159,10 @@ class SettingsDialog(QDialog):
         form_layout = QFormLayout()
         form_layout.setSpacing(15)
 
+        # Main app font settings
+        app_font_label = QLabel("<b>Application Font</b>")
+        form_layout.addRow("", app_font_label)
+
         self.font_combo = QComboBox()
         self.font_combo.setEditable(False)
         self._populate_font_combo()
@@ -167,6 +172,26 @@ class SettingsDialog(QDialog):
         self.font_size_spinbox.setRange(8, 24)
         self.font_size_spinbox.setSuffix(" pt")
         form_layout.addRow("Font Size:", self.font_size_spinbox)
+
+        # Separator
+        separator = QFrame()
+        separator.setFrameShape(QFrame.Shape.HLine)
+        separator.setFrameShadow(QFrame.Shadow.Sunken)
+        form_layout.addRow("", separator)
+
+        # Tooltip font settings
+        tooltip_font_label = QLabel("<b>Tooltip Font</b>")
+        form_layout.addRow("", tooltip_font_label)
+
+        self.tooltip_font_combo = QComboBox()
+        self.tooltip_font_combo.setEditable(False)
+        self._populate_tooltip_font_combo()
+        form_layout.addRow("Tooltip Font:", self.tooltip_font_combo)
+
+        self.tooltip_size_spinbox = QSpinBox()
+        self.tooltip_size_spinbox.setRange(7, 16)
+        self.tooltip_size_spinbox.setSuffix(" pt")
+        form_layout.addRow("Tooltip Size:", self.tooltip_size_spinbox)
 
         main_layout.addLayout(form_layout)
 
@@ -179,6 +204,8 @@ class SettingsDialog(QDialog):
         # Connect signals to update the preview
         self.font_combo.currentTextChanged.connect(self._update_font_preview)
         self.font_size_spinbox.valueChanged.connect(self._update_font_preview)
+        self.tooltip_font_combo.currentTextChanged.connect(self._apply_tooltip_font_preview)
+        self.tooltip_size_spinbox.valueChanged.connect(self._apply_tooltip_font_preview)
 
         self.tab_widget.addTab(font_widget, "Fonts")
 
@@ -215,6 +242,32 @@ class SettingsDialog(QDialog):
         except Exception as e:
             nfo(f"Could not load bundled fonts for combo: {e}")
             self.font_combo.addItem("Open Sans")
+
+    def _populate_tooltip_font_combo(self) -> None:
+        """Populate tooltip font combo with bundled fonts."""
+        try:
+            from ..ui.font_manager import get_font_manager
+            font_manager = get_font_manager()
+            bundled_font_names = list(font_manager.BUNDLED_FONTS.keys())
+            if bundled_font_names:
+                for family in sorted(bundled_font_names):
+                    self.tooltip_font_combo.addItem(family)
+                nfo(f"Added {len(bundled_font_names)} bundled fonts to tooltip combo")
+            else:
+                self.tooltip_font_combo.addItem("Open Sans")
+        except Exception as e:
+            nfo(f"Could not load bundled fonts for tooltip combo: {e}")
+            self.tooltip_font_combo.addItem("Open Sans")
+
+    def _apply_tooltip_font_preview(self) -> None:
+        """Apply tooltip font settings immediately for preview."""
+        tooltip_family = self.tooltip_font_combo.currentText()
+        tooltip_size = self.tooltip_size_spinbox.value()
+
+        from PyQt6.QtWidgets import QToolTip
+        from PyQt6.QtGui import QFont
+        QToolTip.setFont(QFont(tooltip_family, tooltip_size))
+        nfo(f"Preview tooltip font: {tooltip_family} {tooltip_size}pt")
 
     def _update_font_preview(self) -> None:
         """Update the font preview label with the selected font and size."""
@@ -297,6 +350,7 @@ class SettingsDialog(QDialog):
 
     def _load_font_setting(self) -> None:
         """Load and set current font family and size."""
+        # App font
         font_family = self.settings.value("fontFamily", "Open Sans", type=str)
         font_size = self.settings.value("fontSize", 10, type=int)
         index = self.font_combo.findText(font_family)
@@ -305,6 +359,16 @@ class SettingsDialog(QDialog):
         else:
             self.font_combo.setCurrentIndex(0)
         self.font_size_spinbox.setValue(font_size)
+
+        # Tooltip font
+        tooltip_family = self.settings.value("tooltipFontFamily", "Open Sans", type=str)
+        tooltip_size = self.settings.value("tooltipFontSize", 9, type=int)
+        tooltip_index = self.tooltip_font_combo.findText(tooltip_family)
+        if tooltip_index >= 0:
+            self.tooltip_font_combo.setCurrentIndex(tooltip_index)
+        else:
+            self.tooltip_font_combo.setCurrentIndex(0)
+        self.tooltip_size_spinbox.setValue(tooltip_size)
 
     def apply_all_settings(self) -> None:
         """Apply all settings without closing the dialog."""
@@ -341,10 +405,25 @@ class SettingsDialog(QDialog):
 
     def _apply_font_settings(self) -> None:
         """Apply the selected font family and size globally."""
+        # App font
         font_family = self.font_combo.currentText()
         font_size = self.font_size_spinbox.value()
         self.settings.setValue("fontFamily", font_family)
         self.settings.setValue("fontSize", font_size)
+
+        # Tooltip font
+        tooltip_family = self.tooltip_font_combo.currentText()
+        tooltip_size = self.tooltip_size_spinbox.value()
+        self.settings.setValue("tooltipFontFamily", tooltip_family)
+        self.settings.setValue("tooltipFontSize", tooltip_size)
+
+        # Apply tooltip font immediately
+        from PyQt6.QtWidgets import QToolTip
+        from PyQt6.QtGui import QFont
+        QToolTip.setFont(QFont(tooltip_family, tooltip_size))
+        nfo(f"Applied tooltip font: {tooltip_family} {tooltip_size}pt")
+
+        # Apply app font
         if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
             self.parent_window.apply_global_font()
             nfo(f"Applied global font: {font_family}, {font_size}pt")

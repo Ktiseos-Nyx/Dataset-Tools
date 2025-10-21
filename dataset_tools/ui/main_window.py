@@ -1363,6 +1363,16 @@ class MainWindow(Qw.QMainWindow):
             else:
                 nfo(f"[FONT] WARNING: {box_name} not found on main window")
 
+        # Apply font to file list widget (for list view)
+        if hasattr(self, "left_panel"):
+            try:
+                files_list = self.left_panel.get_files_list_widget()
+                files_list.setFont(font)
+                files_list.update()
+                nfo(f"[FONT] Applied to file list widget: {font.family()} {font.pointSize()}pt")
+            except Exception as e:
+                nfo(f"[FONT] Could not apply font to file list: {e}")
+
         # Force a repaint of the entire window to ensure all widgets get the new font
         self.update()
 

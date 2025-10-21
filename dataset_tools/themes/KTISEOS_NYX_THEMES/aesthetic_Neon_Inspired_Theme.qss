@@ -15,11 +15,12 @@
 /* --- General Styling --- */
 QWidget {
     /* Apply the gradient here, as it's the base for many widgets including the central one */
-    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
-                                stop: 0 #1A1A1A, /* Darkest point */
+    /* Changed to vertical gradient: x1:0, y1:0 (top) to x2:0, y2:1 (bottom) */
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1A1A1A, /* Darkest point (top) */
                                 stop: 0.3 #2E403A, /* Dark green */
                                 stop: 0.7 #3A5048, /* Slightly lighter green */
-                                stop: 1 #1A1A1A); /* Darkest point */
+                                stop: 1 #1A1A1A); /* Darkest point (bottom) */
     color: #E0E0E0;            /* Light text for readability */
     font-family: "Segoe UI", "Inter", sans-serif; /* Modern sans-serif font */
     font-size: 10pt;
