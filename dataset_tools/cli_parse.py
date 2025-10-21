@@ -20,21 +20,28 @@ import sys
 import json
 import argparse
 import logging
+import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-# CRITICAL: Only import non-GUI components!
-# These imports must NOT pull in PyQt6 or any GUI dependencies
-from dataset_tools.metadata_engine import parse_file_metadata
 
-
-def setup_logging(verbose: bool = False) -> None:
+def setup_logging(verbose: bool = False, quiet: bool = False) -> None:
     """Configure logging for CLI usage.
 
     Args:
         verbose: Enable verbose debug output
+        quiet: Suppress all logs except CRITICAL (for JSON output)
     """
-    level = logging.DEBUG if verbose else logging.WARNING
+    if quiet:
+        level = logging.CRITICAL  # Only show critical errors in quiet mode
+        # Set environment variable BEFORE importing to suppress session start logs
+        os.environ['DATASET_TOOLS_CLI_QUIET'] = '1'
+    elif verbose:
+        level = logging.DEBUG
+    else:
+        level = logging.WARNING
+
+    # Configure root logger to suppress everything
     logging.basicConfig(
         level=level,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -74,6 +81,12 @@ def parse_args() -> argparse.Namespace:
         '--verbose', '-v',
         action='store_true',
         help="Enable verbose debug output to stderr"
+    )
+
+    parser.add_argument(
+        '--quiet', '-q',
+        action='store_true',
+        help="Suppress all logs except critical errors (recommended for JSON parsing)"
     )
 
     parser.add_argument(
@@ -144,7 +157,15 @@ def cli_parse() -> None:
         3: Parsing error
     """
     args = parse_args()
-    setup_logging(args.verbose)
+
+    # Auto-enable quiet mode for JSON output (unless verbose is explicitly set)
+    auto_quiet = (args.json or args.pretty) and not args.verbose
+    quiet_mode = args.quiet or auto_quiet
+
+    setup_logging(args.verbose, quiet_mode)
+
+    # Import AFTER logging setup to allow quiet mode to take effect
+    from dataset_tools.metadata_engine import parse_file_metadata
 
     # Validate input file
     image_path = Path(args.image_path)

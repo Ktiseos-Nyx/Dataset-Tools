@@ -56,17 +56,22 @@ _initial_log_level_enum_for_dt = getattr(pylog, _current_log_level_str_for_dt, p
 logger.setLevel(_initial_log_level_enum_for_dt)
 
 if not logger.handlers:
-    # Rich console handler for pretty terminal output
-    _dt_rich_handler = RichHandler(
-        console=_dataset_tools_main_rich_console,
-        rich_tracebacks=True,
-        show_path=False,
-        markup=True,
-        level=_initial_log_level_enum_for_dt,
-    )
-    logger.addHandler(_dt_rich_handler)
+    # Check if running in CLI quiet mode
+    import os
+    cli_quiet_mode = os.environ.get('DATASET_TOOLS_CLI_QUIET') == '1'
 
-    # File handler for user-sendable logs
+    if not cli_quiet_mode:
+        # Rich console handler for pretty terminal output
+        _dt_rich_handler = RichHandler(
+            console=_dataset_tools_main_rich_console,
+            rich_tracebacks=True,
+            show_path=False,
+            markup=True,
+            level=_initial_log_level_enum_for_dt,
+        )
+        logger.addHandler(_dt_rich_handler)
+
+    # File handler for user-sendable logs (always enabled)
     _dt_file_handler = pylog.FileHandler(LOG_FILE, mode="w", encoding="utf-8")
     _dt_file_handler.setLevel(_initial_log_level_enum_for_dt)
 
@@ -80,10 +85,11 @@ if not logger.handlers:
 
     logger.propagate = False
 
-    # Log the session start and file location
-    logger.info("=== Dataset Tools Session Started ===")
-    logger.info("Log file: %s", LOG_FILE)
-    logger.info("Initial log level: %s", _current_log_level_str_for_dt)
+    # Log the session start and file location (only to file in quiet mode)
+    if not cli_quiet_mode:
+        logger.info("=== Dataset Tools Session Started ===")
+        logger.info("Log file: %s", LOG_FILE)
+        logger.info("Initial log level: %s", _current_log_level_str_for_dt)
 
 
 def reconfigure_all_loggers(new_log_level_name_str: str):
