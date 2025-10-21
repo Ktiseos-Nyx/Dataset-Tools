@@ -9,8 +9,16 @@ import time
 from pathlib import Path
 from typing import Any
 
+import os
 import requests
-from PyQt6.QtCore import QSettings
+
+# Try to import QSettings for GUI mode, fall back to None for headless
+try:
+    from PyQt6.QtCore import QSettings
+    HAS_QSETTINGS = True
+except (ImportError, ModuleNotFoundError):
+    QSettings = None
+    HAS_QSETTINGS = False
 
 from dataset_tools.logger import error_message, info_monitor, warning_message
 
@@ -114,8 +122,12 @@ def get_model_info_by_hash(model_hash: str) -> dict[str, Any] | None:
     api_url = f"https://civitai.com/api/v1/model-versions/by-hash/{model_hash}"
     info_monitor("[Civitai API] Fetching model info from: %s", api_url)
 
-    settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
-    api_key = settings.value("civitai_api_key", "", type=str)
+    # Get API key from QSettings (GUI) or environment variable (headless)
+    if HAS_QSETTINGS:
+        settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
+        api_key = settings.value("civitai_api_key", "", type=str)
+    else:
+        api_key = os.getenv("CIVITAI_API_KEY", "")
 
     headers = {}
     if api_key:
@@ -189,8 +201,12 @@ def get_model_info_by_id(model_id: str) -> dict[str, Any] | None:
     api_url = f"https://civitai.com/api/v1/models/{model_id}"
     info_monitor("[Civitai API] Fetching model info from: %s", api_url)
 
-    settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
-    api_key = settings.value("civitai_api_key", "", type=str)
+    # Get API key from QSettings (GUI) or environment variable (headless)
+    if HAS_QSETTINGS:
+        settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
+        api_key = settings.value("civitai_api_key", "", type=str)
+    else:
+        api_key = os.getenv("CIVITAI_API_KEY", "")
 
     headers = {}
     if api_key:
@@ -253,8 +269,12 @@ def get_model_version_info_by_id(version_id: str) -> dict[str, Any] | None:
     api_url = f"https://civitai.com/api/v1/model-versions/{version_id}"
     info_monitor("[Civitai API] Fetching model version info from: %s", api_url)
 
-    settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
-    api_key = settings.value("civitai_api_key", "", type=str)
+    # Get API key from QSettings (GUI) or environment variable (headless)
+    if HAS_QSETTINGS:
+        settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
+        api_key = settings.value("civitai_api_key", "", type=str)
+    else:
+        api_key = os.getenv("CIVITAI_API_KEY", "")
 
     headers = {}
     if api_key:
