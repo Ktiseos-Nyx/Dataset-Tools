@@ -44,6 +44,9 @@ NODE_TYPE_SCORES = {
     "TIPO": 6.0,  # TIPO AI prompt generator - prioritize base input over random ShowText output
 
     # Standard prompt nodes (medium priority)
+    "quadmoonSmartPrompt": 2.5,  # Quadmoon custom prompt node - high priority
+    "quadmoonSmartNeg": 2.5,  # Quadmoon custom negative prompt node - high priority
+    "String Literal": 2.0,  # String literal nodes - often used for prompts
     "ChatGptPrompt": 2.0,  # ChatGPT prompt integration - high priority
     "Text Multiline": 6.0,  # Griptape Text Multiline - high priority for clean content
     "easy positive": 2.1,  # Easy positive nodes - high priority for clean content
@@ -316,6 +319,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         ]
 
         medium_priority_types = [
+            "quadmoonSmartPrompt", "quadmoonSmartNeg",  # Quadmoon custom nodes
             "CLIPTextEncode", "CLIPTextEncodeSDXL", "CLIPTextEncodeSDXLRefiner",
             "ConditioningCombine", "ConditioningConcat", "ConditioningSetArea",
             "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline",
@@ -413,6 +417,10 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                     logger.debug("Detected template/mode text in %s: '%s...' - reducing priority", class_type, text[:60])
                     # Don't completely exclude, but mark as low priority template
                     text = f"[TEMPLATE]{text}"
+            elif class_type in ["quadmoonSmartPrompt", "quadmoonSmartNeg"]:
+                # Quadmoon custom nodes - prompt text is in widgets_values[0]
+                if len(widgets_values) >= 1 and isinstance(widgets_values[0], str):
+                    text = widgets_values[0]
             elif class_type in ["CLIPTextEncode", "CLIPTextEncodeSDXL", "CLIPTextEncodeSDXLRefiner", "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline", "easy positive", "T5TextEncode", "PixArtT5TextEncode"]:
                 if len(widgets_values) >= 1 and isinstance(widgets_values[0], str):
                     text = widgets_values[0]
@@ -479,7 +487,10 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         # This handles "flat" formats (like TensorArt) where input values are stored in the inputs dict.
         if not text and isinstance(inputs, dict):
             logger.debug("Checking inputs dict for text (flat/TensorArt format): %s", list(inputs.keys()))
-            if class_type in ["CLIPTextEncode", "CLIPTextEncodeSDXL", "CLIPTextEncodeSDXLRefiner", "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline", "easy positive"]:
+            if class_type in ["quadmoonSmartPrompt", "quadmoonSmartNeg"]:
+                # Quadmoon nodes - check for prompt_text field
+                text = inputs.get("prompt_text", inputs.get("text", ""))
+            elif class_type in ["CLIPTextEncode", "CLIPTextEncodeSDXL", "CLIPTextEncodeSDXLRefiner", "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline", "easy positive"]:
                 text = inputs.get("text", "")
                 # For "easy positive" nodes, also check for "positive" field
                 if not text and class_type == "easy positive":
