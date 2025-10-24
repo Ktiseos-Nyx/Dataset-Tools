@@ -1,0 +1,184 @@
+{
+  "parser_name": "ComfyUI_Video_Animation",
+  "priority": 170,
+  "description": "Parses ComfyUI workflows designed for generating video or animated formats (e.g., WEBP, GIF, MP4).",
+  "version": "1.1-resilient-detection",
+  "maintainer": "Ktiseos Nyx & Gemini",
+  "target_file_types": [
+    "PNG",
+    "JPEG",
+    "WEBP",
+    "GIF"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Master rule: Must be a valid ComfyUI workflow AND must contain a video-specific node.",
+      "operator": "AND",
+      "rules": [
+        {
+          "comment": "PART A: A valid ComfyUI JSON workflow MUST exist in one of the common locations.",
+          "condition": "OR",
+          "rules": [
+            {
+              "source_type": "pil_info_key",
+              "source_key": "workflow",
+              "operator": "is_valid_json"
+            },
+            {
+              "source_type": "pil_info_key",
+              "source_key": "prompt",
+              "operator": "is_valid_json"
+            },
+            {
+              "source_type": "exif_user_comment",
+              "operator": "is_valid_json"
+            }
+          ]
+        },
+        {
+          "comment": "PART B: That workflow MUST contain at least one video/animation-specific node.",
+          "condition": "OR",
+          "rules": [
+            {
+              "source_type": "pil_info_key",
+              "source_key_options": [
+                "workflow",
+                "prompt"
+              ],
+              "json_query_type": "has_any_node_class_type",
+              "operator": "is_true",
+              "class_types_to_check": [
+                "EmptyMochiLatentVideo",
+                "SaveAnimatedWEBP",
+                "SaveAnimatedPNG",
+                "SaveAnimatedGIF",
+                "VHS_VideoCombine",
+                "VideoCombine",
+                "AnimateDiffLoader"
+              ]
+            },
+            {
+              "source_type": "exif_user_comment",
+              "json_query_type": "has_any_node_class_type",
+              "operator": "is_true",
+              "class_types_to_check": [
+                "EmptyMochiLatentVideo",
+                "SaveAnimatedWEBP",
+                "SaveAnimatedPNG",
+                "SaveAnimatedGIF",
+                "VHS_VideoCombine",
+                "VideoCombine",
+                "AnimateDiffLoader"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "positive"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "negative"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler"
+        ],
+        "input_name": "seed"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler"
+        ],
+        "input_name": "steps"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler"
+        ],
+        "input_name": "cfg"
+      },
+      {
+        "target_key": "parameters.video_frames",
+        "method": "comfy_get_node_by_class",
+        "class_type": "EmptyMochiLatentVideo",
+        "field_name": "length"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_get_node_by_class",
+        "class_type": "EmptyMochiLatentVideo",
+        "field_name": "width"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_get_node_by_class",
+        "class_type": "EmptyMochiLatentVideo",
+        "field_name": "height"
+      },
+      {
+        "target_key": "parameters.fps",
+        "method": "comfy_get_node_by_class",
+        "class_type": "SaveAnimatedWEBP",
+        "field_name": "fps"
+      },
+      {
+        "target_key": "raw_workflow_json",
+        "method": "direct_input_data_as_string"
+      }
+    ],
+    "output_template": {
+      "tool": "ComfyUI (Video/Animation)",
+      "parser_version": "1.1",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "width": "$parameters.width",
+        "height": "$parameters.height",
+        "frames": "$parameters.video_frames",
+        "fps": "$parameters.fps"
+      },
+      "workflow_info": {
+        "detected_as": "Video/Animation Workflow"
+      },
+      "raw_workflow_json": "$raw_workflow_json"
+    }
+  }
+}

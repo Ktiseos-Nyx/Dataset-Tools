@@ -1,0 +1,122 @@
+{
+  "parser_name": "ComfyUI_DynamicPrompts_Workflow",
+  "priority": 165,
+  "description": "Parses ComfyUI workflows using the DynamicPrompts custom node ecosystem for wildcard and combinatorial prompt generation.",
+  "version": "1.1-engine-aligned",
+  "maintainer": "Gemini & Ktiseos Nyx",
+  "target_file_types": ["PNG", "JPEG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be a valid ComfyUI workflow in a standard location.",
+      "condition": "OR",
+      "rules": [
+        { "source_type": "pil_info_key", "source_key": "workflow", "operator": "is_valid_json" },
+        { "source_type": "pil_info_key", "source_key": "prompt", "operator": "is_valid_json" },
+        { "source_type": "exif_user_comment", "operator": "is_valid_json" }
+      ]
+    },
+    {
+      "comment": "Rule 2: The workflow MUST contain at least one DynamicPrompts specific node.",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key_options": [ "workflow", "prompt" ],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "DPRandomGenerator",
+            "DPCombinatorialGenerator",
+            "DPSimpleWildcard"
+          ]
+        },
+        {
+          "source_type": "exif_user_comment",
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "DPRandomGenerator",
+            "DPCombinatorialGenerator",
+            "DPSimpleWildcard"
+          ]
+        }
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        { "source_type": "pil_info_key", "source_key": "workflow" },
+        { "source_type": "pil_info_key", "source_key": "prompt" },
+        { "source_type": "exif_user_comment" }
+      ],
+      "transformations": [{ "type": "json_decode_string_itself" }]
+    },
+    "fields": [
+      {
+        "comment": "Use the specialized extractor for dynamic prompts to get the raw, unresolved text.",
+        "target_key": "raw_dynamic_prompt",
+        "method": "comfyui_extract_dynamic_prompt_from_workflow"
+      },
+      {
+        "comment": "For the final, resolved prompt, our standard targeted extractor should work.",
+        "target_key": "prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "positive"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "negative"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [ "KSampler", "KSamplerAdvanced" ],
+        "input_name": "seed"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [ "KSampler", "KSamplerAdvanced" ],
+        "input_name": "steps"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [ "KSampler", "KSamplerAdvanced" ],
+        "input_name": "cfg"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [ "KSampler", "KSamplerAdvanced" ],
+        "input_name": "sampler_name"
+      },
+      {
+        "target_key": "raw_workflow_json",
+        "method": "direct_input_data_as_string"
+      }
+    ],
+    "output_template": {
+      "tool": "ComfyUI (DynamicPrompts)",
+      "parser_version": "1.1-engine-aligned",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "raw_dynamic_prompt": "$raw_dynamic_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name"
+      },
+      "workflow_info": {
+        "detected_as": "DynamicPrompts Workflow",
+        "prompt_generation": "Wildcards / Combinatorial"
+      },
+      "raw_workflow_json": "$raw_workflow_json"
+    }
+  }
+}

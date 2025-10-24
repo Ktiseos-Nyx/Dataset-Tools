@@ -110,11 +110,6 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
         # Template pattern indicators for ComfyUI workflows
         self.template_patterns = [
-            # Generic quality combinations that are often templates
-            ["woman", "portrait", "detailed"],
-            ["beautiful", "detailed", "high quality"],
-            ["girl", "portrait", "masterpiece"],
-            ["anime", "girl", "detailed"],
             # Common ComfyUI default patterns
             ["beautiful", "scenery", "landscape"],
             ["nature", "glass", "bottle"],
@@ -605,7 +600,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
     def _get_connection_bonus(self, candidate: dict[str, Any]) -> float:
         """Calculate connection-based bonus using intelligent graph traversal.
-        
+
         Uses workflow graph analysis to determine actual importance:
         - Direct connections to samplers get highest bonus
         - Nodes in main execution path get high bonus
@@ -617,7 +612,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
     def _calculate_graph_centrality(self, candidate: dict[str, Any]) -> float:
         """Calculate node importance using graph centrality analysis.
-        
+
         This is the ADVANCED SYSTEM that does intelligent graph traversal:
         - Analyzes workflow execution paths
         - Calculates node centrality in the graph
@@ -645,7 +640,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
     def _build_execution_graph(self, workflow_data: dict[str, Any]) -> dict[str, Any]:
         """Build an execution graph showing actual workflow paths.
-        
+
         This creates a graph representation showing:
         - Which nodes feed into samplers (high priority paths)
         - Execution order and dependencies
@@ -694,10 +689,10 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
     def _calculate_node_centrality(self, execution_graph: dict[str, Any], node_id: int) -> float:
         """Calculate how central/important a node is in the workflow execution.
-        
+
         Uses multiple centrality measures:
         - Distance to samplers (closer = higher score)
-        - Number of paths through this node  
+        - Number of paths through this node
         - Betweenness centrality (how many paths go through this node)
         """
         if node_id not in execution_graph["nodes"]:
@@ -823,7 +818,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
     def _is_tensorart_technical_naming(self, text: str) -> bool:
         """Detect TensorArt LoRA/checkpoint technical naming that should be deprioritized.
-        
+
         Simple, non-over-engineered detection for TA flat format issues.
         """
         text_lower = text.lower().strip()
@@ -848,15 +843,13 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         if any(pattern in text_lower for pattern in checkpoint_patterns):
             return True
 
-        # Additional check: if text is mostly technical IDs/hashes
-        if len(text) > 50 and text.count("-") > 3 and text.count(".") > 1:
-            return True
+
 
         return False
 
     def _is_wildcard_template_pattern(self, text: str) -> bool:
         """Detect wildcard template patterns that haven't been resolved yet.
-        
+
         Patterns like {word|}, {word1,word2|}, __wildcard__ indicate templates.
         """
         # Check for common wildcard syntax patterns

@@ -1,0 +1,46 @@
+/*
+ * Catppuccin Macchiato for Qt
+ * Based on the official Catppuccin palette: https://github.com/catppuccin/catppuccin
+ * MIT License: Copyright (c) 2022-present Catppuccin Org
+ */
+
+QMainWindow, QDialog { background-color: #181926; /* Crust */ }
+
+QPushButton { background-color: #363a4f; color: #cad3f5; border: 1px solid #494d64; border-radius: 6px; padding: 8px 12px; }
+QPushButton:hover { background-color: #494d64; }
+QPushButton:pressed { background-color: #5b6078; border-style: inset; }
+QPushButton:disabled { background-color: #1e2030; color: #6e738d; }
+
+QPushButton[cssClass="accent"] { background-color: #8aadf4; color: #24273a; }
+QPushButton[cssClass="accent"]:hover { background-color: #b7bdf8; }
+QPushButton[cssClass="accent"]:pressed { background-color: #7dc4e4; }
+
+QLineEdit, QTextEdit, QPlainTextEdit { background-color: #1e2030; color: #cad3f5; border: 1px solid #494d64; border-radius: 6px; padding: 8px; selection-background-color: #5b6078; selection-color: #cad3f5; }
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus { border: 1px solid #8aadf4; }
+
+QComboBox { background-color: #363a4f; border: 1px solid #494d64; border-radius: 6px; padding: 5px 8px; }
+QComboBox:hover { background-color: #494d64; }
+QComboBox::drop-down { subcontrol-origin: padding; subcontrol-position: top right; width: 20px; border-left: 1px solid #494d64; }
+QComboBox::down-arrow { image: none; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid #cad3f5; width: 0px; height: 0px; margin: 0 auto; }
+QComboBox QAbstractItemView { background-color: #1e2030; color: #cad3f5; border: 1px solid #494d64; selection-background-color: #5b6078; selection-color: #cad3f5; outline: none; }
+
+QListWidget { background-color: #1e2030; border: 1px solid #494d64; border-radius: 6px; }
+QListWidget::item:hover { background-color: #363a4f; }
+QListWidget::item:selected { background-color: #8aadf4; color: #24273a; }
+
+QScrollBar:vertical { background: #1e2030; width: 14px; margin: 16px 0; border-radius: 6px; }
+QScrollBar::handle:vertical { background: #5b6078; min-height: 20px; border-radius: 6px; }
+QScrollBar::handle:vertical:hover { background: #8aadf4; }
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { border: none; background: none; }
+
+QCheckBox::indicator, QRadioButton::indicator { border: 1px solid #494d64; background-color: #1e2030; border-radius: 4px; width: 16px; height: 16px; }
+QRadioButton::indicator { border-radius: 8px; }
+QCheckBox::indicator:checked, QRadioButton::indicator:checked { background-color: #8aadf4; }
+
+QGroupBox { border: 1px solid #494d64; border-radius: 6px; margin-top: 0.5em; }
+QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 5px; }
+
+QTabBar::tab { background: #24273a; color: #a5adcb; padding: 8px 16px; border-top-left-radius: 6px; border-top-right-radius: 6px; }
+QTabBar::tab:hover { background: #363a4f; color: #cad3f5; }
+QTabBar::tab:selected { background: #1e2030; color: #cad3f5; }
+QTabWidget::pane { background: #1e2030; border: 1px solid #494d64; border-radius: 6px; }

@@ -81,6 +81,7 @@ def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]
             if isinstance(raw_meta, str):
                 try:
                     import json
+
                     # First try standard JSON parsing (handles escaped quotes properly)
                     result["raw_metadata"] = json.loads(raw_meta)
                     nfo("[DT.metadata_parser]: Successfully parsed raw_metadata string as JSON.")

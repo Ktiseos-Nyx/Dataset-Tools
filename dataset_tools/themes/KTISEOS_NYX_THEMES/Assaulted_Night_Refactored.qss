@@ -1,0 +1,165 @@
+/*
+ * THEME: Assaulted Night (Refactored)
+ * PALETTE: Based on the original Assaulted_Night.qss
+ * STRUCTURE: Based on a robust, conflict-free QSS foundation.
+*/
+
+/* General Styles */
+QWidget {
+    background-color: #001219;
+    color: #e9d8a6;
+    border: none; /* Critical: No global border */
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #0a9396;
+    color: #e9d8a6;
+    border: 1px solid #005f73;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #94d2bd;
+}
+
+QPushButton:pressed {
+    background-color: #005f73;
+    border-style: inset;
+}
+
+QPushButton:disabled {
+    background-color: #002a3a;
+    border: 1px solid #113333;
+    color: #888888;
+}
+
+/* Text Inputs */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #94d2bd;
+    color: #001219;
+    border: 1px solid #005f73;
+    border-radius: 3px;
+    padding: 5px;
+    selection-background-color: #005f73;
+    selection-color: #e9d8a6;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #e9d8a6;
+}
+
+/* ComboBox */
+QComboBox {
+    background-color: #0a9396;
+    color: #e9d8a6;
+    border: 1px solid #005f73;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #005f73;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #e9d8a6;
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #001219;
+    color: #e9d8a6;
+    border: 1px solid #005f73;
+    selection-background-color: #005f73;
+    selection-color: #e9d8a6;
+    outline: none;
+}
+
+/* ScrollBar */
+QScrollBar:vertical {
+    border: 1px solid #005f73;
+    background: #001219;
+    width: 15px;
+    margin: 15px 0 15px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #0a9396;
+    min-height: 20px;
+    border-radius: 3px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: #94d2bd;
+    height: 15px;
+    border: 1px solid #005f73;
+    subcontrol-origin: margin;
+}
+QScrollBar::add-line:vertical { subcontrol-position: bottom; }
+QScrollBar::sub-line:vertical { subcontrol-position: top; }
+
+/* Tabs */
+QTabWidget::pane {
+    border: 1px solid #005f73;
+    background-color: #001219;
+}
+
+QTabBar::tab {
+    background: #94d2bd;
+    color: #001219;
+    border: 1px solid #005f73;
+    border-bottom: none;
+    padding: 5px 10px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: #0a9396;
+    color: #e9d8a6;
+}
+
+/* CheckBox and RadioButton */
+QCheckBox, QRadioButton {
+    color: #e9d8a6;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 15px;
+    height: 15px;
+    border: 1px solid #005f73;
+    background-color: #94d2bd;
+}
+
+QRadioButton::indicator {
+    border-radius: 7px;
+}
+
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background-color: #0a9396;
+}
+
+/* GroupBox */
+QGroupBox {
+    background-color: #001219;
+    border: 1px solid #005f73;
+    margin-top: 1em;
+    padding-top: 0.5em;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 0 5px;
+    background-color: #0a9396;
+    color: #e9d8a6;
+}

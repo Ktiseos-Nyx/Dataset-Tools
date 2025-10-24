@@ -7,22 +7,29 @@
   ],
   "detection_rules": [
     {
-      "comment": "Rule 1: Must contain CivitAI URN patterns (any CivitAI resource)",
-      "source_type": "any_metadata_source",
-      "operator": "contains",
-      "value": "urn:air:"
-    },
-    {
-      "comment": "Rule 2: OR contains smZ CLIPTextEncode nodes (Civitai custom nodes)",
-      "operator": "OR",
-      "source_type": "any_metadata_source",
-      "operator": "contains",
-      "value": "smZ CLIPTextEncode"
+        "condition": "OR",
+        "rules": [
+            {
+                "comment": "Rule 1: Must contain CivitAI URN patterns (any CivitAI resource)",
+                "source_type": "any_metadata_source",
+                "operator": "contains",
+                "value": "urn:air:"
+            },
+            {
+                "comment": "Rule 2: Contains smZ CLIPTextEncode nodes (Civitai custom nodes)",
+                "source_type": "any_metadata_source",
+                "operator": "contains",
+                "value": "smZ CLIPTextEncode"
+            }
+        ]
     }
   ],
   "parsing_instructions": {
     "input_data": {
       "source_options": [
+        {
+          "source_type": "exif_user_comment"
+        },
         {
           "source_type": "pil_info_key",
           "source_key": "workflow"
@@ -30,9 +37,6 @@
         {
           "source_type": "pil_info_key",
           "source_key": "prompt"
-        },
-        {
-          "source_type": "exif_user_comment"
         }
       ],
       "transformations": [
@@ -99,58 +103,34 @@
       },
       {
         "target_key": "parameters.steps",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "KSampler_A1111",
-          "SamplerCustom",
-          "SamplerCustomAdvanced"
-        ],
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["KSampler"],
         "input_field": "steps",
-        "data_type": "integer",
-        "fallback": 20
+        "value_type": "integer",
+        "fallback": 0
       },
       {
         "target_key": "parameters.cfg_scale",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "KSampler_A1111",
-          "SamplerCustom",
-          "SamplerCustomAdvanced"
-        ],
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["KSampler"],
         "input_field": "cfg",
-        "data_type": "float",
-        "fallback": 7.0
+        "value_type": "float",
+        "fallback": 0.0
       },
       {
         "target_key": "parameters.sampler_name",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "KSampler_A1111",
-          "SamplerCustom",
-          "SamplerCustomAdvanced"
-        ],
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["KSampler"],
         "input_field": "sampler_name",
-        "data_type": "string",
-        "fallback": "euler"
+        "value_type": "string",
+        "fallback": "unknown"
       },
       {
         "target_key": "parameters.seed",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "KSampler_A1111",
-          "SamplerCustom",
-          "SamplerCustomAdvanced"
-        ],
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["KSampler"],
         "input_field": "seed",
-        "data_type": "integer",
+        "value_type": "integer",
         "fallback": -1
       },
       {
@@ -180,13 +160,9 @@
       {
         "target_key": "parameters.model",
         "method": "comfy_find_input_of_node_type",
-        "node_types": [
-          "CheckpointLoaderSimple",
-          "UNETLoader",
-          "UnetLoaderGGUF"
-        ],
+        "node_types": ["CheckpointLoaderSimple"],
         "input_field": "ckpt_name",
-        "data_type": "string",
+        "value_type": "string",
         "fallback": "Unknown Model"
       },
       {
@@ -252,6 +228,10 @@
         "comment": "🎯 High-Level Workflow Techniques",
         "target_key": "workflow_techniques",
         "method": "comfyui_extract_workflow_techniques"
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
       }
     ],
     "output_template": {
@@ -280,7 +260,7 @@
           "JPEG"
         ]
       },
-      "workflow": "$INPUT_STRING_ORIGINAL_CHUNK"
+      "raw_metadata": "$raw_metadata"
     }
   },
   "enhanced_with_node_discovery": true,

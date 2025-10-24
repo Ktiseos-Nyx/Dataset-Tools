@@ -323,6 +323,13 @@ class MenuManager:
             theme_report_action.triggered.connect(self.main_window.show_theme_report)
             help_menu.addAction(theme_report_action)
 
+        help_menu.addSeparator()
+        diagnostic_action = QtGui.QAction("Run List Widget Diagnostic...", self.main_window)
+        diagnostic_action.setToolTip("Run a diagnostic test to check for fundamental list widget rendering issues.")
+        if hasattr(self.main_window, "run_list_widget_diagnostic"):
+            diagnostic_action.triggered.connect(self.main_window.run_list_widget_diagnostic)
+        help_menu.addAction(diagnostic_action)
+
 
 # ============================================================================
 # LAYOUT MANAGER

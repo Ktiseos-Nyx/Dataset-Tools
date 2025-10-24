@@ -54,7 +54,17 @@ class CandidateScorer:
             "masterpiece", "high quality", "detailed", "beautiful", "best quality",
             "intricate", "photorealistic", "cinematic", "portrait", "landscape",
             "anime", "realistic", "stunning", "gorgeous", "amazing", "professional",
-            "artstation", "8k", "4k", "ultra detailed", "sharp focus", "vivid colors"
+            "artstation", "woman", "man", "girl", "boy", "detailed", "highres",
+            "8k", "4k", "ultra detailed", "sharp focus", "vivid colors",
+            "Ultra-realistic", "hyperreal", "digital painting", "concept art",
+            "illustration", "trending on artstation", "award winning", "cinematic lighting",
+            "octane render", "unreal engine", "volumetric lighting", "dramatic lighting",
+            "soft lighting", "studio lighting", "intricate details",
+            "very awa", "amazing", "professional", "trending on pixiv", "beautifully color graded", "close-up",
+            "sharp focus", "depth of field", "bokeh", "cinematic composition", "symmetrical balance",
+            "rule of thirds", "leading lines", "color theory", "You are an assistant designed to generate anime images based on textual prompts.",
+            "anime screencap", "anime style", "manga style", "cel shading", "vibrant colors", "dynamic pose",
+            "woman", "man", "girl", "boy", "detailed", "highres", "8k", "ultra detailed", "sharp focus", "vivid colors",
         ]
 
         self.negative_keywords = [
@@ -62,7 +72,8 @@ class CandidateScorer:
             "nsfw", "bad anatomy", "missing", "distorted", "jpeg artifacts",
             "watermark", "signature", "logo", "cropped", "out of frame",
             "text overlay", "boring", "amateur", "pixelated", "overexposed",
-            "mutation", "mutated", "extra limb", "extra hands", "poorly drawn", "lowres"
+            "mutation", "mutated", "extra limb", "extra hands", "poorly drawn", "lowres", "futanari",
+            "nsfw", "nude", "naked",
             r"embedding:negatives\IllusGen_Neg",
         ]
 
@@ -112,7 +123,7 @@ class CandidateScorer:
         else:
             reasons.append("primary widget (no connections)")
             if candidate.get("node_type") in ["CLIPTextEncode", "CLIPTextEncodeSDXL", "T5TextEncode", "PixArtT5TextEncode", "CLIP Text Encode (Positive Prompt)", "CLIPTextEncodeSD3", "SD3TextEncode"]:
-                score += 3 # Add a significant boost for direct input on a main encoder
+                score += 3  # Add a significant boost for direct input on a main encoder
                 reasons.append("MAIN_ENCODER_WIDGET")
 
         # Workflow-specific boosts
@@ -180,7 +191,7 @@ class CandidateScorer:
         """Check if complex_text is a detailed scene description vs simple_text being just style tags."""
         # Scene description indicators
         scene_words = ["girl", "woman", "man", "person", "character", "sitting", "standing", "wearing",
-                      "holding", "room", "background", "scene", "portrait", "full body", "dress"]
+                       "holding", "room", "background", "scene", "portrait", "full body", "dress"]
         # Style/technical indicators
         style_words = ["masterpiece", "best quality", "8k", "detailed", "realistic", "photorealistic"]
 

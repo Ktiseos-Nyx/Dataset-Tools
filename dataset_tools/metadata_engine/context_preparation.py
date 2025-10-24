@@ -22,6 +22,7 @@ import piexif.helper
 from PIL import Image, UnidentifiedImageError
 
 from ..logger import get_logger
+from ..model_parsers.safetensors_parser import SafetensorsParser
 
 # Type aliases
 ContextData = dict[str, Any]
@@ -108,12 +109,13 @@ class ContextDataPreparer:
             return file_input.name
         return str(file_input)
 
+# --- IN context_preparation.py, REPLACE the entire _process_as_image function with this ---
+
     def _process_as_image(self, file_input: FileInput, context: ContextData) -> ContextData:
         """Process the input as an image file with a clear, single-pass logic."""
         self.logger.info(f"[CONTEXT_PREP] Processing as image: {context['file_path_original']}")
 
         with Image.open(file_input) as img:
-            # --- STRENGTHENING: Centralize basic info extraction ---
             context.update(
                 {
                     "pil_info": img.info.copy() if img.info else {},
@@ -123,13 +125,48 @@ class ContextDataPreparer:
                 }
             )
 
-            # DEBUG: Log what's in PIL info
-            self.logger.info(f"[CONTEXT_PREP_DEBUG] PIL info keys: {list(img.info.keys()) if img.info else 'NO_INFO'}")
+            # ============================================================================
+            # >>> START OF NEW CODE BLOCK: WEBP EXIF BLOB NORMALIZER <<<
+            # This is our surgical fix. It checks for the specific case of a WEBP file
+            # storing its workflow data inside a raw 'exif' byte string.
+            # ============================================================================
+            if context["file_format"] == "WEBP" and "exif" in context["pil_info"] and isinstance(context["pil_info"]["exif"], bytes):
+                self.logger.info("[CONTEXT_PREP] Detected WEBP with raw EXIF blob. Attempting to normalize...")
+                try:
+                    # Decode the entire byte string, ignoring errors from binary parts.
+                    exif_data_str = context["pil_info"]["exif"].decode("utf-8", errors="ignore")
+
+                    # Use regex to find 'workflow:' and 'prompt:' JSON objects within the string.
+                    # The \x00 (null byte) is often a reliable terminator.
+                    import re
+
+                    workflow_match = re.search(r"workflow:({.*?})\x00", exif_data_str)
+                    if workflow_match:
+                        workflow_json_str = workflow_match.group(1)
+                        # Add the extracted workflow back to pil_info as a clean, separate key.
+                        context["pil_info"]["workflow"] = workflow_json_str
+                        self.logger.info("Successfully extracted and normalized 'workflow' key from WEBP EXIF blob.")
+
+                    prompt_match = re.search(r"prompt:({.*?})\x00", exif_data_str)
+                    if prompt_match:
+                        prompt_json_str = prompt_match.group(1)
+                        # Add the extracted prompt back to pil_info as a clean, separate key.
+                        context["pil_info"]["prompt"] = prompt_json_str
+                        self.logger.info("Successfully extracted and normalized 'prompt' key from WEBP EXIF blob.")
+
+                except Exception as e:
+                    self.logger.warning(f"[CONTEXT_PREP] Failed to parse workflow/prompt from WEBP EXIF blob: {e}")
+            # ============================================================================
+            # >>> END OF NEW CODE BLOCK <<<
+            # ============================================================================
+
+
+            self.logger.info(f"[CONTEXT_PREP_DEBUG] PIL info keys after potential normalization: {list(context['pil_info'].keys())}")
+
             if img.info and "parameters" in img.info:
                 param_data = img.info["parameters"]
                 self.logger.info(f"[CONTEXT_PREP_DEBUG] Found 'parameters' in PIL info: {param_data[:200] if len(param_data) > 200 else param_data}")
 
-            # Handle extremely large images by stopping early
             if img.width * img.height > MAX_IMAGE_PIXELS:
                 self.logger.warning(
                     f"Large image ({img.width}x{img.height}) detected. Performing minimal metadata extraction."
@@ -137,14 +174,9 @@ class ContextDataPreparer:
                 self._extract_minimal_metadata(context)
                 return context
 
-            # --- STRENGTHENING: Structured metadata extraction flow ---
-            # For normal-sized images, extract everything possible.
             self._extract_exif_data(context)
             self._extract_xmp_data(context)
             self._extract_png_chunks(context)
-
-            # --- STRENGTHENING: Centralized JSON parsing logic ---
-            # After all text fields are populated, try to parse the most likely one.
             self._find_and_parse_comfyui_json(context)
 
         return context
@@ -254,7 +286,7 @@ class ContextDataPreparer:
 
     def _extract_json_from_raw_exif(self, exif_bytes: bytes) -> str:
         """Extract JSON workflow from raw EXIF bytes when not stored in UserComment.
-        
+
         Some ComfyUI workflows are embedded directly in EXIF data after headers,
         as seen in certain JPEG files where the workflow appears after JFIF/MM headers.
         """
@@ -308,7 +340,6 @@ class ContextDataPreparer:
                         json_candidate = potential_json[:json_end]
                         # Validate it's actually valid JSON
                         try:
-                            import json
                             parsed = json.loads(json_candidate)
                             # Check if it looks like a ComfyUI workflow
                             if (isinstance(parsed, dict) and
@@ -341,13 +372,22 @@ class ContextDataPreparer:
         for source_str in potential_sources:
             if isinstance(source_str, str) and source_str.strip().startswith("{"):
                 try:
-                    # Found a potential JSON, try to parse it
-                    parsed_json = json.loads(source_str)
-                    # Check for a key indicator of a ComfyUI workflow
-                    if isinstance(parsed_json, dict) and ("nodes" in parsed_json or "prompt" in parsed_json):
-                        context["comfyui_workflow_json"] = parsed_json
-                        self.logger.debug("Successfully found and parsed ComfyUI workflow JSON.")
-                        return  # Stop after finding the first valid workflow
+                    try:
+                        # Try parsing directly first
+                        parsed_json = json.loads(source_str)
+                    except json.JSONDecodeError:
+                        # If direct parsing fails, try unescaping backslashes
+                        try:
+                            unescaped_str = source_str.encode("utf-8").decode("unicode_escape")
+                            parsed_json = json.loads(unescaped_str)
+                        except (json.JSONDecodeError, UnicodeDecodeError):
+                            # Still not valid JSON, or unescaping failed
+                            continue  # Not a valid JSON, try the next source
+                        # Check for a key indicator of a ComfyUI workflow
+                        if isinstance(parsed_json, dict) and ("nodes" in parsed_json or "prompt" in parsed_json):
+                            context["comfyui_workflow_json"] = parsed_json
+                            self.logger.debug("Successfully found and parsed ComfyUI workflow JSON.")
+                            return  # Stop after finding the first valid workflow
                 except (json.JSONDecodeError, TypeError):
                     continue  # Not a valid JSON, try the next source
 
@@ -447,7 +487,7 @@ class ContextDataPreparer:
     def _process_safetensors_file(self, file_input: FileInput, context: ContextData) -> ContextData:
         """Process a SafeTensors model file."""
         try:
-            from ..model_parsers.safetensors_parser import SafetensorsParser
+
 
             parser = SafetensorsParser(context["file_path_original"])
             if parser.parse():
@@ -464,11 +504,7 @@ class ContextDataPreparer:
         """Process a GGUF model file."""
         try:
             # Import here to avoid dependency issues if not available
-            try:
-                from ..model_parsers.gguf_parser import GGUFParser, ModelParserStatus
-            except ImportError:
-                self.logger.error("GGUFParser module not found. Skipping GGUF parsing.")
-                return context
+            from ..model_parsers.gguf_parser import GGUFParser
 
             file_path = context["file_path_original"]
             parser = GGUFParser(file_path)

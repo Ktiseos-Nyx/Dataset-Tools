@@ -1,11 +1,11 @@
 {
   "parser_name": "ComfyUI (A1111 Sampler Style)",
-  "priority": 140,
+  "priority": 150,
   "description": "Specialized parser for ComfyUI workflows using A1111-style samplers - the hybrid approach! ⚔️🤖",
   "version": "2.0",
   "maintainer": "Ktiseos Nyx",
   "target_file_types": ["PNG", "JPEG", "JPG"],
-  
+
   "detection_rules": [
     {
       "comment": "Rule 1: Must have prompt PNG chunk with valid JSON (primary ComfyUI format)",
@@ -21,7 +21,7 @@
       "value": "KSampler_A1111"
     }
   ],
-  
+
   "parsing_instructions": {
     "input_data": {
       "source_options": [
@@ -43,7 +43,7 @@
         }
       ]
     },
-    
+
     "fields": [
       {
         "target_key": "prompt",
@@ -67,7 +67,7 @@
         "method": "comfy_find_text_from_main_sampler_input",
         "sampler_node_types": [
           "KSampler_A1111",
-          "KSamplerSelect", 
+          "KSamplerSelect",
           "ClownsharKSampler_Beta"
         ],
         "negative_input_name": "negative",
@@ -207,7 +207,7 @@
         "fallback": "Unknown VAE"
       }
     ],
-    
+
     "output_template": {
       "parser_name_from_engine": "ComfyUI_A1111_Sampler_Style",
       "tool": "ComfyUI (A1111 Sampler)",
