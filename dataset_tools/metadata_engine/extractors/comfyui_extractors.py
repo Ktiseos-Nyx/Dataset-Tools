@@ -128,9 +128,6 @@ class ComfyUIExtractor:
 
             self.logger.info("[TARGETED EXTRACTOR v2.7 DEBUG] Workflow has %s nodes and %s links.", len(nodes_list), len(links_list))
 
-                self.logger.warning("[TARGETED EXTRACTOR v2.4] No valid workflow nodes found.")
-                return ""
-
             # --- BUILD GRAPH UTILITIES (ONCE) ---
             node_lookup = {str(node.get("id", i)): node for i, node in enumerate(nodes_list)}
             # forward_graph: {source_id: [(dest_id, dest_input_name), ...]}
@@ -147,8 +144,10 @@ class ComfyUIExtractor:
                     forward_graph.setdefault(source_id, []).append((dest_id, dest_input_name))
                     reverse_graph.setdefault(dest_id, []).append((source_id, dest_input_name))
 
-            self.logger.info("[BACKWARD TRACER] Graph built: %s nodes, %s forward edges, %s reverse edges",
-                           len(node_lookup), sum(len(v) for v in forward_graph.values()), sum(len(v) for v in reverse_graph.values()))
+            self.logger.info(
+                "[BACKWARD TRACER] Graph built: %s nodes, %s forward edges, %s reverse edges",
+                len(node_lookup), sum(len(v) for v in forward_graph.values()), sum(len(v) for v in reverse_graph.values())
+            )
 
             # --- STEP 1: Find the primary sampler ---
             sampler_types = ["KSampler", "SamplerCustomAdvanced", "KSamplerAdvanced", "SamplerCustom"]
@@ -224,8 +223,10 @@ class ComfyUIExtractor:
             return ""
 
         visited.add(current_id)
-        self.logger.info("[BACKWARD TRACER] %sTracing from Node %s (Type: %s), looking for input '%s'",
-                       "  " * depth, current_id, current_type, target_input)
+        self.logger.info(
+            "[BACKWARD TRACER] %sTracing from Node %s (Type: %s), looking for input '%s'",
+            "  " * depth, current_id, current_type, target_input
+        )
 
         # --- CHECK IF THIS IS A TEXT SOURCE NODE ---
         text_source_types = ["ShowText|pysssss", "OllamaGenerateAdvance", "Text Multiline", "ChatGptPrompt"]
@@ -245,8 +246,10 @@ class ComfyUIExtractor:
             elif "Ollama" in current_type:
                 # Ollama nodes generate text dynamically - output is NOT in widgets!
                 # We need to look FORWARD to find a ShowText node that displays the Ollama output
-                self.logger.info("[BACKWARD TRACER] %sOllama node found - looking for ShowText in forward connections",
-                               "  " * depth)
+                self.logger.info(
+                    "[BACKWARD TRACER] %sOllama node found - looking for ShowText in forward connections",
+                    "  " * depth
+                )
 
                 forward_connections = forward_graph.get(current_id, [])
                 for dest_id, dest_input_name in forward_connections:
@@ -257,8 +260,10 @@ class ComfyUIExtractor:
                         if showtext_widgets and isinstance(showtext_widgets[0], list) and len(showtext_widgets[0]) > 0:
                             if isinstance(showtext_widgets[0][0], str) and showtext_widgets[0][0].strip():
                                 extracted_text = showtext_widgets[0][0].strip()
-                                self.logger.info("[BACKWARD TRACER] %s→ Found Ollama output in ShowText node %s",
-                                               "  " * depth, dest_id)
+                                self.logger.info(
+                                    "[BACKWARD TRACER] %s→ Found Ollama output in ShowText node %s",
+                                    "  " * depth, dest_id
+                                )
                                 break
 
             elif widgets and isinstance(widgets[0], str) and widgets[0].strip():
@@ -266,12 +271,16 @@ class ComfyUIExtractor:
                 extracted_text = widgets[0].strip()
 
             if extracted_text:
-                self.logger.info("[BACKWARD TRACER] %s✓ FOUND TEXT SOURCE: '%s...'",
-                               "  " * depth, extracted_text[:80])
+                self.logger.info(
+                    "[BACKWARD TRACER] %s✓ FOUND TEXT SOURCE: '%s...'",
+                    "  " * depth, extracted_text[:80]
+                )
                 return extracted_text
             else:
-                self.logger.warning("[BACKWARD TRACER] %s✗ Text source node %s has no extractable text",
-                                  "  " * depth, current_id)
+                self.logger.warning(
+                    "[BACKWARD TRACER] %s✗ Text source node %s has no extractable text",
+                    "  " * depth, current_id
+                )
                 return ""
 
         # --- HANDLE INTERMEDIATE/PASSTHROUGH NODES ---
@@ -279,8 +288,10 @@ class ComfyUIExtractor:
         if "CLIPTextEncodeSD3" in current_type:
             # SD3 encoder has clip_g, clip_l, t5xxl inputs - prioritize in order
             priority_inputs = ["clip_g", "t5xxl", "clip_l"]
-            self.logger.info("[BACKWARD TRACER] %sSD3 Encoder - will try inputs in priority order: %s",
-                           "  " * depth, priority_inputs)
+            self.logger.info(
+                "[BACKWARD TRACER] %sSD3 Encoder - will try inputs in priority order: %s",
+                "  " * depth, priority_inputs
+            )
 
             for input_name in priority_inputs:
                 result = self._trace_input_backwards(current_node, input_name, node_lookup, reverse_graph, forward_graph, visited, depth)
@@ -311,8 +322,10 @@ class ComfyUIExtractor:
 
         # Find the source node connected to this input
         reverse_connections = reverse_graph.get(node_id, [])
-        self.logger.debug("[BACKWARD TRACER] %sNode %s has %s reverse connections",
-                        "  " * depth, node_id, len(reverse_connections))
+        self.logger.debug(
+            "[BACKWARD TRACER] %sNode %s has %s reverse connections",
+            "  " * depth, node_id, len(reverse_connections)
+        )
 
         for source_id, conn_input_name in reverse_connections:
             # If we're looking for a specific input, check if this connection matches
