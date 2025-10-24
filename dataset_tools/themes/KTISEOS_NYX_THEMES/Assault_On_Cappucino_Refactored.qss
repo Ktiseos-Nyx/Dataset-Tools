@@ -1,0 +1,165 @@
+/*
+ * THEME: Assault On Cappucino (Refactored)
+ * PALETTE: Based on the original Assault_On_Cappucino.qss
+ * STRUCTURE: Based on a robust, conflict-free QSS foundation.
+*/
+
+/* General Styles */
+QWidget {
+    background-color: #18181D;
+    color: #F2C7CA;
+    border: none; /* Critical: No global border */
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #A87A81;
+    color: #F2C7CA;
+    border: 1px solid #55615C;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #C7B0B1;
+}
+
+QPushButton:pressed {
+    background-color: #55615C;
+    border-style: inset;
+}
+
+QPushButton:disabled {
+    background-color: #3a3a3a;
+    border: 1px solid #444444;
+    color: #888888;
+}
+
+/* Text Inputs */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #C7B0B1;
+    color: #18181D;
+    border: 1px solid #55615C;
+    border-radius: 3px;
+    padding: 5px;
+    selection-background-color: #55615C;
+    selection-color: #F2C7CA;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #F2C7CA;
+}
+
+/* ComboBox */
+QComboBox {
+    background-color: #A87A81;
+    color: #F2C7CA;
+    border: 1px solid #55615C;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #55615C;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #F2C7CA;
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #18181D;
+    color: #F2C7CA;
+    border: 1px solid #55615C;
+    selection-background-color: #55615C;
+    selection-color: #F2C7CA;
+    outline: none;
+}
+
+/* ScrollBar */
+QScrollBar:vertical {
+    border: 1px solid #55615C;
+    background: #18181D;
+    width: 15px;
+    margin: 15px 0 15px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #A87A81;
+    min-height: 20px;
+    border-radius: 3px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: #C7B0B1;
+    height: 15px;
+    border: 1px solid #55615C;
+    subcontrol-origin: margin;
+}
+QScrollBar::add-line:vertical { subcontrol-position: bottom; }
+QScrollBar::sub-line:vertical { subcontrol-position: top; }
+
+/* Tabs */
+QTabWidget::pane {
+    border: 1px solid #55615C;
+    background-color: #18181D;
+}
+
+QTabBar::tab {
+    background: #C7B0B1;
+    color: #18181D;
+    border: 1px solid #55615C;
+    border-bottom: none;
+    padding: 5px 10px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: #A87A81;
+    color: #F2C7CA;
+}
+
+/* CheckBox and RadioButton */
+QCheckBox, QRadioButton {
+    color: #F2C7CA;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 15px;
+    height: 15px;
+    border: 1px solid #55615C;
+    background-color: #C7B0B1;
+}
+
+QRadioButton::indicator {
+    border-radius: 7px;
+}
+
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background-color: #A87A81;
+}
+
+/* GroupBox */
+QGroupBox {
+    background-color: #18181D;
+    border: 1px solid #55615C;
+    margin-top: 1em;
+    padding-top: 0.5em;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 0 5px;
+    background-color: #A87A81;
+    color: #F2C7CA;
+}

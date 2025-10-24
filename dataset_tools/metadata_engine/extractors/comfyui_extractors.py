@@ -128,6 +128,9 @@ class ComfyUIExtractor:
 
             self.logger.info("[TARGETED EXTRACTOR v2.7 DEBUG] Workflow has %s nodes and %s links.", len(nodes_list), len(links_list))
 
+                self.logger.warning("[TARGETED EXTRACTOR v2.4] No valid workflow nodes found.")
+                return ""
+
             # --- BUILD GRAPH UTILITIES (ONCE) ---
             node_lookup = {str(node.get("id", i)): node for i, node in enumerate(nodes_list)}
             # forward_graph: {source_id: [(dest_id, dest_input_name), ...]}

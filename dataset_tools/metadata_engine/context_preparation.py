@@ -22,7 +22,8 @@ import piexif.helper
 from PIL import Image, UnidentifiedImageError
 
 from ..logger import get_logger
-# SafetensorsParser imported lazily in _process_safetensors_file to avoid PyQt6 dependency in headless mode
+from ..model_parsers.safetensors_parser import SafetensorsParser
+
 
 # Type aliases
 ContextData = dict[str, Any]
@@ -509,9 +510,6 @@ class ContextDataPreparer:
     def _process_safetensors_file(self, file_input: FileInput, context: ContextData) -> ContextData:
         """Process a SafeTensors model file."""
         try:
-            # Lazy import to avoid loading PyQt6 dependencies when not parsing safetensors
-            from ..model_parsers.safetensors_parser import SafetensorsParser  # noqa: E402
-
             parser = SafetensorsParser(context["file_path_original"])
             if parser.parse():
                 context["safetensors_metadata"] = parser.metadata_header

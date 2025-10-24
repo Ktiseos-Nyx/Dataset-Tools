@@ -1,0 +1,114 @@
+/*
+ * THEME: Disturbed Laughing Gas (Refactored)
+ * PALETTE: Based on the original, reinterpreted for professionalism.
+ * STRUCTURE: Solid widgets on a gradient background.
+*/
+
+/* The main window background gets the gradient */
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #FF00FF, stop: 0.2 #00FFFF,
+                                stop: 0.4 #FFFF00, stop: 0.6 #FF1493,
+                                stop: 0.8 #00FF00, stop: 1 #FF0000);
+}
+
+/* General widget styles are neutral and clean */
+QWidget {
+    color: #FFFFFF; /* Default to white text */
+    border: none;
+    /* All font properties removed for a professional look */
+}
+
+/* Buttons are solid, with a magenta hover accent */
+QPushButton {
+    background-color: #333333;
+    color: #FFFFFF;
+    border: 1px solid #555555;
+    border-radius: 4px;
+    padding: 8px 12px;
+}
+
+QPushButton:hover {
+    background-color: #FF00FF;
+    color: #FFFFFF;
+}
+
+QPushButton:pressed {
+    background-color: #8B008B; /* Darker magenta */
+    border-style: inset;
+}
+
+/* Text inputs have a solid dark background for readability */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #2c2c2c;
+    color: #FFFFFF;
+    border: 1px solid #555555;
+    border-radius: 3px;
+    padding: 5px;
+    selection-background-color: #FF00FF;
+    selection-color: #FFFFFF;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #FF00FF; /* Magenta focus border */
+}
+
+/* ComboBox is styled robustly like other widgets */
+QComboBox {
+    background-color: #333333;
+    color: #FFFFFF;
+    border: 1px solid #555555;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+QComboBox:hover { background-color: #FF00FF; }
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #555555;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #FFFFFF;
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #2c2c2c;
+    color: #FFFFFF;
+    border: 1px solid #555555;
+    selection-background-color: #FF00FF;
+    selection-color: #FFFFFF;
+    outline: none;
+}
+
+/* Lists are solid and readable */
+QListWidget {
+    background-color: #2c2c2c;
+    color: #FFFFFF;
+    border: 1px solid #555555;
+    border-radius: 3px;
+}
+
+QListWidget::item:hover {
+    background-color: #4a4a4a;
+}
+
+QListWidget::item:selected {
+    background-color: #FF00FF;
+    color: #FFFFFF;
+}
+
+/* Other widgets are simple and inherit colors */
+QLabel, QCheckBox, QRadioButton {
+    background-color: transparent; /* Ensure they don't have their own solid background */
+    color: #000000; /* Black text is most readable on the raw gradient */
+}

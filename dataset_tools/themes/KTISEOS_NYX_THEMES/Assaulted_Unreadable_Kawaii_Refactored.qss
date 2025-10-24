@@ -1,0 +1,189 @@
+/*
+ * THEME: Assaulted Unreadable Kawaii (Refactored)
+ * PALETTE: Based on the original Assaulted_Unreadable_Kawaii.qss
+ * STRUCTURE: Based on a robust, conflict-free QSS foundation.
+ * NOTE: The original theme is named "Unreadable". Contrast may be low by design.
+*/
+
+/* General Styles */
+QWidget {
+    background-color: #fbf8cc;
+    color: #f1c0e8;
+    border: none; /* Critical: No global border */
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #fde4cf;
+    color: #a08098; /* Darkened for readability */
+    border: 1px solid #cfbaf0;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #ffcfd2;
+}
+
+QPushButton:pressed {
+    background-color: #cfbaf0;
+    border-style: inset;
+}
+
+QPushButton:disabled {
+    background-color: #d3d3d3;
+    border: 1px solid #b0b0b0;
+    color: #a0a0a0;
+}
+
+/* Text Inputs */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #ffcfd2;
+    color: #b080a0; /* Darkened for readability */
+    border: 1px solid #cfbaf0;
+    border-radius: 3px;
+    padding: 5px;
+    selection-background-color: #cfbaf0;
+    selection-color: #fbf8cc;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #f1c0e8;
+}
+
+/* ComboBox */
+QComboBox {
+    background-color: #fde4cf;
+    color: #a08098; /* Darkened for readability */
+    border: 1px solid #cfbaf0;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #cfbaf0;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #a08098;
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #fbf8cc;
+    color: #a08098; /* Darkened for readability */
+    border: 1px solid #cfbaf0;
+    selection-background-color: #cfbaf0;
+    selection-color: #fbf8cc;
+    outline: none;
+}
+
+/* ScrollBar */
+QScrollBar:vertical {
+    border: 1px solid #cfbaf0;
+    background: #fbf8cc;
+    width: 15px;
+    margin: 15px 0 15px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #fde4cf;
+    min-height: 20px;
+    border-radius: 3px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: #ffcfd2;
+    height: 15px;
+    border: 1px solid #cfbaf0;
+    subcontrol-origin: margin;
+}
+QScrollBar::add-line:vertical { subcontrol-position: bottom; }
+QScrollBar::sub-line:vertical { subcontrol-position: top; }
+
+/* Tabs */
+QTabWidget::pane {
+    border: 1px solid #cfbaf0;
+    background-color: #fbf8cc;
+}
+
+QTabBar::tab {
+    background: #ffcfd2;
+    color: #b080a0; /* Darkened for readability */
+    border: 1px solid #cfbaf0;
+    border-bottom: none;
+    padding: 5px 10px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: #fde4cf;
+    color: #a08098;
+}
+
+/* CheckBox and RadioButton */
+QCheckBox, QRadioButton {
+    color: #f1c0e8;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 15px;
+    height: 15px;
+    border: 1px solid #cfbaf0;
+    background-color: #ffcfd2;
+}
+
+QRadioButton::indicator {
+    border-radius: 7px;
+}
+
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background-color: #fde4cf;
+}
+
+/* GroupBox */
+QGroupBox {
+    background-color: #fbf8cc;
+    border: 1px solid #cfbaf0;
+    margin-top: 1em;
+    padding-top: 0.5em;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 0 5px;
+    background-color: #fde4cf;
+    color: #a08098;
+}
+
+/* List Widget (for file lists, etc.) */
+QListWidget {
+    background-color: #fbf8cc;
+    border: 1px solid #cfbaf0;
+    border-radius: 3px;
+    padding: 5px;
+    color: #a08098; /* Set text color as requested */
+}
+
+QListWidget::item {
+    padding: 5px;
+    background-color: transparent;
+}
+
+QListWidget::item:hover {
+    background-color: #ffcfd2; /* Hover color from the theme */
+}
+
+QListWidget::item:selected {
+    background-color: #cfbaf0; /* Selection color from the theme */
+    color: #fbf8cc; /* Text color for selected item */
+}
