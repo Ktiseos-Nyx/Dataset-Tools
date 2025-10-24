@@ -10,7 +10,8 @@ import sys
 from pathlib import Path
 
 from PyQt6 import QtWidgets
-from PyQt6.QtGui import QFontDatabase
+from PyQt6.QtGui import QFontDatabase, QFont
+from PyQt6.QtWidgets import QToolTip
 
 # For version display
 # Import from your package's __init__.py
@@ -148,6 +149,17 @@ def main(cli_args_list=None):
     # app-specific ones.
     qt_app_args = sys.argv  # Keep original sys.argv for Qt if needed
     app = QtWidgets.QApplication(qt_app_args)
+
+    # CRITICAL FOR MACOS: Initialize tooltips by setting font
+    # Without this, tooltips may not appear reliably on macOS
+    # Load user's tooltip font preference or use sensible defaults
+    from PyQt6.QtCore import QSettings
+    settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
+    tooltip_family = settings.value("tooltipFontFamily", "Open Sans", type=str)
+    tooltip_size = settings.value("tooltipFontSize", 9, type=int)
+
+    QToolTip.setFont(QFont(tooltip_family, tooltip_size))
+    app_logger.debug_message("Initialized QToolTip font: %s %dpt", tooltip_family, tooltip_size)
 
     # Load all custom fonts from the 'fonts' directory
 

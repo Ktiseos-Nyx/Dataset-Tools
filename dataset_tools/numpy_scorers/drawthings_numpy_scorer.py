@@ -28,9 +28,8 @@ class DrawThingsNumpyScorer(BaseNumpyScorer):
         start_time = time.time()
 
         try:
-            print("[DEBUG] Draw Things scorer enhance_engine_result called")
-            print(f"[DEBUG] Draw Things engine_result keys: {list(engine_result.keys())}")
-            logger.info("Starting Draw Things numpy enhancement")
+            logger.debug("Draw Things scorer enhance_engine_result called")
+            logger.debug("Draw Things engine_result keys: %s", list(engine_result.keys()))
 
             # Draw Things data should already be parsed by SDPR format
             # Check what we already have from the base parser
@@ -38,9 +37,9 @@ class DrawThingsNumpyScorer(BaseNumpyScorer):
             existing_negative = engine_result.get("negative_prompt", "")
             existing_params = engine_result.get("parameters", {})
 
-            print(f"[DEBUG] Existing prompt: {existing_prompt[:100] if existing_prompt else 'None'}...")
-            print(f"[DEBUG] Existing negative: {existing_negative[:100] if existing_negative else 'None'}...")
-            print(f"[DEBUG] Existing parameters: {list(existing_params.keys())}")
+            logger.debug("Existing prompt: %s...", existing_prompt[:100] if existing_prompt else "None")
+            logger.debug("Existing negative: %s...", existing_negative[:100] if existing_negative else "None")
+            logger.debug("Existing parameters: %s", list(existing_params.keys()))
 
             # For Draw Things, the SDPR parser should have already extracted the data
             # We just need to verify and enhance what's there
@@ -50,16 +49,16 @@ class DrawThingsNumpyScorer(BaseNumpyScorer):
             }
 
             if not (prompts_found["positive"] or prompts_found["negative"]):
-                print("[DEBUG] No prompts found in parsed Draw Things result - parser definition may need fixing")
+                logger.debug("No prompts found in parsed Draw Things result - parser definition may need fixing")
                 engine_result["numpy_analysis"] = {"enhanced": False, "reason": "parser_definition_extraction_failed"}
                 return engine_result
 
             # The data is already extracted by SDPR Draw Things parser
             # We just need to add enhancement metadata
-            print("[DEBUG] Draw Things data already parsed by SDPR format")
-            print(f"[DEBUG] Positive prompt available: {prompts_found['positive']}")
-            print(f"[DEBUG] Negative prompt available: {prompts_found['negative']}")
-            print(f"[DEBUG] Parameters available: {len(existing_params)}")
+            logger.debug("Draw Things data already parsed by SDPR format")
+            logger.debug("Positive prompt available: %s", prompts_found["positive"])
+            logger.debug("Negative prompt available: %s", prompts_found["negative"])
+            logger.debug("Parameters available: %s", len(existing_params))
 
             # Add analysis metadata directly to result
             processing_time = time.time() - start_time
@@ -72,14 +71,13 @@ class DrawThingsNumpyScorer(BaseNumpyScorer):
                 "parameters_available": len(existing_params)
             }
 
-            logger.info(f"Draw Things numpy enhancement completed in {processing_time:.3f}s")
-            print("[DEBUG] Draw Things enhancement completed - Enhanced: True")
+            logger.info("Draw Things numpy enhancement completed in %.3fs", processing_time)
+            logger.debug("Draw Things enhancement completed - Enhanced: True")
 
             return engine_result
 
         except Exception as e:
-            logger.error(f"Error in Draw Things numpy enhancement: {e}")
-            print(f"[DEBUG] Draw Things enhancement failed: {e}")
+            logger.error("Error in Draw Things numpy enhancement: %s", e, exc_info=True)
             engine_result["numpy_analysis"] = {"enhanced": False, "error": str(e)}
             return engine_result
 
@@ -92,7 +90,7 @@ class DrawThingsNumpyScorer(BaseNumpyScorer):
         }
 
         try:
-            print(f"[DEBUG] Draw Things workflow_metadata keys: {list(workflow_metadata.keys()) if isinstance(workflow_metadata, dict) else 'Not a dict'}")
+            logger.debug("Draw Things workflow_metadata keys: %s", list(workflow_metadata.keys()) if isinstance(workflow_metadata, dict) else "Not a dict")
 
             # The workflow_metadata should be the parsed Draw Things data
             # Based on the Draw Things parser, this should contain the JSON structure directly
@@ -102,17 +100,17 @@ class DrawThingsNumpyScorer(BaseNumpyScorer):
                 logger.warning("Draw Things workflow_metadata is not a dictionary")
                 return result
 
-            print(f"[DEBUG] Draw Things JSON keys found: {list(json_data.keys())}")
+            logger.debug("Draw Things JSON keys found: %s", list(json_data.keys()))
 
             # Extract positive prompt (key: "c")
             if "c" in json_data and isinstance(json_data["c"], str):
                 result["positive_prompt"] = json_data["c"].strip()
-                print(f"[DEBUG] Found positive prompt: {result['positive_prompt'][:100]}...")
+                logger.debug("Found positive prompt: %s...", result["positive_prompt"][:100])
 
             # Extract negative prompt (key: "uc")
             if "uc" in json_data and isinstance(json_data["uc"], str):
                 result["negative_prompt"] = json_data["uc"].strip()
-                print(f"[DEBUG] Found negative prompt: {result['negative_prompt'][:100]}...")
+                logger.debug("Found negative prompt: %s...", result["negative_prompt"][:100])
 
             # Extract parameters
             param_mapping = {
@@ -150,7 +148,7 @@ class DrawThingsNumpyScorer(BaseNumpyScorer):
             # Extract v2 parameters if available (more detailed parameter structure)
             if "v2" in json_data and isinstance(json_data["v2"], dict):
                 v2_data = json_data["v2"]
-                print(f"[DEBUG] Found v2 parameter structure with keys: {list(v2_data.keys())}")
+                logger.debug("Found v2 parameter structure with keys: %s", list(v2_data.keys()))
 
                 # Map v2 parameters to standard names (v2 parameters override basic ones)
                 v2_mapping = {
@@ -166,14 +164,13 @@ class DrawThingsNumpyScorer(BaseNumpyScorer):
                 for v2_key, standard_key in v2_mapping.items():
                     if v2_key in v2_data:
                         result["parameters"][standard_key] = v2_data[v2_key]
-                        print(f"[DEBUG] Extracted v2 parameter {v2_key} -> {standard_key}: {v2_data[v2_key]}")
+                        logger.debug("Extracted v2 parameter %s -> %s: %s", v2_key, standard_key, v2_data[v2_key])
 
-            logger.info(f"Draw Things analysis extracted {len(result['parameters'])} parameters")
-            print(f"[DEBUG] Final extracted parameters: {list(result['parameters'].keys())}")
+            logger.debug("Draw Things analysis extracted %s parameters", len(result["parameters"]))
+            logger.debug("Final extracted parameters: %s", list(result["parameters"].keys()))
 
         except Exception as e:
-            logger.error(f"Error analyzing Draw Things metadata: {e}")
-            print(f"[DEBUG] Error in Draw Things analysis: {e}")
+            logger.error("Error analyzing Draw Things metadata: %s", e, exc_info=True)
 
         return result
 

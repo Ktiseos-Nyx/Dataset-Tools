@@ -43,19 +43,22 @@
     "fields": [
       {
         "target_key": "prompt",
-        "method": "flux_extract_complex_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "positive",
         "fallback_methods": [
+          "flux_extract_complex_prompt",
           "flux_extract_wildcard_prompt",
           "flux_extract_t5_prompt",
           "comfy_find_text_from_main_sampler_input",
           "comfyui_simple_dfs_prompt"
-        ],
-        "target_input": "positive"
+        ]
       },
       {
         "target_key": "negative_prompt",
-        "method": "flux_extract_clip_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "negative",
         "fallback_methods": [
+          "flux_extract_clip_prompt",
           "comfy_find_text_from_main_sampler_input",
           "comfyui_simple_dfs_prompt"
         ],

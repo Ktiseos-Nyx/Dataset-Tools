@@ -10,14 +10,18 @@ application interface, handling file management, metadata display, and user inte
 """
 
 import os
+import sys
+import shutil
 from pathlib import Path
 from typing import Any
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, PngImagePlugin
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
-from PyQt6.QtCore import QObject, QSettings, QThread, QTimer, pyqtSignal
+from PyQt6.QtCore import QObject, QSettings, QThread, QThreadPool, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
+
+from .civitai_api_worker import CivitaiInfoWorker
 
 from ..background_operations import (  # pylint: disable=relative-beyond-top-level
     TaskManager,
@@ -25,9 +29,9 @@ from ..background_operations import (  # pylint: disable=relative-beyond-top-lev
 )
 
 # from PyQt6.QtWidgets import QApplication
-from ..correct_types import EmptyField  # pylint: disable=relative-beyond-top-level
+from ..correct_types import DownField, UpField, EmptyField  # pylint: disable=relative-beyond-top-level
 from ..correct_types import ExtensionType as Ext  # pylint: disable=relative-beyond-top-level
-from ..logger import debug_monitor  # pylint: disable=relative-beyond-top-level
+from ..logger import debug_message, debug_monitor  # pylint: disable=relative-beyond-top-level
 from ..logger import info_monitor as nfo  # pylint: disable=relative-beyond-top-level
 from ..metadata_parser import (
     parse_metadata,
@@ -35,7 +39,7 @@ from ..metadata_parser import (
 from ..widgets import (
     FileLoader,  # pylint: disable=relative-beyond-top-level
 )
-from .dialogs import SettingsDialog
+from .dialogs import SettingsDialog, TextEditDialog
 from .enhanced_theme_manager import get_enhanced_theme_manager  # pylint: disable=relative-beyond-top-level
 from .font_manager import (
     apply_fonts_to_app,  # pylint: disable=relative-beyond-top-level
@@ -47,6 +51,7 @@ from .managers import (
     MetadataDisplayManager,  # pylint: disable=relative-beyond-top-level
     ThemeManager,  # pylint: disable=relative-beyond-top-level
 )
+from .thumbnail_grid import ThumbnailGridWidget
 from .widgets import FileLoadResult
 
 # ============================================================================
@@ -193,6 +198,10 @@ class MainWindow(Qw.QMainWindow):
         self.file_loader: FileLoader | None = None  # Ensure file_loader is always defined
         self.current_files_in_list: list[str] = []
         self.current_folder: str = ""
+        self.current_selected_file: str | None = None
+        self.current_metadata: dict | None = None
+        self.civitai_api_worker: CivitaiInfoWorker | None = None
+        self.active_workers = []
 
         # UI state
         self.main_status_bar = self.statusBar()
@@ -205,6 +214,8 @@ class MainWindow(Qw.QMainWindow):
         self.image_loader_thread: QThread | None = None
         self.image_loader_worker: ImageLoaderWorker | None = None
         self._setup_image_loading_thread()
+
+        self.thread_pool = QThreadPool.globalInstance()
 
     def _initialize_managers(self) -> None:
         """Initialize UI and functionality managers."""
@@ -281,10 +292,47 @@ class MainWindow(Qw.QMainWindow):
             self.left_panel.sort_files_requested.connect(self.sort_files_list)
             self.left_panel.list_item_selected.connect(self.on_file_selected)
 
+    def set_file_view_mode(self, mode: str) -> None:
+        """Set the file view mode (list or grid).
+        
+        Args:
+            mode: Either 'list' or 'grid'
+
+        """
+        if mode == "grid":
+            if not hasattr(self, "thumbnail_grid"):
+                # Lazy init - only create grid when first needed
+                self._initialize_thumbnail_grid()
+
+            self.left_panel.file_view_stack.setCurrentWidget(self.thumbnail_grid)
+
+            # Populate with current images
+            if self.current_folder and self.current_files_in_list:
+                image_files = [f for f in self.current_files_in_list
+                               if self._should_display_as_image(os.path.join(self.current_folder, f))]
+                self.thumbnail_grid.set_folder(self.current_folder, image_files)
+        else:
+            self.left_panel.file_view_stack.setCurrentWidget(self.left_panel.files_list_widget)
+
+        nfo(f"[UI] File view mode set to: {mode}")
+
+    def _initialize_thumbnail_grid(self):
+        """Lazy initialization of thumbnail grid."""
+        self.thumbnail_grid = ThumbnailGridWidget(parent=self)
+        self.thumbnail_grid.file_selected.connect(self.on_file_selected)
+        self.left_panel.file_view_stack.addWidget(self.thumbnail_grid)
+
+        nfo("[UI] Thumbnail grid initialized")
+
     def _restore_application_state(self) -> None:
         """Restore window geometry and load initial folder."""
         self.theme_manager.restore_window_geometry()
         self._load_initial_folder()
+
+        # Apply saved view mode
+        view_mode = self.settings.value("fileViewMode", "list", type=str)
+        if view_mode == "grid":
+            self.set_file_view_mode("grid")
 
     def _load_initial_folder(self) -> None:
         """Load the last used folder or show empty state."""
@@ -520,23 +568,34 @@ class MainWindow(Qw.QMainWindow):
 
     def _populate_file_list(self, result: FileLoadResult) -> None:
         """Populate the file list with loaded files."""
-        # Combine and sort all files case-insensitively
-        all_files = result.images + result.texts + result.models
-        self.current_files_in_list = sorted(list(set(all_files)), key=str.lower)
+        all_files = sorted(list(set(result.images + result.texts + result.models)), key=str.lower)
+        self.current_files_in_list = all_files
 
-        # Update UI
         self.left_panel.clear_file_list_display()
         self.left_panel.add_items_to_file_list(self.current_files_in_list)
 
-        # Update status bar with file count info
         folder_name = Path(result.folder_path).name
-        file_count = len(self.current_files_in_list)
+        file_count = len(all_files)
         self.file_count_label.setText(f"{file_count} files in {folder_name}")
 
-        # Keep left panel clean - all status info moved to status bar
-
-        # Auto-select file
         self._auto_select_file(result)
+
+        if hasattr(self, "thumbnail_grid") and self.settings.value("fileViewMode", "list") == "grid":
+            nfo("[UI] Populating thumbnail grid...")
+            image_files = []
+            total_files = len(self.current_files_in_list)
+            for i, file_name in enumerate(self.current_files_in_list):
+                if self._should_display_as_image(os.path.join(self.current_folder, file_name)):
+                    image_files.append(file_name)
+
+                # Update progress every 25 files
+                if (i + 1) % 25 == 0 or (i + 1) == total_files:
+                    percent = ((i + 1) / total_files) * 100
+                    sys.stdout.write(f"\r[UI] Filtering image files for grid: {percent:.0f}%")
+                    sys.stdout.flush()
+
+            sys.stdout.write("\n") # Newline after loop finishes
+            self.thumbnail_grid.set_folder(self.current_folder, image_files)
 
     def _auto_select_file(self, result: FileLoadResult) -> None:
         """Auto-select a file after loading."""
@@ -652,25 +711,28 @@ class MainWindow(Qw.QMainWindow):
     @debug_monitor
     def on_file_selected(
         self,
-        current_item: Qw.QListWidgetItem | None,
+        current_item: Qw.QListWidgetItem | str | None,
         _previous_item: Qw.QListWidgetItem | None = None,
     ) -> None:
-        """Handle file selection from the file list.
+        """Handle file selection from either the list view or the grid view."""
+        file_name: str | None = None
 
-        Args:
-            current_item: Currently selected list item
-            _previous_item: Previously selected item (unused)
+        if isinstance(current_item, str):
+            file_name = current_item
+        elif hasattr(current_item, "text"):
+            # It's likely a QListWidgetItem
+            file_name = current_item.text()
 
-        """
-        if not current_item:
+        if not file_name:
             self._handle_no_file_selected()
             return
+
+        self.current_selected_file = file_name
 
         # Clear previous displays
         self.clear_selection()
 
         # Get file information
-        file_name = current_item.text()
         self._update_selection_status(file_name)
 
         # Validate context
@@ -683,6 +745,7 @@ class MainWindow(Qw.QMainWindow):
     def _handle_no_file_selected(self) -> None:
         """Handle when no file is selected."""
         self.clear_selection()
+        self.current_selected_file = None
 
         if hasattr(self, "left_panel"):
             # Left panel stays clean - status only in status bar
@@ -717,9 +780,23 @@ class MainWindow(Qw.QMainWindow):
         # Check if file exists and display image if applicable
         if self._should_display_as_image(full_file_path):
             self.display_image_of(full_file_path)
+            # Load and display metadata for images
+            self._load_and_display_metadata(file_name)
 
-        # Load and display metadata
-        self._load_and_display_metadata(file_name)
+        elif self._should_display_as_text(full_file_path):
+            # Handle text files by displaying their content
+            try:
+                with open(full_file_path, encoding="utf-8") as f:
+                    content = f.read()
+                self.metadata_display.clear_all_displays()
+                self.generation_data_box.setText(content)
+                self.show_status_message(f"Displayed content of {file_name}")
+            except Exception as e:
+                self.show_status_message(f"Error reading text file: {e}")
+                nfo(f"Error reading text file: {e}")
+        else:
+            # For other file types like models, just load metadata
+            self._load_and_display_metadata(file_name)
 
     def _should_display_as_image(self, file_path: str) -> bool:
         """Check if file should be displayed as an image."""
@@ -735,24 +812,45 @@ class MainWindow(Qw.QMainWindow):
         if hasattr(Ext, "IMAGE") and isinstance(Ext.IMAGE, list):
             for image_format_set in Ext.IMAGE:
                 if isinstance(image_format_set, set) and file_suffix in image_format_set:
-                    nfo("[UI] File matches image format: '%s'", file_suffix)
+                    debug_message("[UI] File matches image format: '%s'", file_suffix)
                     return True
 
         nfo("[UI] File is not a supported image format: '%s'", file_suffix)
         return False
 
+    def _should_display_as_text(self, file_path: str) -> bool:
+        """Check if file should be treated as a displayable text file."""
+        path_obj = Path(file_path)
+
+        if not path_obj.is_file():
+            return False
+
+        file_suffix = path_obj.suffix.lower()
+
+        # Check against plain text and schema file types
+        text_exts = {ext for ext_set in getattr(Ext, "PLAIN_TEXT_LIKE", []) for ext in ext_set}
+        schema_exts = {ext for ext_set in getattr(Ext, "SCHEMA_FILES", []) for ext in ext_set}
+        all_text_like_exts = text_exts.union(schema_exts)
+
+        if file_suffix in all_text_like_exts:
+            nfo("[UI] File matches text format: '%s'", file_suffix)
+            return True
+
+        return False
+
     def _load_and_display_metadata(self, file_name: str) -> None:
         """Load metadata for a file and display it."""
         try:
-            metadata_dict = self.load_metadata(file_name)
+            self.current_metadata = self.load_metadata(file_name)
 
             # If background processing is enabled, metadata_dict will be None
             # and the display will be updated asynchronously via callbacks
-            if metadata_dict is not None:
-                self.metadata_display.display_metadata(metadata_dict)
+            if self.current_metadata is not None:
+                self.metadata_display.display_metadata(self.current_metadata)
+                self.fetch_civitai_info(self.current_metadata)
 
                 placeholder_key = EmptyField.PLACEHOLDER.value
-                if len(metadata_dict) == 1 and placeholder_key in metadata_dict:
+                if len(self.current_metadata) == 1 and placeholder_key in self.current_metadata:
                     nfo("No meaningful metadata for %s", file_name)
             else:
                 # Check if we're using background processing
@@ -769,6 +867,147 @@ class MainWindow(Qw.QMainWindow):
                 exc_info=True,
             )
             self.metadata_display.display_metadata(None)
+
+    def fetch_civitai_info(self, metadata_dict: dict) -> None:
+        """Fetch Civitai info in a background thread using pre-extracted IDs."""
+        # Check if the metadata engine already extracted CivitAI IDs for us
+        civitai_api_info = metadata_dict.get(UpField.CIVITAI_INFO.value, {})
+
+        nfo("[CIVITAI_DEBUG] civitai_api_info = %s", civitai_api_info)
+        nfo("[CIVITAI_DEBUG] UpField.CIVITAI_INFO.value = %s", UpField.CIVITAI_INFO.value)
+        nfo("[CIVITAI_DEBUG] metadata_dict keys = %s", list(metadata_dict.keys()))
+
+        if isinstance(civitai_api_info, dict) and "ids_to_fetch" in civitai_api_info:
+            # Use the IDs extracted by the metadata engine
+            ids_to_fetch = civitai_api_info.get("ids_to_fetch", [])
+        else:
+            # Fallback: parse IDs ourselves (shouldn't happen with updated extractors)
+            nfo("[CIVITAI] No pre-extracted IDs found, parsing from metadata")
+            nfo("[CIVITAI_DEBUG] civitai_api_info type: %s, has ids_to_fetch: %s",
+                type(civitai_api_info),
+                'ids_to_fetch' in civitai_api_info if isinstance(civitai_api_info, dict) else 'N/A')
+            return
+
+        if not ids_to_fetch:
+            return
+
+        nfo("[CIVITAI] Starting async fetch for %d CivitAI resources", len(ids_to_fetch))
+
+        if ids_to_fetch:
+            worker = CivitaiInfoWorker(ids_to_fetch)
+            worker.signals.finished.connect(self.on_civitai_info_fetched)
+            worker.signals.error.connect(self.on_civitai_info_error)
+            worker.signals.finished.connect(self.cleanup_worker)
+            self.thread_pool.start(worker)
+            self.active_workers.append(worker)
+
+    def on_civitai_info_fetched(self, civitai_info: dict) -> None:
+        """Update the UI with the fetched Civitai info."""
+        if civitai_info and self.current_metadata:
+            # Format CivitAI resources as human-readable parameter entries
+            resources = []
+            seen_resources = set()  # Track duplicates
+            urn_to_name = {}  # Map URN → display name for prompt replacement
+
+            for key, info in civitai_info.items():
+                if isinstance(info, dict):
+                    resource_type = info.get("type", "Unknown")
+                    model_name = info.get("modelName", "Unknown")
+                    version_name = info.get("versionName", "")
+                    base_model = info.get("baseModel", "")
+                    trained_words = info.get("trainedWords", [])
+
+                    # For embeddings, use the activation tag instead of model name
+                    if resource_type in ["TextualInversion", "Embedding"] and trained_words:
+                        # Use first trained word as the display name
+                        display_name = trained_words[0] if isinstance(trained_words, list) else str(trained_words)
+                    else:
+                        # Format: "ModelName v1.0 (Type - BaseModel)"
+                        display_name = model_name
+                        if version_name:
+                            display_name += f" {version_name}"
+
+                    if resource_type or base_model:
+                        details = []
+                        if resource_type:
+                            details.append(resource_type)
+                        if base_model:
+                            details.append(base_model)
+                        display_name += f" ({' - '.join(details)})"
+
+                    # Only add if we haven't seen this exact resource
+                    if display_name not in seen_resources:
+                        resources.append(display_name)
+                        seen_resources.add(display_name)
+
+            # Build URN to name mapping from civitai_airs in parameters
+            if DownField.GENERATION_DATA.value in self.current_metadata:
+                params = self.current_metadata[DownField.GENERATION_DATA.value]
+                civitai_airs = params.get("civitai_airs", [])
+
+                # Match URNs to fetched resource info by model/version IDs
+                import re
+                for urn in civitai_airs:
+                    if isinstance(urn, str):
+                        urn_match = re.search(r'urn:air:.*?civitai:([0-9]+)@([0-9]+)', urn)
+                        if urn_match:
+                            model_id, version_id = urn_match.groups()
+                            # Try to find matching resource info by ID
+                            for key, info in civitai_info.items():
+                                # Check if this info matches the URN's model_id or version_id
+                                if model_id in key or version_id in key:
+                                    if isinstance(info, dict):
+                                        resource_type = info.get("type", "")
+                                        info_model_name = info.get("modelName", "")
+                                        trained_words = info.get("trainedWords", [])
+
+                                        # For embeddings, use activation tag; otherwise use model name
+                                        if resource_type in ["TextualInversion", "Embedding"] and trained_words:
+                                            simple_name = trained_words[0] if isinstance(trained_words, list) else str(trained_words)
+                                        else:
+                                            simple_name = info_model_name
+
+                                        if simple_name:
+                                            urn_to_name[urn] = simple_name
+                                            break
+
+            # Replace URNs in prompt text with human-readable names
+            if UpField.PROMPT.value in self.current_metadata and urn_to_name:
+                prompt_data = self.current_metadata[UpField.PROMPT.value]
+                for prompt_type in ["Positive", "Negative"]:
+                    if prompt_type in prompt_data:
+                        prompt_text = prompt_data[prompt_type]
+                        for urn, name in urn_to_name.items():
+                            # Replace "embedding:urn:air:..." with activation tag
+                            prompt_text = prompt_text.replace(f"embedding:{urn}", name)
+                            # Also replace bare URNs just in case
+                            prompt_text = prompt_text.replace(urn, name)
+                        prompt_data[prompt_type] = prompt_text
+
+            # Add to parameters section as "CivitAI Resources" and reorder to show first
+            if resources and DownField.GENERATION_DATA.value in self.current_metadata:
+                params = self.current_metadata[DownField.GENERATION_DATA.value]
+
+                # Create new ordered dict with civitai_resources first
+                new_params = {"civitai_resources": resources}
+
+                # Add all other fields after
+                for key, value in params.items():
+                    if key != "civitai_resources":  # Skip if it already exists
+                        new_params[key] = value
+
+                # Replace the parameters dict with the reordered one
+                self.current_metadata[DownField.GENERATION_DATA.value] = new_params
+                self.metadata_display.display_metadata(self.current_metadata)
+
+    def cleanup_worker(self):
+        worker = self.sender()
+        if worker in self.active_workers:
+            self.active_workers.remove(worker)
+
+    def on_civitai_info_error(self, error_message: str) -> None:
+        """Show an error message in the status bar when Civitai info fetching fails."""
+        self.show_status_message(f"Civitai API Error: {error_message}")
 
     # ========================================================================
     # METADATA OPERATIONS
@@ -912,6 +1151,92 @@ class MainWindow(Qw.QMainWindow):
     # USER ACTIONS
     # ========================================================================
 
+    def open_edit_dialog(self) -> None:
+        """Open the dialog to edit metadata for the selected file."""
+        nfo("Edit Metadata button clicked.")
+
+        if not self.current_folder or not self.current_selected_file:
+            self.show_status_message("No file selected to edit.")
+            return
+
+        file_name = self.current_selected_file
+        full_path = os.path.join(self.current_folder, file_name)
+
+        # --- Text File Handling ---
+        if file_name.lower().endswith(".txt"):
+            try:
+                with open(full_path, encoding="utf-8") as f:
+                    initial_text = f.read()
+            except Exception as e:
+                self.show_status_message(f"Error reading file: {e}")
+                return
+
+            accepted, new_text = TextEditDialog.get_edited_text(self, initial_text)
+
+            if accepted:
+                try:
+                    with open(full_path, "w", encoding="utf-8") as f:
+                        f.write(new_text)
+                    self.show_status_message(f"Successfully saved changes to {file_name}.")
+                    # Refresh the display to show new content
+                    self.on_file_selected(self.current_selected_file)
+                except Exception as e:
+                    self.show_status_message(f"Error saving file: {e}")
+            return  # End of text file logic
+
+        # --- PNG File Handling ---
+        if file_name.lower().endswith(".png"):
+            try:
+                img = Image.open(full_path)
+                # Ensure it's a PNG and has metadata
+                if img.format != "PNG" or not img.info:
+                    self.show_status_message("Not a valid PNG file or no metadata found.")
+                    return
+
+                # Find the primary metadata key
+                raw_key = None
+                priority_keys = ["parameters", "prompt", "invokeai_metadata", "Dream", "sd-metadata"]
+                for key in priority_keys:
+                    if key in img.info:
+                        raw_key = key
+                        break
+
+                if not raw_key:
+                    self.show_status_message("No recognized raw metadata block found to edit.")
+                    return
+
+                initial_text = img.info[raw_key]
+
+                # Show the dialog
+                accepted, new_text = TextEditDialog.get_edited_text(self, initial_text)
+
+                if accepted:
+                    # Save the new metadata
+                    new_meta = PngImagePlugin.PngInfo()
+                    # Copy all other metadata first
+                    for key, value in img.info.items():
+                        if key != raw_key:
+                            new_meta.add_text(key, value)
+
+                    # Add the edited metadata
+                    new_meta.add_text(raw_key, new_text)
+
+                    # Save safely
+                    temp_path = full_path + ".tmp"
+                    img.save(temp_path, "PNG", pnginfo=new_meta)
+                    os.replace(temp_path, full_path)
+
+                    self.show_status_message(f"Successfully saved metadata to {file_name}.")
+                    # Refresh the view
+                    self.on_file_selected(self.current_selected_file)
+
+            except Exception as e:
+                self.show_status_message(f"Error processing PNG: {e}")
+                nfo(f"Error during PNG edit process: {e}")
+            return  # End of PNG logic
+
+        self.show_status_message("Editing is currently only supported for .txt and .png files.")
+
     def copy_metadata_to_clipboard(self) -> None:
         """Copy all displayed metadata to clipboard."""
         nfo("Copy All Metadata button clicked.")
@@ -964,7 +1289,7 @@ class MainWindow(Qw.QMainWindow):
                 return self._pil_to_qpixmap(img)
 
         except Exception as e:
-            nfo("[UI] Error creating thumbnail for '%s': %s", image_path, e)
+            nfo("[UI] Error creating thumbnail for '%s': %s", image_path, e, exc_info=True)
             # Return empty pixmap on error
             return QtGui.QPixmap()
 
@@ -998,7 +1323,7 @@ class MainWindow(Qw.QMainWindow):
             return QtGui.QPixmap.fromImage(qimage)
 
         except Exception as e:
-            nfo("[UI] Error converting PIL to QPixmap: %s", e)
+            nfo("[UI] Error converting PIL to QPixmap: %s", e, exc_info=True)
             return QtGui.QPixmap()
 
     def apply_global_font(self) -> None:
@@ -1007,8 +1332,8 @@ class MainWindow(Qw.QMainWindow):
         if not app:
             return
 
-        # Use Open Sans as default if no font preference is saved
-        font_family = self.settings.value("fontFamily", "Open Sans", type=str)
+        # Use JetBrains Mono as default if no font preference is saved
+        font_family = self.settings.value("fontFamily", "JetBrains Mono", type=str)
         font_size = self.settings.value("fontSize", 10, type=int)
 
         # Create font with bundled Open Sans as fallback
@@ -1038,6 +1363,16 @@ class MainWindow(Qw.QMainWindow):
             else:
                 nfo(f"[FONT] WARNING: {box_name} not found on main window")
 
+        # Apply font to file list widget (for list view)
+        if hasattr(self, "left_panel"):
+            try:
+                files_list = self.left_panel.get_files_list_widget()
+                files_list.setFont(font)
+                files_list.update()
+                nfo(f"[FONT] Applied to file list widget: {font.family()} {font.pointSize()}pt")
+            except Exception as e:
+                nfo(f"[FONT] Could not apply font to file list: {e}")
+
         # Force a repaint of the entire window to ensure all widgets get the new font
         self.update()
 
@@ -1065,11 +1400,42 @@ class MainWindow(Qw.QMainWindow):
         """Show enhanced theme system report in console."""
         self.enhanced_theme_manager.print_theme_report()
 
+    def clear_thumbnail_cache(self) -> None:
+        """Clear the thumbnail cache for the current folder and its subdirectories."""
+        if not self.current_folder:
+            self.show_status_message("No folder loaded, nothing to clear.")
+            return
+
+        nfo(f"[CACHE] Starting thumbnail cache clear for: {self.current_folder}")
+        deleted_count = 0
+        try:
+            for root, dirs, _files in os.walk(self.current_folder):
+                if ".thumbnails" in dirs:
+                    cache_dir = os.path.join(root, ".thumbnails")
+                    try:
+                        shutil.rmtree(cache_dir)
+                        nfo(f"[CACHE] Deleted thumbnail cache: {cache_dir}")
+                        deleted_count += 1
+                    except Exception as e:
+                        nfo(f"[CACHE] Error deleting cache directory {cache_dir}: {e}")
+
+            if deleted_count > 0:
+                self.show_status_message(f"Successfully cleared {deleted_count} thumbnail cache(s).")
+                # Refresh the view to show placeholders
+                if hasattr(self, "thumbnail_grid"):
+                    self.thumbnail_grid.set_folder(self.current_folder, self.current_files_in_list)
+            else:
+                self.show_status_message("No thumbnail caches found to clear.")
+
+        except Exception as e:
+            nfo(f"[CACHE] Error during cache clearing process: {e}")
+            self.show_status_message("An error occurred while clearing the cache.")
+
     # ========================================================================
     # DRAG & DROP SUPPORT
     # ========================================================================
 
-    def dragEnterEvent(self, event: QtGui.QDragEnterEvent) -> None:
+    def dragEnterEvent(self, event: QtGui.QDragEnterEvent) -> None:  # noqa: N802
         """Handle drag enter events."""
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
@@ -1078,14 +1444,14 @@ class MainWindow(Qw.QMainWindow):
             event.ignore()
             nfo("[UI] Drag enter ignored (not URLs).")
 
-    def dragMoveEvent(self, event: QtGui.QDragMoveEvent) -> None:
+    def dragMoveEvent(self, event: QtGui.QDragMoveEvent) -> None:  # noqa: N802
         """Handle drag move events."""
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
         else:
             event.ignore()
 
-    def dropEvent(self, event: QtGui.QDropEvent) -> None:
+    def dropEvent(self, event: QtGui.QDropEvent) -> None:  # noqa: N802
         """Handle drop events for files and folders."""
         mime_data = event.mimeData()
 
@@ -1154,7 +1520,7 @@ class MainWindow(Qw.QMainWindow):
     # WINDOW LIFECYCLE
     # ========================================================================
 
-    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:  # noqa: N802
         """Handle window close event and save settings."""
         nfo("[UI] Close event triggered. Saving settings.")
 
@@ -1169,6 +1535,10 @@ class MainWindow(Qw.QMainWindow):
 
         # Clean up image loading thread
         self._cleanup_image_loading_thread()
+
+        # Clean up thumbnail worker thread
+        if hasattr(self, "thumbnail_grid"):
+            self.thumbnail_grid.cleanup()
 
         super().closeEvent(event)
 
@@ -1187,7 +1557,7 @@ class MainWindow(Qw.QMainWindow):
             nfo("[UI] Image loading thread cleaned up successfully")
 
         except Exception as e:
-            nfo("[UI] Error cleaning up image loading thread: %s", e)
+            nfo("[UI] Error cleaning up image loading thread: %s", e, exc_info=True)
 
     def resize_window(self, width: int, height: int) -> None:
         """Resize the window to specified dimensions.
@@ -1200,53 +1570,3 @@ class MainWindow(Qw.QMainWindow):
         self.resize(width, height)
         nfo("[UI] Window resized to: %dx%d", width, height)
 
-    # ========================================================================
-    # EASTER EGG - KONAMI CODE
-    # ========================================================================
-
-    def _initialize_konami_code(self) -> None:
-        """Initialize Konami code tracking."""
-        self.konami_code_sequence = [
-            QtCore.Qt.Key.Key_Up,
-            QtCore.Qt.Key.Key_Up,
-            QtCore.Qt.Key.Key_Down,
-            QtCore.Qt.Key.Key_Down,
-            QtCore.Qt.Key.Key_Left,
-            QtCore.Qt.Key.Key_Right,
-            QtCore.Qt.Key.Key_Left,
-            QtCore.Qt.Key.Key_Right,
-            QtCore.Qt.Key.Key_B,
-            QtCore.Qt.Key.Key_A,
-        ]
-        self.konami_code_progress = 0
-        self.chaos_unlocked_key = "chaosCollection/unlocked"
-
-    def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:
-        """Override key press event to check for Konami code."""
-        super().keyPressEvent(event)
-
-    def _check_konami_code(self, key: int) -> None:
-        """Check if the pressed key matches the Konami code sequence."""
-        if self.settings.value(self.chaos_unlocked_key, False, type=bool):
-            return  # Already unlocked
-
-        if key == self.konami_code_sequence[self.konami_code_progress]:
-            self.konami_code_progress += 1
-            if self.konami_code_progress == len(self.konami_code_sequence):
-                self._unlock_chaos_collection()
-                self.konami_code_progress = 0  # Reset after success
-        else:
-            self.konami_code_progress = 0  # Reset on incorrect key
-
-    def _unlock_chaos_collection(self) -> None:
-        """Unlock the chaos theme collection and notify user."""
-        self.settings.setValue(self.chaos_unlocked_key, True)
-        self.show_status_message("Chaos Collection Unlocked! Prepare for madness.", 5000)
-        nfo("Chaos Collection Unlocked via Konami Code!")
-
-        # Optionally, refresh theme manager to show new category immediately
-        if hasattr(self, "enhanced_theme_manager"):
-            self.enhanced_theme_manager.refresh_theme_categories()
-            # Re-open settings dialog if it's open to show new themes
-            # This would require a signal from theme manager to settings dialog
-            # For now, a simple status message is sufficient.

@@ -1,0 +1,225 @@
+/* General Styles */
+QWidget {
+    background-color: #4B463B;
+    color: #F5DEB3; /* Changed from #921513 (dark red) to a light beige for readability */
+    border: none; /* Removed global border for cleaner look */
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #964A32;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white for readability */
+    border: 1px solid #632F23;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+QPushButton:hover {
+    background-color: #CE5636;
+}
+
+QPushButton:pressed {
+    background-color: #632F23;
+}
+
+/* LineEdit and TextEdit */
+QLineEdit, QTextEdit {
+    background-color: #CE5636;
+    color: #1A1A1A; /* Changed from #921513 (dark red) to a dark color for contrast */
+    border: 1px solid #632F23;
+    padding: 3px;
+    border-radius: 3px;
+    selection-background-color: #632F23; /* Adjusted for better contrast */
+    selection-color: #F5DEB3; /* Adjusted for better contrast */
+}
+
+/* Labels */
+QLabel {
+    color: #F5DEB3; /* Changed from #921513 (dark red) to a light beige for readability */
+}
+
+/* GroupBox */
+QGroupBox {
+    background-color: #4B463B;
+    border: 1px solid #632F23;
+    margin-top: 1ex; /* leave space at the top for the title */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* Changed from top left to top center for better aesthetics */
+    padding: 0 3px;
+    background-color: #964A32;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white for readability */
+}
+
+/* ComboBox */
+QComboBox {
+    background-color: #CE5636;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white for readability */
+    border: 1px solid #632F23;
+    padding: 1px 0px 1px 3px; /* top, right, bottom, left */
+    border-radius: 3px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+    border-left-width: 1px;
+    border-left-color: #632F23;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 3px;
+}
+
+QComboBox::down-arrow {
+    image: none; /* Removed image dependency */
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #F5DEB3; /* Custom arrow using borders, light beige color */
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
+}
+
+/* ScrollBar */
+QScrollBar:vertical {
+    border: 1px solid #632F23;
+    background: #4B463B;
+    width: 10px;
+    margin: 15px 0 15px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #964A32;
+    min-height: 20px;
+}
+
+QScrollBar::add-line:vertical {
+    border: 1px solid #632F23;
+    background: #CE5636;
+    height: 15px;
+    subcontrol-origin: margin; /* Changed from bottom to margin for consistency */
+    subcontrol-position: bottom;
+}
+
+QScrollBar::sub-line:vertical {
+    border: 1px solid #632F23;
+    background: #CE5636;
+    height: 15px;
+    subcontrol-origin: margin; /* Changed from top to margin for consistency */
+    subcontrol-position: top;
+}
+
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    background: #F5DEB3; /* Changed from #921513 (dark red) to light beige */
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* CheckBox */
+QCheckBox {
+    color: #F5DEB3; /* Changed from #921513 (dark red) to light beige */
+}
+
+QCheckBox::indicator {
+    width: 13px;
+    height: 13px;
+    border: 1px solid #632F23;
+    background-color: #CE5636;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #964A32;
+}
+
+/* RadioButton */
+QRadioButton {
+    color: #F5DEB3; /* Changed from #921513 (dark red) to light beige */
+}
+
+QRadioButton::indicator {
+    width: 13px;
+    height: 13px;
+    border: 1px solid #632F23;
+    border-radius: 6px; /* Makes it circular */
+    background-color: #CE5636;
+}
+
+QRadioButton::indicator:checked {
+    background-color: #964A32;
+}
+
+/* TabWidget */
+QTabWidget::pane {
+    border: 1px solid #632F23;
+    background-color: #4B463B;
+}
+
+QTabBar::tab {
+    background: #CE5636;
+    border: 1px solid #632F23;
+    border-bottom: none; /* Removed border-bottom-color for cleaner look */
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    min-width: 8ex;
+    padding: 2px;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white */
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: #964A32;
+}
+
+QTabBar::tab:selected {
+    border-color: #632F23;
+    border-bottom-color: #964A32; /* make the selected tab appear above the pane */
+}
+
+/* MenuBar */
+QMenuBar {
+    background-color: #CE5636;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white */
+}
+
+QMenuBar::item {
+    spacing: 3px;
+    padding: 1px 4px;
+    background: transparent;
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected {
+    background: #964A32;
+}
+
+QMenuBar::item:pressed {
+    background: #632F23;
+}
+
+/* Menu */
+QMenu {
+    background-color: #CE5636;
+    border: 1px solid #632F23;
+    border-radius: 3px;
+}
+
+QMenu::item {
+    padding: 2px 25px 2px 20px;
+    border: 1px solid transparent; /* reserve space for selection border */
+}
+
+QMenu::item:selected {
+    background-color: #964A32;
+    color: #FFFFFF; /* Changed from #921513 (dark red) to white */
+}
+
+QMenu::separator {
+    height: 1px;
+    background: #632F23;
+    margin-left: 10px;
+    margin-right: 10px;
+}

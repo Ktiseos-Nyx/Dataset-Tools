@@ -144,13 +144,13 @@ class ComfyUITraversalExtractor:
                 return []
 
             node_type = node.get("class_type", node.get("type", ""))
-            self.logger.debug(f"[TRAVERSAL] Tracing node {node_id} (Type: {node_type})")
+            self.logger.debug("[TRAVERSAL] Tracing node %s (Type: %s)", node_id, node_type)
 
             # Base Case: If this node holds a primitive string value.
             if "Primitive" in node_type and node.get("widgets_values"):
                 text_content = node["widgets_values"][0]
                 if text_content and isinstance(text_content, str):
-                    self.logger.debug(f"[TRAVERSAL] Found Primitive text: {text_content[:50]}...")
+                    self.logger.debug("[TRAVERSAL] Found Primitive text: %s...", text_content[:50])
                     return [text_content]
 
             # Handle various text encoder nodes.
@@ -163,7 +163,7 @@ class ComfyUITraversalExtractor:
                 widgets = node.get("widgets_values", [])
                 if widgets and isinstance(widgets[0], str) and widgets[0].strip():
                     text_content = widgets[0]
-                    self.logger.debug(f"[TRAVERSAL] Found Text Encoder text: {text_content[:50]}...")
+                    self.logger.debug("[TRAVERSAL] Found Text Encoder text: %s...", text_content[:50])
                     return [text_content]
 
             # Handle specific text processing nodes.
@@ -173,7 +173,7 @@ class ComfyUITraversalExtractor:
                     for key in ["populated_text", "wildcard_text"]:
                         text = inputs.get(key, "")
                         if isinstance(text, str) and text.strip():
-                            self.logger.debug(f"[TRAVERSAL] Found {node_type} text: {text[:50]}...")
+                            self.logger.debug("[TRAVERSAL] Found %s text: %s...", node_type, text[:50])
                             return [text]
 
             if "AutoNegativePrompt" in node_type:
@@ -181,7 +181,7 @@ class ComfyUITraversalExtractor:
                 if isinstance(inputs, dict) and "base_negative" in inputs:
                     text = inputs["base_negative"]
                     if isinstance(text, str) and text.strip():
-                        self.logger.debug(f"[TRAVERSAL] Found AutoNegativePrompt text: {text[:50]}...")
+                        self.logger.debug("[TRAVERSAL] Found AutoNegativePrompt text: %s...", text[:50])
                         return [text]
 
             # This is the main recursive logic.
@@ -196,7 +196,7 @@ class ComfyUITraversalExtractor:
                         source_node_id, _ = link_info
                         all_traced_fragments.extend(trace_recursive(source_node_id, depth + 1))
                 if all_traced_fragments:
-                    self.logger.debug(f"[TRAVERSAL] Concat result: {' '.join(all_traced_fragments)[:50]}...")
+                    self.logger.debug("[TRAVERSAL] Concat result: %s...", " ".join(all_traced_fragments)[:50])
                     return all_traced_fragments
 
             # Generic handling for intermediate nodes.
@@ -211,14 +211,14 @@ class ComfyUITraversalExtractor:
                 "ControlNetApplySD3",
             ]
             if node_type in intermediate_node_types:
-                self.logger.debug(f"[TRAVERSAL] Following inputs for intermediate node: {node_type}")
+                self.logger.debug("[TRAVERSAL] Following inputs for intermediate node: %s", node_type)
                 # Prioritize known input names for text-related data.
                 input_candidates = ["conditioning", "string_a", "string_b", "model", "clip", "samples", "latent_image"]
                 for input_name in input_candidates:
                     link_info = self.follow_input_link(nodes, node_id, input_name)
                     if link_info:
                         source_node_id, _ = link_info
-                        self.logger.debug(f"[TRAVERSAL] Following '{input_name}' from {node_id} to {source_node_id}")
+                        self.logger.debug("[TRAVERSAL] Following '%s' from %s to %s", input_name, node_id, source_node_id)
                         all_traced_fragments.extend(trace_recursive(source_node_id, depth + 1))
 
                 # Also check generic inputs just in case.
@@ -228,7 +228,7 @@ class ComfyUITraversalExtractor:
                         if isinstance(item, dict) and item.get("link"):
                             source_node_id = self._find_source_node_for_link(data, item["link"])
                             if source_node_id:
-                                self.logger.debug(f"[TRAVERSAL] Following generic link from {node_id} to {source_node_id}")
+                                self.logger.debug("[TRAVERSAL] Following generic link from %s to %s", node_id, source_node_id)
                                 all_traced_fragments.extend(trace_recursive(source_node_id, depth + 1))
 
             # Fallback for nodes that might have text in widgets or a direct 'text' input.
@@ -237,17 +237,17 @@ class ComfyUITraversalExtractor:
                 if isinstance(inputs, dict) and "text" in inputs:
                     text_value = inputs["text"]
                     if isinstance(text_value, str) and text_value.strip():
-                        self.logger.debug(f"[TRAVERSAL] Found direct 'text' input: {text_value[:50]}...")
+                        self.logger.debug("[TRAVERSAL] Found direct 'text' input: %s...", text_value[:50])
                         all_traced_fragments.append(text_value)
 
                 widgets = node.get("widgets_values", [])
                 if widgets and isinstance(widgets[0], str) and widgets[0].strip():
                     text_content = widgets[0]
-                    self.logger.debug(f"[TRAVERSAL] Found widget value: {text_content[:50]}...")
+                    self.logger.debug("[TRAVERSAL] Found widget value: %s...", text_content[:50])
                     all_traced_fragments.append(text_content)
 
             if not all_traced_fragments:
-                self.logger.debug(f"[TRAVERSAL] No text found in node {node_id}.")
+                self.logger.debug("[TRAVERSAL] No text found in node %s.", node_id)
 
             return all_traced_fragments
 

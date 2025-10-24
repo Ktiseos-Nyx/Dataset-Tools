@@ -62,6 +62,7 @@ class UpField(Enum):
     TAGS = "tags_and_keywords_section"
     TEXT_DATA = "text_file_content_section"
     WORKFLOW_ANALYSIS = "workflow_analysis_section"
+    CIVITAI_INFO = "civitai_api_info_section"
     # DATA = "generic_data_block_section" # Keep if used
 
     @classmethod
@@ -73,6 +74,7 @@ class UpField(Enum):
             cls.METADATA,
             cls.TEXT_DATA,
             cls.WORKFLOW_ANALYSIS,
+            cls.CIVITAI_INFO,
         ]
 
 

@@ -15,14 +15,15 @@ This module contains manager classes that handle different aspects of the UI:
 from typing import Any
 
 from PyQt6 import QtCore, QtGui
-from PyQt6 import QtWidgets as Qw
 from PyQt6.QtCore import QSettings
 from PyQt6.QtGui import QTextOption
 from PyQt6.QtWidgets import QApplication
+from PyQt6 import QtWidgets as Qw
 
-from ..correct_types import EmptyField
-from ..display_formatter import format_metadata_for_display
-from ..logger import info_monitor as nfo
+from dataset_tools.correct_types import EmptyField
+from dataset_tools.display_formatter import format_metadata_for_display
+from dataset_tools.logger import info_monitor as nfo
+
 from .components import EnhancedImageLabel, EnhancedLeftPanelWidget
 
 # Import icon manager
@@ -97,9 +98,14 @@ class ThemeManager:
             action.setChecked(theme_key == theme_name)
 
         try:
-            # Apply the theme
-            invert_secondary = theme_name.startswith("dark_")
-            apply_stylesheet(app, theme=theme_name, invert_secondary=invert_secondary)
+            # Special handling for reset to default - clear all styling
+            if theme_name == "reset_to_default.qss":
+                app.setStyleSheet("")
+                nfo("Reset to OS default styling")
+            else:
+                # Apply qt-material theme
+                invert_secondary = theme_name.startswith("dark_")
+                apply_stylesheet(app, theme=theme_name, invert_secondary=invert_secondary)
 
             self.current_theme = theme_name
 
@@ -371,12 +377,12 @@ class LayoutManager:
         overall_layout.setSpacing(5)
 
         # Store reference for later use
-        self.main_window._overall_layout = overall_layout
+        self.main_window._overall_layout = overall_layout  # noqa: SLF001
 
     def _setup_main_splitter(self) -> None:
         """Setup the main horizontal splitter."""
         self.main_window.main_splitter = Qw.QSplitter(QtCore.Qt.Orientation.Horizontal)
-        self.main_window._overall_layout.addWidget(self.main_window.main_splitter, 1)
+        self.main_window._overall_layout.addWidget(self.main_window.main_splitter, 1)  # noqa: SLF001
 
     def _setup_left_panel(self) -> None:
         """Setup the left file browser panel."""
@@ -465,7 +471,7 @@ class LayoutManager:
         bottom_layout.addLayout(action_layout)
         bottom_layout.addStretch(1)
 
-        self.main_window._overall_layout.addWidget(bottom_bar, 0)
+        self.main_window._overall_layout.addWidget(bottom_bar, 0)  # noqa: SLF001
 
     def _create_action_buttons(self) -> Qw.QHBoxLayout:
         """Create the action button layout."""
@@ -476,10 +482,17 @@ class LayoutManager:
         button_configs = [
             (
                 "copy_metadata_button",
-                "Copy All Metadata",
+                "Copy All",
                 "copy_metadata_to_clipboard",
                 "<b>Copy All Metadata</b><br/>Copy all metadata from the current file to "
                 "clipboard<br/><i>Shortcut: Ctrl+C</i>",
+            ),
+            (
+                "edit_metadata_button",
+                "Edit",
+                "open_edit_dialog",
+                "<b>Edit Metadata</b><br/>Edit the metadata for the selected file.<br/>"\
+                "<i>Currently supports .txt files.</i>",
             ),
             (
                 "settings_button",
@@ -490,7 +503,7 @@ class LayoutManager:
             ),
             (
                 "exit_button",
-                "Exit Application",
+                "Exit",
                 "close",
                 "<b>Exit Application</b><br/>Close the Dataset Tools application<br/><i>Shortcut: Ctrl+Q</i>",
             ),
@@ -528,7 +541,7 @@ class LayoutManager:
             self.main_window.metadata_image_splitter.setSizes(meta_sizes)
 
         except Exception as e:
-            nfo("Error restoring splitter positions: %s", e)
+            nfo("Error restoring splitter positions: %s", e, exc_info=True)
 
     def _get_window_width(self) -> int:
         """Get current window width safely."""
@@ -566,7 +579,7 @@ class LayoutManager:
 
             nfo("Layout state saved successfully")
         except Exception as e:
-            nfo("Error saving layout state: %s", e)
+            nfo("Error saving layout state: %s", e, exc_info=True)
 
 
 # ============================================================================
@@ -620,12 +633,10 @@ class MetadataDisplayManager:
         ]
 
         for box_attr, placeholder_text in placeholder_configs:
-            if hasattr(self.main_window, box_attr):
-                text_box = getattr(self.main_window, box_attr)
-                if isinstance(text_box, Qw.QTextEdit):
-                    if not text_box.toPlainText().strip():
-                        text_box.setPlaceholderText(placeholder_text)
-
+                            if hasattr(self.main_window, box_attr) and \
+                               isinstance(text_box := getattr(self.main_window, box_attr), Qw.QTextEdit) and \
+                               not text_box.toPlainText().strip():
+                                text_box.setPlaceholderText(placeholder_text)
     def clear_all_displays(self) -> None:
         """Clear all metadata display boxes."""
         text_boxes = [

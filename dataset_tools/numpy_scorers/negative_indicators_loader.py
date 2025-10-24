@@ -30,9 +30,9 @@ class NegativeIndicatorsManager:
         try:
             with open(self.config_path, encoding="utf-8") as f:
                 self.config = json.load(f)
-            logger.info(f"Loaded negative indicators config v{self.config.get('version', 'unknown')}")
+            logger.info("Loaded negative indicators config v%s", self.config.get("version", "unknown"))
         except Exception as e:
-            logger.error(f"Failed to load negative indicators config: {e}")
+            logger.error("Failed to load negative indicators config: %s", e)
             # Fallback to minimal hardcoded config
             self.config = {
                 "categories": {"basic": {"indicators": ["bad quality", "watermark", "nsfw"]}},
@@ -77,7 +77,7 @@ class NegativeIndicatorsManager:
         positive_overrides = rules.get("positive_context_overrides", [])
         for override in positive_overrides:
             if override.lower() in text_lower:
-                logger.debug(f"Positive context override detected: '{override}' - skipping negative classification")
+                logger.debug("Positive context override detected: '%s' - skipping negative classification", override)
                 return False
 
         # Check for embedding negatives using patterns
@@ -85,7 +85,7 @@ class NegativeIndicatorsManager:
         if "embedding:" in text_lower:
             for pattern in embedding_patterns:
                 if re.search(pattern, text_lower):
-                    logger.debug(f"Detected negative embedding pattern: {pattern}")
+                    logger.debug("Detected negative embedding pattern: %s", pattern)
                     return True
 
         # Check for strong single negatives
@@ -94,7 +94,7 @@ class NegativeIndicatorsManager:
             # Use word boundaries for strong negatives too
             strong_pattern = r"\b" + re.escape(strong_neg.lower()) + r"\b"
             if re.search(strong_pattern, text_lower):
-                logger.debug(f"Detected strong negative: {strong_neg} in text: '{text[:60]}...'")
+                logger.debug("Detected strong negative: %s in text: '%s...'", strong_neg, text[:60])
                 return True
 
         # Get all indicators and artistic descriptors
@@ -113,7 +113,7 @@ class NegativeIndicatorsManager:
                     artistic_matches.append(indicator)
                 else:
                     non_artistic_matches.append(indicator)
-                logger.debug(f"Matched indicator: '{indicator}' in text: '{text[:60]}...')")
+                logger.debug("Matched indicator: '%s' in text: '%s...'", indicator, text[:60])
 
         # Apply smarter context-aware logic
         rules = self.config.get("detection_rules", {})
@@ -122,7 +122,7 @@ class NegativeIndicatorsManager:
 
         # If we have many non-artistic negative indicators, it's probably negative
         if len(non_artistic_matches) >= min_matches:
-            logger.debug(f"Detected negative with {len(non_artistic_matches)} non-artistic matches")
+            logger.debug("Detected negative with %d non-artistic matches", len(non_artistic_matches))
             return True
 
         # If we have artistic terms but also other negative context, it might be negative
@@ -142,7 +142,7 @@ class NegativeIndicatorsManager:
         if (len(text.strip()) < short_threshold and
             "neg" in text_lower and
             ("embedding" in text_lower or len(text.split()) < 5)):
-            logger.debug(f"Detected short negative content: {text[:30]}...")
+            logger.debug("Detected short negative content: %s...", text[:30])
             return True
 
         return False

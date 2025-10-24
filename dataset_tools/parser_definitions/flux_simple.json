@@ -1,0 +1,47 @@
+
+{
+  "parser_name": "flux_simple",
+  "priority": 201,
+  "description": "Parses simple, flat JSON metadata from Flux-based generators, often found in the EXIF UserComment.",
+  "version": "1.0",
+  "maintainer": "Gemini & Duskfall",
+  "target_file_types": ["JPEG", "WEBP"],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: The UserComment must be valid JSON.",
+      "source_type": "exif_user_comment",
+      "operator": "is_valid_json"
+    },
+    {
+      "comment": "Rule 2: The JSON must contain 'model': 'flux'.",
+      "source_type": "exif_user_comment",
+      "operator": "json_path_value_equals",
+      "json_path": "model",
+      "value": "flux"
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_type": "exif_user_comment",
+      "transformations": [{ "type": "json_decode_string_itself" }]
+    },
+    "fields": [
+      { "target_key": "prompt", "method": "direct_json_path", "json_path": "prompt" },
+      { "target_key": "negative_prompt", "method": "direct_json_path", "json_path": "negative_prompt" },
+      { "target_key": "parameters.seed", "method": "direct_json_path", "json_path": "seed", "value_type": "integer" },
+      { "target_key": "parameters.width", "method": "direct_json_path", "json_path": "width", "value_type": "integer" },
+      { "target_key": "parameters.height", "method": "direct_json_path", "json_path": "height", "value_type": "integer" }
+    ],
+    "output_template": {
+      "tool": "FLUX (Simple)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "raw_metadata": "$_input_data_object_for_template"
+    }
+  }
+}

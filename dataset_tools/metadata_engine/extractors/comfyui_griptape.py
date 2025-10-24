@@ -90,6 +90,7 @@ class ComfyUIGriptapeExtractor:
                     "text": text.strip(),
                     "node_type": node_type,
                     "node_id": node_id,
+                    "title": node.get("title", "").lower(),
                     "widgets": widgets
                 })
 
@@ -161,11 +162,16 @@ class ComfyUIGriptapeExtractor:
             score -= 1
 
         # Griptape-specific boost for Text Multiline (KEY FIX from numpy research)
-        if node_type == "Text Multiline" and text_length > 50:
-            # In Griptape workflows, Text Multiline often contains the REAL user prompt
-            # while CLIPTextEncode might have template/NSFW content
-            score += 8.0  # Strong boost to beat CLIPTextEncode
-            self.logger.debug("[Griptape] Text Multiline boost applied: +8.0")
+        if node_type == "Text Multiline":
+            # Check for title "Prompt" for an even stronger boost
+            if candidate.get("title") == "prompt":
+                score += 15.0 # Very strong boost for the specific node
+                self.logger.debug("[Griptape] Titled 'Prompt' Text Multiline boost applied: +15.0")
+            elif text_length > 50:
+                # In Griptape workflows, Text Multiline often contains the REAL user prompt
+                # while CLIPTextEncode might have template/NSFW content
+                score += 8.0  # Strong boost to beat CLIPTextEncode
+                self.logger.debug("[Griptape] Text Multiline boost applied: +8.0")
 
         # Template detection penalty (from numpy research)
         if self._is_template_text(text):

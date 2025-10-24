@@ -35,7 +35,7 @@ class ComfyUIExtractor:
             self.manager = ComfyUIExtractorManager(logger)
             self.logger.info("[ComfyUI EXTRACTOR] ComfyUIExtractor initialized successfully!")
         except Exception as e:
-            self.logger.error(f"[ComfyUI EXTRACTOR] Failed to initialize: {e}")
+            self.logger.error("[ComfyUI EXTRACTOR] Failed to initialize: %s", e)
             raise
 
     def _parse_json_data(self, data: Any) -> Any:
@@ -92,6 +92,10 @@ class ComfyUIExtractor:
         methods["comfyui_simple_dfs_prompt"] = self._simple_dfs_prompt_extraction
         methods["comfyui_targeted_prompt_extraction"] = self.comfyui_targeted_prompt_extraction
 
+        # Add intelligent parameter extraction methods
+        methods["comfy_extract_with_widget_idx_map"] = self._extract_with_widget_idx_map
+        methods["comfy_extract_latent_dimensions"] = self._extract_latent_dimensions
+
         return methods
 
 # --- ADD THIS CODE INSIDE YOUR ComfyUIExtractor CLASS in comfyui_extractors.py ---
@@ -100,18 +104,18 @@ class ComfyUIExtractor:
         self,
         data: Any,
         method_def: MethodDefinition,
-        context: ContextData,
+        context:  ContextData,
         fields: ExtractedFields
     ) -> str:
-        """Extracts prompts using a fast, two-phase targeted strategy. v2.4 handles complex CLIP paths.
+        """Extracts prompts using BACKWARD TRACING from sampler to text sources.
 
-        Phase 1: Scans all nodes to find text sources, including traversing back from encoders.
-        Phase 2: Traces forward from only those sources to validate their connection to a sampler.
+        This follows the actual data flow: Sampler <- Encoder <- Text Source
+        Handles intermediate nodes like ControlNet, Reroute, multi-input encoders (SD3/FLUX).
         """
-        self.logger.info("[TARGETED EXTRACTOR v2.4] Starting targeted prompt extraction.")
+        self.logger.info("[TARGETED EXTRACTOR v2.7 DEBUG] Starting targeted prompt extraction.")
 
         target_input = method_def.get("target_input", "positive")
-        self.logger.info(f"[TARGETED EXTRACTOR v2.4] Target input: {target_input}")
+        self.logger.info("[TARGETED EXTRACTOR v2.7 DEBUG] Target input: %s", target_input)
 
         try:
             workflow = self._parse_json_data(data)
@@ -119,8 +123,10 @@ class ComfyUIExtractor:
             links_list = workflow.get("links", [])
 
             if not isinstance(nodes_list, list) or not nodes_list:
-                self.logger.warning("[TARGETED EXTRACTOR v2.4] No valid workflow nodes found.")
+                self.logger.warning("[TARGETED EXTRACTOR v2.7 DEBUG] No valid workflow nodes found.")
                 return ""
+
+            self.logger.info("[TARGETED EXTRACTOR v2.7 DEBUG] Workflow has %s nodes and %s links.", len(nodes_list), len(links_list))
 
             # --- BUILD GRAPH UTILITIES (ONCE) ---
             node_lookup = {str(node.get("id", i)): node for i, node in enumerate(nodes_list)}
@@ -138,81 +144,218 @@ class ComfyUIExtractor:
                     forward_graph.setdefault(source_id, []).append((dest_id, dest_input_name))
                     reverse_graph.setdefault(dest_id, []).append((source_id, dest_input_name))
 
-            # --- PHASE 1: CANDIDATE IDENTIFICATION (Find all needles - UPGRADED) ---
-            text_candidates = []
-            sampler_nodes = []
-            text_encoder_types = ["CLIPTextEncode", "Text Multiline", "DPRandomGenerator", "ShowText|pysssss"]
+            self.logger.info(
+                "[BACKWARD TRACER] Graph built: %s nodes, %s forward edges, %s reverse edges",
+                len(node_lookup), sum(len(v) for v in forward_graph.values()), sum(len(v) for v in reverse_graph.values())
+            )
 
-            for node_id, node in node_lookup.items():
+            # --- STEP 1: Find the primary sampler ---
+            sampler_types = ["KSampler", "SamplerCustomAdvanced", "KSamplerAdvanced", "SamplerCustom"]
+            sampler_node = None
+            for node in nodes_list:
                 node_type = node.get("class_type", node.get("type", ""))
-
-                # If this node IS a text source, extract its text directly.
-                if any(t_type in node_type for t_type in text_encoder_types):
-                    # For CLIPTextEncode, the text is inside its 'widgets_values'
-                    widgets = node.get("widgets_values", [])
-                    if widgets and isinstance(widgets[0], str) and widgets[0].strip():
-                        text_candidates.append({
-                            "id": node_id,
-                            "text": widgets[0].strip(),
-                            "type": node_type,
-                            "title": node.get("title", "").lower()
-                        })
-
-                # Identify samplers for Phase 2
-                sampler_types = ["KSampler", "SamplerCustomAdvanced", "KSamplerAdvanced", "SamplerCustom"]
                 if any(s_type in node_type for s_type in sampler_types):
-                    sampler_nodes.append(node)
+                    sampler_node = node
+                    self.logger.info("[BACKWARD TRACER] Found sampler: Node %s (Type: %s)", node.get("id"), node_type)
+                    break
 
-            if not text_candidates or not sampler_nodes:
-                self.logger.info(f"[TARGETED EXTRACTOR v2.4] Phase 1 failed: Candidates={len(text_candidates)}, Samplers={len(sampler_nodes)}")
-                return ""
-            self.logger.info(f"[TARGETED EXTRACTOR v2.4] Phase 1: Found {len(text_candidates)} text candidates and {len(sampler_nodes)} samplers.")
-
-            # --- PHASE 2: PATH VALIDATION (Check which needles connect) ---
-            scored_candidates = []
-            from collections import deque
-
-            for candidate in text_candidates:
-                queue = deque([(candidate["id"], 0)]) # (node_id, depth)
-                visited = {candidate["id"]}
-                path_found = False
-
-                if target_input in candidate["title"]:
-                    self.logger.info(f"High confidence match on title for candidate {candidate['id']}.")
-                    scored_candidates.append({"text": candidate["text"], "score": 100})
-                    continue
-
-                while queue:
-                    current_node_id, depth = queue.popleft()
-                    if depth > 20: continue  # Increased depth for complex graphs
-
-                    for dest_node_id, dest_input_name in forward_graph.get(current_node_id, []):
-                        dest_node = node_lookup.get(dest_node_id)
-                        if dest_node in sampler_nodes and dest_input_name == target_input:
-                            self.logger.info(f"Path FOUND for candidate {candidate['id']} -> Sampler {dest_node_id} ('{target_input}') at depth {depth}.")
-                            score = 100 - depth # Prioritize shorter paths
-                            scored_candidates.append({"text": candidate["text"], "score": score})
-                            path_found = True
-                            break
-
-                        if dest_node_id not in visited:
-                            visited.add(dest_node_id)
-                            queue.append((dest_node_id, depth + 1))
-
-                    if path_found:
-                        break
-
-            if not scored_candidates:
-                self.logger.warning(f"Phase 2: No candidates found with a path to a sampler's '{target_input}' input.")
+            if not sampler_node:
+                self.logger.warning("[BACKWARD TRACER] No sampler node found")
                 return ""
 
-            best_candidate = max(scored_candidates, key=lambda x: x["score"])
-            self.logger.info(f"Best candidate for '{target_input}' found with score {best_candidate['score']}: '{best_candidate['text'][:100]}...'")
-            return best_candidate["text"]
+            # --- STEP 2: Determine which input to trace based on sampler type ---
+            sampler_type = sampler_node.get("class_type", "")
+            if "SamplerCustomAdvanced" in sampler_type and target_input == "positive":
+                trace_input = "guider"  # FLUX uses 'guider' instead of 'positive'
+            else:
+                trace_input = target_input
+
+            self.logger.info("[BACKWARD TRACER] Tracing '%s' input from sampler", trace_input)
+
+            # --- STEP 3: Backward trace from sampler to text source ---
+            result_text = self._trace_to_text_source(
+                sampler_node,
+                trace_input,
+                node_lookup,
+                reverse_graph,
+                forward_graph,
+                visited=set()
+            )
+
+            if result_text:
+                self.logger.info("[BACKWARD TRACER] Successfully extracted: '%s...'", result_text[:100])
+            else:
+                self.logger.warning("[BACKWARD TRACER] Failed to find text source")
+
+            return result_text
 
         except Exception as e:
-            self.logger.error(f"[TARGETED EXTRACTOR v2.4] An exception occurred: {e}", exc_info=True)
+            self.logger.error("[TARGETED EXTRACTOR v2.7 DEBUG] An exception occurred: %s", e, exc_info=True)
             return ""
+
+    def _trace_to_text_source(self, current_node, target_input, node_lookup, reverse_graph, forward_graph, visited, depth=0):
+        """Recursively trace backward from a node to find the ultimate text source.
+
+        Args:
+            current_node: The node we're currently at
+            target_input: Which input of this node to trace (e.g. 'positive', 'clip_g', 'text')
+            node_lookup: Dict mapping node IDs to node objects
+            reverse_graph: Dict mapping dest_id -> [(source_id, input_name), ...]
+            forward_graph: Dict mapping source_id -> [(dest_id, input_name), ...]
+            visited: Set of visited node IDs to prevent loops
+            depth: Current recursion depth (for loop prevention)
+
+        Returns:
+            str: The text content from the source node, or empty string if not found
+        """
+        if depth > 20:  # Prevent infinite loops
+            self.logger.warning("[BACKWARD TRACER] Max depth reached at node %s", current_node.get("id"))
+            return ""
+
+        current_id = str(current_node.get("id"))
+        # Handle nodes where class_type is the string "None" - use type field instead
+        current_type = current_node.get("class_type") or current_node.get("type", "")
+        if current_type == "None":
+            current_type = current_node.get("type", "")
+
+        if current_id in visited:
+            self.logger.debug("[BACKWARD TRACER] Already visited node %s, skipping", current_id)
+            return ""
+
+        visited.add(current_id)
+        self.logger.info(
+            "[BACKWARD TRACER] %sTracing from Node %s (Type: %s), looking for input '%s'",
+            "  " * depth, current_id, current_type, target_input
+        )
+
+        # --- CHECK IF THIS IS A TEXT SOURCE NODE ---
+        text_source_types = ["ShowText|pysssss", "OllamaGenerateAdvance", "Text Multiline", "ChatGptPrompt"]
+        is_text_source = any(src_type in current_type for src_type in text_source_types)
+
+        if is_text_source:
+            # Extract text from this source node
+            widgets = current_node.get("widgets_values", [])
+            extracted_text = None
+
+            if "ShowText" in current_type:
+                # ShowText stores text in nested array: [[text]]
+                if widgets and isinstance(widgets[0], list) and len(widgets[0]) > 0:
+                    if isinstance(widgets[0][0], str) and widgets[0][0].strip():
+                        extracted_text = widgets[0][0].strip()
+
+            elif "Ollama" in current_type:
+                # Ollama nodes generate text dynamically - output is NOT in widgets!
+                # We need to look FORWARD to find a ShowText node that displays the Ollama output
+                self.logger.info(
+                    "[BACKWARD TRACER] %sOllama node found - looking for ShowText in forward connections",
+                    "  " * depth
+                )
+
+                forward_connections = forward_graph.get(current_id, [])
+                for dest_id, dest_input_name in forward_connections:
+                    dest_node = node_lookup.get(dest_id)
+                    if dest_node and "ShowText" in dest_node.get("class_type", ""):
+                        # Found a ShowText connected to this Ollama!
+                        showtext_widgets = dest_node.get("widgets_values", [])
+                        if showtext_widgets and isinstance(showtext_widgets[0], list) and len(showtext_widgets[0]) > 0:
+                            if isinstance(showtext_widgets[0][0], str) and showtext_widgets[0][0].strip():
+                                extracted_text = showtext_widgets[0][0].strip()
+                                self.logger.info(
+                                    "[BACKWARD TRACER] %s→ Found Ollama output in ShowText node %s",
+                                    "  " * depth, dest_id
+                                )
+                                break
+
+            elif widgets and isinstance(widgets[0], str) and widgets[0].strip():
+                # Other text sources (Text Multiline, etc.) store in first position
+                extracted_text = widgets[0].strip()
+
+            if extracted_text:
+                self.logger.info(
+                    "[BACKWARD TRACER] %s✓ FOUND TEXT SOURCE: '%s...'",
+                    "  " * depth, extracted_text[:80]
+                )
+                return extracted_text
+            else:
+                self.logger.warning(
+                    "[BACKWARD TRACER] %s✗ Text source node %s has no extractable text",
+                    "  " * depth, current_id
+                )
+                return ""
+
+        # --- HANDLE INTERMEDIATE/PASSTHROUGH NODES ---
+        # For SD3/FLUX multi-input encoders, prioritize certain inputs
+        if "CLIPTextEncodeSD3" in current_type:
+            # SD3 encoder has clip_g, clip_l, t5xxl inputs - prioritize in order
+            priority_inputs = ["clip_g", "t5xxl", "clip_l"]
+            self.logger.info(
+                "[BACKWARD TRACER] %sSD3 Encoder - will try inputs in priority order: %s",
+                "  " * depth, priority_inputs
+            )
+
+            for input_name in priority_inputs:
+                result = self._trace_input_backwards(current_node, input_name, node_lookup, reverse_graph, forward_graph, visited, depth)
+                if result:
+                    return result
+
+            self.logger.warning("[BACKWARD TRACER] %sSD3 Encoder exhausted all inputs, no text found", "  " * depth)
+            return ""
+
+        # For ControlNet nodes, trace the 'positive' input
+        if "ControlNet" in current_type:
+            return self._trace_input_backwards(current_node, "positive", node_lookup, reverse_graph, forward_graph, visited, depth)
+
+        # For Reroute nodes, trace the unnamed input
+        if current_type == "Reroute":
+            return self._trace_input_backwards(current_node, None, node_lookup, reverse_graph, forward_graph, visited, depth)
+
+        # For CLIPTextEncode (non-SD3), trace the 'text' input
+        if "CLIPTextEncode" in current_type:
+            return self._trace_input_backwards(current_node, "text", node_lookup, reverse_graph, forward_graph, visited, depth)
+
+        # Default: trace the specified target_input
+        return self._trace_input_backwards(current_node, target_input, node_lookup, reverse_graph, forward_graph, visited, depth)
+
+    def _trace_input_backwards(self, node, input_name, node_lookup, reverse_graph, forward_graph, visited, depth):
+        """Helper to trace a specific input of a node backwards."""
+        node_id = str(node.get("id"))
+
+        # Find the source node connected to this input
+        reverse_connections = reverse_graph.get(node_id, [])
+        self.logger.debug(
+            "[BACKWARD TRACER] %sNode %s has %s reverse connections",
+            "  " * depth, node_id, len(reverse_connections)
+        )
+
+        for source_id, conn_input_name in reverse_connections:
+            # If we're looking for a specific input, check if this connection matches
+            if input_name is not None and conn_input_name != input_name:
+                self.logger.debug("[BACKWARD TRACER] %sSkipping connection from %s (input '%s' != target '%s')",
+                                "  " * depth, source_id, conn_input_name, input_name)
+                continue
+
+            source_node = node_lookup.get(source_id)
+            if not source_node:
+                self.logger.warning("[BACKWARD TRACER] %sSource node %s not found", "  " * depth, source_id)
+                continue
+
+            self.logger.info("[BACKWARD TRACER] %s→ Following connection from %s (via input '%s')",
+                           "  " * depth, source_id, conn_input_name)
+
+            # Recursively trace from the source node
+            result = self._trace_to_text_source(source_node, conn_input_name, node_lookup, reverse_graph, forward_graph, visited, depth + 1)
+            if result:
+                return result
+
+        # If no input found, check if this node has text directly in widgets
+        widgets = node.get("widgets_values", [])
+        if widgets and isinstance(widgets, list):
+            for widget in widgets:
+                if isinstance(widget, str) and len(widget) > 10 and widget.strip():
+                    self.logger.info("[BACKWARD TRACER] %s→ Using widget text from node %s", "  " * depth, node_id)
+                    return widget.strip()
+
+        return ""
 
     def _find_legacy_input_of_node_type(
         self,
@@ -254,7 +397,7 @@ class ComfyUIExtractor:
 
             # Check if this node matches any of our target types
             if any(target_type in class_type for target_type in node_types):
-                self.logger.info(f"Found matching node type '{class_type}' for {node_types}")
+                self.logger.info("Found matching node type '%s' for %s", class_type, node_types)
 
                 # Try to get value from inputs first
                 inputs = node_data.get("inputs", {})
@@ -278,7 +421,7 @@ class ComfyUIExtractor:
                     value = node_data[input_field]
                     return self._convert_data_type(value, data_type, fallback)
 
-        self.logger.debug(f"No matching node found for types {node_types}")
+        self.logger.debug("No matching node found for types %s", node_types)
         return fallback
 
     def _convert_data_type(self, value: Any, data_type: str, fallback: Any) -> Any:
@@ -292,7 +435,7 @@ class ComfyUIExtractor:
                 return str(value)
             return value
         except (ValueError, TypeError):
-            self.logger.warning(f"Failed to convert {value} to {data_type}, using fallback")
+            self.logger.warning("Failed to convert %s to %s, using fallback", value, data_type)
             return fallback
 
     # Legacy method implementations that delegate to the new system
@@ -564,7 +707,7 @@ class ComfyUIExtractor:
 
         try:
             self.logger.info("[ComfyUI EXTRACTOR] ============ STARTING EXTRACTION ============")
-            self.logger.info(f"[ComfyUI EXTRACTOR] Method def: {method_def}")
+            self.logger.info("[ComfyUI EXTRACTOR] Method def: %s", method_def)
         except Exception:
             return ""
 
@@ -572,7 +715,7 @@ class ComfyUIExtractor:
             "sampler_node_types",
             ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
         )
-        text_encoder_types = method_def.get("text_encoder_node_types", ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"])
+        text_encoder_types = method_def.get("text_encoder_node_types", ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "Text Multiline"])
 
         # Determine which input to follow (positive or negative)
         if method_def.get("positive_input_name"):
@@ -672,7 +815,7 @@ class ComfyUIExtractor:
 
                     # Handle link-based connections (traditional format)
                     elif target_connection is not None:
-                        print(f"Using link-based connection: {target_connection}")
+                        self.logger.debug("Using link-based connection: %s", target_connection)
                         # Look through links to find where this connection comes from
                         links = data.get("links", [])
                         for link in links:
@@ -692,7 +835,7 @@ class ComfyUIExtractor:
                                         return found_text
                                 break
                     else:
-                        self.logger.debug(f"No connection found for {target_input_name} in sampler node {node_id}")
+                        self.logger.debug("No connection found for %s in sampler node %s", target_input_name, node_id)
 
                     break  # Found the sampler, stop looking
 
@@ -727,22 +870,22 @@ class ComfyUIExtractor:
 
         # Check if this node is a text encoder
         class_type = node.get("class_type", node.get("type", ""))
-        self.logger.info(f"[TRAVERSE] Visiting node {node_id}, class_type: {class_type}")
+        self.logger.info("[TRAVERSE] Visiting node %s, class_type: %s", node_id, class_type)
         # print(f"_traverse_for_text: node {node_id} class_type={class_type}")
 
         # --- PRIORITY: Check for Impact Pack and special text processing nodes FIRST ---
         if class_type == "ImpactWildcardProcessor":
             # This node processes wildcard text - the processed text is in widgets[1]
             widget_values = node.get("widgets_values", [])
-            self.logger.info(f"[IMPACT FIX] Found ImpactWildcardProcessor node {node_id}!")
-            self.logger.info(f"[IMPACT FIX] Widget values: {widget_values}")
+            self.logger.info("[IMPACT FIX] Found ImpactWildcardProcessor node %s!", node_id)
+            self.logger.info("[IMPACT FIX] Widget values: %s", widget_values)
             if len(widget_values) >= 2:
                 result = str(widget_values[1])  # Return the processed text
-                self.logger.info(f"[IMPACT FIX] Returning processed text: {result}")
+                self.logger.info("[IMPACT FIX] Returning processed text: %s", result)
                 return result
             if len(widget_values) >= 1:
                 result = str(widget_values[0])  # Fallback to original text
-                self.logger.info(f"[IMPACT FIX] Returning original text: {result}")
+                self.logger.info("[IMPACT FIX] Returning original text: %s", result)
                 return result
             self.logger.info("[IMPACT FIX] No widget values found, returning empty")
             return ""
@@ -850,7 +993,7 @@ class ComfyUIExtractor:
             Extracted text or empty string
 
         """
-        self.logger.info(f"[ComfyUI EXTRACTOR] *** WORKFLOW-ONLY EXTRACTION for {target_input_name} ***")
+        self.logger.info("[ComfyUI EXTRACTOR] *** WORKFLOW-ONLY EXTRACTION for %s ***", target_input_name)
 
         # Use workflow analyzer to get nodes
         analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
@@ -886,6 +1029,7 @@ class ComfyUIExtractor:
                     "BNK_CLIPTextEncodeAdvanced",
                     "CLIPTextEncodeAdvanced",
                     "DPRandomGenerator",
+                    "MZ_ChatGLM3_V2", # Add this line
                 ]
             ):
                 widgets = node.get("widgets_values", [])
@@ -893,7 +1037,9 @@ class ComfyUIExtractor:
                     text_encoders.append({"id": node_id, "type": node_type, "text": widgets[0].strip()})
 
         self.logger.info(
-            f"[ComfyUI EXTRACTOR] Found {len(text_encoders)} text encoder nodes: {[(e['id'], e['type'], e['text'][:50]) for e in text_encoders]}"
+            "[ComfyUI EXTRACTOR] Found %s text encoder nodes: %s",
+            len(text_encoders),
+            [(e["id"], e["type"], e["text"][:50]) for e in text_encoders],
         )
 
         # For positive prompts, try to find the main/primary text
@@ -901,22 +1047,22 @@ class ComfyUIExtractor:
             self.logger.debug("[ComfyUI EXTRACTOR] Attempting to extract POSITIVE prompt.")
             # Strategy 1: Look for T5TextEncode (FLUX) or PixArtT5TextEncode (PixArt) first
             for encoder in text_encoders:
-                self.logger.debug(f"[ComfyUI EXTRACTOR] Checking encoder type: {encoder['type']}")
+                self.logger.debug("[ComfyUI EXTRACTOR] Checking encoder type: %s", encoder["type"])
                 if "T5TextEncode" in encoder["type"] or "PixArt" in encoder["type"]:
-                    self.logger.info(f"[ComfyUI EXTRACTOR] *** Found T5/PixArt encoder: {encoder['text'][:100]}... ***")
+                    self.logger.info("[ComfyUI EXTRACTOR] *** Found T5/PixArt encoder: %s... ***", encoder["text"][:100])
                     return self._clean_prompt_text(encoder["text"])
 
             # Strategy 2: Look for any CLIP encoder
             for encoder in text_encoders:
-                self.logger.debug(f"[ComfyUI EXTRACTOR] Checking encoder type: {encoder['type']}")
+                self.logger.debug("[ComfyUI EXTRACTOR] Checking encoder type: %s", encoder["type"])
                 if "CLIPTextEncode" in encoder["type"]:
-                    self.logger.info(f"[ComfyUI EXTRACTOR] *** Found CLIP encoder: {encoder['text'][:100]}... ***")
+                    self.logger.info("[ComfyUI EXTRACTOR] *** Found CLIP encoder: %s... ***", encoder["text"][:100])
                     return self._clean_prompt_text(encoder["text"])
 
             # Strategy 3: Take any text encoder
             if text_encoders:
                 encoder = text_encoders[0]
-                self.logger.info(f"[ComfyUI EXTRACTOR] *** Taking first encoder: {encoder['text'][:100]}... ***")
+                self.logger.info("[ComfyUI EXTRACTOR] *** Taking first encoder: %s... ***", encoder["text"][:100])
                 return self._clean_prompt_text(encoder["text"])
 
         # For negative prompts, look for CLIP encoders for negative prompts
@@ -924,12 +1070,13 @@ class ComfyUIExtractor:
             self.logger.debug("[ComfyUI EXTRACTOR] Attempting to extract NEGATIVE prompt.")
             # Look for CLIP encoders for negative prompts
             for encoder in text_encoders:
-                self.logger.debug(f"[ComfyUI EXTRACTOR] Checking encoder type: {encoder['type']}")
+                self.logger.debug("[ComfyUI EXTRACTOR] Checking encoder type: %s", encoder["type"])
                 if "CLIPTextEncode" in encoder["type"]:
                     text = encoder["text"]
                     if text.strip():  # Only return non-empty text
                         self.logger.info(
-                            f"[ComfyUI EXTRACTOR] *** Found CLIP encoder for negative prompt: {text[:100]}... ***"
+                            "[ComfyUI EXTRACTOR] *** Found CLIP encoder for negative prompt: %s... ***",
+                            text[:100],
                         )
                         return self._clean_prompt_text(text)
 
@@ -937,7 +1084,7 @@ class ComfyUIExtractor:
             self.logger.info("[ComfyUI EXTRACTOR] No negative prompt found (common in modern architectures)")
             return ""
 
-        self.logger.info(f"[ComfyUI EXTRACTOR] No suitable text encoder found for {target_input_name}")
+        self.logger.info("[ComfyUI EXTRACTOR] No suitable text encoder found for %s", target_input_name)
         return ""
 
     def _find_node_by_id(self, nodes: Any, node_id: int | str) -> dict[str, Any] | None:
@@ -1055,7 +1202,7 @@ class ComfyUIExtractor:
         # Use traversal to get the text from the source node
         traced_text = self.manager.traversal.trace_text_flow(data, source_node_id)
         if traced_text:
-            self.logger.debug(f"[FLUX] Traced negative text: {traced_text[:100]}...")
+            self.logger.debug("[FLUX] Traced negative text: %s...", traced_text[:100])
             return self._clean_prompt_text(traced_text)
 
         return ""
@@ -1258,11 +1405,11 @@ class ComfyUIExtractor:
 
         # Auto-detect workflow type to use the best extraction strategy
         workflow_types = self.manager._auto_detect_workflow(data, method_def, context, fields)
-        self.logger.info(f"[ComfyUI EXTRACTOR] Detected workflow types: {workflow_types}")
+        self.logger.info("[ComfyUI EXTRACTOR] Detected workflow types: %s", workflow_types)
 
         # Use modern, direct extraction for modern architectures
         if any(wt in workflow_types for wt in ["pixart", "flux", "sd3"]):
-            self.logger.info(f"Using modern text extraction for {workflow_types}")
+            self.logger.info("Using modern text extraction for %s", workflow_types)
             return self._extract_from_workflow_text_nodes(data, "positive")
 
         # Fallback to legacy traversal for standard/unknown workflows
@@ -1270,10 +1417,10 @@ class ComfyUIExtractor:
         fake_method_def = {
             "sampler_node_types": ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
             "positive_input_name": "positive",
-            "text_encoder_node_types": ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"],
+            "text_encoder_node_types": ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "Text Multiline", "MZ_ChatGLM3_V2"],
         }
         result = self._find_legacy_text_from_main_sampler_input(data, fake_method_def, context, fields)
-        self.logger.info(f"[ComfyUI EXTRACTOR] Legacy positive prompt result: {result[:100]}...")
+        self.logger.info("[ComfyUI EXTRACTOR] Legacy positive prompt result: %s...", result[:100])
         return result
 
     def _extract_legacy_negative_prompt_from_workflow(
@@ -1291,11 +1438,11 @@ class ComfyUIExtractor:
 
         # Auto-detect workflow type to use the best extraction strategy
         workflow_types = self.manager._auto_detect_workflow(data, method_def, context, fields)
-        self.logger.info(f"[ComfyUI EXTRACTOR] Detected workflow types: {workflow_types}")
+        self.logger.info("[ComfyUI EXTRACTOR] Detected workflow types: %s", workflow_types)
 
         # Use modern, direct extraction for modern architectures
         if any(wt in workflow_types for wt in ["pixart", "flux", "sd3"]):
-            self.logger.info(f"Using modern text extraction for {workflow_types}")
+            self.logger.info("Using modern text extraction for %s", workflow_types)
             return self._extract_from_workflow_text_nodes(data, "negative")
 
         # Fallback to legacy traversal for standard/unknown workflows
@@ -1303,10 +1450,10 @@ class ComfyUIExtractor:
         fake_method_def = {
             "sampler_node_types": ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
             "negative_input_name": "negative",
-            "text_encoder_node_types": ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced"],
+            "text_encoder_node_types": ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "Text Multiline", "MZ_ChatGLM3_V2"],
         }
         result = self._find_legacy_text_from_main_sampler_input(data, fake_method_def, context, fields)
-        self.logger.info(f"[ComfyUI EXTRACTOR] Legacy negative prompt result: {result[:100]}...")
+        self.logger.info("[ComfyUI EXTRACTOR] Legacy negative prompt result: %s...", result[:100])
         return result
 
     def _extract_legacy_workflow_parameters(
@@ -1347,7 +1494,7 @@ class ComfyUIExtractor:
         efficiency_params = self.manager.efficiency._extract_sampler_params(data, {}, {}, {})
         all_params.update(efficiency_params)
 
-        self.logger.debug(f"[FACADE] Final extracted params: {all_params}")
+        self.logger.debug("[FACADE] Final extracted params: %s", all_params)
 
         return {k: v for k, v in all_params.items() if v is not None}
 
@@ -1362,18 +1509,18 @@ class ComfyUIExtractor:
         from ...logger import get_logger
         logger = get_logger(__name__)
 
-        print(f"[DEBUG] _extract_legacy_raw_workflow called with data type: {type(data)}")
-        logger.info(f"_extract_legacy_raw_workflow called with data type: {type(data)}")
+        logger.debug("_extract_legacy_raw_workflow called with data type: %s", type(data))
+        logger.info("_extract_legacy_raw_workflow called with data type: %s", type(data))
 
         data = self._parse_json_data(data)
-        print(f"[DEBUG] After parsing, data type: {type(data)}, is_dict: {isinstance(data, dict)}")
-        logger.info(f"After parsing, data type: {type(data)}, is_dict: {isinstance(data, dict)}")
+        logger.debug("After parsing, data type: %s, is_dict: %s", type(data), isinstance(data, dict))
+        logger.info("After parsing, data type: %s, is_dict: %s", type(data), isinstance(data, dict))
 
         if isinstance(data, dict):
-            print(f"[DEBUG] Raw workflow extracted successfully with {len(data)} keys: {list(data.keys())[:10]}")
-            logger.info(f"Raw workflow extracted successfully with {len(data)} keys: {list(data.keys())[:10]}")
+            logger.debug("Raw workflow extracted successfully with %s keys: %s", len(data), list(data.keys())[:10])
+            logger.info("Raw workflow extracted successfully with %s keys: %s", len(data), list(data.keys())[:10])
             return data
-        print(f"[DEBUG] Raw workflow extraction failed - data is not a dict: {data}")
+        logger.debug("Raw workflow extraction failed - data is not a dict: %s", data)
         logger.info("Raw workflow extraction failed - data is not a dict")
         return {}
 
@@ -1443,7 +1590,7 @@ class ComfyUIExtractor:
                 return []
             return nodes
         except Exception as e:
-            self.logger.error(f"Error parsing workflow data: {e}")
+            self.logger.error("Error parsing workflow data: %s", e)
             return []
 
     def _extract_text_from_refiner_node(self, node: dict[str, Any], prompt_type: str = "positive") -> str:
@@ -1460,19 +1607,19 @@ class ComfyUIExtractor:
 
             widgets_values = node.get("widgets_values", [])
             if not isinstance(widgets_values, list):
-                self.logger.warning(f"Invalid widgets_values type in refiner node: {type(widgets_values)}")
+                self.logger.warning("Invalid widgets_values type in refiner node: %s", type(widgets_values))
                 return ""
 
             if len(widgets_values) >= 4:
                 prompt_text = widgets_values[3]  # Text is at index 3
                 if isinstance(prompt_text, str) and prompt_text.strip():
-                    self.logger.info(f"[SDXL Refiner] Found {prompt_type} prompt: {prompt_text[:100]}...")
+                    self.logger.info("[SDXL Refiner] Found %s prompt: %s...", prompt_type, prompt_text[:100])
                     return prompt_text
             else:
-                self.logger.debug(f"Insufficient widgets_values in refiner node: {len(widgets_values)} < 4")
+                self.logger.debug("Insufficient widgets_values in refiner node: %d < 4", len(widgets_values))
             return ""
         except Exception as e:
-            self.logger.error(f"Error extracting text from refiner node: {e}")
+            self.logger.error("Error extracting text from refiner node: %s", e)
             return ""
 
     def _extract_text_from_primitive_node(self, nodes: list[dict[str, Any]], titles: list[str]) -> str:
@@ -1488,7 +1635,7 @@ class ComfyUIExtractor:
                         widgets_values = node.get("widgets_values", [])
                         if not isinstance(widgets_values, list):
                             self.logger.warning(
-                                f"Invalid widgets_values type in primitive node: {type(widgets_values)}"
+                                "Invalid widgets_values type in primitive node: %s", type(widgets_values)
                             )
                             continue
 
@@ -1496,7 +1643,7 @@ class ComfyUIExtractor:
                             return widgets_values[0]
             return ""
         except Exception as e:
-            self.logger.error(f"Error extracting text from primitive node: {e}")
+            self.logger.error("Error extracting text from primitive node: %s", e)
             return ""
 
     # Convenience methods for direct access to the manager
@@ -1581,7 +1728,7 @@ class ComfyUIExtractor:
 
             return 50  # Default base steps (reasonable for SDXL)
         except Exception as e:
-            self.logger.error(f"Error extracting SDXL base steps: {e}")
+            self.logger.error("Error extracting SDXL base steps: %s", e)
             return 50
 
     def _extract_sdxl_refiner_steps(
@@ -1598,7 +1745,7 @@ class ComfyUIExtractor:
             refiner_steps = total_steps - base_steps
             return max(0, refiner_steps)  # Ensure non-negative
         except Exception as e:
-            self.logger.error(f"Error extracting SDXL refiner steps: {e}")
+            self.logger.error("Error extracting SDXL refiner steps: %s", e)
             return 0
 
     def _extract_sdxl_total_steps(
@@ -1642,7 +1789,7 @@ class ComfyUIExtractor:
 
             return max_steps
         except Exception as e:
-            self.logger.error(f"Error extracting SDXL total steps: {e}")
+            self.logger.error("Error extracting SDXL total steps: %s", e)
             return 80  # Higher fallback for modern workflows
 
     def get_manager(self) -> ComfyUIExtractorManager:
@@ -1708,13 +1855,13 @@ class ComfyUIExtractor:
                     # Found a sampler, now DFS backwards to find text
                     result = self._dfs_follow_links(node, target_input, node_lookup, visited=set(), depth=0)
                     if result:
-                        self.logger.info(f"[DFS] Found {target_input} prompt: {result[:100]}...")
+                        self.logger.info("[DFS] Found %s prompt: %s...", target_input, result[:100])
                         return result
 
             return ""
 
         except Exception as e:
-            self.logger.error(f"[DFS] Error in simple DFS extraction: {e}")
+            self.logger.error("[DFS] Error in simple DFS extraction: %s", e)
             return ""
 
     def _dfs_follow_links(self, node: dict, target_input: str, node_lookup: dict, visited: set, depth: int) -> str:
@@ -1787,3 +1934,175 @@ class ComfyUIExtractor:
                         pass  # Could add more extraction logic here
 
         return ""
+
+    def _extract_with_widget_idx_map(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> Any:
+        """Extract parameter using widget_idx_map for correct array indexing.
+
+        ComfyUI workflows have a widget_idx_map at the root that maps
+        node IDs to parameter names and their index in widgets_values.
+        This is the CORRECT way to extract parameters instead of guessing positions.
+
+        Args:
+            data: Workflow JSON
+            method_def: Must contain 'parameter_name' (e.g. 'seed', 'steps', 'cfg')
+            context: Extraction context
+            fields: Already extracted fields
+
+        Returns:
+            The parameter value from widgets_values using the correct index
+        """
+        parameter_name = method_def.get("parameter_name")
+        if not parameter_name:
+            self.logger.warning("[widget_idx_map] Missing 'parameter_name' in method_def")
+            return None
+
+        workflow = self._parse_json_data(data)
+        if not isinstance(workflow, dict):
+            return None
+
+        # Get widget_idx_map from workflow root
+        widget_idx_map = workflow.get("widget_idx_map", {})
+        if not widget_idx_map:
+            self.logger.debug("[widget_idx_map] No widget_idx_map found in workflow")
+            return None
+
+        # Find the main sampler node
+        sampler_types = method_def.get("sampler_node_types", [
+            "KSampler", "KSamplerAdvanced", "SamplerCustom",
+            "SamplerCustomAdvanced", "UltimateSDUpscale"
+        ])
+
+        sampler_node = None
+        sampler_id = None
+
+        for node_id, node_data in workflow.items():
+            if not isinstance(node_data, dict):
+                continue
+            class_type = node_data.get("class_type", "")
+            if any(sampler_type in class_type for sampler_type in sampler_types):
+                sampler_node = node_data
+                sampler_id = str(node_id)
+                break
+
+        if not sampler_node or not sampler_id:
+            self.logger.debug("[widget_idx_map] No sampler node found")
+            return None
+
+        # Get the widget index for this parameter
+        node_widget_map = widget_idx_map.get(sampler_id, {})
+        if not node_widget_map:
+            self.logger.debug("[widget_idx_map] No mapping found for sampler node %s", sampler_id)
+            return None
+
+        param_index = node_widget_map.get(parameter_name)
+        if param_index is None:
+            self.logger.debug("[widget_idx_map] Parameter '%s' not in map for node %s", parameter_name, sampler_id)
+            return None
+
+        # Get widgets_values array
+        widgets_values = sampler_node.get("widgets_values", [])
+        if not isinstance(widgets_values, list) or param_index >= len(widgets_values):
+            self.logger.debug("[widget_idx_map] widgets_values invalid or index out of bounds")
+            return None
+
+        value = widgets_values[param_index]
+        self.logger.info("[widget_idx_map] Extracted %s = %s from index %d", parameter_name, value, param_index)
+        return value
+
+    def _extract_latent_dimensions(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> int | None:
+        """Extract width/height/batch from latent image node by backward tracing.
+
+        Traces from sampler's latent_image input back to EmptyLatentImage node
+        and extracts dimensions from widgets_values [width, height, batch_size].
+
+        Args:
+            data: Workflow JSON
+            method_def: Must contain 'dimension_type' ('width', 'height', or 'batch_size')
+            context: Extraction context
+            fields: Already extracted fields
+
+        Returns:
+            The requested dimension value
+        """
+        dimension_type = method_def.get("dimension_type")
+        if not dimension_type:
+            self.logger.warning("[latent_dims] Missing 'dimension_type' in method_def")
+            return None
+
+        workflow = self._parse_json_data(data)
+        if not isinstance(workflow, dict):
+            return None
+
+        # Find the main sampler node
+        sampler_types = method_def.get("sampler_node_types", [
+            "KSampler", "KSamplerAdvanced", "SamplerCustom",
+            "SamplerCustomAdvanced", "UltimateSDUpscale"
+        ])
+
+        sampler_node = None
+        for node_id, node_data in workflow.items():
+            if not isinstance(node_data, dict):
+                continue
+            class_type = node_data.get("class_type", "")
+            if any(sampler_type in class_type for sampler_type in sampler_types):
+                sampler_node = node_data
+                break
+
+        if not sampler_node:
+            self.logger.debug("[latent_dims] No sampler node found")
+            return None
+
+        # Trace backward from sampler's latent_image input
+        inputs = sampler_node.get("inputs", {})
+        latent_input = inputs.get("latent_image")
+
+        if not latent_input or not isinstance(latent_input, list) or len(latent_input) < 1:
+            self.logger.debug("[latent_dims] No latent_image input found")
+            return None
+
+        # latent_input is typically [node_id, output_index]
+        latent_node_id = str(latent_input[0])
+        latent_node = workflow.get(latent_node_id)
+
+        if not latent_node:
+            self.logger.debug("[latent_dims] Latent node %s not found", latent_node_id)
+            return None
+
+        # Check if this is an EmptyLatentImage node (or similar)
+        class_type = latent_node.get("class_type", "")
+        if "Latent" not in class_type and "Empty" not in class_type:
+            self.logger.debug("[latent_dims] Node %s is not a latent image node (type: %s)", latent_node_id, class_type)
+            return None
+
+        # Extract from widgets_values: [width, height, batch_size]
+        widgets_values = latent_node.get("widgets_values", [])
+        if not isinstance(widgets_values, list) or len(widgets_values) < 3:
+            self.logger.debug("[latent_dims] widgets_values invalid or too short")
+            return None
+
+        dimension_map = {
+            "width": 0,
+            "height": 1,
+            "batch_size": 2
+        }
+
+        index = dimension_map.get(dimension_type)
+        if index is None:
+            self.logger.warning("[latent_dims] Unknown dimension_type: %s", dimension_type)
+            return None
+
+        value = widgets_values[index]
+        self.logger.info("[latent_dims] Extracted %s = %s", dimension_type, value)
+        return value

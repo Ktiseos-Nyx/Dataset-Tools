@@ -1,0 +1,206 @@
+/*
+ * Catppuccin Mocha for Qt
+ * Based on the official Catppuccin palette: https://github.com/catppuccin/catppuccin
+ *
+ * MIT License
+ *
+ * Copyright (c) 2022-present Catppuccin Org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+/* General Styles */
+QMainWindow, QDialog {
+    background-color: #11111b; /* Crust */
+}
+
+QWidget {
+    background-color: #1e1e2e; /* Base */
+    color: #cdd6f4; /* Text */
+    border: none;
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #313244; /* Surface0 */
+    color: #cdd6f4;
+    border: 1px solid #45475a; /* Surface1 */
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+QPushButton:hover {
+    background-color: #45475a; /* Surface1 */
+}
+
+QPushButton:pressed {
+    background-color: #585b70; /* Surface2 */
+    border-style: inset;
+}
+
+QPushButton:disabled {
+    background-color: #181825; /* Mantle */
+    color: #6c7086; /* Overlay0 */
+}
+
+/* Accent Button */
+QPushButton[cssClass="accent"] {
+    background-color: #89b4fa; /* Blue */
+    color: #1e1e2e; /* Base */
+}
+
+QPushButton[cssClass="accent"]:hover { background-color: #b4befe; } /* Lavender */
+QPushButton[cssClass="accent"]:pressed { background-color: #74c7ec; } /* Sapphire */
+
+/* Text Inputs */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #181825; /* Mantle */
+    color: #cdd6f4;
+    border: 1px solid #45475a; /* Surface1 */
+    border-radius: 6px;
+    padding: 8px;
+    selection-background-color: #585b70; /* Surface2 */
+    selection-color: #cdd6f4;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #89b4fa; /* Blue */
+}
+
+/* ComboBox */
+QComboBox {
+    background-color: #313244; /* Surface0 */
+    border: 1px solid #45475a; /* Surface1 */
+    border-radius: 6px;
+    padding: 5px 8px;
+}
+
+QComboBox:hover { background-color: #45475a; }
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #45475a;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #cdd6f4; /* Text */
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #181825; /* Mantle */
+    color: #cdd6f4;
+    border: 1px solid #45475a;
+    selection-background-color: #585b70; /* Surface2 */
+    selection-color: #cdd6f4;
+    outline: none;
+}
+
+/* Lists */
+QListWidget {
+    background-color: #181825; /* Mantle */
+    border: 1px solid #45475a;
+    border-radius: 6px;
+}
+
+QListWidget::item:hover {
+    background-color: #313244; /* Surface0 */
+}
+
+QListWidget::item:selected {
+    background-color: #89b4fa; /* Blue */
+    color: #1e1e2e; /* Base */
+}
+
+/* ScrollBar */
+QScrollBar:vertical {
+    background: #181825; /* Mantle */
+    width: 14px;
+    margin: 16px 0 16px 0;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #585b70; /* Surface2 */
+    min-height: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover { background: #89b4fa; } /* Blue */
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { border: none; background: none; }
+
+/* CheckBox and RadioButton */
+QCheckBox::indicator, QRadioButton::indicator {
+    border: 1px solid #45475a;
+    background-color: #181825;
+    border-radius: 4px;
+    width: 16px;
+    height: 16px;
+}
+
+QRadioButton::indicator { border-radius: 8px; }
+
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background-color: #89b4fa; /* Blue */
+}
+
+/* GroupBox */
+QGroupBox {
+    border: 1px solid #45475a;
+    border-radius: 6px;
+    margin-top: 0.5em;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+}
+
+/* Tabs */
+QTabBar::tab {
+    background: #1e1e2e; /* Base */
+    color: #a6adc8; /* Subtext0 */
+    padding: 8px 16px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+QTabBar::tab:hover {
+    background: #313244; /* Surface0 */
+    color: #cdd6f4; /* Text */
+}
+
+QTabBar::tab:selected {
+    background: #181825; /* Mantle */
+    color: #cdd6f4; /* Text */
+}
+
+QTabWidget::pane {
+    background: #181825; /* Mantle */
+    border: 1px solid #45475a;
+    border-radius: 6px;
+}

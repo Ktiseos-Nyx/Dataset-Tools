@@ -114,13 +114,13 @@ class ImageMetadataReader:
             return self._fallback_to_pillow(file_path, "PNG")
 
         except Exception as e:
-            self.logger.error(f"Error reading PNG metadata from {file_path}: {e}")
+            self.logger.error("Error reading PNG metadata from %s: %s", file_path, e)
             return self._fallback_to_pillow(file_path, "PNG (after error)")
 
     @debug_monitor
     def _read_tiff_metadata(self, file_path: str) -> dict[str, Any] | None:
         """Read metadata from a TIFF file."""
-        nfo(f"[ImageReader] Reading TIFF metadata: {Path(file_path).name}")
+        nfo("[ImageReader] Reading TIFF metadata: %s", Path(file_path).name)
 
         try:
             result = self._read_with_pyexiv2(file_path)
@@ -130,13 +130,13 @@ class ImageMetadataReader:
             return self._fallback_to_pillow(file_path, "TIFF")
 
         except Exception as e:
-            self.logger.error(f"Error reading TIFF metadata from {file_path}: {e}")
+            self.logger.error("Error reading TIFF metadata from %s: %s", file_path, e)
             return self._fallback_to_pillow(file_path, "TIFF (after error)")
 
     @debug_monitor
     def _read_webp_metadata(self, file_path: str) -> dict[str, Any] | None:
         """Read metadata from a WebP file."""
-        nfo(f"[ImageReader] Reading WebP metadata: {Path(file_path).name}")
+        nfo("[ImageReader] Reading WebP metadata: %s", Path(file_path).name)
 
         try:
             result = self._read_with_pyexiv2(file_path)
@@ -146,13 +146,13 @@ class ImageMetadataReader:
             return self._fallback_to_pillow(file_path, "WebP")
 
         except Exception as e:
-            self.logger.error(f"Error reading WebP metadata from {file_path}: {e}")
+            self.logger.error("Error reading WebP metadata from %s: %s", file_path, e)
             return self._fallback_to_pillow(file_path, "WebP (after error)")
 
     @debug_monitor
     def _read_generic_image_metadata(self, file_path: str) -> dict[str, Any] | None:
         """Read metadata from any supported image format."""
-        nfo(f"[ImageReader] Reading generic image metadata: {Path(file_path).name}")
+        nfo("[ImageReader] Reading generic image metadata: %s", Path(file_path).name)
 
         try:
             result = self._read_with_pyexiv2(file_path)
@@ -162,7 +162,7 @@ class ImageMetadataReader:
             return self._fallback_to_pillow(file_path, "Generic")
 
         except Exception as e:
-            self.logger.error(f"Error reading generic image metadata from {file_path}: {e}")
+            self.logger.error("Error reading generic image metadata from %s: %s", file_path, e)
             return self._fallback_to_pillow(file_path, "Generic (after error)")
 
     def _read_with_pyexiv2(self, file_path: str) -> dict[str, Any] | None:
@@ -207,18 +207,18 @@ class ImageMetadataReader:
 
                 if corrected_uc != uc_value:
                     metadata["EXIF"]["Exif.Photo.UserComment"] = corrected_uc
-                    self.logger.debug(f"Corrected UserComment for {Path(file_path).name}")
+                    self.logger.debug("Corrected UserComment for %s", Path(file_path).name)
 
             # Check if we actually found any metadata
             if not any(metadata.values()):
-                nfo(f"[ImageReader] pyexiv2 found no metadata in: {Path(file_path).name}")
+                nfo("[ImageReader] pyexiv2 found no metadata in: %s", Path(file_path).name)
                 return None
 
-            nfo(f"[ImageReader] pyexiv2 successfully read metadata from: {Path(file_path).name}")
+            nfo("[ImageReader] pyexiv2 successfully read metadata from: %s", Path(file_path).name)
             return metadata
 
         except Exception:
-            self.logger.exception(f"pyexiv2 error for {file_path}")
+            self.logger.exception("pyexiv2 error for %s", file_path)
             return None
 
     def _decode_pyexiv2_usercomment_string(self, data_str: str) -> str:
@@ -238,7 +238,7 @@ class ImageMetadataReader:
                     # Then, decode these bytes as UTF-16LE.
                     return unicode_part_str.encode("latin-1").decode("utf-16le", errors="ignore")
             except Exception as e:
-                self.logger.debug(f"Failed to re-decode UserComment string with charset prefix: {e}")
+                self.logger.debug("Failed to re-decode UserComment string with charset prefix: %s", e)
         # If it doesn't have the charset prefix or the above failed, return the original string
         return data_str
 
@@ -257,7 +257,7 @@ class ImageMetadataReader:
             self.logger.warning("Pillow not available for fallback EXIF reading")
             return None
 
-        nfo(f"[ImageReader] Attempting Pillow fallback for {context}: {Path(file_path).name}")
+        nfo("[ImageReader] Attempting Pillow fallback for %s: %s", context, Path(file_path).name)
 
         pillow_exif = self._read_exif_with_pillow(file_path)
         if pillow_exif:
@@ -289,7 +289,7 @@ class ImageMetadataReader:
 
                 exif_data = {}
                 for tag_id, value in exif_info.items():
-                    tag_name = TAGS.get(tag_id, f"Tag_{tag_id}")
+                    tag_name = TAGS.get(tag_id, "Tag_%s" % tag_id)
 
                     # Specifically handle UserComment decoding for Pillow fallback
                     if tag_name == "UserComment" and isinstance(value, bytes):
@@ -305,13 +305,13 @@ class ImageMetadataReader:
                 return exif_data
 
         except FileNotFoundError:
-            self.logger.error(f"Image file not found: {file_path}")
+            self.logger.error("Image file not found: %s", file_path)
             return None
         except OSError as e:
-            self.logger.error(f"OS error reading image {file_path}: {e}")
+            self.logger.error("OS error reading image %s: %s", file_path, e)
             return None
         except Exception as e:
-            self.logger.error(f"Unexpected error reading image {file_path}: {e}", exc_info=True)
+            self.logger.error("Unexpected error reading image %s: %s", file_path, e, exc_info=True)
             return None
 
 def _decode_usercomment_bytes(self, data: bytes) -> str:
@@ -327,7 +327,7 @@ def _decode_usercomment_bytes(self, data: bytes) -> str:
                 # The rest of the string is separated by null bytes, so treat as utf-16le
                 return json_part_bytes.decode("utf-16le").strip()
             except Exception as e:
-                self.logger.debug(f"Failed to decode UserComment bytes with SwarmUI prefix: {e}")
+                self.logger.debug("Failed to decode UserComment bytes with SwarmUI prefix: %s", e)
 
         # Strategy 1: Standard Unicode prefix with UTF-16 (for other generators)
         if data.startswith(b"UNICODE\x00\x00"):
@@ -335,7 +335,7 @@ def _decode_usercomment_bytes(self, data: bytes) -> str:
                 utf16_data = data[9:]  # Skip "UNICODE\0\0"
                 return utf16_data.decode("utf-16le")
             except Exception as e:
-                self.logger.debug(f"Failed to decode UserComment bytes as UTF-16: {e}")
+                self.logger.debug("Failed to decode UserComment bytes as UTF-16: %s", e)
 
         # Strategy 2: charset=Unicode prefix (mojibake format)
         if data.startswith(b"charset=Unicode"):
@@ -343,19 +343,19 @@ def _decode_usercomment_bytes(self, data: bytes) -> str:
                 unicode_part = data[len(b"charset=Unicode ") :]
                 return unicode_part.decode("utf-16le", errors="ignore")
             except Exception as e:
-                self.logger.debug(f"Failed to decode UserComment bytes as UTF-16: {e}")
+                self.logger.debug("Failed to decode UserComment bytes as UTF-16: %s", e)
 
         # Strategy 3: Direct UTF-8
         try:
             return data.decode("utf-8")
         except Exception as e:
-            self.logger.debug(f"Failed to decode UserComment bytes as UTF-8: {e}")
+            self.logger.debug("Failed to decode UserComment bytes as UTF-8: %s", e)
 
         # Strategy 4: Latin-1 (preserves all bytes)
         try:
             return data.decode("latin-1")
         except Exception as e:
-            self.logger.debug(f"Failed to decode UserComment bytes as Latin-1: {e}")
+            self.logger.debug("Failed to decode UserComment bytes as Latin-1: %s", e)
 
         # Strategy 5: Ignore errors
         try:
@@ -369,10 +369,10 @@ def _decode_usercomment_bytes(self, data: bytes) -> str:
         exif_data = metadata.get("EXIF", {})
         if "Exif.Photo.UserComment" in exif_data:
             uc_value = exif_data["Exif.Photo.UserComment"]
-            self.logger.debug(f"UserComment type for {Path(file_path).name}: {type(uc_value)}")
+            self.logger.debug("UserComment type for %s: %s", Path(file_path).name, type(uc_value))
 
         if isinstance(uc_value, str) and uc_value.startswith("charset="):
-            self.logger.debug(f"UserComment appears to be pre-decoded with charset prefix: {Path(file_path).name}")
+            self.logger.debug("UserComment appears to be pre-decoded with charset prefix: %s", Path(file_path).name)
 
     def get_supported_formats(self) -> set[str]:
         """Get the set of supported image formats."""
@@ -462,7 +462,7 @@ class ImageMetadataExtractor:
                     with Image.open(file_path) as img:
                         info["image_size"] = (img.width, img.height)
                 except Exception as e:
-                    self.logger.debug(f"Error getting image size for {file_path}: {e}")
+                    self.logger.debug("Error getting image size for %s: %s", file_path, e)
 
             # Check for metadata presence
             metadata = self.reader.read_metadata(file_path)
@@ -472,7 +472,7 @@ class ImageMetadataExtractor:
                 info["has_iptc"] = bool(metadata.get("IPTC"))
 
         except Exception as e:
-            self.logger.debug(f"Error extracting basic info from {file_path}: {e}")
+            self.logger.debug("Error extracting basic info from %s: %s", file_path, e)
 
         return info
 

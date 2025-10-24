@@ -165,29 +165,29 @@ class MetadataEngine:
             return None
 
         # Prepare context data
-        print("DEBUG: About to call context_preparer.prepare_context")
+        self.logger.debug("About to call context_preparer.prepare_context")
         context_data = self.context_preparer.prepare_context(file_input)
-        print(f"DEBUG: prepare_context returned: {type(context_data)} - {bool(context_data)}")
+        self.logger.debug(f"prepare_context returned: {type(context_data)} - {bool(context_data)}")
         if not context_data:
-            print("DEBUG: Context data is None/empty, returning None")
+            self.logger.debug("Context data is None/empty, returning None")
             return None
 
-        print("DEBUG: Context data looks good, continuing to find matching parser")
-        print(f"DEBUG: Context data keys: {list(context_data.keys())}")
+        self.logger.debug("Context data looks good, continuing to find matching parser")
+        self.logger.debug(f"Context data keys: {list(context_data.keys())}")
         if "pil_info" in context_data:
             pil_info = context_data["pil_info"]
-            print(f"DEBUG: pil_info type: {type(pil_info)}, content: {pil_info}")
+            self.logger.debug(f"pil_info type: {type(pil_info)}, content: {pil_info}")
             if isinstance(pil_info, dict) and "parameters" in pil_info:
-                print(f"DEBUG: Found 'parameters' in pil_info: {pil_info['parameters'][:100] if len(pil_info['parameters']) > 100 else pil_info['parameters']}")
-        print(f"DEBUG: raw_user_comment_str: {context_data.get('raw_user_comment_str', 'NOT_FOUND')[:100] if context_data.get('raw_user_comment_str') else 'EMPTY'}")
-        print(f"DEBUG: File format: {context_data.get('file_format')}, extension: {context_data.get('file_extension')}")
-        print(f"DEBUG: Image size: {context_data.get('width')}x{context_data.get('height')}")
+                self.logger.debug(f"Found 'parameters' in pil_info: {pil_info['parameters'][:100] if len(pil_info['parameters']) > 100 else pil_info['parameters']}")
+        self.logger.debug(f"raw_user_comment_str: {context_data.get('raw_user_comment_str', 'NOT_FOUND')[:100] if context_data.get('raw_user_comment_str') else 'EMPTY'}")
+        self.logger.debug(f"File format: {context_data.get('file_format')}, extension: {context_data.get('file_extension')}")
+        self.logger.debug(f"Image size: {context_data.get('width')}x{context_data.get('height')}")
 
         # Find matching parser definition
-        print("DEBUG: About to call _find_matching_parser")
+        self.logger.debug("About to call _find_matching_parser")
         chosen_parser_def = self._find_matching_parser(context_data)
-        print(f"DEBUG: _find_matching_parser returned parser: {chosen_parser_def.get('parser_name', 'NONE') if chosen_parser_def else 'NONE'}")
-        print(f"DEBUG: Parser priority: {chosen_parser_def.get('priority', 'NONE') if chosen_parser_def else 'NONE'}")
+        self.logger.debug(f"_find_matching_parser returned parser: {chosen_parser_def.get('parser_name', 'NONE') if chosen_parser_def else 'NONE'}")
+        self.logger.debug(f"Parser priority: {chosen_parser_def.get('priority', 'NONE') if chosen_parser_def else 'NONE'}")
         if not chosen_parser_def:
             self.logger.info(f"No suitable parser definition matched for {display_name}")
             return None

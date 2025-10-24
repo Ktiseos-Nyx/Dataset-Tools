@@ -27,12 +27,11 @@ def format_metadata_for_display(metadata_dict: dict[str, Any] | None) -> dict[st
     if len(metadata_dict) == 1:
         # Old format: _dt_internal_placeholder_
         if EmptyField.PLACEHOLDER.value in metadata_dict:
-            content = metadata_dict.get(EmptyField.PLACEHOLDER.value, {})
             error_msg = content.get("Error", content.get("Info", "No metadata to display."))
             return {
                 "positive": "",
                 "negative": "",
-                "details": f"Info/Error:\n{error_msg}",
+                "details": "Info/Error:\n%s" % error_msg,
                 "parameters": "",
             }
 
@@ -43,7 +42,7 @@ def format_metadata_for_display(metadata_dict: dict[str, Any] | None) -> dict[st
             return {
                 "positive": "",
                 "negative": "",
-                "details": f"Info/Error:\n{error_msg}",
+                "details": "Info/Error:\n%s" % error_msg,
                 "parameters": "",
             }
 
@@ -97,11 +96,11 @@ def _format_parameters(metadata_dict: dict[str, Any]) -> str:
                 import json
                 try:
                     formatted_value = json.dumps(value, indent=2, ensure_ascii=False)
-                    parts.append(f"{key}:\n{formatted_value}")
+                    parts.append("%s:\n%s" % (key, formatted_value))
                 except (TypeError, ValueError):
-                    parts.append(f"{key}: {value!s}")
+                    parts.append("%s: %s" % (key, value))
             else:
-                parts.append(f"{key}: {value}")
+                parts.append("%s: %s" % (key, value))
         return "\n\n".join(parts)
     return str(parameters)
 
@@ -113,7 +112,7 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
 
     # Detected Tool
     if "Detected Tool" in (metadata_s := metadata_dict.get(UpField.METADATA.value, {})):
-        details_parts.append(f"Detected Tool: {metadata_s['Detected Tool']}")
+        details_parts.append("Detected Tool: %s" % metadata_s["Detected Tool"])
 
     # Generation Parameters
     if gen_params := metadata_dict.get(DownField.GENERATION_DATA.value):
@@ -122,15 +121,15 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
         # 🚨 CRIME #3: MAKE TOOL DETECTION LOUD AND PROUD! 🚨
         # Add detected tool as the FIRST parameter for maximum visibility
         if "Detected Tool" in (metadata_s := metadata_dict.get(UpField.METADATA.value, {})):
-            param_strings.append(f"Tool: {metadata_s['Detected Tool']}")
+            param_strings.append("Tool: %s" % metadata_s["Detected Tool"])
 
         # Add all other generation parameters (sorted for consistency)
-        other_params = [f"{k}: {v}" for k, v in sorted(gen_params.items())]
+        other_params = ["%s: %s" % (k, v) for k, v in sorted(gen_params.items())]
         param_strings.extend(other_params)
 
         if param_strings:
             joined_params = "\n".join(param_strings)
-            details_parts.append(f"Generation Parameters:\n{joined_params}")
+            details_parts.append("Generation Parameters:\n%s" % joined_params)
 
     # --- START OF THE CORRECTLY INDENTED BLOCK ---
 
@@ -138,7 +137,7 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
     # It has access to 'details_parts' and 'metadata_dict' from its parent scope.
     def append_unpacked_section(title: str, field: Any):  # noqa: ANN401
         if display_text := _unpack_content_of(metadata_dict, [field]).strip():
-            details_parts.append(f"{title}:\n{display_text}")
+            details_parts.append("%s:\n%s" % (title, display_text))
 
     append_unpacked_section("EXIF Details", DownField.EXIF)
     append_unpacked_section("Tags (XMP/IPTC)", UpField.TAGS)
@@ -147,7 +146,7 @@ def _build_details_string(metadata_dict: dict[str, Any]) -> str:
     # Raw Data / Workflow
     if raw_content := str(metadata_dict.get(DownField.RAW_DATA.value, "")):
         title = "Raw Data / Workflow (JSON)" if raw_content.strip().startswith("{") else "Raw Data / Workflow"
-        details_parts.append(f"{title}:\n{raw_content}")
+        details_parts.append("%s:\n%s" % (title, raw_content))
 
     # This return is now correctly inside the function
     return section_separator.join(filter(None, details_parts))
@@ -180,10 +179,10 @@ def _format_single_section_data(data_item: Any) -> list[str]:  # noqa: ANN401
                 # Format sub-dictionary with indentation
                 nested_parts = _format_single_section_data(value)
                 if nested_parts:
-                    parts.append(f"{key}:")
-                    parts.extend([f"  {p}" for p in nested_parts])
+                    parts.append("%s:" % key)
+                    parts.extend(["  %s" % p for p in nested_parts])
             else:
-                parts.append(f"{key}: {value!s}")
+                parts.append("%s: %s" % (key, value))
     elif isinstance(data_item, list):
         parts.extend(str(item) for item in data_item)
     elif data_item is not None:

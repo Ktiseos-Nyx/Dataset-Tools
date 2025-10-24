@@ -1,0 +1,174 @@
+/*
+ * THEME: Discount Maroon 5 (Refactored)
+ * PALETTE: Based on the original, with contrast improvements.
+ * STRUCTURE: Based on a robust, conflict-free QSS foundation.
+*/
+
+/* General Styles - Changed text to a light color for readability */
+QWidget {
+    background-color: #94868D;
+    color: #DDC8CE; /* Changed from #3C1D26 */
+    border: none; /* Critical: No global border */
+}
+
+/* Buttons - Changed text to a light color */
+QPushButton {
+    background-color: #432529;
+    color: #DDC8CE; /* Changed from #3C1D26 */
+    border: 1px solid #33313C;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+QPushButton:hover {
+    background-color: #60222B;
+}
+
+QPushButton:pressed {
+    background-color: #33313C;
+}
+
+/* LineEdit and TextEdit - Changed background for better contrast */
+QLineEdit, QTextEdit {
+    background-color: #94868D; /* Changed from #60222B */
+    color: #3C1D26; /* Original dark text is now readable */
+    border: 1px solid #33313C;
+    padding: 3px;
+    border-radius: 3px;
+    selection-background-color: #432529;
+    selection-color: #DDC8CE;
+}
+
+/* Labels - Inherits new light text color from QWidget */
+QLabel {}
+
+/* GroupBox - Changed title text to a light color */
+QGroupBox {
+    background-color: #94868D;
+    border: 1px solid #33313C;
+    margin-top: 1ex;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 3px;
+    background-color: #432529;
+    color: #DDC8CE; /* Changed from #3C1D26 */
+}
+
+/* ComboBox - Applying contrast and structural fixes */
+QComboBox {
+    background-color: #60222B;
+    color: #DDC8CE; /* Changed from #3C1D26 */
+    border: 1px solid #33313C;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #33313C;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #DDC8CE;
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #94868D;
+    color: #3C1D26;
+    border: 1px solid #33313C;
+    selection-background-color: #432529;
+    selection-color: #DDC8CE;
+    outline: none;
+}
+
+/* ScrollBar */
+QScrollBar:vertical {
+    border: 1px solid #33313C;
+    background: #94868D;
+    width: 10px;
+    margin: 15px 0 15px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #432529;
+    min-height: 20px;
+}
+
+/* CheckBox - Inherits new light text color */
+QCheckBox {}
+
+QCheckBox::indicator {
+    width: 13px;
+    height: 13px;
+    border: 1px solid #33313C;
+    background-color: #60222B;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #432529;
+}
+
+/* RadioButton - Inherits new light text color */
+QRadioButton {}
+
+QRadioButton::indicator {
+    width: 13px;
+    height: 13px;
+    border: 1px solid #33313C;
+    border-radius: 6px;
+    background-color: #60222B;
+}
+
+QRadioButton::indicator:checked {
+    background-color: #432529;
+}
+
+/* TabWidget - Applying contrast fixes */
+QTabWidget::pane {
+    border: 1px solid #33313C;
+    background-color: #94868D;
+}
+
+QTabBar::tab {
+    background: #60222B;
+    border: 1px solid #33313C;
+    padding: 4px 8px;
+    color: #DDC8CE; /* Changed from #3C1D26 */
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: #432529;
+    color: #DDC8CE; /* Ensured light text color */
+}
+
+/* MenuBar and Menu - Applying contrast fixes */
+QMenuBar {
+    background-color: #60222B;
+    color: #DDC8CE; /* Changed from #3C1D26 */
+}
+
+QMenuBar::item:selected {
+    background: #432529;
+}
+
+QMenu {
+    background-color: #60222B;
+    border: 1px solid #33313C;
+    color: #DDC8CE; /* Added for consistency */
+}
+
+QMenu::item:selected {
+    background-color: #432529;
+    color: #DDC8CE; /* Changed from #3C1D26 */
+}

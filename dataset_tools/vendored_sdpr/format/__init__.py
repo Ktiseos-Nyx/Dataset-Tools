@@ -29,16 +29,15 @@ from .swarmui import SwarmUI
 # and for clarity of what this package provides, making them available for
 # `from .format import ...` in image_data_reader.py
 __all__ = [
-    "BaseFormat",
     "A1111",
+    "BaseFormat",
+    "CivitaiFormat",
     "ComfyUI",
-    "CivitaiFormat",  # <<< CORRECTED
-    # "YodayoFormat",  # <<< ADDED
-    "MochiDiffusionFormat",  # <<< ADDED
     "DrawThings",
     "EasyDiffusion",
     "Fooocus",
     "InvokeAI",
+    "MochiDiffusionFormat",
     "NovelAI",
     "RuinedFooocusFormat",
     "SwarmUI",

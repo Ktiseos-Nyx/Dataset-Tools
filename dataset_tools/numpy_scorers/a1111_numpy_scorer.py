@@ -173,7 +173,7 @@ class A1111NumpyScorer(BaseNumpyScorer):
             return parsed
 
         except Exception as e:
-            self.logger.error(f"Error in numpy A1111 parsing: {e}")
+            self.logger.error("Error in numpy A1111 parsing: %s", e)
             return {"parsing_error": str(e), "raw_text": raw_data}
 
     def _extract_parameters_numpy(self, param_text: str) -> dict[str, Any]:
@@ -221,7 +221,7 @@ class A1111NumpyScorer(BaseNumpyScorer):
                         parameters[key] = value
 
         except Exception as e:
-            self.logger.error(f"Error extracting parameters: {e}")
+            self.logger.error("Error extracting parameters: %s", e)
 
         return parameters
 
@@ -346,7 +346,7 @@ class A1111NumpyScorer(BaseNumpyScorer):
             return scored_candidate
 
         except Exception as e:
-            self.logger.error(f"Error scoring A1111 candidate: {e}")
+            self.logger.error("Error scoring A1111 candidate: %s", e)
             processing_time = time.time() - start_time
             self._track_analytics("score_candidate", False, processing_time, format_type)
 
@@ -391,7 +391,7 @@ class A1111NumpyScorer(BaseNumpyScorer):
                     parsed_data = self._parse_a1111_raw_data(raw_text)
 
                     if parsed_data.get("parsing_confidence", 0) > 0.5:
-                        self.logger.info(f"Numpy fallback parsing successful with confidence {parsed_data['parsing_confidence']}")
+                        self.logger.info("Numpy fallback parsing successful with confidence %s", parsed_data["parsing_confidence"])
 
                         # Create enhanced result with fallback data
                         enhanced_result = engine_result.copy()
@@ -454,7 +454,7 @@ class A1111NumpyScorer(BaseNumpyScorer):
                         return enhanced_result
 
         except Exception as e:
-            self.logger.error(f"Error in A1111 numpy enhancement: {e}")
+            self.logger.error("Error in A1111 numpy enhancement: %s", e)
 
         return engine_result
 

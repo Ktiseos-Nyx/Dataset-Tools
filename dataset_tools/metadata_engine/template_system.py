@@ -100,7 +100,7 @@ class TemplateProcessor:
                 value = json_path_get_utility(extracted_fields, var_path)
                 if value is not None:
                     return value  # Return actual object, not str(value)
-                self.logger.debug(f"Template variable '${var_path}' not found, returning empty string")
+                self.logger.debug("Template variable '$%s' not found, returning empty string", var_path)
                 return ""
             # Normal string with embedded variables - use string substitution
             return self._substitute_variables(template, extracted_fields, context_data)
@@ -128,7 +128,7 @@ class TemplateProcessor:
             value = json_path_get_utility(extracted_fields, var_path)
             if value is not None:
                 return str(value)
-            self.logger.debug(f"Template variable '${var_path}' not found, replacing with empty string")
+            self.logger.debug("Template variable '$%s' not found, replacing with empty string", var_path)
             return ""
 
         return self.variable_pattern.sub(replacer, template_string)
@@ -199,9 +199,9 @@ class TemplateValidator:
                 continue
             if var.startswith("CONTEXT."):
                 if var.split(".")[1] not in context_keys:
-                    self.warnings.append(f"Context var '${var}' may not be available.")
+                    self.warnings.append("Context var '$%s' may not be available." % var)
             elif var.split(".")[0] not in fields:
-                self.warnings.append(f"Field var '${var}' may not be available.")
+                self.warnings.append("Field var '$%s' may not be available." % var)
 
 
 class StandardTemplates:
@@ -238,7 +238,7 @@ class TemplateBuilder:
         return self
 
     def add_variable(self, key: str, var_name: str) -> "TemplateBuilder":
-        self.template_data[key] = f"${var_name}"
+        self.template_data[key] = "$%s" % var_name
         return self
 
     @classmethod
@@ -378,10 +378,10 @@ def test_template_system():
     template = StandardTemplates.a1111_template()
     logger.info("--- Testing Template Processing ---")
     processed = process_template(template, extracted, context)
-    logger.info(f"Processed template: {json.dumps(processed, indent=2)}")
+    logger.info("Processed template: %s", json.dumps(processed, indent=2))
     logger.info("\n--- Testing Output Formatting ---")
     formatted = format_template_output(processed, context_data=context)
-    logger.info(f"Formatted output: {json.dumps(formatted, indent=2)}")
+    logger.info("Formatted output: %s", json.dumps(formatted, indent=2))
 
 
 if __name__ == "__main__":

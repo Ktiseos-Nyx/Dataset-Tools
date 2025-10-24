@@ -45,7 +45,7 @@ class RuleEvaluator:
                             rule["parser_name"] = parser_name
                         self.rules.extend(parser_config["detection_rules"])
 
-            self.logger.info(f"Successfully loaded {len(self.rules)} rules from {filepath}.")
+            self.logger.info("Successfully loaded %d rules from %s.", len(self.rules), filepath)
         except Exception as e:
             self.logger.error("Failed to load or parse rules from %s: %s", filepath, e, exc_info=True)
 
@@ -87,11 +87,11 @@ class RuleEvaluator:
                                 decoded = utf16_data.decode("utf-16le")
                                 if "Steps:" in decoded:
                                     self.logger.debug(
-                                        f"Detection: Manual Unicode extracted {len(decoded)} chars with A1111 patterns"
+                                        "Detection: Manual Unicode extracted %d chars with A1111 patterns", len(decoded)
                                     )
                                     return decoded
                             except Exception as e:
-                                self.logger.debug(f"Detection: Manual Unicode extraction failed as UTF-16: {e}")
+                                self.logger.debug("Detection: Manual Unicode extraction failed as UTF-16: %s", e)
 
                         # Strategy 2: charset=Unicode prefix
                         if user_comment_raw.startswith(b"charset=Unicode"):
@@ -100,13 +100,13 @@ class RuleEvaluator:
                                 decoded = unicode_part.decode("utf-16le", errors="ignore")
                                 if "Steps:" in decoded:
                                     self.logger.debug(
-                                        f"Detection: charset=Unicode extracted {len(decoded)} chars with A1111 patterns"
+                                        "Detection: charset=Unicode extracted %d chars with A1111 patterns", len(decoded)
                                     )
                                     return decoded
                             except Exception as e:
-                                self.logger.debug(f"Detection: charset=Unicode extraction failed as UTF-16: {e}")
+                                self.logger.debug("Detection: charset=Unicode extraction failed as UTF-16: %s", e)
         except Exception as e:
-            self.logger.debug(f"Detection: Manual Unicode extraction completely failed: {e}")
+            self.logger.debug("Detection: Manual Unicode extraction completely failed: %s", e)
 
         self.logger.debug("Detection: No A1111 patterns found in UserComment")
         return None
@@ -240,21 +240,21 @@ class RuleEvaluator:
                         break
             if json_str:
                 try:
-                    self.logger.debug(f"Attempting to load JSON from user comment/PNG chunk: {json_str[:50]}...")
+                    self.logger.debug("Attempting to load JSON from user comment/PNG chunk: %s...", json_str[:50])
                     return json.loads(json_str), True
                 except json.JSONDecodeError:
-                    self.logger.debug(f"Failed to decode JSON from user comment/PNG chunk: {json_str[:50]}...")
+                    self.logger.debug("Failed to decode JSON from user comment/PNG chunk: %s...", json_str[:50])
                     return None, False
             return None, False
 
         elif source_type == "json_from_xmp_exif_user_comment":
             json_str = context_data.get("xmp_user_comment_json_str")
             if json_str:
-                self.logger.debug(f"Attempting to load JSON from extracted XMP UserComment: {json_str[:50]}...")
+                self.logger.debug("Attempting to load JSON from extracted XMP UserComment: %s...", json_str[:50])
                 try:
                     return json.loads(json_str), True
                 except json.JSONDecodeError:
-                    self.logger.debug(f"Failed to decode JSON from XMP UserComment: {json_str[:50]}...")
+                    self.logger.debug("Failed to decode JSON from XMP UserComment: %s...", json_str[:50])
                     return None, False
             return None, False
 
@@ -262,10 +262,10 @@ class RuleEvaluator:
             json_str = context_data.get("raw_user_comment_str")
             if json_str:
                 try:
-                    self.logger.debug(f"Attempting to load JSON from raw_user_comment_str: {json_str[:50]}...")
+                    self.logger.debug("Attempting to load JSON from raw_user_comment_str: %s...", json_str[:50])
                     return json.loads(json_str), True
                 except json.JSONDecodeError:
-                    self.logger.debug(f"Failed to decode JSON from raw_user_comment_str: {json_str[:50]}...")
+                    self.logger.debug("Failed to decode JSON from raw_user_comment_str: %s...", json_str[:50])
                     return None, False
             return None, False
 
@@ -276,7 +276,7 @@ class RuleEvaluator:
 
         else:  # Final catch-all
             if source_type is not None:
-                self.logger.warning(f"RuleEvaluator: Unknown source_type in detection rule: '{source_type}'")
+                self.logger.warning("RuleEvaluator: Unknown source_type in detection rule: '%s'", source_type)
             else:
                 self.logger.debug("RuleEvaluator: Rule is missing 'source_type'.")
             return None, False
@@ -393,25 +393,25 @@ class RuleEvaluator:
                     try:
                         target_json_obj_for_keys = json.loads(data_to_check)
                     except json.JSONDecodeError:
-                        self.logger.debug(f"RuleEvaluator: Op '{operator}', data_to_check string not valid JSON.")
+                        self.logger.debug("RuleEvaluator: Op '%s', data_to_check string not valid JSON.", operator)
                         return False  # Cannot proceed if string is not valid JSON
                 # else: data_to_check is None or some other type, target_json_obj_for_keys remains None
 
                 # Now check if we have a dictionary to work with
                 if not isinstance(target_json_obj_for_keys, dict):
                     self.logger.debug(
-                        f"RuleEvaluator: Op '{operator}', target for key check is not a dictionary (was {type(data_to_check)})."
+                        "RuleEvaluator: Op '%s', target for key check is not a dictionary (was %s).", operator, type(data_to_check)
                     )
                     return False
 
                 # 'expected_keys' is defined at the top of _apply_operator from rule.get("expected_keys")
                 if not expected_keys or not isinstance(expected_keys, list):
-                    self.logger.warning(f"RuleEvaluator: Op '{operator}' needs a list for 'expected_keys' in rule.")
+                    self.logger.warning("RuleEvaluator: Op '%s' needs a list for 'expected_keys' in rule.", operator)
                     return False  # Rule is malformed if expected_keys isn't a list
 
                 if not expected_keys:  # If the list of expected_keys is empty
                     self.logger.debug(
-                        f"RuleEvaluator: Op '{operator}', 'expected_keys' list is empty. Returning False as no keys can be found."
+                        "RuleEvaluator: Op '%s', 'expected_keys' list is empty. Returning False as no keys can be found.", operator
                     )
                     return False  # Or True, depending on desired behavior for empty list (usually False)
 
@@ -423,7 +423,7 @@ class RuleEvaluator:
                 # bool(data_to_check) checks if the dictionary is not empty
                 is_not_empty = bool(data_to_check) if is_dict else False
                 self.logger.debug(
-                    f"RuleEvaluator: Op 'exists_and_is_dictionary': data type {type(data_to_check)}, is_dict={is_dict}, is_not_empty={is_not_empty}"
+                    "RuleEvaluator: Op 'exists_and_is_dictionary': data type %s, is_dict=%s, is_not_empty=%s", type(data_to_check), is_dict, is_not_empty
                 )
                 return is_dict and is_not_empty
 
@@ -556,20 +556,20 @@ class RuleEvaluator:
                 # bool(data_to_check) checks if the dictionary is not empty
                 is_not_empty = bool(data_to_check) if is_dict else False
                 self.logger.debug(
-                    f"RuleEvaluator: Op 'exists_and_is_dictionary': data type {type(data_to_check)}, is_dict={is_dict}, is_not_empty={is_not_empty}"
+                    "RuleEvaluator: Op 'exists_and_is_dictionary': data type %s, is_dict=%s, is_not_empty=%s", type(data_to_check), is_dict, is_not_empty
                 )
                 return is_dict and is_not_empty
 
             # This 'else' should be the VERY LAST condition in the operator chain
             else:
                 self.logger.warning(
-                    f"RuleEvaluator: Operator '{operator}' is not implemented or recognized. Rule: {rule.get('comment', 'Unnamed')}"
+                    "RuleEvaluator: Operator '%s' is not implemented or recognized. Rule: %s", operator, rule.get("comment", "Unnamed")
                 )
                 return False
 
         except Exception as e_op:
             self.logger.error(
-                f"RuleEvaluator: Error evaluating op '{operator}' for rule '{rule.get('comment', 'Unnamed rule')}': {e_op}",
+                "RuleEvaluator: Error evaluating op '%s' for rule '%s': %s", operator, rule.get("comment", "Unnamed rule"), e_op,
                 exc_info=True,
             )
             return False
@@ -581,9 +581,9 @@ class RuleEvaluator:
         if not source_found and operator_for_precheck not in ["not_exists", "is_none"]:
             rule_comment = rule.get(
                 "comment",
-                f"source_type: {rule.get('source_type')}, operator: {operator_for_precheck}",
+                "source_type: %s, operator: %s" % (rule.get("source_type"), operator_for_precheck),
             )
-            self.logger.debug(f"RuleEvaluator: Source data not found for rule '{rule_comment}'.")
+            self.logger.debug("RuleEvaluator: Source data not found for rule '%s'.", rule_comment)
             return False
 
         return self._apply_operator(operator_for_precheck, data_to_check, rule, context_data)

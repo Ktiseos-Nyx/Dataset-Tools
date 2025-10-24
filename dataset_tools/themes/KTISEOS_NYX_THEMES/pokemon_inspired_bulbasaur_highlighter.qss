@@ -1,0 +1,80 @@
+/*
+ * THEME: Disturbed Bulbasaur Highlighter (Refactored)
+ * PALETTE: Based on the original, reinterpreted for professionalism.
+ * STRUCTURE: Solid widgets on a gradient background.
+*/
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #7CFC00, stop: 0.5 #8A2BE2,
+                                stop: 1 #FFFF00);
+}
+
+QWidget { border: none; }
+
+QPushButton, QLineEdit, QTextEdit, QPlainTextEdit, QListWidget, QComboBox {
+    background-color: #2a0d45; /* Very dark purple */
+    color: #d9bfff; /* Light lavender text */
+    border: 1px solid #4a1d75; /* Neutral purple border */
+    border-radius: 4px;
+    padding: 8px;
+}
+
+QPushButton:hover, QComboBox:hover {
+    background-color: #4a1d75;
+    border: 1px solid #7CFC00; /* Accent color: lime green */
+}
+
+QPushButton:pressed {
+    background-color: #7CFC00;
+    color: #2a0d45;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #7CFC00;
+}
+
+QLabel, QCheckBox, QRadioButton {
+    background-color: transparent;
+    color: #201500; /* Softened dark text */
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #4a1d75;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #d9bfff;
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #2a0d45;
+    color: #d9bfff;
+    border: 1px solid #4a1d75;
+    selection-background-color: #7CFC00;
+    selection-color: #2a0d45;
+    outline: none;
+}
+
+QListWidget::item:hover {
+    background-color: #4a1d75;
+}
+
+QListWidget::item:selected {
+    background-color: #7CFC00;
+    color: #2a0d45;
+}
+
+/* Dialog box styling */
+QDialog {
+    background-color: #2a0d45;
+}

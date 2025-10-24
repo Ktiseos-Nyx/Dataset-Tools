@@ -69,7 +69,6 @@ Dataset Tools uses modern Python features like:
 2. Choose from categories:
    - **Qt-Material**: Material Design themes
    - **Custom QSS**: Hand-crafted themes (retro, aesthetic, etc.)
-   - **Qt-Themes**: Color palettes (Dracula, Nord, etc.)
    - **Unreal**: Unreal Engine-style interface
 
 Your theme selection is automatically saved.
@@ -110,7 +109,7 @@ Simply load an image or text file containing metadata.
 
 **Access Themes Menu:**
 1. Go to **View → Themes** in the menu bar
-2. Choose from **4 different theme categories**
+2. Choose from **3 different theme categories**
 3. Your selection is **automatically saved** and restored on restart
 
 ### What theme categories are available?
@@ -121,43 +120,19 @@ Simply load an image or text file containing metadata.
 - **Features:** Dynamic color schemes, Material Design components
 - **Best For:** Clean, professional look
 
-#### 🌈 **Qt-Themes Color Palettes**  
-- **Description:** Popular programmer color schemes
-- **Available Palettes:**
-  - `One Dark`, `Monokai`, `Nord` 
-  - `Catppuccin` (Mocha, Macchiato, Frappe, Latte)
-  - `Atom One`, `GitHub Dark/Light`, `Dracula`, `Blender`
-- **Features:** Color-only themes (no layout changes)
-- **Best For:** Developers who want familiar editor colors
-
 #### 🎮 **Custom QSS Themes**
 Hand-crafted themes with unique aesthetics:
 
-**🕹️ Gaming & Tech:**
-- `Steam Deck` - Gaming handheld inspired with Valve's design language
-- `Terminal Hacker` - Matrix-inspired green-on-black with monospace fonts
-- `Cyberpunk 2077` - Green-on-black matrix/cyberpunk aesthetic
+**Examples of Categories:**
+- `Aesthetic` - Themes inspired by various aesthetic movements (e.g., Vaporwave, Static Noise)
+- `AI` - Themes inspired by AI tools (e.g., ChatGPT, Gemini)
+- `Food` - Themes with food-related color palettes (e.g., Watermelon, Burnt Cheese)
+- `Games` - Themes inspired by video games (e.g., Cyberpunk 2077, Genshin Impact)
+- `Memes` - Humorous or internet culture-inspired themes (e.g., Geocities, DollarstoreArmy)
+- `UI` - General UI themes (e.g., Fluent Inspired, Dark, Windows XP)
 
-**🎭 Retro & Nostalgic:**
-- `Windows XP` - Classic Luna theme with gradients
-- `Windows 3.1 Blue` - Vintage Windows 3.1 styling
-- `Mac 90s Greyscale` - Classic 90s Mac aesthetic
-- `AOL Classic` - AOL Instant Messenger throwback
-
-**🌐 Web Culture:**
-- `Geocities Nightmare` - 90s web aesthetic with background images
-- `Vaporwave Aesthetic` - Neon gradients and retro-futuristic styling
-- `Kawaii Pastel Overload` - Pastel rainbow gradients
-
-**☕ Cozy & Professional:**
-- `Cozy Coffee Shop` - Warm browns and creams with serif fonts
-- `Arctic Minimalist` - Clean ice-inspired design with cool blues
-- `Sunset Gradient` - Warm oranges, pinks, and purples with glass effects
-
-**🎬 Social & Entertainment:**
-- `Facebook Light/Dark` - Social media inspired themes
-- `FF6 Classic Flat` - Final Fantasy VI inspired
-- `Firefox Classic` - Classic browser styling
+**Features:** Highly customizable, can include gradients, images, and animations.
+**Best For:** Users who want unique, personalized visual experiences.
 
 #### 🎯 **Unreal Stylesheet**
 - **Description:** Unreal Engine-like interface styling
@@ -438,12 +413,32 @@ Absolutely! Dataset Tools is GPL-3.0 licensed:
 3. **Test thoroughly** with different UI elements
 4. **Submit via pull request** to share with community
 
-**Theme Template:**
+#### **Basic Theme Template:**
 ```css
 /* YOUR THEME NAME */
-QMainWindow { background-color: #your-color; }
-QPushButton { /* your button styling */ }
-/* ... other Qt widgets ... */
+QWidget { 
+    background-color: #your-main-color; 
+    color: #your-text-color;
+}
+
+QPushButton { 
+    background-color: #button-color;
+    border: 1px solid #border-color;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+QPushButton:hover {
+    background-color: #hover-color;
+}
+
+QTextEdit, QPlainTextEdit {
+    background-color: #text-area-color;
+    border: 1px solid #border-color;
+    color: #text-color;
+}
+
+/* ... style other Qt widgets ... */
 ```
 
 ---
@@ -523,5 +518,5 @@ Dataset Tools automatically creates detailed log files in a `logs/` directory:
 
 ---
 
-*Last Updated: January 2025*
+*Last Updated: October 2025*
 *For the most current information, always check the [GitHub repository](https://github.com/Ktiseos-Nyx/Dataset-Tools)*

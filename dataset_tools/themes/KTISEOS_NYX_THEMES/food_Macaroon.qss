@@ -1,0 +1,215 @@
+/*
+ * THEME: Assault on Macaroon (Refactored)
+ * PALETTE: Based on the original Assault_on_Macarroon.qss
+ * STRUCTURE: Based on the robust foundation of zordonofdoom_confuzzzlement_gradient.qss
+ *
+ * This theme was created by refactoring the original "Assault on Macaroon"
+ * aesthetic onto a more stable and complete QSS structure to resolve
+ * rendering issues, particularly with QComboBox dropdowns.
+*/
+
+/* General Styles - Using Macaroon's core dark background and light text */
+QWidget {
+    background-color: #312d2f;
+    color: #fce883;
+    border: none; /* Critical: No global border */
+}
+
+/* Buttons - Macaroon's palette on Zordon's structure */
+QPushButton {
+    background-color: #ee204d; /* Macaroon's button color */
+    color: #fce883;
+    border: 1px solid #af593e; /* Macaroon's border color */
+    border-radius: 5px;        /* A moderate radius */
+    padding: 8px 12px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #ff7538; /* Macaroon's hover color */
+}
+
+QPushButton:pressed {
+    background-color: #af593e; /* Macaroon's pressed color */
+    border-style: inset;
+}
+
+QPushButton:disabled {
+    background-color: #5a5a5a; /* A neutral dark gray for disabled */
+    border: 1px solid #444444;
+    color: #888888;
+}
+
+/* Text Inputs - Using Macaroon's orange bg and dark text */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #ff7538;
+    color: #312d2f;
+    border: 1px solid #af593e;
+    border-radius: 3px;
+    padding: 5px;
+    selection-background-color: #af593e; /* Macaroon's selection color */
+    selection-color: #fce883;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #fce883; /* Highlight focus with the light yellow */
+}
+
+/* ComboBox - The primary target for the fix */
+QComboBox {
+    background-color: #ee204d; /* Using button color for standout */
+    color: #fce883;
+    border: 1px solid #af593e;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+/* Robust, image-free dropdown arrow, styled with Macaroon colors */
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #af593e;
+}
+
+QComboBox::down-arrow {
+    image: none; /* No external image dependency */
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #fce883; /* Arrow color */
+    width: 0px;
+    height: 0px;
+    margin: 0 auto;
+}
+
+/* The FIX: Styling the dropdown list view directly and robustly */
+QComboBox QAbstractItemView {
+    background-color: #312d2f; /* Dark background for the dropdown list */
+    color: #fce883;
+    border: 1px solid #af593e;
+    selection-background-color: #af593e; /* Macaroon's selection color */
+    selection-color: #fce883;
+    outline: none; /* Prevents dotted border on some platforms */
+}
+
+/* ScrollBar */
+QScrollBar:vertical {
+    border: 1px solid #af593e;
+    background: #312d2f;
+    width: 15px;
+    margin: 15px 0 15px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #ee204d;
+    min-height: 20px;
+    border-radius: 3px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: #ff7538;
+    height: 15px;
+    border: 1px solid #af593e;
+    subcontrol-origin: margin;
+}
+QScrollBar::add-line:vertical { subcontrol-position: bottom; }
+QScrollBar::sub-line:vertical { subcontrol-position: top; }
+
+
+QScrollBar:horizontal {
+    border: 1px solid #af593e;
+    background: #312d2f;
+    height: 15px;
+    margin: 0 15px 0 15px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #ee204d;
+    min-width: 20px;
+    border-radius: 3px;
+}
+
+/* Tabs */
+QTabWidget::pane {
+    border: 1px solid #af593e;
+    background-color: #312d2f;
+}
+
+QTabBar::tab {
+    background: #ff7538;
+    color: #312d2f;
+    border: 1px solid #af593e;
+    border-bottom: none;
+    padding: 5px 10px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: #ee204d;
+    color: #fce883;
+}
+
+QTabBar::tab:selected {
+    border-color: #af593e;
+}
+
+/* CheckBox and RadioButton */
+QCheckBox, QRadioButton {
+    color: #fce883;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 15px;
+    height: 15px;
+    border: 1px solid #af593e;
+    background-color: #ff7538;
+}
+
+QRadioButton::indicator {
+    border-radius: 7px;
+}
+
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background-color: #ee204d;
+}
+
+/* GroupBox */
+QGroupBox {
+    background-color: #312d2f;
+    border: 1px solid #af593e;
+    margin-top: 1em;
+    padding-top: 0.5em;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 0 5px;
+    background-color: #af593e;
+    color: #fce883;
+}
+
+/* Menu */
+QMenuBar {
+    background-color: #312d2f;
+    color: #fce883;
+    border-bottom: 1px solid #af593e;
+}
+
+QMenuBar::item {
+    padding: 5px 10px;
+    background: transparent;
+}
+
+QMenuBar::item:selected, QMenuBar::item:pressed {
+    background-color: #af593e;
+}
+
+QMenu {
+    background-color: #312d2f;
+    border: 1px solid #af593e;
+    color: #fce883;
+}
+
+QMenu::item:selected {
+    background-color: #af593e;
+}

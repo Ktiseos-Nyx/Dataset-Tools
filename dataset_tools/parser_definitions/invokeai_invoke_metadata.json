@@ -58,15 +58,23 @@
         "optional": true
       },
       {
-        "target_key": "parameters.is_sdxl_style",
-        "method": "json_path_exists_boolean",
-        "json_path": "positive_style_prompt",
+        "target_key": "parameters.model",
+        "method": "direct_json_path",
+        "json_path": "model.name",
+        "value_type": "string",
         "optional": true
       },
       {
-        "target_key": "parameters.model",
+        "target_key": "parameters.model_base",
         "method": "direct_json_path",
-        "json_path": "model.model_name",
+        "json_path": "model.base",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.model_type",
+        "method": "direct_json_path",
+        "json_path": "model.type",
         "value_type": "string",
         "optional": true
       },
@@ -74,6 +82,13 @@
         "target_key": "parameters.model_hash",
         "method": "direct_json_path",
         "json_path": "model.hash",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.model_key",
+        "method": "direct_json_path",
+        "json_path": "model.key",
         "value_type": "string",
         "optional": true
       },
@@ -124,6 +139,24 @@
         "optional": true
       }
     ],
-    "output_template": {}
+    "output_template": {
+      "tool": "InvokeAI",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "scheduler": "$parameters.scheduler",
+        "model": "$parameters.model",
+        "model_base": "$parameters.model_base",
+        "model_type": "$parameters.model_type",
+        "model_hash": "$parameters.model_hash",
+        "model_key": "$parameters.model_key",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "raw_metadata": "$_input_data_object_for_template"
+    }
   }
 }

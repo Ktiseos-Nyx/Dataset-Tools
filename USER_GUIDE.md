@@ -14,7 +14,6 @@ Welcome to Dataset Tools! This guide will walk you through everything you need t
 - [Keyboard Shortcuts](#keyboard-shortcuts)
 - [Getting Help and Reporting Issues](#getting-help-and-reporting-issues)
 - [Community and Support](#community-and-support)
-- [Important Notice: PyQt6 Status](#important-notice-pyqt6-branch-status)
 
 ---
 
@@ -70,7 +69,9 @@ Dataset Tools can handle various file types:
 
 **Model Files:**
 - Safetensors files (partial support)
-- GGUF files (coming soon)
+- GGUF files (supported)
+- PyTorch (.pt, .pth)
+- Checkpoint (.ckpt)
 
 **Text Files:**
 - TXT files (displays content)
@@ -104,11 +105,11 @@ Dataset Tools comes with multiple beautiful themes to suit your preference:
 #### Quick Theme Change
 1. Go to **View → Themes** in the menu bar
 2. Select from available themes:
-   - **Dark Pink**: Dark theme with pink accents
-   - **Light Green**: Light theme with green accents
-   - **Dark Teal**: Dark theme with teal accents
-   - **Hide Pink Spider**: Special high-contrast theme
-   - And many more!
+   - **Material Design**: Clean, modern themes (e.g., Dark Teal, Light Blue)
+   - **Custom QSS**: Hand-crafted themes (e.g., Neon Inspired, Food_Watermelon, Memes_DollarstoreArmy)
+   - **Unreal**: Unreal Engine-style interface
+
+Your theme selection is automatically saved.
 
 #### Advanced Theme Settings
 1. Click the **Settings** button at the bottom of the window
@@ -240,42 +241,6 @@ If Dataset Tools helps your workflow:
 - **Changelog**: Check releases for update information
 - **Security**: Review [SECURITY.md](SECURITY.md) for security-related information
 
-## Important Notice: PyQt6 Branch Status
-
-### Current Development Status
-**Important**: The PyQt6 branch of Dataset Tools is in **maintenance mode** as of this release.
-
-#### What This Means
-- **Bug Fixes**: We will continue to fix critical bugs and security issues
-- **Minor Updates**: Small improvements and compatibility fixes will be applied
-- **No Major Features**: No new major features will be added to the PyQt6 version
-
-#### Future Development: Tkinter Migration
-We are planning a major migration to **Tkinter** for broader platform support:
-
-**Why Tkinter?**
-- **Better Compatibility**: Fewer dependency issues across different systems
-- **Easier Installation**: Tkinter comes with Python by default
-- **Reduced Complexity**: Simpler deployment and distribution
-- **Cross-Platform Stability**: More consistent behavior across operating systems
-
-**Timeline**
-- **Current**: PyQt6 maintenance and bug fixes continue
-- **Future**: New major features will be developed in the Tkinter version
-- **Migration**: Users will be guided through the transition when ready
-
-#### For Users
-- **Keep Using PyQt6**: The current version remains fully functional
-- **Stay Updated**: Follow our Discord and GitHub for migration announcements
-- **Backup Settings**: Your themes and preferences will be preserved in the migration
-
-#### For Developers
-- **Contributing**: Bug fixes and small improvements to PyQt6 are still welcome
-- **New Features**: Consider waiting for the Tkinter version for major contributions
-- **Migration Help**: We welcome assistance with the Tkinter migration effort
-
----
-
 ## Troubleshooting
 
 ### Common Issues
@@ -308,4 +273,4 @@ If you encounter issues not covered here:
 
 🎨✨
 
-*For the latest version of this guide, visit our [GitHub](https://github.com/Ktiseos-Nyx/Dataset-Tools).*
+*Last Updated: October 2025*

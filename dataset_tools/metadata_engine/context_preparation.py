@@ -24,6 +24,7 @@ from PIL import Image, UnidentifiedImageError
 from ..logger import get_logger
 from ..model_parsers.safetensors_parser import SafetensorsParser
 
+
 # Type aliases
 ContextData = dict[str, Any]
 FileInput = Union[str, Path, BinaryIO]
@@ -176,6 +177,28 @@ class ContextDataPreparer:
 
             self._extract_exif_data(context)
             self._extract_xmp_data(context)
+
+            # --- IPTC Data Extraction ---
+            try:
+                from PIL import IptcImagePlugin
+                iptc_data = IptcImagePlugin.getiptcinfo(img)
+                if iptc_data:
+                    self.logger.info(f"[CONTEXT_PREP] Found {len(iptc_data)} IPTC fields.")
+                    context["iptc_data"] = {}
+                    for key, value in iptc_data.items():
+                        if isinstance(value, bytes):
+                            decoded_value = value.decode("utf-8", errors="ignore").strip()
+                            context["iptc_data"][key] = decoded_value
+                            # Mochi parser needs these specifically
+                            if key == (2, 120): # Caption-Abstract
+                                context["raw_user_comment_str"] = decoded_value
+                            if key == (2, 105): # OriginatingProgram
+                                context["iptc_originating_program"] = decoded_value
+                        else:
+                            context["iptc_data"][key] = value
+            except Exception as e:
+                self.logger.debug(f"Could not process IPTC data: {e}")
+
             self._extract_png_chunks(context)
             self._find_and_parse_comfyui_json(context)
 
@@ -487,11 +510,11 @@ class ContextDataPreparer:
     def _process_safetensors_file(self, file_input: FileInput, context: ContextData) -> ContextData:
         """Process a SafeTensors model file."""
         try:
-
-
             parser = SafetensorsParser(context["file_path_original"])
             if parser.parse():
                 context["safetensors_metadata"] = parser.metadata_header
+                if parser.civitai_api_info:
+                    context["civitai_api_info"] = parser.civitai_api_info
             else:
                 self.logger.warning(f"SafeTensors parser failed: {getattr(parser, 'error_message', 'Unknown error')}")
         except ImportError:
