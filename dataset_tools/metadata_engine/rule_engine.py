@@ -683,19 +683,24 @@ class DataSourceHandler:
 
             elif json_query_type == "has_any_node_class_type":
                 class_types = rule.get("class_types_to_check", [])
+                self.logger.debug("[DETECTION] Checking for node types: %s", class_types)
                 if isinstance(json_obj, dict):
                     nodes_container = json_obj.get("nodes", json_obj)
+                    self.logger.debug("[DETECTION] nodes_container type: %s, is dict: %s, is list: %s",
+                                    type(nodes_container).__name__, isinstance(nodes_container, dict), isinstance(nodes_container, list))
                     if isinstance(nodes_container, dict):
                         result = any(
-                            isinstance(node_val, dict) and node_val.get("type") in class_types
+                            isinstance(node_val, dict) and (node_val.get("class_type") or node_val.get("type")) in class_types
                             for node_val in nodes_container.values()
                         )
+                        self.logger.debug("[DETECTION] Dict format check result: %s", result)
                         return result, True
                     if isinstance(nodes_container, list):
                         result = any(
-                            isinstance(node_item, dict) and node_item.get("type") in class_types
+                            isinstance(node_item, dict) and (node_item.get("class_type") or node_item.get("type")) in class_types
                             for node_item in nodes_container
                         )
+                        self.logger.debug("[DETECTION] List format check result: %s", result)
                         return result, True
 
         return json_obj, True

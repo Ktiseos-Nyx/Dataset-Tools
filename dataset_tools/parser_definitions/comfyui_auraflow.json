@@ -10,7 +10,7 @@
   "detection_rules": [
     {
       "comment": "Rule 1: Must have ComfyUI JSON structure",
-      "condition": "OR",
+      "operator": "OR",
       "rules": [
         {
           "source_type": "pil_info_key",
@@ -59,12 +59,12 @@
     "fields": [
       {
         "target_key": "prompt",
-        "method": "comfyui_simple_dfs_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
         "target_input": "positive"
       },
       {
         "target_key": "negative_prompt",
-        "method": "comfyui_simple_dfs_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
         "target_input": "negative"
       },
       {

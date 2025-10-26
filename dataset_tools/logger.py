@@ -40,8 +40,8 @@ DATASET_TOOLS_RICH_THEME = Theme(
 
 _dataset_tools_main_rich_console = Console(stderr=True, theme=DATASET_TOOLS_RICH_THEME)
 
-# Create logs directory
-LOG_DIR = Path.cwd() / "logs"
+# Create logs directory in the app folder, not wherever command is run from
+LOG_DIR = Path(__file__).parent.parent / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 
 # Create timestamped log file

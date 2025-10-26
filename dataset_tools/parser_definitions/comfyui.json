@@ -1,6 +1,6 @@
 {
   "parser_name": "ComfyUI Universal Parser",
-  "priority": 125,
+  "priority": 100,
   "description": "Advanced ComfyUI parser that handles any workflow type with robust detection and extraction",
   "version": "2.0_universal_edition",
   "maintainer": "DuskFall Crew",
@@ -81,6 +81,60 @@
               "value": "extraMetadata"
             }
           ]
+        }
+      ]
+    },
+    {
+      "comment": "Rule 4: Must NOT have ModelSamplingAuraFlow in workflow or prompt",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingAuraFlow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingAuraFlow"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 5: Must NOT have ModelSamplingSD3 in workflow or prompt",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingSD3"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingSD3"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 6: Must NOT have ModelSamplingFlux in workflow or prompt",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingFlux"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingFlux"
         }
       ]
     }

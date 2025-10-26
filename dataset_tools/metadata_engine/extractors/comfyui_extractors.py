@@ -330,6 +330,13 @@ class ComfyUIExtractor:
             "  " * depth, node_id, len(reverse_connections)
         )
 
+        # Check if there are any relevant connections for the requested input
+        has_relevant_connections = False
+        for source_id, conn_input_name in reverse_connections:
+            if input_name is None or conn_input_name == input_name:
+                has_relevant_connections = True
+                break
+
         for source_id, conn_input_name in reverse_connections:
             # If we're looking for a specific input, check if this connection matches
             if input_name is not None and conn_input_name != input_name:
@@ -350,13 +357,16 @@ class ComfyUIExtractor:
             if result:
                 return result
 
-        # If no input found, check if this node has text directly in widgets
-        widgets = node.get("widgets_values", [])
-        if widgets and isinstance(widgets, list):
-            for widget in widgets:
-                if isinstance(widget, str) and len(widget) > 10 and widget.strip():
-                    self.logger.info("[BACKWARD TRACER] %s→ Using widget text from node %s", "  " * depth, node_id)
-                    return widget.strip()
+        # ONLY use widget fallback if there were NO connections to trace for this input
+        if not has_relevant_connections:
+            widgets = node.get("widgets_values", [])
+            if widgets and isinstance(widgets, list):
+                for widget in widgets:
+                    if isinstance(widget, str) and len(widget) > 10 and widget.strip():
+                        self.logger.info("[BACKWARD TRACER] %s→ Using widget text from node %s (no connections found)", "  " * depth, node_id)
+                        return widget.strip()
+        else:
+            self.logger.debug("[BACKWARD TRACER] %sNot using widget fallback - connections exist but trace failed", "  " * depth)
 
         return ""
 
