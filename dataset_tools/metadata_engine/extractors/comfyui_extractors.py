@@ -254,17 +254,20 @@ class ComfyUIExtractor:
                 forward_connections = forward_graph.get(current_id, [])
                 for dest_id, dest_input_name in forward_connections:
                     dest_node = node_lookup.get(dest_id)
-                    if dest_node and "ShowText" in dest_node.get("class_type", ""):
-                        # Found a ShowText connected to this Ollama!
-                        showtext_widgets = dest_node.get("widgets_values", [])
-                        if showtext_widgets and isinstance(showtext_widgets[0], list) and len(showtext_widgets[0]) > 0:
-                            if isinstance(showtext_widgets[0][0], str) and showtext_widgets[0][0].strip():
-                                extracted_text = showtext_widgets[0][0].strip()
-                                self.logger.info(
-                                    "[BACKWARD TRACER] %s→ Found Ollama output in ShowText node %s",
-                                    "  " * depth, dest_id
-                                )
-                                break
+                    if dest_node:
+                        # Handle both "class_type" (simplified format) and "type" (full format)
+                        dest_type = dest_node.get("class_type") or dest_node.get("type", "")
+                        if "ShowText" in dest_type:
+                            # Found a ShowText connected to this Ollama!
+                            showtext_widgets = dest_node.get("widgets_values", [])
+                            if showtext_widgets and isinstance(showtext_widgets[0], list) and len(showtext_widgets[0]) > 0:
+                                if isinstance(showtext_widgets[0][0], str) and showtext_widgets[0][0].strip():
+                                    extracted_text = showtext_widgets[0][0].strip()
+                                    self.logger.info(
+                                        "[BACKWARD TRACER] %s→ Found Ollama output in ShowText node %s",
+                                        "  " * depth, dest_id
+                                    )
+                                    break
 
             elif widgets and isinstance(widgets[0], str) and widgets[0].strip():
                 # Other text sources (Text Multiline, etc.) store in first position
