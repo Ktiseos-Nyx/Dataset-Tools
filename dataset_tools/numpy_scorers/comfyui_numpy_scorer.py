@@ -14,17 +14,6 @@ from .negative_indicators_loader import negative_indicators
 
 logger = get_logger(__name__)
 
-# LLM prompt expansion node types - these generate verbose prompts from short inputs
-LLM_EXPANSION_NODES = {
-    "OllamaGenerateAdvance",  # Ollama LLM integration
-    "OllamaGenerate",  # Ollama basic integration
-    "ChatGptPrompt",  # ChatGPT prompt expansion
-    "MZ_ChatGLM3_V2",  # ChatGLM3 LLM integration
-    "LLMCompletion",  # Generic LLM completion nodes
-    "GPT4Prompt",  # GPT-4 integration
-    "ClaudePrompt",  # Claude integration
-}
-
 # ComfyUI Node type scoring with domain knowledge
 NODE_TYPE_SCORES = {
     # Final resolved content display nodes (absolute highest priority)
@@ -44,9 +33,6 @@ NODE_TYPE_SCORES = {
     "TIPO": 6.0,  # TIPO AI prompt generator - prioritize base input over random ShowText output
 
     # Standard prompt nodes (medium priority)
-    "quadmoonSmartPrompt": 2.5,  # Quadmoon custom prompt node - high priority
-    "quadmoonSmartNeg": 2.5,  # Quadmoon custom negative prompt node - high priority
-    "String Literal": 2.0,  # String literal nodes - often used for prompts
     "ChatGptPrompt": 2.0,  # ChatGPT prompt integration - high priority
     "Text Multiline": 6.0,  # Griptape Text Multiline - high priority for clean content
     "easy positive": 2.1,  # Easy positive nodes - high priority for clean content
@@ -192,80 +178,6 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
         return False
 
-    def _detect_llm_expansion_workflow(self, workflow_data: dict[str, Any]) -> dict[str, Any]:
-        """Detect if workflow uses LLM nodes for prompt expansion.
-
-        Returns:
-            dict with:
-                - has_llm_expansion: bool
-                - llm_node_ids: list of LLM node IDs
-                - llm_input_node_ids: list of nodes that feed INTO LLMs (user inputs)
-                - llm_output_node_ids: list of nodes that receive FROM LLMs (expanded prompts)
-        """
-        result = {
-            "has_llm_expansion": False,
-            "llm_node_ids": [],
-            "llm_input_node_ids": set(),
-            "llm_output_node_ids": set(),
-        }
-
-        nodes = workflow_data.get("nodes", workflow_data)
-
-        # Handle both list and dict formats
-        if isinstance(nodes, dict):
-            node_items = [(node_id, node_data) for node_id, node_data in nodes.items()]
-        elif isinstance(nodes, list):
-            node_items = [(node.get("id"), node) for node in nodes if isinstance(node, dict)]
-        else:
-            return result
-
-        # Find LLM nodes
-        for node_id, node_data in node_items:
-            if not isinstance(node_data, dict):
-                continue
-
-            class_type = node_data.get("class_type") or node_data.get("type", "")
-
-            if class_type in LLM_EXPANSION_NODES:
-                result["has_llm_expansion"] = True
-                result["llm_node_ids"].append(node_id)
-                logger.debug("Found LLM expansion node: %s (type: %s)", node_id, class_type)
-
-        if not result["has_llm_expansion"]:
-            return result
-
-        # Trace connections to find inputs and outputs of LLM nodes
-        links = workflow_data.get("links", [])
-
-        # Handle both list and dict formats for links
-        if isinstance(links, dict):
-            link_items = links.values()
-        elif isinstance(links, list):
-            link_items = links
-        else:
-            link_items = []
-
-        for link in link_items:
-            if not isinstance(link, list) or len(link) < 5:
-                continue
-
-            # Link format: [link_id, output_node, output_slot, input_node, input_slot, ...]
-            output_node = link[1]
-            input_node = link[3]
-
-            for llm_node_id in result["llm_node_ids"]:
-                # If something feeds INTO an LLM node, it's user input
-                if input_node == llm_node_id:
-                    result["llm_input_node_ids"].add(output_node)
-                    logger.debug("Node %s feeds into LLM node %s (user input)", output_node, llm_node_id)
-
-                # If LLM node feeds INTO something, that receives expanded output
-                if output_node == llm_node_id:
-                    result["llm_output_node_ids"].add(input_node)
-                    logger.debug("LLM node %s feeds into node %s (expanded output)", llm_node_id, input_node)
-
-        return result
-
     def _build_link_map(self, workflow_data: dict[str, Any]) -> dict[int, dict[str, Any]]:
         """Build a mapping of node connections from workflow data."""
         link_map = {}
@@ -319,7 +231,6 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         ]
 
         medium_priority_types = [
-            "quadmoonSmartPrompt", "quadmoonSmartNeg",  # Quadmoon custom nodes
             "CLIPTextEncode", "CLIPTextEncodeSDXL", "CLIPTextEncodeSDXLRefiner",
             "ConditioningCombine", "ConditioningConcat", "ConditioningSetArea",
             "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline",
@@ -417,10 +328,6 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                     logger.debug("Detected template/mode text in %s: '%s...' - reducing priority", class_type, text[:60])
                     # Don't completely exclude, but mark as low priority template
                     text = f"[TEMPLATE]{text}"
-            elif class_type in ["quadmoonSmartPrompt", "quadmoonSmartNeg"]:
-                # Quadmoon custom nodes - prompt text is in widgets_values[0]
-                if len(widgets_values) >= 1 and isinstance(widgets_values[0], str):
-                    text = widgets_values[0]
             elif class_type in ["CLIPTextEncode", "CLIPTextEncodeSDXL", "CLIPTextEncodeSDXLRefiner", "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline", "easy positive", "T5TextEncode", "PixArtT5TextEncode"]:
                 if len(widgets_values) >= 1 and isinstance(widgets_values[0], str):
                     text = widgets_values[0]
@@ -487,10 +394,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         # This handles "flat" formats (like TensorArt) where input values are stored in the inputs dict.
         if not text and isinstance(inputs, dict):
             logger.debug("Checking inputs dict for text (flat/TensorArt format): %s", list(inputs.keys()))
-            if class_type in ["quadmoonSmartPrompt", "quadmoonSmartNeg"]:
-                # Quadmoon nodes - check for prompt_text field
-                text = inputs.get("prompt_text", inputs.get("text", ""))
-            elif class_type in ["CLIPTextEncode", "CLIPTextEncodeSDXL", "CLIPTextEncodeSDXLRefiner", "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline", "easy positive"]:
+            if class_type in ["CLIPTextEncode", "CLIPTextEncodeSDXL", "CLIPTextEncodeSDXLRefiner", "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline", "easy positive"]:
                 text = inputs.get("text", "")
                 # For "easy positive" nodes, also check for "positive" field
                 if not text and class_type == "easy positive":
@@ -640,8 +544,6 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
         text = candidate.get("text", "")
         node_type = candidate.get("source_node_type", "")
-        node_id = candidate.get("node_id")
-        workflow_data = candidate.get("workflow_data", {})
         confidence = scored_candidate.get("confidence", 0.5)
 
         # Apply ComfyUI-specific scoring adjustments
@@ -652,23 +554,6 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             confidence *= 0.1  # Reduce confidence to 10% for template content
             text = text[10:]  # Remove [TEMPLATE] prefix for further processing
             candidate["text"] = text  # Update candidate text to remove prefix
-
-        # LLM expansion detection - adjust scoring based on workflow context
-        llm_info = self._detect_llm_expansion_workflow(workflow_data)
-        if llm_info["has_llm_expansion"]:
-            logger.debug("LLM expansion workflow detected with %s LLM nodes", len(llm_info["llm_node_ids"]))
-
-            # If this node feeds INTO an LLM, it's user input - deprioritize it
-            if node_id in llm_info["llm_input_node_ids"]:
-                logger.debug("Node %s feeds into LLM - deprioritizing as user input (was: %.2f)", node_id, confidence)
-                confidence *= 0.3  # Heavy penalty - this is raw user input, not the final prompt
-                scored_candidate["llm_context"] = "user_input_to_llm"
-
-            # If this node receives FROM an LLM, it's expanded output - keep priority
-            elif node_id in llm_info["llm_output_node_ids"]:
-                logger.debug("Node %s receives from LLM - keeping high priority as expanded output (%.2f)", node_id, confidence)
-                scored_candidate["llm_context"] = "llm_expanded_output"
-                # Don't change confidence - let the node type score handle it
 
         # Node type scoring
         node_score_multiplier = NODE_TYPE_SCORES.get(node_type, 1.0)
@@ -1089,67 +974,37 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                 enhanced_result = engine_result.copy()
 
                 # Find best positive candidate
-                best_positive = None
                 if positive_candidates:
                     best_positive = max(positive_candidates, key=lambda x: x.get("confidence", 0))
                     logger.debug("Best positive candidate: confidence=%.3f, text='%s...'", best_positive.get("confidence", 0), best_positive.get("text", "")[:60])
 
+                    if best_positive.get("confidence", 0) > 0.5:
+                        enhanced_result["prompt"] = best_positive["text"]
+
                 # Find best negative candidate
-                best_negative = None
                 if negative_candidates:
                     best_negative = max(negative_candidates, key=lambda x: x.get("confidence", 0))
                     logger.debug("Best negative candidate: confidence=%.3f, text='%s...'", best_negative.get("confidence", 0), best_negative.get("text", "")[:60])
-
-                # Store ALL candidates and analysis
-                enhanced_result["numpy_analysis"] = {
-                    "enhancement_applied": True,
-                    "all_candidates": candidates,  # ALL candidates for future use
-                    "positive_candidates": positive_candidates,
-                    "negative_candidates": negative_candidates,
-                    "best_positive": best_positive,
-                    "best_negative": best_negative,
-                    "best_positive_confidence": best_positive.get("confidence") if best_positive else None,
-                    "best_negative_confidence": best_negative.get("confidence") if best_negative else None,
-                    "total_candidates": len(candidates),
-                    "scoring_method": "comfyui_numpy",
-                    "workflow_type": (best_positive if best_positive else best_negative).get("workflow_type") if (best_positive or best_negative) else None,
-                    "source_node_type": (best_positive if best_positive else best_negative).get("source_node_type") if (best_positive or best_negative) else None,
-                    "workflow_data": workflow_data  # Store workflow for reference
-                }
-
-                # INTELLIGENT OVERRIDE LOGIC:
-                # Only override parser results if:
-                # 1. Parser found nothing, OR
-                # 2. Numpy found something with very high confidence (>5.0)
-
-                parser_prompt = engine_result.get("prompt", "").strip()
-                parser_negative = engine_result.get("negative_prompt", "").strip()
-
-                # Override positive prompt only if parser found nothing or numpy is very confident
-                if not parser_prompt or (best_positive and best_positive.get("confidence", 0) > 5.0):
-                    if best_positive and best_positive.get("confidence", 0) > 0.5:
-                        enhanced_result["prompt"] = best_positive["text"]
-                        logger.info("Numpy overriding positive prompt (parser had: '%s', numpy confidence: %.2f)",
-                                   "nothing" if not parser_prompt else parser_prompt[:40],
-                                   best_positive.get("confidence", 0))
+                    enhanced_result["negative_prompt"] = best_negative["text"]
                 else:
-                    logger.info("Keeping parser's positive prompt (numpy fallback available with confidence %.2f)",
-                               best_positive.get("confidence", 0) if best_positive else 0)
+                    # Keep existing negative_prompt if parser already found one
+                    # Don't clear it - parser might have extracted embeddings/URNs that numpy doesn't recognize
+                    logger.debug("No negative candidates found, keeping existing negative_prompt from parser")
+                    # No-op: keep enhanced_result["negative_prompt"] = engine_result.get("negative_prompt", "")
 
-                # Override negative prompt only if parser found nothing or numpy is very confident
-                if not parser_negative or (best_negative and best_negative.get("confidence", 0) > 5.0):
-                    if best_negative:
-                        enhanced_result["negative_prompt"] = best_negative["text"]
-                        logger.info("Numpy overriding negative prompt (parser had: '%s', numpy confidence: %.2f)",
-                                   "nothing" if not parser_negative else parser_negative[:40],
-                                   best_negative.get("confidence", 0))
-                else:
-                    logger.info("Keeping parser's negative prompt (numpy fallback available)")
+                # Only enhance if we found good candidates
+                if positive_candidates or negative_candidates:
+                    enhanced_result["numpy_analysis"] = {
+                        "enhancement_applied": True,
+                        "best_positive_confidence": best_positive.get("confidence") if positive_candidates else None,
+                        "best_negative_confidence": best_negative.get("confidence") if negative_candidates else None,
+                        "total_candidates": len(candidates),
+                        "scoring_method": "comfyui_numpy",
+                        "workflow_type": (best_positive if positive_candidates else best_negative).get("workflow_type"),
+                        "source_node_type": (best_positive if positive_candidates else best_negative).get("source_node_type")
+                    }
 
-                logger.info("Numpy enhancement complete: %s positive, %s negative, %s total candidates",
-                           len(positive_candidates), len(negative_candidates), len(candidates))
-
-                return enhanced_result
+                    return enhanced_result
 
         except Exception as e:
             self.logger.error("Error in ComfyUI numpy enhancement: %s", e)
