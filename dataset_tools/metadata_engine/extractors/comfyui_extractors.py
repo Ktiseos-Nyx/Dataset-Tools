@@ -145,7 +145,7 @@ class ComfyUIExtractor:
             # --- PHASE 1: CANDIDATE IDENTIFICATION (Find all needles - UPGRADED v2.6) ---
             text_candidates = []
             sampler_nodes = []
-            text_encoder_types = ["CLIPTextEncode", "Text Multiline", "DPRandomGenerator", "ShowText|pysssss", "ChatGptPrompt"]
+            text_encoder_types = ["CLIPTextEncode", "Text Multiline", "DPRandomGenerator", "ShowText|pysssss", "ChatGptPrompt", "PrimitiveStringMultiline", "easy positive", "Text Concatenate"]
 
             for node_id, node in node_lookup.items():
                 node_type = node.get("class_type", node.get("type", ""))
@@ -604,15 +604,19 @@ class ComfyUIExtractor:
         # print("\n--- [FACADE] Running: _find_legacy_text_from_main_sampler_input ---")
         # print(f"Method def: {method_def}")
 
+        self.logger.info("[ComfyUI EXTRACTOR] _find_legacy_text_from_main_sampler_input CALLED")
+
         data = self._parse_json_data(data)
 
         if not isinstance(data, dict):
+            self.logger.warning("[ComfyUI EXTRACTOR] Data is not dict after parsing, returning empty")
             return ""
 
         try:
             self.logger.info("[ComfyUI EXTRACTOR] ============ STARTING EXTRACTION ============")
             self.logger.info("[ComfyUI EXTRACTOR] Method def: %s", method_def)
-        except Exception:
+        except Exception as e:
+            self.logger.error("[ComfyUI EXTRACTOR] Exception in initial logging: %s", e)
             return ""
 
         sampler_node_types = method_def.get(

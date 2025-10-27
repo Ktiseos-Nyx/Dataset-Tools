@@ -125,6 +125,11 @@ class MetadataEngine:
         """
         self.parser_definitions_path = Path(parser_definitions_path)
         self.logger = logger_obj or get_logger("MetadataEngine")
+
+        # Ensure logger is at DEBUG level to see all parser matching attempts
+        if self.logger.level == logging.NOTSET or self.logger.level > logging.DEBUG:
+            self.logger.setLevel(logging.DEBUG)
+
         self.logger.debug(f"MetadataEngine: __init__ called, logger type: {type(self.logger)}")
 
         # Initialize components
@@ -259,16 +264,14 @@ class MetadataEngine:
             parser_name = parser_def.get("parser_name", "UNKNOWN")
             priority = parser_def.get("priority", 0)
 
-            # Only log A1111-related parsers to avoid spam
-            if "a1111" in parser_name.lower():
-                self.logger.info(f"Trying parser: {parser_name} (priority {priority})")
+            # DEBUG: Log all parser attempts; INFO: Only log matches
+            self.logger.debug(f"Trying parser: {parser_name} (priority {priority})")
 
             if self._parser_matches_context(parser_def, context_data):
-                if "a1111" in parser_name.lower():
-                    self.logger.info(f"*** MATCHED: {parser_name} ***")
+                self.logger.info(f"*** MATCHED: {parser_name} ***")
                 return parser_def
-            if "a1111" in parser_name.lower():
-                self.logger.info(f"Failed to match: {parser_name}")
+
+            self.logger.debug(f"Failed to match: {parser_name}")
 
         return None
 

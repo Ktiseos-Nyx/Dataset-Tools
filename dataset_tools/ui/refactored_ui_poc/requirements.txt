@@ -1,0 +1,4 @@
+# Requirements for Refactored UI POC Demo
+# This POC only needs PyQt6 for the GUI demonstration
+
+PyQt6>=6.4.0

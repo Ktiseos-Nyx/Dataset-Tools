@@ -39,11 +39,16 @@ class FieldExtractor:
     def __init__(self, logger: logging.Logger | None = None):
         """Initialize the field extractor with all sub-extractors."""
         self.logger = logger or get_logger("FieldExtractor")
+        self.logger.info("[FIELD_EXTRACTOR] FieldExtractor initializing...")
 
         # Initialize specialized extractors
+        self.logger.info("[FIELD_EXTRACTOR] Creating DirectValueExtractor...")
         self.direct_extractor = DirectValueExtractor(self.logger)
+        self.logger.info("[FIELD_EXTRACTOR] Creating A1111Extractor...")
         self.a1111_extractor = A1111Extractor(self.logger)
+        self.logger.info("[FIELD_EXTRACTOR] Creating CivitaiExtractor...")
         self.civitai_extractor = CivitaiExtractor(self.logger)
+        self.logger.info("[FIELD_EXTRACTOR] Creating ComfyUIExtractor...")
         self.comfyui_extractor = ComfyUIExtractor(self.logger)
         self.comfyui_enhanced_extractor = ComfyUIEnhancedExtractor(self.logger)
         self.drawthings_extractor = DrawThingsExtractor(self.logger)
@@ -129,9 +134,17 @@ class FieldExtractor:
             # Debug logging already handled by logger
             self.logger.info("[FIELD_EXTRACT_DEBUG] About to call civitai_extract_all_info!")
 
+        # DEBUG: Log method calls for prompt/negative_prompt
+        if method_name == "comfy_find_text_from_main_sampler_input":
+            self.logger.info("[FIELD_EXTRACT] About to call comfy_find_text_from_main_sampler_input for target_key: %s", method_def.get('target_key', 'UNKNOWN'))
+
         try:
             # Execute the extraction
             value = extraction_method(data_for_method, method_def, context_data, extracted_fields)
+
+            # DEBUG: Log result for prompt extraction
+            if method_name == "comfy_find_text_from_main_sampler_input":
+                self.logger.info("[FIELD_EXTRACT] Method returned: %s", value[:100] if value else "EMPTY/NONE")
 
             if method_name == "civitai_extract_all_info":
                 # Debug logging already handled by logger

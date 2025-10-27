@@ -137,6 +137,24 @@
           "value": "ModelSamplingFlux"
         }
       ]
+    },
+    {
+      "comment": "Rule 7: Must NOT have Chroma LoRAs in workflow (use Chroma-specific parser)",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "Chroma-Anime"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "chroma_v10HD"
+        }
+      ]
     }
   ],
   "parsing_instructions": {
@@ -178,7 +196,10 @@
           "PixArtT5TextEncode",
           "CLIPTextEncodeSDXL",
           "CLIPTextEncodeSDXLRefiner",
-          "smZ CLIPTextEncode"
+          "smZ CLIPTextEncode",
+          "PrimitiveStringMultiline",
+          "easy positive",
+          "Text Concatenate"
         ]
       },
       {
@@ -201,7 +222,10 @@
           "PixArtT5TextEncode",
           "CLIPTextEncodeSDXL",
           "CLIPTextEncodeSDXLRefiner",
-          "smZ CLIPTextEncode"
+          "smZ CLIPTextEncode",
+          "PrimitiveStringMultiline",
+          "easy positive",
+          "Text Concatenate"
         ]
       },
       {

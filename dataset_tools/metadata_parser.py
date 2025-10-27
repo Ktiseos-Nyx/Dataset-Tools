@@ -99,11 +99,25 @@ def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]
             try:
                 if status_callback:
                     status_callback("Analyzing workflow with numpy enhancement...")
+
+                # DEBUG: Log what parser extracted BEFORE numpy enhancement
+                parser_prompt = result.get("prompt", "")
+                parser_negative = result.get("negative_prompt", "")
+                nfo("[DT.metadata_parser]: BEFORE NUMPY - Parser extracted prompt: %s", parser_prompt[:100] if parser_prompt else "NONE")
+                nfo("[DT.metadata_parser]: BEFORE NUMPY - Parser extracted negative: %s", parser_negative[:100] if parser_negative else "NONE")
+
                 nfo("[DT.metadata_parser]: Applying numpy enhancement to all parsing results")
                 enhanced_result = numpy_scorer.enhance_result(result, file_path_named)
                 result = enhanced_result
                 if status_callback:
                     status_callback("Numpy enhancement completed")
+
+                # DEBUG: Log what numpy changed it to AFTER enhancement
+                numpy_prompt = result.get("prompt", "")
+                numpy_negative = result.get("negative_prompt", "")
+                nfo("[DT.metadata_parser]: AFTER NUMPY - Final prompt: %s", numpy_prompt[:100] if numpy_prompt else "NONE")
+                nfo("[DT.metadata_parser]: AFTER NUMPY - Final negative: %s", numpy_negative[:100] if numpy_negative else "NONE")
+
                 nfo("[DT.metadata_parser]: Numpy enhancement completed. Enhanced: %s", enhanced_result.get("numpy_analysis", {}).get("enhancement_applied", False))
             except Exception as numpy_error:
                 nfo("[DT.metadata_parser]: Numpy enhancement failed: %s, using original result", numpy_error)
