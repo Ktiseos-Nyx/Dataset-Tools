@@ -301,7 +301,7 @@ class ThumbnailGridWidget(Qw.QListWidget):
         # Request visible thumbnails at new size
         QtCore.QTimer.singleShot(50, self._request_visible_thumbnails)
 
-    def set_folder(self, folder_path: str, files: list[str]):
+    def set_folder(self, folder_path: str, files: list[str], file_to_select: str | None = None):
         """Set the folder and file list to display."""
         log.info(f"Setting folder: {folder_path} with {len(files)} files")
 
@@ -326,8 +326,27 @@ class ThumbnailGridWidget(Qw.QListWidget):
         # Pre-load cached thumbnails from disk into memory
         self._preload_disk_cache()
 
+        # Select the requested file if provided
+        if file_to_select:
+            self.select_file_by_name(file_to_select)
+
         # Load visible thumbnails after a short delay
         QtCore.QTimer.singleShot(100, self._request_visible_thumbnails)
+
+    def select_file_by_name(self, file_name: str) -> bool:
+        """Select and scroll to a specific file by name.
+
+        Returns:
+            True if file was found and selected, False otherwise
+        """
+        for i in range(self.count()):
+            item = self.item(i)
+            if item and item.text() == file_name:
+                self.setCurrentItem(item)
+                self.scrollToItem(item, Qw.QAbstractItemView.ScrollHint.PositionAtCenter)
+                log.info(f"Selected and scrolled to thumbnail: {file_name}")
+                return True
+        return False
 
     def _create_placeholder_icon(self) -> QtGui.QPixmap:
         """Create a placeholder icon for loading state."""

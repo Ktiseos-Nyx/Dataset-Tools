@@ -314,7 +314,7 @@ class ImageMetadataReader:
             self.logger.error("Unexpected error reading image %s: %s", file_path, e, exc_info=True)
             return None
 
-def _decode_usercomment_bytes(self, data: bytes) -> str:
+    def _decode_usercomment_bytes(self, data: bytes) -> str:
         """Try various decoding strategies for UserComment bytes."""
         # NEW STRATEGY: Handle the SwarmUI-style UNICODE header
         # This checks for the UTF-16LE encoding of "UNICODE { "

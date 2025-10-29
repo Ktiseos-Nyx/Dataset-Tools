@@ -299,6 +299,49 @@ class MenuManager:
         """Setup the View menu."""
         view_menu = menu_bar.addMenu("&View")
 
+        # File view mode submenu
+        view_mode_menu = Qw.QMenu("&File View Mode", self.main_window)
+        view_menu.addMenu(view_mode_menu)
+
+        # Create action group for mutually exclusive view modes
+        view_mode_group = QtGui.QActionGroup(self.main_window)
+        view_mode_group.setExclusive(True)
+
+        # List view action
+        list_view_action = QtGui.QAction("📄 &List View", self.main_window)
+        list_view_action.setCheckable(True)
+        list_view_action.setToolTip("View files as a simple list")
+        list_view_action.triggered.connect(lambda: self.main_window.set_file_view_mode("list"))
+        view_mode_group.addAction(list_view_action)
+        view_mode_menu.addAction(list_view_action)
+
+        # Grid view action
+        grid_view_action = QtGui.QAction("🖼️ &Grid View", self.main_window)
+        grid_view_action.setCheckable(True)
+        grid_view_action.setToolTip("View images as a thumbnail grid")
+        grid_view_action.triggered.connect(lambda: self.main_window.set_file_view_mode("grid"))
+        view_mode_group.addAction(grid_view_action)
+        view_mode_menu.addAction(grid_view_action)
+
+        # Tree view action
+        tree_view_action = QtGui.QAction("🌲 &Tree View", self.main_window)
+        tree_view_action.setCheckable(True)
+        tree_view_action.setToolTip("View files in a hierarchical folder tree")
+        tree_view_action.triggered.connect(lambda: self.main_window.set_file_view_mode("tree"))
+        view_mode_group.addAction(tree_view_action)
+        view_mode_menu.addAction(tree_view_action)
+
+        # Set default checked state based on current mode
+        current_mode = self.main_window.settings.value("fileViewMode", "list", type=str)
+        if current_mode == "grid":
+            grid_view_action.setChecked(True)
+        elif current_mode == "tree":
+            tree_view_action.setChecked(True)
+        else:
+            list_view_action.setChecked(True)
+
+        view_menu.addSeparator()
+
         # Themes submenu
         self.themes_menu = Qw.QMenu("&Themes", self.main_window)
         view_menu.addMenu(self.themes_menu)

@@ -1,0 +1,215 @@
+{
+  "parser_name": "ComfyUI Targeted Parser",
+  "priority": 101,
+  "description": "Advanced ComfyUI parser that uses targeted graph traversal for robust prompt extraction",
+  "version": "1.0_targeted",
+  "maintainer": "DuskFall Crew",
+  "target_file_types": [
+    "PNG",
+    "JPEG",
+    "JPG",
+    "WEBP"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have 'workflow' PNG chunk with valid JSON and ComfyUI node signatures",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "exists"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "json_path_exists_boolean",
+          "json_path": "$.nodes[?(@.class_type =~ /KSampler|SamplerCustomAdvanced|CLIPTextEncode/i)]"
+        },
+        {
+          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "extraMetadata"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: OR, must have 'prompt' pil_info_key with valid JSON and ComfyUI node signatures (for older/different formats)",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "json_path_exists_boolean",
+          "json_path": "$.nodes[?(@.class_type =~ /KSampler|SamplerCustomAdvanced|CLIPTextEncode/i)]"
+        },
+        {
+          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "does_not_contain",
+          "value": "extraMetadata"
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "comment": "Extract positive prompt using targeted graph traversal",
+        "target_key": "prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "params": {
+            "target_input": "positive"
+        }
+      },
+      {
+        "comment": "Extract negative prompt using targeted graph traversal",
+        "target_key": "negative_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "params": {
+            "target_input": "negative"
+        }
+      },
+      {
+        "comment": "Extract seed from sampler",
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_field": "seed",
+        "value_type": "integer"
+      },
+      {
+        "comment": "Extract steps from sampler",
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_field": "steps",
+        "value_type": "integer"
+      },
+      {
+        "comment": "Extract cfg_scale from sampler",
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_field": "cfg",
+        "value_type": "float"
+      },
+      {
+        "comment": "Extract sampler name",
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_field": "sampler_name",
+        "value_type": "string"
+      },
+      {
+        "comment": "Extract width from latent image nodes",
+        "target_key": "parameters.width",
+        "method": "comfy_find_node_input_or_widget_value",
+        "node_criteria": [
+          {
+            "class_type": "EmptyLatentImage"
+          },
+          {
+            "class_type": "LatentUpscale"
+          },
+          {
+            "class_type": "EmptyLatentImageFromPresetsSDXL"
+          },
+          {
+            "class_type": "EmptySD3LatentImage"
+          }
+        ],
+        "input_field": "width",
+        "value_type": "integer"
+      },
+      {
+        "comment": "Extract height from latent image nodes",
+        "target_key": "parameters.height",
+        "method": "comfy_find_node_input_or_widget_value",
+        "node_criteria": [
+          {
+            "class_type": "EmptyLatentImage"
+          },
+          {
+            "class_type": "LatentUpscale"
+          },
+          {
+            "class_type": "EmptyLatentImageFromPresetsSDXL"
+          },
+          {
+            "class_type": "EmptySD3LatentImage"
+          }
+        ],
+        "input_field": "height",
+        "value_type": "integer"
+      }
+    ],
+    "output_template": {
+      "tool": "ComfyUI (Targeted Parser)",
+      "parser_version": "1.0_targeted",
+      "detection_confidence": "high",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "raw_workflow": "$input_data"
+    }
+  }
+}

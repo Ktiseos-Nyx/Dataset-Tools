@@ -1,4 +1,4 @@
-"""Civitai API Interaction Module
+"""Civitai API Interaction Module.
 
 This module provides functions to interact with the Civitai API to fetch
 metadata for models, LORAs, and other resources.
@@ -179,6 +179,7 @@ def get_model_info_by_hash(model_hash: str) -> dict[str, Any] | None:
         error_message("[Civitai API] An unexpected error occurred: %s", e)
         return None
 
+
 def get_model_info_by_id(model_id: str) -> dict[str, Any] | None:
     """Fetches model information from Civitai using a model ID.
 
@@ -246,6 +247,7 @@ def get_model_info_by_id(model_id: str) -> dict[str, Any] | None:
     except Exception as e:
         error_message("[Civitai API] An unexpected error occurred: %s", e)
         return None
+
 
 def get_model_version_info_by_id(version_id: str) -> dict[str, Any] | None:
     """Fetches model version information from Civitai using a model version ID.

@@ -85,7 +85,7 @@ QPushButton:pressed {
 
 /* --- Line Edits / Text Inputs --- */
 QLineEdit, QTextEdit, QPlainTextEdit {
-    background-color: #2A2A2A; /* Darker background */
+    background-color: #2A2A2A; /* Darker background - KEEP SOLID */
     border: 1px solid #4A4A4A; /* Subtle border */
     border-radius: 4px;
     padding: 5px;
@@ -100,6 +100,7 @@ QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
 
 /* --- Labels --- */
 QLabel {
+    background-color: transparent; /* TRANSPARENT - let gradient show through! */
     color: #E0E0E0;
 }
 

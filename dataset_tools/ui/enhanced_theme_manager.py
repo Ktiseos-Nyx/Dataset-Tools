@@ -216,8 +216,6 @@ class EnhancedThemeManager:
             nfo("Error applying qt-material theme %s: %s", theme_name, e)
             return False
 
-
-
     def _apply_custom_qss_theme(self, theme_id: str, app: QApplication) -> bool:
         """Apply a custom QSS theme from the 'themes' directory."""
         try:

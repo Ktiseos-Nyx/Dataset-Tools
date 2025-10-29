@@ -53,6 +53,7 @@ from .managers import (
 )
 from .thumbnail_grid import ThumbnailGridWidget
 from .widgets import FileLoadResult
+from .file_tree_panel import FileTreePanel
 
 # ============================================================================
 # CONSTANTS
@@ -295,10 +296,10 @@ class MainWindow(Qw.QMainWindow):
             self.left_panel.list_item_selected.connect(self.on_file_selected)
 
     def set_file_view_mode(self, mode: str) -> None:
-        """Set the file view mode (list or grid).
-        
+        """Set the file view mode (list, grid, or tree).
+
         Args:
-            mode: Either 'list' or 'grid'
+            mode: Either 'list', 'grid', or 'tree'
 
         """
         if mode == "grid":
@@ -313,8 +314,23 @@ class MainWindow(Qw.QMainWindow):
                 image_files = [f for f in self.current_files_in_list
                                if self._should_display_as_image(os.path.join(self.current_folder, f))]
                 self.thumbnail_grid.set_folder(self.current_folder, image_files)
-        else:
+
+        elif mode == "tree":
+            if not hasattr(self, "file_tree"):
+                # Lazy init - only create tree when first needed
+                self._initialize_file_tree()
+
+            self.left_panel.file_view_stack.setCurrentWidget(self.file_tree)
+
+            # Populate with current folder
+            if self.current_folder:
+                self.file_tree.set_root_path(self.current_folder)
+
+        else:  # list mode
             self.left_panel.file_view_stack.setCurrentWidget(self.left_panel.files_list_widget)
+
+        # Save view mode preference
+        self.settings.setValue("fileViewMode", mode)
 
         nfo(f"[UI] File view mode set to: {mode}")
 
@@ -326,6 +342,24 @@ class MainWindow(Qw.QMainWindow):
 
         nfo("[UI] Thumbnail grid initialized")
 
+    def _initialize_file_tree(self):
+        """Lazy initialization of file tree."""
+        self.file_tree = FileTreePanel(parent=self)
+        self.file_tree.file_selected.connect(self.on_file_selected)
+        self.file_tree.folder_changed.connect(lambda path: nfo("[UI] Tree folder changed: %s", path))
+        self.left_panel.file_view_stack.addWidget(self.file_tree)
+
+        # Set supported extensions from file operations
+        from ..file_operations import FileOperations
+        file_ops = FileOperations()
+        extensions = file_ops.get_supported_extensions()
+        all_extensions = set()
+        for ext_set in extensions.values():
+            all_extensions.update(ext_set)
+        self.file_tree.set_supported_extensions(all_extensions)
+
+        nfo("[UI] File tree initialized")
+
     def _restore_application_state(self) -> None:
         """Restore window geometry and load initial folder."""
         self.theme_manager.restore_window_geometry()
@@ -333,16 +367,18 @@ class MainWindow(Qw.QMainWindow):
 
         # Apply saved view mode
         view_mode = self.settings.value("fileViewMode", "list", type=str)
-        if view_mode == "grid":
-            self.set_file_view_mode("grid")
+        if view_mode in ("grid", "tree"):
+            self.set_file_view_mode(view_mode)
 
     def _load_initial_folder(self) -> None:
         """Load the last used folder or show empty state."""
         initial_folder = self.settings.value("lastFolderPath", os.getcwd())
+        last_selected_file = self.settings.value("lastSelectedFile", None, type=str)
         self.clear_file_list()
 
         if initial_folder and Path(initial_folder).is_dir():
-            self.load_files(initial_folder)
+            # Restore last selected file if available
+            self.load_files(initial_folder, file_to_select_after_load=last_selected_file)
         else:
             self._show_empty_folder_state()
 
@@ -456,7 +492,8 @@ class MainWindow(Qw.QMainWindow):
 
         if self.current_folder and Path(self.current_folder).is_dir():
             nfo("[UI] Refreshing folder: %s", self.current_folder)
-            self.load_files(self.current_folder)
+            # Preserve current selection when refreshing
+            self.load_files(self.current_folder, file_to_select_after_load=self.current_selected_file)
         else:
             nfo("[UI] No current folder to refresh.")
 
@@ -593,20 +630,25 @@ class MainWindow(Qw.QMainWindow):
 
         self._auto_select_file(result)
 
+        # Update thumbnail grid if in grid mode
         if hasattr(self, "thumbnail_grid") and self.settings.value("fileViewMode", "list") == "grid":
-            nfo("[UI] Populating thumbnail grid...")
-            image_files = []
             total_files = len(self.current_files_in_list)
-            for i, file_name in enumerate(self.current_files_in_list):
+            nfo("[UI] Filtering %d files for thumbnail grid...", total_files)
+
+            image_files = []
+            for file_name in self.current_files_in_list:
                 if self._should_display_as_image(os.path.join(self.current_folder, file_name)):
                     image_files.append(file_name)
 
-                # Update progress every 25 files
-                if (i + 1) % 25 == 0 or (i + 1) == total_files:
-                    percent = ((i + 1) / total_files) * 100
-                    nfo("[UI] Filtering image files for grid: %d%%", int(percent))
+            nfo("[UI] Found %d images, populating grid...", len(image_files))
+            # Pass the file_to_select to thumbnail grid so it can scroll to it
+            file_to_select = result.file_to_select if result.file_to_select in image_files else None
+            self.thumbnail_grid.set_folder(self.current_folder, image_files, file_to_select=file_to_select)
 
-            self.thumbnail_grid.set_folder(self.current_folder, image_files)
+        # Update tree view if in tree mode
+        if hasattr(self, "file_tree") and self.settings.value("fileViewMode", "list") == "tree":
+            nfo("[UI] Updating tree view for new folder...")
+            self.file_tree.set_root_path(self.current_folder)
 
     def _auto_select_file(self, result: FileLoadResult) -> None:
         """Auto-select a file after loading."""
@@ -807,6 +849,9 @@ class MainWindow(Qw.QMainWindow):
 
         self.current_selected_file = file_name
 
+        # Save selected file for next session
+        self.settings.setValue("lastSelectedFile", file_name)
+
         # Clear previous displays
         self.clear_selection()
 
@@ -951,19 +996,12 @@ class MainWindow(Qw.QMainWindow):
         # Check if the metadata engine already extracted CivitAI IDs for us
         civitai_api_info = metadata_dict.get(UpField.CIVITAI_INFO.value, {})
 
-        nfo("[CIVITAI_DEBUG] civitai_api_info = %s", civitai_api_info)
-        nfo("[CIVITAI_DEBUG] UpField.CIVITAI_INFO.value = %s", UpField.CIVITAI_INFO.value)
-        nfo("[CIVITAI_DEBUG] metadata_dict keys = %s", list(metadata_dict.keys()))
-
+        # Debug logging removed - only log when actually fetching
         if isinstance(civitai_api_info, dict) and "ids_to_fetch" in civitai_api_info:
             # Use the IDs extracted by the metadata engine
             ids_to_fetch = civitai_api_info.get("ids_to_fetch", [])
         else:
-            # Fallback: parse IDs ourselves (shouldn't happen with updated extractors)
-            nfo("[CIVITAI] No pre-extracted IDs found, parsing from metadata")
-            nfo("[CIVITAI_DEBUG] civitai_api_info type: %s, has ids_to_fetch: %s",
-                type(civitai_api_info),
-                'ids_to_fetch' in civitai_api_info if isinstance(civitai_api_info, dict) else 'N/A')
+            # Fallback: No Civitai IDs found - skip API call
             return
 
         if not ids_to_fetch:
@@ -1508,6 +1546,19 @@ class MainWindow(Qw.QMainWindow):
         except Exception as e:
             nfo(f"[CACHE] Error during cache clearing process: {e}")
             self.show_status_message("An error occurred while clearing the cache.")
+
+    def clear_workflow_cache(self) -> None:
+        """Clear the in-memory workflow analysis cache."""
+        from ..numpy_scorers.base_numpy_scorer import WORKFLOW_CACHE
+        cache_size = len(WORKFLOW_CACHE)
+        WORKFLOW_CACHE.clear()
+        nfo(f"[CACHE] Workflow cache cleared ({cache_size} entries removed).")
+        self.show_status_message(f"Workflow cache cleared ({cache_size} workflows).")
+
+    def clear_all_caches(self) -> None:
+        """Clear all caches (thumbnails + workflow analysis)."""
+        self.clear_thumbnail_cache()
+        self.clear_workflow_cache()
 
     # ========================================================================
     # DRAG & DROP SUPPORT

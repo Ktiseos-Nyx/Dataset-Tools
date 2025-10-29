@@ -1,12 +1,14 @@
 # dataset_tools/ui/civitai_api_worker.py
 
-from PyQt6.QtCore import QObject, pyqtSignal, QRunnable
+from PyQt6.QtCore import QObject, QRunnable, pyqtSignal
 
 from .. import civitai_api
+
 
 class CivitaiInfoWorkerSignals(QObject):
     finished = pyqtSignal(dict)
     error = pyqtSignal(str)
+
 
 class CivitaiInfoWorker(QRunnable):
     def __init__(self, ids_to_fetch):
@@ -23,13 +25,13 @@ class CivitaiInfoWorker(QRunnable):
                     model_info = civitai_api.get_model_info_by_id(model_id)
                     if model_info:
                         results[f"model_{model_id}"] = model_info
-                
+
                 if "version_id" in item:
                     version_id = item["version_id"]
                     version_info = civitai_api.get_model_version_info_by_id(version_id)
                     if version_info:
                         results[f"version_{version_id}"] = version_info
-            
+
             self.signals.finished.emit(results)
         except Exception as e:
             self.signals.error.emit(str(e))

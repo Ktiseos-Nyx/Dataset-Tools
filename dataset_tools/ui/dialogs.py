@@ -9,6 +9,7 @@ This module contains all dialog windows used in the application,
 including settings configuration and about information dialogs.
 """
 
+from PyQt6 import QtCore
 from PyQt6.QtCore import QSettings, Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
@@ -71,8 +72,9 @@ class SettingsDialog(QDialog):
 
         self._create_theme_tab()
         self._create_appearance_tab()
-        self._create_font_tab()
         self._create_api_keys_tab()
+        self._create_system_tab()
+        self._create_about_tab()
 
     def _create_theme_tab(self) -> None:
         """Create the Themes tab with buttons for each theme pack."""
@@ -132,87 +134,49 @@ class SettingsDialog(QDialog):
         self.view_mode_combo = QComboBox()
         self.view_mode_combo.addItem("List View (Default)", "list")
         self.view_mode_combo.addItem("Thumbnail Grid (Images Only)", "grid")
+        self.view_mode_combo.addItem("Tree View (Hierarchical)", "tree")
         layout.addWidget(view_label)
         layout.addWidget(self.view_mode_combo)
 
         view_help = QLabel(
             "<i>Thumbnail Grid shows image previews with lazy loading.<br/>"
+            "Tree View shows folders and files in a hierarchical structure.<br/>"
             "First load may be slow, but thumbnails are cached for instant loading after.</i>"
         )
         view_help.setWordWrap(True)
         layout.addWidget(view_help)
 
-        self.clear_cache_button = QPushButton("Clear Thumbnail Cache")
-        self.clear_cache_button.setToolTip("Deletes all cached thumbnail files. Thumbnails will be regenerated on next view.")
-        self.clear_cache_button.clicked.connect(self._on_clear_cache_clicked)
-        layout.addWidget(self.clear_cache_button)
+        # Font settings
+        font_label = QLabel("<b>Fonts:</b>")
+        layout.addWidget(font_label)
 
-        layout.addStretch(1)
-        self.tab_widget.addTab(appearance_widget, "Appearance")
-
-    def _create_font_tab(self) -> None:
-        """Create the Font tab with font family and size options."""
-        font_widget = QWidget()
-        main_layout = QVBoxLayout(font_widget)
-        main_layout.setSpacing(15)
-
-        form_layout = QFormLayout()
-        form_layout.setSpacing(15)
-
-        # Main app font settings
-        app_font_label = QLabel("<b>Application Font</b>")
-        form_layout.addRow("", app_font_label)
+        font_layout = QFormLayout()
+        font_layout.setSpacing(10)
 
         self.font_combo = QComboBox()
         self.font_combo.setEditable(False)
         self._populate_font_combo()
-        form_layout.addRow("Font Family:", self.font_combo)
+        font_layout.addRow("App Font:", self.font_combo)
 
         self.font_size_spinbox = QSpinBox()
         self.font_size_spinbox.setRange(8, 24)
         self.font_size_spinbox.setSuffix(" pt")
-        form_layout.addRow("Font Size:", self.font_size_spinbox)
-
-        # Separator
-        separator = QFrame()
-        separator.setFrameShape(QFrame.Shape.HLine)
-        separator.setFrameShadow(QFrame.Shadow.Sunken)
-        form_layout.addRow("", separator)
-
-        # Tooltip font settings
-        tooltip_font_label = QLabel("<b>Tooltip Font</b>")
-        form_layout.addRow("", tooltip_font_label)
+        font_layout.addRow("Font Size:", self.font_size_spinbox)
 
         self.tooltip_font_combo = QComboBox()
         self.tooltip_font_combo.setEditable(False)
         self._populate_tooltip_font_combo()
-        form_layout.addRow("Tooltip Font:", self.tooltip_font_combo)
+        font_layout.addRow("Tooltip Font:", self.tooltip_font_combo)
 
         self.tooltip_size_spinbox = QSpinBox()
-        self.tooltip_size_spinbox.setRange(7, 16)
+        self.tooltip_size_spinbox.setRange(8, 18)
         self.tooltip_size_spinbox.setSuffix(" pt")
-        form_layout.addRow("Tooltip Size:", self.tooltip_size_spinbox)
+        font_layout.addRow("Tooltip Size:", self.tooltip_size_spinbox)
 
-        main_layout.addLayout(form_layout)
+        layout.addLayout(font_layout)
 
-        self.font_preview = QLabel("A flock of fluffy, feathery fowls flew fast.")
-        self.font_preview.setWordWrap(True)
-        self.font_preview.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        main_layout.addWidget(self.font_preview)
-        main_layout.addStretch(1)
-
-        # Connect signals to update the preview
-        self.font_combo.currentTextChanged.connect(self._update_font_preview)
-        self.font_size_spinbox.valueChanged.connect(self._update_font_preview)
-        self.tooltip_font_combo.currentTextChanged.connect(self._apply_tooltip_font_preview)
-        self.tooltip_size_spinbox.valueChanged.connect(self._apply_tooltip_font_preview)
-
-        self.tab_widget.addTab(font_widget, "Fonts")
-
-        # Set initial preview
-        self._update_font_preview()
-
-
+        layout.addStretch(1)
+        self.tab_widget.addTab(appearance_widget, "Appearance")
 
     def _populate_size_combo(self) -> None:
         """Populate the size combo box."""
@@ -303,6 +267,128 @@ class SettingsDialog(QDialog):
 
         self.tab_widget.addTab(api_keys_widget, "API Keys")
 
+    def _create_system_tab(self) -> None:
+        """Create the System tab with cache management and system resources."""
+        system_widget = QWidget()
+        layout = QVBoxLayout(system_widget)
+        layout.setSpacing(20)
+
+        # Cache Management Section
+        cache_group = QLabel("<b>Cache Management:</b>")
+        layout.addWidget(cache_group)
+
+        cache_info = QLabel(
+            "<i>Caches improve performance but use disk space and memory.<br/>"
+            "Clear caches if experiencing issues or to free up resources.</i>"
+        )
+        cache_info.setWordWrap(True)
+        layout.addWidget(cache_info)
+
+        # Thumbnail cache button
+        self.clear_thumbnail_button = QPushButton("Clear Thumbnail Cache")
+        self.clear_thumbnail_button.setToolTip(
+            "Deletes cached thumbnail files from disk.\n"
+            "Thumbnails will be regenerated on next view."
+        )
+        self.clear_thumbnail_button.clicked.connect(self._on_clear_thumbnail_clicked)
+        layout.addWidget(self.clear_thumbnail_button)
+
+        # Workflow cache button
+        self.clear_workflow_button = QPushButton("Clear Workflow Cache")
+        self.clear_workflow_button.setToolTip(
+            "Clears in-memory workflow analysis cache.\n"
+            "Workflow scoring will be recalculated on next load."
+        )
+        self.clear_workflow_button.clicked.connect(self._on_clear_workflow_clicked)
+        layout.addWidget(self.clear_workflow_button)
+
+        # Clear all caches button
+        self.clear_all_button = QPushButton("Clear All Caches")
+        self.clear_all_button.setToolTip(
+            "Clears both thumbnail and workflow caches.\n"
+            "Use this for a complete cache reset."
+        )
+        self.clear_all_button.clicked.connect(self._on_clear_all_caches_clicked)
+        layout.addWidget(self.clear_all_button)
+
+        layout.addStretch(1)
+        self.tab_widget.addTab(system_widget, "System")
+
+    def _create_about_tab(self) -> None:
+        """Create the About tab with application information."""
+        about_widget = QWidget()
+        layout = QVBoxLayout(about_widget)
+        layout.setSpacing(20)
+        layout.setContentsMargins(20, 20, 20, 20)
+
+        # Application title and version
+        title_label = QLabel("<h2>Dataset Tools</h2>")
+        title_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(title_label)
+
+        # Get version from package metadata
+        try:
+            from .. import __version__
+            version_text = __version__
+        except (ImportError, AttributeError):
+            version_text = "unknown"
+
+        version_label = QLabel(f"<b>Version:</b> {version_text}")
+        version_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(version_label)
+
+        # Description
+        description = QLabel(
+            "A modular Python application for parsing and processing metadata "
+            "from various AI image generation tools including ComfyUI, A1111, "
+            "NovelAI, Draw Things, InvokeAI, and more."
+        )
+        description.setWordWrap(True)
+        description.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(description)
+
+        # Add separator
+        separator = QFrame()
+        separator.setFrameShape(QFrame.Shape.HLine)
+        separator.setFrameShadow(QFrame.Shadow.Sunken)
+        layout.addWidget(separator)
+
+        # Credits section
+        credits_label = QLabel("<b>Developed by:</b>")
+        credits_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(credits_label)
+
+        credits_text = QLabel("duskfall (Ktiseos-Nyx)")
+        credits_text.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(credits_text)
+
+        # License
+        license_label = QLabel(
+            "<i>Licensed under the MIT License<br/>"
+            "© 2025 Dataset Tools Contributors</i>"
+        )
+        license_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        license_label.setWordWrap(True)
+        layout.addWidget(license_label)
+
+        # Add separator
+        separator2 = QFrame()
+        separator2.setFrameShape(QFrame.Shape.HLine)
+        separator2.setFrameShadow(QFrame.Shadow.Sunken)
+        layout.addWidget(separator2)
+
+        # GitHub link (placeholder - user can update with actual repo)
+        github_label = QLabel(
+            'Repository: <a href="https://github.com/Ktiseos-Nyx/Dataset-Tools">'
+            'github.com/Ktiseos-Nyx/Dataset-Tools</a>'
+        )
+        github_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        github_label.setOpenExternalLinks(True)
+        layout.addWidget(github_label)
+
+        layout.addStretch(1)
+        self.tab_widget.addTab(about_widget, "About")
+
     def _create_button_box(self) -> None:
         """Create the dialog button box."""
         self.button_box = QDialogButtonBox(
@@ -313,12 +399,26 @@ class SettingsDialog(QDialog):
         self.button_box.rejected.connect(self.reject)
         self.layout.addWidget(self.button_box)
 
-    def _on_clear_cache_clicked(self) -> None:
-        """Handle the clear cache button click."""
+    def _on_clear_thumbnail_clicked(self) -> None:
+        """Handle the clear thumbnail cache button click."""
         if hasattr(self.parent_window, "clear_thumbnail_cache"):
             self.parent_window.clear_thumbnail_cache()
         else:
             nfo("Parent window does not have clear_thumbnail_cache method.")
+
+    def _on_clear_workflow_clicked(self) -> None:
+        """Handle the clear workflow cache button click."""
+        if hasattr(self.parent_window, "clear_workflow_cache"):
+            self.parent_window.clear_workflow_cache()
+        else:
+            nfo("Parent window does not have clear_workflow_cache method.")
+
+    def _on_clear_all_caches_clicked(self) -> None:
+        """Handle the clear all caches button click."""
+        if hasattr(self.parent_window, "clear_all_caches"):
+            self.parent_window.clear_all_caches()
+        else:
+            nfo("Parent window does not have clear_all_caches method.")
 
     def _load_current_settings(self) -> None:
         """Load and display current settings for all tabs."""

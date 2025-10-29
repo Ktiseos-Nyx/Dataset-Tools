@@ -373,8 +373,15 @@ class ComfyUIExtractor:
     def _is_text_node(self, node_data: dict) -> bool:
         """Check if a node is a text node."""
         class_type = node_data.get("class_type", node_data.get("type", ""))
-        text_node_types = ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "TextInput"]
+        text_node_types = ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "TextInput", "easy showAnything"]
         return any(text_type in class_type for text_type in text_node_types)
+
+    def _is_node_bypassed(self, node_data: dict) -> bool:
+        """Check if a ComfyUI node is bypassed/disabled.
+
+        In ComfyUI, mode: 4 means the node is bypassed and should not be used.
+        """
+        return node_data.get("mode", 0) == 4
 
     def _looks_like_negative_prompt(self, text: str) -> bool:
         """Check if text looks like a negative prompt."""
@@ -461,9 +468,20 @@ class ComfyUIExtractor:
         # Get the text from the source node
         source_node = self._find_node_by_id(nodes, source_node_id)
         if source_node and self._is_text_node(source_node):
+            node_type = source_node.get("class_type", source_node.get("type", ""))
             widgets_values = source_node.get("widgets_values", [])
-            if widgets_values:
-                return str(widgets_values[0])
+
+            if not widgets_values:
+                return ""
+
+            # Standard extraction - text at index 0
+            text = widgets_values[0]
+
+            # Handle nested arrays (HiDream "easy showAnything" format: [[text]])
+            if isinstance(text, list) and len(text) > 0:
+                text = text[0]  # Unwrap nested array
+
+            return str(text) if text else ""
 
         return ""
 
@@ -826,6 +844,9 @@ class ComfyUIExtractor:
             # Try widget_values first
             if widget_values and len(widget_values) > 0:
                 text_value = widget_values[0]
+                # Handle nested arrays (HiDream "easy showAnything" format: [[text]])
+                if isinstance(text_value, list) and len(text_value) > 0:
+                    text_value = text_value[0]  # Unwrap nested array
                 # print(f"_traverse_for_text: extracted from widgets: {text_value}")
                 return str(text_value)
 
@@ -1538,6 +1559,10 @@ class ComfyUIExtractor:
                 if not isinstance(node, dict):
                     continue
 
+                # Skip bypassed nodes
+                if self._is_node_bypassed(node):
+                    continue
+
                 if node.get("type") == "PrimitiveNode":
                     node_title = node.get("title", "").lower()
                     if node_title in titles:
@@ -1570,6 +1595,10 @@ class ComfyUIExtractor:
 
         # Look for CLIPTextEncodeSDXLRefiner nodes
         for node in nodes:
+            # Skip bypassed nodes
+            if self._is_node_bypassed(node):
+                continue
+
             result = self._extract_text_from_refiner_node(node, "positive")
             if result:
                 return result
@@ -1591,6 +1620,10 @@ class ComfyUIExtractor:
 
         # Look for CLIPTextEncodeSDXLRefiner nodes with negative title/purpose
         for node in nodes:
+            # Skip bypassed nodes
+            if self._is_node_bypassed(node):
+                continue
+
             result = self._extract_text_from_refiner_node(node, "negative")
             if result:
                 return result

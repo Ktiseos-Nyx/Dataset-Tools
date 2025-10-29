@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 from PyQt6 import QtWidgets
-from PyQt6.QtGui import QFontDatabase, QFont
+from PyQt6.QtGui import QFont, QFontDatabase
 from PyQt6.QtWidgets import QToolTip
 
 # For version display
@@ -95,7 +95,7 @@ def main(cli_args_list=None):
         )  # Call the correct function
 
         # Configure external libraries to use our Rich console logging
-        import logging as pylog
+        import logging as pylog  # noqa: PLC0415
 
         # PyQt6 logging
         qt_logger = pylog.getLogger("PyQt6")
@@ -153,7 +153,7 @@ def main(cli_args_list=None):
     # CRITICAL FOR MACOS: Initialize tooltips by setting font
     # Without this, tooltips may not appear reliably on macOS
     # Load user's tooltip font preference or use sensible defaults
-    from PyQt6.QtCore import QSettings
+    from PyQt6.QtCore import QSettings  # noqa: PLC0415
     settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
     tooltip_family = settings.value("tooltipFontFamily", "Open Sans", type=str)
     tooltip_size = settings.value("tooltipFontSize", 9, type=int)

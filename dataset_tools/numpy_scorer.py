@@ -67,37 +67,53 @@ def enhance_result(
     This is the main entry point that selects and applies the right scorer.
     """
     try:
-        logger.debug("numpy scorer called with engine_result keys: %s",
-                     list(engine_result.keys()))
-        logger.debug("Tool: %s, Format: %s",
+        # TEMP DEBUG: Use info_monitor to ensure logs appear
+        from .logger import info_monitor as nfo
+        logger.debug("[NUMPY] =" * 40)
+        logger.debug("[NUMPY] NUMPY SCORER ENHANCE_RESULT CALLED")
+        logger.debug("[NUMPY] Engine result keys: %s", list(engine_result.keys()))
+        logger.debug("[NUMPY] Tool: '%s', Format: '%s'",
                      engine_result.get("tool", "NONE"),
                      engine_result.get("format", "NONE"))
-        logger.debug("Has raw_metadata: %s", "raw_metadata" in engine_result)
+        logger.debug("[NUMPY] Has raw_metadata: %s (type: %s)",
+                     "raw_metadata" in engine_result,
+                     type(engine_result.get("raw_metadata", None)))
+        logger.debug("[NUMPY] Prompt: '%s...'", engine_result.get("prompt", "NONE")[:80])
+        logger.debug("[NUMPY] Negative: '%s...'", engine_result.get("negative_prompt", "NONE")[:80])
+        logger.debug("[NUMPY] =" * 40)
 
         # Always apply numpy scoring, but choose the right scorer
         # Advanced ComfyUI functionality (like Griptape) is now handled by
         # metadata_engine/extractors
 
         # Try standard ComfyUI scoring
-        if should_use_comfyui_numpy_scoring(engine_result):
-            logger.info("Using standard ComfyUI numpy scoring")
+        logger.debug("[NUMPY] Checking if should use ComfyUI numpy scoring...")
+        should_use_comfy = should_use_comfyui_numpy_scoring(engine_result)
+        logger.debug("[NUMPY] should_use_comfyui_numpy_scoring returned: %s", should_use_comfy)
+        if should_use_comfy:
+            logger.debug("[NUMPY] ✅ Using standard ComfyUI numpy scoring")
             scorer = _get_comfyui_scorer()
             return scorer.enhance_engine_result(
                 engine_result, original_file_path)
+        else:
+            logger.debug("[NUMPY] ❌ NOT using ComfyUI numpy scoring - check failed")
 
         # Try Draw Things specific scoring
         if should_use_drawthings_numpy_scoring(engine_result):
-            logger.info("Using Draw Things numpy scoring")
+            logger.debug("[NUMPY] Using Draw Things numpy scoring")
             scorer = _get_drawthings_scorer()
             return scorer.enhance_engine_result(
                 engine_result, original_file_path)
 
+        logger.debug("[NUMPY] No specific scorer matched - returning original result")
+
     except Exception as e:
-        logger.error("Error in numpy scoring coordination: %s", e)
+        logger.debug("[NUMPY] Error in numpy scoring coordination: %s", e)
         # Return original result if scoring fails
         return engine_result
 
     # If no specific scorer was matched, return the original result
+    logger.debug("[NUMPY] Returning original engine_result unchanged")
     return engine_result
 
 
