@@ -22,7 +22,6 @@ QWidget {
                                 stop: 0.7 #3A5048, /* Slightly lighter green */
                                 stop: 1 #1A1A1A); /* Darkest point (bottom) */
     color: #E0E0E0;            /* Light text for readability */
-    font-family: "Segoe UI", "Inter", sans-serif; /* Modern sans-serif font */
     font-size: 10pt;
     border: none; /* No global border */
 }

@@ -29,6 +29,7 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
     open_folder_requested = QtCore.pyqtSignal()
     refresh_folder_requested = QtCore.pyqtSignal()
     sort_files_requested = QtCore.pyqtSignal()
+    sort_mode_changed = QtCore.pyqtSignal(str)  # Emits sort mode name
     list_item_selected = QtCore.pyqtSignal(object, object)  # current, previous
 
     def __init__(self, parent=None):
@@ -127,11 +128,38 @@ class EnhancedLeftPanelWidget(Qw.QWidget):
 
         layout.addLayout(button_layout)
 
+        # Sort mode selector
+        sort_mode_layout = Qw.QHBoxLayout()
+        sort_mode_layout.setSpacing(5)
+
+        sort_label = Qw.QLabel("Sort by:")
+        sort_label.setToolTip("Choose how to sort the file list")
+        sort_mode_layout.addWidget(sort_label)
+
+        self.sort_mode_combo = Qw.QComboBox()
+        self.sort_mode_combo.addItems([
+            "Name (Natural)",
+            "Date Modified",
+            "Date Created",
+            "File Size",
+        ])
+        self.sort_mode_combo.setToolTip(
+            "<b>Sort Mode</b><br/>"
+            "<b>Name (Natural):</b> Sorts files alphabetically with proper number ordering (1, 2, 10 instead of 1, 10, 2)<br/>"
+            "<b>Date Modified:</b> Sorts by last modification date (newest first)<br/>"
+            "<b>Date Created:</b> Sorts by creation date (newest first)<br/>"
+            "<b>File Size:</b> Sorts by file size (largest first)"
+        )
+        sort_mode_layout.addWidget(self.sort_mode_combo, 1)
+
+        layout.addLayout(sort_mode_layout)
+
     def _connect_signals(self) -> None:
         """Connect internal signals to handlers."""
         self.open_folder_button.clicked.connect(self.open_folder_requested.emit)
         self.refresh_button.clicked.connect(self.refresh_folder_requested.emit)
         self.sort_button.clicked.connect(self.sort_files_requested.emit)
+        self.sort_mode_combo.currentTextChanged.connect(self.sort_mode_changed.emit)
         self.files_list_widget.currentItemChanged.connect(self.list_item_selected.emit)
 
     # ========================================================================

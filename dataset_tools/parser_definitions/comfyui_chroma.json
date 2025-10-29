@@ -69,13 +69,11 @@
     "fields": [
       {
         "target_key": "prompt",
-        "method": "comfyui_targeted_prompt_extraction",
-        "target_input": "positive"
+        "method": "comfyui_extract_prompt_from_workflow"
       },
       {
         "target_key": "negative_prompt",
-        "method": "comfyui_targeted_prompt_extraction",
-        "target_input": "negative"
+        "method": "comfyui_extract_negative_prompt_from_workflow"
       },
       {
         "target_key": "parameters.model",

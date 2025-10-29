@@ -16,7 +16,6 @@ QWidget {
                                 stop: 0 #ff6b6b, stop: 0.3 #ff8e53,
                                 stop: 0.7 #ff6b9d, stop: 1 #c44569);
     color: #ffffff;
-    font-family: 'Segoe UI', 'San Francisco', Arial, sans-serif;
     font-size: 13px;
 }
 

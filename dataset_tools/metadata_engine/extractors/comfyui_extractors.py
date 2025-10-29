@@ -145,7 +145,7 @@ class ComfyUIExtractor:
             # --- PHASE 1: CANDIDATE IDENTIFICATION (Find all needles - UPGRADED v2.6) ---
             text_candidates = []
             sampler_nodes = []
-            text_encoder_types = ["CLIPTextEncode", "Text Multiline", "DPRandomGenerator", "ShowText|pysssss", "ChatGptPrompt", "PrimitiveStringMultiline", "easy positive", "Text Concatenate"]
+            text_encoder_types = ["CLIPTextEncode", "Text Multiline", "DPRandomGenerator", "ShowText|pysssss", "ChatGptPrompt", "PrimitiveStringMultiline", "easy positive", "Text Concatenate", "PCLazyTextEncode"]
 
             for node_id, node in node_lookup.items():
                 node_type = node.get("class_type", node.get("type", ""))
@@ -623,7 +623,7 @@ class ComfyUIExtractor:
             "sampler_node_types",
             ["KSampler", "KSamplerAdvanced", "SamplerCustomAdvanced"],
         )
-        text_encoder_types = method_def.get("text_encoder_node_types", ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "Text Multiline"])
+        text_encoder_types = method_def.get("text_encoder_node_types", ["CLIPTextEncode", "BNK_CLIPTextEncodeAdvanced", "Text Multiline", "PCLazyTextEncode"])
 
         # Determine which input to follow (positive or negative)
         if method_def.get("positive_input_name"):
@@ -937,7 +937,8 @@ class ComfyUIExtractor:
                     "BNK_CLIPTextEncodeAdvanced",
                     "CLIPTextEncodeAdvanced",
                     "DPRandomGenerator",
-                    "MZ_ChatGLM3_V2", # Add this line
+                    "MZ_ChatGLM3_V2",
+                    "PCLazyTextEncode",  # ComfyUI Prompt Control - supports lazy evaluation
                 ]
             ):
                 widgets = node.get("widgets_values", [])

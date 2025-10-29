@@ -202,6 +202,7 @@ class MainWindow(Qw.QMainWindow):
         self.current_metadata: dict | None = None
         self.civitai_api_worker: CivitaiInfoWorker | None = None
         self.active_workers = []
+        self.current_sort_mode: str = "Name (Natural)"  # Track current sort mode
 
         # UI state
         self.main_status_bar = self.statusBar()
@@ -290,6 +291,7 @@ class MainWindow(Qw.QMainWindow):
             self.left_panel.open_folder_requested.connect(self.open_folder)
             self.left_panel.refresh_folder_requested.connect(self.refresh_current_folder)
             self.left_panel.sort_files_requested.connect(self.sort_files_list)
+            self.left_panel.sort_mode_changed.connect(self.on_sort_mode_changed)
             self.left_panel.list_item_selected.connect(self.on_file_selected)
 
     def set_file_view_mode(self, mode: str) -> None:
@@ -568,7 +570,13 @@ class MainWindow(Qw.QMainWindow):
 
     def _populate_file_list(self, result: FileLoadResult) -> None:
         """Populate the file list with loaded files."""
-        all_files = sorted(list(set(result.images + result.texts + result.models)), key=str.lower)
+        import re
+
+        # Use natural sort for initial population (instead of lexicographic)
+        def natural_sort_key(text):
+            return [int(x) if x.isdigit() else x.lower() for x in re.split(r"(\d+)", text)]
+
+        all_files = sorted(list(set(result.images + result.texts + result.models)), key=natural_sort_key)
         self.current_files_in_list = all_files
 
         self.left_panel.clear_file_list_display()
@@ -577,6 +585,11 @@ class MainWindow(Qw.QMainWindow):
         folder_name = Path(result.folder_path).name
         file_count = len(all_files)
         self.file_count_label.setText(f"{file_count} files in {folder_name}")
+
+        # Apply the saved sort mode if it's not the default
+        if self.current_sort_mode != "Name (Natural)":
+            nfo("[UI] Re-applying saved sort mode: %s", self.current_sort_mode)
+            self._perform_file_sort(self.current_sort_mode)
 
         self._auto_select_file(result)
 
@@ -591,10 +604,8 @@ class MainWindow(Qw.QMainWindow):
                 # Update progress every 25 files
                 if (i + 1) % 25 == 0 or (i + 1) == total_files:
                     percent = ((i + 1) / total_files) * 100
-                    sys.stdout.write(f"\r[UI] Filtering image files for grid: {percent:.0f}%")
-                    sys.stdout.flush()
+                    nfo("[UI] Filtering image files for grid: %d%%", int(percent))
 
-            sys.stdout.write("\n") # Newline after loop finishes
             self.thumbnail_grid.set_folder(self.current_folder, image_files)
 
     def _auto_select_file(self, result: FileLoadResult) -> None:
@@ -649,35 +660,102 @@ class MainWindow(Qw.QMainWindow):
         else:
             self._handle_no_files_to_sort()
 
-    def _perform_file_sort(self) -> None:
-        """Perform the actual file sorting operation."""
+    def on_sort_mode_changed(self, mode: str) -> None:
+        """Handle sort mode change from the combo box.
+
+        Args:
+            mode: The selected sort mode (e.g., "Name (Natural)", "Date Modified", etc.)
+        """
+        nfo("[UI] Sort mode changed to: %s", mode)
+
+        # Save the current sort mode so it persists across refreshes
+        self.current_sort_mode = mode
+
+        if not hasattr(self, "left_panel"):
+            return
+
+        if self.current_files_in_list:
+            self._perform_file_sort(mode)
+        else:
+            nfo("[UI] No files to sort.")
+
+    def _perform_file_sort(self, mode: str = "Name (Natural)") -> None:
+        """Perform the actual file sorting operation.
+
+        Args:
+            mode: Sort mode - one of "Name (Natural)", "Date Modified", "Date Created", "File Size"
+        """
+        import re
+        from pathlib import Path
+
         list_widget = self.left_panel.get_files_list_widget()
 
         # Remember current selection
         current_item = list_widget.currentItem()
         current_selection = current_item.text() if current_item else None
 
-        # Sort naturally (handles numbers properly: IMG_2.jpg before IMG_10.jpg)
-        import re
-        def natural_sort_key(text):
-            return [int(x) if x.isdigit() else x.lower() for x in re.split(r"(\d+)", text)]
+        # Get the sort key function based on mode
+        if mode == "Name (Natural)":
+            # Natural sort: handles numbers properly (IMG_2.jpg before IMG_10.jpg)
+            def natural_sort_key(text):
+                return [int(x) if x.isdigit() else x.lower() for x in re.split(r"(\d+)", text)]
+            self.current_files_in_list.sort(key=natural_sort_key)
 
-        self.current_files_in_list.sort(key=natural_sort_key)
-        self.left_panel.clear_file_list_display()
-        self.left_panel.add_items_to_file_list(self.current_files_in_list)
+        elif mode == "Date Modified":
+            # Sort by modification time (newest first)
+            def mtime_key(filepath):
+                try:
+                    # Use full path for stat
+                    return -Path(os.path.join(self.current_folder, filepath)).stat().st_mtime
+                except (OSError, AttributeError):
+                    return 0
+            self.current_files_in_list.sort(key=mtime_key)
 
-        # Restore selection
-        if current_selection:
-            self.left_panel.set_current_file_by_name(current_selection)
-        elif list_widget.count() > 0:
-            self.left_panel.set_current_file_by_row(0)
+        elif mode == "Date Created":
+            # Sort by creation time (newest first)
+            def ctime_key(filepath):
+                try:
+                    # Use full path for stat
+                    return -Path(os.path.join(self.current_folder, filepath)).stat().st_ctime
+                except (OSError, AttributeError):
+                    return 0
+            self.current_files_in_list.sort(key=ctime_key)
+
+        elif mode == "File Size":
+            # Sort by file size (largest first)
+            def size_key(filepath):
+                try:
+                    # Use full path for stat
+                    return -Path(os.path.join(self.current_folder, filepath)).stat().st_size
+                except (OSError, AttributeError):
+                    return 0
+            self.current_files_in_list.sort(key=size_key)
+
+        # Refresh the appropriate view
+        view_mode = self.settings.value("fileViewMode", "list", type=str)
+
+        if view_mode == "grid":
+            if hasattr(self, "thumbnail_grid"):
+                nfo("[UI] Refreshing thumbnail grid with sorted files.")
+                image_files = [f for f in self.current_files_in_list if self._should_display_as_image(os.path.join(self.current_folder, f))]
+                self.thumbnail_grid.set_folder(self.current_folder, image_files)
+                # Optionally, restore selection in grid view if needed
+        else:
+            nfo("[UI] Refreshing file list with sorted files.")
+            self.left_panel.clear_file_list_display()
+            self.left_panel.add_items_to_file_list(self.current_files_in_list)
+            # Restore selection
+            if current_selection:
+                self.left_panel.set_current_file_by_name(current_selection)
+            elif list_widget.count() > 0:
+                self.left_panel.set_current_file_by_row(0)
 
         # Update status bar
         file_count = len(self.current_files_in_list)
-        message = f"Files sorted ({file_count} items)."
+        message = f"Files sorted by {mode} ({file_count} items)."
         self.show_status_message(message)
 
-        nfo("[UI] Files list re-sorted and repopulated.")
+        nfo("[UI] Files list re-sorted by %s and repopulated.", mode)
 
     def _handle_no_files_to_sort(self) -> None:
         """Handle when there are no files to sort."""

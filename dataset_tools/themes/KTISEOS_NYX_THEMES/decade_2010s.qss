@@ -14,7 +14,6 @@ QWidget {
                                 stop: 0 #3498DB, stop: 0.3 #2ECC71,
                                 stop: 0.7 #F1C40F, stop: 1 #3498DB);
     color: #FFFFFF;
-    font-family: 'Segoe UI', sans-serif;
     font-size: 13px;
 }
 
