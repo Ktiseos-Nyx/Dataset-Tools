@@ -29,7 +29,7 @@ QWidget {
 /* --- Main Application Window --- */
 /* Remove QMainWindow and QWidget#centralWidget specific background, rely on QWidget */
 QMainWindow {
-    background: transparent; /* Ensure QMainWindow itself is transparent */
+     /* Ensure QMainWindow itself is transparent */
     border: none;
 }
 

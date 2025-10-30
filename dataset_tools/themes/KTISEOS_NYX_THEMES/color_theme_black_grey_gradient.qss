@@ -14,8 +14,6 @@ QWidget {
                                 stop: 0 #424242, stop: 0.3 #607D8B,
                                 stop: 0.7 #9E9E9E, stop: 1 #424242);
     color: #FFFFFF;
-    font-family: 'Georgia', serif;
-    font-size: 14px;
 }
 
 QPushButton {
@@ -25,8 +23,6 @@ QPushButton {
     border-radius: 5px;
     padding: 10px 15px;
     color: #000000;
-    font-weight: bold;
-    text-transform: uppercase;
 }
 
 QPushButton:hover {
