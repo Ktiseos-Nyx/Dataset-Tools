@@ -43,6 +43,7 @@ NODE_TYPE_SCORES = {
     "Text to Conditioning": 2.3,  # Text to conditioning converter - high priority
     "Text Find and Replace": 1.8,  # Text processing node - medium-high priority
     "Text Concatenate": 2.0,  # Text concatenation - high priority for combined prompts
+    "TensorArt_PromptText": 2.5,  # TensorArt prompt text input - high priority
     "CLIPTextEncode": 1.0,
     "CLIPTextEncodeSDXL": 1.0,  # SDXL CLIP text encoding - same priority as standard
     "CLIPTextEncodeSDXLRefiner": 1.0,  # SDXL Refiner CLIP text encoding - same priority
@@ -68,6 +69,12 @@ NODE_TYPE_SCORES = {
     "T5v11Loader": 0.2,  # T5 v1.1 text encoder loader for PixArt workflows
     "PixArtCheckpointLoader": 0.2,  # PixArt model checkpoint loader
     "PixArtResolutionSelect": 0.1,  # PixArt resolution selector utility
+
+    # TensorArt utility nodes (very low priority - no prompt content)
+    "TensorArt_CheckpointLoader": 0.1,  # TensorArt checkpoint loader
+    "TensorArt_Seed": 0.1,  # TensorArt seed selector
+    "TensorArt_SelectBatchs": 0.1,  # TensorArt batch size selector
+    "TensorArt_SelectResolution": 0.1,  # TensorArt resolution selector
 }
 
 # Workflow classification system
@@ -181,6 +188,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             "BNK_CLIPTextEncodeAdvanced",
             "Text Multiline",
             "PCLazyTextEncode",
+            "TensorArt_PromptText",
         ]
 
         # Dynamic content generators - their wildcard syntax is REAL USER INPUT, not templates!
@@ -336,6 +344,27 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
         return conditioning_nodes
 
+    def _resolve_node_reference(self, source_info: dict[str, Any], node_id: str) -> str:
+        """Resolve a node reference to get the actual text content.
+
+        Args:
+            source_info: The workflow source info containing all nodes
+            node_id: The node ID to resolve (as string)
+
+        Returns:
+            The text content from the referenced node, or empty string if not found
+        """
+        workflow_data = source_info if isinstance(source_info, dict) else {}
+
+        # Find the referenced node
+        if node_id in workflow_data:
+            referenced_node = workflow_data[node_id]
+            # Recursively extract text from the referenced node
+            return self._extract_text_from_node(referenced_node, source_info)
+
+        logger.debug("Could not resolve node reference: %s", node_id)
+        return ""
+
     def _extract_text_from_node(self, node: dict[str, Any], source_info: dict[str, Any]) -> str:
         """Extract text content from a ComfyUI node."""
         class_type = node.get("class_type") or node.get("type", "")
@@ -453,6 +482,12 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             logger.debug("Checking inputs dict for text (flat/TensorArt format): %s", list(inputs.keys()))
             if class_type in ["CLIPTextEncode", "CLIPTextEncodeSDXL", "CLIPTextEncodeSDXLRefiner", "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline", "easy positive"]:
                 text = inputs.get("text", "")
+                # Check if text is a node reference (e.g., ['12', 0])
+                if isinstance(text, list) and len(text) == 2:
+                    # This is a node connection reference - need to resolve it
+                    referenced_node_id = str(text[0])
+                    text = self._resolve_node_reference(source_info, referenced_node_id)
+                    logger.debug("Resolved node reference ['%s', %s] to text: '%s...'", referenced_node_id, text[1] if isinstance(text, list) else 0, str(text)[:60])
                 # For "easy positive" nodes, also check for "positive" field
                 if not text and class_type == "easy positive":
                     text = inputs.get("positive", "")
@@ -479,6 +514,9 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             elif class_type == "TIPO":
                 # TIPO AI prompt generator - check for tags input
                 text = inputs.get("tags", inputs.get("text", ""))
+            elif class_type == "TensorArt_PromptText":
+                # TensorArt uses capital T "Text" field
+                text = inputs.get("Text", inputs.get("text", ""))
             else:
                 text = inputs.get("text", inputs.get("prompt", inputs.get("input_text", "")))
 
@@ -560,7 +598,8 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                     logger.debug("Skipping non-dict node: %s", node)
                     continue
 
-                text = self._extract_text_from_node(node, {})
+                # Pass workflow_data as source_info so node references can be resolved
+                text = self._extract_text_from_node(node, workflow_data)
                 if text and len(text.strip()) > 0:
                     node_id = node.get("id")
                     is_connected = False

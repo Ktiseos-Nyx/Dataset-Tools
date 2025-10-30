@@ -197,6 +197,32 @@ class EnhancedThemeManager:
 
         return success
 
+    def _refresh_thumbnail_grid_after_theme_change(self):
+        """Refresh thumbnail grid after theme changes to prevent icon clearing."""
+        if not hasattr(self.main_window, "thumbnail_grid"):
+            return
+
+        grid = self.main_window.thumbnail_grid
+
+        # Temporarily disable resize events to prevent spurious reloads
+        if hasattr(grid, "ignore_resize_events"):
+            grid.ignore_resize_events = True
+
+        # After theme settles, force a full thumbnail reload
+        from PyQt6.QtCore import QTimer
+
+        def restore_thumbnails():
+            # Re-enable resize events
+            if hasattr(grid, "ignore_resize_events"):
+                grid.ignore_resize_events = False
+
+            # Request visible thumbnails
+            if hasattr(grid, "_request_visible_thumbnails"):
+                grid._request_visible_thumbnails()
+                nfo("Thumbnail grid refreshed after theme change")
+
+        QTimer.singleShot(200, restore_thumbnails)
+
     def _apply_qt_material_theme(self, theme_name: str, app: QApplication) -> bool:
         """Apply a qt-material theme."""
         try:
@@ -304,14 +330,67 @@ class EnhancedThemeManager:
                 stylesheet = re.sub(r'url\("(assets/[^"]+)"\)', replace_asset_url_enhanced, stylesheet)
                 stylesheet = re.sub(r"url\('(assets/[^']+)'\)", replace_asset_url_enhanced, stylesheet)
 
+            # Handle icons directory (for enhanced_qss_collection themes)
+            # Check if theme has its own icons subdirectory
+            theme_dir = qss_file.parent
+            icons_dir = theme_dir / "icons"
+            if icons_dir.exists():
+                def replace_icon_url(match):
+                    relative_path = match.group(1)
+                    if relative_path.startswith("icons/"):
+                        absolute_path = theme_dir / relative_path
+                        if absolute_path.exists():
+                            # Qt accepts both quoted and unquoted paths, but let's use unquoted to match original format
+                            return f'url({absolute_path})'
+                        nfo(f"Icon not found: {absolute_path}")
+                    return match.group(0)
+
+                # Replace icon URLs with absolute paths (matches both quoted and unquoted)
+                icon_count = 0
+                def count_and_replace(match):
+                    nonlocal icon_count
+                    result = replace_icon_url(match)
+                    if result != match.group(0):
+                        icon_count += 1
+                    return result
+
+                stylesheet = re.sub(r'url\((icons/[^)]+)\)', count_and_replace, stylesheet)
+                nfo(f"Processed {icon_count} icon paths for theme: {theme_name}")
+
             nfo(f"Processed custom QSS theme: {theme_name}, asset replacements applied")
+
+            # Show status message during theme change
+            if hasattr(self, "main_window") and hasattr(self.main_window, "status_bar"):
+                self.main_window.status_bar.showMessage(f"Applying theme: {theme_name}...")
+
+            # Disable thumbnail grid resize events BEFORE applying stylesheet
+            if hasattr(self, "main_window") and hasattr(self.main_window, "thumbnail_grid"):
+                grid = self.main_window.thumbnail_grid
+                if hasattr(grid, "ignore_resize_events"):
+                    grid.ignore_resize_events = True
 
             # IMPORTANT: Clear qt-material styling before applying custom QSS
             # qt-material's apply_stylesheet sets comprehensive styles that override custom QSS
             app.setStyleSheet("")  # Clear any existing stylesheets first
 
+            # Process events to keep UI responsive
+            app.processEvents()
+
             # Apply the custom QSS theme
             app.setStyleSheet(stylesheet)
+
+            # Process events after stylesheet application
+            app.processEvents()
+
+            # Re-enable resize events after a shorter delay (100ms instead of 500ms)
+            if hasattr(self, "main_window") and hasattr(self.main_window, "thumbnail_grid"):
+                from PyQt6.QtCore import QTimer
+                def reenable_resize():
+                    grid.ignore_resize_events = False
+                    # Clear status message
+                    if hasattr(self.main_window, "status_bar"):
+                        self.main_window.status_bar.clearMessage()
+                QTimer.singleShot(100, reenable_resize)
 
             # Clear any qt-themes palette and qt-material theme tracking
             if self.current_palette_theme:

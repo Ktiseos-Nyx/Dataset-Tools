@@ -20,7 +20,9 @@
         "regex_patterns": [
             "KolorsCheckpointLoaderSimple",
             "TensorArtLoadChatGLM3",
-            "ECHOCheckpointLoaderSimple"
+            "ECHOCheckpointLoaderSimple",
+            "TensorArt_CheckpointLoader",
+            "TensorArt_PromptText"
         ]
     }
   ],
@@ -42,7 +44,7 @@
       {
         "target_key": "parameters.model",
         "method": "comfy_find_input_of_node_type",
-        "node_types": ["KolorsCheckpointLoaderSimple", "ECHOCheckpointLoaderSimple"],
+        "node_types": ["KolorsCheckpointLoaderSimple", "ECHOCheckpointLoaderSimple", "TensorArt_CheckpointLoader"],
         "input_field": "ckpt_name",
         "value_type": "string"
       },

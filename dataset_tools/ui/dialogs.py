@@ -10,9 +10,11 @@ including settings configuration and about information dialogs.
 """
 
 from PyQt6 import QtCore
+from PyQt6 import QtWidgets as Qw
 from PyQt6.QtCore import QSettings, Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
+    QCheckBox,
     QComboBox,
     QDialog,
     QDialogButtonBox,
@@ -26,6 +28,7 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QSizePolicy,
+    QSlider,
     QSpinBox,
     QTabWidget,
     QTextEdit,
@@ -146,6 +149,25 @@ class SettingsDialog(QDialog):
         view_help.setWordWrap(True)
         layout.addWidget(view_help)
 
+        # Thumbnail Grid Settings
+        thumb_label = QLabel("<b>Thumbnail Grid Settings:</b>")
+        layout.addWidget(thumb_label)
+
+        thumb_layout = QFormLayout()
+        thumb_layout.setSpacing(10)
+
+        # TEMPORARILY DISABLED - Grid sizing was causing layout issues
+        # Will re-enable once we figure out the viewport calculation problems
+        # TODO: Re-add thumbnail size and grid column controls later
+
+        info_label = QLabel("⚠️ Grid layout controls temporarily disabled due to layout issues.\n"
+                           "Thumbnails will auto-size based on window width.")
+        info_label.setWordWrap(True)
+        info_label.setStyleSheet("color: #888; font-style: italic;")
+        thumb_layout.addRow(info_label)
+
+        layout.addLayout(thumb_layout)
+
         # Font settings
         font_label = QLabel("<b>Fonts:</b>")
         layout.addWidget(font_label)
@@ -173,7 +195,24 @@ class SettingsDialog(QDialog):
         self.tooltip_size_spinbox.setSuffix(" pt")
         font_layout.addRow("Tooltip Size:", self.tooltip_size_spinbox)
 
+        # Font preview label
+        self.font_preview = QLabel("The quick brown fox jumps over the lazy dog")
+        self.font_preview.setMinimumHeight(60)
+        self.font_preview.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.font_preview.setStyleSheet("QLabel { border: 1px solid #666; padding: 10px; background: #f0f0f0; color: #000; }")
+        font_layout.addRow("Preview:", self.font_preview)
+
+        # Connect signals for live preview
+        self.font_combo.currentTextChanged.connect(self._update_font_preview)
+        self.font_size_spinbox.valueChanged.connect(self._update_font_preview)
+
         layout.addLayout(font_layout)
+
+        # Add Apply button at the bottom of Appearance tab
+        apply_appearance_btn = QPushButton("Apply Settings")
+        apply_appearance_btn.setToolTip("Apply appearance settings without closing the dialog")
+        apply_appearance_btn.clicked.connect(self._apply_appearance_only)
+        layout.addWidget(apply_appearance_btn)
 
         layout.addStretch(1)
         self.tab_widget.addTab(appearance_widget, "Appearance")
@@ -339,9 +378,12 @@ class SettingsDialog(QDialog):
 
         # Description
         description = QLabel(
-            "A modular Python application for parsing and processing metadata "
-            "from various AI image generation tools including ComfyUI, A1111, "
+            "A Simple Viewer for EXIF and AI Metadata. "
+            "Extracts from various AI image generation tools including ComfyUI, Forge, A1111, "
             "NovelAI, Draw Things, InvokeAI, and more."
+            "Reads from popular sites metadata such"
+            "as Civitai, Tensorart and Moescape(Yodayo)"
+            "Includes CivitAI API integration for model and asset info."
         )
         description.setWordWrap(True)
         description.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -358,13 +400,21 @@ class SettingsDialog(QDialog):
         credits_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(credits_label)
 
-        credits_text = QLabel("duskfall (Ktiseos-Nyx)")
+        credits_text = QLabel("KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA")
+        credits_text.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(credits_text)
+
+        credits_text = QLabel("Supervised by: traugdor")
+        credits_text.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(credits_text)
+
+        credits_text = QLabel("Special Thanks to contributors: Open Source Community, Whitevamp, Exdysa, ")
         credits_text.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(credits_text)
 
         # License
         license_label = QLabel(
-            "<i>Licensed under the MIT License<br/>"
+            "<i>Licensed under the GPL-3.0 license<br/>"
             "© 2025 Dataset Tools Contributors</i>"
         )
         license_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -380,7 +430,10 @@ class SettingsDialog(QDialog):
         # GitHub link (placeholder - user can update with actual repo)
         github_label = QLabel(
             'Repository: <a href="https://github.com/Ktiseos-Nyx/Dataset-Tools">'
-            'github.com/Ktiseos-Nyx/Dataset-Tools</a>'
+            'github.com/Ktiseos-Nyx/Dataset-Tools</a>' '<br/>'
+            'Discord: <a href="https://discord.gg/HhBSvM9gBY">Ktiseos Nyx Discord</a>'
+            '<br/>'
+            'Membership / Ko-Fi: <a href="https://ko-fi.com/duskfallcrew/">ko-fi.com/duskfallcrew</a>'
         )
         github_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         github_label.setOpenExternalLinks(True)
@@ -426,6 +479,7 @@ class SettingsDialog(QDialog):
         self._load_font_setting()
         self._load_view_mode_setting()
         self._load_api_key_setting()
+        self._load_thumbnail_settings()
 
     def _load_view_mode_setting(self) -> None:
         """Load and set current view mode setting."""
@@ -460,6 +514,9 @@ class SettingsDialog(QDialog):
             self.font_combo.setCurrentIndex(0)
         self.font_size_spinbox.setValue(font_size)
 
+        # Update font preview with loaded settings
+        self._update_font_preview()
+
         # Tooltip font
         tooltip_family = self.settings.value("tooltipFontFamily", "Open Sans", type=str)
         tooltip_size = self.settings.value("tooltipFontSize", 9, type=int)
@@ -470,12 +527,54 @@ class SettingsDialog(QDialog):
             self.tooltip_font_combo.setCurrentIndex(0)
         self.tooltip_size_spinbox.setValue(tooltip_size)
 
+    def _load_thumbnail_settings(self) -> None:
+        """Load and set thumbnail grid settings."""
+        # Grid sizing controls temporarily disabled - do nothing
+        pass
+
+    def _snap_thumb_size_to_64(self, value: int) -> None:
+        """Snap slider value to nearest multiple of 64."""
+        pass  # Temporarily disabled
+
+    def _update_thumb_size_label(self, value: int = None) -> None:
+        """Update the thumbnail size label."""
+        pass  # Temporarily disabled
+
+    def _on_thumb_auto_changed(self) -> None:
+        """Handle thumbnail size auto checkbox change."""
+        pass  # Temporarily disabled
+
+    def _on_grid_auto_changed(self) -> None:
+        """Handle grid columns auto checkbox change."""
+        pass  # Temporarily disabled
+
+    def _on_grid_cols_changed(self) -> None:
+        """Handle grid columns spinbox change - apply immediately for live preview."""
+        pass  # Temporarily disabled
+
+    def _apply_appearance_only(self) -> None:
+        """Apply only appearance settings (for preview without closing dialog)."""
+        self._apply_window_settings()
+        self._apply_font_settings()
+        self._apply_view_mode_settings()
+        self._apply_thumbnail_settings()
+        if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
+            self.parent_window.apply_global_font()
+        self.show_status_message("Appearance settings applied!")
+        nfo("Appearance settings applied from tab.")
+
+    def show_status_message(self, message: str) -> None:
+        """Show a status message in the parent window."""
+        if self.parent_window and hasattr(self.parent_window, "show_status_message"):
+            self.parent_window.show_status_message(message)
+
     def apply_all_settings(self) -> None:
         """Apply all settings without closing the dialog."""
         self._apply_window_settings()
         self._apply_font_settings()
         self._apply_view_mode_settings()
         self._apply_api_key_settings()
+        self._apply_thumbnail_settings()
         if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
             self.parent_window.apply_global_font()
         nfo("All settings applied.")
@@ -527,6 +626,13 @@ class SettingsDialog(QDialog):
         if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
             self.parent_window.apply_global_font()
             nfo(f"Applied global font: {font_family}, {font_size}pt")
+
+    def _apply_thumbnail_settings(self) -> None:
+        """Apply thumbnail grid settings."""
+        # Grid sizing controls temporarily disabled - settings use auto defaults
+        # Set auto mode by default
+        self.settings.setValue("thumbnailSizeAuto", True)
+        self.settings.setValue("gridColumnsAuto", True)
 
     def _clear_civitai_cache(self) -> None:
         """Clear the CivitAI API cache."""
@@ -759,42 +865,27 @@ class AboutDialog(QDialog):
     def _build_about_text(self) -> str:
         """Build the complete about text."""
         version_text = self._get_version_text()
-        contributors_text = self._get_contributors_text()
-        license_text = self._get_license_text()
 
         return (
-            f"<b>Dataset Viewer</b><br><br>"
-            f"{version_text}<br>"
-            f"An ultralight metadata viewer for AI-generated content."
-            f"Developed by KTISEOS NYX."
-            f"<br><br>"
-            f"{contributors_text}<br><br>"
-            f"{license_text}"
+            f"<b>Dataset Tools</b><br><br>"
+            f"{version_text}<br><br>"
+            f"A Simple Viewer for EXIF and AI Metadata.<br>"
+            f"Extracts from various AI image generation tools including ComfyUI, Forge, A1111, "
+            f"NovelAI, Draw Things, InvokeAI, and more.<br>"
+            f"Reads from popular sites metadata such as Civitai, Tensorart and Moescape(Yodayo).<br>"
+            f"Includes CivitAI API integration for model and asset info.<br><br>"
+            f"<b>Copyright © 2025 KTISEOS NYX / EARTH & DUSK MEDIA</b><br>"
+            f"Licensed under GPL-3.0<br><br>"
+            f"Built with PyQt6 and Pillow for robust metadata extraction."
         )
 
     def _get_version_text(self) -> str:
         """Get formatted version text."""
         try:
-            from dataset_tools import __version__ as package_version
-
-            if package_version and package_version != "0.0.0-dev":
-                return f"Version: {package_version}"
-        except ImportError:
-            pass
-
-        return "Version: N/A (development)"
-
-    def _get_contributors_text(self) -> str:
-        """Get formatted contributors text."""
-        contributors = ["KTISEOS NYX / 0FTH3N1GHT / EARTH & DUSK MEDIA (Lead Developer)"]
-
-        contributor_lines = [f"- {contributor}" for contributor in contributors]
-        return "Contributors:<br>" + "<br>".join(contributor_lines)
-
-    def _get_license_text(self) -> str:
-        """Get formatted license text."""
-        license_name = "GPL-3.0-or-later"
-        return f"License: {license_name}<br>(Refer to LICENSE file for details)"
+            from .. import __version__
+            return f"<b>Version:</b> {__version__}"
+        except (ImportError, AttributeError):
+            return "<b>Version:</b> unknown"
 
 
 # ============================================================================

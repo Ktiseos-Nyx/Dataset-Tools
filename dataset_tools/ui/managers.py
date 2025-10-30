@@ -287,6 +287,17 @@ class MenuManager:
         file_menu.addAction(change_folder_action)
         file_menu.addSeparator()
 
+        # Settings action
+        settings_action = QtGui.QAction("&Settings...", self.main_window)
+        settings_action.setShortcut(QtGui.QKeySequence.StandardKey.Preferences)
+        settings_action.setToolTip("Open application settings")
+
+        if hasattr(self.main_window, "open_settings_dialog"):
+            settings_action.triggered.connect(self.main_window.open_settings_dialog)
+
+        file_menu.addAction(settings_action)
+        file_menu.addSeparator()
+
         # Close action
         close_action = QtGui.QAction("&Close Window", self.main_window)
         close_action.setShortcut(QtGui.QKeySequence.StandardKey.Close)

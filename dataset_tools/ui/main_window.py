@@ -203,7 +203,8 @@ class MainWindow(Qw.QMainWindow):
         self.current_metadata: dict | None = None
         self.civitai_api_worker: CivitaiInfoWorker | None = None
         self.active_workers = []
-        self.current_sort_mode: str = "Name (Natural)"  # Track current sort mode
+        # Load saved sort mode from settings
+        self.current_sort_mode: str = self.settings.value("sortMode", "Name (Natural)", type=str)
 
         # UI state
         self.main_status_bar = self.statusBar()
@@ -307,10 +308,13 @@ class MainWindow(Qw.QMainWindow):
                 # Lazy init - only create grid when first needed
                 self._initialize_thumbnail_grid()
 
+            # Only repopulate if switching TO grid mode, not if already in grid mode
+            was_already_grid = self.left_panel.file_view_stack.currentWidget() == self.thumbnail_grid
+
             self.left_panel.file_view_stack.setCurrentWidget(self.thumbnail_grid)
 
-            # Populate with current images
-            if self.current_folder and self.current_files_in_list:
+            # Only reload folder if we're switching views (not just adjusting settings)
+            if not was_already_grid and self.current_folder and self.current_files_in_list:
                 image_files = [f for f in self.current_files_in_list
                                if self._should_display_as_image(os.path.join(self.current_folder, f))]
                 self.thumbnail_grid.set_folder(self.current_folder, image_files)
@@ -369,6 +373,11 @@ class MainWindow(Qw.QMainWindow):
         view_mode = self.settings.value("fileViewMode", "list", type=str)
         if view_mode in ("grid", "tree"):
             self.set_file_view_mode(view_mode)
+
+        # Restore sort mode combo box to match saved setting
+        if hasattr(self, "left_panel") and hasattr(self.left_panel, "sort_mode_combo"):
+            self.left_panel.sort_mode_combo.setCurrentText(self.current_sort_mode)
+            nfo("[UI] Restored sort mode combo box to: %s", self.current_sort_mode)
 
     def _load_initial_folder(self) -> None:
         """Load the last used folder or show empty state."""
@@ -623,14 +632,16 @@ class MainWindow(Qw.QMainWindow):
         file_count = len(all_files)
         self.file_count_label.setText(f"{file_count} files in {folder_name}")
 
-        # Apply the saved sort mode if it's not the default
+        # Apply the saved sort mode BEFORE creating thumbnail grid to prevent race condition
         if self.current_sort_mode != "Name (Natural)":
             nfo("[UI] Re-applying saved sort mode: %s", self.current_sort_mode)
-            self._perform_file_sort(self.current_sort_mode)
+            # Don't call _perform_file_sort() yet - it would repopulate thumbnail grid twice
+            # Just sort the list in place
+            self._sort_file_list_only(self.current_sort_mode)
 
         self._auto_select_file(result)
 
-        # Update thumbnail grid if in grid mode
+        # Update thumbnail grid if in grid mode (after sorting!)
         if hasattr(self, "thumbnail_grid") and self.settings.value("fileViewMode", "list") == "grid":
             total_files = len(self.current_files_in_list)
             nfo("[UI] Filtering %d files for thumbnail grid...", total_files)
@@ -643,7 +654,9 @@ class MainWindow(Qw.QMainWindow):
             nfo("[UI] Found %d images, populating grid...", len(image_files))
             # Pass the file_to_select to thumbnail grid so it can scroll to it
             file_to_select = result.file_to_select if result.file_to_select in image_files else None
+            nfo("[UI] Calling thumbnail_grid.set_folder with %d images, file_to_select=%s", len(image_files), file_to_select)
             self.thumbnail_grid.set_folder(self.current_folder, image_files, file_to_select=file_to_select)
+            nfo("[UI] thumbnail_grid.set_folder returned")
 
         # Update tree view if in tree mode
         if hasattr(self, "file_tree") and self.settings.value("fileViewMode", "list") == "tree":
@@ -710,8 +723,9 @@ class MainWindow(Qw.QMainWindow):
         """
         nfo("[UI] Sort mode changed to: %s", mode)
 
-        # Save the current sort mode so it persists across refreshes
+        # Save the current sort mode so it persists across refreshes and app restarts
         self.current_sort_mode = mode
+        self.settings.setValue("sortMode", mode)
 
         if not hasattr(self, "left_panel"):
             return
@@ -720,6 +734,46 @@ class MainWindow(Qw.QMainWindow):
             self._perform_file_sort(mode)
         else:
             nfo("[UI] No files to sort.")
+
+    def _sort_file_list_only(self, mode: str) -> None:
+        """Sort the file list in place without refreshing UI.
+
+        This is used during initial folder load to avoid double-populating the UI.
+        """
+        import re
+
+        if mode == "Name (Natural)":
+            # Natural sort: handles numbers properly
+            def natural_sort_key(text):
+                return [int(x) if x.isdigit() else x.lower() for x in re.split(r"(\d+)", text)]
+            self.current_files_in_list.sort(key=natural_sort_key)
+
+        elif mode == "Date Modified":
+            # Sort by modification time (newest first)
+            def get_mtime(f):
+                try:
+                    return -os.path.getmtime(os.path.join(self.current_folder, f))
+                except OSError:
+                    return 0
+            self.current_files_in_list.sort(key=get_mtime)
+
+        elif mode == "Date Created":
+            # Sort by creation time (newest first)
+            def get_ctime(f):
+                try:
+                    return -os.path.getctime(os.path.join(self.current_folder, f))
+                except OSError:
+                    return 0
+            self.current_files_in_list.sort(key=get_ctime)
+
+        elif mode == "File Size":
+            # Sort by file size (largest first)
+            def get_size(f):
+                try:
+                    return -os.path.getsize(os.path.join(self.current_folder, f))
+                except OSError:
+                    return 0
+            self.current_files_in_list.sort(key=get_size)
 
     def _perform_file_sort(self, mode: str = "Name (Natural)") -> None:
         """Perform the actual file sorting operation.
@@ -780,8 +834,9 @@ class MainWindow(Qw.QMainWindow):
             if hasattr(self, "thumbnail_grid"):
                 nfo("[UI] Refreshing thumbnail grid with sorted files.")
                 image_files = [f for f in self.current_files_in_list if self._should_display_as_image(os.path.join(self.current_folder, f))]
-                self.thumbnail_grid.set_folder(self.current_folder, image_files)
-                # Optionally, restore selection in grid view if needed
+                # Pass current selection to restore it after reload
+                file_to_select = current_selection if current_selection and current_selection in image_files else None
+                self.thumbnail_grid.set_folder(self.current_folder, image_files, file_to_select=file_to_select)
         else:
             nfo("[UI] Refreshing file list with sorted files.")
             self.left_panel.clear_file_list_display()
@@ -1459,6 +1514,24 @@ class MainWindow(Qw.QMainWindow):
         # Set application-wide font
         app.setFont(font)
 
+        # CRITICAL: Inject font into stylesheet to override QSS font rules
+        # Get current stylesheet and append font override
+        current_stylesheet = app.styleSheet()
+        # Remove any previous font injection
+        if "/* USER_FONT_OVERRIDE */" in current_stylesheet:
+            parts = current_stylesheet.split("/* USER_FONT_OVERRIDE */")
+            current_stylesheet = parts[0]
+
+        # Inject user font choice into stylesheet with high specificity
+        font_injection = f"""
+/* USER_FONT_OVERRIDE */
+QWidget, QTextEdit, QPlainTextEdit, QListWidget, QPushButton, QLabel, QLineEdit {{
+    font-family: "{font_family}" !important;
+    font-size: {font_size}pt !important;
+}}
+"""
+        app.setStyleSheet(current_stylesheet + font_injection)
+
         # Apply font to specific text boxes to ensure they inherit user's choice
         text_boxes = [
             "positive_prompt_box",
@@ -1668,6 +1741,13 @@ class MainWindow(Qw.QMainWindow):
         # Clean up thumbnail worker thread
         if hasattr(self, "thumbnail_grid"):
             self.thumbnail_grid.cleanup()
+
+        # Wait for any background workers (CivitAI, thumbnails, etc.) to finish
+        from PyQt6.QtCore import QThreadPool
+        thread_pool = QThreadPool.globalInstance()
+        if thread_pool.activeThreadCount() > 0:
+            nfo("[UI] Waiting for %d background workers to finish...", thread_pool.activeThreadCount())
+            thread_pool.waitForDone(2000)  # Wait up to 2 seconds max
 
         super().closeEvent(event)
 

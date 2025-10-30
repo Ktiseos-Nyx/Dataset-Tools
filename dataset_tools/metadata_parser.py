@@ -78,22 +78,32 @@ def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]
             # First, ensure the raw_metadata is a dictionary before proceeding.
             raw_meta = result.get("raw_metadata")
             if isinstance(raw_meta, str):
-                try:
-                    import json
+                # Check if this looks like A1111 text format (should stay as string)
+                # A1111 format has patterns like "Steps: 30, Sampler: euler" or "Negative prompt:"
+                is_a1111_format = ("Steps:" in raw_meta or "Negative prompt:" in raw_meta or
+                                   "Sampler:" in raw_meta or "CFG scale:" in raw_meta)
 
-                    # First try standard JSON parsing (handles escaped quotes properly)
-                    result["raw_metadata"] = json.loads(raw_meta)
-                    nfo("[DT.metadata_parser]: Successfully parsed raw_metadata string as JSON.")
-                except json.JSONDecodeError as e:
+                if is_a1111_format:
+                    # Keep as string - A1111 format will be parsed by numpy enhancement
+                    nfo("[DT.metadata_parser]: Detected A1111 text format, keeping as string for numpy enhancement")
+                else:
+                    # Try parsing as structured data (JSON/Python literal)
                     try:
-                        # Fallback: try ast.literal_eval for Python dict strings
-                        import ast
-                        result["raw_metadata"] = ast.literal_eval(raw_meta)
-                        nfo("[DT.metadata_parser]: Successfully parsed raw_metadata string as Python literal.")
-                    except (ValueError, SyntaxError) as e2:
-                        nfo("[DT.metadata_parser]: Could not parse raw_metadata string (JSON error: %s, AST error: %s)", e, e2)
-                        # If parsing fails, we cannot proceed with numpy enhancement.
-                        result["raw_metadata"] = {"error": "unparseable_string", "original_string": raw_meta}
+                        import json
+
+                        # First try standard JSON parsing (handles escaped quotes properly)
+                        result["raw_metadata"] = json.loads(raw_meta)
+                        nfo("[DT.metadata_parser]: Successfully parsed raw_metadata string as JSON.")
+                    except json.JSONDecodeError as e:
+                        try:
+                            # Fallback: try ast.literal_eval for Python dict strings
+                            import ast
+                            result["raw_metadata"] = ast.literal_eval(raw_meta)
+                            nfo("[DT.metadata_parser]: Successfully parsed raw_metadata string as Python literal.")
+                        except (ValueError, SyntaxError) as e2:
+                            nfo("[DT.metadata_parser]: Could not parse raw_metadata string (JSON error: %s, AST error: %s)", e, e2)
+                            # If parsing fails, we cannot proceed with numpy enhancement.
+                            result["raw_metadata"] = {"error": "unparseable_string", "original_string": raw_meta}
 
             # Apply numpy enhancement to ALL parsing results (no longer conditional)
             try:

@@ -1,8 +1,8 @@
 {
-  "parser_name": "ComfyUI QuadMoons",
-  "priority": 145,
-  "description": "ComfyUI workflows using QuadMoons custom nodes (KSampler - Extra Outputs)",
-  "version": "2.0",
+  "parser_name": "ComfyUI QuadMoon SD 1.5",
+  "priority": 146,
+  "description": "ComfyUI workflows using QuadMoon's custom nodes for SD 1.5 (quadmoonKSampler, quadmoonSmartPrompt, quadmoonSmartNeg)",
+  "version": "1.0",
   "maintainer": "Dataset-Tools",
   "target_file_types": [
     "PNG", "JPG", "JPEG"
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "comment": "Rule 2: Must contain QuadMoons custom sampler nodes",
+      "comment": "Rule 2: Must contain modern QuadMoon nodes",
       "source_type": "pil_info_key",
       "source_key_options": [
         "workflow",
@@ -34,10 +34,8 @@
       "json_query_type": "has_any_node_class_type",
       "operator": "is_true",
       "class_types_to_check": [
-        "KSampler - Extra Outputs",
         "quadmoonKSampler",
         "quadmoonSmartPrompt",
-        "quadmoonSmartNeg",
         "quadmoonModelLoader"
       ]
     }
@@ -63,22 +61,29 @@
     "fields": [
       {
         "target_key": "prompt",
-        "method": "comfyui_simple_dfs_prompt",
-        "target_input": "positive"
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "quadmoonSmartPrompt"
+        ],
+        "input_field": "prompt_text",
+        "data_type": "string",
+        "fallback": ""
       },
       {
         "target_key": "negative_prompt",
-        "method": "comfyui_simple_dfs_prompt",
-        "target_input": "negative"
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "quadmoonSmartNeg"
+        ],
+        "input_field": "optional_text",
+        "data_type": "string",
+        "fallback": ""
       },
       {
         "target_key": "parameters.seed",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
-          "KSampler - Extra Outputs",
-          "quadmoonKSampler",
-          "KSampler",
-          "KSamplerAdvanced"
+          "quadmoonKSampler"
         ],
         "input_key": "seed",
         "value_type": "integer",
@@ -88,10 +93,7 @@
         "target_key": "parameters.steps",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
-          "KSampler - Extra Outputs",
-          "quadmoonKSampler",
-          "KSampler",
-          "KSamplerAdvanced"
+          "quadmoonKSampler"
         ],
         "input_key": "steps",
         "value_type": "integer",
@@ -101,10 +103,7 @@
         "target_key": "parameters.cfg_scale",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
-          "KSampler - Extra Outputs",
-          "quadmoonKSampler",
-          "KSampler",
-          "KSamplerAdvanced"
+          "quadmoonKSampler"
         ],
         "input_key": "cfg",
         "value_type": "float",
@@ -114,10 +113,7 @@
         "target_key": "parameters.sampler_name",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
-          "KSampler - Extra Outputs",
-          "quadmoonKSampler",
-          "KSampler",
-          "KSamplerAdvanced"
+          "quadmoonKSampler"
         ],
         "input_key": "sampler_name",
         "value_type": "string",
@@ -127,10 +123,7 @@
         "target_key": "parameters.scheduler",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
-          "KSampler - Extra Outputs",
-          "quadmoonKSampler",
-          "KSampler",
-          "KSamplerAdvanced"
+          "quadmoonKSampler"
         ],
         "input_key": "scheduler",
         "value_type": "string",
@@ -140,19 +133,37 @@
         "target_key": "parameters.model",
         "method": "comfy_find_input_of_node_type",
         "node_types": [
-          "quadmoonModelLoader",
-          "CheckpointLoaderSimple",
-          "UNETLoader"
+          "quadmoonModelLoader"
         ],
         "input_field": "ckpt_name",
         "data_type": "string",
         "fallback": "Unknown Model"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 512
       }
     ],
     "output_template": {
-      "parser_name_from_engine": "ComfyUI QuadMoons",
-      "tool": "ComfyUI QuadMoons",
-      "format": "QuadMoons Enhanced Workflow",
+      "parser_name_from_engine": "ComfyUI QuadMoon SD 1.5",
+      "tool": "ComfyUI",
+      "format": "QuadMoon SD 1.5 Workflow",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
       "parameters": {
@@ -161,14 +172,16 @@
         "cfg_scale": "$parameters.cfg_scale",
         "sampler_name": "$parameters.sampler_name",
         "scheduler": "$parameters.scheduler",
-        "model": "$parameters.model"
+        "model": "$parameters.model",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
       },
       "workflow_metadata": {
         "source": "ComfyUI workflow",
-        "parser_priority": 145,
+        "parser_priority": 146,
         "confidence": "high",
-        "custom_nodes": ["QuadMoons"],
-        "enhanced_sampler": true
+        "custom_nodes": ["QuadMoon"],
+        "workflow_type": "SD 1.5"
       }
     }
   },
@@ -178,9 +191,10 @@
     "validation_level": "strict"
   },
   "notes": [
-    "Detects ComfyUI workflows using QuadMoons custom nodes",
-    "Specifically looks for 'KSampler - Extra Outputs' nodes",
-    "Priority 145 puts it above generic ComfyUI parsers",
-    "Converted from legacy format to modern JSON parser definition"
+    "Specifically targets modern QuadMoon workflows with SD 1.5",
+    "Looks for quadmoonKSampler, quadmoonSmartPrompt, quadmoonSmartNeg nodes",
+    "Priority 146 puts it above the legacy QuadMoon parser (145)",
+    "Extracts prompts from quadmoonSmartPrompt.prompt_text widget",
+    "Extracts negative from quadmoonSmartNeg.optional_text widget"
   ]
 }
