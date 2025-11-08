@@ -1,6 +1,6 @@
 {
   "parser_name": "ComfyUI Simple Parser",
-  "priority": 90,
+  "priority": 65,
   "description": "Handles basic ComfyUI workflows - covers 80% of common cases",
   "target_file_types": ["PNG"],
   

@@ -25,6 +25,8 @@ class ComfyUIPixArtExtractor:
         """Return dictionary of method name -> method function."""
         return {
             "pixart_extract_t5_prompt": self.extract_t5_prompt,
+            "pixart_extract_prompt_from_t5_nodes": self.extract_prompt_from_t5_nodes,
+            "pixart_extract_negative_from_t5_nodes": self.extract_negative_from_t5_nodes,
             "pixart_extract_model_info": self._extract_model_info,
             "pixart_extract_sampler_params": self._extract_sampler_params,
             "pixart_extract_conditioning_params": self._extract_conditioning_params,
@@ -60,6 +62,146 @@ class ComfyUIPixArtExtractor:
                     return text
 
         return ""
+
+    def extract_prompt_from_t5_nodes(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> str:
+        """Extract positive prompt from T5 text encoder nodes.
+
+        This looks for T5TextEncode or PixArtT5TextEncode nodes and extracts
+        the text that looks like a positive prompt (not negative).
+        """
+        self.logger.debug("[PixArt] Extracting positive prompt from T5 nodes")
+
+        try:
+            # Parse JSON if needed
+            if isinstance(data, str):
+                import json
+                data = json.loads(data)
+
+            if not isinstance(data, dict):
+                return ""
+
+            # Handle both API format (nodes dict) and workflow format (nodes list)
+            nodes = data.get("nodes", {})
+            if isinstance(nodes, list):
+                nodes = {str(i): node for i, node in enumerate(nodes)}
+
+            # Look for T5 text encoder nodes
+            prompts = []
+            for node_id, node_data in nodes.items():
+                if not isinstance(node_data, dict):
+                    continue
+
+                class_type = node_data.get("class_type") or node_data.get("type", "")
+
+                # Check for T5 encoding nodes
+                if "T5TextEncode" in class_type or "PixArtT5TextEncode" in class_type:
+                    # Get the text from widget values
+                    text = self._get_text_from_node(node_data, nodes)
+                    if text and not self._looks_like_negative_prompt(text):
+                        prompts.append(text)
+
+            # Return the first valid positive prompt
+            return prompts[0] if prompts else ""
+
+        except Exception as e:
+            self.logger.error("[PixArt] Error extracting positive prompt from T5 nodes: %s", e, exc_info=True)
+            return ""
+
+    def extract_negative_from_t5_nodes(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> str:
+        """Extract negative prompt from T5 text encoder nodes.
+
+        This looks for T5TextEncode or PixArtT5TextEncode nodes and extracts
+        the text that looks like a negative prompt.
+        """
+        self.logger.debug("[PixArt] Extracting negative prompt from T5 nodes")
+
+        try:
+            # Parse JSON if needed
+            if isinstance(data, str):
+                import json
+                data = json.loads(data)
+
+            if not isinstance(data, dict):
+                return ""
+
+            # Handle both API format (nodes dict) and workflow format (nodes list)
+            nodes = data.get("nodes", {})
+            if isinstance(nodes, list):
+                nodes = {str(i): node for i, node in enumerate(nodes)}
+
+            # Look for T5 text encoder nodes
+            negatives = []
+            for node_id, node_data in nodes.items():
+                if not isinstance(node_data, dict):
+                    continue
+
+                class_type = node_data.get("class_type") or node_data.get("type", "")
+
+                # Check for T5 encoding nodes
+                if "T5TextEncode" in class_type or "PixArtT5TextEncode" in class_type:
+                    # Get the text from widget values
+                    text = self._get_text_from_node(node_data, nodes)
+                    if text and self._looks_like_negative_prompt(text):
+                        negatives.append(text)
+
+            # Return the first valid negative prompt
+            return negatives[0] if negatives else ""
+
+        except Exception as e:
+            self.logger.error("[PixArt] Error extracting negative prompt from T5 nodes: %s", e, exc_info=True)
+            return ""
+
+    def _looks_like_negative_prompt(self, text: str) -> bool:
+        """Heuristic to detect if text looks like a negative prompt."""
+        if not text:
+            return False
+
+        text_lower = text.lower()
+
+        # Strong indicators of negative prompts
+        negative_indicators = [
+            "bad quality",
+            "low quality",
+            "worst quality",
+            "ugly",
+            "blurry",
+            "deformed",
+            "disfigured",
+            "mutated",
+            "extra limbs",
+            "missing",
+            "cropped",
+            "watermark",
+            "signature",
+            "jpeg artifacts",
+            "lowres",
+        ]
+
+        # Count how many negative indicators are present
+        indicator_count = sum(1 for indicator in negative_indicators if indicator in text_lower)
+
+        # If 3+ negative indicators, very likely negative prompt
+        if indicator_count >= 3:
+            return True
+
+        # If starts with common negative patterns
+        if text_lower.startswith(("bad", "worst", "low quality", "ugly", "blurry")):
+            return True
+
+        # Otherwise assume positive
+        return False
 
     def _extract_model_info(
         self,

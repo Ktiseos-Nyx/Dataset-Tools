@@ -1151,8 +1151,12 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                         best_negative.get("confidence", 0),
                         best_negative.get("source_node_type", "UNKNOWN"),
                         best_negative.get("text", "")[:80])
-                    self.logger.debug("[COMFYUI_SCORER] ✅ Setting negative_prompt to best negative candidate")
-                    enhanced_result["negative_prompt"] = best_negative["text"]
+
+                    if best_negative.get("confidence", 0) > 0.5:
+                        self.logger.debug("[COMFYUI_SCORER] ✅ Setting negative_prompt to best negative candidate")
+                        enhanced_result["negative_prompt"] = best_negative["text"]
+                    else:
+                        self.logger.debug("[COMFYUI_SCORER] ❌ Best negative confidence too low (%.3f < 0.5), keeping parser negative", best_negative.get("confidence", 0))
                 else:
                     # Keep existing negative_prompt if parser already found one
                     # Don't clear it - parser might have extracted embeddings/URNs that numpy doesn't recognize

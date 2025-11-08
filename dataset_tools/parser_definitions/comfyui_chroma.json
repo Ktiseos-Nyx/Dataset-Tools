@@ -1,6 +1,6 @@
 {
   "parser_name": "ComfyUI Chroma",
-  "priority": 160,
+  "priority": 250,
   "description": "Chroma models using ModelSamplingAuraFlow architecture but with Chroma-specific training",
   "version": "1.0",
   "maintainer": "Dataset-Tools",
@@ -68,12 +68,39 @@
     },
     "fields": [
       {
+        "comment": "Try text combiner extraction first (for Text Concatenate nodes)",
         "target_key": "prompt",
-        "method": "comfyui_extract_prompt_from_workflow"
+        "method": "text_combiner_extract_combined_text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PrimitiveStringMultiline",
+          "easy positive"
+        ]
+      },
+      {
+        "comment": "Fallback to legacy workflow extraction if combiner doesn't find anything",
+        "target_key": "prompt",
+        "method": "comfyui_extract_prompt_from_workflow",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PrimitiveStringMultiline",
+          "easy positive"
+        ]
       },
       {
         "target_key": "negative_prompt",
-        "method": "comfyui_extract_negative_prompt_from_workflow"
+        "method": "comfyui_extract_negative_prompt_from_workflow",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PrimitiveStringMultiline",
+          "easy positive"
+        ]
       },
       {
         "target_key": "parameters.model",
@@ -169,6 +196,10 @@
         "input_field": "height",
         "data_type": "integer",
         "fallback": 1024
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
       }
     ],
     "output_template": {
@@ -187,6 +218,7 @@
         "width": "$parameters.width",
         "height": "$parameters.height"
       },
+      "raw_metadata": "$raw_metadata",
       "architecture_info": {
         "detected_as": "Chroma architecture",
         "text_encoder": "T5-based (Chroma-specific training)",

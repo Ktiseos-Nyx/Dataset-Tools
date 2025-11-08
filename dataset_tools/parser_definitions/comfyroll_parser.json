@@ -47,13 +47,13 @@
       {
         "target_key": "prompt",
         "method": "regex_on_input_data_string",
-        "pattern": "\"title\": \"Positive Prompt\".*?\"widgets_values\":\\s*\\[\\s*\"([\\s\\S]*?)\"\\s*\\]",
+        "pattern": "\"title\": \"Positive(?: Prompt)?\".*?\"widgets_values\":\\s*\\[\\s*\"([\\s\\S]*?)\"\\s*\\]",
         "fallback": "N/A"
       },
       {
         "target_key": "negative_prompt",
         "method": "regex_on_input_data_string",
-        "pattern": "\"title\": \"Negative Prompt\".*?\"widgets_values\":\\s*\\[\\s*\"([\\s\\S]*?)\"\\s*\\]",
+        "pattern": "\"title\": \"Negative(?: Prompt)?\".*?\"widgets_values\":\\s*\\[\\s*\"([\\s\\S]*?)\"\\s*\\]",
         "fallback": ""
       },
       {

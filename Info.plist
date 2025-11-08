@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>Dataset-Tools</string>
+    <key>CFBundleDisplayName</key>
+    <string>Dataset Tools</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.duskfallcrew.dataset-tools</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+
+    <!-- Location Services Permission -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Dataset Tools reads GPS coordinates from camera photo EXIF data to display where photos were taken. This data never leaves your device.</string>
+
+    <!-- Bluetooth Permission (required by macOS when accessing location data) -->
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Dataset Tools does not use Bluetooth directly, but macOS requires this permission when reading GPS data from photo metadata.</string>
+</dict>
+</plist>

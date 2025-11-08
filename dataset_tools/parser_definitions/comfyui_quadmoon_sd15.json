@@ -61,23 +61,11 @@
     "fields": [
       {
         "target_key": "prompt",
-        "method": "comfy_find_input_of_node_type",
-        "node_types": [
-          "quadmoonSmartPrompt"
-        ],
-        "input_field": "prompt_text",
-        "data_type": "string",
-        "fallback": ""
+        "method": "quadmoons_extract_positive"
       },
       {
         "target_key": "negative_prompt",
-        "method": "comfy_find_input_of_node_type",
-        "node_types": [
-          "quadmoonSmartNeg"
-        ],
-        "input_field": "optional_text",
-        "data_type": "string",
-        "fallback": ""
+        "method": "quadmoons_extract_negative"
       },
       {
         "target_key": "parameters.seed",
@@ -158,11 +146,15 @@
         "input_field": "height",
         "data_type": "integer",
         "fallback": 512
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
       }
     ],
     "output_template": {
       "parser_name_from_engine": "ComfyUI QuadMoon SD 1.5",
-      "tool": "ComfyUI",
+      "tool": "ComfyUI (QuadMoon SD 1.5)",
       "format": "QuadMoon SD 1.5 Workflow",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
@@ -176,6 +168,7 @@
         "width": "$parameters.width",
         "height": "$parameters.height"
       },
+      "raw_metadata": "$raw_metadata",
       "workflow_metadata": {
         "source": "ComfyUI workflow",
         "parser_priority": 146,

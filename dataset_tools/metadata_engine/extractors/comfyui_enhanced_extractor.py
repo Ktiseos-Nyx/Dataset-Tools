@@ -48,6 +48,7 @@ class ComfyUIEnhancedExtractor:
             "comfyui_analyze_workflow_intelligence": self.analyze_workflow_intelligence,
             "comfyui_extract_with_priority": self.extract_with_priority,
             "comfyui_get_extraction_report": self.get_extraction_report,
+            "comfyui_detect_vhs_batch_processing": self.detect_vhs_batch_processing,
         }
 
     def smart_extract_prompt(
@@ -322,3 +323,76 @@ class ComfyUIEnhancedExtractor:
             stats["traversal_fallback_rate"] = 0.0
 
         return stats
+
+    def detect_vhs_batch_processing(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> dict[str, Any]:
+        """Detect VHS (Video Helper Suite) batch processing nodes and configuration.
+
+        VHS is a ComfyUI extension for video/batch image processing. This method
+        detects if the workflow uses VHS batch processing features.
+
+        Returns:
+            dict with keys: detected (bool), batch_count (int), vhs_nodes (list)
+        """
+        try:
+            # Parse JSON if needed
+            if isinstance(data, str):
+                import json
+                data = json.loads(data)
+
+            if not isinstance(data, dict):
+                return {"detected": False, "batch_count": 0, "vhs_nodes": []}
+
+            nodes = self.dictionary_manager._get_nodes_from_workflow(data)
+
+            # VHS-specific node types
+            vhs_node_types = [
+                "VHS_BatchManager",
+                "VHS_LoadImages",
+                "VHS_LoadImagePath",
+                "VHS_LoadVideo",
+                "VHS_VideoCombine",
+                "VHS_SplitImages",
+                "VHS_GetImageCount",
+                "VHS_LoadImagesFromDirectory",
+            ]
+
+            detected_vhs_nodes = []
+            batch_count = 0
+
+            for node_id, node_data in nodes.items():
+                if not isinstance(node_data, dict):
+                    continue
+
+                class_type = node_data.get("class_type") or node_data.get("type", "")
+
+                # Check if this is a VHS node
+                if any(vhs_type in class_type for vhs_type in vhs_node_types):
+                    detected_vhs_nodes.append({
+                        "node_id": node_id,
+                        "type": class_type,
+                        "widgets": node_data.get("widgets_values", [])
+                    })
+
+                    # Try to extract batch count from widgets
+                    widgets = node_data.get("widgets_values", [])
+                    if "BatchManager" in class_type and widgets:
+                        # BatchManager typically has batch count in first widget
+                        if isinstance(widgets[0], int):
+                            batch_count = max(batch_count, widgets[0])
+
+            return {
+                "detected": len(detected_vhs_nodes) > 0,
+                "batch_count": batch_count,
+                "vhs_nodes": detected_vhs_nodes,
+                "node_count": len(detected_vhs_nodes)
+            }
+
+        except Exception as e:
+            self.logger.error("[VHS Detection] Error detecting VHS batch processing: %s", e, exc_info=True)
+            return {"detected": False, "batch_count": 0, "vhs_nodes": [], "error": str(e)}

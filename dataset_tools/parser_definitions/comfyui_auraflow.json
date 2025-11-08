@@ -161,6 +161,10 @@
         "input_field": "height",
         "data_type": "integer",
         "fallback": 1024
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
       }
     ],
     "output_template": {
@@ -179,6 +183,7 @@
         "width": "$parameters.width",
         "height": "$parameters.height"
       },
+      "raw_metadata": "$raw_metadata",
       "architecture_info": {
         "detected_as": "AuraFlow architecture",
         "text_encoder": "Gemma/T5-based", 

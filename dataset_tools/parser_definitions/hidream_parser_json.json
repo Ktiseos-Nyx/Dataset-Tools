@@ -44,51 +44,51 @@
       {
         "target_key": "prompt",
         "method": "comfy_find_text_from_main_sampler_input",
-        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler"],
+        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler", "KSampler", "KSamplerAdvanced"],
         "positive_input_name": "positive",
         "text_input_name_in_encoder": "text",
-        "text_encoder_node_types": ["QuadrupleCLIPEncoder"]
+        "text_encoder_node_types": ["QuadrupleCLIPEncoder", "CLIPTextEncode"]
       },
       {
         "target_key": "negative_prompt",
         "method": "comfy_find_text_from_main_sampler_input",
-        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler"],
+        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler", "KSampler", "KSamplerAdvanced"],
         "negative_input_name": "negative",
         "text_input_name_in_encoder": "text",
-        "text_encoder_node_types": ["QuadrupleCLIPEncoder"]
+        "text_encoder_node_types": ["QuadrupleCLIPEncoder", "CLIPTextEncode"]
       },
       {
         "target_key": "parameters.seed",
         "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler"],
+        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler", "KSampler", "KSamplerAdvanced"],
         "input_key": "seed",
         "value_type": "integer"
       },
       {
         "target_key": "parameters.steps",
         "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler"],
+        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler", "KSampler", "KSamplerAdvanced"],
         "input_key": "steps",
         "value_type": "integer"
       },
       {
         "target_key": "parameters.cfg_scale",
         "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler"],
+        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler", "KSampler", "KSamplerAdvanced"],
         "input_key": "cfg",
         "value_type": "float"
       },
       {
         "target_key": "parameters.sampler_name",
         "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler"],
+        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler", "KSampler", "KSamplerAdvanced"],
         "input_key": "sampler_name",
         "value_type": "string"
       },
       {
         "target_key": "parameters.scheduler",
         "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler"],
+        "sampler_node_types": ["HiDreamSampler", "HiDreamKSampler", "KSampler", "KSamplerAdvanced"],
         "input_key": "scheduler",
         "value_type": "string"
       },
@@ -108,18 +108,18 @@
       },
       {
         "target_key": "parameters.width",
-        "method": "comfy_get_node_by_class",
-        "class_type": "EmptyLatentImage",
-        "field_name": "width",
-        "value_type": "integer",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["EmptyLatentImage", "EmptySD3LatentImage"],
+        "input_field": "width",
+        "data_type": "integer",
         "optional": true
       },
       {
         "target_key": "parameters.height",
-        "method": "comfy_get_node_by_class",
-        "class_type": "EmptyLatentImage",
-        "field_name": "height",
-        "value_type": "integer",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["EmptyLatentImage", "EmptySD3LatentImage"],
+        "input_field": "height",
+        "data_type": "integer",
         "optional": true
       }
     ],

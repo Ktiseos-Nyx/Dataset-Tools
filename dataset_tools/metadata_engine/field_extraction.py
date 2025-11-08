@@ -14,6 +14,8 @@ from .extractors.a1111_extractors import A1111Extractor
 from .extractors.civitai_extractors import CivitaiExtractor
 from .extractors.comfyui_enhanced_extractor import ComfyUIEnhancedExtractor
 from .extractors.comfyui_extractors import ComfyUIExtractor
+from .extractors.comfyui_griptape import ComfyUIGriptapeExtractor
+from .extractors.comfyui_pixart import ComfyUIPixArtExtractor
 
 # Import extraction modules
 from .extractors.direct_extractors import DirectValueExtractor
@@ -51,6 +53,8 @@ class FieldExtractor:
         self.logger.info("[FIELD_EXTRACTOR] Creating ComfyUIExtractor...")
         self.comfyui_extractor = ComfyUIExtractor(self.logger)
         self.comfyui_enhanced_extractor = ComfyUIEnhancedExtractor(self.logger)
+        self.comfyui_griptape_extractor = ComfyUIGriptapeExtractor(self.logger)
+        self.comfyui_pixart_extractor = ComfyUIPixArtExtractor(self.logger)
         self.drawthings_extractor = DrawThingsExtractor(self.logger)
         self.invokeai_extractor = InvokeAIExtractor(self.logger)
         self.json_extractor = JSONExtractor(self.logger)
@@ -81,6 +85,12 @@ class FieldExtractor:
 
         # Enhanced ComfyUI methods (priority over standard)
         self._method_registry.update(self.comfyui_enhanced_extractor.get_methods())
+
+        # Griptape-specific ComfyUI methods
+        self._method_registry.update(self.comfyui_griptape_extractor.get_methods())
+
+        # PixArt-specific ComfyUI methods
+        self._method_registry.update(self.comfyui_pixart_extractor.get_methods())
 
         # DrawThings methods
         self._method_registry.update(self.drawthings_extractor.get_methods())
@@ -129,6 +139,9 @@ class FieldExtractor:
         if not extraction_method:
             self.logger.warning(f"Unknown extraction method: '{method_name}'")
             return None
+
+        # DEBUG: Log all field extractions
+        self.logger.debug("[FIELD_EXTRACT] Calling method '%s' for target_key '%s'", method_name, method_def.get('target_key', 'UNKNOWN'))
 
         if method_name == "civitai_extract_all_info":
             # Debug logging already handled by logger

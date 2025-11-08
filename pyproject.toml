@@ -47,6 +47,7 @@ dependencies = [
     "piexif",
     "defusedxml",
     "requests",
+    "jsonpath-ng",  # Proper JSONPath implementation for parser detection rules
 ]
 
 [project.optional-dependencies]

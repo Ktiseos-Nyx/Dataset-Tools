@@ -156,6 +156,11 @@
         "method": "static_value",
         "value": "FLUX T5 Architecture",
         "comment": "Mark this as FLUX T5 architecture detected from Civitai A1111-style metadata"
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "direct_input_data_as_string",
+        "comment": "Extract raw A1111 parameter string as metadata"
       }
     ],
     "output_template": {
@@ -185,7 +190,7 @@
           "Civitai resources"
         ]
       },
-      "raw_metadata": "$INPUT_JSON_OBJECT_AS_STRING",
+      "raw_metadata": "$raw_metadata",
       "_metadata": {
         "processed_at": "$CURRENT_TIMESTAMP",
         "processor": "MetadataEngine",

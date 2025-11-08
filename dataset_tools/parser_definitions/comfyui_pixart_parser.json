@@ -214,6 +214,10 @@
         ],
         "input_field": "ckpt_name",
         "data_type": "string"
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
       }
     ],
     "output_template": {
@@ -234,6 +238,7 @@
       "model_info": {
         "checkpoint": "$model_info.checkpoint"
       },
+      "raw_metadata": "$raw_metadata",
       "architecture_info": {
         "detected_as": "PixArt",
         "text_encoding": "T5",

@@ -11,7 +11,7 @@ from typing import Any
 
 from . import numpy_scorer
 from .correct_types import DownField, UpField
-from .logger import info_monitor as nfo
+from .logger import get_logger, info_monitor as nfo
 from .metadata_engine.engine import create_metadata_engine
 from .metadata_engine.parser_registry import register_parser_class
 from .vendored_sdpr.format.a1111 import A1111
@@ -47,7 +47,7 @@ def _register_vendored_parsers():
 _register_vendored_parsers()
 
 
-def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]:
+def parse_metadata(file_path_named: str, status_callback=None, extract_exif_fallback: bool = True) -> dict[str, Any]:
     """Parses metadata from a given file using the modular metadata engine.
 
     This function initializes the metadata engine, processes the file,
@@ -64,9 +64,10 @@ def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]
     final_ui_dict: dict[str, Any] = {}
 
     try:
-        # Create the metadata engine
+        # Create the metadata engine with proper logger
         nfo("[DT.metadata_parser]: Creating metadata engine with path: %s", PARSER_DEFINITIONS_PATH)
-        engine = create_metadata_engine(PARSER_DEFINITIONS_PATH)
+        engine_logger = get_logger()  # Use the same logger as the rest of the app
+        engine = create_metadata_engine(PARSER_DEFINITIONS_PATH, logger=engine_logger)
         nfo("[DT.metadata_parser]: Engine created successfully, calling get_parser_for_file")
 
         # Process the file
@@ -116,6 +117,80 @@ def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]
                 nfo("[DT.metadata_parser]: BEFORE NUMPY - Parser extracted prompt: %s", parser_prompt[:100] if parser_prompt else "NONE")
                 nfo("[DT.metadata_parser]: BEFORE NUMPY - Parser extracted negative: %s", parser_negative[:100] if parser_negative else "NONE")
 
+                # FALLBACK: If A1111 hybrid parser found no prompts, try extracting from ComfyUI workflow
+                parser_name = result.get("parser", "")
+                if parser_name == "a1111_string_with_workflow":
+                    if (not parser_prompt or not parser_negative):
+                        nfo("[DT.metadata_parser]: A1111 hybrid parser missing prompts, attempting ComfyUI workflow fallback...")
+
+                        # Get the workflow from the engine's context (prepared during file processing)
+                        workflow_data = None
+
+                        # First try: Get from raw_workflow_json field (debug field from parser)
+                        import json
+                        raw_workflow = result.get("raw_workflow_json", "")
+                        if raw_workflow:
+                            if isinstance(raw_workflow, str):
+                                try:
+                                    workflow_data = json.loads(raw_workflow)
+                                    nfo("[DT.metadata_parser]: Found workflow in raw_workflow_json (string)")
+                                except:
+                                    pass
+                            elif isinstance(raw_workflow, dict):
+                                workflow_data = raw_workflow
+                                nfo("[DT.metadata_parser]: Found workflow in raw_workflow_json (dict)")
+
+                        # Second try: Get from the engine context directly (this is where it actually is!)
+                        if not workflow_data:
+                            # The workflow was loaded into context during file preparation
+                            # We need to re-parse it from the file since we don't have context access here
+                            try:
+                                from PIL import Image
+                                img = Image.open(file_path_named)
+                                workflow_json = img.info.get('workflow', '')
+                                if workflow_json:
+                                    if isinstance(workflow_json, str):
+                                        workflow_data = json.loads(workflow_json)
+                                    else:
+                                        workflow_data = workflow_json
+                                    nfo("[DT.metadata_parser]: Loaded workflow directly from image file")
+                            except Exception as e:
+                                nfo("[DT.metadata_parser]: Failed to load workflow from file: %s", e)
+
+                        if workflow_data and isinstance(workflow_data, dict):
+                            # Use the ComfyUI extractor to get prompts from workflow
+                            try:
+                                comfyui_extractor = engine.field_extractor.comfyui_extractor
+
+                                # Extract positive prompt if missing
+                                if not parser_prompt:
+                                    positive_result = comfyui_extractor._find_legacy_text_from_main_sampler_input(
+                                        data=workflow_data,
+                                        method_def={"positive_input_name": "positive"},
+                                        context={},  # Empty context - not needed for basic extraction
+                                        fields={}    # Empty fields - not needed for basic extraction
+                                    )
+                                    if positive_result:
+                                        result["prompt"] = positive_result
+                                        nfo("[DT.metadata_parser]: ✅ Fallback extracted positive prompt from workflow: %s", positive_result[:100])
+
+                                # Extract negative prompt if missing
+                                if not parser_negative:
+                                    negative_result = comfyui_extractor._find_legacy_text_from_main_sampler_input(
+                                        data=workflow_data,
+                                        method_def={"negative_input_name": "negative"},
+                                        context={},  # Empty context - not needed for basic extraction
+                                        fields={}    # Empty fields - not needed for basic extraction
+                                    )
+                                    if negative_result:
+                                        result["negative_prompt"] = negative_result
+                                        nfo("[DT.metadata_parser]: ✅ Fallback extracted negative prompt from workflow: %s", negative_result[:100])
+
+                            except Exception as fallback_error:
+                                nfo("[DT.metadata_parser]: ⚠️ Workflow fallback failed: %s", fallback_error)
+                        else:
+                            nfo("[DT.metadata_parser]: ⚠️ No valid workflow data found for fallback")
+
                 nfo("[DT.metadata_parser]: Applying numpy enhancement to all parsing results")
                 enhanced_result = numpy_scorer.enhance_result(result, file_path_named)
                 result = enhanced_result
@@ -149,10 +224,16 @@ def parse_metadata(file_path_named: str, status_callback=None) -> dict[str, Any]
         }
         potential_ai_parsed = False
 
-    # 4. (Optional) Future placeholder for adding non-AI metadata (like EXIF)
-    # if not potential_ai_parsed:
-    #     nfo("[DT.metadata_parser]: No AI metadata found, could add standard EXIF/XMP here.")
-    #     pass
+    # 4. Add standard EXIF metadata if no AI metadata was found (only for full detail view, not thumbnails)
+    if not potential_ai_parsed and extract_exif_fallback:
+        nfo("[DT.metadata_parser]: No AI metadata found, extracting standard EXIF data...")
+        exif_data = _extract_basic_exif(file_path_named)
+        if exif_data:
+            final_ui_dict[DownField.GENERATION_DATA.value] = exif_data
+            final_ui_dict[UpField.METADATA.value] = {
+                "Source": "EXIF Data (No AI metadata detected)"
+            }
+            nfo("[DT.metadata_parser]: Extracted basic EXIF metadata")
 
     if not final_ui_dict:
         final_ui_dict["info"] = {
@@ -252,3 +333,192 @@ def _transform_engine_result_to_ui_dict(result: dict[str, Any], ui_dict: dict[st
 
     if civitai_api_info:
         ui_dict[UpField.CIVITAI_INFO.value] = civitai_api_info
+
+
+def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
+    """Extract basic EXIF metadata when no AI metadata is found.
+
+    Args:
+        file_path: Path to the image file
+
+    Returns:
+        Dictionary of EXIF fields or None if no useful EXIF data found
+    """
+    try:
+        from PIL import Image
+        import piexif
+        import io
+
+        img = Image.open(file_path)
+        result = {}
+
+        # Get basic image info
+        result["Format"] = img.format or "Unknown"
+        result["Dimensions"] = f"{img.width} x {img.height}"
+
+        # ICC Color Profile
+        if "icc_profile" in img.info:
+            try:
+                from PIL import ImageCms
+                icc_bytes = img.info["icc_profile"]
+                profile = ImageCms.ImageCmsProfile(io.BytesIO(icc_bytes))
+                # Get profile description (e.g., "sRGB IEC61966-2.1")
+                profile_desc = ImageCms.getProfileDescription(profile)
+                if profile_desc:
+                    result["Color Profile"] = profile_desc.strip()
+            except Exception:
+                # If we can't parse the profile, just note that it exists
+                result["Color Profile"] = "Present (unknown)"
+
+        # Progressive JPEG info
+        if img.format == "JPEG" and img.info.get("progressive"):
+            result["JPEG Encoding"] = "Progressive"
+
+        # Try to get EXIF data
+        exif_dict = piexif.load(img.info.get("exif", b""))
+        if not exif_dict:
+            return result if result else None
+
+        # EXIF tag numbers (IFD0 - main tags)
+        exif_0th = exif_dict.get("0th", {})
+        exif_exif = exif_dict.get("Exif", {})  # Exif-specific tags
+        exif_gps = exif_dict.get("GPS", {})    # GPS tags
+
+        # Camera Make (271) and Model (272)
+        if 271 in exif_0th:
+            make_bytes = exif_0th[271]
+            if isinstance(make_bytes, bytes):
+                try:
+                    make = make_bytes.decode("ascii", "ignore").strip("\x00")
+                    if make:
+                        result["Camera Make"] = make
+                except:
+                    pass
+
+        if 272 in exif_0th:
+            model_bytes = exif_0th[272]
+            if isinstance(model_bytes, bytes):
+                try:
+                    model = model_bytes.decode("ascii", "ignore").strip("\x00")
+                    if model:
+                        result["Camera Model"] = model
+                except:
+                    pass
+
+        # Software (305)
+        if 305 in exif_0th:
+            software_bytes = exif_0th[305]
+            if isinstance(software_bytes, bytes):
+                try:
+                    software = software_bytes.decode("ascii", "ignore").strip("\x00")
+                    if software:
+                        result["Software"] = software
+                except:
+                    pass
+
+        # DateTime (306)
+        if 306 in exif_0th:
+            datetime_bytes = exif_0th[306]
+            if isinstance(datetime_bytes, bytes):
+                try:
+                    datetime_str = datetime_bytes.decode("ascii", "ignore").strip("\x00")
+                    if datetime_str:
+                        result["DateTime"] = datetime_str
+                except:
+                    pass
+
+        # Resolution (282, 283)
+        if 282 in exif_0th:
+            try:
+                x_res = exif_0th[282]
+                if isinstance(x_res, tuple) and len(x_res) == 2:
+                    # Rational format: (numerator, denominator)
+                    if x_res[1] != 0:
+                        dpi = x_res[0] / x_res[1]
+                        result["Resolution"] = f"{int(dpi)} DPI"
+            except:
+                pass
+
+        # Exposure Time (33434) - in Exif IFD
+        if 33434 in exif_exif:
+            try:
+                exp_time = exif_exif[33434]
+                if isinstance(exp_time, tuple) and len(exp_time) == 2:
+                    if exp_time[1] != 0:
+                        exp_val = exp_time[0] / exp_time[1]
+                        if exp_val < 1:
+                            result["Exposure Time"] = f"1/{int(1/exp_val)} sec"
+                        else:
+                            result["Exposure Time"] = f"{exp_val:.2f} sec"
+            except:
+                pass
+
+        # F-Number (33437) - in Exif IFD
+        if 33437 in exif_exif:
+            try:
+                f_num = exif_exif[33437]
+                if isinstance(f_num, tuple) and len(f_num) == 2:
+                    if f_num[1] != 0:
+                        f_val = f_num[0] / f_num[1]
+                        result["Aperture"] = f"f/{f_val:.1f}"
+            except:
+                pass
+
+        # ISO Speed (34855) - in Exif IFD
+        if 34855 in exif_exif:
+            try:
+                iso = exif_exif[34855]
+                if isinstance(iso, int):
+                    result["ISO"] = str(iso)
+                elif isinstance(iso, tuple) and len(iso) > 0:
+                    result["ISO"] = str(iso[0])
+            except:
+                pass
+
+        # Focal Length (37386) - in Exif IFD
+        if 37386 in exif_exif:
+            try:
+                focal = exif_exif[37386]
+                if isinstance(focal, tuple) and len(focal) == 2:
+                    if focal[1] != 0:
+                        focal_val = focal[0] / focal[1]
+                        result["Focal Length"] = f"{focal_val:.1f}mm"
+            except:
+                pass
+
+        # Focal Length in 35mm (41989) - in Exif IFD
+        if 41989 in exif_exif:
+            try:
+                focal_35 = exif_exif[41989]
+                if isinstance(focal_35, int):
+                    result["Focal Length (35mm equiv)"] = f"{focal_35}mm"
+                elif isinstance(focal_35, tuple) and len(focal_35) > 0:
+                    result["Focal Length (35mm equiv)"] = f"{focal_35[0]}mm"
+            except:
+                pass
+
+        # Flash (37385) - in Exif IFD
+        if 37385 in exif_exif:
+            try:
+                flash = exif_exif[37385]
+                if isinstance(flash, int):
+                    # Flash tag is a bitmask, but simple check: 0 = no flash
+                    flash_status = "Fired" if (flash & 0x01) else "Did not fire"
+                    result["Flash"] = flash_status
+                elif isinstance(flash, tuple) and len(flash) > 0:
+                    flash_val = flash[0]
+                    flash_status = "Fired" if (flash_val & 0x01) else "Did not fire"
+                    result["Flash"] = flash_status
+            except:
+                pass
+
+        # GPS Coordinates - DISABLED for privacy reasons
+        # Extracting GPS data can trigger macOS location/Bluetooth permission prompts
+        # and displaying exact coordinates could be a privacy/security concern.
+        # Users can use dedicated EXIF tools if they need GPS data.
+
+        return result if result else None
+
+    except Exception as e:
+        nfo("[DT.metadata_parser]: Failed to extract EXIF: %s", e)
+        return None

@@ -1,6 +1,6 @@
 {
   "parser_name": "ComfyUI Modern Architectures (Unified)",
-  "priority": 220,
+  "priority": 120,
   "description": "A consolidated parser for modern ComfyUI workflows, including T5, DiT, and advanced sampling architectures (e.g., Flux, PixArt, SD3, AuraFlow, Qwen, HiDream).",
   "version": "2.3-log-aligned",
   "maintainer": "Ktiseos Nyx & Gemini",
@@ -107,8 +107,8 @@
         "field_name": "height"
       },
       {
-        "target_key": "raw_workflow_json",
-        "method": "direct_input_data_as_string"
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
       }
     ],
     "output_template": {
@@ -117,7 +117,7 @@
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
       "parameters": "$parameters",
-      "raw_workflow_json": "$raw_workflow_json"
+      "raw_metadata": "$raw_metadata"
     }
   }
 }

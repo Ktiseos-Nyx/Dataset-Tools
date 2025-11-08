@@ -1,6 +1,6 @@
 {
   "parser_name": "ComfyUI_Simple",
-  "priority": 100,
+  "priority": 97,
   "description": "Simple ComfyUI workflow parser for basic PNG files",
   "version": "1.0",
   "maintainer": "Ktiseos Nyx",

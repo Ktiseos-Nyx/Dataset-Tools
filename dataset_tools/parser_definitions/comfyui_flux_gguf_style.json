@@ -45,10 +45,11 @@
         "target_input": "positive"
       },
       {
-        "comment": "Extract negative prompt using targeted traversal",
+        "comment": "Extract negative prompt using targeted traversal (FLUX typically doesn't use negative prompts)",
         "target_key": "negative_prompt",
         "method": "comfyui_targeted_prompt_extraction",
-        "target_input": "negative"
+        "target_input": "negative",
+        "optional": true
       },
       {
         "comment": "Extract FLUX model name",

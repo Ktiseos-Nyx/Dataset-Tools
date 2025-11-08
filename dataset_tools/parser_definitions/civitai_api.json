@@ -1,6 +1,6 @@
 {
   "parser_name": "CivitAI API",
-  "priority": 174,
+  "priority": 14,
   "description": "CivitAI API and training inference - detects API-generated images with specific CivitAI API signatures and numbered models 🎨🔗",
   "version": "1.0",
   "maintainer": "Chaos Bean Crew",
@@ -51,7 +51,7 @@
         "method": "a1111_extract_prompt_positive"
       },
       {
-        "target_key": "negative_prompt", 
+        "target_key": "negative_prompt",
         "method": "a1111_extract_prompt_negative"
       },
       {
@@ -63,7 +63,7 @@
       {
         "target_key": "parameters.sampler",
         "method": "key_value_extract_from_a1111_block",
-        "key_name": "Sampler", 
+        "key_name": "Sampler",
         "value_type": "string"
       },
       {
@@ -105,7 +105,7 @@
       },
       {
         "target_key": "parameters.hires_upscaler",
-        "method": "key_value_extract_from_a1111_block", 
+        "method": "key_value_extract_from_a1111_block",
         "key_name": "Hires upscaler",
         "value_type": "string",
         "optional": true
@@ -113,7 +113,7 @@
       {
         "target_key": "parameters.hires_steps",
         "method": "key_value_extract_from_a1111_block",
-        "key_name": "Hires steps", 
+        "key_name": "Hires steps",
         "value_type": "integer",
         "optional": true
       },
@@ -130,13 +130,13 @@
       "tool": "CivitAI API",
       "category": "API Generation / Training Inference",
       "platform": "CivitAI",
-      
+
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
 
       "parameters": {
         "steps": "$parameters.steps",
-        "sampler": "$parameters.sampler", 
+        "sampler": "$parameters.sampler",
         "cfg_scale": "$parameters.cfg_scale",
         "seed": "$parameters.seed",
         "width": "$CONTEXT.width",
@@ -162,7 +162,7 @@
         "format": "A1111-compatible parameters",
         "upscaling": {
           "hires_upscaler": "$parameters.hires_upscaler",
-          "hires_steps": "$parameters.hires_steps", 
+          "hires_steps": "$parameters.hires_steps",
           "denoising_strength": "$parameters.denoising_strength",
           "size_change": "$parameters.original_size → $CONTEXT.width x $CONTEXT.height"
         }
@@ -179,7 +179,7 @@
 
       "_metadata": {
         "processed_at": "$CURRENT_TIMESTAMP",
-        "processor": "MetadataEngine", 
+        "processor": "MetadataEngine",
         "template_processed": true,
         "note": "CivitAI API or training inference with A1111-compatible formatting"
       }
@@ -190,7 +190,7 @@
     "Detects CivitAI API-generated images and LoRA training inference outputs",
     "Uses specific API signatures (numbered models, API URLs, inference markers)",
     "Distinguishes from regular A1111 WebUI usage by requiring actual API indicators",
-    "Priority 174 - higher than A1111 WebUI (170) for specific CivitAI API detection", 
+    "Priority 174 - higher than A1111 WebUI (170) for specific CivitAI API detection",
     "Supports both direct API calls and training inference workflows",
     "Requires numbered model files (12345.safetensors) or explicit API markers",
     "No longer matches just model names - requires actual CivitAI API evidence"

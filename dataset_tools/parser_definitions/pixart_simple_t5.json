@@ -74,11 +74,15 @@
     "fields": [
       {
         "target_key": "prompt",
-        "method": "pixart_extract_prompt_from_t5_nodes"
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "positive",
+        "text_encoder_node_types": ["T5TextEncode", "PixArtT5TextEncode", "CLIPTextEncode"]
       },
       {
         "target_key": "negative_prompt",
-        "method": "pixart_extract_negative_from_t5_nodes"
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "negative",
+        "text_encoder_node_types": ["T5TextEncode", "PixArtT5TextEncode", "CLIPTextEncode"]
       },
       {
         "target_key": "parameters.model",
@@ -201,6 +205,10 @@
         "comment": "🎯 High-Level Workflow Techniques",
         "target_key": "workflow_techniques",
         "method": "comfyui_extract_workflow_techniques"
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
       }
     ],
     "output_template": {
@@ -219,6 +227,7 @@
         "width": "$parameters.width",
         "height": "$parameters.height"
       },
+      "raw_metadata": "$raw_metadata",
       "architecture_info": {
         "detected_as": "PixArt T5 architecture",
         "text_encoder": "T5-v11",

@@ -1,6 +1,13 @@
 # dataset_tools/metadata_engine/utils.py
 import re
 
+try:
+    from jsonpath_ng.ext import parse as jsonpath_parse
+    HAS_JSONPATH = True
+except ImportError:
+    HAS_JSONPATH = False
+    # Don't log here - let it fail silently or log later when actually used
+
 
 def get_a1111_kv_block_utility(data: str) -> str:
     """Extract the key-value parameter block from A1111 format string.
@@ -43,8 +50,44 @@ def get_a1111_kv_block_utility(data: str) -> str:
 
 
 def json_path_get_utility(data_container: any, path_str: str | None) -> any:
+    """Get value from data using JSONPath or simple dot notation.
+
+    Supports:
+    - Simple dot notation: "foo.bar"
+    - Array indexing: "foo[0]" or "foo.bar[0]"
+    - Full JSONPath (requires jsonpath-ng): "$.nodes[?(@.type=='sampler')]"
+
+    Returns the value at the path, or None if not found.
+    For JSONPath queries that return multiple matches, returns a list.
+    """
     if not path_str:
         return data_container
+
+    # Check if it's a JSONPath query (starts with $ or contains filter syntax)
+    is_jsonpath_query = any(indicator in path_str for indicator in ['$', '[?', '(@', '=~'])
+
+    if is_jsonpath_query and HAS_JSONPATH:
+        # Use full JSONPath library for complex queries
+        try:
+            jsonpath_expr = jsonpath_parse(path_str)
+            matches = [match.value for match in jsonpath_expr.find(data_container)]
+            # Return list if multiple matches, single value if one match, None if no matches
+            if len(matches) == 0:
+                return None
+            elif len(matches) == 1:
+                return matches[0]
+            else:
+                return matches
+        except Exception:
+            # JSONPath parse failed - fall back to simple parser
+            return None
+
+    # Fall back to simple dot-notation parser (backward compatible)
+    return _simple_dot_notation_parser(data_container, path_str)
+
+
+def _simple_dot_notation_parser(data_container: any, path_str: str) -> any:
+    """Simple dot-notation parser for basic paths like 'foo.bar' or 'foo[0].bar'."""
     keys = path_str.split(".")
     current = data_container
     for key_part in keys:

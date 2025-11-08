@@ -35,32 +35,64 @@ class ComfyUIGriptapeExtractor:
             "CLIPTextEncode": 1.0,  # Standard encoding (may contain templates)
         }
 
-    def extract_griptape_smart_prompt(self, data: ContextData, fields: ExtractedFields, definition: MethodDefinition) -> None:
-        """Extract the best prompt from Griptape AI workflow using smart candidate scoring."""
-        workflow = self._get_workflow_data(data)
+    def extract_griptape_smart_prompt(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> str:
+        """Extract the best prompt from Griptape AI workflow using smart candidate scoring.
+
+        Returns the extracted prompt text (standard extraction interface).
+        """
+        # Check if we're looking for negative prompt
+        target_key = method_def.get("target_key", "prompt")
+        is_negative = "negative" in target_key.lower()
+
+        workflow = self._get_workflow_data_from_input(data, context)
         if not workflow:
-            return
+            self.logger.debug("[Griptape] No workflow data found")
+            return ""
 
         # Find all potential prompt candidates
-        candidates = self._find_prompt_candidates(workflow)
+        candidates = self._find_prompt_candidates(workflow, is_negative=is_negative)
 
         if not candidates:
             self.logger.debug("[Griptape] No prompt candidates found")
-            return
+            return ""
 
         # Score and rank candidates using numpy-enhanced logic
-        scored_candidates = self._score_candidates(candidates)
+        scored_candidates = self._score_candidates(candidates, is_negative=is_negative)
+
+        if not scored_candidates:
+            self.logger.debug("[Griptape] No scored candidates")
+            return ""
 
         # Select the best candidate
         best_candidate = max(scored_candidates, key=lambda c: c["score"])
 
-        # Extract target field from definition
-        target_field = definition.get("target_field", "prompt")
+        self.logger.info("[Griptape] Selected %s with score %.2f for %s: %s",
+                        best_candidate['node_type'],
+                        best_candidate['score'],
+                        "NEGATIVE" if is_negative else "POSITIVE",
+                        best_candidate['text'][:100])
 
-        # Store the result
-        fields[target_field] = best_candidate["text"]
+        return best_candidate["text"]
 
-        self.logger.info(f"[Griptape] Selected {best_candidate['node_type']} with score {best_candidate['score']:.2f}")
+    def _get_workflow_data_from_input(self, data: Any, context: ContextData) -> dict[str, Any] | None:
+        """Extract workflow data from input data or context."""
+        # First try the data itself
+        if isinstance(data, dict):
+            if "nodes" in data:
+                return data
+            # Try nested workflow keys
+            for key in ["workflow", "workflow_api", "raw_workflow"]:
+                if key in data and isinstance(data[key], dict):
+                    return data[key]
+
+        # Fall back to context
+        return self._get_workflow_data(context)
 
     def _get_workflow_data(self, data: ContextData) -> dict[str, Any] | None:
         """Extract workflow data from context."""
@@ -69,7 +101,7 @@ class ComfyUIGriptapeExtractor:
                 return data[key]
         return None
 
-    def _find_prompt_candidates(self, workflow: dict[str, Any]) -> list[dict[str, Any]]:
+    def _find_prompt_candidates(self, workflow: dict[str, Any], is_negative: bool = False) -> list[dict[str, Any]]:
         """Find all potential prompt sources in the workflow."""
         candidates = []
         nodes = workflow.get("nodes", [])
@@ -80,7 +112,13 @@ class ComfyUIGriptapeExtractor:
 
             node_type = node.get("type", "")
             node_id = node.get("id")
+            node_title = node.get("title", "").lower()
             widgets = node.get("widgets_values", [])
+
+            # For negative prompts, look for nodes with "negative" in the title
+            if is_negative:
+                if "negative" not in node_title:
+                    continue  # Skip nodes without "negative" in title
 
             # Extract text based on node type (from our research)
             text = self._extract_text_from_node(node_type, widgets)
@@ -90,7 +128,7 @@ class ComfyUIGriptapeExtractor:
                     "text": text.strip(),
                     "node_type": node_type,
                     "node_id": node_id,
-                    "title": node.get("title", "").lower(),
+                    "title": node_title,
                     "widgets": widgets
                 })
 
@@ -132,18 +170,19 @@ class ComfyUIGriptapeExtractor:
 
         return ""
 
-    def _score_candidates(self, candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def _score_candidates(self, candidates: list[dict[str, Any]], is_negative: bool = False) -> list[dict[str, Any]]:
         """Score candidates using numpy-enhanced logic from our research."""
         for candidate in candidates:
-            score = self._calculate_candidate_score(candidate)
+            score = self._calculate_candidate_score(candidate, is_negative=is_negative)
             candidate["score"] = score
 
         return candidates
 
-    def _calculate_candidate_score(self, candidate: dict[str, Any]) -> float:
+    def _calculate_candidate_score(self, candidate: dict[str, Any], is_negative: bool = False) -> float:
         """Calculate score for a candidate (key logic from numpy research)."""
         text = candidate["text"]
         node_type = candidate["node_type"]
+        node_title = candidate.get("title", "")
 
         # Base score
         score = 5.0
@@ -151,6 +190,11 @@ class ComfyUIGriptapeExtractor:
         # Node type bonus
         node_bonus = self.node_scores.get(node_type, 0)
         score += node_bonus
+
+        # Negative prompt title boost
+        if is_negative and "negative" in node_title:
+            score += 10.0  # Strong boost for nodes titled "negative"
+            self.logger.debug("[Griptape] Negative title boost: +10.0")
 
         # Length bonus (capped to prevent runaway scores)
         text_length = len(text)

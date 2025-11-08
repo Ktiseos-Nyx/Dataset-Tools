@@ -351,11 +351,11 @@ class ComfyUIDynamicPromptsExtractor:
                             )
                             return prompt_template
 
-        # Fallback: look for any CLIPTextEncode connected to the DPRandomGenerator output
+        # Fallback: look for any CLIPTextEncode variant connected to the DPRandomGenerator output
         for node_data in nodes.values():
             if isinstance(node_data, dict):
                 class_type = node_data.get("class_type", "")
-                if class_type == "CLIPTextEncode":
+                if class_type.startswith("CLIPTextEncode"):
                     # Check if this node has a STRING input link from a DPRandomGenerator
                     inputs = node_data.get("inputs", [])
                     for input_def in inputs:

@@ -178,6 +178,10 @@ def main(cli_args_list=None):
     window.show()
     window.apply_global_font()  # Apply saved font settings after UI is fully created
 
+    # Connect async logging cleanup to Qt's shutdown signal
+    # This ensures the QueueListener is stopped exactly once, cleanly
+    app.aboutToQuit.connect(app_logger.stop_async_logging)
+
     try:
         exit_code = app.exec()
     finally:

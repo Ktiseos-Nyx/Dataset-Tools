@@ -17,6 +17,7 @@ from .comfyui_dynamicprompts import ComfyUIDynamicPromptsExtractor
 from .comfyui_efficiency import ComfyUIEfficiencyExtractor
 from .comfyui_flux import ComfyUIFluxExtractor
 from .comfyui_griptape import ComfyUIGriptapeExtractor
+from .comfyui_hidream import ComfyUIHiDreamExtractor
 from .comfyui_impact import ComfyUIImpactExtractor
 from .comfyui_inspire import ComfyUIInspireExtractor
 from .comfyui_pixart import ComfyUIPixArtExtractor
@@ -24,6 +25,7 @@ from .comfyui_quadmoons import ComfyUIQuadMoonsExtractor
 from .comfyui_rgthree import ComfyUIRGthreeExtractor
 from .comfyui_sdxl import ComfyUISDXLExtractor
 from .comfyui_searge import ComfyUISeargeExtractor
+from .comfyui_text_combiners import ComfyUITextCombinerExtractor
 from .comfyui_traversal import ComfyUITraversalExtractor
 from .comfyui_was import ComfyUIWASExtractor
 from .comfyui_workflow_analyzer import ComfyUIWorkflowAnalyzer  # New Analyzer
@@ -61,8 +63,10 @@ class ComfyUIExtractorManager:
         self.rgthree = ComfyUIRGthreeExtractor(logger)
         self.inspire = ComfyUIInspireExtractor(logger)
         self.dynamicprompts = ComfyUIDynamicPromptsExtractor(logger)
+        self.hidream = ComfyUIHiDreamExtractor(logger)
         self.griptape = ComfyUIGriptapeExtractor(logger)
         self.quadmoons = ComfyUIQuadMoonsExtractor(logger)
+        self.text_combiners = ComfyUITextCombinerExtractor(logger)
 
         # Cache for detected workflow types (might be managed by analyzer now)
         self._workflow_type_cache: dict[str, list[str]] = {}
@@ -85,8 +89,10 @@ class ComfyUIExtractorManager:
         methods.update(self.rgthree.get_methods())
         methods.update(self.inspire.get_methods())
         methods.update(self.dynamicprompts.get_methods())
+        methods.update(self.hidream.get_methods())
         methods.update(self.griptape.get_methods())
         methods.update(self.quadmoons.get_methods())
+        methods.update(self.text_combiners.get_methods())
 
         # Add workflow analyzer methods if needed
         # methods.update(self.workflow_analyzer.get_methods())

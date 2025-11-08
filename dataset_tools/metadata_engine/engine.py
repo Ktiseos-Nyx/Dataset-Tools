@@ -188,6 +188,9 @@ class MetadataEngine:
         self.logger.debug(f"File format: {context_data.get('file_format')}, extension: {context_data.get('file_extension')}")
         self.logger.debug(f"Image size: {context_data.get('width')}x{context_data.get('height')}")
 
+        # Clear cache for new file (prevents A1111 parameter string being extracted 11+ times)
+        self.rule_engine.clear_file_cache()
+
         # Find matching parser definition
         self.logger.debug("About to call _find_matching_parser")
         chosen_parser_def = self._find_matching_parser(context_data)
@@ -357,7 +360,9 @@ class MetadataEngine:
         self.logger.info(f"Using JSON-defined parsing instructions for {parser_name}")
 
         # Prepare input data
+        self.logger.debug("[ENGINE] Preparing input data for %s", parser_name)
         input_data, original_input = self._prepare_input_data(instructions, context_data)
+        self.logger.debug("[ENGINE] Input data type: %s, is None: %s", type(input_data), input_data is None)
         if input_data is None:
             self.logger.warning(f"No input data found for {parser_name}")
             return None
@@ -366,6 +371,8 @@ class MetadataEngine:
         transformed_data = self._transform_input_data(input_data, instructions, original_input)
 
         # Extract fields
+        self.logger.debug("[ENGINE] About to extract fields, instructions keys: %s", list(instructions.keys()))
+        self.logger.debug("[ENGINE] Field definitions count: %s", len(instructions.get("fields", [])))
         extracted_fields = self._extract_fields(instructions, transformed_data, context_data)
 
         # Process output template
@@ -507,6 +514,29 @@ class MetadataEngine:
         elif transform_type == "filter_dict_nodes_only" and isinstance(data, dict):
             # Filter out non-dict values to keep only node data for ComfyUI workflows
             return {k: v for k, v in data.items() if isinstance(v, dict)}
+
+        elif transform_type == "extract_nested_key":
+            # Extract a nested key from dict, with optional fallback to root
+            key = transform.get("key")
+            fallback_to_root = transform.get("fallback_to_root", False)
+
+            if not key:
+                self.logger.warning("extract_nested_key transformation missing 'key' parameter")
+                return data
+
+            if isinstance(data, dict) and key in data:
+                # Extract the nested object
+                extracted = data[key]
+                self.logger.debug("Extracted nested key '%s' from data", key)
+                return extracted
+            elif fallback_to_root:
+                # Key not found, return original data as fallback
+                self.logger.debug("Key '%s' not found, using fallback_to_root", key)
+                return data
+            else:
+                # Key not found and no fallback
+                self.logger.warning("Key '%s' not found in data and no fallback specified", key)
+                return None
 
         elif transform_type == "extract_json_from_xmp_user_comment" and isinstance(data, str):
             # Extract JSON from XMP exif:UserComment element (for Draw Things)
