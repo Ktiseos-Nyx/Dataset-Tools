@@ -1,77 +1,40 @@
 {
-  "parser_name": "ComfyUI Targeted Parser",
-  "priority": 60,
-  "description": "Fallback ComfyUI parser using targeted graph traversal for workflows not matched by specialized parsers",
-  "version": "2.0_enhanced_fallback",
-  "maintainer": "DuskFall Crew",
+  "parser_name": "ComfyUI FLUX (Generic)",
+  "priority": 140,
+  "description": "Generic FLUX workflows including advanced text processing, wildcards, and modern sampling",
+  "version": "2.0",
+  "maintainer": "Dataset-Tools",
   "target_file_types": [
-    "PNG",
-    "JPEG",
-    "JPG",
-    "WEBP"
+    "PNG", "JPG", "JPEG"
   ],
   "detection_rules": [
     {
-      "comment": "Rule 1: Must have 'workflow' PNG chunk with valid JSON and ComfyUI node signatures",
-      "operator": "AND",
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
+      "condition": "OR",
       "rules": [
         {
-          "source_type": "png_chunk",
-          "source_key": "workflow",
-          "operator": "exists"
-        },
-        {
-          "source_type": "png_chunk",
+          "source_type": "pil_info_key",
           "source_key": "workflow",
           "operator": "is_valid_json"
         },
         {
-          "comment": "Check for typical ComfyUI node types - using simple contains check",
-          "source_type": "png_chunk",
-          "source_key": "workflow",
-          "operator": "OR",
-          "rules": [
-            {"operator": "contains", "value": "KSampler"},
-            {"operator": "contains", "value": "SamplerCustomAdvanced"},
-            {"operator": "contains", "value": "CLIPTextEncode"}
-          ]
-        },
-        {
-          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
-          "source_type": "png_chunk",
-          "source_key": "workflow",
-          "operator": "does_not_contain",
-          "value": "extraMetadata"
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
         }
       ]
     },
     {
-      "comment": "Rule 2: OR, must have 'prompt' pil_info_key with valid JSON and ComfyUI node signatures (for older/different formats)",
-      "operator": "AND",
-      "rules": [
-        {
-          "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "is_valid_json"
-        },
-        {
-          "comment": "Check for typical ComfyUI node types - using simple contains check",
-          "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "OR",
-          "rules": [
-            {"operator": "contains", "value": "KSampler"},
-            {"operator": "contains", "value": "SamplerCustomAdvanced"},
-            {"operator": "contains", "value": "CLIPTextEncode"}
-          ]
-        },
-        {
-          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
-          "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "does_not_contain",
-          "value": "extraMetadata"
-        }
+      "comment": "Rule 2: Must contain FLUX-specific nodes",
+      "source_type": "pil_info_key",
+      "source_key_options": ["workflow", "prompt"],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "CLIPTextEncodeFlux",
+        "ModelSamplingFlux",
+        "FluxGuidance",
+        "DualCLIPLoader"
       ]
     }
   ],
@@ -95,126 +58,102 @@
     },
     "fields": [
       {
-        "comment": "Extract positive prompt using targeted graph traversal",
+        "comment": "Use targeted extraction with fallbacks for complex workflows",
         "target_key": "prompt",
         "method": "comfyui_targeted_prompt_extraction",
-        "params": {
-            "target_input": "positive"
-        }
+        "target_input": "positive"
       },
       {
-        "comment": "Extract negative prompt using targeted graph traversal",
         "target_key": "negative_prompt",
         "method": "comfyui_targeted_prompt_extraction",
-        "params": {
-            "target_input": "negative"
-        }
+        "target_input": "negative"
       },
       {
-        "comment": "Extract seed from sampler",
         "target_key": "parameters.seed",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
           "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "KSampler",
+          "KSamplerAdvanced"
         ],
-        "input_field": "seed",
+        "input_key": "seed",
         "value_type": "integer"
       },
       {
-        "comment": "Extract steps from sampler",
         "target_key": "parameters.steps",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
           "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "KSampler",
+          "KSamplerAdvanced"
         ],
-        "input_field": "steps",
+        "input_key": "steps",
         "value_type": "integer"
       },
       {
-        "comment": "Extract cfg_scale from sampler",
-        "target_key": "parameters.cfg_scale",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
-        ],
-        "input_field": "cfg",
-        "value_type": "float"
+        "target_key": "parameters.guidance_scale",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": ["FluxGuidance"],
+        "input_field": "guidance",
+        "data_type": "float",
+        "fallback": 3.5
       },
       {
-        "comment": "Extract sampler name",
         "target_key": "parameters.sampler_name",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
           "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "KSampler",
+          "KSamplerAdvanced"
         ],
-        "input_field": "sampler_name",
+        "input_key": "sampler_name",
         "value_type": "string"
       },
       {
-        "comment": "Extract width from latent image nodes",
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "SamplerCustomAdvanced",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string"
+      },
+      {
         "target_key": "parameters.width",
         "method": "comfy_find_input_of_node_type",
         "node_types": [
           "EmptyLatentImage",
-          "LatentUpscale",
-          "EmptyLatentImageFromPresetsSDXL",
-          "EmptySD3LatentImage"
+          "ImageScale"
         ],
         "input_field": "width",
-        "data_type": "integer"
+        "data_type": "integer",
+        "fallback": 1024
       },
       {
-        "comment": "Extract height from latent image nodes",
         "target_key": "parameters.height",
         "method": "comfy_find_input_of_node_type",
         "node_types": [
           "EmptyLatentImage",
-          "LatentUpscale",
-          "EmptyLatentImageFromPresetsSDXL",
-          "EmptySD3LatentImage"
+          "ImageScale"
         ],
         "input_field": "height",
-        "data_type": "integer"
+        "data_type": "integer",
+        "fallback": 1024
       },
       {
-        "comment": "Extract scheduler from sampler",
-        "target_key": "parameters.scheduler",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
-        ],
-        "input_field": "scheduler",
-        "value_type": "string"
-      },
-      {
-        "comment": "Extract model from checkpoint loaders",
         "target_key": "parameters.model",
         "method": "comfy_find_input_of_node_type",
         "node_types": [
-          "CheckpointLoaderSimple",
           "UNETLoader",
-          "CheckpointLoader"
+          "CheckpointLoaderSimple"
         ],
-        "input_field": "ckpt_name",
-        "data_type": "string"
+        "input_field": "unet_name",
+        "data_type": "string",
+        "fallback": "Unknown FLUX Model"
       },
       {
-        "comment": "Extract raw workflow metadata",
         "target_key": "raw_metadata",
         "method": "comfyui_extract_raw_workflow"
       },
@@ -255,17 +194,16 @@
       }
     ],
     "output_template": {
-      "parser_name_from_engine": "ComfyUI Targeted Parser",
-      "tool": "ComfyUI (Targeted Fallback)",
-      "format": "ComfyUI Generic Workflow",
-      "parser_version": "2.0_enhanced_fallback",
+      "parser_name_from_engine": "ComfyUI FLUX (Generic)",
+      "tool": "ComfyUI FLUX",
+      "format": "FLUX Text-to-Image",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
       "parameters": {
         "model": "$parameters.model",
         "seed": "$parameters.seed",
         "steps": "$parameters.steps",
-        "cfg_scale": "$parameters.cfg_scale",
+        "guidance_scale": "$parameters.guidance_scale",
         "sampler_name": "$parameters.sampler_name",
         "scheduler": "$parameters.scheduler",
         "width": "$parameters.width",
@@ -281,12 +219,30 @@
         "custom_node_ecosystems": "$workflow_analysis.custom_node_ecosystems",
         "workflow_techniques": "$workflow_analysis.workflow_techniques"
       },
+      "architecture_info": {
+        "detected_as": "FLUX",
+        "sampling_method": "FLUX Sampling",
+        "text_encoding": "Dual CLIP + T5",
+        "workflow_type": "Generic FLUX"
+      },
       "workflow_metadata": {
-        "source": "ComfyUI workflow",
-        "parser_priority": 60,
-        "confidence": "medium",
-        "note": "Caught by targeted fallback parser - may benefit from specialized parser"
+        "source": "ComfyUI FLUX workflow",
+        "parser_priority": 140,
+        "confidence": "high",
+        "flux_workflow": true
       }
     }
-  }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Generic FLUX workflow parser for text-to-image generation",
+    "Handles standard FLUX workflows with CLIPTextEncodeFlux and ModelSamplingFlux",
+    "Supports advanced features like wildcards and text concatenation",
+    "Priority 140 puts it below specialized parsers (Kontext, GGUF) but above generic ComfyUI",
+    "Replaces: flux_workflow (140) and comfyui_flux_advanced (80)"
+  ]
 }

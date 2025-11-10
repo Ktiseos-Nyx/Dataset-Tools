@@ -250,6 +250,10 @@
         "fallback": "Unknown VAE"
       },
       {
+        "target_key": "raw_metadata",
+        "method": "direct_input_data_as_string"
+      },
+      {
         "comment": "🎯 TIPO AI Prompt Enhancement Detection",
         "target_key": "tipo_enhancement",
         "method": "comfyui_detect_tipo_enhancement"
@@ -303,9 +307,19 @@
         "loras": "$parameters.loras",
         "vae_model": "$parameters.vae_model"
       },
+      "raw_metadata": "$raw_metadata",
+      "workflow_analysis": {
+        "tipo_enhancement": "$tipo_enhancement",
+        "workflow_complexity": "$workflow_complexity",
+        "advanced_upscaling": "$advanced_upscaling",
+        "multi_stage_conditioning": "$multi_stage_conditioning",
+        "post_processing_effects": "$post_processing_effects",
+        "custom_node_ecosystems": "$custom_node_ecosystems",
+        "workflow_techniques": "$workflow_techniques"
+      },
       "workflow_metadata": {
         "source": "EXIF UserComment",
-        "parser_priority": 115,
+        "parser_priority": 124,
         "confidence": "high"
       }
     }

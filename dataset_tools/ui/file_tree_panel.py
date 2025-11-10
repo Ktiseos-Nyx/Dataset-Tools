@@ -54,7 +54,12 @@ class FileTreePanel(Qw.QWidget):
         self.tree = Qw.QTreeWidget()
         self.tree.setHeaderLabel("Files and Folders")
         self.tree.setColumnCount(1)
+
+        # Enable keyboard search (type letters to jump to files)
+        self.tree.setEditTriggers(Qw.QAbstractItemView.EditTrigger.NoEditTriggers)
+
         self.tree.itemClicked.connect(self._on_item_clicked)
+        self.tree.currentItemChanged.connect(self._on_item_selected)
         self.tree.itemExpanded.connect(self._on_item_expanded)
         layout.addWidget(self.tree)
 
@@ -176,6 +181,22 @@ class FileTreePanel(Qw.QWidget):
             filepath = item.data(0, Qt.ItemDataRole.UserRole)
             self.file_selected.emit(filepath)
             nfo("[FileTreePanel] File selected: %s", filepath)
+
+    def _on_item_selected(self, current: Qw.QTreeWidgetItem, previous: Qw.QTreeWidgetItem):
+        """Handle item selection change (keyboard navigation).
+
+        Args:
+            current: Currently selected item
+            previous: Previously selected item (unused)
+        """
+        if current is None:
+            return
+
+        item_type = current.data(0, Qt.ItemDataRole.UserRole + 1)
+        if item_type == "file":
+            filepath = current.data(0, Qt.ItemDataRole.UserRole)
+            self.file_selected.emit(filepath)
+            nfo("[FileTreePanel] File selected (keyboard): %s", filepath)
 
     def _count_files(self, folder: Path) -> int:
         """Count all supported files in folder and subfolders.

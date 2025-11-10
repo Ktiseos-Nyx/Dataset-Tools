@@ -274,6 +274,10 @@ class CivitaiExtractor:
 
         self.logger.info("[CIVITAI_EXTRACTOR] Found IDs to fetch: %s", ids_to_fetch)
 
-        # Return IDs for UI to fetch asynchronously - NO API CALLS HERE
-        # This keeps metadata loading fast and UI responsive
-        return {"ids_to_fetch": ids_to_fetch, "fetch_pending": len(ids_to_fetch) > 0}
+        # ONLY return if we actually have IDs - don't create empty fetch requests
+        if ids_to_fetch:
+            self.logger.info("[CIVITAI_EXTRACTOR] Returning %d IDs for async fetch", len(ids_to_fetch))
+            return {"ids_to_fetch": ids_to_fetch, "fetch_pending": True}
+        else:
+            self.logger.debug("[CIVITAI_EXTRACTOR] No Civitai IDs found - returning None")
+            return None

@@ -1,14 +1,15 @@
 {
-  "parser_name": "ComfyUI_ComfyRoll_Ecosystem",
-  "priority": 121,
-  "description": "Parses complex ComfyRoll workflows using regex.",
-  "version": "1.1-regex-enabled",
-  "maintainer": "Ktiseos Nyx & AI Co-pilot",
-  "target_file_types": ["PNG", "JPEG", "WEBP"],
-
+  "parser_name": "ComfyUI QuadMoon (Unified)",
+  "priority": 146,
+  "description": "Unified parser for all QuadMoon custom node workflows (SD 1.5, SDXL, FLUX)",
+  "version": "2.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
   "detection_rules": [
     {
-      "comment": "Rule 1: Must be a valid ComfyUI workflow",
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
       "condition": "OR",
       "rules": [
         {
@@ -24,69 +25,59 @@
       ]
     },
     {
-      "comment": "Rule 2: Must contain ComfyRoll nodes",
-      "source_type": "pil_info_key",
-      "source_key_options": ["workflow", "prompt"],
-      "json_query_type": "has_any_node_class_type_prefix",
-      "operator": "is_true",
-      "class_type_prefix": "CR "
-    },
-    {
-      "comment": "Rule 3: MUST NOT be a Kolors workflow (defer to Kolors parser)",
+      "comment": "Rule 2: Must contain QuadMoon custom nodes",
       "source_type": "pil_info_key",
       "source_key_options": ["workflow", "prompt"],
       "json_query_type": "has_any_node_class_type",
-      "operator": "is_false",
+      "operator": "is_true",
       "class_types_to_check": [
-        "MZ_KolorsUNETLoaderV2",
-        "MZ_ChatGLM3Loader",
-        "MZ_ChatGLM3_V2",
-        "MZ_ChatGLM3_Advance_V2",
-        "DownloadAndLoadChatGLM3"
+        "quadmoonKSampler",
+        "quadmoonSmartPrompt",
+        "quadmoonSmartNeg",
+        "quadmoonModelLoader",
+        "quadmoonCLIPTextEncode",
+        "quadmoonCLIPTextEncode2",
+        "quadmoonLatentImage",
+        "KSampler - Extra Outputs"
       ]
     }
   ],
-
   "parsing_instructions": {
     "input_data": {
       "source_options": [
-        { "source_type": "pil_info_key", "source_key": "workflow" },
-        { "source_type": "pil_info_key", "source_key": "prompt" }
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
       ],
-      "transformations": [{ "type": "json_decode_string_itself" }]
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
     },
     "fields": [
       {
-        "comment": "Try targeted extraction first for prompts",
+        "comment": "Use QuadMoon-specific prompt extraction",
         "target_key": "prompt",
-        "method": "comfyui_targeted_prompt_extraction",
-        "target_input": "positive"
+        "method": "quadmoons_extract_positive"
       },
       {
         "target_key": "negative_prompt",
-        "method": "comfyui_targeted_prompt_extraction",
-        "target_input": "negative"
-      },
-      {
-        "comment": "Fallback to regex if targeted extraction fails",
-        "target_key": "prompt_regex_fallback",
-        "method": "regex_on_input_data_string",
-        "pattern": "\"title\": \"Positive(?: Prompt)?\".*?\"widgets_values\":\\s*\\[\\s*\"([\\s\\S]*?)\"\\s*\\]",
-        "fallback": null
-      },
-      {
-        "target_key": "negative_prompt_regex_fallback",
-        "method": "regex_on_input_data_string",
-        "pattern": "\"title\": \"Negative(?: Prompt)?\".*?\"widgets_values\":\\s*\\[\\s*\"([\\s\\S]*?)\"\\s*\\]",
-        "fallback": null
+        "method": "quadmoons_extract_negative"
       },
       {
         "target_key": "parameters.seed",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
+          "quadmoonKSampler",
+          "KSampler - Extra Outputs",
           "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced"
+          "KSamplerAdvanced"
         ],
         "input_key": "seed",
         "value_type": "integer",
@@ -96,21 +87,23 @@
         "target_key": "parameters.steps",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
+          "quadmoonKSampler",
+          "KSampler - Extra Outputs",
           "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced"
+          "KSamplerAdvanced"
         ],
         "input_key": "steps",
         "value_type": "integer",
-        "fallback": 20
+        "fallback": 30
       },
       {
         "target_key": "parameters.cfg_scale",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
+          "quadmoonKSampler",
+          "KSampler - Extra Outputs",
           "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced"
+          "KSamplerAdvanced"
         ],
         "input_key": "cfg",
         "value_type": "float",
@@ -120,9 +113,10 @@
         "target_key": "parameters.sampler_name",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
+          "quadmoonKSampler",
+          "KSampler - Extra Outputs",
           "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced"
+          "KSamplerAdvanced"
         ],
         "input_key": "sampler_name",
         "value_type": "string",
@@ -132,9 +126,10 @@
         "target_key": "parameters.scheduler",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
+          "quadmoonKSampler",
+          "KSampler - Extra Outputs",
           "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced"
+          "KSamplerAdvanced"
         ],
         "input_key": "scheduler",
         "value_type": "string",
@@ -144,6 +139,7 @@
         "target_key": "parameters.model",
         "method": "comfy_find_input_of_node_type",
         "node_types": [
+          "quadmoonModelLoader",
           "CheckpointLoaderSimple",
           "UNETLoader"
         ],
@@ -173,7 +169,7 @@
       },
       {
         "target_key": "raw_metadata",
-        "method": "direct_input_data_as_string"
+        "method": "comfyui_extract_raw_workflow"
       },
       {
         "comment": "🎯 TIPO AI Prompt Enhancement Detection",
@@ -211,20 +207,19 @@
         "method": "comfyui_extract_workflow_techniques"
       }
     ],
-
     "output_template": {
-      "parser_name_from_engine": "ComfyUI_ComfyRoll_Ecosystem",
-      "tool": "ComfyUI (ComfyRoll)",
-      "format": "ComfyRoll Enhanced Workflow",
+      "parser_name_from_engine": "ComfyUI QuadMoon (Unified)",
+      "tool": "ComfyUI (QuadMoon)",
+      "format": "QuadMoon Enhanced Workflow",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
       "parameters": {
-        "model": "$parameters.model",
         "seed": "$parameters.seed",
         "steps": "$parameters.steps",
         "cfg_scale": "$parameters.cfg_scale",
         "sampler_name": "$parameters.sampler_name",
         "scheduler": "$parameters.scheduler",
+        "model": "$parameters.model",
         "width": "$parameters.width",
         "height": "$parameters.height"
       },
@@ -240,10 +235,24 @@
       },
       "workflow_metadata": {
         "source": "ComfyUI workflow",
-        "parser_priority": 121,
+        "parser_priority": 146,
         "confidence": "high",
-        "custom_nodes": ["ComfyRoll"]
+        "custom_nodes": ["QuadMoon"],
+        "enhanced_sampler": true
       }
     }
-  }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Unified parser for all QuadMoon custom node workflows",
+    "Supports SD 1.5, SDXL, and FLUX workflows with QuadMoon nodes",
+    "Detects: quadmoonKSampler, quadmoonSmartPrompt, quadmoonCLIPTextEncode, KSampler - Extra Outputs",
+    "Uses specialized quadmoons_extract_positive/negative methods",
+    "Priority 146 puts it above generic ComfyUI parsers",
+    "Replaces 2 older parsers: comfyui_quadmoon_sd15, comfyui_quadmoons_parser"
+  ]
 }

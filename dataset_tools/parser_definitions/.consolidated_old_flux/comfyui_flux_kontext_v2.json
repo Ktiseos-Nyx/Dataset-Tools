@@ -42,6 +42,12 @@
     },
     "fields": [
       {
+        "comment": "Define sampler node types variable",
+        "target_key": "_sampler_node_types_var",
+        "method": "static_value",
+        "value": ["KSampler", "KSamplerAdvanced", "SamplerCustom", "SamplerCustomAdvanced", "ModelSamplingAuraFlow", "BasicGuider"]
+      },
+      {
         "comment": "Use the targeted dispatcher to find the real positive prompt.",
         "target_key": "prompt",
         "method": "comfyui_targeted_prompt_extraction",

@@ -14,9 +14,10 @@ class CivitaiInfoWorkerSignals(QObject):
 
 
 class CivitaiInfoWorker(QRunnable):
-    def __init__(self, ids_to_fetch):
+    def __init__(self, ids_to_fetch, file_path=None):
         super().__init__()
         self.ids_to_fetch = ids_to_fetch
+        self.file_path = file_path  # Track which file this worker is for
         self.signals = CivitaiInfoWorkerSignals()
 
     def _fetch_with_retry(self, fetch_func, item_id, max_retries=3, timeout=30):

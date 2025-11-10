@@ -1,0 +1,325 @@
+{
+  "parser_name": "Non-AI Image Metadata",
+  "priority": 25,
+  "description": "Generic metadata extraction for non-AI images - graphics software, camera EXIF, PIL info, etc.",
+  "version": "1.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP", "TIFF", "GIF", "BMP", "PSD"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have some basic metadata - EXIF, XMP, or PIL info",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_object",
+          "operator": "exists_and_is_dictionary"
+        },
+        {
+          "source_type": "exif_all_fields",
+          "operator": "exists"
+        },
+        {
+          "source_type": "xmp_all_fields",
+          "operator": "exists"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must NOT have AI generation metadata",
+      "condition": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "parameters",
+          "operator": "not_exists"
+        },
+        {
+          "source_type": "exif_user_comment",
+          "operator": "not_contains_text",
+          "text": "Steps:"
+        },
+        {
+          "source_type": "png_chunk",
+          "source_key": "workflow",
+          "operator": "not_exists"
+        }
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {"source_type": "exif_all_fields"},
+        {"source_type": "xmp_all_fields"},
+        {"source_type": "pil_info_object"}
+      ]
+    },
+    "fields": [
+      {
+        "comment": "No AI prompts for non-AI images",
+        "target_key": "prompt",
+        "method": "static_value",
+        "value": null
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "static_value",
+        "value": null
+      },
+      {
+        "comment": "Graphics software detection",
+        "target_key": "software_primary",
+        "method": "direct_exif_field",
+        "field_name": "Software",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "creator_tool",
+        "method": "direct_xmp_field",
+        "field_name": "CreatorTool",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "comment": "Timestamp information",
+        "target_key": "creation_date",
+        "method": "direct_xmp_field",
+        "field_name": "CreateDate",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "modify_date",
+        "method": "direct_xmp_field",
+        "field_name": "ModifyDate",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "comment": "Image metadata",
+        "target_key": "title",
+        "method": "direct_xmp_field",
+        "field_name": "title",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "document_id",
+        "method": "direct_xmp_field",
+        "field_name": "DocumentID",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "comment": "Color management",
+        "target_key": "color_mode",
+        "method": "direct_xmp_field",
+        "field_name": "ColorMode",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "icc_profile",
+        "method": "direct_exif_field",
+        "field_name": "ColorSpace",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "comment": "PIL-specific metadata",
+        "target_key": "pil_gamma",
+        "method": "direct_json_path",
+        "json_path": "gamma",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "pil_dpi",
+        "method": "direct_json_path",
+        "json_path": "dpi",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "pil_icc_profile_present",
+        "method": "json_path_exists",
+        "json_path": "icc_profile",
+        "optional": true
+      },
+      {
+        "comment": "Camera EXIF data - comprehensive photography metadata",
+        "target_key": "camera_make",
+        "method": "direct_exif_field",
+        "field_name": "Make",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "camera_model",
+        "method": "direct_exif_field",
+        "field_name": "Model",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "lens_model",
+        "method": "direct_exif_field",
+        "field_name": "LensModel",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "date_taken",
+        "method": "direct_exif_field",
+        "field_name": "DateTimeOriginal",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "photographer",
+        "method": "direct_exif_field",
+        "field_name": "Artist",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "aperture",
+        "method": "direct_exif_field",
+        "field_name": "FNumber",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "shutter_speed",
+        "method": "direct_exif_field",
+        "field_name": "ExposureTime",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "iso",
+        "method": "direct_exif_field",
+        "field_name": "ISO",
+        "value_type": "integer",
+        "optional": true
+      },
+      {
+        "target_key": "focal_length",
+        "method": "direct_exif_field",
+        "field_name": "FocalLength",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "flash",
+        "method": "direct_exif_field",
+        "field_name": "Flash",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "gps_latitude",
+        "method": "direct_exif_field",
+        "field_name": "GPSLatitude",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "gps_longitude",
+        "method": "direct_exif_field",
+        "field_name": "GPSLongitude",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "target_key": "orientation",
+        "method": "direct_exif_field",
+        "field_name": "Orientation",
+        "value_type": "string",
+        "optional": true
+      },
+      {
+        "comment": "Editing history",
+        "target_key": "workflow_history",
+        "method": "extract_xmp_history_array",
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "Non-AI Image Metadata",
+      "tool": "Non-AI Image",
+      "creation_type": "Manual/Digital Art/Photography (No AI detected)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "software_info": {
+        "primary_tool": "$creator_tool",
+        "software_signature": "$software_primary",
+        "workflow_type": "Non-AI"
+      },
+      "creation_details": {
+        "created": "$creation_date",
+        "last_modified": "$modify_date",
+        "title": "$title",
+        "color_profile": "$icc_profile",
+        "color_mode": "$color_mode"
+      },
+      "camera_info": {
+        "make": "$camera_make",
+        "model": "$camera_model",
+        "lens": "$lens_model"
+      },
+      "capture_settings": {
+        "aperture": "$aperture",
+        "shutter_speed": "$shutter_speed",
+        "iso": "$iso",
+        "focal_length": "$focal_length",
+        "flash": "$flash",
+        "orientation": "$orientation"
+      },
+      "capture_details": {
+        "date_taken": "$date_taken",
+        "photographer": "$photographer",
+        "gps_location": {
+          "latitude": "$gps_latitude",
+          "longitude": "$gps_longitude"
+        }
+      },
+      "pil_metadata": {
+        "gamma": "$pil_gamma",
+        "dpi": "$pil_dpi",
+        "icc_profile_present": "$pil_icc_profile_present"
+      },
+      "workflow": {
+        "document_id": "$document_id",
+        "editing_history": "$workflow_history"
+      },
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "detection_confidence": "High - No AI metadata detected",
+        "parser_priority": 25
+      }
+    }
+  },
+
+  "notes": [
+    "Unified non-AI image parser - replaces graphics_workflow.json and pil_standard_image_info.json",
+    "Priority 25 ensures it runs LAST (after all AI parsers)",
+    "Handles multiple scenarios:",
+    "  - Graphics software (Adobe, Affinity, Celsys, etc.)",
+    "  - Camera photographs with EXIF data",
+    "  - Generic PIL info for basic image metadata",
+    "  - Digital art with editing history",
+    "Extracts comprehensive metadata when available:",
+    "  - Software/tool information",
+    "  - Timestamps and version info",
+    "  - Color management (ICC profiles, color modes)",
+    "  - Camera EXIF (make, model, lens)",
+    "  - PIL metadata (DPI, gamma, chromaticity)",
+    "  - Editing workflow history (XMP)",
+    "Useful for dataset organization and non-AI image cataloging"
+  ]
+}

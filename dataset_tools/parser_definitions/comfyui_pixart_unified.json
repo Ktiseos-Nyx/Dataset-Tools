@@ -1,0 +1,311 @@
+{
+  "parser_name": "ComfyUI PixArt (Unified)",
+  "priority": 160,
+  "description": "Unified parser for all PixArt Sigma/Alpha workflows using T5 text encoding",
+  "version": "2.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "exif_user_comment",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain PixArt-specific nodes (T5 encoders OR PixArt loaders/samplers)",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "PixArtT5TextEncode",
+            "PixArtCheckpointLoader",
+            "PixArtSigmaSampler",
+            "PixArtAlphaSampler",
+            "PixArtResolutionSelect"
+          ]
+        },
+        {
+          "source_type": "exif_user_comment",
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "PixArtT5TextEncode",
+            "PixArtCheckpointLoader",
+            "PixArtSigmaSampler",
+            "PixArtAlphaSampler",
+            "PixArtResolutionSelect"
+          ]
+        }
+      ]
+    },
+    {
+      "comment": "Rule 3: OR must have T5 encoder + T5 loader (generic T5 setup for PixArt)",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_all_node_class_types",
+          "operator": "is_true",
+          "class_types_to_check": ["T5TextEncode", "T5v11Loader"]
+        },
+        {
+          "source_type": "exif_user_comment",
+          "json_query_type": "has_all_node_class_types",
+          "operator": "is_true",
+          "class_types_to_check": ["T5TextEncode", "T5v11Loader"]
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "comment": "Use modern targeted extraction with PixArt-specific text encoders",
+        "target_key": "prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "positive",
+        "text_encoder_node_types": ["T5TextEncode", "PixArtT5TextEncode", "CLIPTextEncode"]
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "negative",
+        "text_encoder_node_types": ["T5TextEncode", "PixArtT5TextEncode", "CLIPTextEncode"]
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "PixArtCheckpointLoader",
+          "CheckpointLoaderSimple"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string",
+        "fallback": "Unknown PixArt Model"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "steps",
+        "value_type": "integer",
+        "fallback": 20
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "cfg",
+        "value_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "PixArtSigmaSampler",
+          "PixArtAlphaSampler",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "PixArtResolutionSelect",
+          "PixArtResolutionCond"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "PixArtResolutionSelect",
+          "PixArtResolutionCond"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
+      },
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "workflow_analysis.tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis",
+        "target_key": "workflow_analysis.workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "workflow_analysis.advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "workflow_analysis.multi_stage_conditioning",
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "workflow_analysis.post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "workflow_analysis.custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_analysis.workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI PixArt (Unified)",
+      "tool": "ComfyUI (PixArt)",
+      "format": "PixArt Text-to-Image",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "seed": "$parameters.seed",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "raw_metadata": "$raw_metadata",
+      "workflow_analysis": {
+        "tipo_enhancement": "$workflow_analysis.tipo_enhancement",
+        "workflow_complexity": "$workflow_analysis.workflow_complexity",
+        "advanced_upscaling": "$workflow_analysis.advanced_upscaling",
+        "multi_stage_conditioning": "$workflow_analysis.multi_stage_conditioning",
+        "post_processing_effects": "$workflow_analysis.post_processing_effects",
+        "custom_node_ecosystems": "$workflow_analysis.custom_node_ecosystems",
+        "workflow_techniques": "$workflow_analysis.workflow_techniques"
+      },
+      "architecture_info": {
+        "detected_as": "PixArt Alpha/Sigma",
+        "text_encoder": "T5-v11 / T5-XXL",
+        "model_type": "Diffusion Transformer (DiT)",
+        "efficient_attention": true
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 160,
+        "confidence": "high",
+        "pixart_workflow": true
+      }
+    }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Unified parser combining all PixArt Sigma and PixArt Alpha detection",
+    "Handles both PixArt-specific nodes (PixArtT5TextEncode, PixArtCheckpointLoader)",
+    "AND generic T5 setups (T5TextEncode + T5v11Loader)",
+    "Supports workflows stored in PNG metadata OR EXIF UserComment",
+    "Uses modern comfyui_targeted_prompt_extraction for best accuracy",
+    "Priority 160 puts it above generic ComfyUI parsers",
+    "Replaces 5 older PixArt parsers: pixart_simple_t5, Pixart_Alpha_Sigma_T5, pixart_sigma_enhanced, comfyui_pixart_parser, pixart_sigma_parser"
+  ]
+}

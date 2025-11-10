@@ -75,6 +75,7 @@ class SettingsDialog(QDialog):
 
         self._create_theme_tab()
         self._create_appearance_tab()
+        self._create_fonts_tab()
         self._create_api_keys_tab()
         self._create_system_tab()
         self._create_about_tab()
@@ -122,7 +123,7 @@ class SettingsDialog(QDialog):
         dialog.exec()
 
     def _create_appearance_tab(self) -> None:
-        """Create the Appearance tab with window size options."""
+        """Create the Appearance tab with window size and view mode options."""
         appearance_widget = QWidget()
         layout = QVBoxLayout(appearance_widget)
         layout.setSpacing(20)
@@ -168,8 +169,22 @@ class SettingsDialog(QDialog):
 
         layout.addLayout(thumb_layout)
 
-        # Font settings
-        font_label = QLabel("<b>Fonts:</b>")
+        # Add Apply button at the bottom of Appearance tab
+        apply_appearance_btn = QPushButton("Apply Settings")
+        apply_appearance_btn.setToolTip("Apply window and view settings without closing the dialog")
+        apply_appearance_btn.clicked.connect(self._apply_window_and_view_settings)
+        layout.addWidget(apply_appearance_btn)
+
+        layout.addStretch(1)
+        self.tab_widget.addTab(appearance_widget, "Appearance")
+
+    def _create_fonts_tab(self) -> None:
+        """Create the Fonts tab with font family and size options."""
+        fonts_widget = QWidget()
+        layout = QVBoxLayout(fonts_widget)
+        layout.setSpacing(20)
+
+        font_label = QLabel("<b>Application Fonts:</b>")
         layout.addWidget(font_label)
 
         font_layout = QFormLayout()
@@ -208,14 +223,14 @@ class SettingsDialog(QDialog):
 
         layout.addLayout(font_layout)
 
-        # Add Apply button at the bottom of Appearance tab
-        apply_appearance_btn = QPushButton("Apply Settings")
-        apply_appearance_btn.setToolTip("Apply appearance settings without closing the dialog")
-        apply_appearance_btn.clicked.connect(self._apply_appearance_only)
-        layout.addWidget(apply_appearance_btn)
+        # Add Apply button at the bottom of Fonts tab
+        apply_fonts_btn = QPushButton("Apply Fonts")
+        apply_fonts_btn.setToolTip("Apply font settings without closing the dialog")
+        apply_fonts_btn.clicked.connect(self._apply_font_settings_only)
+        layout.addWidget(apply_fonts_btn)
 
         layout.addStretch(1)
-        self.tab_widget.addTab(appearance_widget, "Appearance")
+        self.tab_widget.addTab(fonts_widget, "Fonts")
 
     def _populate_size_combo(self) -> None:
         """Populate the size combo box."""
@@ -444,11 +459,12 @@ class SettingsDialog(QDialog):
 
     def _create_button_box(self) -> None:
         """Create the dialog button box."""
+        # OK and Close buttons - each tab has its own Apply button
         self.button_box = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok
-            | QDialogButtonBox.StandardButton.Cancel
+            | QDialogButtonBox.StandardButton.Close
         )
-        self.button_box.accepted.connect(self.accept_settings)
+        self.button_box.accepted.connect(self.accept)
         self.button_box.rejected.connect(self.reject)
         self.layout.addWidget(self.button_box)
 
@@ -552,16 +568,21 @@ class SettingsDialog(QDialog):
         """Handle grid columns spinbox change - apply immediately for live preview."""
         pass  # Temporarily disabled
 
-    def _apply_appearance_only(self) -> None:
-        """Apply only appearance settings (for preview without closing dialog)."""
+    def _apply_window_and_view_settings(self) -> None:
+        """Apply only window and view mode settings (no fonts)."""
         self._apply_window_settings()
-        self._apply_font_settings()
         self._apply_view_mode_settings()
         self._apply_thumbnail_settings()
+        self.show_status_message("Appearance settings applied!")
+        nfo("Window and view settings applied from Appearance tab.")
+
+    def _apply_font_settings_only(self) -> None:
+        """Apply only font settings."""
+        self._apply_font_settings()
         if self.parent_window and hasattr(self.parent_window, "apply_global_font"):
             self.parent_window.apply_global_font()
-        self.show_status_message("Appearance settings applied!")
-        nfo("Appearance settings applied from tab.")
+        self.show_status_message("Font settings applied!")
+        nfo("Font settings applied from Fonts tab.")
 
     def show_status_message(self, message: str) -> None:
         """Show a status message in the parent window."""
@@ -662,8 +683,7 @@ class SettingsDialog(QDialog):
                 )
 
     def accept_settings(self) -> None:
-        """Apply all settings and close the dialog."""
-        self.apply_all_settings()
+        """Close the dialog without applying settings (each tab has its own Apply button)."""
         self.accept()
 
 

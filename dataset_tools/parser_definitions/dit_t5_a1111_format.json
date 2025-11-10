@@ -1,0 +1,203 @@
+{
+  "parser_name": "DiT + T5 Architecture (A1111 Format)",
+  "priority": 200,
+  "description": "Advanced DiT (Diffusion Transformer) with T5 text encoder in A1111-style EXIF format - FLUX, PixArt, SD3, AuraFlow, HunyuanDiT",
+  "version": "3.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG",
+    "JPEG",
+    "JPG",
+    "WEBP"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: EXIF UserComment must exist",
+      "source_type": "exif_user_comment",
+      "operator": "exists"
+    },
+    {
+      "comment": "Rule 2: Must contain DiT/T5 model signatures in EXIF - case insensitive",
+      "source_type": "exif_user_comment",
+      "operator": "OR",
+      "rules": [
+        {
+          "operator": "contains_case_insensitive",
+          "value": "flux"
+        },
+        {
+          "operator": "contains_case_insensitive",
+          "value": "pixart"
+        },
+        {
+          "operator": "contains_case_insensitive",
+          "value": "sd3"
+        },
+        {
+          "operator": "contains_case_insensitive",
+          "value": "auraflow"
+        },
+        {
+          "operator": "contains_case_insensitive",
+          "value": "hunyuan"
+        },
+        {
+          "operator": "contains",
+          "value": "t5"
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "a1111_parameter_string_content"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ]
+    },
+    "extraction_strategy": "a1111_text_parsing",
+    "format_description": "A1111-style DiT/T5 architecture images use text format with prompts and key-value parameters in EXIF",
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "a1111_extract_prompt_positive",
+        "comment": "Extract positive prompt from A1111-style parameter string"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "a1111_extract_prompt_negative",
+        "comment": "Extract negative prompt from A1111-style parameter string"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Seed",
+        "value_type": "integer",
+        "comment": "Extract seed parameter"
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Steps",
+        "value_type": "integer",
+        "comment": "Extract steps parameter"
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "CFG scale",
+        "value_type": "float",
+        "comment": "Extract CFG scale parameter"
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Sampler",
+        "value_type": "string",
+        "comment": "Extract sampler parameter"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Schedule type",
+        "value_type": "string",
+        "optional": true,
+        "comment": "Extract scheduler parameter (optional)"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model",
+        "value_type": "string",
+        "comment": "Extract model parameter (DiT model name)"
+      },
+      {
+        "target_key": "parameters.size",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Size",
+        "value_type": "string",
+        "comment": "Extract size parameter"
+      },
+      {
+        "target_key": "parameters.model_hash",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Model hash",
+        "value_type": "string",
+        "optional": true,
+        "comment": "Extract model hash (optional)"
+      },
+      {
+        "target_key": "parameters.version",
+        "method": "key_value_extract_from_a1111_block",
+        "key_name": "Version",
+        "value_type": "string",
+        "optional": true,
+        "comment": "Extract version info (optional)"
+      },
+      {
+        "comment": "Detect which DiT architecture from model name",
+        "target_key": "architecture_detected",
+        "method": "regex_on_input_data_string",
+        "regex_pattern": "(flux|pixart|sd3|auraflow|hunyuan)",
+        "value_type": "string",
+        "case_insensitive": true,
+        "optional": true
+      }
+    ],
+    "output_template": {
+      "tool": "DiT + T5 Architecture (A1111 Format)",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "model": "$parameters.model",
+        "model_hash": "$parameters.model_hash",
+        "size": "$parameters.size",
+        "version": "$parameters.version"
+      },
+      "architecture_info": {
+        "detected_as": "$architecture_detected",
+        "architecture_family": "DiT (Diffusion Transformer)",
+        "text_encoder": "T5-based",
+        "supports": [
+          "FLUX (Schnell, Dev, Pro)",
+          "PixArt (Alpha, Sigma)",
+          "SD3 (Medium, Large)",
+          "AuraFlow",
+          "HunyuanDiT"
+        ]
+      },
+      "workflow_metadata": {
+        "source": "A1111-style EXIF metadata",
+        "parser_priority": 200,
+        "confidence": "high",
+        "format": "DiT + T5 in A1111 format"
+      },
+      "_metadata": {
+        "processed_at": "$CURRENT_TIMESTAMP",
+        "processor": "MetadataEngine",
+        "template_processed": true
+      }
+    }
+  },
+  "notes": [
+    "Unified DiT + T5 architecture parser for A1111-style metadata",
+    "Detects and supports all major DiT models:",
+    "  - FLUX (Schnell, Dev, Pro) - Black Forest Labs",
+    "  - PixArt (Alpha, Sigma) - PixArt team",
+    "  - SD3 (Medium, Large) - Stability AI",
+    "  - AuraFlow - Fal.ai",
+    "  - HunyuanDiT - Tencent",
+    "Priority 200 ensures it runs before generic A1111 parsers",
+    "Handles all DiT architectures that use T5 text encoders",
+    "Auto-detects specific architecture from model name"
+  ]
+}

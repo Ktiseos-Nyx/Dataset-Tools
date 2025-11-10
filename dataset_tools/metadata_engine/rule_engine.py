@@ -356,6 +356,35 @@ class RuleOperators:
                 # Neither dict nor list - can't process
                 return False
 
+            if json_query_type == "has_any_node_class_type_prefix":
+                class_type_prefix = rule.get("class_type_prefix")
+                if not class_type_prefix:
+                    self.logger.warning("Query 'has_any_node_class_type_prefix' missing 'class_type_prefix'")
+                    return False
+
+                if not isinstance(json_obj, dict):
+                    return False
+
+                nodes_container = json_obj.get("nodes", json_obj)
+
+                # Handle both dictionary format (node_id: node_data) and list format [node_data, ...]
+                if isinstance(nodes_container, dict):
+                    # Dictionary format: check if any node type starts with the prefix
+                    return any(
+                        isinstance(node_val, dict) and
+                        str(node_val.get("class_type", "") or node_val.get("type", "")).startswith(class_type_prefix)
+                        for node_val in nodes_container.values()
+                    )
+                if isinstance(nodes_container, list):
+                    # List format: check if any node type starts with the prefix
+                    return any(
+                        isinstance(node_item, dict) and
+                        str(node_item.get("class_type", "") or node_item.get("type", "")).startswith(class_type_prefix)
+                        for node_item in nodes_container
+                    )
+                # Neither dict nor list - can't process
+                return False
+
             if json_query_type == "has_all_node_class_types":
                 class_types = rule.get("class_types_to_check")
                 if not class_types or not isinstance(class_types, list):

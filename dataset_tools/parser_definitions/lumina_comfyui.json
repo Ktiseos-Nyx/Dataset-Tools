@@ -34,6 +34,12 @@
     },
     "fields": [
       {
+        "comment": "Define sampler node types variable",
+        "target_key": "_sampler_node_types_var",
+        "method": "static_value",
+        "value": ["KSampler", "KSamplerAdvanced", "SamplerCustom", "SamplerCustomAdvanced", "ModelSamplingAuraFlow", "BasicGuider"]
+      },
+      {
         "comment": "BEST METHOD: Use the high-level dispatcher for prompts.",
         "target_key": "prompt",
         "method": "comfyui_extract_prompt_from_workflow"

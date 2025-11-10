@@ -1,80 +1,44 @@
 {
-  "parser_name": "ComfyUI Targeted Parser",
-  "priority": 60,
-  "description": "Fallback ComfyUI parser using targeted graph traversal for workflows not matched by specialized parsers",
-  "version": "2.0_enhanced_fallback",
-  "maintainer": "DuskFall Crew",
-  "target_file_types": [
-    "PNG",
-    "JPEG",
-    "JPG",
-    "WEBP"
-  ],
+  "parser_name": "TensorArt (Unified)",
+  "priority": 200,
+  "description": "Unified TensorArt parser for ComfyUI backend workflows with comprehensive node detection",
+  "version": "2.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": ["PNG", "JPEG", "JPG", "WEBP"],
+
   "detection_rules": [
     {
-      "comment": "Rule 1: Must have 'workflow' PNG chunk with valid JSON and ComfyUI node signatures",
-      "operator": "AND",
+      "comment": "Rule 1: Must be a valid ComfyUI workflow",
+      "condition": "OR",
       "rules": [
         {
-          "source_type": "png_chunk",
-          "source_key": "workflow",
-          "operator": "exists"
-        },
-        {
-          "source_type": "png_chunk",
+          "source_type": "pil_info_key",
           "source_key": "workflow",
           "operator": "is_valid_json"
         },
         {
-          "comment": "Check for typical ComfyUI node types - using simple contains check",
-          "source_type": "png_chunk",
-          "source_key": "workflow",
-          "operator": "OR",
-          "rules": [
-            {"operator": "contains", "value": "KSampler"},
-            {"operator": "contains", "value": "SamplerCustomAdvanced"},
-            {"operator": "contains", "value": "CLIPTextEncode"}
-          ]
-        },
-        {
-          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
-          "source_type": "png_chunk",
-          "source_key": "workflow",
-          "operator": "does_not_contain",
-          "value": "extraMetadata"
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
         }
       ]
     },
     {
-      "comment": "Rule 2: OR, must have 'prompt' pil_info_key with valid JSON and ComfyUI node signatures (for older/different formats)",
-      "operator": "AND",
-      "rules": [
-        {
-          "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "is_valid_json"
-        },
-        {
-          "comment": "Check for typical ComfyUI node types - using simple contains check",
-          "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "OR",
-          "rules": [
-            {"operator": "contains", "value": "KSampler"},
-            {"operator": "contains", "value": "SamplerCustomAdvanced"},
-            {"operator": "contains", "value": "CLIPTextEncode"}
-          ]
-        },
-        {
-          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
-          "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "does_not_contain",
-          "value": "extraMetadata"
-        }
+      "comment": "Rule 2: Must contain TensorArt-specific nodes",
+      "source_type": "pil_info_key",
+      "source_key_options": ["workflow", "prompt"],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "ECHOCheckpointLoaderSimple",
+        "TensorArt_CheckpointLoader",
+        "TensorArt_PromptText",
+        "KolorsCheckpointLoaderSimple",
+        "TensorArtLoadChatGLM3"
       ]
     }
   ],
+
   "parsing_instructions": {
     "input_data": {
       "source_options": [
@@ -93,128 +57,141 @@
         }
       ]
     },
+
     "fields": [
       {
-        "comment": "Extract positive prompt using targeted graph traversal",
+        "comment": "Use targeted extraction for complex workflows",
         "target_key": "prompt",
         "method": "comfyui_targeted_prompt_extraction",
         "params": {
-            "target_input": "positive"
+          "target_input": "positive"
         }
       },
       {
-        "comment": "Extract negative prompt using targeted graph traversal",
         "target_key": "negative_prompt",
         "method": "comfyui_targeted_prompt_extraction",
         "params": {
-            "target_input": "negative"
+          "target_input": "negative"
         }
       },
       {
-        "comment": "Extract seed from sampler",
-        "target_key": "parameters.seed",
-        "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "ECHOCheckpointLoaderSimple",
+          "TensorArt_CheckpointLoader",
+          "KolorsCheckpointLoaderSimple",
+          "CheckpointLoaderSimple"
         ],
-        "input_field": "seed",
-        "value_type": "integer"
+        "input_field": "ckpt_name",
+        "data_type": "string",
+        "fallback": "Unknown TensorArt Model"
       },
       {
-        "comment": "Extract steps from sampler",
         "target_key": "parameters.steps",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
           "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "SamplerCustomAdvanced"
         ],
         "input_field": "steps",
-        "value_type": "integer"
+        "value_type": "integer",
+        "fallback": 20
       },
       {
-        "comment": "Extract cfg_scale from sampler",
         "target_key": "parameters.cfg_scale",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
           "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "SamplerCustomAdvanced"
         ],
         "input_field": "cfg",
-        "value_type": "float"
+        "value_type": "float",
+        "fallback": 7.0
       },
       {
-        "comment": "Extract sampler name",
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_field": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
         "target_key": "parameters.sampler_name",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
           "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "SamplerCustomAdvanced"
         ],
         "input_field": "sampler_name",
-        "value_type": "string"
+        "value_type": "string",
+        "fallback": "euler"
       },
       {
-        "comment": "Extract width from latent image nodes",
-        "target_key": "parameters.width",
-        "method": "comfy_find_input_of_node_type",
-        "node_types": [
-          "EmptyLatentImage",
-          "LatentUpscale",
-          "EmptyLatentImageFromPresetsSDXL",
-          "EmptySD3LatentImage"
-        ],
-        "input_field": "width",
-        "data_type": "integer"
-      },
-      {
-        "comment": "Extract height from latent image nodes",
-        "target_key": "parameters.height",
-        "method": "comfy_find_input_of_node_type",
-        "node_types": [
-          "EmptyLatentImage",
-          "LatentUpscale",
-          "EmptyLatentImageFromPresetsSDXL",
-          "EmptySD3LatentImage"
-        ],
-        "input_field": "height",
-        "data_type": "integer"
-      },
-      {
-        "comment": "Extract scheduler from sampler",
         "target_key": "parameters.scheduler",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
           "KSamplerAdvanced",
-          "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "SamplerCustomAdvanced"
         ],
         "input_field": "scheduler",
-        "value_type": "string"
+        "value_type": "string",
+        "fallback": "normal"
       },
       {
-        "comment": "Extract model from checkpoint loaders",
-        "target_key": "parameters.model",
+        "target_key": "parameters.denoise",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_field": "denoise",
+        "value_type": "float",
+        "optional": true
+      },
+      {
+        "target_key": "parameters.width",
         "method": "comfy_find_input_of_node_type",
         "node_types": [
-          "CheckpointLoaderSimple",
-          "UNETLoader",
-          "CheckpointLoader"
+          "EmptyLatentImage",
+          "EmptySD3LatentImage"
         ],
-        "input_field": "ckpt_name",
-        "data_type": "string"
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 1024
       },
       {
-        "comment": "Extract raw workflow metadata",
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptySD3LatentImage"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "parameters.vae_model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "VAELoader"
+        ],
+        "input_field": "vae_name",
+        "data_type": "string",
+        "optional": true
+      },
+      {
         "target_key": "raw_metadata",
         "method": "comfyui_extract_raw_workflow"
       },
@@ -254,11 +231,11 @@
         "method": "comfyui_extract_workflow_techniques"
       }
     ],
+
     "output_template": {
-      "parser_name_from_engine": "ComfyUI Targeted Parser",
-      "tool": "ComfyUI (Targeted Fallback)",
-      "format": "ComfyUI Generic Workflow",
-      "parser_version": "2.0_enhanced_fallback",
+      "parser_name_from_engine": "TensorArt (Unified)",
+      "tool": "TensorArt",
+      "format": "ComfyUI Workflow (TensorArt)",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
       "parameters": {
@@ -268,8 +245,10 @@
         "cfg_scale": "$parameters.cfg_scale",
         "sampler_name": "$parameters.sampler_name",
         "scheduler": "$parameters.scheduler",
+        "denoise": "$parameters.denoise",
         "width": "$parameters.width",
-        "height": "$parameters.height"
+        "height": "$parameters.height",
+        "vae_model": "$parameters.vae_model"
       },
       "raw_metadata": "$raw_metadata",
       "workflow_analysis": {
@@ -282,11 +261,32 @@
         "workflow_techniques": "$workflow_analysis.workflow_techniques"
       },
       "workflow_metadata": {
-        "source": "ComfyUI workflow",
-        "parser_priority": 60,
-        "confidence": "medium",
-        "note": "Caught by targeted fallback parser - may benefit from specialized parser"
+        "parser": "TensorArt v2.0 Unified",
+        "source": "ComfyUI Workflow JSON",
+        "parser_priority": 200,
+        "confidence": "high",
+        "platform": "TensorArt",
+        "backend_engine": "ComfyUI"
       }
     }
-  }
+  },
+
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "moderate"
+  },
+
+  "notes": [
+    "Unified TensorArt parser - replaces TensorArt.json and tensorart_comfyui.json",
+    "Detects TensorArt-specific nodes:",
+    "  - ECHOCheckpointLoaderSimple (TensorArt infrastructure)",
+    "  - TensorArt_CheckpointLoader / TensorArt_PromptText (custom nodes)",
+    "  - KolorsCheckpointLoaderSimple (Kolors model support)",
+    "  - TensorArtLoadChatGLM3 (ChatGLM3 LLM integration)",
+    "Priority 200 ensures detection before generic ComfyUI parsers",
+    "Uses modern targeted extraction for complex workflows",
+    "Includes comprehensive workflow analysis (7 advanced fields)",
+    "Works with both A1111-style and pure ComfyUI frontend modes"
+  ]
 }

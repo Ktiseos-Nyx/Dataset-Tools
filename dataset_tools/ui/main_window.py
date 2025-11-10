@@ -1065,7 +1065,8 @@ class MainWindow(Qw.QMainWindow):
         nfo("[CIVITAI] Starting async fetch for %d CivitAI resources", len(ids_to_fetch))
 
         if ids_to_fetch:
-            worker = CivitaiInfoWorker(ids_to_fetch)
+            # Pass the current file path to the worker to prevent race conditions
+            worker = CivitaiInfoWorker(ids_to_fetch, file_path=self.current_selected_file)
             worker.signals.finished.connect(self.on_civitai_info_fetched)
             worker.signals.error.connect(self.on_civitai_info_error)
             worker.signals.finished.connect(self.cleanup_worker)
@@ -1074,6 +1075,15 @@ class MainWindow(Qw.QMainWindow):
 
     def on_civitai_info_fetched(self, civitai_info: dict) -> None:
         """Update the UI with the fetched Civitai info."""
+        # Get the worker that sent this signal
+        worker = self.sender()
+
+        # Race condition check: Only update if we're still viewing the same file
+        if hasattr(worker, 'file_path') and worker.file_path != self.current_selected_file:
+            nfo("[CIVITAI] Ignoring stale Civitai data for: %s (current: %s)",
+                worker.file_path, self.current_selected_file)
+            return
+
         if civitai_info and self.current_metadata:
             # Format CivitAI resources as human-readable parameter entries
             resources = []

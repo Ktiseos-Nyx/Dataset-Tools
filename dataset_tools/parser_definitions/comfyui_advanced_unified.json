@@ -1,80 +1,80 @@
 {
-  "parser_name": "ComfyUI Targeted Parser",
-  "priority": 60,
-  "description": "Fallback ComfyUI parser using targeted graph traversal for workflows not matched by specialized parsers",
-  "version": "2.0_enhanced_fallback",
-  "maintainer": "DuskFall Crew",
-  "target_file_types": [
-    "PNG",
-    "JPEG",
-    "JPG",
-    "WEBP"
-  ],
+  "parser_name": "ComfyUI Advanced (Unified Fallback)",
+  "priority": 55,
+  "description": "Unified fallback parser for advanced ComfyUI workflows - handles video/animation, advanced sampling, custom nodes, and specialized models not covered by specialized parsers",
+  "version": "3.0_unified",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": ["PNG", "JPG", "JPEG", "WEBP", "GIF"],
+
   "detection_rules": [
     {
-      "comment": "Rule 1: Must have 'workflow' PNG chunk with valid JSON and ComfyUI node signatures",
-      "operator": "AND",
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
+      "condition": "OR",
       "rules": [
         {
-          "source_type": "png_chunk",
-          "source_key": "workflow",
-          "operator": "exists"
-        },
-        {
-          "source_type": "png_chunk",
+          "source_type": "pil_info_key",
           "source_key": "workflow",
           "operator": "is_valid_json"
         },
         {
-          "comment": "Check for typical ComfyUI node types - using simple contains check",
-          "source_type": "png_chunk",
-          "source_key": "workflow",
-          "operator": "OR",
-          "rules": [
-            {"operator": "contains", "value": "KSampler"},
-            {"operator": "contains", "value": "SamplerCustomAdvanced"},
-            {"operator": "contains", "value": "CLIPTextEncode"}
-          ]
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
         },
         {
-          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
-          "source_type": "png_chunk",
-          "source_key": "workflow",
-          "operator": "does_not_contain",
-          "value": "extraMetadata"
+          "source_type": "exif_user_comment",
+          "operator": "is_valid_json"
         }
       ]
     },
     {
-      "comment": "Rule 2: OR, must have 'prompt' pil_info_key with valid JSON and ComfyUI node signatures (for older/different formats)",
-      "operator": "AND",
+      "comment": "Rule 2: Detects advanced nodes - video/animation, advanced sampling, or specialized models",
+      "condition": "OR",
       "rules": [
         {
+          "comment": "Video/Animation nodes",
           "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "is_valid_json"
-        },
-        {
-          "comment": "Check for typical ComfyUI node types - using simple contains check",
-          "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "OR",
-          "rules": [
-            {"operator": "contains", "value": "KSampler"},
-            {"operator": "contains", "value": "SamplerCustomAdvanced"},
-            {"operator": "contains", "value": "CLIPTextEncode"}
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "VHS_VideoCombine",
+            "VHS_LoadVideo",
+            "AnimateDiffLoader",
+            "AnimateDiffCombine",
+            "SaveAnimatedWEBP",
+            "VideoHelperSuite"
           ]
         },
         {
-          "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
+          "comment": "Advanced sampling nodes",
           "source_type": "pil_info_key",
-          "source_key": "prompt",
-          "operator": "does_not_contain",
-          "value": "extraMetadata"
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "SamplerCustomAdvanced",
+            "BasicGuider",
+            "CFGGuider",
+            "DualCFGGuider"
+          ]
+        },
+        {
+          "comment": "Specialized model loaders",
+          "source_type": "pil_info_key",
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "UNETLoader",
+            "UnetLoaderGGUF",
+            "Power Lora Loader (rgthree)"
+          ]
         }
       ]
     }
   ],
+
   "parsing_instructions": {
     "input_data": {
       "source_options": [
@@ -85,6 +85,9 @@
         {
           "source_type": "pil_info_key",
           "source_key": "prompt"
+        },
+        {
+          "source_type": "exif_user_comment"
         }
       ],
       "transformations": [
@@ -93,128 +96,136 @@
         }
       ]
     },
+
     "fields": [
       {
-        "comment": "Extract positive prompt using targeted graph traversal",
+        "comment": "Use targeted extraction for complex workflows",
         "target_key": "prompt",
         "method": "comfyui_targeted_prompt_extraction",
         "params": {
-            "target_input": "positive"
+          "target_input": "positive"
         }
       },
       {
-        "comment": "Extract negative prompt using targeted graph traversal",
         "target_key": "negative_prompt",
         "method": "comfyui_targeted_prompt_extraction",
         "params": {
-            "target_input": "negative"
+          "target_input": "negative"
         }
       },
       {
-        "comment": "Extract seed from sampler",
         "target_key": "parameters.seed",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
           "KSamplerAdvanced",
           "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "SamplerCustom"
         ],
-        "input_field": "seed",
-        "value_type": "integer"
+        "input_key": "seed",
+        "value_type": "integer",
+        "fallback": -1
       },
       {
-        "comment": "Extract steps from sampler",
         "target_key": "parameters.steps",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
           "KSamplerAdvanced",
           "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "SamplerCustom"
         ],
-        "input_field": "steps",
-        "value_type": "integer"
+        "input_key": "steps",
+        "value_type": "integer",
+        "fallback": 20
       },
       {
-        "comment": "Extract cfg_scale from sampler",
         "target_key": "parameters.cfg_scale",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
           "KSamplerAdvanced",
           "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "SamplerCustom"
         ],
-        "input_field": "cfg",
-        "value_type": "float"
+        "input_key": "cfg",
+        "value_type": "float",
+        "fallback": 7.0
       },
       {
-        "comment": "Extract sampler name",
         "target_key": "parameters.sampler_name",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
           "KSamplerAdvanced",
           "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "SamplerCustom"
         ],
-        "input_field": "sampler_name",
-        "value_type": "string"
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "fallback": "euler"
       },
       {
-        "comment": "Extract width from latent image nodes",
-        "target_key": "parameters.width",
-        "method": "comfy_find_input_of_node_type",
-        "node_types": [
-          "EmptyLatentImage",
-          "LatentUpscale",
-          "EmptyLatentImageFromPresetsSDXL",
-          "EmptySD3LatentImage"
-        ],
-        "input_field": "width",
-        "data_type": "integer"
-      },
-      {
-        "comment": "Extract height from latent image nodes",
-        "target_key": "parameters.height",
-        "method": "comfy_find_input_of_node_type",
-        "node_types": [
-          "EmptyLatentImage",
-          "LatentUpscale",
-          "EmptyLatentImageFromPresetsSDXL",
-          "EmptySD3LatentImage"
-        ],
-        "input_field": "height",
-        "data_type": "integer"
-      },
-      {
-        "comment": "Extract scheduler from sampler",
         "target_key": "parameters.scheduler",
         "method": "comfy_find_input_of_main_sampler",
         "sampler_node_types": [
           "KSampler",
           "KSamplerAdvanced",
           "SamplerCustomAdvanced",
-          "KSampler_A1111"
+          "SamplerCustom"
         ],
-        "input_field": "scheduler",
-        "value_type": "string"
+        "input_key": "scheduler",
+        "value_type": "string",
+        "fallback": "normal"
       },
       {
-        "comment": "Extract model from checkpoint loaders",
+        "target_key": "parameters.denoise",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "SamplerCustom"
+        ],
+        "input_key": "denoise",
+        "value_type": "float",
+        "fallback": 1.0
+      },
+      {
         "target_key": "parameters.model",
         "method": "comfy_find_input_of_node_type",
         "node_types": [
-          "CheckpointLoaderSimple",
           "UNETLoader",
-          "CheckpointLoader"
+          "UnetLoaderGGUF",
+          "CheckpointLoaderSimple"
         ],
-        "input_field": "ckpt_name",
-        "data_type": "string"
+        "input_field": "unet_name",
+        "data_type": "string",
+        "fallback": "Unknown Model"
       },
       {
-        "comment": "Extract raw workflow metadata",
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptySD3LatentImage"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptySD3LatentImage"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      {
         "target_key": "raw_metadata",
         "method": "comfyui_extract_raw_workflow"
       },
@@ -254,11 +265,12 @@
         "method": "comfyui_extract_workflow_techniques"
       }
     ],
+
     "output_template": {
-      "parser_name_from_engine": "ComfyUI Targeted Parser",
-      "tool": "ComfyUI (Targeted Fallback)",
-      "format": "ComfyUI Generic Workflow",
-      "parser_version": "2.0_enhanced_fallback",
+      "parser_name_from_engine": "ComfyUI Advanced (Unified Fallback)",
+      "tool": "ComfyUI (Advanced)",
+      "format": "ComfyUI Advanced Workflow",
+      "parser_version": "3.0_unified",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
       "parameters": {
@@ -268,6 +280,7 @@
         "cfg_scale": "$parameters.cfg_scale",
         "sampler_name": "$parameters.sampler_name",
         "scheduler": "$parameters.scheduler",
+        "denoise": "$parameters.denoise",
         "width": "$parameters.width",
         "height": "$parameters.height"
       },
@@ -283,10 +296,29 @@
       },
       "workflow_metadata": {
         "source": "ComfyUI workflow",
-        "parser_priority": 60,
+        "parser_priority": 55,
         "confidence": "medium",
-        "note": "Caught by targeted fallback parser - may benefit from specialized parser"
+        "note": "Advanced workflow caught by unified fallback parser",
+        "categories": ["video/animation", "advanced_sampling", "specialized_models"]
       }
     }
-  }
+  },
+
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "moderate"
+  },
+
+  "notes": [
+    "Unified fallback parser - replaces comfyui_advanced_sampling, comfyui_video_animation, and comfyui_advanced_node_discovery",
+    "Priority 55 puts it as a mid-tier fallback (above Universal/Targeted at 50-60)",
+    "Handles three categories of advanced workflows:",
+    "  1. Video/Animation: VHS, AnimateDiff, VideoHelperSuite",
+    "  2. Advanced Sampling: SamplerCustomAdvanced, CFGGuider, BasicGuider",
+    "  3. Specialized Models: UNETLoader, GGUF loaders, Power LoRA",
+    "Uses targeted extraction for complex prompt traversal",
+    "Includes comprehensive workflow analysis (7 advanced fields)",
+    "Supports EXIF UserComment workflows (JPEG compatibility)"
+  ]
 }
