@@ -56,19 +56,15 @@
     },
     "fields": [
       {
-        "comment": "Use the specialized extractor for dynamic prompts to get the raw, unresolved text.",
-        "target_key": "raw_dynamic_prompt",
-        "method": "comfyui_extract_dynamic_prompt_from_workflow"
-      },
-      {
-        "comment": "For the final, resolved prompt, our standard targeted extractor should work.",
+        "comment": "Extract RESOLVED prompts from API format (DynamicPrompts now checks API first!)",
         "target_key": "prompt",
-        "method": "comfyui_targeted_prompt_extraction",
+        "method": "comfyui_extract_dynamic_prompt_from_workflow",
         "target_input": "positive"
       },
       {
+        "comment": "Same for negative - API format has resolved values",
         "target_key": "negative_prompt",
-        "method": "comfyui_targeted_prompt_extraction",
+        "method": "comfyui_extract_dynamic_prompt_from_workflow",
         "target_input": "negative"
       },
       {

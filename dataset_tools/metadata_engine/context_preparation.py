@@ -23,6 +23,7 @@ from PIL import Image, UnidentifiedImageError
 
 from ..logger import get_logger
 from ..model_parsers.safetensors_parser import SafetensorsParser
+from ..file_readers.image_metadata_reader import ImageMetadataReader
 
 
 # Type aliases
@@ -46,6 +47,7 @@ class ContextDataPreparer:
     def __init__(self, log: logging.Logger | None = None):
         """Initialize the context data preparer."""
         self.logger = log or get_logger("ContextDataPreparer")
+        self.image_metadata_reader = ImageMetadataReader()
 
     def prepare_context(self, file_input: FileInput) -> ContextData | None:
         """Prepare context data from a file input.
@@ -102,6 +104,12 @@ class ContextDataPreparer:
             "raw_file_content_bytes": None,
             "safetensors_metadata": None,
             "gguf_metadata": None,
+            # pyexiv2 data (raw and mapped)
+            "pyexiv2_exif": {},  # Raw EXIF from pyexiv2 with prefixed keys
+            "pyexiv2_xmp": {},   # Raw XMP from pyexiv2 with prefixed keys
+            "pyexiv2_iptc": {},  # Raw IPTC from pyexiv2
+            "exif_fields": {},   # Mapped EXIF fields (friendly names)
+            "xmp_fields": {},    # Mapped XMP fields (friendly names)
         }
 
     def _get_file_path_string(self, file_input: FileInput) -> str:
@@ -177,6 +185,7 @@ class ContextDataPreparer:
 
             self._extract_exif_data(context)
             self._extract_xmp_data(context)
+            self._extract_pyexiv2_metadata(context)
 
             # --- IPTC Data Extraction ---
             try:
@@ -420,6 +429,74 @@ class ContextDataPreparer:
         if xmp_str:
             context["xmp_string"] = xmp_str
             # TODO: Parse XMP into structured format if needed
+
+    def _extract_pyexiv2_metadata(self, context: ContextData) -> None:
+        """Extract rich EXIF/XMP metadata using pyexiv2 and map to friendly field names."""
+        file_path = context.get("file_path_original")
+        if not file_path:
+            return
+
+        try:
+            # Use ImageMetadataReader to get pyexiv2 data
+            metadata = self.image_metadata_reader.read_metadata(file_path)
+            if not metadata:
+                self.logger.debug(f"[PYEXIV2] No metadata extracted for: {file_path}")
+                return
+
+            # Store raw pyexiv2 data
+            context["pyexiv2_exif"] = metadata.get("EXIF", {})
+            context["pyexiv2_xmp"] = metadata.get("XMP", {})
+            context["pyexiv2_iptc"] = metadata.get("IPTC", {})
+
+            # Map EXIF fields to friendly names
+            context["exif_fields"] = self._map_exif_fields(context["pyexiv2_exif"])
+
+            # Map XMP fields to friendly names
+            context["xmp_fields"] = self._map_xmp_fields(context["pyexiv2_xmp"])
+
+            self.logger.info(
+                f"[PYEXIV2] Extracted {len(context['exif_fields'])} EXIF fields, "
+                f"{len(context['xmp_fields'])} XMP fields from: {Path(file_path).name}"
+            )
+
+        except Exception as e:
+            self.logger.debug(f"[PYEXIV2] Error extracting metadata: {e}")
+
+    def _map_exif_fields(self, exif_data: dict) -> dict:
+        """Map pyexiv2 EXIF keys to friendly field names.
+
+        Example: "Exif.Photo.UserComment" -> "UserComment"
+                 "Exif.Image.Make" -> "Make"
+        """
+        mapped = {}
+        for key, value in exif_data.items():
+            # Strip the "Exif.X." prefix to get friendly name
+            if key.startswith("Exif."):
+                # Remove "Exif.Photo." or "Exif.Image." prefix
+                friendly_name = key.split(".")[-1]  # Get last part after final dot
+                mapped[friendly_name] = value
+            else:
+                # Keep unmapped fields as-is
+                mapped[key] = value
+        return mapped
+
+    def _map_xmp_fields(self, xmp_data: dict) -> dict:
+        """Map pyexiv2 XMP keys to friendly field names.
+
+        Example: "Xmp.dc.creator" -> "creator"
+                 "Xmp.xmp.CreateDate" -> "CreateDate"
+        """
+        mapped = {}
+        for key, value in xmp_data.items():
+            # Strip the "Xmp.X." prefix to get friendly name
+            if key.startswith("Xmp."):
+                # Remove "Xmp.namespace." prefix
+                friendly_name = key.split(".")[-1]  # Get last part after final dot
+                mapped[friendly_name] = value
+            else:
+                # Keep unmapped fields as-is
+                mapped[key] = value
+        return mapped
 
     def _extract_png_chunks(self, context: ContextData) -> None:
         """Extract PNG text chunks from PIL info."""

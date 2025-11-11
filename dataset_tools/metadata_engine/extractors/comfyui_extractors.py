@@ -104,11 +104,70 @@ class ComfyUIExtractor:
         context: ContextData,
         fields: ExtractedFields
     ) -> str:
-        """Extracts prompts using a fast, two-phase targeted strategy. v2.4 handles complex CLIP paths.
+        """3-Tier targeted extraction: WorkflowAnalyzer → Smart BFS → Dumb BFS (v3.0).
 
-        Phase 1: Scans all nodes to find text sources, including traversing back from encoders.
-        Phase 2: Traces forward from only those sources to validate their connection to a sampler.
+        Tier 1: Use WorkflowAnalyzer for intelligent prompt tracing
+        Tier 2: Enhanced BFS with passthrough node awareness
+        Tier 3: Legacy BFS with simple scoring (fallback)
         """
+        target_input = method_def.get("target_input", "positive")
+
+        # TIER 1: SMART - Use WorkflowAnalyzer
+        tier1_result = self._tier1_workflow_analyzer_extraction(data, target_input)
+        if tier1_result:
+            return tier1_result
+
+        # TIER 2 & 3: SMARTER & DUMB - Use enhanced and legacy BFS
+        return self._tier2_and_tier3_bfs_extraction(data, method_def, context, fields)
+
+    def _tier1_workflow_analyzer_extraction(self, data: Any, target_input: str) -> str:
+        """Tier 1: Use WorkflowAnalyzer's intelligent prompt extraction."""
+        try:
+            self.logger.info("[TIER 1 TARGETED ✨] Trying WorkflowAnalyzer for '%s'", target_input)
+            analysis = self.manager.workflow_analyzer.analyze_workflow(data)
+
+            if not analysis.get("is_valid_workflow"):
+                self.logger.debug("[TIER 1 ⚠️] Invalid workflow, trying Tier 2")
+                return ""
+
+            passes = analysis.get("generation_passes", [])
+            if not passes:
+                self.logger.debug("[TIER 1 ⚠️] No generation passes found, trying Tier 2")
+                return ""
+
+            # Get the first generation pass (main sampler)
+            main_pass = passes[0]
+            prompt_info = main_pass.get("prompt_info", {})
+
+            # Map target_input to prompt_info keys
+            field_map = {
+                "positive": "positive_prompt",
+                "negative": "negative_prompt",
+                "guider": "positive_prompt"  # FLUX-style
+            }
+
+            prompt_key = field_map.get(target_input, f"{target_input}_prompt")
+            prompt = prompt_info.get(prompt_key, "")
+
+            if prompt and isinstance(prompt, str) and prompt.strip():
+                self.logger.info("[TIER 1 ✅] WorkflowAnalyzer succeeded for '%s': %s...", target_input, prompt[:100])
+                return prompt.strip()
+
+            self.logger.debug("[TIER 1 ⚠️] No prompt found in generation passes, trying Tier 2")
+            return ""
+
+        except Exception as e:
+            self.logger.debug("[TIER 1 ❌] WorkflowAnalyzer failed: %s, trying Tier 2", e)
+            return ""
+
+    def _tier2_and_tier3_bfs_extraction(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields
+    ) -> str:
+        """Tier 2 & 3: Enhanced and legacy BFS prompt extraction."""
         self.logger.info("[TARGETED EXTRACTOR v2.7 DEBUG] Starting targeted prompt extraction.")
 
         target_input = method_def.get("target_input", "positive")
@@ -148,9 +207,9 @@ class ComfyUIExtractor:
             sampler_nodes = []
             # Use text_encoder_node_types from method_def if provided, otherwise use defaults
             text_encoder_types = method_def.get("text_encoder_node_types", [
-                "CLIPTextEncode", "Text Multiline", "DPRandomGenerator", "ShowText|pysssss",
-                "ChatGptPrompt", "ChatGLM3TextEncode", "PrimitiveStringMultiline", "easy positive",
-                "Text Concatenate", "PCLazyTextEncode"
+                "CLIPTextEncode", "Text Multiline", "String Literal", "PrimitiveStringMultiline",
+                "DPRandomGenerator", "ShowText|pysssss", "ChatGptPrompt", "ChatGLM3TextEncode",
+                "easy positive", "Text Concatenate", "PCLazyTextEncode"
             ])
 
             for node_id, node in node_lookup.items():
@@ -170,6 +229,14 @@ class ComfyUIExtractor:
                                 resolved_text = showtext_widgets[1].strip()
                                 self.logger.info("[TARGETED EXTRACTOR v2.7 DEBUG] Found resolved dynamic prompt via ShowText: '%s...'", resolved_text[:100])
                                 break
+
+                    # If no ShowText found, try widgets_values[0] for direct text
+                    if not resolved_text:
+                        widgets = node.get("widgets_values", [])
+                        if widgets and len(widgets) > 0:
+                            if isinstance(widgets[0], str) and widgets[0].strip():
+                                resolved_text = widgets[0].strip()
+                                self.logger.info("[TARGETED EXTRACTOR v2.7 DEBUG] Found prompt directly in DPRandomGenerator widgets_values[0]: '%s...'", resolved_text[:100])
 
                     if resolved_text:
                         # Use the resolved text, but keep the ID of the generator for path validation
@@ -242,6 +309,15 @@ class ComfyUIExtractor:
                     scored_candidates.append({"text": candidate["text"], "score": 100})
                     continue
 
+                # Passthrough nodes that don't count against path length (TIER 2 SMART SCORING)
+                passthrough_types = [
+                    "ModelSamplingFlux", "ModelSamplingSD3", "ModelSamplingAuraFlow",
+                    "BasicGuider", "SamplerCustomAdvanced", "FluxGuidance",
+                    "CR LoRA Stack", "Text Concatenate (JPS)", "LoraLoader",
+                    "ConditioningConcat", "ConditioningCombine", "ConditioningAverage",
+                    "Reroute"
+                ]
+
                 while queue:
                     current_node_id, path = queue.popleft()
                     if len(path) > 20: continue
@@ -253,8 +329,22 @@ class ComfyUIExtractor:
                         dest_node = node_lookup.get(dest_node_id)
 
                         if dest_node in sampler_nodes and dest_input_name == effective_target_input:
-                            self.logger.info("    [SUCCESS] Path FOUND for candidate %s -> Sampler %s ('%s') at depth %s.", candidate["id"], dest_node_id, effective_target_input, len(path))
-                            score = 100 - len(path)
+                            # TIER 2: Smart scoring - don't penalize passthrough nodes
+                            penalty_hops = 0
+                            for node_id in path[1:]:  # Skip first node (the candidate itself)
+                                node_type = node_lookup.get(node_id, {}).get("class_type", "")
+                                if not any(pt in node_type for pt in passthrough_types):
+                                    penalty_hops += 1
+
+                            if penalty_hops == 0:
+                                # Pure passthrough path - high score! (TIER 2 SUCCESS)
+                                score = 95
+                                self.logger.info("    [TIER 2 ✅] Path FOUND via passthrough nodes! Score: %s", score)
+                            else:
+                                # Some real hops - penalize (TIER 3 FALLBACK)
+                                score = max(50, 100 - (penalty_hops * 5))
+                                self.logger.info("    [TIER 3 ⚠️] Path FOUND with %s penalty hops. Score: %s", penalty_hops, score)
+
                             scored_candidates.append({"text": candidate["text"], "score": score})
                             path_found = True
                             break
@@ -335,6 +425,8 @@ class ComfyUIExtractor:
                     if input_field == "height" and len(widgets) >= 2:
                         return self._convert_data_type(widgets[1], data_type, fallback)
                     if input_field == "ckpt_name" and len(widgets) >= 1:
+                        return self._convert_data_type(widgets[0], data_type, fallback)
+                    if input_field == "unet_name" and len(widgets) >= 1:
                         return self._convert_data_type(widgets[0], data_type, fallback)
 
                 # Try direct field access
@@ -1265,43 +1357,106 @@ class ComfyUIExtractor:
         method_def: MethodDefinition,
         context: ContextData,
         fields: ExtractedFields,
-    ) -> dict[str, Any]:
-        """Legacy input of main sampler."""
-        # Use workflow analyzer to get nodes
-        analysis_result = self.manager.workflow_analyzer.analyze_workflow(data)
-        if not analysis_result.get("is_valid_workflow", False):
-            return {}
-        nodes = self.manager.workflow_analyzer.nodes
-        if not nodes:
-            return {}
-
-        # Find sampler nodes and extract specific input field
+    ) -> Any:
+        """Smart 3-tier sampler finder: WorkflowAnalyzer → NodeDictionary → Legacy loop."""
         input_field = method_def.get("input_field", "")
-        data_type = method_def.get("data_type", "string")
+        # Support both data_type and value_type (legacy compatibility)
+        data_type = method_def.get("data_type") or method_def.get("value_type", "string")
         fallback = method_def.get("fallback")
 
-        for node_id, node_data in nodes.items() if isinstance(nodes, dict) else enumerate(nodes):
-            if isinstance(node_data, dict):
-                class_type = node_data.get("class_type", node_data.get("type", ""))
-                if any(sampler in class_type for sampler in ["KSampler", "KSamplerAdvanced", "SamplerCustom"]):
-                    inputs = node_data.get("inputs", {})
-                    if input_field in inputs:
-                        value = inputs[input_field]
-                        # Convert to appropriate data type
-                        try:
-                            if data_type == "integer":
-                                return int(value)
-                            if data_type == "float":
-                                return float(value)
-                            if data_type == "string":
-                                return str(value)
-                            return value
-                        except (ValueError, TypeError):
-                            return fallback
-                    else:
-                        return fallback
+        # TIER 1: SMART - Use WorkflowAnalyzer with graph tracing
+        try:
+            analysis = self.manager.workflow_analyzer.analyze_workflow(data)
+            if analysis.get("is_valid_workflow"):
+                passes = analysis.get("generation_passes", [])
+                if passes:
+                    main_pass = passes[0]  # First pass is main generation
+                    sampling_info = main_pass.get("sampling_info", {})
+                    value = sampling_info.get(input_field)
 
-        return fallback if fallback is not None else {}
+                    if value is not None:
+                        self.logger.debug("[TIER 1 ✅] Smart extraction succeeded for '%s': %s", input_field, value)
+                        return self._convert_value_to_type(value, data_type, fallback)
+                    self.logger.debug("[TIER 1 ⚠️] Field '%s' not in sampling_info, trying Tier 2", input_field)
+                else:
+                    self.logger.debug("[TIER 1 ⚠️] No generation passes found, trying Tier 2")
+            else:
+                self.logger.debug("[TIER 1 ⚠️] Invalid workflow, trying Tier 2")
+        except Exception as e:
+            self.logger.debug("[TIER 1 ❌] Smart extraction failed: %s, trying Tier 2", e)
+
+        # TIER 2: SMARTER - Use NodeDictionary for flexible sampler detection
+        try:
+            nodes = self.manager.workflow_analyzer.nodes
+            if not nodes:
+                # Try to get nodes directly from data
+                nodes = data.get("nodes", {}) if isinstance(data, dict) else {}
+
+            if nodes:
+                # Ask NodeDictionary which nodes can provide this parameter
+                priority_nodes = self.manager.dictionary_manager.get_priority_nodes_for_parameter(input_field)
+
+                for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+                    if isinstance(node_data, dict):
+                        class_type = node_data.get("class_type", node_data.get("type", ""))
+
+                        # Check if node is in priority list OR contains "Sampler" (flexible!)
+                        if class_type in priority_nodes or "Sampler" in class_type:
+                            inputs = node_data.get("inputs", {})
+                            if input_field in inputs:
+                                value = inputs[input_field]
+                                self.logger.debug("[TIER 2 ✅] Dictionary extraction succeeded for '%s' from node '%s': %s",
+                                                input_field, class_type, value)
+                                return self._convert_value_to_type(value, data_type, fallback)
+
+                self.logger.debug("[TIER 2 ⚠️] No matching nodes found, trying Tier 3")
+            else:
+                self.logger.debug("[TIER 2 ⚠️] No nodes available, trying Tier 3")
+        except Exception as e:
+            self.logger.debug("[TIER 2 ❌] Dictionary extraction failed: %s, trying Tier 3", e)
+
+        # TIER 3: DUMB - Hardcoded loop (last resort)
+        try:
+            nodes = self.manager.workflow_analyzer.nodes
+            if not nodes:
+                nodes = data.get("nodes", {}) if isinstance(data, dict) else {}
+
+            if nodes:
+                for node_id, node_data in (nodes.items() if isinstance(nodes, dict) else enumerate(nodes)):
+                    if isinstance(node_data, dict):
+                        class_type = node_data.get("class_type", node_data.get("type", ""))
+                        # Hardcoded list as last resort
+                        if any(s in class_type for s in ["KSampler", "KSamplerAdvanced", "SamplerCustom"]):
+                            inputs = node_data.get("inputs", {})
+                            if input_field in inputs:
+                                value = inputs[input_field]
+                                self.logger.debug("[TIER 3 ⚠️] Dumb fallback succeeded for '%s' from '%s': %s",
+                                                input_field, class_type, value)
+                                return self._convert_value_to_type(value, data_type, fallback)
+
+                self.logger.debug("[TIER 3 ❌] No hardcoded sampler types found")
+            else:
+                self.logger.debug("[TIER 3 ❌] No nodes available")
+        except Exception as e:
+            self.logger.error("[TIER 3 ❌] Dumb fallback failed: %s", e)
+
+        # GIVE UP
+        self.logger.debug("[ALL TIERS FAILED] Returning fallback for '%s'", input_field)
+        return fallback
+
+    def _convert_value_to_type(self, value: Any, data_type: str, fallback: Any) -> Any:
+        """Convert value to specified data type with fallback."""
+        try:
+            if data_type == "integer":
+                return int(value)
+            if data_type == "float":
+                return float(value)
+            if data_type == "string":
+                return str(value)
+            return value
+        except (ValueError, TypeError) as e:
+            self.logger.debug("Type conversion failed for '%s' to %s: %s, using fallback", value, data_type, e)
+            return fallback
 
     def _simple_legacy_text_extraction(
         self,
@@ -1973,7 +2128,7 @@ class ComfyUIExtractor:
 
             # Find a sampler node
             for node_id, node in node_lookup.items():
-                node_type = node.get("class_type", "")
+                node_type = node.get("class_type", node.get("type", ""))
                 if any(sampler_type in node_type for sampler_type in sampler_types):
                     # Found a sampler, now DFS backwards to find text
                     result = self._dfs_follow_links(node, target_input, node_lookup, visited=set(), depth=0)
@@ -2026,8 +2181,9 @@ class ComfyUIExtractor:
             outputs = node.get("outputs", [])
             for output in outputs:
                 if isinstance(output, dict):
-                    links = output.get("links", [])
-                    if link_id in links:
+                    links = output.get("links")
+                    # Handle both None and actual list
+                    if links and link_id in links:
                         return node
         return None
 

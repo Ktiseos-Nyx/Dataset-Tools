@@ -21,6 +21,14 @@ try:
 except ImportError:
     PILLOW_AVAILABLE = False
 
+# pypng import with fallback
+try:
+    import png
+
+    PYPNG_AVAILABLE = True
+except ImportError:
+    PYPNG_AVAILABLE = False
+
 from ..logger import debug_monitor, get_logger
 from ..logger import info_monitor as nfo
 
@@ -101,16 +109,19 @@ class ImageMetadataReader:
 
     @debug_monitor
     def _read_png_metadata(self, file_path: str) -> dict[str, Any] | None:
-        """Read metadata from a PNG file."""
+        """Read metadata from a PNG file.
+
+        pyexiv2 is now smart enough to automatically use pypng for PNG text chunks!
+        """
         nfo("[ImageReader] Reading PNG metadata: %s", Path(file_path).name)
 
         try:
-            # Try pyexiv2 first
+            # Try pyexiv2 (now enhanced with automatic pypng fallback for PNGs)
             result = self._read_with_pyexiv2(file_path)
             if result:
                 return result
 
-            # Fallback to Pillow
+            # Final fallback to Pillow
             return self._fallback_to_pillow(file_path, "PNG")
 
         except Exception as e:
@@ -166,7 +177,10 @@ class ImageMetadataReader:
             return self._fallback_to_pillow(file_path, "Generic (after error)")
 
     def _read_with_pyexiv2(self, file_path: str) -> dict[str, Any] | None:
-        """Read metadata using pyexiv2.
+        """Read metadata using pyexiv2, enhanced with pypng for PNG files.
+
+        For PNG files, if pyexiv2 finds no standard metadata (EXIF/IPTC/XMP),
+        this automatically tries pypng to read PNG text chunks (ComfyUI workflows, etc.)
 
         Args:
             file_path: Path to the image file
@@ -209,13 +223,33 @@ class ImageMetadataReader:
                     metadata["EXIF"]["Exif.Photo.UserComment"] = corrected_uc
                     self.logger.debug("Corrected UserComment for %s", Path(file_path).name)
 
-            # Check if we actually found any metadata
-            if not any(metadata.values()):
-                nfo("[ImageReader] pyexiv2 found no metadata in: %s", Path(file_path).name)
-                return None
+            # Check if we actually found any standard metadata
+            has_standard_metadata = any(metadata.values())
 
-            nfo("[ImageReader] pyexiv2 successfully read metadata from: %s", Path(file_path).name)
-            return metadata
+            # ENHANCEMENT: For PNG files with no standard metadata, try pypng for text chunks
+            if not has_standard_metadata and Path(file_path).suffix.lower() == ".png":
+                if PYPNG_AVAILABLE:
+                    self.logger.debug("[ImageReader] pyexiv2 found no standard metadata, trying pypng for PNG chunks")
+                    pypng_result = self._read_png_chunks_with_pypng(file_path)
+                    if pypng_result:
+                        # Merge pypng results into metadata dict
+                        metadata.update(pypng_result)
+                        nfo("[ImageReader] pyexiv2 (enhanced with pypng) successfully read PNG chunks from: %s", Path(file_path).name)
+                        return metadata
+                    else:
+                        nfo("[ImageReader] pyexiv2 + pypng found no metadata in: %s", Path(file_path).name)
+                        return None
+                else:
+                    nfo("[ImageReader] pyexiv2 found no metadata in PNG (pypng not available): %s", Path(file_path).name)
+                    return None
+
+            # Standard metadata found
+            if has_standard_metadata:
+                nfo("[ImageReader] pyexiv2 successfully read metadata from: %s", Path(file_path).name)
+                return metadata
+
+            nfo("[ImageReader] pyexiv2 found no metadata in: %s", Path(file_path).name)
+            return None
 
         except Exception:
             self.logger.exception("pyexiv2 error for %s", file_path)
@@ -373,6 +407,92 @@ class ImageMetadataReader:
 
         if isinstance(uc_value, str) and uc_value.startswith("charset="):
             self.logger.debug("UserComment appears to be pre-decoded with charset prefix: %s", Path(file_path).name)
+
+    def _read_png_chunks_with_pypng(self, file_path: str) -> dict[str, Any] | None:
+        """Read PNG text chunks using pypng library.
+
+        pypng is better at reading large PNG chunks (>50KB) and can handle
+        binary chunks that Pillow might struggle with.
+
+        Args:
+            file_path: Path to PNG file
+
+        Returns:
+            Dictionary with PNG_CHUNKS key containing chunk data, or None
+        """
+        try:
+            with open(file_path, "rb") as f:
+                reader = png.Reader(f)
+
+                # Read chunks without decoding image data
+                chunks = []
+                for chunk_type, chunk_data in reader.chunks():
+                    # Decode chunk type from bytes to string
+                    chunk_type_str = chunk_type.decode("ascii", errors="ignore") if isinstance(chunk_type, bytes) else chunk_type
+
+                    # Only process text chunks (tEXt, iTXt, zTXt)
+                    if chunk_type_str in ("tEXt", "iTXt", "zTXt"):
+                        chunks.append({
+                            "type": chunk_type_str,
+                            "data": chunk_data,
+                            "size": len(chunk_data)
+                        })
+
+                if chunks:
+                    self.logger.debug("[ImageReader] pypng found %d text chunks in: %s", len(chunks), Path(file_path).name)
+
+                    # Parse the chunks into readable format
+                    parsed_chunks = {}
+                    for chunk in chunks:
+                        chunk_type = chunk["type"]
+                        chunk_data = chunk["data"]
+
+                        try:
+                            # tEXt chunks: keyword\0text
+                            if chunk_type == "tEXt":
+                                null_idx = chunk_data.find(b"\x00")
+                                if null_idx > 0:
+                                    keyword = chunk_data[:null_idx].decode("latin-1")
+                                    text = chunk_data[null_idx + 1:].decode("latin-1", errors="replace")
+                                    parsed_chunks[keyword] = text
+
+                            # iTXt chunks: keyword\0compression_flag\0compression_method\0language\0translated_keyword\0text
+                            elif chunk_type == "iTXt":
+                                null_idx = chunk_data.find(b"\x00")
+                                if null_idx > 0:
+                                    keyword = chunk_data[:null_idx].decode("utf-8")
+                                    # Skip compression flag and method, just get the text
+                                    # Simplified parsing - just decode as UTF-8
+                                    text_start = chunk_data.find(b"\x00", null_idx + 3)
+                                    if text_start > 0:
+                                        text = chunk_data[text_start + 1:].decode("utf-8", errors="replace")
+                                        parsed_chunks[keyword] = text
+
+                            # zTXt chunks: keyword\0compression_method\0compressed_text
+                            elif chunk_type == "zTXt":
+                                import zlib
+                                null_idx = chunk_data.find(b"\x00")
+                                if null_idx > 0:
+                                    keyword = chunk_data[:null_idx].decode("latin-1")
+                                    # Skip compression method byte, decompress rest
+                                    compressed_text = chunk_data[null_idx + 2:]
+                                    text = zlib.decompress(compressed_text).decode("utf-8", errors="replace")
+                                    parsed_chunks[keyword] = text
+
+                        except Exception as e:
+                            self.logger.debug("[ImageReader] Failed to parse %s chunk: %s", chunk_type, e)
+                            continue
+
+                    if parsed_chunks:
+                        nfo("[ImageReader] pypng successfully extracted %d text chunks", len(parsed_chunks))
+                        return {"PNG_CHUNKS": parsed_chunks}
+
+                self.logger.debug("[ImageReader] pypng found no text chunks in: %s", Path(file_path).name)
+                return None
+
+        except Exception as e:
+            self.logger.debug("[ImageReader] pypng extraction failed for %s: %s", Path(file_path).name, e)
+            return None
 
     def get_supported_formats(self) -> set[str]:
         """Get the set of supported image formats."""

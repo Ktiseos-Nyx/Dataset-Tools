@@ -31,6 +31,11 @@ class ComfyUITextCombinerExtractor:
             "default_delimiter": ", ",
             "inputs": ["text_a", "text_b", "text_c", "text_d"],
         },
+        "Text Concatenate (JPS)": {
+            "delimiter_index": 0,  # widgets_values[0] is delimiter
+            "default_delimiter": " ",
+            "inputs": ["text1", "text2", "text3", "text4"],  # JPS uses different naming!
+        },
         "String Append": {
             "delimiter_index": None,  # No delimiter, just appends
             "default_delimiter": "",

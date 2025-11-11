@@ -21,6 +21,7 @@ except (ImportError, ModuleNotFoundError):
     HAS_QSETTINGS = False
 
 from dataset_tools.logger import error_message, info_monitor, warning_message
+from dataset_tools.crypto_secrets import get_civitai_api_key as get_encrypted_api_key
 
 # Cache configuration
 CACHE_DIR = Path.home() / ".cache" / "dataset-tools" / "civitai"
@@ -122,12 +123,8 @@ def get_model_info_by_hash(model_hash: str) -> dict[str, Any] | None:
     api_url = f"https://civitai.com/api/v1/model-versions/by-hash/{model_hash}"
     info_monitor("[Civitai API] Fetching model info from: %s", api_url)
 
-    # Get API key from QSettings (GUI) or environment variable (headless)
-    if HAS_QSETTINGS:
-        settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
-        api_key = settings.value("civitai_api_key", "", type=str)
-    else:
-        api_key = os.getenv("CIVITAI_API_KEY", "")
+    # Get API key from encrypted storage (with QSettings + env fallback)
+    api_key = get_encrypted_api_key() or ""
 
     headers = {}
     if api_key:
@@ -202,12 +199,8 @@ def get_model_info_by_id(model_id: str) -> dict[str, Any] | None:
     api_url = f"https://civitai.com/api/v1/models/{model_id}"
     info_monitor("[Civitai API] Fetching model info from: %s", api_url)
 
-    # Get API key from QSettings (GUI) or environment variable (headless)
-    if HAS_QSETTINGS:
-        settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
-        api_key = settings.value("civitai_api_key", "", type=str)
-    else:
-        api_key = os.getenv("CIVITAI_API_KEY", "")
+    # Get API key from encrypted storage (with QSettings + env fallback)
+    api_key = get_encrypted_api_key() or ""
 
     headers = {}
     if api_key:
@@ -271,12 +264,8 @@ def get_model_version_info_by_id(version_id: str) -> dict[str, Any] | None:
     api_url = f"https://civitai.com/api/v1/model-versions/{version_id}"
     info_monitor("[Civitai API] Fetching model version info from: %s", api_url)
 
-    # Get API key from QSettings (GUI) or environment variable (headless)
-    if HAS_QSETTINGS:
-        settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
-        api_key = settings.value("civitai_api_key", "", type=str)
-    else:
-        api_key = os.getenv("CIVITAI_API_KEY", "")
+    # Get API key from encrypted storage (with QSettings + env fallback)
+    api_key = get_encrypted_api_key() or ""
 
     headers = {}
     if api_key:

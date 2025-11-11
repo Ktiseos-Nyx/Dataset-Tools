@@ -199,16 +199,29 @@ class ComfyUITraversalExtractor:
                     self.logger.debug("[TRAVERSAL] Concat result: %s...", " ".join(all_traced_fragments)[:50])
                     return all_traced_fragments
 
+            # Handle Text Concatenate (JPS) nodes by tracing all text inputs.
+            if "Text Concatenate (JPS)" in node_type:
+                # JPS uses text1, text2, text3, text4 naming
+                for input_name in ["text1", "text2", "text3", "text4"]:
+                    link_info = self.follow_input_link(nodes, node_id, input_name)
+                    if link_info:
+                        source_node_id, _ = link_info
+                        all_traced_fragments.extend(trace_recursive(source_node_id, depth + 1))
+                if all_traced_fragments:
+                    self.logger.debug("[TRAVERSAL] JPS Concat result: %s...", " ".join(all_traced_fragments)[:50])
+                    return all_traced_fragments
+
             # Generic handling for intermediate nodes.
             intermediate_node_types = [
                 "ConditioningConcat", "ConditioningCombine", "ConditioningAverage",
                 "ConditioningSetArea", "ConditioningSetMask", "ConditioningMultiply",
                 "ConditioningSubtract", "ConditioningAddConDelta", "CFGlessNegativePrompt",
                 "Reroute", "LoraLoader", "CheckpointLoaderSimple", "UNETLoader",
-                "VAELoader", "ModelSamplingFlux", "BasicGuider", "SamplerCustomAdvanced",
+                "VAELoader", "ModelSamplingFlux", "ModelSamplingSD3", "ModelSamplingAuraFlow",
+                "BasicGuider", "SamplerCustomAdvanced",
                 "FluxGuidance", "ConditioningRecastFP64", "ImpactConcatConditionings",
                 "ImpactCombineConditionings", "ControlNetApplyAdvanced", "ControlNetApply",
-                "ControlNetApplySD3",
+                "ControlNetApplySD3", "CR LoRA Stack", "Text Concatenate (JPS)",
             ]
             if node_type in intermediate_node_types:
                 self.logger.debug("[TRAVERSAL] Following inputs for intermediate node: %s", node_type)

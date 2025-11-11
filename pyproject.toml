@@ -40,6 +40,8 @@ dependencies = [
     "toml",
     "typing-extensions", # Good for broader Python 3.x compatibility for newer typing features
     "pyexiv2",
+    "pypng",  # Better PNG chunk reading for large ComfyUI workflows
+    "cryptography",  # Fernet encryption for API key storage
     "exif", # Consider if this is still needed with piexif and pyexiv2
     "numpy", #advanced algorithms
     # "sd-prompt-reader", # REMOVE - You have vendored this.

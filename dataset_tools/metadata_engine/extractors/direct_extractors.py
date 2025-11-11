@@ -35,6 +35,8 @@ class DirectValueExtractor:
             "direct_context_key": self._extract_direct_context_key,
             "context_workflow_contains_string": self._context_workflow_contains_string,
             "swarmui_extract_sampler": self._extract_swarmui_extract_sampler,
+            "direct_exif_field": self._extract_direct_exif_field,
+            "direct_xmp_field": self._extract_direct_xmp_field,
         }
 
     def direct_input_data_as_string(
@@ -210,3 +212,81 @@ class DirectValueExtractor:
             return sampler
 
         return None
+
+    def _extract_direct_exif_field(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> Any:
+        """Extract EXIF field using pyexiv2 mapped fields.
+
+        Extracts from context['exif_fields'] which contains friendly field names.
+        Example: field_name="Make" extracts camera make from mapped EXIF data.
+        """
+        field_name = method_def.get("field_name")
+        if not field_name:
+            self.logger.warning("direct_exif_field method missing 'field_name'")
+            return None
+
+        # Get mapped EXIF fields from context (friendly names)
+        exif_fields = context.get("exif_fields", {})
+        value = exif_fields.get(field_name)
+
+        if value is None:
+            # Fallback: try raw pyexiv2 EXIF with prefixed keys
+            pyexiv2_exif = context.get("pyexiv2_exif", {})
+            # Try common prefixes
+            for prefix in ["Exif.Photo.", "Exif.Image.", "Exif.GPSInfo."]:
+                prefixed_key = f"{prefix}{field_name}"
+                value = pyexiv2_exif.get(prefixed_key)
+                if value is not None:
+                    self.logger.debug("Found EXIF field '%s' with prefix '%s'", field_name, prefix)
+                    break
+
+        if value is not None:
+            self.logger.debug("Extracted EXIF field '%s': %s", field_name, str(value)[:100])
+        else:
+            self.logger.debug("EXIF field '%s' not found", field_name)
+
+        return value
+
+    def _extract_direct_xmp_field(
+        self,
+        data: Any,
+        method_def: MethodDefinition,
+        context: ContextData,
+        fields: ExtractedFields,
+    ) -> Any:
+        """Extract XMP field using pyexiv2 mapped fields.
+
+        Extracts from context['xmp_fields'] which contains friendly field names.
+        Example: field_name="CreatorTool" extracts software name from mapped XMP data.
+        """
+        field_name = method_def.get("field_name")
+        if not field_name:
+            self.logger.warning("direct_xmp_field method missing 'field_name'")
+            return None
+
+        # Get mapped XMP fields from context (friendly names)
+        xmp_fields = context.get("xmp_fields", {})
+        value = xmp_fields.get(field_name)
+
+        if value is None:
+            # Fallback: try raw pyexiv2 XMP with prefixed keys
+            pyexiv2_xmp = context.get("pyexiv2_xmp", {})
+            # Try common prefixes
+            for prefix in ["Xmp.dc.", "Xmp.xmp.", "Xmp.tiff.", "Xmp.exif.", "Xmp.photoshop."]:
+                prefixed_key = f"{prefix}{field_name}"
+                value = pyexiv2_xmp.get(prefixed_key)
+                if value is not None:
+                    self.logger.debug("Found XMP field '%s' with prefix '%s'", field_name, prefix)
+                    break
+
+        if value is not None:
+            self.logger.debug("Extracted XMP field '%s': %s", field_name, str(value)[:100])
+        else:
+            self.logger.debug("XMP field '%s' not found", field_name)
+
+        return value
