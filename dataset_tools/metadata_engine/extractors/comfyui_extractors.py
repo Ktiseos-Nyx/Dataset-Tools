@@ -45,7 +45,8 @@ class ComfyUIExtractor:
                 import json
 
                 return json.loads(data)
-            except:
+            except Exception as e:
+                self.logger.debug("Failed to parse JSON string: %s", e)
                 return {}
         return data
 

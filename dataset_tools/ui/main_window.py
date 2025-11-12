@@ -20,6 +20,7 @@ from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
 from PyQt6.QtCore import QObject, QSettings, QThread, QThreadPool, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QDialog
 
 from .civitai_api_worker import CivitaiInfoWorker
 
@@ -344,7 +345,16 @@ class MainWindow(Qw.QMainWindow):
         self.thumbnail_grid.file_selected.connect(self.on_file_selected)
         self.left_panel.file_view_stack.addWidget(self.thumbnail_grid)
 
-        nfo("[UI] Thumbnail grid initialized")
+        # Load saved thumbnail size settings
+        thumb_auto = self.settings.value("thumbnailSizeAuto", True, type=bool)
+        thumb_size = self.settings.value("thumbnailSize", 128, type=int)
+
+        if not thumb_auto:
+            # User has manual size set - apply it (skip reload since no thumbnails loaded yet)
+            self.thumbnail_grid.set_manual_thumbnail_size(thumb_size, skip_reload=True)
+            nfo(f"[UI] Thumbnail grid initialized with manual size: {thumb_size}px")
+        else:
+            nfo("[UI] Thumbnail grid initialized with auto-sizing")
 
     def _initialize_file_tree(self):
         """Lazy initialization of file tree."""
@@ -964,6 +974,22 @@ class MainWindow(Qw.QMainWindow):
         elif self._should_display_as_text(full_file_path):
             # Handle text files by displaying their content
             try:
+                # Check file size before loading (prevent UI freeze on huge files)
+                path_obj = Path(full_file_path)
+                file_size = path_obj.stat().st_size
+                max_size = 10 * 1024 * 1024  # 10MB limit
+
+                if file_size > max_size:
+                    self.show_status_message(f"File too large to display ({file_size / (1024*1024):.1f}MB > 10MB limit)")
+                    self.metadata_display.clear_all_displays()
+                    self.generation_data_box.setText(
+                        f"[File too large to display]\n\n"
+                        f"File size: {file_size / (1024*1024):.1f}MB\n"
+                        f"Maximum display size: 10MB\n\n"
+                        f"Please open this file in a text editor."
+                    )
+                    return
+
                 with open(full_file_path, encoding="utf-8") as f:
                     content = f.read()
                 self.metadata_display.clear_all_displays()
@@ -971,7 +997,7 @@ class MainWindow(Qw.QMainWindow):
                 self.show_status_message(f"Displayed content of {file_name}")
             except Exception as e:
                 self.show_status_message(f"Error reading text file: {e}")
-                nfo(f"Error reading text file: {e}")
+                logger.error("Error reading text file: %s", e, exc_info=True)
         else:
             # For other file types like models, just load metadata
             self._load_and_display_metadata(file_name)
@@ -1356,13 +1382,24 @@ class MainWindow(Qw.QMainWindow):
 
             if accepted:
                 try:
-                    with open(full_path, "w", encoding="utf-8") as f:
+                    # Write to temp file first, then atomic replace
+                    temp_path = full_path + ".tmp"
+                    with open(temp_path, "w", encoding="utf-8") as f:
                         f.write(new_text)
+                    os.replace(temp_path, full_path)  # Atomic replace
                     self.show_status_message(f"Successfully saved changes to {file_name}.")
                     # Refresh the display to show new content
                     self.on_file_selected(self.current_selected_file)
                 except Exception as e:
                     self.show_status_message(f"Error saving file: {e}")
+                    logger.error("Error saving text file: %s", e, exc_info=True)
+                    # Clean up temp file if it exists
+                    temp_path = full_path + ".tmp"
+                    if os.path.exists(temp_path):
+                        try:
+                            os.unlink(temp_path)
+                        except OSError:
+                            pass  # Best effort cleanup
             return  # End of text file logic
 
         # --- PNG File Handling ---
@@ -1402,18 +1439,26 @@ class MainWindow(Qw.QMainWindow):
                     # Add the edited metadata
                     new_meta.add_text(raw_key, new_text)
 
-                    # Save safely
+                    # Save safely with proper cleanup
                     temp_path = full_path + ".tmp"
-                    img.save(temp_path, "PNG", pnginfo=new_meta)
-                    os.replace(temp_path, full_path)
-
-                    self.show_status_message(f"Successfully saved metadata to {file_name}.")
-                    # Refresh the view
-                    self.on_file_selected(self.current_selected_file)
+                    try:
+                        img.save(temp_path, "PNG", pnginfo=new_meta)
+                        os.replace(temp_path, full_path)  # Atomic on POSIX
+                        self.show_status_message(f"Successfully saved metadata to {file_name}.")
+                        # Refresh the view
+                        self.on_file_selected(self.current_selected_file)
+                    except Exception as save_error:
+                        # Clean up temp file if it exists
+                        if os.path.exists(temp_path):
+                            try:
+                                os.unlink(temp_path)
+                            except OSError:
+                                pass  # Best effort cleanup
+                        raise save_error  # Re-raise to outer handler
 
             except Exception as e:
                 self.show_status_message(f"Error processing PNG: {e}")
-                nfo(f"Error during PNG edit process: {e}")
+                logger.error("Error during PNG edit process: %s", e, exc_info=True)
             return  # End of PNG logic
 
         self.show_status_message("Editing is currently only supported for .txt and .png files.")
@@ -1441,9 +1486,11 @@ class MainWindow(Qw.QMainWindow):
     def open_settings_dialog(self) -> None:
         """Open the application settings dialog."""
         dialog = SettingsDialog(self)
-        dialog.exec()
-        # Re-apply fonts after dialog closes to ensure they stick
-        self.apply_global_font()
+        result = dialog.exec()
+        # Only re-apply fonts if user clicked OK (accepted dialog)
+        # Clicking Close should not trigger any changes
+        if result == QDialog.DialogCode.Accepted:
+            self.apply_global_font()
 
     def _create_safe_thumbnail(self, image_path: str, max_size: int) -> QtGui.QPixmap:
         """Create a memory-efficient thumbnail avoiding Lanczos artifacts.
@@ -1770,8 +1817,10 @@ QWidget, QTextEdit, QPlainTextEdit, QListWidget, QPushButton, QLabel, QLineEdit 
             if self.image_loader_thread and self.image_loader_thread.isRunning():
                 self.image_loader_thread.quit()
                 if not self.image_loader_thread.wait(3000):  # Wait up to 3 seconds
-                    self.image_loader_thread.terminate()
-                    self.image_loader_thread.wait()  # Wait for termination
+                    # Double-check thread is still running before terminate
+                    if self.image_loader_thread.isRunning():
+                        self.image_loader_thread.terminate()
+                        self.image_loader_thread.wait()  # Wait for termination
 
             nfo("[UI] Image loading thread cleaned up successfully")
 

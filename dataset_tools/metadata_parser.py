@@ -134,8 +134,8 @@ def parse_metadata(file_path_named: str, status_callback=None, extract_exif_fall
                                 try:
                                     workflow_data = json.loads(raw_workflow)
                                     nfo("[DT.metadata_parser]: Found workflow in raw_workflow_json (string)")
-                                except:
-                                    pass
+                                except Exception as e:
+                                    logger.debug("Failed to parse raw_workflow_json as JSON: %s", e)
                             elif isinstance(raw_workflow, dict):
                                 workflow_data = raw_workflow
                                 nfo("[DT.metadata_parser]: Found workflow in raw_workflow_json (dict)")
@@ -146,14 +146,14 @@ def parse_metadata(file_path_named: str, status_callback=None, extract_exif_fall
                             # We need to re-parse it from the file since we don't have context access here
                             try:
                                 from PIL import Image
-                                img = Image.open(file_path_named)
-                                workflow_json = img.info.get('workflow', '')
-                                if workflow_json:
-                                    if isinstance(workflow_json, str):
-                                        workflow_data = json.loads(workflow_json)
-                                    else:
-                                        workflow_data = workflow_json
-                                    nfo("[DT.metadata_parser]: Loaded workflow directly from image file")
+                                with Image.open(file_path_named) as img:
+                                    workflow_json = img.info.get('workflow', '')
+                                    if workflow_json:
+                                        if isinstance(workflow_json, str):
+                                            workflow_data = json.loads(workflow_json)
+                                        else:
+                                            workflow_data = workflow_json
+                                        nfo("[DT.metadata_parser]: Loaded workflow directly from image file")
                             except Exception as e:
                                 nfo("[DT.metadata_parser]: Failed to load workflow from file: %s", e)
 
@@ -392,8 +392,8 @@ def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
                     make = make_bytes.decode("ascii", "ignore").strip("\x00")
                     if make:
                         result["Camera Make"] = make
-                except:
-                    pass
+                except Exception as e:
+                    logger.debug("Failed to decode Camera Make EXIF field: %s", e)
 
         if 272 in exif_0th:
             model_bytes = exif_0th[272]
@@ -402,8 +402,8 @@ def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
                     model = model_bytes.decode("ascii", "ignore").strip("\x00")
                     if model:
                         result["Camera Model"] = model
-                except:
-                    pass
+                except Exception as e:
+                    logger.debug("Failed to decode Camera Model EXIF field: %s", e)
 
         # Software (305)
         if 305 in exif_0th:
@@ -413,8 +413,8 @@ def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
                     software = software_bytes.decode("ascii", "ignore").strip("\x00")
                     if software:
                         result["Software"] = software
-                except:
-                    pass
+                except Exception as e:
+                    logger.debug("Failed to decode Software EXIF field: %s", e)
 
         # DateTime (306)
         if 306 in exif_0th:
@@ -424,8 +424,8 @@ def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
                     datetime_str = datetime_bytes.decode("ascii", "ignore").strip("\x00")
                     if datetime_str:
                         result["DateTime"] = datetime_str
-                except:
-                    pass
+                except Exception as e:
+                    logger.debug("Failed to decode DateTime EXIF field: %s", e)
 
         # Resolution (282, 283)
         if 282 in exif_0th:
@@ -436,8 +436,8 @@ def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
                     if x_res[1] != 0:
                         dpi = x_res[0] / x_res[1]
                         result["Resolution"] = f"{int(dpi)} DPI"
-            except:
-                pass
+            except Exception as e:
+                logger.debug("Failed to parse Resolution EXIF field: %s", e)
 
         # Exposure Time (33434) - in Exif IFD
         if 33434 in exif_exif:
@@ -450,8 +450,8 @@ def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
                             result["Exposure Time"] = f"1/{int(1/exp_val)} sec"
                         else:
                             result["Exposure Time"] = f"{exp_val:.2f} sec"
-            except:
-                pass
+            except Exception as e:
+                logger.debug("Failed to parse Exposure Time EXIF field: %s", e)
 
         # F-Number (33437) - in Exif IFD
         if 33437 in exif_exif:
@@ -461,8 +461,8 @@ def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
                     if f_num[1] != 0:
                         f_val = f_num[0] / f_num[1]
                         result["Aperture"] = f"f/{f_val:.1f}"
-            except:
-                pass
+            except Exception as e:
+                logger.debug("Failed to parse Aperture EXIF field: %s", e)
 
         # ISO Speed (34855) - in Exif IFD
         if 34855 in exif_exif:
@@ -472,8 +472,8 @@ def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
                     result["ISO"] = str(iso)
                 elif isinstance(iso, tuple) and len(iso) > 0:
                     result["ISO"] = str(iso[0])
-            except:
-                pass
+            except Exception as e:
+                logger.debug("Failed to parse ISO EXIF field: %s", e)
 
         # Focal Length (37386) - in Exif IFD
         if 37386 in exif_exif:
@@ -483,8 +483,8 @@ def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
                     if focal[1] != 0:
                         focal_val = focal[0] / focal[1]
                         result["Focal Length"] = f"{focal_val:.1f}mm"
-            except:
-                pass
+            except Exception as e:
+                logger.debug("Failed to parse Focal Length EXIF field: %s", e)
 
         # Focal Length in 35mm (41989) - in Exif IFD
         if 41989 in exif_exif:
@@ -494,8 +494,8 @@ def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
                     result["Focal Length (35mm equiv)"] = f"{focal_35}mm"
                 elif isinstance(focal_35, tuple) and len(focal_35) > 0:
                     result["Focal Length (35mm equiv)"] = f"{focal_35[0]}mm"
-            except:
-                pass
+            except Exception as e:
+                logger.debug("Failed to parse Focal Length (35mm) EXIF field: %s", e)
 
         # Flash (37385) - in Exif IFD
         if 37385 in exif_exif:
@@ -509,8 +509,8 @@ def _extract_basic_exif(file_path: str) -> dict[str, Any] | None:
                     flash_val = flash[0]
                     flash_status = "Fired" if (flash_val & 0x01) else "Did not fire"
                     result["Flash"] = flash_status
-            except:
-                pass
+            except Exception as e:
+                logger.debug("Failed to parse Flash EXIF field: %s", e)
 
         # GPS Coordinates - DISABLED for privacy reasons
         # Extracting GPS data can trigger macOS location/Bluetooth permission prompts

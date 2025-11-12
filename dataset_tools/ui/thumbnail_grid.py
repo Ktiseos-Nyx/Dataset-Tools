@@ -9,6 +9,7 @@ Think of it as your inventory grid in FFXIV but for images!
 
 import hashlib
 import gc
+import logging
 import time
 from pathlib import Path
 
@@ -19,6 +20,15 @@ from PyQt6 import QtWidgets as Qw
 from dataset_tools.logger import get_logger
 
 log = get_logger(__name__)
+
+# Suppress PIL's DEBUG/INFO spam during thumbnail generation
+# PIL/piexif/TiffImagePlugin log every EXIF tag at DEBUG level, which floods the console
+# Only show warnings and errors from image libraries
+logging.getLogger("PIL").setLevel(logging.WARNING)
+logging.getLogger("PIL.Image").setLevel(logging.WARNING)
+logging.getLogger("PIL.TiffImagePlugin").setLevel(logging.WARNING)
+logging.getLogger("PIL.PngImagePlugin").setLevel(logging.WARNING)
+logging.getLogger("piexif").setLevel(logging.WARNING)
 
 
 class ThumbnailCache:
@@ -146,8 +156,15 @@ class ThumbnailWorker(QtCore.QRunnable):
         start_time = time.time()
         try:
             with Image.open(image_path) as original_img:
+                # Speed optimization: Load in draft mode for huge images (4x faster!)
+                # This is safe for thumbnails since we're downscaling anyway
+                if hasattr(original_img, 'draft'):
+                    # Draft mode: load only enough data for the target size
+                    original_img.draft('RGB', (thumb_size * 2, thumb_size * 2))
+
                 processed_img = ImageOps.exif_transpose(original_img)
-                processed_img.thumbnail((thumb_size, thumb_size), Image.Resampling.BILINEAR)
+                # Use NEAREST for thumbnails - 2-3x faster than BILINEAR, good enough for small sizes
+                processed_img.thumbnail((thumb_size, thumb_size), Image.Resampling.NEAREST)
                 pixmap = self._pil_to_qpixmap(processed_img)
                 end_time = time.time()
                 log.debug("[CACHE_DEBUG] Thumbnail generation took: %.4f seconds", end_time - start_time)
@@ -160,7 +177,8 @@ class ThumbnailWorker(QtCore.QRunnable):
         """Save thumbnail to disk cache."""
         try:
             cache_path = self._get_cache_path(image_path, thumb_size)
-            success = pixmap.save(str(cache_path), "WEBP", quality=85)
+            # Lower quality for faster saves (60 is plenty for thumbnails, saves 2-3x faster)
+            success = pixmap.save(str(cache_path), "WEBP", quality=60)
             if success:
                 log.debug("[CACHE_DEBUG] Successfully saved cache file: %s", cache_path)
             else:
@@ -210,8 +228,30 @@ class ThumbnailGridWidget(Qw.QListWidget):
         self.resize_timer.setSingleShot(True)
         self.resize_timer.timeout.connect(self._update_thumbnail_size)
 
-        # Use the global thread pool for concurrent thumbnail loading
-        self.thread_pool = QtCore.QThreadPool.globalInstance()
+        # Prevent infinite resize loops during thumbnail loading
+        self._is_reloading = False
+
+        # Prevent metadata spam during mouse wheel scrolling
+        self._is_scrolling = False
+        self._pending_selection = None  # Store selection to emit after scroll stops
+        self.scroll_debounce_timer = QtCore.QTimer()
+        self.scroll_debounce_timer.setSingleShot(True)
+        self.scroll_debounce_timer.timeout.connect(self._on_scroll_stopped)
+
+        # Throttle thumbnail requests during scroll (don't check visibility on EVERY pixel)
+        self.scroll_thumbnail_timer = QtCore.QTimer()
+        self.scroll_thumbnail_timer.setSingleShot(True)
+        self.scroll_thumbnail_timer.timeout.connect(self._request_visible_thumbnails)
+
+        # Track if user has set manual size (disables auto-sizing on resize)
+        self._manual_size_mode = False
+
+        # Use a dedicated thread pool for thumbnail loading (not global!)
+        # This prevents race conditions with other background tasks like CivitAI workers
+        self.thread_pool = QtCore.QThreadPool(parent=self)
+        # Use many threads for faster loading (thumbnails are I/O bound, not CPU bound)
+        # 16 threads = aggressive parallelism, SSDs can handle it easily
+        self.thread_pool.setMaxThreadCount(16)
         log.info(f"Thumbnail pool configured with max {self.thread_pool.maxThreadCount()} threads.")
 
         self._setup_ui()
@@ -243,16 +283,28 @@ class ThumbnailGridWidget(Qw.QListWidget):
     def _connect_signals(self):
         """Connect signals."""
         self.currentItemChanged.connect(self._on_selection_changed)
-        self.verticalScrollBar().valueChanged.connect(self._request_visible_thumbnails)
+        self.verticalScrollBar().valueChanged.connect(self._on_scroll_value_changed)
 
     def resizeEvent(self, event: QtGui.QResizeEvent):  # noqa: N802
         """Handle widget resize by debouncing thumbnail size recalculation."""
         super().resizeEvent(event)
+
+        # Don't trigger resize during thumbnail reload (prevents infinite loops!)
+        if self._is_reloading:
+            return
+
+        # Don't auto-resize if user has set manual size mode
+        if self._manual_size_mode:
+            return
+
         # Debounce: only recalculate after user stops resizing for 150ms
         self.resize_timer.start(150)
 
     def _update_thumbnail_size(self):
         """Calculate and apply appropriate thumbnail size based on widget width."""
+        # Re-enable auto-sizing mode (user may have switched from manual to auto)
+        self._manual_size_mode = False
+
         viewport_width = self.viewport().width()
 
         if viewport_width <= 0:
@@ -287,19 +339,62 @@ class ThumbnailGridWidget(Qw.QListWidget):
 
     def _reload_thumbnails_at_new_size(self):
         """Reload visible thumbnails at the new size."""
+        # Set reload flag to prevent resize events during reload
+        self._is_reloading = True
+
+        # ALSO block selection signals to prevent metadata spam during reload!
+        self._is_scrolling = True
+
         # Clear memory cache (disk cache handles different sizes)
         self.thumbnail_cache.clear()
         self.requested_thumbnails.clear()
 
-        # Reset all items to placeholder
-        placeholder = self._create_placeholder_icon()
-        for i in range(self.count()):
-            item = self.item(i)
-            if item:
-                item.setIcon(QtGui.QIcon(placeholder))
+        # DON'T reset icons to placeholder - keep old size visible while new size loads!
+        # This makes size switching feel instant since old thumbs stay visible
+        # New thumbs will replace them as they load from disk cache
 
         # Request visible thumbnails at new size
-        QtCore.QTimer.singleShot(50, self._request_visible_thumbnails)
+        # Use longer delay to let layout stabilize completely
+        QtCore.QTimer.singleShot(200, self._request_visible_and_unlock)
+
+    def _request_visible_and_unlock(self):
+        """Request visible thumbnails and unlock resize events."""
+        self._request_visible_thumbnails()
+        # Unlock after thumbnails start loading
+        QtCore.QTimer.singleShot(500, self._unlock_resize)
+
+    def _unlock_resize(self):
+        """Unlock resize events after thumbnail loading stabilizes."""
+        self._is_reloading = False
+        self._is_scrolling = False  # Also unlock selection signals
+        log.debug("Thumbnail reload complete, resize and selection events unlocked")
+        # Request visible thumbnails one more time to catch any that were
+        # missed during layout shifts
+        self._request_visible_thumbnails()
+
+    def set_manual_thumbnail_size(self, size: int, skip_reload: bool = False):
+        """Set thumbnail size manually (disables auto-sizing).
+
+        Args:
+            size: Thumbnail size in pixels
+            skip_reload: If True, don't reload thumbnails (used on startup)
+        """
+        log.info(f"Setting manual thumbnail size: {size}px (manual mode enabled)")
+
+        # Enable manual size mode (disables auto-resize on window resize)
+        self._manual_size_mode = True
+
+        # Update size
+        old_size = self.current_thumb_size
+        self.current_thumb_size = size
+
+        # Update UI
+        self.setIconSize(QtCore.QSize(size, size))
+        self._update_grid_size()
+
+        # Reload thumbnails at new size (unless we're initializing on startup)
+        if not skip_reload:
+            self._reload_thumbnails_at_new_size()
 
     def set_folder(self, folder_path: str, files: list[str], file_to_select: str | None = None):
         """Set the folder and file list to display."""
@@ -461,9 +556,43 @@ class ThumbnailGridWidget(Qw.QListWidget):
                 break
 
     def _on_selection_changed(self, current, _previous):
-        """Handle selection change."""
-        if current:
-            self.file_selected.emit(current.text())
+        """Handle selection change - debounce during scrolling to prevent metadata spam."""
+        if not current:
+            return
+
+        # If we're actively scrolling, store the selection and don't emit yet
+        if self._is_scrolling:
+            self._pending_selection = current.text()
+            log.debug(f"Selection queued during scroll: {current.text()}")
+            return
+
+        # Not scrolling - emit immediately
+        self.file_selected.emit(current.text())
+        log.debug(f"Selection emitted immediately: {current.text()}")
+
+    def _on_scroll_value_changed(self):
+        """Handle scroll bar value change - marks us as scrolling and requests thumbnails."""
+        # Mark as scrolling
+        self._is_scrolling = True
+
+        # Throttle thumbnail requests (only check every 50ms, not every pixel!)
+        # This prevents scroll lag from checking 1000+ items on every scroll event
+        if not self.scroll_thumbnail_timer.isActive():
+            self.scroll_thumbnail_timer.start(50)
+
+        # Reset scroll debounce timer (300ms after last scroll movement)
+        self.scroll_debounce_timer.start(300)
+
+    def _on_scroll_stopped(self):
+        """Called when scrolling has stopped - emit pending selection if any."""
+        self._is_scrolling = False
+        log.debug("Scrolling stopped")
+
+        # If there's a pending selection, emit it now
+        if self._pending_selection:
+            log.info(f"Emitting selection after scroll stopped: {self._pending_selection}")
+            self.file_selected.emit(self._pending_selection)
+            self._pending_selection = None
 
     def cleanup(self):
         """Cleanup resources on shutdown."""

@@ -125,9 +125,12 @@ if not logger.handlers:
     logger.propagate = False
 
     # Silence noisy third-party library loggers (even at initial setup)
-    pylog.getLogger("PIL").setLevel(pylog.INFO)  # PIL is too chatty at DEBUG
-    pylog.getLogger("PIL.Image").setLevel(pylog.INFO)
-    pylog.getLogger("PIL.PngImagePlugin").setLevel(pylog.INFO)
+    # Set to WARNING to suppress DEBUG/INFO spam from EXIF tag reading
+    pylog.getLogger("PIL").setLevel(pylog.WARNING)
+    pylog.getLogger("PIL.Image").setLevel(pylog.WARNING)
+    pylog.getLogger("PIL.TiffImagePlugin").setLevel(pylog.WARNING)
+    pylog.getLogger("PIL.PngImagePlugin").setLevel(pylog.WARNING)
+    pylog.getLogger("piexif").setLevel(pylog.WARNING)
 
     # Log the session start and file location (only to file in quiet mode)
     if not cli_quiet_mode:
@@ -157,9 +160,12 @@ def reconfigure_all_loggers(new_log_level_name_str: str):
         pylog.root.setLevel(actual_level_enum)
 
         # Silence noisy third-party library loggers
-        pylog.getLogger("PIL").setLevel(pylog.INFO)  # PIL is too chatty at DEBUG
-        pylog.getLogger("PIL.Image").setLevel(pylog.INFO)
-        pylog.getLogger("PIL.PngImagePlugin").setLevel(pylog.INFO)
+        # Set to WARNING to suppress DEBUG/INFO spam from EXIF tag reading
+        pylog.getLogger("PIL").setLevel(pylog.WARNING)
+        pylog.getLogger("PIL.Image").setLevel(pylog.WARNING)
+        pylog.getLogger("PIL.TiffImagePlugin").setLevel(pylog.WARNING)
+        pylog.getLogger("PIL.PngImagePlugin").setLevel(pylog.WARNING)
+        pylog.getLogger("piexif").setLevel(pylog.WARNING)
 
         # Use the logger's own method for consistency after reconfiguration
         debug_message("Dataset-Tools Logger internal level object set to: %s", actual_level_enum)

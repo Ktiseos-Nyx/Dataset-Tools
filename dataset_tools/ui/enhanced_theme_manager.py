@@ -57,6 +57,7 @@ class EnhancedThemeManager:
         "unreal": "Unreal Style",
         "GTRONICK_QSS": "GTRONICK's Themes",
         "KTISEOS_NYX_THEMES": "Ktiseos Nyx's Themes",
+        "MATERIAL_CONVERTED": "Material (Converted)",
         "custom_qss": "Custom Themes",
     }
 
@@ -188,12 +189,8 @@ class EnhancedThemeManager:
             action_text = "Initial theme loaded" if initial_load else "Theme applied and saved"
             nfo("%s: %s", action_text, theme_id)
 
-            # Re-apply fonts after theme to ensure they don't get overridden
-            if not initial_load and hasattr(self, "main_window") and hasattr(self.main_window, "apply_global_font"):
-                # Use a timer to delay font application slightly to ensure theme is fully applied first
-                from PyQt6.QtCore import QTimer
-
-                QTimer.singleShot(100, self.main_window.apply_global_font)
+            # Don't re-apply fonts on theme change - QSS themes don't override font settings
+            # and it causes unnecessary delays. User can manually apply fonts from Settings if needed.
 
         return success
 
@@ -204,24 +201,32 @@ class EnhancedThemeManager:
 
         grid = self.main_window.thumbnail_grid
 
-        # Temporarily disable resize events to prevent spurious reloads
-        if hasattr(grid, "ignore_resize_events"):
-            grid.ignore_resize_events = True
+        # Use the NEW _is_reloading flag to prevent resize events during theme change
+        if hasattr(grid, "_is_reloading"):
+            grid._is_reloading = True
 
-        # After theme settles, force a full thumbnail reload
+        # ALSO prevent selection signals during theme change (prevents metadata spam)
+        if hasattr(grid, "_is_scrolling"):
+            grid._is_scrolling = True
+
+        # After theme settles, unlock and request visible thumbnails
         from PyQt6.QtCore import QTimer
 
         def restore_thumbnails():
-            # Re-enable resize events
-            if hasattr(grid, "ignore_resize_events"):
-                grid.ignore_resize_events = False
+            # Unlock resize events
+            if hasattr(grid, "_is_reloading"):
+                grid._is_reloading = False
 
-            # Request visible thumbnails
+            # Unlock selection signals
+            if hasattr(grid, "_is_scrolling"):
+                grid._is_scrolling = False
+
+            # Request visible thumbnails (don't do a full reload!)
             if hasattr(grid, "_request_visible_thumbnails"):
                 grid._request_visible_thumbnails()
                 nfo("Thumbnail grid refreshed after theme change")
 
-        QTimer.singleShot(200, restore_thumbnails)
+        QTimer.singleShot(300, restore_thumbnails)
 
     def _apply_qt_material_theme(self, theme_name: str, app: QApplication) -> bool:
         """Apply a qt-material theme."""
@@ -369,12 +374,10 @@ class EnhancedThemeManager:
                 if hasattr(grid, "ignore_resize_events"):
                     grid.ignore_resize_events = True
 
-            # IMPORTANT: Clear qt-material styling before applying custom QSS
-            # qt-material's apply_stylesheet sets comprehensive styles that override custom QSS
-            app.setStyleSheet("")  # Clear any existing stylesheets first
-
-            # Process events to keep UI responsive
-            app.processEvents()
+            # TESTING: Commenting out the clear to prevent flicker between themes
+            # Original reason: Clear qt-material styling before applying custom QSS
+            # app.setStyleSheet("")  # Clear any existing stylesheets first
+            # app.processEvents()  # Process events to keep UI responsive
 
             # Apply the custom QSS theme
             app.setStyleSheet(stylesheet)

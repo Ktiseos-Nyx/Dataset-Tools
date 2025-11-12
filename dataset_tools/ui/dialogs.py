@@ -157,15 +157,50 @@ class SettingsDialog(QDialog):
         thumb_layout = QFormLayout()
         thumb_layout.setSpacing(10)
 
-        # TEMPORARILY DISABLED - Grid sizing was causing layout issues
-        # Will re-enable once we figure out the viewport calculation problems
-        # TODO: Re-add thumbnail size and grid column controls later
+        # Thumbnail Size Control
+        thumb_size_layout = QHBoxLayout()
 
-        info_label = QLabel("⚠️ Grid layout controls temporarily disabled due to layout issues.\n"
-                           "Thumbnails will auto-size based on window width.")
-        info_label.setWordWrap(True)
-        info_label.setStyleSheet("color: #888; font-style: italic;")
-        thumb_layout.addRow(info_label)
+        # Preset buttons for common sizes
+        self.thumb_preset_small = QPushButton("Small (96px)")
+        self.thumb_preset_medium = QPushButton("Medium (128px)")
+        self.thumb_preset_large = QPushButton("Large (192px)")
+        self.thumb_preset_xlarge = QPushButton("X-Large (256px)")
+
+        self.thumb_preset_small.clicked.connect(lambda: self._set_thumb_size(96))
+        self.thumb_preset_medium.clicked.connect(lambda: self._set_thumb_size(128))
+        self.thumb_preset_large.clicked.connect(lambda: self._set_thumb_size(192))
+        self.thumb_preset_xlarge.clicked.connect(lambda: self._set_thumb_size(256))
+
+        thumb_size_layout.addWidget(self.thumb_preset_small)
+        thumb_size_layout.addWidget(self.thumb_preset_medium)
+        thumb_size_layout.addWidget(self.thumb_preset_large)
+        thumb_size_layout.addWidget(self.thumb_preset_xlarge)
+
+        thumb_layout.addRow("Quick Size:", thumb_size_layout)
+
+        # Auto-size checkbox (enabled by default)
+        self.thumb_auto_checkbox = QCheckBox("Auto-size thumbnails based on window width")
+        self.thumb_auto_checkbox.setChecked(True)
+        self.thumb_auto_checkbox.toggled.connect(self._on_thumb_auto_changed)
+        thumb_layout.addRow("", self.thumb_auto_checkbox)
+
+        # Manual size slider (disabled when auto is on)
+        slider_layout = QHBoxLayout()
+        self.thumb_size_slider = QSlider(Qt.Orientation.Horizontal)
+        self.thumb_size_slider.setRange(64, 256)
+        self.thumb_size_slider.setValue(128)
+        self.thumb_size_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.thumb_size_slider.setTickInterval(32)
+        self.thumb_size_slider.valueChanged.connect(self._on_thumb_slider_changed)
+
+        self.thumb_size_label = QLabel("128px")
+        slider_layout.addWidget(self.thumb_size_slider)
+        slider_layout.addWidget(self.thumb_size_label)
+
+        thumb_layout.addRow("Manual Size:", slider_layout)
+
+        # Disable slider initially (auto is on by default)
+        self.thumb_size_slider.setEnabled(False)
 
         layout.addLayout(thumb_layout)
 
@@ -545,20 +580,45 @@ class SettingsDialog(QDialog):
 
     def _load_thumbnail_settings(self) -> None:
         """Load and set thumbnail grid settings."""
-        # Grid sizing controls temporarily disabled - do nothing
-        pass
+        # Load saved auto-size preference (default: True)
+        thumb_auto = self.settings.value("thumbnailSizeAuto", True, type=bool)
+        self.thumb_auto_checkbox.setChecked(thumb_auto)
 
-    def _snap_thumb_size_to_64(self, value: int) -> None:
-        """Snap slider value to nearest multiple of 64."""
-        pass  # Temporarily disabled
+        # Load saved manual size (default: 128)
+        thumb_size = self.settings.value("thumbnailSize", 128, type=int)
+        self.thumb_size_slider.setValue(thumb_size)
+        self.thumb_size_label.setText(f"{thumb_size}px")
 
-    def _update_thumb_size_label(self, value: int = None) -> None:
-        """Update the thumbnail size label."""
-        pass  # Temporarily disabled
+        # Enable/disable slider based on auto setting
+        self.thumb_size_slider.setEnabled(not thumb_auto)
+
+    def _set_thumb_size(self, size: int) -> None:
+        """Set thumbnail size to a specific preset value."""
+        # Disable auto-size when using presets
+        self.thumb_auto_checkbox.setChecked(False)
+        self.thumb_size_slider.setValue(size)
+        self.thumb_size_label.setText(f"{size}px")
+        # Apply immediately
+        self._apply_thumbnail_settings()
+
+    def _on_thumb_slider_changed(self, value: int) -> None:
+        """Handle slider value change - snap to 32px increments."""
+        # Snap to nearest 32px increment (64, 96, 128, 160, 192, 224, 256)
+        snapped = round(value / 32) * 32
+        if snapped != value:
+            # Block signals to avoid infinite loop
+            self.thumb_size_slider.blockSignals(True)
+            self.thumb_size_slider.setValue(snapped)
+            self.thumb_size_slider.blockSignals(False)
+            value = snapped
+
+        self.thumb_size_label.setText(f"{value}px")
 
     def _on_thumb_auto_changed(self) -> None:
         """Handle thumbnail size auto checkbox change."""
-        pass  # Temporarily disabled
+        is_auto = self.thumb_auto_checkbox.isChecked()
+        # Enable slider only when auto is OFF
+        self.thumb_size_slider.setEnabled(not is_auto)
 
     def _on_grid_auto_changed(self) -> None:
         """Handle grid columns auto checkbox change."""
@@ -650,10 +710,22 @@ class SettingsDialog(QDialog):
 
     def _apply_thumbnail_settings(self) -> None:
         """Apply thumbnail grid settings."""
-        # Grid sizing controls temporarily disabled - settings use auto defaults
-        # Set auto mode by default
-        self.settings.setValue("thumbnailSizeAuto", True)
-        self.settings.setValue("gridColumnsAuto", True)
+        # Save auto-size preference
+        is_auto = self.thumb_auto_checkbox.isChecked()
+        self.settings.setValue("thumbnailSizeAuto", is_auto)
+
+        # Save manual size
+        thumb_size = self.thumb_size_slider.value()
+        self.settings.setValue("thumbnailSize", thumb_size)
+
+        # Apply to thumbnail grid if it exists
+        if self.parent_window and hasattr(self.parent_window, "thumbnail_grid"):
+            if is_auto:
+                # Re-enable automatic sizing
+                self.parent_window.thumbnail_grid._update_thumbnail_size()
+            else:
+                # Set manual size
+                self.parent_window.thumbnail_grid.set_manual_thumbnail_size(thumb_size)
 
     def _clear_civitai_cache(self) -> None:
         """Clear the CivitAI API cache."""

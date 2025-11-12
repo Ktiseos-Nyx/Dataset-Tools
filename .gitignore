@@ -96,3 +96,4 @@ secrets.json
 *.secret
 *_secrets.json
 DEVLOG.md
+*.enc
