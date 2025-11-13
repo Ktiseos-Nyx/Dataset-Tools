@@ -233,6 +233,7 @@ class ThemeManager:
             "Small (800x600)": (800, 600),
             "Medium (1280x900)": (1280, 900),
             "Large (1600x900)": (1600, 900),
+            "Full HD (1920x1080)": (1920, 1080),
         }
 
         preset_name = self.settings.value("windowSizePreset", "Default (1024x768)")

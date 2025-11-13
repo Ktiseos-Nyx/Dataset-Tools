@@ -74,11 +74,18 @@ Built with Python and PyQt6, it provides an intuitive interface for viewing embe
   * **Model File Support:** Enhanced metadata viewing capabilities (Safetensors and GGUF support in progress!).
 * **Configurable Logging:** Control application log verbosity for debugging (see [Debug Mode](#debug-mode)).
 
-## Known Issues
+## Known Issues & Development Status
 
-*   **Material Theme Compatibility:** The integrated `qt-material` themes, while visually appealing, are not 100% compatible with all PyQt6/Qt6 elements. While the application remains functional, some minor visual inconsistencies may be present. We are actively exploring alternatives and plan to migrate to Tkinter in the near future to address these and other compatibility challenges.
-*   **Advanced Parsers** Advanced parsing is about 75% of the way there. Currently we are struggling to get a lot of the T5 style models to parse in ComfyUI. If you or someone you know use ComfyUI and can pass any information about workflows, or what nodes you're currently using that'd be amazing.
-*   **Draw Things** The XMP Extractor MIGHT be working, but with limited data on DrawThings and the original vendored code not working at the moment we're unsure of how this is working.
+### UI Limitations (v0.x)
+*   **PyQt6 Layout Issues:** The current PyQt6 UI has known limitations with viewport resizing and button centering across different screen resolutions. While functional, some layout elements may appear inconsistent when resizing windows or using non-standard display configurations (4K, 5K Retina, etc.).
+*   **Material Theme Compatibility:** The integrated `qt-material` themes, while visually appealing, are not 100% compatible with all PyQt6/Qt6 elements. Some minor visual inconsistencies may be present.
+*   **Future UI Direction:** We are actively exploring a migration to **Electron** for v1.0 to address these UI limitations and provide better theming flexibility, improved cross-platform consistency, and easier headless/CLI integration. The Python parser core will remain unchanged - only the UI layer would be rewritten. **This is under consideration** - if you have concerns about Chromium/Electron (privacy, resource usage, etc.) or alternative suggestions, please join the discussion in [Issues](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues) or [Discord](https://discord.gg/HhBSvM9gBY).
+
+### Parser Status
+*   **Advanced Parsers:** Advanced parsing is about 75% of the way there. We're continuously working to iron out edge cases and improve extraction accuracy. Currently we are struggling to get a lot of the T5 style models to parse in ComfyUI. If you or someone you know use ComfyUI and can pass any information about workflows, or what nodes you're currently using that'd be amazing.
+*   **Draw Things:** The XMP Extractor MIGHT be working, but with limited data on DrawThings and the original vendored code not working at the moment we're unsure of how this is working.
+
+**Note:** This is active development software (v0.x). We're still ironing out bugs and refining functionality. Expect rough edges, but the core parsing is solid!
 
 ## Supported Formats
 

@@ -13,22 +13,14 @@ import logging
 import time
 from pathlib import Path
 
-from PIL import Image, ImageOps
+import cv2
+import numpy as np
 from PyQt6 import QtCore, QtGui
 from PyQt6 import QtWidgets as Qw
 
 from dataset_tools.logger import get_logger
 
 log = get_logger(__name__)
-
-# Suppress PIL's DEBUG/INFO spam during thumbnail generation
-# PIL/piexif/TiffImagePlugin log every EXIF tag at DEBUG level, which floods the console
-# Only show warnings and errors from image libraries
-logging.getLogger("PIL").setLevel(logging.WARNING)
-logging.getLogger("PIL.Image").setLevel(logging.WARNING)
-logging.getLogger("PIL.TiffImagePlugin").setLevel(logging.WARNING)
-logging.getLogger("PIL.PngImagePlugin").setLevel(logging.WARNING)
-logging.getLogger("piexif").setLevel(logging.WARNING)
 
 
 class ThumbnailCache:
@@ -151,24 +143,48 @@ class ThumbnailWorker(QtCore.QRunnable):
         return None
 
     def _generate_thumbnail(self, image_path: str, thumb_size: int) -> QtGui.QPixmap | None:
-        """Generate a new thumbnail."""
+        """Generate a new thumbnail using OpenCV for better performance."""
         log.debug("[CACHE_DEBUG] Generating thumbnail for: %s", image_path)
         start_time = time.time()
         try:
-            with Image.open(image_path) as original_img:
-                # Speed optimization: Load in draft mode for huge images (4x faster!)
-                # This is safe for thumbnails since we're downscaling anyway
-                if hasattr(original_img, 'draft'):
-                    # Draft mode: load only enough data for the target size
-                    original_img.draft('RGB', (thumb_size * 2, thumb_size * 2))
+            # Load image with OpenCV (handles EXIF rotation automatically)
+            img = cv2.imread(image_path, cv2.IMREAD_COLOR)
+            if img is None:
+                log.error("Failed to load image: %s", image_path)
+                return None
 
-                processed_img = ImageOps.exif_transpose(original_img)
-                # Use NEAREST for thumbnails - 2-3x faster than BILINEAR, good enough for small sizes
-                processed_img.thumbnail((thumb_size, thumb_size), Image.Resampling.NEAREST)
-                pixmap = self._pil_to_qpixmap(processed_img)
-                end_time = time.time()
-                log.debug("[CACHE_DEBUG] Thumbnail generation took: %.4f seconds", end_time - start_time)
-                return pixmap
+            # OpenCV loads as BGR, convert to RGB
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+            # Get original dimensions
+            height, width = img.shape[:2]
+
+            # Calculate aspect-preserving dimensions
+            if width > height:
+                new_width = thumb_size
+                new_height = int(height * (thumb_size / width))
+            else:
+                new_height = thumb_size
+                new_width = int(width * (thumb_size / height))
+
+            # Resize using INTER_AREA (best for downscaling - fast + high quality)
+            resized = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_AREA)
+
+            # Letterbox to square with transparent padding
+            # Create RGBA image (add alpha channel)
+            square_img = np.zeros((thumb_size, thumb_size, 4), dtype=np.uint8)
+            # Center the thumbnail
+            x_offset = (thumb_size - new_width) // 2
+            y_offset = (thumb_size - new_height) // 2
+            # Paste RGB data
+            square_img[y_offset:y_offset+new_height, x_offset:x_offset+new_width, :3] = resized
+            # Set alpha to 255 (opaque) where image exists
+            square_img[y_offset:y_offset+new_height, x_offset:x_offset+new_width, 3] = 255
+
+            pixmap = self._numpy_to_qpixmap(square_img)
+            end_time = time.time()
+            log.debug("[CACHE_DEBUG] Thumbnail generation took: %.4f seconds", end_time - start_time)
+            return pixmap
         except Exception as e:
             log.error("Failed to generate thumbnail for %s: %s", image_path, e, exc_info=True)
             return None
@@ -187,22 +203,32 @@ class ThumbnailWorker(QtCore.QRunnable):
             log.debug("Failed to save thumbnail cache: %s", e, exc_info=True)
             # Exception already logged above
 
-    def _pil_to_qpixmap(self, pil_image: Image.Image) -> QtGui.QPixmap:
-        """Convert PIL Image to QPixmap."""
-        if pil_image.mode != "RGB":
-            pil_image = pil_image.convert("RGB")
+    def _numpy_to_qpixmap(self, numpy_image: np.ndarray) -> QtGui.QPixmap:
+        """Convert NumPy array (OpenCV format) to QPixmap."""
+        height, width, channels = numpy_image.shape
 
-        width, height = pil_image.size
-        image_data = pil_image.tobytes("raw", "RGB")
-        bytes_per_line = width * 3
-
-        qimage = QtGui.QImage(
-            image_data,
-            width,
-            height,
-            bytes_per_line,
-            QtGui.QImage.Format.Format_RGB888,
-        )
+        if channels == 4:
+            # RGBA image
+            bytes_per_line = width * 4
+            qimage = QtGui.QImage(
+                numpy_image.data,
+                width,
+                height,
+                bytes_per_line,
+                QtGui.QImage.Format.Format_RGBA8888,
+            )
+        elif channels == 3:
+            # RGB image
+            bytes_per_line = width * 3
+            qimage = QtGui.QImage(
+                numpy_image.data,
+                width,
+                height,
+                bytes_per_line,
+                QtGui.QImage.Format.Format_RGB888,
+            )
+        else:
+            raise ValueError(f"Unsupported channel count: {channels}")
 
         return QtGui.QPixmap.fromImage(qimage)
 

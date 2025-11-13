@@ -1486,11 +1486,9 @@ class MainWindow(Qw.QMainWindow):
     def open_settings_dialog(self) -> None:
         """Open the application settings dialog."""
         dialog = SettingsDialog(self)
-        result = dialog.exec()
-        # Only re-apply fonts if user clicked OK (accepted dialog)
-        # Clicking Close should not trigger any changes
-        if result == QDialog.DialogCode.Accepted:
-            self.apply_global_font()
+        dialog.exec()
+        # Each tab has its own Apply button - OK button just closes the dialog
+        # No need to apply anything here
 
     def _create_safe_thumbnail(self, image_path: str, max_size: int) -> QtGui.QPixmap:
         """Create a memory-efficient thumbnail avoiding Lanczos artifacts.

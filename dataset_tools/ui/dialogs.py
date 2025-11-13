@@ -275,6 +275,7 @@ class SettingsDialog(QDialog):
             "Small (800x600)": (800, 600),
             "Medium (1280x900)": (1280, 900),
             "Large (1600x900)": (1600, 900),
+            "Full HD (1920x1080)": (1920, 1080),
         }
         for display_name in self.size_presets:
             self.size_combo.addItem(display_name)
