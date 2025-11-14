@@ -98,6 +98,10 @@ Built with Python and PyQt6, it provides an intuitive interface for viewing embe
 
 Dataset-Tools reads metadata from a comprehensive array of AI generation tools and image sources. We're constantly expanding support as new tools and custom nodes emerge!
 
+
+<details>
+<summary>Click to expand Supported formats. </summary>
+
 **AI Image Generation Tools:**
 
 * **Automatic1111 WebUI / Forge:** PNG (parameters chunk), JPEG/WEBP (UserComment EXIF).
@@ -150,6 +154,7 @@ Dataset-Tools reads metadata from a comprehensive array of AI generation tools a
 * **`.json`**, **`.toml`** - Content display (structured view planned)
 
 > **Note:** Non-image files may not display thumbnails in grid view yet - we're adding SVG icons for better file type visualization!
+</details>
 
 ## Dependencies
 
@@ -334,6 +339,8 @@ Debug logs show detailed parser decisions, node detection, and extraction steps 
 
 ### Themes
 
+<details>
+<summary>Click to expand Themes. </summary>
 Dataset-Tools comes with **40+ themes** accessible through the built-in theme browser:
 
 * **Professional themes** for serious work
@@ -352,9 +359,14 @@ Access themes via `View > Themes` menu or the Settings button. Our theme collect
 
 **Note on Material Themes:** We previously used the `qt-material` dependency from Dunderlab, but found its overstyled QSS caused some UI glitches and compatibility issues with PyQt6 widgets. We've replaced it with our own Material Design-inspired themes that maintain the aesthetic while ensuring better compatibility with our application. Full credit to the Dunderlab qt-material project for the inspiration - their work is brilliant, we just needed themes specifically tailored to our widget structure. Screencaps from our local insallation still show MATERIAL themes installed, that's because one of us forgot to do a re-install.
 
+</details>
+
 See [NOTICE.md](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/NOTICE.md) for full theme licensing and attribution.
 
 ### Future Development Roadmap
+
+<details>
+<summary>Click to expand the Roadmap. </summary>
 
 **Core Features:**
 
@@ -391,6 +403,8 @@ See [NOTICE.md](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/NOTICE.md
 * [ ] **Dataset Management Tools:** Integration with HuggingFace, model downloaders, and conversion utilities.
 * [ ] **Workflow Integration:** Support for AI generation workflows and pipeline management.
 * [ ] **Community Features:** Parser sharing, format contribution system.
+
+</details>
 
 ## Contributing
 
