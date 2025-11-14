@@ -282,6 +282,10 @@ That's it! The GUI will launch and you can start browsing your AI image datasets
 
 ### Debug Mode
 
+
+<details>
+<summary>Click to expand Advanced Logging & Debug Mode</summary>
+
 Need to troubleshoot extraction issues or report a bug? Enable verbose logging:
 
 ```bash
@@ -299,7 +303,13 @@ dataset-tools --log-level ERROR    # Errors only
 
 Debug logs show detailed parser decisions, node detection, and extraction steps - perfect for figuring out why a specific workflow isn't parsing correctly!
 
+</details>
+
 #### GUI Interaction
+
+
+<details>
+<summary>Click to expand Gui Interaction</summary>
 
 **Loading Files:**
 
@@ -330,6 +340,8 @@ Debug logs show detailed parser decisions, node detection, and extraction steps 
    * **Civitai API Key:** Enter in Settings for enhanced resource data
    * **Window Size:** All layouts are resizable - stretch to fit your workflow!
    * **Font Preferences:** Customize text display
+
+</details>
 
 ### Themes
 
