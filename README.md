@@ -15,6 +15,8 @@
 
 Built with Python and PyQt6, it provides an intuitive interface for viewing embedded generation parameters, ComfyUI workflows, model metadata, and even camera EXIF data from non-AI images.
 
+**Future Forward** We're looking into re-developing the front end with Electron, if you have concerns, suggestions or anything feel free to join our discord, pull an issue or use the github discussions. We'll always provide bug catching and error support for any PYQT6 branches. We validate that users don't always like stark changes, and we want to make the future transition as smooth as possible.
+
 **Community-Driven Development:** This project is inspired by [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) and thrives on community contributions. Found a bug? Have a workflow that won't parse? Want to add support for a new tool? **We welcome forks, fixes, and pull requests!** This is a community tool built by the community, for the community.
 
 <hr>
@@ -87,6 +89,11 @@ Built with Python and PyQt6, it provides an intuitive interface for viewing embe
 
 **Note:** This is active development software (v0.x). We're still ironing out bugs and refining functionality. Expect rough edges, but the core parsing is solid!
 
+**SPECIAL THANKS**
+
+- Supervised by: traugdor
+- Special Thanks to contributors: Open Source Community, Whitevamp, Exdysa, and so many more.
+
 ## Supported Formats
 
 Dataset-Tools reads metadata from a comprehensive array of AI generation tools and image sources. We're constantly expanding support as new tools and custom nodes emerge!
@@ -100,7 +107,7 @@ Dataset-Tools reads metadata from a comprehensive array of AI generation tools a
   * SD3, SDXL, SD1.5 workflows
   * Efficiency Nodes (Efficient Loader, KSampler Efficient)
   * DynamicPrompts (batch generation with wildcards)
-  * QuadMoon custom nodes
+  * QuadMoon custom nodes (Thank you to Joel Traugdor for breaking the app, AND for supervising the code!)
   * HiDream workflows
   * ComfyRoll ecosystem
   * Griptape workflows
@@ -158,26 +165,26 @@ Dataset-Tools relies on several excellent open-source libraries:
 * **pypng** - PNG chunk reading for large ComfyUI workflows
 * **piexif** - Additional EXIF manipulation
 * **pydantic** - Data validation and settings management
-* **rich** - Beautiful terminal output and logging
+* **rich** - Beautiful terminal output and logging system.
 * **toml** - Configuration file parsing
 * **requests** - HTTP requests for Civitai API integration
-
-**Optional Enhancements:**
-* **qt-material** - Material Design themes
-* **QSS stylesheets** - Custom theme support
+* **cryptography** - Fernet encryption for CivitaiAPI keys.
+* **NumPy** - Workflow enhanced NumPy system.
+* **defusedxml** Secure metadata extraction.
+* **jsonpath-ng** Json Path Enabled ComfyUI Workflow support.
 
 All dependencies are automatically installed via pip. See [Installation](#installation) for details.
 
 </details>
 
 ## Example Images
- If you're interested in seeing the app in action, this table shows what's up! 
+ If you're interested in seeing the app in action, this table shows what's up!
 
-| Screenshot 1: Dark QSS Themes | Screenshot 2: ConsoleStyle Gtronicks QSS | Screenshot 3: Font Choices |
+| Screenshot 1: Theme Browser | Screenshot 2: CivitaiAPI Key | Screenshot 3: FileTree View |
 | :-----------------------------: | :------------------------------: | :--------------------------: |
-| <img src="example_images/Screenshot 2025-07-13 at 22.07.43.jpg" alt="GTRONICK QSS: Manjaromix" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 20.02.22.jpg" alt="ConsoleStyle" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 22.07.01.jpg" alt="Theme (Dark Teal) Choosing" width="250"> |
-| Screenshot 4: Paimon Inspired | Screenshot 5: Material Blue | Screenshot 6: Deadpool Inspired |
-| <img src="example_images/Screenshot 2025-07-13 at 20.01.54.jpg" alt="Screen Sizes" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 20.01.15.jpg" alt="Civitai Metadata" width="250"> |  <img src="example_images/Screenshot 2025-07-13 at 22.13.02.jpg" alt="Civitai Metadata" width="250">|
+| <img src="example_images/Screenshot 2025-11-14 at 16.27.01.jpg" alt="Theme Browser" width="250"> | <img src="example_images/Screenshot 2025-11-14 at 16.27.19.jpg" alt="CivitaiAPI Key" width="250"> | <img src="example_images/Screenshot 2025-10-31 at 18.07.50.jpg" alt="FileTree View" width="250"> |
+| Screenshot 4: Custom Themes & Thumbnail View | Screenshot 5: Appearance options | Screenshot 6: Edit Metadata |
+| <img src="example_images/Screenshot 2025-11-14 at 15.54.06.jpg" alt="Custom Themes & Thumbnail View" width="250"> | <img src="example_images/Screenshot 2025-11-14 at 16.28.12.jpg" alt="Appearance options" width="250"> |  <img src="example_images/Screenshot 2025-11-14 at 16.28.57.jpg" alt="Edit Metadata" width="250">|
 
 ## Installation
 
@@ -338,12 +345,12 @@ Dataset-Tools comes with **40+ themes** accessible through the built-in theme br
 Access themes via `View > Themes` menu or the Settings button. Our theme collection ranges from beautiful to... questionable. No judgment - use what makes you happy!
 
 **Theme Credits:**
-* [GTRONICK](https://github.com/GTRONICK/QSS) - QSS themes
+* [GTRONICK](https://github.com/GTRONICK/QSS) - QSS themes Inspiration (Neon Button Styling)
 * [Unreal Stylesheet](https://github.com/leixingyu/unrealStylesheet) - Unreal Engine-inspired themes
 * [Dunderlab Qt-Material](https://github.com/dunderlab/qt-material) - Material Design inspiration (we created custom compatible themes inspired by their brilliant work)
-* [QSS Themes Repository](https://github.com/Ktiseos-Nyx/qss_themes/) - Our custom collection
+* [QSS Themes Repository](https://github.com/Ktiseos-Nyx/qss_themes/) - Our custom collection (Which hasn't been updated in months on the repository)
 
-**Note on Material Themes:** We previously used the `qt-material` dependency from Dunderlab, but found its overstyled QSS caused some UI glitches and compatibility issues with PyQt6 widgets. We've replaced it with our own Material Design-inspired themes that maintain the aesthetic while ensuring better compatibility with our application. Full credit to the Dunderlab qt-material project for the inspiration - their work is brilliant, we just needed themes specifically tailored to our widget structure.
+**Note on Material Themes:** We previously used the `qt-material` dependency from Dunderlab, but found its overstyled QSS caused some UI glitches and compatibility issues with PyQt6 widgets. We've replaced it with our own Material Design-inspired themes that maintain the aesthetic while ensuring better compatibility with our application. Full credit to the Dunderlab qt-material project for the inspiration - their work is brilliant, we just needed themes specifically tailored to our widget structure. Screencaps from our local insallation still show MATERIAL themes installed, that's because one of us forgot to do a re-install.
 
 See [NOTICE.md](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/NOTICE.md) for full theme licensing and attribution.
 
@@ -359,23 +366,25 @@ See [NOTICE.md](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/NOTICE.md
 
 **User Experience:**
 
-* [ ] **Enhanced UI/UX:** Improved prompt display, better text file viewing with syntax highlighting. (Planned migration to Tkinter for improved cross-platform compatibility and UI consistency.)
+* [ ] **Enhanced UI/UX:** Improved prompt display, better text file viewing with syntax highlighting. (Planned migration to Electron for improved cross-platform compatibility and UI consistency.)
 * [ ] **Theme System Expansion:** Additional themes and customization options.
 * [ ] **Keyboard Shortcuts:** Comprehensive hotkey support for power users.
 
 **Platform & Integration:**
 
 * [ ] **Standalone Executables:** Native builds for Windows, macOS, and Linux.
+* [ ] **Headless CLI for customized development needs** Disconnecting from the GUI, giving the power users their choice of frontend UI. (Also useful if you're developing a discord bot!)
 * [ ] **PyPI Distribution:** Official package distribution for easy `pip install dataset-tools`.
 * [ ] **CivitAI API Integration:** Direct model and resource lookup capabilities.
 * [ ] **Cross-Platform Compatibility:** Enhanced support across different operating systems.
 
 **Technical Improvements:**
 
-* [ ] **Comprehensive Test Suite:** Automated testing to ensure stability and prevent regressions.
+* [ ] **Comprehensive Test Suite:** Automated testing to ensure stability and prevent regressions. (Haven't finished this again.)
 * [ ] **Enhanced Format Support:** Additional AI tool formats and metadata standards.
 * [ ] **Performance Optimization:** Faster loading and processing for large datasets.
 * [ ] **Error Handling:** Improved error reporting and recovery mechanisms.
+* [ ] **Better Security** Have added fernet for the API keys, but more vulnerabilities exist and we're working on it.
 
 **Ecosystem Integration:**
 

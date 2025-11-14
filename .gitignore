@@ -97,3 +97,6 @@ secrets.json
 *_secrets.json
 DEVLOG.md
 *.enc
+.claude/agents
+electron-app/
+.igitignore
