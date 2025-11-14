@@ -10,7 +10,6 @@ QMainWindow {
 QWidget {
     background: #000000;
     color: #FFFFFF;
-    font-family: 'Monospace', 'Courier New', monospace;
     font-size: 12px;
 }
 

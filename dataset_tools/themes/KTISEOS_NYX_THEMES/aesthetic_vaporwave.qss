@@ -14,8 +14,6 @@ QWidget {
                                 stop: 0 #1a0033, stop: 0.5 #330066,
                                 stop: 1 #000011);
     color: #ff00ff;
-    font-size: 13px;
-    font-weight: bold;
 }
 
 /* Neon button styling */
@@ -28,7 +26,6 @@ QPushButton {
     color: #00ffff;
     font-weight: bold;
     min-height: 16px;
-    text-transform: uppercase;
 }
 
 QPushButton:hover {
@@ -83,7 +80,6 @@ QListWidget {
 QListWidget::item {
     padding: 8px;
     border-bottom: 1px solid #ff0080;
-    text-transform: uppercase;
 }
 
 QListWidget::item:selected {
@@ -111,7 +107,6 @@ QMenuBar {
     color: #ff00ff;
     border-bottom: 3px solid #00ffff;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 QMenuBar::item {
@@ -136,7 +131,6 @@ QMenu {
 QMenu::item {
     padding: 8px 20px;
     border-radius: 0px;
-    text-transform: uppercase;
     color: #00ffff;
 }
 
@@ -216,7 +210,6 @@ QTabBar::tab {
     padding: 10px 18px;
     margin-right: 2px;
     font-weight: bold;
-    text-transform: uppercase;
     color: #00ffff;
 }
 
@@ -240,7 +233,6 @@ QStatusBar {
     border-top: 3px solid #00ffff;
     color: #ff00ff;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 /* Retrowave input fields */
@@ -270,7 +262,6 @@ QComboBox {
     color: #00ffff;
     font-weight: bold;
     min-width: 80px;
-    text-transform: uppercase;
 }
 
 QComboBox:hover {
@@ -326,7 +317,6 @@ QProgressBar {
     text-align: center;
     color: #00ffff;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 QProgressBar::chunk {
@@ -345,14 +335,12 @@ QToolTip {
     padding: 8px;
     border-radius: 0px;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 /* Additional vaporwave styling */
 QLabel {
     color: #ff00ff;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 QGroupBox {
@@ -361,7 +349,6 @@ QGroupBox {
     margin-top: 12px;
     padding-top: 12px;
     font-weight: bold;
-    text-transform: uppercase;
     color: #00ffff;
 }
 
@@ -373,14 +360,12 @@ QGroupBox::title {
                                 stop: 0 #ff00ff, stop: 1 #8000ff);
     color: #ffff00;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 /* Vaporwave checkboxes */
 QCheckBox {
     color: #ff00ff;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 QCheckBox::indicator {
@@ -405,4 +390,26 @@ QCheckBox::indicator:checked:hover {
 
 QCheckBox::indicator:hover {
     border: 2px solid #00ffff;
+}
+QLabel {
+    background-color: transparent;
+    color: #FF6EC7;
+}
+
+QGroupBox {
+    background-color: rgba(0, 255, 255, 0.1);
+    border: 2px solid #00FFFF;
+    border-radius: 5px;
+    margin-top: 1em;
+    padding-top: 12px;
+    color: #FF6EC7;
+    font-weight: bold;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 4px 8px;
+    background-color: transparent;
+    color: #00FFFF;
 }

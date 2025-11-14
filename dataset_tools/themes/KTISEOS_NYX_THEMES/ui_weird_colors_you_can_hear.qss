@@ -16,7 +16,6 @@ QWidget {
                                 stop: 0.4 #00FFFF, stop: 0.6 #FF1493,
                                 stop: 0.8 #00FF00, stop: 1 #FF0000);
     color: #000000;
-    font-family: 'Impact', sans-serif;
     font-size: 16px;
 }
 

@@ -30,7 +30,6 @@ QPushButton {
     color: #ffffff;
     min-height: 16px;
     font-weight: bold;
-    text-shadow: 2px 2px 4px #000000;
 }
 
 QPushButton:hover {
@@ -39,7 +38,6 @@ QPushButton:hover {
                                 stop: 0.4 #ffff47, stop: 0.6 #90ee90,
                                 stop: 0.8 #6495ed, stop: 1 #ba55d3);
     border: 3px outset #f0f8ff;
-    text-shadow: 1px 1px 2px #000000;
 }
 
 QPushButton:pressed {
@@ -103,7 +101,6 @@ QListWidget::item:selected {
     border-radius: 12px;
     border: 2px solid #ffffff;
     font-weight: bold;
-    text-shadow: 1px 1px 2px #000000;
 }
 
 QListWidget::item:hover {
@@ -134,7 +131,6 @@ QMenuBar::item:selected {
                                 stop: 0.66 #32cd32, stop: 1 #4169e1);
     color: #ffffff;
     border: 2px outset #ffffff;
-    text-shadow: 1px 1px 2px #000000;
 }
 
 QMenu {
@@ -157,7 +153,6 @@ QMenu::item:selected {
                                 stop: 0 #ff4500, stop: 0.33 #ffff00,
                                 stop: 0.66 #32cd32, stop: 1 #4169e1);
     color: #ffffff;
-    text-shadow: 1px 1px 2px #000000;
 }
 
 /* Cloud scrollbars */
@@ -235,7 +230,6 @@ QTabBar::tab:selected {
     border: 4px outset #ffffff;
     border-bottom: none;
     color: #ffffff;
-    text-shadow: 1px 1px 2px #000000;
 }
 
 QTabBar::tab:hover:!selected {
@@ -342,7 +336,8 @@ QToolTip {
 
 /* Additional Rainbow Dash styling */
 QLabel {
-    color: #ffffff;
+    background-color: transparent;
+    color: #000000;
     font-weight: bold;
 }
 
@@ -368,11 +363,10 @@ QGroupBox::title {
     font-weight: bold;
     border-radius: 8px;
     border: 3px outset #ffffff;
-    text-shadow: 1px 1px 2px #000000;
 }
 
 QCheckBox {
-    color: #ffffff;
+    color: #000000;
     font-weight: bold;
 }
 

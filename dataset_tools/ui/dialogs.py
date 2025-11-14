@@ -249,7 +249,7 @@ class SettingsDialog(QDialog):
         self.font_preview = QLabel("The quick brown fox jumps over the lazy dog")
         self.font_preview.setMinimumHeight(60)
         self.font_preview.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.font_preview.setStyleSheet("QLabel { border: 1px solid #666; padding: 10px; background: #f0f0f0; color: #000; }")
+        self.font_preview.setStyleSheet("QLabel { border: 1px solid #666 !important; padding: 10px !important; background: #f0f0f0 !important; color: #000 !important; }")
         font_layout.addRow("Preview:", self.font_preview)
 
         # Connect signals for live preview
@@ -852,7 +852,7 @@ class ThemeBrowserDialog(QDialog):
                     "assaulted_", "ui_", "music_",
                     "food_", "movies", "comics", "cartoons",
                     "color_theme_", "crafts_", "weird_colors_",
-                    "pokemon_inspired_"]
+                    "pokemon_inspired_", "material_"]
 
         for theme in self.themes:
             found_category = "Uncategorized"

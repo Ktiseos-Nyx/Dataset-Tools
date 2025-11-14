@@ -16,7 +16,6 @@ QWidget {
                                 stop: 0 #ff6b6b, stop: 0.3 #ff8e53,
                                 stop: 0.7 #ff6b9d, stop: 1 #c44569);
     color: #ffffff;
-    font-size: 13px;
 }
 
 /* Make specific widgets transparent so they show the gradient underneath */
@@ -412,4 +411,27 @@ QCheckBox::indicator:checked:hover {
 
 QCheckBox::indicator:hover {
     border: 2px solid #ffcc02;
+}
+
+QLabel {
+    background-color: transparent;
+    color: #ffffff;
+}
+
+QGroupBox {
+    background-color: rgba(255, 107, 107, 0.3);
+    border: 2px solid #ff8a80;
+    border-radius: 5px;
+    margin-top: 1em;
+    padding-top: 12px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 4px 8px;
+    background-color: transparent;
+    color: #ffffff;
 }

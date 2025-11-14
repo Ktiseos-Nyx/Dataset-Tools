@@ -20,18 +20,17 @@ QWidget {
 QPushButton {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #8A2BE2, stop: 1 #4B0082);
-    border: 2px solid #00FF00;
+    border: 3px solid #00FF00;
     border-radius: 5px;
     padding: 8px 12px;
     color: #FFFFFF;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 QPushButton:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #9932CC, stop: 1 #8A2BE2);
-    border: 2px solid #FFFF00;
+    border: 3px solid #FFFF00;
 }
 
 QPushButton:pressed {

@@ -27,7 +27,6 @@ QPushButton {
     padding: 12px 20px;
     color: #FFFFFF;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 QPushButton:hover {
@@ -255,7 +254,10 @@ QToolTip {
 }
 
 QLabel {
+    background: #FFFFFF;
     color: #333333;
+    padding: 2px 4px;
+    border-radius: 3px;
 }
 
 QGroupBox {

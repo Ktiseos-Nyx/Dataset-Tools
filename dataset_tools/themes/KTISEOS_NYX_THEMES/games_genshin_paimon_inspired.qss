@@ -36,7 +36,6 @@ QPushButton:hover {
                                 stop: 0 #ffff00, stop: 0.5 #ffd700,
                                 stop: 1 #ffb347);
     border: 3px outset #fffacd;
-    text-shadow: 1px 1px 2px #daa520;
 }
 
 QPushButton:pressed {

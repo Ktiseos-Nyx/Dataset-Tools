@@ -10,7 +10,6 @@ QMainWindow {
 QWidget {
     background: #CE1126; /* Red */
     color: #FFFFFF;
-    font-family: 'Arial', sans-serif;
     font-size: 13px;
 }
 

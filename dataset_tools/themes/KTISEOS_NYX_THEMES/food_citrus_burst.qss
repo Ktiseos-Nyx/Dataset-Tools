@@ -14,7 +14,6 @@ QWidget {
                                 stop: 0 #FFD700, stop: 0.3 #FFA500,
                                 stop: 0.7 #FF4500, stop: 1 #FFD700);
     color: #333333;
-    font-family: 'Arial', sans-serif;
     font-size: 12px;
 }
 

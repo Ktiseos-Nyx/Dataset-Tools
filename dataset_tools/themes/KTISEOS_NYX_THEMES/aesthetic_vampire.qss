@@ -55,3 +55,26 @@ QListWidget::item:selected {
     background: #DC143C;
     color: #FFFFFF;
 }
+
+QLabel {
+    background-color: transparent;
+    color: #F0F0F0;
+}
+
+QGroupBox {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 2px solid #DC143C;
+    border-radius: 5px;
+    margin-top: 1em;
+    padding-top: 12px;
+    color: #F0F0F0;
+    font-weight: bold;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 4px 8px;
+    background-color: transparent;
+    color: #DC143C;
+}

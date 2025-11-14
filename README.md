@@ -340,8 +340,10 @@ Access themes via `View > Themes` menu or the Settings button. Our theme collect
 **Theme Credits:**
 * [GTRONICK](https://github.com/GTRONICK/QSS) - QSS themes
 * [Unreal Stylesheet](https://github.com/leixingyu/unrealStylesheet) - Unreal Engine-inspired themes
-* [Dunderlab Qt-Material](https://github.com/dunderlab/qt-material) - Material Design themes
+* [Dunderlab Qt-Material](https://github.com/dunderlab/qt-material) - Material Design inspiration (we created custom compatible themes inspired by their brilliant work)
 * [QSS Themes Repository](https://github.com/Ktiseos-Nyx/qss_themes/) - Our custom collection
+
+**Note on Material Themes:** We previously used the `qt-material` dependency from Dunderlab, but found its overstyled QSS caused some UI glitches and compatibility issues with PyQt6 widgets. We've replaced it with our own Material Design-inspired themes that maintain the aesthetic while ensuring better compatibility with our application. Full credit to the Dunderlab qt-material project for the inspiration - their work is brilliant, we just needed themes specifically tailored to our widget structure.
 
 See [NOTICE.md](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/NOTICE.md) for full theme licensing and attribution.
 

@@ -23,7 +23,7 @@ QPushButton {
     border: 3px solid #800080;
     border-radius: 10px;
     padding: 10px 15px;
-    color: #FFFFFF;
+    color: #4A0E4E;
     font-weight: bold;
     text-transform: uppercase;
 }
@@ -55,4 +55,27 @@ QListWidget {
 QListWidget::item:selected {
     background: #FF69B4;
     color: #FFFFFF;
+}
+
+QLabel {
+    background-color: transparent;
+    color: #FFFFFF;
+}
+
+QGroupBox {
+    background-color: rgba(128, 0, 128, 0.3);
+    border: 2px solid #FF1493;
+    border-radius: 5px;
+    margin-top: 1em;
+    padding-top: 12px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 4px 8px;
+    background-color: transparent;
+    color: #FFD700;
 }

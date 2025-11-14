@@ -1,0 +1,282 @@
+/* FFXIV ELEGANT CREAM THEME */
+/* Final Fantasy XIV inspired - Warm creams with burgundy and maroon accents */
+
+QMainWindow {
+    background: #F5F1E8;
+    color: #5A4A3A;
+    border: none;
+}
+
+QWidget {
+    background: #F5F1E8;
+    color: #5A4A3A;
+    font-size: 13px;
+}
+
+QPushButton {
+    background: #8B2332;
+    border: 2px solid #D4AF37;
+    border-radius: 5px;
+    padding: 10px 16px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: #A52A3A;
+    border: 2px solid #FFD700;
+}
+
+QPushButton:pressed {
+    background: #6B1A28;
+    border: 2px solid #B8860B;
+}
+
+QPushButton:disabled {
+    background: #C4B8A6;
+    border: 2px solid #B5A898;
+    color: #8B7D6F;
+}
+
+QTextEdit, QPlainTextEdit {
+    background: #FFFFFF;
+    border: 2px solid #8B2332;
+    border-radius: 5px;
+    padding: 8px;
+    color: #3A2F25;
+    selection-background-color: #8B2332;
+    selection-color: #FFFFFF;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid #D4AF37;
+}
+
+QListWidget {
+    background: #FFFFFF;
+    border: 2px solid #8B2332;
+    border-radius: 5px;
+    alternate-background-color: #FAF7F0;
+    color: #3A2F25;
+}
+
+QListWidget::item:selected {
+    background: #8B2332;
+    color: #FFFFFF;
+}
+
+QListWidget::item:hover {
+    background: #EDE6D3;
+    color: #5A4A3A;
+}
+
+QMenuBar {
+    background: #8B2332;
+    color: #D4AF37;
+    border-bottom: 2px solid #6B1A28;
+}
+
+QMenuBar::item:selected {
+    background: #A52A3A;
+    color: #FFD700;
+}
+
+QMenu {
+    background: #F5F1E8;
+    border: 2px solid #8B2332;
+    color: #3A2F25;
+}
+
+QMenu::item:selected {
+    background: #8B2332;
+    color: #FFFFFF;
+}
+
+QScrollBar:vertical {
+    background: #EDE6D3;
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #8B2332;
+    border-radius: 5px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #A52A3A;
+}
+
+QScrollBar:horizontal {
+    background: #EDE6D3;
+    height: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #8B2332;
+    border-radius: 5px;
+    min-width: 20px;
+}
+
+QScrollBar::add-line, QScrollBar::sub-line {
+    border: none;
+    background: none;
+}
+
+QTabWidget::pane {
+    border: 2px solid #8B2332;
+    background: #FFFFFF;
+}
+
+QTabBar::tab {
+    background: #D4AF37;
+    border: 2px solid #8B2332;
+    padding: 8px 15px;
+    color: #3A2F25;
+    font-weight: bold;
+}
+
+QTabBar::tab:selected {
+    background: #8B2332;
+    color: #FFD700;
+}
+
+QTabBar::tab:hover:!selected {
+    background: #E6C547;
+}
+
+QStatusBar {
+    background: #8B2332;
+    border-top: 2px solid #6B1A28;
+    color: #D4AF37;
+}
+
+QLineEdit {
+    background: #FFFFFF;
+    border: 2px solid #8B2332;
+    border-radius: 5px;
+    padding: 8px;
+    color: #3A2F25;
+    selection-background-color: #8B2332;
+    selection-color: #FFFFFF;
+}
+
+QLineEdit:focus {
+    border: 2px solid #D4AF37;
+}
+
+QComboBox {
+    background: #D4AF37;
+    border: 2px solid #8B2332;
+    border-radius: 5px;
+    padding: 5px;
+    color: #3A2F25;
+}
+
+QComboBox:hover {
+    background: #E6C547;
+    border: 2px solid #A52A3A;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 8px solid #3A2F25;
+}
+
+QComboBox QAbstractItemView {
+    background: #F5F1E8;
+    border: 2px solid #8B2332;
+    selection-background-color: #8B2332;
+    selection-color: #FFFFFF;
+    color: #3A2F25;
+}
+
+QProgressBar {
+    border: 2px solid #8B2332;
+    border-radius: 5px;
+    background: #FFFFFF;
+    text-align: center;
+    color: #3A2F25;
+}
+
+QProgressBar::chunk {
+    background: #8B2332;
+    border-radius: 3px;
+}
+
+QToolTip {
+    background: #8B2332;
+    border: 2px solid #6B1A28;
+    color: #FFD700;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+QLabel {
+    background-color: transparent;
+    color: #5A4A3A;
+    font-weight: bold;
+}
+
+QGroupBox {
+    border: 2px solid #8B2332;
+    border-radius: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    color: #3A2F25;
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+    background: #8B2332;
+    color: #D4AF37;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+QCheckBox {
+    color: #5A4A3A;
+    font-weight: bold;
+}
+
+QCheckBox::indicator {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    border: 2px solid #8B2332;
+    background: #FFFFFF;
+}
+
+QCheckBox::indicator:checked {
+    background: #8B2332;
+    border: 2px solid #D4AF37;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px solid #D4AF37;
+}
+
+QSlider::groove:horizontal {
+    background: #EDE6D3;
+    height: 6px;
+    border-radius: 3px;
+}
+
+QSlider::handle:horizontal {
+    background: #8B2332;
+    width: 16px;
+    height: 16px;
+    margin: -5px 0;
+    border-radius: 8px;
+}
+
+QSlider::handle:horizontal:hover {
+    background: #A52A3A;
+}

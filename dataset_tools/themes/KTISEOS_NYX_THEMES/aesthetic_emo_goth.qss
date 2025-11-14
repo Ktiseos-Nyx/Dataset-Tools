@@ -14,7 +14,6 @@ QWidget {
                                 stop: 0 #1A1A1A, stop: 0.3 #2A2A2A,
                                 stop: 0.7 #3A3A3A, stop: 1 #1A1A1A);
     color: #C0C0C0;
-    font-family: 'Georgia', serif;
     font-size: 13px;
 }
 

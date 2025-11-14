@@ -30,14 +30,12 @@ QPushButton:hover {
     background-color: #002200;
     border: 2px solid #00ff41;
     color: #00ff41;
-    text-shadow: 0px 0px 8px #00ff00;
 }
 
 QPushButton:pressed {
     background-color: #00ff00;
     border: 2px solid #00ff00;
     color: #000000;
-    text-shadow: none;
 }
 
 QPushButton:disabled {
@@ -60,7 +58,6 @@ QTextEdit, QPlainTextEdit {
 
 QTextEdit:focus, QPlainTextEdit:focus {
     border: 2px solid #00ff41;
-    text-shadow: 0px 0px 2px #00ff00;
 }
 
 /* Terminal list styling */
@@ -82,13 +79,11 @@ QListWidget::item {
 QListWidget::item:selected {
     background-color: #00ff00;
     color: #000000;
-    text-shadow: none;
 }
 
 QListWidget::item:hover {
     background-color: #002200;
     color: #00ff41;
-    text-shadow: 0px 0px 4px #00ff00;
 }
 
 QListWidget::item:selected:hover {
@@ -113,7 +108,6 @@ QMenuBar::item {
 QMenuBar::item:selected {
     background-color: #00ff00;
     color: #000000;
-    text-shadow: none;
 }
 
 QMenu {
@@ -207,7 +201,6 @@ QTabBar::tab:selected {
 QTabBar::tab:hover:!selected {
     background-color: #002200;
     color: #00ff41;
-    text-shadow: 0px 0px 4px #00ff00;
 }
 
 /* Terminal status bar */
@@ -231,7 +224,6 @@ QLineEdit {
 
 QLineEdit:focus {
     border: 2px solid #00ff41;
-    text-shadow: 0px 0px 2px #00ff00;
 }
 
 /* Terminal combo boxes */
@@ -248,7 +240,6 @@ QComboBox {
 QComboBox:hover {
     background-color: #002200;
     color: #00ff41;
-    text-shadow: 0px 0px 4px #00ff00;
 }
 
 QComboBox::drop-down {
