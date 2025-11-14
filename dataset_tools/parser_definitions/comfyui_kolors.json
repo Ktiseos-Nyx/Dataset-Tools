@@ -1,0 +1,283 @@
+{
+  "parser_name": "ComfyUI_Kolors",
+  "priority": 200,
+  "description": "Kolors text-to-image model with ChatGLM3 text encoder and specialized nodes",
+  "version": "1.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": ["PNG", "JPG", "JPEG"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be a valid ComfyUI workflow",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain Kolors-specific nodes",
+      "source_type": "pil_info_key",
+      "source_key_options": ["workflow", "prompt"],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "MZ_KolorsUNETLoaderV2",
+        "MZ_ChatGLM3Loader",
+        "MZ_ChatGLM3_V2",
+        "MZ_ChatGLM3_Advance_V2",
+        "DownloadAndLoadChatGLM3",
+        "MZ_KolorsControlNetPatch",
+        "MZ_IPAdapterModelLoaderKolors"
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "comment": "Use targeted extraction for prompts - ChatGLM3 workflows may use ShowText nodes for final prompts",
+        "target_key": "prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "positive",
+        "text_encoder_node_types": [
+          "MZ_ChatGLM3_Advance_V2",
+          "MZ_ChatGLM3_V2",
+          "CLIPTextEncode",
+          "ShowText|pysssss"
+        ]
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "target_input": "negative",
+        "text_encoder_node_types": [
+          "MZ_ChatGLM3_V2",
+          "CLIPTextEncode",
+          "ShowText|pysssss"
+        ]
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_key": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_key": "steps",
+        "value_type": "integer",
+        "fallback": 20
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_key": "cfg",
+        "value_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "MZ_KolorsUNETLoaderV2",
+          "CheckpointLoaderSimple",
+          "UNETLoader"
+        ],
+        "input_field": "unet_name",
+        "data_type": "string",
+        "fallback": "Unknown Kolors Model"
+      },
+      {
+        "target_key": "parameters.chatglm3_model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "MZ_ChatGLM3Loader",
+          "DownloadAndLoadChatGLM3"
+        ],
+        "input_field": "chatglm3_checkpoint",
+        "data_type": "string",
+        "fallback": null
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "direct_input_data_as_string"
+      },
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "workflow_analysis.tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis",
+        "target_key": "workflow_analysis.workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "workflow_analysis.advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "workflow_analysis.multi_stage_conditioning",
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "workflow_analysis.post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "workflow_analysis.custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_analysis.workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
+      }
+    ],
+
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI_Kolors",
+      "tool": "ComfyUI (Kolors)",
+      "format": "Kolors Text-to-Image",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "chatglm3_model": "$parameters.chatglm3_model",
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "raw_metadata": "$raw_metadata",
+      "workflow_analysis": {
+        "tipo_enhancement": "$workflow_analysis.tipo_enhancement",
+        "workflow_complexity": "$workflow_analysis.workflow_complexity",
+        "advanced_upscaling": "$workflow_analysis.advanced_upscaling",
+        "multi_stage_conditioning": "$workflow_analysis.multi_stage_conditioning",
+        "post_processing_effects": "$workflow_analysis.post_processing_effects",
+        "custom_node_ecosystems": "$workflow_analysis.custom_node_ecosystems",
+        "workflow_techniques": "$workflow_analysis.workflow_techniques"
+      },
+      "architecture_info": {
+        "detected_as": "Kolors",
+        "text_encoding": "ChatGLM3",
+        "workflow_type": "Kolors Text-to-Image"
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 145,
+        "confidence": "high",
+        "custom_nodes": ["Kolors", "ChatGLM3"]
+      }
+    }
+  },
+
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+
+  "notes": [
+    "Kolors text-to-image model with ChatGLM3 LLM text encoder",
+    "Priority 145 puts it above generic ComfyUI parsers and ComfyRoll",
+    "Detects MZ_KolorsUNETLoaderV2, MZ_ChatGLM3Loader, and related nodes",
+    "Uses targeted prompt extraction for complex workflows",
+    "Supports ControlNet and IPAdapter Kolors variants"
+  ]
+}

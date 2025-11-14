@@ -270,8 +270,8 @@ class MetadataParsingTask(BackgroundTask):
 
             self.emit_progress(20, "Parsing metadata...")
 
-            # Parse the metadata with our callback
-            result = parse_metadata(self.file_path, status_callback)
+            # Parse the metadata with our callback (skip EXIF fallback for background/thumbnails)
+            result = parse_metadata(self.file_path, status_callback, extract_exif_fallback=False)
 
             if self.is_cancelled:
                 return

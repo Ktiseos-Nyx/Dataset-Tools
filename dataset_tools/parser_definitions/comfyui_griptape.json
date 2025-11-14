@@ -2,7 +2,7 @@
   "parser_name": "ComfyUI Griptape",
   "priority": 155,
   "description": "ComfyUI workflows using Griptape AI framework for intelligent prompt generation and agent-based workflows",
-  "version": "1.0",
+  "version": "1.1-revised",
   "maintainer": "Dataset-Tools",
   "target_file_types": [
     "PNG", "JPG", "JPEG"
@@ -44,7 +44,8 @@
         "Griptape Prompt Driver: LM Studio",
         "Griptape Prompt Driver: Anthropic",
         "Griptape Tool: Calculator",
-        "Griptape Tool: DateTime"
+        "Griptape Tool: DateTime",
+        "Griptape Run: Agent"
       ]
     }
   ],
@@ -69,68 +70,46 @@
     "fields": [
       {
         "target_key": "prompt",
-        "method": "comfyui_simple_dfs_prompt",
-        "target_input": "positive"
+        "method": "extract_griptape_smart_prompt"
       },
       {
         "target_key": "negative_prompt",
-        "method": "comfyui_simple_dfs_prompt",
-        "target_input": "negative"
+        "method": "extract_griptape_smart_prompt"
+      },
+      {
+        "target_key": "_sampler_node_types_var",
+        "method": "static_value",
+        "value": [ "KSampler", "KSamplerAdvanced", "SamplerCustom", "SamplerCustomAdvanced" ]
       },
       {
         "target_key": "parameters.seed",
         "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced"
-        ],
-        "input_key": "seed",
-        "value_type": "integer",
-        "fallback": -1
+        "sampler_node_types": "$_sampler_node_types_var",
+        "input_name": "seed"
       },
       {
         "target_key": "parameters.steps",
         "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced"
-        ],
-        "input_key": "steps",
-        "value_type": "integer",
-        "fallback": 30
+        "sampler_node_types": "$_sampler_node_types_var",
+        "input_name": "steps"
       },
       {
         "target_key": "parameters.cfg_scale",
         "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced"
-        ],
-        "input_key": "cfg",
-        "value_type": "float",
-        "fallback": 7.0
+        "sampler_node_types": "$_sampler_node_types_var",
+        "input_name": "cfg"
       },
       {
         "target_key": "parameters.sampler_name",
         "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced"
-        ],
-        "input_key": "sampler_name",
-        "value_type": "string",
-        "fallback": "euler"
+        "sampler_node_types": "$_sampler_node_types_var",
+        "input_name": "sampler_name"
       },
       {
         "target_key": "parameters.scheduler",
         "method": "comfy_find_input_of_main_sampler",
-        "sampler_node_types": [
-          "KSampler",
-          "KSamplerAdvanced"
-        ],
-        "input_key": "scheduler",
-        "value_type": "string",
-        "fallback": "normal"
+        "sampler_node_types": "$_sampler_node_types_var",
+        "input_name": "scheduler"
       },
       {
         "target_key": "parameters.model",
@@ -138,11 +117,25 @@
         "node_types": [
           "CheckpointLoaderSimple",
           "CheckpointLoader|pysssss",
-          "UNETLoader"
+          "UNETLoader",
+          "Load Checkpoint",
+          "Efficient Loader"
         ],
         "input_field": "ckpt_name",
         "data_type": "string",
         "fallback": "Unknown Model"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_get_node_by_class",
+        "class_type": "EmptyLatentImage",
+        "field_name": "width"
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_get_node_by_class",
+        "class_type": "EmptyLatentImage",
+        "field_name": "height"
       },
       {
         "target_key": "parameters.ai_driver",
@@ -156,6 +149,10 @@
         "method": "comfy_count_nodes_by_class_prefix",
         "class_prefix": "Griptape Tool:",
         "optional": true
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
       }
     ],
     "output_template": {
@@ -164,16 +161,8 @@
       "format": "Griptape AI-Enhanced Workflow",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
-      "parameters": {
-        "seed": "$parameters.seed",
-        "steps": "$parameters.steps",
-        "cfg_scale": "$parameters.cfg_scale",
-        "sampler_name": "$parameters.sampler_name",
-        "scheduler": "$parameters.scheduler",
-        "model": "$parameters.model",
-        "ai_driver": "$parameters.ai_driver",
-        "griptape_tools": "$parameters.griptape_tools"
-      },
+      "parameters": "$parameters",
+      "raw_metadata": "$raw_metadata",
       "workflow_metadata": {
         "source": "ComfyUI workflow",
         "parser_priority": 155,
@@ -183,17 +172,5 @@
         "agent_based": true
       }
     }
-  },
-  "error_handling": {
-    "on_parse_failure": "return_partial_data",
-    "log_errors": true,
-    "validation_level": "strict"
-  },
-  "notes": [
-    "Detects ComfyUI workflows enhanced with Griptape AI framework",
-    "Identifies agent-based prompt generation and AI-driven workflow automation",
-    "Priority 155 puts it above generic ComfyUI parsers and most specialized parsers",
-    "Extracts AI driver model information and Griptape tool usage when available",
-    "Designed for workflows that combine traditional image generation with intelligent AI assistance"
-  ]
+  }
 }

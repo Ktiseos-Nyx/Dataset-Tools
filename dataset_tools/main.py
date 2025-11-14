@@ -10,7 +10,8 @@ import sys
 from pathlib import Path
 
 from PyQt6 import QtWidgets
-from PyQt6.QtGui import QFontDatabase
+from PyQt6.QtGui import QFont, QFontDatabase
+from PyQt6.QtWidgets import QToolTip
 
 # For version display
 # Import from your package's __init__.py
@@ -94,7 +95,7 @@ def main(cli_args_list=None):
         )  # Call the correct function
 
         # Configure external libraries to use our Rich console logging
-        import logging as pylog
+        import logging as pylog  # noqa: PLC0415
 
         # PyQt6 logging
         qt_logger = pylog.getLogger("PyQt6")
@@ -149,6 +150,17 @@ def main(cli_args_list=None):
     qt_app_args = sys.argv  # Keep original sys.argv for Qt if needed
     app = QtWidgets.QApplication(qt_app_args)
 
+    # CRITICAL FOR MACOS: Initialize tooltips by setting font
+    # Without this, tooltips may not appear reliably on macOS
+    # Load user's tooltip font preference or use sensible defaults
+    from PyQt6.QtCore import QSettings  # noqa: PLC0415
+    settings = QSettings("EarthAndDuskMedia", "DatasetViewer")
+    tooltip_family = settings.value("tooltipFontFamily", "Open Sans", type=str)
+    tooltip_size = settings.value("tooltipFontSize", 9, type=int)
+
+    QToolTip.setFont(QFont(tooltip_family, tooltip_size))
+    app_logger.debug_message("Initialized QToolTip font: %s %dpt", tooltip_family, tooltip_size)
+
     # Load all custom fonts from the 'fonts' directory
 
     fonts_dir = Path(__file__).parent / "fonts"
@@ -165,6 +177,10 @@ def main(cli_args_list=None):
     window = MainWindow()  # Initialize our main window.
     window.show()
     window.apply_global_font()  # Apply saved font settings after UI is fully created
+
+    # Connect async logging cleanup to Qt's shutdown signal
+    # This ensures the QueueListener is stopped exactly once, cleanly
+    app.aboutToQuit.connect(app_logger.stop_async_logging)
 
     try:
         exit_code = app.exec()

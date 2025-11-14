@@ -40,12 +40,16 @@ dependencies = [
     "toml",
     "typing-extensions", # Good for broader Python 3.x compatibility for newer typing features
     "pyexiv2",
+    "pypng @ git+https://gitlab.com/drj11/pypng.git@pypng-0.20250521.0",  # Better PNG chunk reading for large ComfyUI workflows (latest GitLab version)
+    "cryptography @ git+https://github.com/pyca/cryptography.git@46.0.3",  # Fernet encryption for API key storage (latest GitHub version)
     "exif", # Consider if this is still needed with piexif and pyexiv2
     "numpy", #advanced algorithms
     # "sd-prompt-reader", # REMOVE - You have vendored this.
-    "qt-material",
+    # "qt-material", # REMOVED - Overstyled QSS caused glitches; replaced with compatible custom themes inspired by UN-AM/qt-material
     "piexif",
     "defusedxml",
+    "requests",
+    "jsonpath-ng",  # Proper JSONPath implementation for parser detection rules (PyPI up-to-date: v1.7.0, Oct 2024)
 ]
 
 [project.optional-dependencies]
@@ -60,6 +64,7 @@ kn  = ["ruff", "pylint"] # For your personal linting/tooling
 
 [project.scripts]
 dataset-tools = "dataset_tools.main:main"
+dataset-tools-parse = "dataset_tools.cli_parse:cli_parse"  # Headless CLI parser for bots/serverless
 
 [tool.setuptools.packages.find]
 include = ["dataset_tools*"]
@@ -390,7 +395,7 @@ plugins = "pydantic.mypy"
 module = [
     "piexif.*",
     "pyexiv2.*",
-    "qt_material.*",
+    # "qt_material.*", # REMOVED - No longer using qt-material dependency
     "defusedxml.*", # types-defusedxml should provide stubs
     "dataset_tools.version", # Your _version.py
     "PyQt6.*",

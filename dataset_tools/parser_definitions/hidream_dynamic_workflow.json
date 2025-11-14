@@ -46,20 +46,20 @@
           ]
         },
         {
-          "comment": "Rule 3: Must contain ConDelta conditioning nodes", 
+          "comment": "Rule 3: Must contain ConDelta conditioning nodes",
           "condition": "OR",
           "rules": [
             {
               "source_type": "pil_info_key",
               "source_key": "workflow",
               "operator": "regex_match",
-              "value": "ConditioningSubtract|ConditioningAddConDelta|QuickConDelta|CFGlessNegativePrompt"
+              "regex_pattern": "ConditioningSubtract|ConditioningAddConDelta|QuickConDelta|CFGlessNegativePrompt"
             },
             {
               "source_type": "pil_info_key",
               "source_key": "prompt",
               "operator": "regex_match",
-              "value": "ConditioningSubtract|ConditioningAddConDelta|QuickConDelta|CFGlessNegativePrompt"
+              "regex_pattern": "ConditioningSubtract|ConditioningAddConDelta|QuickConDelta|CFGlessNegativePrompt"
             }
           ]
         }
@@ -86,15 +86,16 @@
     },
     "fields": [
       {
+        "comment": "Extract from ConcatStringSingle + DPRandomGenerator chains (HiDream specialist)",
         "target_key": "prompt",
-        "method": "comfyui_extract_dynamic_prompt_from_workflow"
+        "method": "hidream_extract_concatenated_prompt"
       },
       {
         "target_key": "negative_prompt",
         "method": "comfy_find_text_from_main_sampler_input",
         "sampler_node_types": [
           "KSampler",
-          "KSamplerAdvanced", 
+          "KSamplerAdvanced",
           "SamplerCustom"
         ],
         "negative_input_name": "negative",

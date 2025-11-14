@@ -18,13 +18,16 @@
         {
           "source_type": "png_chunk",
           "source_key": "workflow",
-          "operator": "json_path_exists_boolean",
-          "json_path": "$.nodes[?(@.class_type =~ /Note|MarkdownNote/i)]"
+          "operator": "OR",
+          "rules": [
+            {"operator": "contains", "value": "Note"},
+            {"operator": "contains", "value": "MarkdownNote"}
+          ]
         },
         {
           "source_type": "png_chunk",
           "source_key": "workflow",
-          "operator": "json_path_exists_boolean", 
+          "operator": "json_path_exists", 
           "json_path": "$.nodes[?(@.widgets_values && @.widgets_values[0] && @.widgets_values[0] =~ /.{10,}/)]"
         }
       ]

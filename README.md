@@ -5,25 +5,29 @@
 
 
 [![Dependency review](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/dependency-review.yml) [![CodeQL](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Ktiseos-Nyx/Dataset-Tools/actions/workflows/github-code-scanning/codeql) ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+[![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx/Dataset-Tools) [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/HhBSvM9gBY) [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew) <a href="https://ko-fi.com/duskfallcrew" target="_blank"><img src="https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi" alt="Support us on Ko-fi"></a>
 
 <hr>
 
 [English Readme](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/README.md) [Wiki](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki) [Discussions](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions) [Notices](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/NOTICE.md) [License](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/LICENSE)
 
 <hr>
- Dataset Tools is a desktop application designed to help users browse and manage their image datasets, particularly those used with AI art generation tools (like Stable Diffusion WebUI Forge, A1111, ComfyUI) and model files (like Safetensors). Developed using Python and PyQt6, it provides an intuitive graphical interface for browsing files, viewing embedded generation parameters, and examining associated metadata.
+ Dataset Tools is a desktop application for browsing and managing AI image datasets with comprehensive metadata extraction. Whether you're organizing generations from A1111, ComfyUI, Civitai, or other tools - or just curious what parameters were used to create that cool image - Dataset Tools has you covered.
 
-This project is inspired by tools within the AI art community, notably [stable-diffusion-prompt-reader by receyuki](https://github.com/receyuki/stable-diffusion-prompt-reader), and aims to empower users in improving their dataset curation workflow. We welcome contributions; feel free to fork the repository and submit pull requests!
+Built with Python and PyQt6, it provides an intuitive interface for viewing embedded generation parameters, ComfyUI workflows, model metadata, and even camera EXIF data from non-AI images.
 
-<hr>
+**Future Forward** We're looking into re-developing the front end with Electron, if you have concerns, suggestions or anything feel free to join our discord, pull an issue or use the github discussions. We'll always provide bug catching and error support for any PYQT6 branches. We validate that users don't always like stark changes, and we want to make the future transition as smooth as possible.
 
-## Contact & Support Us
+**Community-Driven Development:** This project is inspired by [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) and thrives on community contributions. Found a bug? Have a workflow that won't parse? Want to add support for a new tool? **We welcome forks, fixes, and pull requests!** This is a community tool built by the community, for the community.
 
-<hr>
+## Example Images
 
-[![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx/Dataset-Tools) [![Discord](https://img.shields.io/discord/1024442483750490222?logo=discord&style=for-the-badge&color=5865F2)](https://discord.gg/HhBSvM9gBY) [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew) <a href="https://ko-fi.com/duskfallcrew" target="_blank"><img src="https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi" alt="Support us on Ko-fi"></a>
 
-</div>
+| Screenshot 1: Theme Browser | Screenshot 2: CivitaiAPI Key | Screenshot 3: FileTree View |
+| :-----------------------------: | :------------------------------: | :--------------------------: |
+| <img src="example_images/Screenshot 2025-11-14 at 16.27.01.jpg" alt="Theme Browser" width="250"> | <img src="example_images/Screenshot 2025-11-14 at 16.27.19.jpg" alt="CivitaiAPI Key" width="250"> | <img src="example_images/Screenshot 2025-10-31 at 18.07.50.jpg" alt="FileTree View" width="250"> |
+| Screenshot 4: Custom Themes & Thumbnail View | Screenshot 5: Appearance options | Screenshot 6: Edit Metadata |
+| <img src="example_images/Screenshot 2025-11-14 at 15.54.06.jpg" alt="Custom Themes & Thumbnail View" width="250"> | <img src="example_images/Screenshot 2025-11-14 at 16.28.12.jpg" alt="Appearance options" width="250"> |  <img src="example_images/Screenshot 2025-11-14 at 16.28.57.jpg" alt="Edit Metadata" width="250">|
 
 ---
 
@@ -44,76 +48,145 @@ This project is inspired by tools within the AI art community, notably [stable-d
 
 ## Features
 
-* **Lightweight & Fast:** Designed for quick loading and efficient metadata display.
+<details>
+<summary>Click to expand Features. </summary>
+
+* **Lightweight & Fast:** Designed for quick loading and efficient metadata display with intelligent caching.
 * **Cross-Platform:** Built with Python and PyQt6 (compatible with Windows, macOS, Linux).
+* **Flexible View Modes:**
+  * **Thumbnail Grid View:** Browse images visually with thumbnail previews.
+  * **File Tree View:** Navigate folders hierarchically with expandable tree structure.
+  * **Resizable Windows:** Adjust window size to your preference - all layouts adapt dynamically.
 * **Comprehensive Metadata Viewing:**
   * Clearly displays prompt information (positive, negative, SDXL-specific).
   * Shows detailed generation parameters from various AI tools.
+  * **Metadata Editing:** Modify and save image metadata directly in the application.
+  * **Non-AI Images:** View EXIF/XMP data from cameras and software (privacy note: we don't extract GPS coordinates - no one needs to know about your Bluetooth spam on macOS 😄).
 * **Intuitive File Handling:**
   * **Drag and Drop:** Easily load single image files or entire folders. Dropped files are auto-selected.
   * Folder browsing and file list navigation.
 * **Image Preview:** Clear, rescalable preview for selected images.
 * **Copy Metadata:** One-click copy of parsed metadata to the clipboard.
-* **Themeable UI:** Supports themes via `qt-material` (e.g., dark_pink, light_lightgreen_500).
+* **Themeable UI:** Extensive theme browser with 40+ themes ranging from professional to "Colors Only a Mother Would Love".
 * **Advanced Metadata Engine:**
   * **Completely Rebuilt Parser System:** New MetadataEngine with priority-based detection, robust Unicode handling, and comprehensive format support.
-  * **Enhanced ComfyUI Support:** Advanced workflow traversal, node connection analysis, and support for modern custom nodes (smZ CLIPTextEncode, etc.).
-  * **CivitAI Integration:** Full support for CivitAI's dual metadata formats with URN resource extraction and workflow parsing.
+  * **Enhanced ComfyUI Support:** Advanced workflow traversal, node connection analysis, and support for modern custom nodes.
+  * **CivitAI Integration:** Dual metadata format support with URN resource extraction and **Civitai API integration** (requires API key for enhanced resource data).
   * **Bulletproof Unicode Handling:** Eliminates mojibake issues with comprehensive fallback chains and robust encoding detection.
-  * **A1111 Format Restoration:** Fixed and enhanced A1111 JPEG support with improved detection rules.
+  * **Intelligent Caching:** Smart metadata caching reduces redundant parsing for faster browsing.
   * **Intelligent Fallback System:** When specialized parsers can't handle a file, the system gracefully falls back to vendored parsers ensuring maximum compatibility.
   * **25+ Specialized Parsers:** Dedicated parsers for various AI tools and platforms with ongoing expansion.
-  * **Model File Support:** Enhanced metadata viewing capabilities (Safetensors and GGUF support coming soon!).
-* **Configurable Logging:** Control application log verbosity via command-line arguments for easier debugging.
+  * **Model File Support:** Enhanced metadata viewing capabilities (Safetensors and GGUF support in progress!).
+* **Configurable Logging:** Control application log verbosity for debugging (see [Debug Mode](#debug-mode)).
 
-## Known Issues
+</details>
 
-*   **Material Theme Compatibility:** The integrated `qt-material` themes, while visually appealing, are not 100% compatible with all PyQt6/Qt6 elements. While the application remains functional, some minor visual inconsistencies may be present. We are actively exploring alternatives and plan to migrate to Tkinter in the near future to address these and other compatibility challenges.
-*   **Advanced Parsers** Advanced parsing is about 75% of the way there. Currently we are struggling to get a lot of the T5 style models to parse in ComfyUI. If you or someone you know use ComfyUI and can pass any information about workflows, or what nodes you're currently using that'd be amazing.
-*   **Draw Things** The XMP Extractor MIGHT be working, but with limited data on DrawThings and the original vendored code not working at the moment we're unsure of how this is working.
+## Known Issues & Development Status
+
+<details>
+<summary>Click to expand Known Issues. </summary>
+
+### UI Limitations (v0.x)
+*   **PyQt6 Layout Issues:** The current PyQt6 UI has known limitations with viewport resizing and button centering across different screen resolutions. While functional, some layout elements may appear inconsistent when resizing windows or using non-standard display configurations (4K, 5K Retina, etc.).
+*   **Material Theme Compatibility:** The integrated `qt-material` themes, while visually appealing, are not 100% compatible with all PyQt6/Qt6 elements. Some minor visual inconsistencies may be present.
+*   **Future UI Direction:** We are actively exploring a migration to **Electron** for v1.0 to address these UI limitations and provide better theming flexibility, improved cross-platform consistency, and easier headless/CLI integration. The Python parser core will remain unchanged - only the UI layer would be rewritten. **This is under consideration** - if you have concerns about Chromium/Electron (privacy, resource usage, etc.) or alternative suggestions, please join the discussion in [Issues](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues) or [Discord](https://discord.gg/HhBSvM9gBY).
+
+### Parser Status
+*   **Advanced Parsers:** Advanced parsing is about 75% of the way there. We're continuously working to iron out edge cases and improve extraction accuracy. Currently we are struggling to get a lot of the T5 style models to parse in ComfyUI. If you or someone you know use ComfyUI and can pass any information about workflows, or what nodes you're currently using that'd be amazing.
+*   **Draw Things:** The XMP Extractor MIGHT be working, but with limited data on DrawThings and the original vendored code not working at the moment we're unsure of how this is working.
+
+**Note:** This is active development software (v0.x). We're still ironing out bugs and refining functionality. Expect rough edges, but the core parsing is solid!
+
+</details>
+
 
 ## Supported Formats
 
-Dataset-Tools aims to read metadata from a wide array of sources. Current capabilities include:
+Dataset-Tools reads metadata from a comprehensive array of AI generation tools and image sources. We're constantly expanding support as new tools and custom nodes emerge!
 
-**AI Image Metadata:**
 
-* **A1111 webUI / Forge:** PNG (parameters chunk), JPEG/WEBP (UserComment).
-* **ComfyUI:**
-  * Standard PNGs (embedded workflow JSON in "prompt" chunk).
-  * Civitai-generated JPEGs/PNGs (UserComment JSON with "extraMetadata").
-  * **Advanced ComfyUI Workflows:** While many workflows are supported, some complex or custom ComfyUI workflows may not be fully parsed yet. We are continuously working to improve compatibility. Please provide examples of unparsed workflows to help us improve!
-* **NovelAI:** PNG (Legacy "Software" tag & "Comment" JSON; Stealth LSB in alpha channel).
-* **Midjourney** Popularity rules! This is the old. gold standard of the old discord way (Shh I wrote this at 1 am)
-* **InvokeAI:** (Currently undergoing refactoring, may not parse correctly in this version. Fixes planned for next major push.)
-* **Easy Diffusion:** PNG, JPEG, WEBP (embedded JSON metadata).
-* **Fooocus:** PNG ("Comment" chunk JSON), JPEG (JFIF comment JSON).
-* **Midjourney** YAY
-* **RuinedFooocus:** JPEG (UserComment JSON).
-* **Draw Things:** (Currently undergoing refactoring, may not parse correctly in this version. Fixes planned for next major push.)
-* **StableSwarmUI:** PNG, JPEG (EXIF or "sui_image_params" in PNG/UserComment).
-* *(Support for other formats may be on the way, please see issues and/or discussions for details)*
+<details>
+<summary>Click to expand Supported formats. </summary>
 
-### File Types that are COMING SOON AND/or have partial capability
+**AI Image Generation Tools:**
 
-**Model File Metadata (Header Information):**
+* **Automatic1111 WebUI / Forge:** PNG (parameters chunk), JPEG/WEBP (UserComment EXIF).
+* **ComfyUI:** *(Extraction is never 100% - someone always creates a workflow that breaks things! But we're always working to support the latest custom nodes.)*
+  * Standard workflows (PNG "prompt"/"workflow" chunks)
+  * FLUX workflows (UNETLoader, ModelSamplingFlux, FluxGuidance)
+  * SD3, SDXL, SD1.5 workflows
+  * Efficiency Nodes (Efficient Loader, KSampler Efficient)
+  * DynamicPrompts (batch generation with wildcards)
+  * QuadMoon custom nodes (Thank you to Joel Traugdor for breaking the app, AND for supervising the code!)
+  * HiDream workflows
+  * ComfyRoll ecosystem
+  * Griptape workflows
+  * PixArt/T5-based models
+  * AuraFlow, Lumina, Kolors
+  * Advanced samplers (SamplerCustomAdvanced, BasicGuider)
+  * Text combiners and prompt manipulation nodes
+  * And many more custom node ecosystems!
+* **CivitAI Images:**
+  * FLUX-generated images (A1111 and ComfyUI formats)
+  * A1111-style generations
+  * ComfyUI workflows exported from Civitai
+  * LoRA trainer outputs
+  * **Enhanced with Civitai API:** URN extraction and resource lookups (API key required in Settings)
+* **InvokeAI:** PNG/JPEG metadata extraction
+* **Draw Things:** XMP metadata support (macOS/iOS)
+* **SwarmUI / StableSwarmUI:** PNG/JPEG parameter extraction
+* **Fooocus / RuinedFooocus:** Comment and UserComment metadata
+* **Easy Diffusion:** Embedded JSON metadata
+* **Mochi Diffusion:** macOS-specific format support
+* **NovelAI:** PNG (legacy "Software" tag, "Comment" JSON, Stealth LSB alpha channel)
+* **Midjourney:** Discord-era metadata formats
 
-* `.safetensors`
-* `.gguf`
+**Non-AI Images:**
+
+* **Camera/Photo Metadata:** EXIF, IPTC, XMP data from cameras and photo editing software
+* **Privacy Note:** We deliberately don't extract GPS coordinates - your location data stays private!
+
+### Model Files & Other Formats
+
+**Model File Metadata:**
+
+* **`.safetensors`** - ✅ LoRA metadata extraction (if authors left metadata intact!)
+* **`.gguf`** - 🚧 In progress, basic support working
 
 **Other File Types:**
 
-* `.txt`: Displays content.
-* `.json`, `.toml`: Displays content (future: structured view).
+* **`.png`**, **`.jpg`**, **`.jpeg`**, **`.webp`** - Full support
+* **`.txt`** - Content display
+* **`.json`**, **`.toml`** - Content display (structured view planned)
 
-## Example Images
- If you're interested in seeing the app in action, this table shows what's up! 
+> **Note:** Non-image files may not display thumbnails in grid view yet - we're adding SVG icons for better file type visualization!
+</details>
 
-| Screenshot 1: Dark QSS Themes | Screenshot 2: ConsoleStyle Gtronicks QSS | Screenshot 3: Font Choices |
-| :-----------------------------: | :------------------------------: | :--------------------------: |
-| <img src="example_images/Screenshot 2025-07-13 at 22.07.43.jpg" alt="GTRONICK QSS: Manjaromix" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 20.02.22.jpg" alt="ConsoleStyle" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 22.07.01.jpg" alt="Theme (Dark Teal) Choosing" width="250"> |
-| Screenshot 4: Paimon Inspired | Screenshot 5: Material Blue | Screenshot 6: Deadpool Inspired |
-| <img src="example_images/Screenshot 2025-07-13 at 20.01.54.jpg" alt="Screen Sizes" width="250"> | <img src="example_images/Screenshot 2025-07-13 at 20.01.15.jpg" alt="Civitai Metadata" width="250"> |  <img src="example_images/Screenshot 2025-07-13 at 22.13.02.jpg" alt="Civitai Metadata" width="250">|
+## Dependencies
+
+<details>
+<summary>Click to expand dependency information</summary>
+
+Dataset-Tools relies on several excellent open-source libraries:
+
+**Core Dependencies:**
+* **PyQt6** - GUI framework (cross-platform desktop interface)
+* **Pillow (PIL)** - Image processing and metadata extraction
+* **pyexiv2** - Advanced EXIF/IPTC/XMP metadata reading (enhanced with pypng integration)
+* **pypng** - PNG chunk reading for large ComfyUI workflows
+* **piexif** - Additional EXIF manipulation
+* **pydantic** - Data validation and settings management
+* **rich** - Beautiful terminal output and logging system.
+* **toml** - Configuration file parsing
+* **requests** - HTTP requests for Civitai API integration
+* **cryptography** - Fernet encryption for CivitaiAPI keys.
+* **NumPy** - Workflow enhanced NumPy system.
+* **defusedxml** Secure metadata extraction.
+* **jsonpath-ng** Json Path Enabled ComfyUI Workflow support.
+
+All dependencies are automatically installed via pip. See [Installation](#installation) for details.
+
+</details>
 
 ## Installation
 
@@ -186,52 +259,48 @@ pip install -e .  # Editable install for development
 
 ---
 
-### 🆚 vs SD Prompt Reader
-
-Unlike SD Prompt Reader which focuses on basic prompt viewing, Dataset Tools provides:
-
-* Advanced ComfyUI workflow analysis
-* LoRA training metadata extraction
-* 25+ specialized AI format parsers
-* Model file support (SafeTensors, GGUF)
-* Comprehensive metadata engine
-
-**Both tools are great!** Use whichever fits your workflow better.
-
 ## Usage
 
 ### Launching the Application
 
-```bash
-    python dataset_tools
-```
-
 **After installation, run the application from your terminal:**
 
- ```bash
-    dataset-tools
-  ```
+```bash
+dataset-tools
+```
 
-#### Advanced Command-line Options
+That's it! The GUI will launch and you can start browsing your AI image datasets.
 
-  ```bash
-   python -m dataset_tools.main [options]
-  ```
+### Debug Mode
 
-> [!TIP]
->
-> ```bash
->     --log-level LEVEL: Sets the logging verbosity.
-> ```
->
-> Choices: DEBUG, INFO (default), WARNING, ERROR, CRITICAL.
-> Short forms: d, i, w, e, c (case-insensitive).
->
-> ```bash
->    Example: python -m dataset_tools.main --log-level DEBUG
-> ```
+
+<details>
+<summary>Click to expand Advanced Logging & Debug Mode</summary>
+
+Need to troubleshoot extraction issues or report a bug? Enable verbose logging:
+
+```bash
+# Full debug output (most verbose)
+dataset-tools --log-level DEBUG
+
+# Or use short form
+dataset-tools --log-level d
+
+# Other log levels available
+dataset-tools --log-level INFO     # Default - normal operation
+dataset-tools --log-level WARNING  # Warnings only
+dataset-tools --log-level ERROR    # Errors only
+```
+
+Debug logs show detailed parser decisions, node detection, and extraction steps - perfect for figuring out why a specific workflow isn't parsing correctly!
+
+</details>
 
 #### GUI Interaction
+
+
+<details>
+<summary>Click to expand Gui Interaction</summary>
 
 **Loading Files:**
 
@@ -242,34 +311,59 @@ Unlike SD Prompt Reader which focuses on basic prompt viewing, Dataset Tools pro
 
 **Navigation:**
 
-1. Select files from the list on the left panel to view their details.
-   * Image Preview:
-         Selected images are displayed in the preview area on the right.
-         Non-image files or files that cannot be previewed will show a "No preview available" message.
-   * Metadata Display:
-         Parsed prompts (Positive, Negative), generation parameters (Steps, Sampler, CFG, Seed, etc.), and other relevant metadata are shown in the text areas below/beside the image preview.
-         The Prompt Info and Generation Info section titles will update based on the content found.
-   * Copy Metadata:
-         Use the "Copy Metadata" button to copy the currently displayed parsed metadata (from the text areas) to your system clipboard.
-   * File List Actions:
-         Sort Files: Click the "Sort Files" button to sort the items in the file list alphabetically by type (images, then text, then models).
-   * Settings & Themes:
-         Access application settings (e.g., display theme, window size preferences) via the "Settings..." button at the bottom or the View > Themes menu for quick theme changes.
+1. **Select files** from the list/tree view to view their details
+2. **View Modes:**
+   * **Thumbnail Grid:** Visual browsing with image previews
+   * **File Tree:** Hierarchical folder navigation
+   * Switch between modes via the View menu
+3. **Image Preview:**
+   * Selected images display in the preview pane
+   * Zoom, pan, and resize as needed
+   * Non-image files show "No preview available"
+4. **Metadata Display:**
+   * **Prompt Info:** Positive and negative prompts
+   * **Generation Parameters:** Steps, sampler, CFG, seed, model, etc.
+   * **Raw Workflow:** Full ComfyUI workflow JSON (when available)
+   * **Edit Metadata:** Click Edit button to modify and save metadata
+5. **Copy Metadata:** One-click copy to clipboard
+6. **Settings & Configuration:**
+   * **Themes:** Access via Settings button or View > Themes menu
+   * **Civitai API Key:** Enter in Settings for enhanced resource data
+   * **Window Size:** All layouts are resizable - stretch to fit your workflow!
+   * **Font Preferences:** Customize text display
+
+</details>
 
 ### Themes
 
-A massive selection of horrifying and eye catching, eye tearing, and meme worthy themes are currently available in the app in QSS form for the PYQT6 branch only.
-Future development will include Tkinter themes in a similar format. Please note, that the main developer of this app has 0 clue how QSS entirely works, and just wanted to provide some good and some bad themes.
-You can use these for yourself by heading over to [QSS Themes](https://github.com/Ktiseos-Nyx/qss_themes/). You should be able to use your own QSS style sheets in the themes folder. Our insanity is not required, and you do not have to thank us.
-Yes, theres is a disclaimer file for theme information and we do not own any of the names, brands or concepts within them. Nor are we intentionally being offensive, trust me on this - nobody will shame you for using the theme "Colors only a Mother Would Love" you know you want to.
+<details>
+<summary>Click to expand Themes. </summary>
+Dataset-Tools comes with **40+ themes** accessible through the built-in theme browser:
 
-We are also using the following imported themes:
+* **Professional themes** for serious work
+* **Material Design** themes for modern aesthetics
+* **Retro/Console themes** for that nostalgic terminal vibe
+* **Meme themes** like "Colors Only a Mother Would Love" (yes, really)
+* **Custom themes** - Add your own QSS stylesheets to the themes folder!
 
-* [GTRONICKS](https://github.com/GTRONICK/QSS)
-* [UNREAL STYLESHEET](https://github.com/leixingyu/unrealStylesheet)
-* [DUNDERLAB QT MATERIAL STYLESHEETS](https://github.com/dunderlab/qt-material)
+Access themes via `View > Themes` menu or the Settings button. Our theme collection ranges from beautiful to... questionable. No judgment - use what makes you happy!
+
+**Theme Credits:**
+* [GTRONICK](https://github.com/GTRONICK/QSS) - QSS themes Inspiration (Neon Button Styling)
+* [Unreal Stylesheet](https://github.com/leixingyu/unrealStylesheet) - Unreal Engine-inspired themes
+* [Dunderlab Qt-Material](https://github.com/dunderlab/qt-material) - Material Design inspiration (we created custom compatible themes inspired by their brilliant work)
+* [QSS Themes Repository](https://github.com/Ktiseos-Nyx/qss_themes/) - Our custom collection (Which hasn't been updated in months on the repository)
+
+**Note on Material Themes:** We previously used the `qt-material` dependency from Dunderlab, but found its overstyled QSS caused some UI glitches and compatibility issues with PyQt6 widgets. We've replaced it with our own Material Design-inspired themes that maintain the aesthetic while ensuring better compatibility with our application. Full credit to the Dunderlab qt-material project for the inspiration - their work is brilliant, we just needed themes specifically tailored to our widget structure. Screencaps from our local insallation still show MATERIAL themes installed, that's because one of us forgot to do a re-install.
+
+</details>
+
+See [NOTICE.md](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/NOTICE.md) for full theme licensing and attribution.
 
 ### Future Development Roadmap
+
+<details>
+<summary>Click to expand the Roadmap. </summary>
 
 **Core Features:**
 
@@ -281,23 +375,25 @@ We are also using the following imported themes:
 
 **User Experience:**
 
-* [ ] **Enhanced UI/UX:** Improved prompt display, better text file viewing with syntax highlighting. (Planned migration to Tkinter for improved cross-platform compatibility and UI consistency.)
+* [ ] **Enhanced UI/UX:** Improved prompt display, better text file viewing with syntax highlighting. (Planned migration to Electron for improved cross-platform compatibility and UI consistency.)
 * [ ] **Theme System Expansion:** Additional themes and customization options.
 * [ ] **Keyboard Shortcuts:** Comprehensive hotkey support for power users.
 
 **Platform & Integration:**
 
 * [ ] **Standalone Executables:** Native builds for Windows, macOS, and Linux.
+* [ ] **Headless CLI for customized development needs** Disconnecting from the GUI, giving the power users their choice of frontend UI. (Also useful if you're developing a discord bot!)
 * [ ] **PyPI Distribution:** Official package distribution for easy `pip install dataset-tools`.
 * [ ] **CivitAI API Integration:** Direct model and resource lookup capabilities.
 * [ ] **Cross-Platform Compatibility:** Enhanced support across different operating systems.
 
 **Technical Improvements:**
 
-* [ ] **Comprehensive Test Suite:** Automated testing to ensure stability and prevent regressions.
+* [ ] **Comprehensive Test Suite:** Automated testing to ensure stability and prevent regressions. (Haven't finished this again.)
 * [ ] **Enhanced Format Support:** Additional AI tool formats and metadata standards.
 * [ ] **Performance Optimization:** Faster loading and processing for large datasets.
 * [ ] **Error Handling:** Improved error reporting and recovery mechanisms.
+* [ ] **Better Security** Have added fernet for the API keys, but more vulnerabilities exist and we're working on it.
 
 **Ecosystem Integration:**
 
@@ -305,17 +401,44 @@ We are also using the following imported themes:
 * [ ] **Workflow Integration:** Support for AI generation workflows and pipeline management.
 * [ ] **Community Features:** Parser sharing, format contribution system.
 
+</details>
+
 ## Contributing
 
-Your contributions are welcome! Whether it's bug reports, feature requests, documentation improvements, or code contributions, please feel free to get involved.
+**We welcome forks, fixes, and experiments!** Dataset-Tools is a community project - feel free to:
 
-* Issues: Please check the issues tab for existing bugs or ideas. If you don't see your issue, please open a new one with a clear description and steps to reproduce (for bugs).
-* Pull Requests:
-         Fork the repository.
-         Create a new branch for your feature or bugfix (git checkout -b feature/your-feature-name or bugfix/issue-number).
-         Make your changes and commit them with clear, descriptive messages.
-         Push your branch to your fork (git push origin feature/your-feature-name).
-         Submit a pull request to the main branch of the Ktiseos-Nyx/Dataset-Tools repository. Please provide a clear description of your changes in the PR.
+* **Fork it** and make it your own
+* **Break it** and see what happens (then tell us about it!)
+* **Fix it** when you find bugs
+* **Extend it** with new parsers or features
+* **Share it** with others who might find it useful
+
+### How to Contribute
+
+**Found a Bug?**
+* Check the [Issues](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues) tab to see if it's already reported
+* If not, open a new issue with:
+  * Clear description of the problem
+  * Steps to reproduce
+  * Example images (if it's a parsing issue)
+  * Log output with `--log-level DEBUG` enabled
+
+**Want to Add Support for a New Tool/Node?**
+* Share example images with metadata in a GitHub issue
+* Tell us about the workflow structure
+* We're always hunting for new ComfyUI custom nodes to support!
+
+**Code Contributions:**
+1. Fork the repository
+2. Create a branch: `git checkout -b feature/your-feature-name`
+3. Make your changes with clear commit messages
+4. Push to your fork: `git push origin feature/your-feature-name`
+5. Submit a pull request with a description of your changes
+
+**ComfyUI Node Support:**
+> **Reality check:** ComfyUI extraction is never 100% finished. Someone always creates a workflow, uses it, sends us the images, and... it breaks. 😂 But we're always working to support the latest nodes! If you have workflows that aren't parsing correctly, please share them so we can add support.
+
+No contribution is too small - typo fixes, documentation improvements, and questions are all valuable!
 
 ## License
 
@@ -333,6 +456,12 @@ Please see the LICENSE file in the repository root for the full license text.
 * Our peers and the wider AI and open-source communities for their continuous support and inspiration.
 * AI Language Models (like those from Google, OpenAI, Anthropic) for assistance with code generation, documentation, and problem-solving during development.
 * ...and many more!
+
+
+**SPECIAL THANKS**
+
+- Supervised by: traugdor
+- Special Thanks to contributors: Open Source Community, Whitevamp, Exdysa, and so many more.
 
 <hr>
 

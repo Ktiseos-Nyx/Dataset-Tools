@@ -330,47 +330,241 @@ class ComfyUIDynamicPromptsExtractor:
     ) -> str:
         """Extract the actual prompt text from DPRandomGenerator nodes.
 
-        This method traverses the workflow to find DPRandomGenerator nodes
-        and extracts the prompt template from their widgets_values.
+        This method FIRST checks API prompt format for resolved values,
+        then falls back to workflow format for templates.
         """
+        # Check if we're looking for positive or negative
+        target_input = method_def.get("target_input", "positive")
+
+        # PRIORITY: Check API format prompt first (has RESOLVED prompts, not templates!)
+        api_prompt = context.get("png_chunks", {}).get("prompt")
+        if api_prompt:
+            self.logger.info(f"[DynamicPrompts] Checking API prompt format for '{target_input}' prompt...")
+            try:
+                import json
+                api_data = json.loads(api_prompt) if isinstance(api_prompt, str) else api_prompt
+
+                # Use targeted extraction to find the right prompt for this input type
+                # We'll score based on path to sampler and text quality
+                best_text = ""
+                best_score = -999
+
+                for node_id, node_data in api_data.items():
+                    if isinstance(node_data, dict):
+                        inputs = node_data.get("inputs", {})
+
+                        # Check for text/text2 inputs (common in these workflows)
+                        for text_key in ["text", "text2", "text_g", "text_l"]:
+                            text_value = inputs.get(text_key)
+                            if isinstance(text_value, str) and len(text_value) > 20:
+                                # Score this candidate
+                                score = len(text_value) / 10  # Longer is better
+
+                                # Penalize LoRA-only prompts
+                                if "<lora:" in text_value.lower() and text_value.count(",") < 3:
+                                    score -= 100
+
+                                # Boost descriptive prompts
+                                if any(w in text_value.lower() for w in ["photo", "painting", "portrait", "art", "digital"]):
+                                    score += 20
+
+                                # CRITICAL: Filter by target_input type if possible
+                                # For negative prompts, look for negative keywords
+                                if target_input == "negative":
+                                    if any(w in text_value.lower() for w in ["blurry", "worst", "bad", "ugly", "deformed", "watermark"]):
+                                        score += 30  # Strong boost for negative keywords
+                                    elif any(w in text_value.lower() for w in ["beautiful", "best", "masterpiece", "detailed"]):
+                                        score -= 50  # Penalize positive-looking text in negative field
+                                else:  # positive
+                                    if any(w in text_value.lower() for w in ["beautiful", "detailed", "masterpiece", "1girl", "1boy"]):
+                                        score += 30  # Boost positive-looking text
+                                    elif any(w in text_value.lower() for w in ["blurry", "worst", "bad", "ugly"]):
+                                        score -= 50  # Penalize negative text in positive field
+
+                                if score > best_score:
+                                    best_score = score
+                                    best_text = text_value
+                                    self.logger.debug(f"[DynamicPrompts] API candidate for '{target_input}' (score={score:.1f}): {text_value[:80]}...")
+
+                if best_text:
+                    self.logger.info(f"[DynamicPrompts] ✅ Found resolved '{target_input}' prompt in API format: {best_text[:100]}...")
+                    return best_text
+                else:
+                    self.logger.info(f"[DynamicPrompts] No good '{target_input}' prompts in API format, trying workflow format...")
+
+            except Exception as e:
+                self.logger.debug(f"[DynamicPrompts] API format parsing failed: {e}, trying workflow format...")
+
+        # FALLBACK: Parse workflow format (templates, not resolved)
         workflow = self._parse_json_data(data)
         nodes = self._get_nodes(workflow)
 
-        # Look for DPRandomGenerator nodes
-        for node_data in nodes.values():
+        self.logger.info(f"[DynamicPrompts] Searching for prompts in {len(nodes)} nodes")
+
+        # Debug: show what node types we have
+        node_types = [n.get("class_type") or n.get("type", "unknown") for n in nodes.values() if isinstance(n, dict)]
+        self.logger.info(f"[DynamicPrompts] Node types in workflow: {', '.join(set(node_types[:20]))}")
+
+        # Helper function to follow node references recursively
+        def follow_node_reference(node_ref: list, depth: int = 0) -> str:
+            """Follow a node reference like ["node_id", slot] to extract text.
+
+            Args:
+                node_ref: Reference in format [node_id, slot_index]
+                depth: Recursion depth to prevent infinite loops
+
+            Returns:
+                Extracted text or empty string
+            """
+            if depth > 10:  # Prevent infinite recursion
+                self.logger.warning("[DynamicPrompts] Max recursion depth reached following references")
+                return ""
+
+            if not isinstance(node_ref, list) or len(node_ref) < 1:
+                return ""
+
+            ref_node_id = str(node_ref[0])
+            if ref_node_id not in nodes:
+                self.logger.debug(f"[DynamicPrompts] Referenced node {ref_node_id} not found")
+                return ""
+
+            ref_node = nodes[ref_node_id]
+            if not isinstance(ref_node, dict):
+                return ""
+
+            ref_class = ref_node.get("class_type") or ref_node.get("type", "")
+            ref_widgets = ref_node.get("widgets_values", [])
+
+            self.logger.debug(f"[DynamicPrompts] Following reference to node {ref_node_id} (type: {ref_class})")
+
+            # If referenced node is also a DPRandomGenerator, extract from it
+            if ref_class == "DPRandomGenerator":
+                if ref_widgets and len(ref_widgets) > 0:
+                    text = ref_widgets[0]
+                    if isinstance(text, str) and text.strip():
+                        self.logger.info(f"[DynamicPrompts] Found text in referenced DPRandomGenerator: {text[:100]}...")
+                        return text
+                    # If still empty, try following its reference
+                    if len(ref_widgets) > 1 and isinstance(ref_widgets[1], list):
+                        return follow_node_reference(ref_widgets[1], depth + 1)
+
+            # If it's a text node or string primitive, try to extract
+            if ref_class in ["PrimitiveNode", "String Literal", "easy string"]:
+                if ref_widgets and len(ref_widgets) > 0:
+                    text = ref_widgets[0]
+                    if isinstance(text, str) and text.strip():
+                        self.logger.info(f"[DynamicPrompts] Found text in {ref_class}: {text[:100]}...")
+                        return text
+
+            # Check if this node has an 'outputs' value we can use
+            outputs = ref_node.get("outputs", [])
+            if outputs and isinstance(outputs, list):
+                for output in outputs:
+                    if isinstance(output, dict):
+                        value = output.get("value")
+                        if isinstance(value, str) and value.strip():
+                            self.logger.info(f"[DynamicPrompts] Found text in node output: {value[:100]}...")
+                            return value
+
+            return ""
+
+        # Collect ALL DPRandomGenerator candidates with scoring for multi-pass workflows
+        candidates = []
+
+        for node_id, node_data in nodes.items():
             if isinstance(node_data, dict):
-                class_type = node_data.get("class_type", "")
+                # Check both 'class_type' (API format) and 'type' (workflow format)
+                class_type = node_data.get("class_type") or node_data.get("type", "")
                 if class_type == "DPRandomGenerator":
                     # Extract prompt from widgets_values[0]
                     widgets_values = node_data.get("widgets_values", [])
                     if widgets_values and len(widgets_values) > 0:
                         prompt_template = widgets_values[0]
-                        if isinstance(prompt_template, str) and prompt_template.strip():
-                            self.logger.info(
-                                f"[DynamicPrompts] Found DPRandomGenerator prompt: {prompt_template[:100]}..."
-                            )
-                            return prompt_template
 
-        # Fallback: look for any CLIPTextEncode connected to the DPRandomGenerator output
+                        # Try direct text first
+                        if isinstance(prompt_template, str) and prompt_template.strip():
+                            candidates.append({"node_id": node_id, "text": prompt_template, "source": "direct"})
+
+                        # If widgets_values[0] is empty, try following reference in widgets_values[1]
+                        elif len(widgets_values) > 1 and isinstance(widgets_values[1], list):
+                            self.logger.debug(f"[DynamicPrompts] Node {node_id}: widgets_values[0] empty, following reference...")
+                            referenced_text = follow_node_reference(widgets_values[1])
+                            if referenced_text:
+                                candidates.append({"node_id": node_id, "text": referenced_text, "source": "reference"})
+
+        # Score candidates to find the MAIN generation prompt (not LoRA/auxiliary)
+        if candidates:
+            self.logger.info(f"[DynamicPrompts] Found {len(candidates)} candidate prompts, scoring...")
+
+            for candidate in candidates:
+                text = candidate["text"]
+                score = 0
+
+                # Base score: text length (longer is often better)
+                score += min(len(text), 500) / 10  # Cap at 50 points
+
+                # PENALIZE LoRA loading patterns (these are auxiliary, not main prompts)
+                if "<lora:" in text.lower() or "<lyco:" in text.lower():
+                    score -= 100  # Heavy penalty
+                    self.logger.debug(f"[DynamicPrompts] Node {candidate['node_id']}: LoRA pattern detected, penalizing")
+
+                # PENALIZE very short text (likely templates or placeholders)
+                if len(text.strip()) < 20:
+                    score -= 30
+
+                # PREFER descriptive prompts with commas (tag-based or sentence-based)
+                comma_count = text.count(",")
+                score += min(comma_count * 2, 20)  # Up to 20 bonus points
+
+                # PREFER prompts with content words
+                if any(word in text.lower() for word in ["photo", "image", "portrait", "landscape", "art", "painting"]):
+                    score += 10
+
+                candidate["score"] = score
+                self.logger.debug(
+                    f"[DynamicPrompts] Node {candidate['node_id']}: score={score:.1f}, text={text[:60]}..."
+                )
+
+            # Sort by score and return the best one
+            candidates.sort(key=lambda x: x["score"], reverse=True)
+            best = candidates[0]
+            self.logger.info(
+                f"[DynamicPrompts] Selected best candidate: Node {best['node_id']} "
+                f"(score={best['score']:.1f}, source={best['source']}): {best['text'][:100]}..."
+            )
+            return best["text"]
+
+        # Fallback: look for any CLIPTextEncode variant connected to the DPRandomGenerator output
         for node_data in nodes.values():
             if isinstance(node_data, dict):
-                class_type = node_data.get("class_type", "")
-                if class_type == "CLIPTextEncode":
+                # Check both 'class_type' (API format) and 'type' (workflow format)
+                class_type = node_data.get("class_type") or node_data.get("type", "")
+                if class_type.startswith("CLIPTextEncode"):
                     # Check if this node has a STRING input link from a DPRandomGenerator
-                    inputs = node_data.get("inputs", [])
-                    for input_def in inputs:
-                        if isinstance(input_def, dict) and input_def.get("type") == "STRING":
-                            # This CLIPTextEncode is receiving string input, likely from DPRandomGenerator
-                            widgets_values = node_data.get("widgets_values", [])
-                            if widgets_values and len(widgets_values) > 0:
-                                prompt_text = widgets_values[0]
-                                if isinstance(prompt_text, str) and prompt_text.strip():
-                                    # Skip default placeholder text
-                                    if prompt_text not in ["chibi anime style", ""]:
-                                        self.logger.info(
-                                            f"[DynamicPrompts] Found connected prompt: {prompt_text[:100]}..."
-                                        )
-                                        return prompt_text
+                    inputs = node_data.get("inputs", {})
+                    # inputs is a DICT like {"text": ["node_id", 0], "clip": ["node_id2", 1]}
+                    if isinstance(inputs, dict):
+                        text_input = inputs.get("text")
+                        # Check if text input is connected (list format) vs static (string format)
+                        if isinstance(text_input, list) and len(text_input) >= 2:
+                            # This means text is CONNECTED from another node
+                            # The source node might be a DPRandomGenerator
+                            source_node_id = str(text_input[0])
+                            if source_node_id in nodes:
+                                source_node = nodes[source_node_id]
+                                if isinstance(source_node, dict):
+                                    # Check both 'class_type' (API format) and 'type' (workflow format)
+                                    source_class = source_node.get("class_type") or source_node.get("type", "")
+                                    # If connected to a DynamicPrompts node, extract from its widgets
+                                    if any(dp_node in source_class for dp_node in self.DYNAMICPROMPTS_NODES):
+                                        source_widgets = source_node.get("widgets_values", [])
+                                        if source_widgets and len(source_widgets) > 0:
+                                            prompt_text = source_widgets[0]
+                                            if isinstance(prompt_text, str) and prompt_text.strip():
+                                                self.logger.info(
+                                                    f"[DynamicPrompts] Found prompt from {source_class}: {prompt_text[:100]}..."
+                                                )
+                                                return prompt_text
 
         self.logger.warning("[DynamicPrompts] No valid dynamic prompt found in workflow")
         return ""

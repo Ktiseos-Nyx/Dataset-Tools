@@ -733,7 +733,7 @@ class MidjourneyFormat(BaseFormat):
                 "total_parameters": len(self._parameter),
                 "midjourney_parameters": [
                     k
-                    for k in self._parameter.keys()
+                    for k in self._parameter
                     if k.startswith("mj_") or k in self.config.PARAMETER_MAPPINGS.values()
                 ],
                 "prompt_length": len(self._positive) if self._positive else 0,

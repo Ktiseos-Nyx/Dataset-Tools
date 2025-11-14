@@ -15,14 +15,15 @@ This module contains manager classes that handle different aspects of the UI:
 from typing import Any
 
 from PyQt6 import QtCore, QtGui
-from PyQt6 import QtWidgets as Qw
 from PyQt6.QtCore import QSettings
 from PyQt6.QtGui import QTextOption
 from PyQt6.QtWidgets import QApplication
+from PyQt6 import QtWidgets as Qw
 
-from ..correct_types import EmptyField
-from ..display_formatter import format_metadata_for_display
-from ..logger import info_monitor as nfo
+from dataset_tools.correct_types import EmptyField
+from dataset_tools.display_formatter import format_metadata_for_display
+from dataset_tools.logger import info_monitor as nfo
+
 from .components import EnhancedImageLabel, EnhancedLeftPanelWidget
 
 # Import icon manager
@@ -97,9 +98,14 @@ class ThemeManager:
             action.setChecked(theme_key == theme_name)
 
         try:
-            # Apply the theme
-            invert_secondary = theme_name.startswith("dark_")
-            apply_stylesheet(app, theme=theme_name, invert_secondary=invert_secondary)
+            # Special handling for reset to default - clear all styling
+            if theme_name == "reset_to_default.qss":
+                app.setStyleSheet("")
+                nfo("Reset to OS default styling")
+            else:
+                # Apply qt-material theme
+                invert_secondary = theme_name.startswith("dark_")
+                apply_stylesheet(app, theme=theme_name, invert_secondary=invert_secondary)
 
             self.current_theme = theme_name
 
@@ -227,6 +233,7 @@ class ThemeManager:
             "Small (800x600)": (800, 600),
             "Medium (1280x900)": (1280, 900),
             "Large (1600x900)": (1600, 900),
+            "Full HD (1920x1080)": (1920, 1080),
         }
 
         preset_name = self.settings.value("windowSizePreset", "Default (1024x768)")
@@ -281,6 +288,17 @@ class MenuManager:
         file_menu.addAction(change_folder_action)
         file_menu.addSeparator()
 
+        # Settings action
+        settings_action = QtGui.QAction("&Settings...", self.main_window)
+        settings_action.setShortcut(QtGui.QKeySequence.StandardKey.Preferences)
+        settings_action.setToolTip("Open application settings")
+
+        if hasattr(self.main_window, "open_settings_dialog"):
+            settings_action.triggered.connect(self.main_window.open_settings_dialog)
+
+        file_menu.addAction(settings_action)
+        file_menu.addSeparator()
+
         # Close action
         close_action = QtGui.QAction("&Close Window", self.main_window)
         close_action.setShortcut(QtGui.QKeySequence.StandardKey.Close)
@@ -292,6 +310,49 @@ class MenuManager:
     def _setup_view_menu(self, menu_bar: Qw.QMenuBar) -> None:
         """Setup the View menu."""
         view_menu = menu_bar.addMenu("&View")
+
+        # File view mode submenu
+        view_mode_menu = Qw.QMenu("&File View Mode", self.main_window)
+        view_menu.addMenu(view_mode_menu)
+
+        # Create action group for mutually exclusive view modes
+        view_mode_group = QtGui.QActionGroup(self.main_window)
+        view_mode_group.setExclusive(True)
+
+        # List view action
+        list_view_action = QtGui.QAction("📄 &List View", self.main_window)
+        list_view_action.setCheckable(True)
+        list_view_action.setToolTip("View files as a simple list")
+        list_view_action.triggered.connect(lambda: self.main_window.set_file_view_mode("list"))
+        view_mode_group.addAction(list_view_action)
+        view_mode_menu.addAction(list_view_action)
+
+        # Grid view action
+        grid_view_action = QtGui.QAction("🖼️ &Grid View", self.main_window)
+        grid_view_action.setCheckable(True)
+        grid_view_action.setToolTip("View images as a thumbnail grid")
+        grid_view_action.triggered.connect(lambda: self.main_window.set_file_view_mode("grid"))
+        view_mode_group.addAction(grid_view_action)
+        view_mode_menu.addAction(grid_view_action)
+
+        # Tree view action
+        tree_view_action = QtGui.QAction("🌲 &Tree View", self.main_window)
+        tree_view_action.setCheckable(True)
+        tree_view_action.setToolTip("View files in a hierarchical folder tree")
+        tree_view_action.triggered.connect(lambda: self.main_window.set_file_view_mode("tree"))
+        view_mode_group.addAction(tree_view_action)
+        view_mode_menu.addAction(tree_view_action)
+
+        # Set default checked state based on current mode
+        current_mode = self.main_window.settings.value("fileViewMode", "list", type=str)
+        if current_mode == "grid":
+            grid_view_action.setChecked(True)
+        elif current_mode == "tree":
+            tree_view_action.setChecked(True)
+        else:
+            list_view_action.setChecked(True)
+
+        view_menu.addSeparator()
 
         # Themes submenu
         self.themes_menu = Qw.QMenu("&Themes", self.main_window)
@@ -371,12 +432,12 @@ class LayoutManager:
         overall_layout.setSpacing(5)
 
         # Store reference for later use
-        self.main_window._overall_layout = overall_layout
+        self.main_window._overall_layout = overall_layout  # noqa: SLF001
 
     def _setup_main_splitter(self) -> None:
         """Setup the main horizontal splitter."""
         self.main_window.main_splitter = Qw.QSplitter(QtCore.Qt.Orientation.Horizontal)
-        self.main_window._overall_layout.addWidget(self.main_window.main_splitter, 1)
+        self.main_window._overall_layout.addWidget(self.main_window.main_splitter, 1)  # noqa: SLF001
 
     def _setup_left_panel(self) -> None:
         """Setup the left file browser panel."""
@@ -465,7 +526,7 @@ class LayoutManager:
         bottom_layout.addLayout(action_layout)
         bottom_layout.addStretch(1)
 
-        self.main_window._overall_layout.addWidget(bottom_bar, 0)
+        self.main_window._overall_layout.addWidget(bottom_bar, 0)  # noqa: SLF001
 
     def _create_action_buttons(self) -> Qw.QHBoxLayout:
         """Create the action button layout."""
@@ -476,10 +537,17 @@ class LayoutManager:
         button_configs = [
             (
                 "copy_metadata_button",
-                "Copy All Metadata",
+                "Copy All",
                 "copy_metadata_to_clipboard",
                 "<b>Copy All Metadata</b><br/>Copy all metadata from the current file to "
                 "clipboard<br/><i>Shortcut: Ctrl+C</i>",
+            ),
+            (
+                "edit_metadata_button",
+                "Edit",
+                "open_edit_dialog",
+                "<b>Edit Metadata</b><br/>Edit the metadata for the selected file.<br/>"\
+                "<i>Currently supports .txt files.</i>",
             ),
             (
                 "settings_button",
@@ -490,7 +558,7 @@ class LayoutManager:
             ),
             (
                 "exit_button",
-                "Exit Application",
+                "Exit",
                 "close",
                 "<b>Exit Application</b><br/>Close the Dataset Tools application<br/><i>Shortcut: Ctrl+Q</i>",
             ),
@@ -528,7 +596,7 @@ class LayoutManager:
             self.main_window.metadata_image_splitter.setSizes(meta_sizes)
 
         except Exception as e:
-            nfo("Error restoring splitter positions: %s", e)
+            nfo("Error restoring splitter positions: %s", e, exc_info=True)
 
     def _get_window_width(self) -> int:
         """Get current window width safely."""
@@ -566,7 +634,7 @@ class LayoutManager:
 
             nfo("Layout state saved successfully")
         except Exception as e:
-            nfo("Error saving layout state: %s", e)
+            nfo("Error saving layout state: %s", e, exc_info=True)
 
 
 # ============================================================================
@@ -620,12 +688,10 @@ class MetadataDisplayManager:
         ]
 
         for box_attr, placeholder_text in placeholder_configs:
-            if hasattr(self.main_window, box_attr):
-                text_box = getattr(self.main_window, box_attr)
-                if isinstance(text_box, Qw.QTextEdit):
-                    if not text_box.toPlainText().strip():
-                        text_box.setPlaceholderText(placeholder_text)
-
+                            if hasattr(self.main_window, box_attr) and \
+                               isinstance(text_box := getattr(self.main_window, box_attr), Qw.QTextEdit) and \
+                               not text_box.toPlainText().strip():
+                                text_box.setPlaceholderText(placeholder_text)
     def clear_all_displays(self) -> None:
         """Clear all metadata display boxes."""
         text_boxes = [

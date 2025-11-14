@@ -50,7 +50,12 @@ class RegexExtractor:
             return None
 
         # Ensure data is a string
-        data_str = str(data)
+        # If data is a dict/list, use json.dumps to preserve JSON format with double quotes
+        import json
+        if isinstance(data, (dict, list)):
+            data_str = json.dumps(data)
+        else:
+            data_str = str(data)
 
         try:
             match = re.search(pattern, data_str, re.DOTALL)

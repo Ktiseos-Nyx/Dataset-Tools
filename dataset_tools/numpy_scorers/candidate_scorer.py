@@ -8,6 +8,10 @@ Includes specialized scoring for different workflow types and node ecosystems.
 import re  # noqa: F401
 from typing import Any
 
+from ..logger import get_logger  # noqa: TID252
+
+logger = get_logger(__name__)
+
 # Advanced ComfyUI Node type scoring with domain knowledge
 ADVANCED_NODE_TYPE_SCORES = {
     # Dynamic content generators (highest priority)
@@ -20,7 +24,7 @@ ADVANCED_NODE_TYPE_SCORES = {
     "WildCardProcessor": 2.5,
 
     # HiDream ecosystem nodes (high priority)
-    "easy positive": 2.3,  # HiDream positive prompt node
+    "easy positive": 2.5,  # HiDream positive prompt node
     "Text Concatenate (JPS)": 2.0,  # JPS text concatenation
     "Prompt Multiple Styles Selector": 1.9,  # Style selector
 
@@ -62,7 +66,7 @@ class CandidateScorer:
             "soft lighting", "studio lighting", "intricate details",
             "very awa", "amazing", "professional", "trending on pixiv", "beautifully color graded", "close-up",
             "sharp focus", "depth of field", "bokeh", "cinematic composition", "symmetrical balance",
-            "rule of thirds", "leading lines", "color theory", "You are an assistant designed to generate anime images based on textual prompts.",
+            "rule of thirds", "leading lines", "color theory",
             "anime screencap", "anime style", "manga style", "cel shading", "vibrant colors", "dynamic pose",
             "woman", "man", "girl", "boy", "detailed", "highres", "8k", "ultra detailed", "sharp focus", "vivid colors",
         ]
@@ -80,7 +84,7 @@ class CandidateScorer:
         self.technical_terms = [
             "lanczos", "bilinear", "ddim", "euler", "dpmpp", "cfg", "randomize",
             "steps", "sampler", "scheduler", "denoise", "seed", "checkpoint",
-            "lora", "embedding", "hypernetwork", "vae", "controlnet"
+            "lora", "embedding", "hypernetwork", "vae", "controlnet", "You are an assistant designed to generate anime images based on textual prompts.",
         ]
 
     def score_text_candidate(self, candidate: dict[str, Any], workflow_type: str = "standard") -> dict[str, Any]:
@@ -127,7 +131,7 @@ class CandidateScorer:
                 reasons.append("MAIN_ENCODER_WIDGET")
 
         # Workflow-specific boosts
-        if workflow_type == "randomizer":
+        if workflow_type == "randomizer":  # noqa: SIM102
             # Extra boost for randomizer workflows with high-value nodes
             if node_bonus >= 2.0 and workflow_type == "randomizer":
                 extra_boost = 2 if is_connected else 1
@@ -141,7 +145,9 @@ class CandidateScorer:
             score += 8
             reasons.append("SUBSTANTIAL TEXT MULTILINE IN GRIPTAPE")
             confidence_modifier += 1
-            print(f"Griptape Text Multiline boost: '{text[:40]}...' -> score +8")
+            logger.debug(
+                "Griptape Text Multiline boost: '%s...' -> score +8", text[:40]
+            )
 
         # Enhanced ShowText|pysssss scoring - prioritize more detailed content
         if node_type == "ShowText|pysssss" and len(text) > 100:

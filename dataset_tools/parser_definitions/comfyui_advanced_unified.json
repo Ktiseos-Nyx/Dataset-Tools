@@ -1,0 +1,324 @@
+{
+  "parser_name": "ComfyUI Advanced (Unified Fallback)",
+  "priority": 55,
+  "description": "Unified fallback parser for advanced ComfyUI workflows - handles video/animation, advanced sampling, custom nodes, and specialized models not covered by specialized parsers",
+  "version": "3.0_unified",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": ["PNG", "JPG", "JPEG", "WEBP", "GIF"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "exif_user_comment",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Detects advanced nodes - video/animation, advanced sampling, or specialized models",
+      "condition": "OR",
+      "rules": [
+        {
+          "comment": "Video/Animation nodes",
+          "source_type": "pil_info_key",
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "VHS_VideoCombine",
+            "VHS_LoadVideo",
+            "AnimateDiffLoader",
+            "AnimateDiffCombine",
+            "SaveAnimatedWEBP",
+            "VideoHelperSuite"
+          ]
+        },
+        {
+          "comment": "Advanced sampling nodes",
+          "source_type": "pil_info_key",
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "SamplerCustomAdvanced",
+            "BasicGuider",
+            "CFGGuider",
+            "DualCFGGuider"
+          ]
+        },
+        {
+          "comment": "Specialized model loaders",
+          "source_type": "pil_info_key",
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "UNETLoader",
+            "UnetLoaderGGUF",
+            "Power Lora Loader (rgthree)"
+          ]
+        }
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        },
+        {
+          "source_type": "exif_user_comment"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+
+    "fields": [
+      {
+        "comment": "Use targeted extraction for complex workflows",
+        "target_key": "prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "params": {
+          "target_input": "positive"
+        }
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "params": {
+          "target_input": "negative"
+        }
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "SamplerCustom"
+        ],
+        "input_key": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "SamplerCustom"
+        ],
+        "input_key": "steps",
+        "value_type": "integer",
+        "fallback": 20
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "SamplerCustom"
+        ],
+        "input_key": "cfg",
+        "value_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "SamplerCustom"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "SamplerCustom"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.denoise",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "SamplerCustom"
+        ],
+        "input_key": "denoise",
+        "value_type": "float",
+        "fallback": 1.0
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "UNETLoader",
+          "UnetLoaderGGUF",
+          "CheckpointLoaderSimple"
+        ],
+        "input_field": "unet_name",
+        "data_type": "string",
+        "fallback": "Unknown Model"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptySD3LatentImage"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptySD3LatentImage"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
+      },
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "workflow_analysis.tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis",
+        "target_key": "workflow_analysis.workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "workflow_analysis.advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "workflow_analysis.multi_stage_conditioning",
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "workflow_analysis.post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "workflow_analysis.custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_analysis.workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
+      }
+    ],
+
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI Advanced (Unified Fallback)",
+      "tool": "ComfyUI (Advanced)",
+      "format": "ComfyUI Advanced Workflow",
+      "parser_version": "3.0_unified",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "denoise": "$parameters.denoise",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "raw_metadata": "$raw_metadata",
+      "workflow_analysis": {
+        "tipo_enhancement": "$workflow_analysis.tipo_enhancement",
+        "workflow_complexity": "$workflow_analysis.workflow_complexity",
+        "advanced_upscaling": "$workflow_analysis.advanced_upscaling",
+        "multi_stage_conditioning": "$workflow_analysis.multi_stage_conditioning",
+        "post_processing_effects": "$workflow_analysis.post_processing_effects",
+        "custom_node_ecosystems": "$workflow_analysis.custom_node_ecosystems",
+        "workflow_techniques": "$workflow_analysis.workflow_techniques"
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 55,
+        "confidence": "medium",
+        "note": "Advanced workflow caught by unified fallback parser",
+        "categories": ["video/animation", "advanced_sampling", "specialized_models"]
+      }
+    }
+  },
+
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "moderate"
+  },
+
+  "notes": [
+    "Unified fallback parser - replaces comfyui_advanced_sampling, comfyui_video_animation, and comfyui_advanced_node_discovery",
+    "Priority 55 puts it as a mid-tier fallback (above Universal/Targeted at 50-60)",
+    "Handles three categories of advanced workflows:",
+    "  1. Video/Animation: VHS, AnimateDiff, VideoHelperSuite",
+    "  2. Advanced Sampling: SamplerCustomAdvanced, CFGGuider, BasicGuider",
+    "  3. Specialized Models: UNETLoader, GGUF loaders, Power LoRA",
+    "Uses targeted extraction for complex prompt traversal",
+    "Includes comprehensive workflow analysis (7 advanced fields)",
+    "Supports EXIF UserComment workflows (JPEG compatibility)"
+  ]
+}

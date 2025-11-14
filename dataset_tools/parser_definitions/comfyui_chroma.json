@@ -1,0 +1,249 @@
+{
+  "parser_name": "ComfyUI Chroma",
+  "priority": 250,
+  "description": "Chroma models using ModelSamplingAuraFlow architecture but with Chroma-specific training",
+  "version": "1.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have workflow with Chroma model/LoRA AND ModelSamplingAuraFlow node",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "exists"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "contains",
+          "value": "ModelSamplingAuraFlow"
+        },
+        {
+          "operator": "OR",
+          "rules": [
+            {
+              "source_type": "pil_info_key",
+              "source_key": "workflow",
+              "operator": "contains",
+              "value": "chroma"
+            },
+            {
+              "source_type": "pil_info_key",
+              "source_key": "workflow",
+              "operator": "contains",
+              "value": "Chroma"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "comment": "Try text combiner extraction first (for Text Concatenate nodes)",
+        "target_key": "prompt",
+        "method": "text_combiner_extract_combined_text",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PrimitiveStringMultiline",
+          "easy positive"
+        ]
+      },
+      {
+        "comment": "Fallback to legacy workflow extraction if combiner doesn't find anything",
+        "target_key": "prompt",
+        "method": "comfyui_extract_prompt_from_workflow",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PrimitiveStringMultiline",
+          "easy positive"
+        ]
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_extract_negative_prompt_from_workflow",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "BNK_CLIPTextEncodeAdvanced",
+          "T5TextEncode",
+          "PrimitiveStringMultiline",
+          "easy positive"
+        ]
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "CheckpointLoaderSimple",
+          "UNETLoader"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string",
+        "fallback": "Unknown Chroma Model"
+      },
+      {
+        "target_key": "parameters.flow_shift",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "ModelSamplingAuraFlow"
+        ],
+        "input_field": "shift",
+        "data_type": "float",
+        "fallback": 1.0
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "SamplerCustom",
+          "SamplerCustomAdvanced",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "steps",
+        "value_type": "integer",
+        "fallback": 30
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "SamplerCustom",
+          "SamplerCustomAdvanced",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "cfg",
+        "value_type": "float",
+        "fallback": 3.6
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "SamplerCustom",
+          "SamplerCustomAdvanced",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "SamplerCustom",
+          "SamplerCustomAdvanced",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "fallback": "beta"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptySD3LatentImage"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptySD3LatentImage"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI Chroma",
+      "tool": "ComfyUI Chroma",
+      "format": "Chroma Text-to-Image",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "flow_shift": "$parameters.flow_shift",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "raw_metadata": "$raw_metadata",
+      "architecture_info": {
+        "detected_as": "Chroma architecture",
+        "text_encoder": "T5-based (Chroma-specific training)",
+        "model_type": "Flow Matching Transformer (Chroma)",
+        "sampling_method": "AuraFlow-style (Chroma tuning)"
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 160,
+        "confidence": "high",
+        "chroma_workflow": true,
+        "flow_matching": true
+      }
+    }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Specifically designed for Chroma model workflows",
+    "Uses ModelSamplingAuraFlow architecture with Chroma-specific training",
+    "Detects 'chroma' string in model names or LoRAs for identification",
+    "Priority 160 puts it above generic AuraFlow (155) and ComfyUI (100)",
+    "Handles PrimitiveStringMultiline prompt nodes used in Chroma workflows"
+  ]
+}

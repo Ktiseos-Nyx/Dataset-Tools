@@ -24,13 +24,6 @@ from ..logger import info_monitor as nfo
 
 # Import theme libraries with fallbacks
 try:
-    import qt_themes
-
-    QT_THEMES_AVAILABLE = True
-except ImportError:
-    QT_THEMES_AVAILABLE = False
-
-try:
     import unreal_stylesheet
 
     UNREAL_STYLESHEET_AVAILABLE = True
@@ -61,10 +54,10 @@ class EnhancedThemeManager:
 
     THEME_CATEGORIES = {
         "qt_material": "Material Design",
-        "qt_themes": "Color Palettes",
         "unreal": "Unreal Style",
         "GTRONICK_QSS": "GTRONICK's Themes",
         "KTISEOS_NYX_THEMES": "Ktiseos Nyx's Themes",
+        "MATERIAL_CONVERTED": "Material (Converted)",
         "custom_qss": "Custom Themes",
     }
 
@@ -76,48 +69,12 @@ class EnhancedThemeManager:
         self.current_palette_theme: str | None = None
         self.current_qt_material_theme: str | None = None
 
-        # Load qt-themes palettes dynamically
-        self._load_qt_themes_palettes()
-
         nfo("Enhanced ThemeManager initialized")
         nfo(
-            "Available systems: qt-material=%s, qt-themes=%s, unreal=%s",
+            "Available systems: qt-material=%s, unreal=%s",
             QT_MATERIAL_AVAILABLE,
-            QT_THEMES_AVAILABLE,
             UNREAL_STYLESHEET_AVAILABLE,
         )
-
-    def _load_qt_themes_palettes(self) -> None:
-        """Load available qt-themes palettes dynamically."""
-        if QT_THEMES_AVAILABLE:
-            try:
-                # Get themes using the get_themes function
-                if hasattr(qt_themes, "get_themes"):
-                    themes_dict = qt_themes.get_themes()
-                    # Extract theme names from the dictionary
-                    self.QT_THEMES_PALETTES = list(themes_dict.keys())
-                else:
-                    # Fallback to hardcoded list if get_themes not available
-                    self.QT_THEMES_PALETTES = [
-                        "one_dark_two",
-                        "monokai",
-                        "nord",
-                        "catppuccin_mocha",
-                        "catppuccin_macchiato",
-                        "catppuccin_frappe",
-                        "catppuccin_latte",
-                        "atom_one",
-                        "github_dark",
-                        "github_light",
-                        "dracula",
-                        "blender",
-                    ]
-                nfo("Loaded %d qt-themes palettes", len(self.QT_THEMES_PALETTES))
-            except Exception as e:
-                nfo("Error loading qt-themes palettes: %s", e)
-                self.QT_THEMES_PALETTES = []
-        else:
-            self.QT_THEMES_PALETTES = []
 
     def get_available_themes(self) -> dict[str, list[str]]:
         """Get all available themes organized by category."""
@@ -127,27 +84,12 @@ class EnhancedThemeManager:
         if QT_MATERIAL_AVAILABLE:
             themes["qt_material"] = sorted(list_themes(), key=self._natural_sort_key)
 
-        # qt-themes color palettes
-        if QT_THEMES_AVAILABLE:
-            themes["qt_themes"] = sorted(self.QT_THEMES_PALETTES.copy(), key=self._natural_sort_key)
-
         # Unreal stylesheet
         if UNREAL_STYLESHEET_AVAILABLE:
             themes["unreal"] = ["unreal_engine_5"]
 
         # Custom QSS themes from subfolders
         custom_themes = self._load_custom_qss_themes_from_subfolders()
-
-        # Filter KTISEOS_NYX_THEMES based on chaos unlock status
-        if "KTISEOS_NYX_THEMES" in custom_themes:
-            chaos_unlocked = self.settings.value("chaosCollection/unlocked", False, type=bool)
-            if not chaos_unlocked:
-                # Remove 'moms_2am_' themes if not unlocked
-                custom_themes["KTISEOS_NYX_THEMES"] = [
-                    theme for theme in custom_themes["KTISEOS_NYX_THEMES"] if not theme.startswith("moms_2am_")
-                ]
-                if not custom_themes["KTISEOS_NYX_THEMES"]:
-                    del custom_themes["KTISEOS_NYX_THEMES"]
 
         themes.update(custom_themes)
 
@@ -227,9 +169,6 @@ class EnhancedThemeManager:
         if category == "qt_material" and QT_MATERIAL_AVAILABLE:
             success = self._apply_qt_material_theme(name, app)
 
-        elif category == "qt_themes" and QT_THEMES_AVAILABLE:
-            success = self._apply_qt_themes_palette(name, app)
-
         elif category == "unreal" and UNREAL_STYLESHEET_AVAILABLE:
             success = self._apply_unreal_theme(app)
 
@@ -250,14 +189,44 @@ class EnhancedThemeManager:
             action_text = "Initial theme loaded" if initial_load else "Theme applied and saved"
             nfo("%s: %s", action_text, theme_id)
 
-            # Re-apply fonts after theme to ensure they don't get overridden
-            if not initial_load and hasattr(self, "main_window") and hasattr(self.main_window, "apply_global_font"):
-                # Use a timer to delay font application slightly to ensure theme is fully applied first
-                from PyQt6.QtCore import QTimer
-
-                QTimer.singleShot(100, self.main_window.apply_global_font)
+            # Don't re-apply fonts on theme change - QSS themes don't override font settings
+            # and it causes unnecessary delays. User can manually apply fonts from Settings if needed.
 
         return success
+
+    def _refresh_thumbnail_grid_after_theme_change(self):
+        """Refresh thumbnail grid after theme changes to prevent icon clearing."""
+        if not hasattr(self.main_window, "thumbnail_grid"):
+            return
+
+        grid = self.main_window.thumbnail_grid
+
+        # Use the NEW _is_reloading flag to prevent resize events during theme change
+        if hasattr(grid, "_is_reloading"):
+            grid._is_reloading = True
+
+        # ALSO prevent selection signals during theme change (prevents metadata spam)
+        if hasattr(grid, "_is_scrolling"):
+            grid._is_scrolling = True
+
+        # After theme settles, unlock and request visible thumbnails
+        from PyQt6.QtCore import QTimer
+
+        def restore_thumbnails():
+            # Unlock resize events
+            if hasattr(grid, "_is_reloading"):
+                grid._is_reloading = False
+
+            # Unlock selection signals
+            if hasattr(grid, "_is_scrolling"):
+                grid._is_scrolling = False
+
+            # Request visible thumbnails (don't do a full reload!)
+            if hasattr(grid, "_request_visible_thumbnails"):
+                grid._request_visible_thumbnails()
+                nfo("Thumbnail grid refreshed after theme change")
+
+        QTimer.singleShot(300, restore_thumbnails)
 
     def _apply_qt_material_theme(self, theme_name: str, app: QApplication) -> bool:
         """Apply a qt-material theme."""
@@ -276,17 +245,6 @@ class EnhancedThemeManager:
             return True
         except Exception as e:
             nfo("Error applying qt-material theme %s: %s", theme_name, e)
-            return False
-
-    def _apply_qt_themes_palette(self, palette_name: str, app: QApplication) -> bool:
-        """Apply a qt-themes color palette."""
-        try:
-            # qt-themes uses set_theme(app, theme_name) format
-            qt_themes.set_theme(app, palette_name)
-            self.current_palette_theme = palette_name
-            return True
-        except Exception as e:
-            nfo("Error applying qt-themes palette %s: %s", palette_name, e)
             return False
 
     def _apply_custom_qss_theme(self, theme_id: str, app: QApplication) -> bool:
@@ -377,14 +335,65 @@ class EnhancedThemeManager:
                 stylesheet = re.sub(r'url\("(assets/[^"]+)"\)', replace_asset_url_enhanced, stylesheet)
                 stylesheet = re.sub(r"url\('(assets/[^']+)'\)", replace_asset_url_enhanced, stylesheet)
 
+            # Handle icons directory (for enhanced_qss_collection themes)
+            # Check if theme has its own icons subdirectory
+            theme_dir = qss_file.parent
+            icons_dir = theme_dir / "icons"
+            if icons_dir.exists():
+                def replace_icon_url(match):
+                    relative_path = match.group(1)
+                    if relative_path.startswith("icons/"):
+                        absolute_path = theme_dir / relative_path
+                        if absolute_path.exists():
+                            # Qt accepts both quoted and unquoted paths, but let's use unquoted to match original format
+                            return f'url({absolute_path})'
+                        nfo(f"Icon not found: {absolute_path}")
+                    return match.group(0)
+
+                # Replace icon URLs with absolute paths (matches both quoted and unquoted)
+                icon_count = 0
+                def count_and_replace(match):
+                    nonlocal icon_count
+                    result = replace_icon_url(match)
+                    if result != match.group(0):
+                        icon_count += 1
+                    return result
+
+                stylesheet = re.sub(r'url\((icons/[^)]+)\)', count_and_replace, stylesheet)
+                nfo(f"Processed {icon_count} icon paths for theme: {theme_name}")
+
             nfo(f"Processed custom QSS theme: {theme_name}, asset replacements applied")
 
-            # IMPORTANT: Clear qt-material styling before applying custom QSS
-            # qt-material's apply_stylesheet sets comprehensive styles that override custom QSS
-            app.setStyleSheet("")  # Clear any existing stylesheets first
+            # Show status message during theme change
+            if hasattr(self, "main_window") and hasattr(self.main_window, "status_bar"):
+                self.main_window.status_bar.showMessage(f"Applying theme: {theme_name}...")
+
+            # Disable thumbnail grid resize events BEFORE applying stylesheet
+            if hasattr(self, "main_window") and hasattr(self.main_window, "thumbnail_grid"):
+                grid = self.main_window.thumbnail_grid
+                if hasattr(grid, "ignore_resize_events"):
+                    grid.ignore_resize_events = True
+
+            # TESTING: Commenting out the clear to prevent flicker between themes
+            # Original reason: Clear qt-material styling before applying custom QSS
+            # app.setStyleSheet("")  # Clear any existing stylesheets first
+            # app.processEvents()  # Process events to keep UI responsive
 
             # Apply the custom QSS theme
             app.setStyleSheet(stylesheet)
+
+            # Process events after stylesheet application
+            app.processEvents()
+
+            # Re-enable resize events after a shorter delay (100ms instead of 500ms)
+            if hasattr(self, "main_window") and hasattr(self.main_window, "thumbnail_grid"):
+                from PyQt6.QtCore import QTimer
+                def reenable_resize():
+                    grid.ignore_resize_events = False
+                    # Clear status message
+                    if hasattr(self.main_window, "status_bar"):
+                        self.main_window.status_bar.clearMessage()
+                QTimer.singleShot(100, reenable_resize)
 
             # Clear any qt-themes palette and qt-material theme tracking
             if self.current_palette_theme:
@@ -510,7 +519,6 @@ class EnhancedThemeManager:
             "current_palette": self.current_palette_theme,
             "available_systems": {
                 "qt_material": QT_MATERIAL_AVAILABLE,
-                "qt_themes": QT_THEMES_AVAILABLE,
                 "unreal_stylesheet": UNREAL_STYLESHEET_AVAILABLE,
                 "custom_qss": True,
             },

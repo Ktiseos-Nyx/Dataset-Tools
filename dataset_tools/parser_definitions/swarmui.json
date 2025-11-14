@@ -87,11 +87,6 @@
           "operator": "OR",
           "rules": [
             {
-              "source_type": "exif_software",
-              "operator": "regex_match",
-              "regex_patterns": ["adobe|photoshop|gimp|paint\\.net|affinity|canva|figma|sketch|procreate|clip studio"]
-            },
-            {
               "source_type": "png_chunk",
               "source_key": "workflow",
               "operator": "exists"
@@ -190,7 +185,7 @@
       }
     ],
     "output_template": {
-      "tool": "StableSwarmUI",
+      "tool": "SwarmUI",
       "parser_version": "1.0_json_ruleset",
       "detection_confidence": "high",
       "prompt": "$prompt",

@@ -57,6 +57,8 @@ We'll do our best to acknowledge your report within 48-72 hours. As an independe
   * **GitHub's Dependabot alerts** (if enabled) to notify us of vulnerable dependencies.
 * **Static Analysis:** We use linters and static analysis tools to identify potential issues in our own codebase:
   * **`Ruff`** for general linting, style enforcement, and identifying many common code issues.
+  * **`Pylint`** for comprehensive static code analysis and identifying coding standard violations.
+  * **`Prospector`** to run and aggregate results from multiple static analysis tools.
   * **`Bandit`** for finding common security pitfalls in Python code.
   * We are also exploring the use of **`Mypy`** for static type checking to improve code robustness.
 * **Vendored Code:** Code vendored from other projects (like components from `sd-prompt-reader`) is included with clear attribution and its original license. We take on the responsibility of maintaining or updating these components as needed within our project. See our `NOTICE.md` file for details.

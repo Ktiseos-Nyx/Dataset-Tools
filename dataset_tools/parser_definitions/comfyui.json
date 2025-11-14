@@ -1,6 +1,6 @@
 {
   "parser_name": "ComfyUI Universal Parser",
-  "priority": 195,
+  "priority": 100,
   "description": "Advanced ComfyUI parser that handles any workflow type with robust detection and extraction",
   "version": "2.0_universal_edition",
   "maintainer": "DuskFall Crew",
@@ -26,10 +26,15 @@
           "operator": "is_valid_json"
         },
         {
+          "comment": "Check for typical ComfyUI node types - using simple contains check instead of regex",
           "source_type": "png_chunk",
           "source_key": "workflow",
-          "operator": "json_path_exists_boolean",
-          "json_path": "$.nodes[?(@.class_type =~ /KSampler|SamplerCustomAdvanced|CLIPTextEncode/i)]"
+          "operator": "OR",
+          "rules": [
+            {"operator": "contains", "value": "KSampler"},
+            {"operator": "contains", "value": "SamplerCustomAdvanced"},
+            {"operator": "contains", "value": "CLIPTextEncode"}
+          ]
         },
         {
           "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
@@ -50,10 +55,15 @@
           "operator": "is_valid_json"
         },
         {
+          "comment": "Check for typical ComfyUI node types - using simple contains check instead of regex",
           "source_type": "pil_info_key",
           "source_key": "prompt",
-          "operator": "json_path_exists_boolean",
-          "json_path": "$.nodes[?(@.class_type =~ /KSampler|SamplerCustomAdvanced|CLIPTextEncode/i)]"
+          "operator": "OR",
+          "rules": [
+            {"operator": "contains", "value": "KSampler"},
+            {"operator": "contains", "value": "SamplerCustomAdvanced"},
+            {"operator": "contains", "value": "CLIPTextEncode"}
+          ]
         },
         {
           "comment": "Exclude Civitai ComfyUI files (they have extraMetadata and should use specialized parser)",
@@ -81,6 +91,78 @@
               "value": "extraMetadata"
             }
           ]
+        }
+      ]
+    },
+    {
+      "comment": "Rule 4: Must NOT have ModelSamplingAuraFlow in workflow or prompt",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingAuraFlow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingAuraFlow"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 5: Must NOT have ModelSamplingSD3 in workflow or prompt",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingSD3"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingSD3"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 6: Must NOT have ModelSamplingFlux in workflow or prompt",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingFlux"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "does_not_contain",
+          "value": "ModelSamplingFlux"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 7: Must NOT have Chroma LoRAs in workflow (use Chroma-specific parser)",
+      "operator": "AND",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "Chroma-Anime"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "does_not_contain",
+          "value": "chroma_v10HD"
         }
       ]
     }
@@ -124,7 +206,9 @@
           "PixArtT5TextEncode",
           "CLIPTextEncodeSDXL",
           "CLIPTextEncodeSDXLRefiner",
-          "smZ CLIPTextEncode"
+          "smZ CLIPTextEncode",
+          "PrimitiveStringMultiline",
+          "easy positive"
         ]
       },
       {
@@ -147,7 +231,9 @@
           "PixArtT5TextEncode",
           "CLIPTextEncodeSDXL",
           "CLIPTextEncodeSDXLRefiner",
-          "smZ CLIPTextEncode"
+          "smZ CLIPTextEncode",
+          "PrimitiveStringMultiline",
+          "easy positive"
         ]
       },
       {
@@ -245,67 +331,158 @@
         "value_type": "integer"
       },
       {
+        "comment": "Extract scheduler from sampler",
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced",
+          "KSampler_A1111"
+        ],
+        "input_field": "scheduler",
+        "value_type": "string"
+      },
+      {
+        "comment": "Extract model/checkpoint name",
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "CheckpointLoaderSimple",
+          "UNETLoader",
+          "CheckpointLoader"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string"
+      },
+      {
+        "comment": "Extract denoise strength (for img2img workflows)",
+        "target_key": "parameters.denoise",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSampler",
+          "KSamplerAdvanced",
+          "SamplerCustomAdvanced"
+        ],
+        "input_field": "denoise",
+        "value_type": "float"
+      },
+      {
+        "comment": "Extract batch size",
+        "target_key": "parameters.batch_size",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage",
+          "EmptySD3LatentImage"
+        ],
+        "input_field": "batch_size",
+        "data_type": "integer"
+      },
+      {
+        "comment": "Extract LoRA information",
+        "target_key": "parameters.loras",
+        "method": "comfy_find_all_lora_nodes",
+        "lora_node_types": [
+          "LoraLoader",
+          "LoraLoaderModelOnly",
+          "LoraTagLoader",
+          "Power Lora Loader (rgthree)"
+        ],
+        "extract_fields": [
+          "lora_name",
+          "strength_model",
+          "strength_clip"
+        ]
+      },
+      {
+        "comment": "Extract VAE model",
+        "target_key": "parameters.vae_model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "VAELoader"
+        ],
+        "input_field": "vae_name",
+        "data_type": "string"
+      },
+      {
+        "comment": "Extract raw workflow metadata",
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
+      },
+      {
         "comment": "🎯 TIPO AI Prompt Enhancement Detection",
-        "target_key": "tipo_enhancement",
+        "target_key": "workflow_analysis.tipo_enhancement",
         "method": "comfyui_detect_tipo_enhancement"
       },
       {
         "comment": "📊 Workflow Complexity Analysis",
-        "target_key": "workflow_complexity",
+        "target_key": "workflow_analysis.workflow_complexity",
         "method": "comfyui_calculate_workflow_complexity"
       },
       {
         "comment": "🚀 Advanced Upscaling Detection",
-        "target_key": "advanced_upscaling",
+        "target_key": "workflow_analysis.advanced_upscaling",
         "method": "comfyui_detect_advanced_upscaling"
       },
       {
         "comment": "🎨 Multi-Stage Conditioning Detection",
-        "target_key": "multi_stage_conditioning",
+        "target_key": "workflow_analysis.multi_stage_conditioning",
         "method": "comfyui_detect_multi_stage_conditioning"
       },
       {
         "comment": "✨ Post-Processing Effects Detection",
-        "target_key": "post_processing_effects",
+        "target_key": "workflow_analysis.post_processing_effects",
         "method": "comfyui_detect_post_processing_effects"
       },
       {
         "comment": "🔌 Custom Node Ecosystem Detection",
-        "target_key": "custom_node_ecosystems",
+        "target_key": "workflow_analysis.custom_node_ecosystems",
         "method": "comfyui_detect_custom_node_ecosystems"
       },
       {
         "comment": "🎯 High-Level Workflow Techniques",
-        "target_key": "workflow_techniques",
+        "target_key": "workflow_analysis.workflow_techniques",
         "method": "comfyui_extract_workflow_techniques"
       }
     ],
     "output_template": {
+      "parser_name_from_engine": "ComfyUI Universal Parser",
       "tool": "ComfyUI (Universal Parser)",
-      "parser_version": "2.0_universal",
-      "detection_confidence": "high",
+      "format": "ComfyUI Generic Workflow",
+      "parser_version": "2.0_universal_enhanced",
       "prompt": "$prompt",
       "negative_prompt": "$negative_prompt",
       "parameters": {
+        "model": "$parameters.model",
         "seed": "$parameters.seed",
         "steps": "$parameters.steps",
         "cfg_scale": "$parameters.cfg_scale",
         "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "denoise": "$parameters.denoise",
         "width": "$parameters.width",
-        "height": "$parameters.height"
+        "height": "$parameters.height",
+        "batch_size": "$parameters.batch_size",
+        "loras": "$parameters.loras",
+        "vae_model": "$parameters.vae_model"
       },
-      "workflow_info": {
+      "raw_metadata": "$raw_metadata",
+      "workflow_analysis": {
+        "tipo_enhancement": "$workflow_analysis.tipo_enhancement",
+        "workflow_complexity": "$workflow_analysis.workflow_complexity",
+        "advanced_upscaling": "$workflow_analysis.advanced_upscaling",
+        "multi_stage_conditioning": "$workflow_analysis.multi_stage_conditioning",
+        "post_processing_effects": "$workflow_analysis.post_processing_effects",
+        "custom_node_ecosystems": "$workflow_analysis.custom_node_ecosystems",
+        "workflow_techniques": "$workflow_analysis.workflow_techniques"
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 100,
+        "confidence": "high",
         "parser_used": "Universal ComfyUI Parser",
-        "notes": "Handles SDXL, FLUX, and other ComfyUI workflow variants",
-        "supports": [
-          "KSampler",
-          "SamplerCustomAdvanced",
-          "BasicGuider",
-          "DualCLIPLoader",
-          "All ComfyUI variants"
-        ]
-      },
-      "raw_workflow": "$input_data"
+        "notes": "Handles standard ComfyUI workflows (SDXL, SD1.5, and other variants)"
+      }
     }
   },
   "engineering_notes": {

@@ -41,10 +41,15 @@ htmlcov/
 # Log files
 logs/
 dev_logs/
+logs_for_gemini/
 
 # Documentation files
 CLAUDE.md
 DEVELOPMENT_ROADMAP.md
+ROADMAP.md
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
 
 # Archive and backup directories (should never be committed)
 archive/
@@ -52,6 +57,7 @@ ARCHIVE/
 *_backup/
 backup/
 *backup/
+themes_backup/
 
 # Development screenshots and research (should never be committed)
 dev-screenshots/
@@ -64,9 +70,33 @@ research/
 font_backup/
 theme_backup/
 
+# Theme cache directory
+dataset_tools/themes/cache/
+
 # EXIF output and test data
 exif_output/
 
 # Disabled/experimental files
 *.disabled
 .disabled/
+
+# Docs folder
+docs/
+
+# Gemini/Claude conversation logs
+dataset_tools/ui/QSS App code for Gemini/
+dataset_tools/ui/claude_messages/
+
+# Wiki export directory
+wiki_export/
+
+# API keys and secrets (CRITICAL - NEVER COMMIT THESE!)
+secrets.json
+.env
+*.secret
+*_secrets.json
+DEVLOG.md
+*.enc
+.claude/agents
+electron-app/
+.igitignore

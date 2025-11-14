@@ -18,16 +18,11 @@
         {
           "source_type": "png_chunk",
           "source_key": "workflow",
-          "operator": "json_path_exists_boolean",
-          "json_path": "$.nodes[?(@.class_type =~ /GetNode|SetNode/i)]"
-        },
-        {
-          "comment": "Should have at least 5 GetNode/SetNode instances (complex routing)",
-          "source_type": "png_chunk",
-          "source_key": "workflow",
-          "operator": "json_path_count_gte",
-          "json_path": "$.nodes[?(@.class_type =~ /GetNode|SetNode/i)]",
-          "count": 5
+          "operator": "OR",
+          "rules": [
+            {"operator": "contains", "value": "GetNode"},
+            {"operator": "contains", "value": "SetNode"}
+          ]
         }
       ]
     }

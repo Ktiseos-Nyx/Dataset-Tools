@@ -14,6 +14,8 @@ from .extractors.a1111_extractors import A1111Extractor
 from .extractors.civitai_extractors import CivitaiExtractor
 from .extractors.comfyui_enhanced_extractor import ComfyUIEnhancedExtractor
 from .extractors.comfyui_extractors import ComfyUIExtractor
+from .extractors.comfyui_griptape import ComfyUIGriptapeExtractor
+from .extractors.comfyui_pixart import ComfyUIPixArtExtractor
 
 # Import extraction modules
 from .extractors.direct_extractors import DirectValueExtractor
@@ -39,13 +41,20 @@ class FieldExtractor:
     def __init__(self, logger: logging.Logger | None = None):
         """Initialize the field extractor with all sub-extractors."""
         self.logger = logger or get_logger("FieldExtractor")
+        self.logger.info("[FIELD_EXTRACTOR] FieldExtractor initializing...")
 
         # Initialize specialized extractors
+        self.logger.info("[FIELD_EXTRACTOR] Creating DirectValueExtractor...")
         self.direct_extractor = DirectValueExtractor(self.logger)
+        self.logger.info("[FIELD_EXTRACTOR] Creating A1111Extractor...")
         self.a1111_extractor = A1111Extractor(self.logger)
+        self.logger.info("[FIELD_EXTRACTOR] Creating CivitaiExtractor...")
         self.civitai_extractor = CivitaiExtractor(self.logger)
+        self.logger.info("[FIELD_EXTRACTOR] Creating ComfyUIExtractor...")
         self.comfyui_extractor = ComfyUIExtractor(self.logger)
         self.comfyui_enhanced_extractor = ComfyUIEnhancedExtractor(self.logger)
+        self.comfyui_griptape_extractor = ComfyUIGriptapeExtractor(self.logger)
+        self.comfyui_pixart_extractor = ComfyUIPixArtExtractor(self.logger)
         self.drawthings_extractor = DrawThingsExtractor(self.logger)
         self.invokeai_extractor = InvokeAIExtractor(self.logger)
         self.json_extractor = JSONExtractor(self.logger)
@@ -58,6 +67,8 @@ class FieldExtractor:
 
     def _register_extractor_methods(self):
         """Register all extraction methods from sub-extractors."""
+        self.logger.info("[FIELD_EXTRACTION] _register_extractor_methods CALLED!")
+
         # Direct value methods
         self._method_registry.update(self.direct_extractor.get_methods())
 
@@ -65,13 +76,21 @@ class FieldExtractor:
         self._method_registry.update(self.a1111_extractor.get_methods())
 
         # Civitai methods
-        self._method_registry.update(self.civitai_extractor.get_methods())
+        civitai_methods = self.civitai_extractor.get_methods()
+        self.logger.info("[FIELD_EXTRACTION_DEBUG] Registering Civitai methods: %s", list(civitai_methods.keys()))
+        self._method_registry.update(civitai_methods)
 
         # ComfyUI methods
         self._method_registry.update(self.comfyui_extractor.get_methods())
 
         # Enhanced ComfyUI methods (priority over standard)
         self._method_registry.update(self.comfyui_enhanced_extractor.get_methods())
+
+        # Griptape-specific ComfyUI methods
+        self._method_registry.update(self.comfyui_griptape_extractor.get_methods())
+
+        # PixArt-specific ComfyUI methods
+        self._method_registry.update(self.comfyui_pixart_extractor.get_methods())
 
         # DrawThings methods
         self._method_registry.update(self.drawthings_extractor.get_methods())
@@ -121,9 +140,28 @@ class FieldExtractor:
             self.logger.warning(f"Unknown extraction method: '{method_name}'")
             return None
 
+        # DEBUG: Log all field extractions
+        self.logger.debug("[FIELD_EXTRACT] Calling method '%s' for target_key '%s'", method_name, method_def.get('target_key', 'UNKNOWN'))
+
+        if method_name == "civitai_extract_all_info":
+            # Debug logging already handled by logger
+            self.logger.info("[FIELD_EXTRACT_DEBUG] About to call civitai_extract_all_info!")
+
+        # DEBUG: Log method calls for prompt/negative_prompt
+        if method_name == "comfy_find_text_from_main_sampler_input":
+            self.logger.info("[FIELD_EXTRACT] About to call comfy_find_text_from_main_sampler_input for target_key: %s", method_def.get('target_key', 'UNKNOWN'))
+
         try:
             # Execute the extraction
             value = extraction_method(data_for_method, method_def, context_data, extracted_fields)
+
+            # DEBUG: Log result for prompt extraction
+            if method_name == "comfy_find_text_from_main_sampler_input":
+                self.logger.info("[FIELD_EXTRACT] Method returned: %s", value[:100] if value else "EMPTY/NONE")
+
+            if method_name == "civitai_extract_all_info":
+                # Debug logging already handled by logger
+                self.logger.info("[FIELD_EXTRACT_DEBUG] civitai_extract_all_info returned: %s", value)
 
             # Apply type conversion if specified
             return self._apply_type_conversion(value, method_def)

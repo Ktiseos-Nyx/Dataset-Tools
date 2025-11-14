@@ -28,7 +28,7 @@ class MetadataFileReader:
 
     def __init__(self):
         self._logger = pylog.getLogger(
-            f"dataset_tools.access_disk.{self.__class__.__name__}",
+            "dataset_tools.access_disk.%s" % self.__class__.__name__,
         )
 
     @debug_monitor
@@ -43,7 +43,8 @@ class MetadataFileReader:
 
         """
         nfo(
-            f"[MDFileReader] Reading PNG with pyexiv2 for standard metadata: {file_path_named}",
+            "[MDFileReader] Reading PNG with pyexiv2 for standard metadata: %s",
+            file_path_named,
         )
         try:
             img = pyexiv2.Image(file_path_named)
@@ -55,30 +56,37 @@ class MetadataFileReader:
             img.close()
             if not metadata["EXIF"] and not metadata["IPTC"] and not metadata["XMP"]:
                 nfo(
-                    f"[MDFileReader] pyexiv2 found no standard EXIF/IPTC/XMP in PNG: {file_path_named}",
+                    "[MDFileReader] pyexiv2 found no standard EXIF/IPTC/XMP in PNG: %s",
+                    file_path_named,
                 )
                 return None
             return metadata
         except pyexiv2.Exiv2Error as exiv_err:
             nfo(
-                f"[MDFileReader] pyexiv2 Exiv2Error reading PNG standard metadata {file_path_named}: {exiv_err}",
+                "[MDFileReader] pyexiv2 Exiv2Error reading PNG standard metadata %s: %s",
+                file_path_named,
+                exiv_err,
             )
             return None
         except OSError as io_err:
             nfo(
-                f"[MDFileReader] pyexiv2 IOError reading PNG standard metadata {file_path_named}: {io_err}",
+                "[MDFileReader] pyexiv2 IOError reading PNG standard metadata %s: %s",
+                file_path_named,
+                io_err,
             )
             return None
         except Exception as e:  # pylint: disable=broad-except
             nfo(
-                f"[MDFileReader] pyexiv2 general error reading PNG standard metadata {file_path_named}: {e}",
+                "[MDFileReader] pyexiv2 general error reading PNG standard metadata %s: %s",
+                file_path_named,
+                e,
             )
             # self._logger.error("pyexiv2 PNG error for %s", file_path_named, exc_info=True) # Example of lazy logging for error
             return None
 
     @debug_monitor
     def read_txt_contents(self, file_path_named: str) -> dict | None:
-        nfo(f"[MDFileReader] Reading TXT: {file_path_named}")
+        nfo("[MDFileReader] Reading TXT: %s", file_path_named)
         encodings_to_try = ["utf-8", "utf-16", "latin-1"]
         for enc in encodings_to_try:
             try:
@@ -89,22 +97,29 @@ class MetadataFileReader:
                 continue
             except OSError as file_err:
                 nfo(
-                    f"[MDFileReader] File Error reading TXT {file_path_named} with encoding {enc}: {file_err}",
+                    "[MDFileReader] File Error reading TXT %s with encoding %s: %s",
+                    file_path_named,
+                    enc,
+                    file_err,
                 )
                 return None  # Or perhaps `break` to stop trying other encodings if it's a file system error
             except Exception as e:  # pylint: disable=broad-except
                 nfo(
-                    f"[MDFileReader] General Error reading TXT {file_path_named} with encoding {enc}: {e}",
+                    "[MDFileReader] General Error reading TXT %s with encoding %s: %s",
+                    file_path_named,
+                    enc,
+                    e,
                 )
                 return None
         nfo(
-            f"[MDFileReader] Failed to decode TXT {file_path_named} with common encodings.",
+            "[MDFileReader] Failed to decode TXT %s with common encodings.",
+            file_path_named,
         )
         return None
 
     @debug_monitor
     def read_schema_file(self, file_path_named: str) -> dict | None:
-        nfo(f"[MDFileReader] Reading schema file: {file_path_named}")
+        nfo("[MDFileReader] Reading schema file: %s", file_path_named)
         header_field_enum = DownField.JSON_DATA
         loader = None
         mode = "r"
@@ -124,7 +139,9 @@ class MetadataFileReader:
             header_field_enum = DownField.JSON_DATA
         else:
             nfo(
-                f"[MDFileReader] Unknown schema file type for {file_path_named} (ext: {ext})",
+                "[MDFileReader] Unknown schema file type for %s (ext: %s)",
+                file_path_named,
+                ext,
             )
             return None
         try:
@@ -139,27 +156,33 @@ class MetadataFileReader:
             json.JSONDecodeError,
         ) as decode_err:  # Renamed error_log
             nfo(
-                f"[MDFileReader] Schema decode error for {file_path_named}: {decode_err}",
+                "[MDFileReader] Schema decode error for %s: %s",
+                file_path_named,
+                decode_err,
             )
             return {
                 EmptyField.PLACEHOLDER.value: {
-                    "Error": f"Invalid {ext.upper()[1:]} format.",
+                    "Error": "Invalid %s format." % ext.upper()[1:],
                 },
             }
         except OSError as file_err:
             nfo(
-                f"[MDFileReader] File Error reading schema file {file_path_named}: {file_err}",
+                "[MDFileReader] File Error reading schema file %s: %s",
+                file_path_named,
+                file_err,
             )
             return None
         except Exception as e:  # pylint: disable=broad-except
             nfo(
-                f"[MDFileReader] General Error reading schema file {file_path_named}: {e}",
+                "[MDFileReader] General Error reading schema file %s: %s",
+                file_path_named,
+                e,
             )
             return None
 
     @debug_monitor
     def read_jpg_header_pyexiv2(self, file_path_named: str) -> dict | None:
-        nfo(f"[MDFileReader] Reading JPG with pyexiv2: {file_path_named}")
+        nfo("[MDFileReader] Reading JPG with pyexiv2: %s", file_path_named)
         try:
             img = pyexiv2.Image(file_path_named)
             exif_tags = img.read_exif()
@@ -192,32 +215,39 @@ class MetadataFileReader:
             img.close()
             if not metadata["EXIF"] and not metadata["IPTC"] and not metadata["XMP"]:
                 nfo(
-                    f"[MDFileReader] pyexiv2 found no EXIF/IPTC/XMP in JPG: {file_path_named}",
+                    "[MDFileReader] pyexiv2 found no EXIF/IPTC/XMP in JPG: %s",
+                    file_path_named,
                 )
                 return None
             return metadata
         except pyexiv2.Exiv2Error as exiv_err:
             nfo(
-                f"[MDFileReader] pyexiv2 Exiv2Error reading JPG {file_path_named}: {exiv_err}",
+                "[MDFileReader] pyexiv2 Exiv2Error reading JPG %s: %s",
+                file_path_named,
+                exiv_err,
             )
             traceback.print_exc()
             return None
         except OSError as io_err:
             nfo(
-                f"[MDFileReader] pyexiv2 IOError reading JPG {file_path_named}: {io_err}",
+                "[MDFileReader] pyexiv2 IOError reading JPG %s: %s",
+                file_path_named,
+                io_err,
             )
             traceback.print_exc()
             return None
         except Exception as e:  # pylint: disable=broad-except
             nfo(
-                f"[MDFileReader] pyexiv2 general error reading JPG {file_path_named}: {e}",
+                "[MDFileReader] pyexiv2 general error reading JPG %s: %s",
+                file_path_named,
+                e,
             )
             traceback.print_exc()
             return None
 
     @debug_monitor
     def read_file_data_by_type(self, file_path_named: str) -> dict | None:
-        nfo(f"[MDFileReader] Dispatching read for: {file_path_named}")
+        nfo("[MDFileReader] Dispatching read for: %s", file_path_named)
         path_obj = Path(file_path_named)
         ext_lower = path_obj.suffix.lower()
 
@@ -260,24 +290,29 @@ class MetadataFileReader:
                 return tool.read_metadata_from(file_path_named)
             except ImportError:  # pragma: no cover
                 nfo(
-                    f"[MDFileReader] ModelTool not available for import. Cannot process model file: {path_obj.name}",
+                    "[MDFileReader] ModelTool not available for import. Cannot process model file: %s",
+                    path_obj.name,
                 )
                 return {
                     EmptyField.PLACEHOLDER.value: {
-                        "Info": f"Model file ({ext_lower}) - ModelTool parser not available.",
+                        "Info": "Model file (%s) - ModelTool parser not available." % ext_lower,
                     },
                 }
             except Exception as e_model:  # pylint: disable=broad-except # pragma: no cover
                 nfo(
-                    f"[MDFileReader] Error using ModelTool for {path_obj.name}: {e_model}",
+                    "[MDFileReader] Error using ModelTool for %s: %s",
+                    path_obj.name,
+                    e_model,
                 )
                 return {
                     EmptyField.PLACEHOLDER.value: {
-                        "Error": f"Could not parse model file: {e_model}",
+                        "Error": "Could not parse model file: %s" % e_model,
                     },
                 }
         # Fallthrough if none of the above
         nfo(
-            f"[MDFileReader] File type {ext_lower} for {path_obj.name} is not handled by this dispatcher.",
+            "[MDFileReader] File type %s for %s is not handled by this dispatcher.",
+            ext_lower,
+            path_obj.name,
         )
         return None

@@ -7,6 +7,8 @@ for optimized processing strategies.
 
 from typing import Any
 
+from ..logger import debug_message
+
 # Advanced workflow detection patterns
 WORKFLOW_INDICATORS = {
     "dynamic_prompts": ["DPRandomGenerator", "WildcardProcessor", "Wildcard Processor", "ImpactWildcardProcessor"],
@@ -32,7 +34,7 @@ class WorkflowClassifier:
         if any(t in node_types for t in ["DPRandomGenerator", "ImpactWildcardProcessor"]):
             return "randomizer"
         if any(t in node_types for t in ["Griptape Display: Text", "Griptape Create: Agent"]):
-            print(f"NUMPY DEBUG: Found Griptape nodes in workflow, detected node types: {node_types}")
+            debug_message("NUMPY DEBUG: Found Griptape nodes in workflow, detected node types: %s", node_types)
             return "griptape"
         if any(t in node_types for t in ["T5TextEncode", "PixArtT5TextEncode", "BasicGuider"]):
             return "flux_t5"

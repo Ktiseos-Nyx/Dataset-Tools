@@ -63,29 +63,23 @@ __author__ = "KTISEOS NYX"
 
 # Main public API - these are the most commonly used components
 __all__ = [
-    # Main engine interface
+    "A1111ParameterExtractor",
+    "ComfyUIWorkflowExtractor",
+    "ContextDataPreparer",
+    "create_field_extractor",
+    "create_metadata_engine",
+    "FieldExtractor",
+    "format_template_output",
     "MetadataEngine",
     "MetadataEngineBuilder",
     "MetadataEngineManager",
-    # Convenience functions
-    "create_metadata_engine",
+    "OutputFormatter",
     "parse_file_metadata",
     "prepare_context_data",
-    # Core components for advanced usage
-    "ContextDataPreparer",
-    "FieldExtractor",
-    "TemplateProcessor",
-    "OutputFormatter",
-    # Specialized extractors
-    "A1111ParameterExtractor",
-    "ComfyUIWorkflowExtractor",
-    # Template tools
-    "TemplateBuilder",
-    "StandardTemplates",
-    # Utility functions
-    "create_field_extractor",
     "process_template",
-    "format_template_output",
+    "StandardTemplates",
+    "TemplateBuilder",
+    "TemplateProcessor",
 ]
 
 # Add rule engine components if available

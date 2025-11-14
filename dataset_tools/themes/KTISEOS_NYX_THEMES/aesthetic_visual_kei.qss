@@ -1,0 +1,327 @@
+/* VISUAL KEI THEME */
+/* Late 90s/Early 00s Harajuku Visual Kei street fashion */
+/* Punk rock meets Japanese pop - Black with neon accents */
+
+QMainWindow {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 0.4 #0d0d0d,
+                                stop: 0.7 #1a0a1a, stop: 1 #000000);
+    color: #ffffff;
+    border: none;
+}
+
+QWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 0.4 #0d0d0d,
+                                stop: 0.7 #1a0a1a, stop: 1 #000000);
+    color: #ffffff;
+    font-size: 13px;
+}
+
+/* Punk rock buttons */
+QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff0066, stop: 1 #990033);
+    border: 2px solid #ff0066;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff3399, stop: 1 #cc0066);
+    border: 2px solid #ff00ff;
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #cc0066, stop: 1 #660033);
+    border: 2px solid #990033;
+}
+
+/* Street style text areas */
+QTextEdit, QPlainTextEdit {
+    background: #0d0d0d;
+    border: 2px solid #ff0066;
+    border-radius: 6px;
+    padding: 10px;
+    color: #ffffff;
+    selection-background-color: #ff0066;
+    selection-color: #ffffff;
+}
+
+QListWidget {
+    background: #0d0d0d;
+    border: 2px solid #ff0066;
+    border-radius: 6px;
+    alternate-background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff0066, stop: 0.5 #ff00ff, stop: 1 #9900ff);
+    color: #ffffff;
+}
+
+QListWidget::item:hover {
+    background: #1a1a1a;
+    color: #ff0066;
+}
+
+QTreeWidget {
+    background: #0d0d0d;
+    border: 2px solid #ff0066;
+    border-radius: 6px;
+    alternate-background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+QTreeWidget::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff0066, stop: 0.5 #ff00ff, stop: 1 #9900ff);
+    color: #ffffff;
+}
+
+QLineEdit {
+    background: #0d0d0d;
+    border: 2px solid #ff0066;
+    border-radius: 6px;
+    padding: 8px;
+    color: #ffffff;
+    selection-background-color: #ff0066;
+    selection-color: #ffffff;
+}
+
+QLineEdit:focus {
+    border: 2px solid #ff00ff;
+}
+
+QLabel {
+    background-color: transparent;
+    color: #ffffff;
+}
+
+QGroupBox {
+    background-color: rgba(255, 0, 102, 0.15);
+    border: 2px solid #ff0066;
+    border-radius: 8px;
+    margin-top: 1em;
+    padding-top: 12px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 4px 10px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff0066, stop: 0.5 #ff00ff, stop: 1 #9900ff);
+    color: #ffffff;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+QComboBox {
+    background: #1a1a1a;
+    border: 2px solid #ff0066;
+    border-radius: 6px;
+    padding: 8px;
+    color: #ffffff;
+}
+
+QComboBox:hover {
+    border: 2px solid #ff00ff;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 20px;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid #ff0066;
+    margin-right: 6px;
+}
+
+QTabWidget::pane {
+    border: 2px solid #ff0066;
+    border-radius: 6px;
+    background: #0d0d0d;
+}
+
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0d0d0d);
+    border: 2px solid #ff0066;
+    border-bottom: none;
+    padding: 8px 16px;
+    margin-right: 2px;
+    color: #ffffff;
+    font-weight: bold;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+QTabBar::tab:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff0066, stop: 0.5 #ff00ff, stop: 1 #9900ff);
+    color: #ffffff;
+}
+
+QTabBar::tab:hover {
+    background: #1a1a1a;
+    border: 2px solid #ff00ff;
+}
+
+QScrollBar:vertical {
+    background: #0d0d0d;
+    width: 14px;
+    border: 1px solid #ff0066;
+    border-radius: 7px;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff0066, stop: 1 #ff00ff);
+    min-height: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff00ff, stop: 1 #9900ff);
+}
+
+QScrollBar:horizontal {
+    background: #0d0d0d;
+    height: 14px;
+    border: 1px solid #ff0066;
+    border-radius: 7px;
+}
+
+QScrollBar::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff0066, stop: 1 #ff00ff);
+    min-width: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff00ff, stop: 1 #9900ff);
+}
+
+QScrollBar::add-line, QScrollBar::sub-line {
+    border: none;
+    background: none;
+}
+
+QMenuBar {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a1a1a, stop: 1 #0d0d0d);
+    color: #ffffff;
+    border-bottom: 2px solid #ff0066;
+    font-weight: bold;
+}
+
+QMenuBar::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff0066, stop: 1 #ff00ff);
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+QMenu {
+    background: #0d0d0d;
+    border: 2px solid #ff0066;
+    border-radius: 6px;
+    color: #ffffff;
+}
+
+QMenu::item:selected {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff0066, stop: 1 #ff00ff);
+    color: #ffffff;
+}
+
+QStatusBar {
+    background: #1a1a1a;
+    color: #ffffff;
+    border-top: 2px solid #ff0066;
+}
+
+QToolTip {
+    background: #ff0066;
+    color: #ffffff;
+    border: 2px solid #ff00ff;
+    border-radius: 4px;
+    padding: 6px;
+}
+
+QProgressBar {
+    background: #0d0d0d;
+    border: 2px solid #ff0066;
+    border-radius: 6px;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff0066, stop: 0.5 #ff00ff, stop: 1 #9900ff);
+    border-radius: 4px;
+}
+
+QCheckBox, QRadioButton {
+    color: #ffffff;
+    spacing: 8px;
+    font-weight: bold;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ff0066;
+    background: #0d0d0d;
+    border-radius: 3px;
+}
+
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #ff0066, stop: 1 #ff00ff);
+    border: 2px solid #ff00ff;
+}
+
+QCheckBox::indicator:hover, QRadioButton::indicator:hover {
+    border: 2px solid #ff00ff;
+}
+
+QSlider::groove:horizontal {
+    background: #0d0d0d;
+    height: 6px;
+    border-radius: 3px;
+    border: 1px solid #ff0066;
+}
+
+QSlider::handle:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff0066, stop: 1 #ff00ff);
+    width: 16px;
+    height: 16px;
+    margin: -5px 0;
+    border-radius: 8px;
+    border: 2px solid #ff00ff;
+}
+
+QSlider::handle:horizontal:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #ff00ff, stop: 1 #9900ff);
+}

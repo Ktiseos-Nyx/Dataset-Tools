@@ -1,0 +1,295 @@
+{
+  "parser_name": "ComfyUI Lumina/Chroma",
+  "priority": 180,
+  "description": "Lumina DiT architecture and Chroma finetunes (City96's FluxMod-compatible implementation)",
+  "version": "1.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": ["PNG", "JPG", "JPEG", "WEBP"],
+
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must be a valid ComfyUI workflow",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain Chroma-specific nodes OR Lumina nodes",
+      "operator": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key_options": ["workflow", "prompt"],
+          "json_query_type": "has_any_node_class_type",
+          "operator": "is_true",
+          "class_types_to_check": [
+            "ChromaPaddingRemoval",
+            "FluxModDiffusionLoader",
+            "KSamplerMod",
+            "CLIPTextEncodeLumina2",
+            "LuminaDiffusionLoader"
+          ]
+        }
+      ]
+    }
+  ],
+
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "comment": "Use targeted extraction for prompts",
+        "target_key": "prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "params": {
+          "target_input": "positive"
+        }
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "comfyui_targeted_prompt_extraction",
+        "params": {
+          "target_input": "negative"
+        }
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSamplerMod",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSamplerMod",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "steps",
+        "value_type": "integer",
+        "fallback": 30
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSamplerMod",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "cfg",
+        "value_type": "float",
+        "fallback": 5.0
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSamplerMod",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSamplerMod",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.denoise",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "KSamplerMod",
+          "KSampler",
+          "KSamplerAdvanced"
+        ],
+        "input_key": "denoise",
+        "value_type": "float",
+        "fallback": 1.0
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "FluxModDiffusionLoader",
+          "UNETLoader",
+          "CheckpointLoaderSimple"
+        ],
+        "input_field": "unet_name",
+        "data_type": "string",
+        "fallback": "Unknown Lumina/Chroma Model"
+      },
+      {
+        "target_key": "parameters.t5_encoder",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "CLIPLoader"
+        ],
+        "input_field": "clip_name",
+        "data_type": "string",
+        "fallback": null
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 1024
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
+      },
+      {
+        "comment": "🎯 TIPO AI Prompt Enhancement Detection",
+        "target_key": "workflow_analysis.tipo_enhancement",
+        "method": "comfyui_detect_tipo_enhancement"
+      },
+      {
+        "comment": "📊 Workflow Complexity Analysis",
+        "target_key": "workflow_analysis.workflow_complexity",
+        "method": "comfyui_calculate_workflow_complexity"
+      },
+      {
+        "comment": "🚀 Advanced Upscaling Detection",
+        "target_key": "workflow_analysis.advanced_upscaling",
+        "method": "comfyui_detect_advanced_upscaling"
+      },
+      {
+        "comment": "🎨 Multi-Stage Conditioning Detection",
+        "target_key": "workflow_analysis.multi_stage_conditioning",
+        "method": "comfyui_detect_multi_stage_conditioning"
+      },
+      {
+        "comment": "✨ Post-Processing Effects Detection",
+        "target_key": "workflow_analysis.post_processing_effects",
+        "method": "comfyui_detect_post_processing_effects"
+      },
+      {
+        "comment": "🔌 Custom Node Ecosystem Detection",
+        "target_key": "workflow_analysis.custom_node_ecosystems",
+        "method": "comfyui_detect_custom_node_ecosystems"
+      },
+      {
+        "comment": "🎯 High-Level Workflow Techniques",
+        "target_key": "workflow_analysis.workflow_techniques",
+        "method": "comfyui_extract_workflow_techniques"
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI Lumina/Chroma",
+      "tool": "ComfyUI (Lumina/Chroma)",
+      "format": "Lumina DiT Architecture",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "model": "$parameters.model",
+        "t5_encoder": "$parameters.t5_encoder",
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "denoise": "$parameters.denoise",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "raw_metadata": "$raw_metadata",
+      "workflow_analysis": {
+        "tipo_enhancement": "$workflow_analysis.tipo_enhancement",
+        "workflow_complexity": "$workflow_analysis.workflow_complexity",
+        "advanced_upscaling": "$workflow_analysis.advanced_upscaling",
+        "multi_stage_conditioning": "$workflow_analysis.multi_stage_conditioning",
+        "post_processing_effects": "$workflow_analysis.post_processing_effects",
+        "custom_node_ecosystems": "$workflow_analysis.custom_node_ecosystems",
+        "workflow_techniques": "$workflow_analysis.workflow_techniques"
+      },
+      "architecture_info": {
+        "detected_as": "Lumina/Chroma",
+        "architecture_family": "DiT (Diffusion Transformer)",
+        "text_encoder": "T5-XXL",
+        "custom_nodes": ["FluxMod (City96)", "ChromaPaddingRemoval"],
+        "note": "Lumina is Alpha-VLLM's DiT architecture; Chroma is City96's finetune"
+      },
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 180,
+        "confidence": "high",
+        "custom_nodes": ["FluxMod", "Chroma"]
+      }
+    }
+  },
+
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+
+  "notes": [
+    "Lumina DiT architecture parser with Chroma finetune support",
+    "Priority 180 puts it above generic parsers but below Civitai (185)",
+    "Detects City96's FluxMod nodes (FluxModDiffusionLoader, KSamplerMod)",
+    "Detects ChromaPaddingRemoval nodes specific to Chroma workflows",
+    "Lumina is separate from FLUX - both use T5-XXL but different architectures",
+    "Chroma is City96's improved finetune of Lumina with better coherence",
+    "Uses T5-XXL text encoder (similar to FLUX, different from SD/SDXL)",
+    "Includes comprehensive workflow analysis (7 advanced fields)"
+  ]
+}

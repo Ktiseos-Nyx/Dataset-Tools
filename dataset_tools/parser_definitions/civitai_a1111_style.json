@@ -114,14 +114,22 @@
         "method": "key_value_extract_from_a1111_block",
         "key_name": "Civitai resources",
         "value_type": "string",
-        "optional": true
+        "optional": true,
+        "comment": "Extract raw Civitai resources JSON string"
+      },
+      {
+        "target_key": "parameters.civitai_version_ids",
+        "method": "civitai_extract_version_ids_from_raw_string",
+        "optional": true,
+        "comment": "Extract version IDs directly from A1111 parameter string using regex (bypasses JSON parsing issues)"
       },
       {
         "target_key": "parameters.civitai_resources_data",
         "method": "json_from_string_variable",
         "source_variable_key": "parameters.tool_specific.civitai_resources_str",
         "value_type": "array",
-        "optional": true
+        "optional": true,
+        "comment": "Try to parse full JSON (may fail with escaped unicode)"
       },
       {
         "target_key": "parameters.tool_specific.civitai_metadata_str",
@@ -143,6 +151,12 @@
         "source_variable_key": "parameters.tool_specific.civitai_metadata_str",
         "value_type": "object",
         "optional": true
+      },
+      {
+        "target_key": "parameters.civitai_api_info",
+        "method": "civitai_extract_all_info",
+        "optional": true,
+        "comment": "Fetch model/version information from CivitAI API based on civitai_resources"
       }
     ],
     "output_template": {
@@ -159,6 +173,7 @@
         "clip_skip": "$parameters.clip_skip",
         "civitai_resources": "$parameters.civitai_resources_data",
         "civitai_metadata_obj": "$parameters.civitai_metadata",
+        "civitai_api_info": "$parameters.civitai_api_info",
         "tool_specific": {
           "a1111_model": "$parameters.model",
           "a1111_model_hash": "$parameters.model_hash",

@@ -1,0 +1,195 @@
+/* Fluent-Inspired Theme Snippet */
+/* Mimicking Windows 11 Fluent Design principles */
+
+/* --- General Styling --- */
+QWidget {
+    background-color: #F3F3F3; /* Light background */
+    color: #1A1A1A;            /* Dark text */
+    font-size: 10pt;
+}
+
+/* --- Main Window / Panels --- */
+QMainWindow, QWidget#centralWidget {
+    background-color: #F3F3F3;
+    border: none;
+}
+
+/* --- Buttons --- */
+QPushButton {
+    background-color: #E0E0E0; /* Light gray background */
+    border: 1px solid #CCCCCC; /* Subtle border */
+    border-radius: 4px;        /* Slightly rounded corners */
+    padding: 6px 12px;
+    color: #1A1A1A;
+    font-weight: normal;
+    min-height: 24px;
+    outline: none; /* Remove focus rectangle */
+}
+
+QPushButton:hover {
+    background-color: #D0D0D0; /* Slightly darker on hover */
+    border-color: #A0A0A0;
+}
+
+QPushButton:pressed {
+    background-color: #C0C0C0; /* Even darker on press */
+    border-color: #808080;
+}
+
+QPushButton:disabled {
+    background-color: #EFEFEF;
+    border-color: #E0E0E0;
+    color: #AAAAAA;
+}
+
+/* --- Accent Button (e.g., primary action) --- */
+QPushButton#accentButton { /* Assign objectName "accentButton" in code */
+    background-color: #0078D4; /* Fluent accent blue */
+    border: 1px solid #005BA1;
+    color: #FFFFFF;
+}
+
+QPushButton#accentButton:hover {
+    background-color: #006BBF;
+    border-color: #004A80;
+}
+
+QPushButton#accentButton:pressed {
+    background-color: #005BA1;
+    border-color: #003A60;
+}
+
+/* --- Line Edits / Text Inputs --- */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    padding: 5px;
+    color: #1A1A1A;
+    selection-background-color: #0078D4;
+    selection-color: #FFFFFF;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #0078D4; /* Accent color border on focus */
+}
+
+/* --- List / Tree / Table Widgets --- */
+QListWidget, QTreeWidget, QTableWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    alternate-background-color: #F9F9F9; /* Subtle striping */
+    color: #1A1A1A;
+    gridline-color: #E0E0E0;
+}
+
+QListWidget::item:selected, QTreeWidget::item:selected, QTableWidget::item:selected {
+    background-color: #E6F2FF; /* Light accent background for selection */
+    color: #1A1A1A;
+    border: none;
+}
+
+QListWidget::item:hover, QTreeWidget::item:hover, QTableWidget::item:hover {
+    background-color: #F0F0F0; /* Subtle hover effect */
+}
+
+/* --- Combo Boxes --- */
+QComboBox {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    padding: 5px 10px 5px 5px;
+    color: #1A1A1A;
+    min-width: 80px;
+}
+
+QComboBox:hover {
+    border-color: #A0A0A0;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #CCCCCC;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+QComboBox::down-arrow {
+    /* Use a simple SVG or font icon for down arrow */
+    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMUw2IDZMMTEgMSIgc3Ryb2tlPSIjNjY2NjY2IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==);
+    width: 12px;
+    height: 8px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    selection-background-color: #E6F2FF;
+    selection-color: #1A1A1A;
+    color: #1A1A1A;
+}
+
+/* --- Scroll Bars --- */
+QScrollBar:vertical, QScrollBar:horizontal {
+    border: none;
+    background: #F0F0F0;
+    width: 10px; /* for vertical */
+    height: 10px; /* for horizontal */
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+    background: #C0C0C0;
+    border-radius: 5px;
+    min-height: 20px; /* vertical */
+    min-width: 20px;  /* horizontal */
+}
+
+QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover {
+    background: #A0A0A0;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    border: none;
+    background: none;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical,
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
+
+/* --- Status Bar --- */
+QStatusBar {
+    background-color: #E0E0E0;
+    color: #1A1A1A;
+    border-top: 1px solid #CCCCCC;
+}
+
+/* --- Menu Bar --- */
+QMenuBar {
+    background-color: #E0E0E0;
+    color: #1A1A1A;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+QMenuBar::item:selected {
+    background-color: #E6F2FF;
+    color: #1A1A1A;
+}
+
+QmMenu { /* Context menus */
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    color: #1A1A1A;
+}
+
+QMenu::item:selected {
+    background-color: #E6F2FF;
+    color: #1A1A1A;
+}

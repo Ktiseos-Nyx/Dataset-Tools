@@ -248,7 +248,7 @@ class CivitaiFormat(BaseFormat):
         # A1111's _parse_settings_string_to_dict is a method, so call on instance
         a1111_parsed_settings_dict = {}
         if raw_settings_block_from_a1111:
-            a1111_parsed_settings_dict = a1111_parser_util._parse_settings_string_to_dict(raw_settings_block_from_a1111)
+            a1111_parsed_settings_dict = a1111_parser_util._parse_settings_string_to_dict(raw_settings_block_from_a1111)  # noqa: SLF001
 
         if "Civitai resources" not in a1111_parsed_settings_dict:
             self._logger.debug(

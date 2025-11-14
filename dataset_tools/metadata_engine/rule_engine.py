@@ -153,6 +153,10 @@ class RuleOperators:
     def is_true(self, data: Any, rule: RuleDict, context: ContextData) -> bool:
         """Check if data is True (with special handling for complex queries)."""
         source_type = rule.get("source_type")
+        # Check if rule has json_query_type - if so, use JSON query handler regardless of source_type
+        if rule.get("json_query_type"):
+            return self._handle_json_path_query(data, rule)
+        # Legacy support: also check for explicit json_path_query source type
         if source_type == "pil_info_key_json_path_query":
             return self._handle_json_path_query(data, rule)
         return data is True
@@ -340,15 +344,77 @@ class RuleOperators:
                 if isinstance(nodes_container, dict):
                     # Dictionary format: iterate over values
                     return any(
-                        isinstance(node_val, dict) and node_val.get("type") in class_types
+                        isinstance(node_val, dict) and (node_val.get("class_type") or node_val.get("type")) in class_types
                         for node_val in nodes_container.values()
                     )
                 if isinstance(nodes_container, list):
                     # List format: iterate over list items
                     return any(
-                        isinstance(node_item, dict) and node_item.get("type") in class_types
+                        isinstance(node_item, dict) and (node_item.get("class_type") or node_item.get("type")) in class_types
                         for node_item in nodes_container
                     )
+                # Neither dict nor list - can't process
+                return False
+
+            if json_query_type == "has_any_node_class_type_prefix":
+                class_type_prefix = rule.get("class_type_prefix")
+                if not class_type_prefix:
+                    self.logger.warning("Query 'has_any_node_class_type_prefix' missing 'class_type_prefix'")
+                    return False
+
+                if not isinstance(json_obj, dict):
+                    return False
+
+                nodes_container = json_obj.get("nodes", json_obj)
+
+                # Handle both dictionary format (node_id: node_data) and list format [node_data, ...]
+                if isinstance(nodes_container, dict):
+                    # Dictionary format: check if any node type starts with the prefix
+                    return any(
+                        isinstance(node_val, dict) and
+                        str(node_val.get("class_type", "") or node_val.get("type", "")).startswith(class_type_prefix)
+                        for node_val in nodes_container.values()
+                    )
+                if isinstance(nodes_container, list):
+                    # List format: check if any node type starts with the prefix
+                    return any(
+                        isinstance(node_item, dict) and
+                        str(node_item.get("class_type", "") or node_item.get("type", "")).startswith(class_type_prefix)
+                        for node_item in nodes_container
+                    )
+                # Neither dict nor list - can't process
+                return False
+
+            if json_query_type == "has_all_node_class_types":
+                class_types = rule.get("class_types_to_check")
+                if not class_types or not isinstance(class_types, list):
+                    self.logger.warning("Query 'has_all_node_class_types' missing 'class_types_to_check'")
+                    return False
+
+                if not isinstance(json_obj, dict):
+                    return False
+
+                nodes_container = json_obj.get("nodes", json_obj)
+
+                # Handle both dictionary format (node_id: node_data) and list format [node_data, ...]
+                if isinstance(nodes_container, dict):
+                    # Get all node types in the workflow
+                    found_types = {
+                        node_val.get("class_type") or node_val.get("type")
+                        for node_val in nodes_container.values()
+                        if isinstance(node_val, dict)
+                    }
+                    # Check if all required types are present
+                    return all(class_type in found_types for class_type in class_types)
+                if isinstance(nodes_container, list):
+                    # Get all node types in the workflow
+                    found_types = {
+                        node_item.get("class_type") or node_item.get("type")
+                        for node_item in nodes_container
+                        if isinstance(node_item, dict)
+                    }
+                    # Check if all required types are present
+                    return all(class_type in found_types for class_type in class_types)
                 # Neither dict nor list - can't process
                 return False
 
@@ -374,6 +440,12 @@ class DataSourceHandler:
 
     def __init__(self, logger):
         self.logger = logger
+        self._a1111_param_cache = None  # Cache for A1111 parameter string extraction
+
+    def clear_file_cache(self):
+        """Clear cached data for processing a new file."""
+        self._a1111_param_cache = None
+        self.logger.debug("Cleared A1111 parameter cache for new file")
 
     def get_source_data(self, rule: RuleDict, context: ContextData) -> tuple[Any, bool]:
         """Extract source data based on rule configuration.
@@ -388,11 +460,34 @@ class DataSourceHandler:
         """
         source_type = rule.get("source_type")
         source_key = rule.get("source_key")
+        source_key_options = rule.get("source_key_options")
+
+        # Helper to get data from multiple possible keys (for source_key_options support)
+        def get_from_pil_info():
+            pil_info = context.get("pil_info", {})
+            if source_key_options:
+                # Try each key option in order
+                for key in source_key_options:
+                    data = pil_info.get(key)
+                    if data is not None:
+                        return data
+                return None
+            return pil_info.get(source_key)
+
+        def get_from_png_chunks():
+            png_chunks = context.get("png_chunks", {})
+            if source_key_options:
+                for key in source_key_options:
+                    data = png_chunks.get(key)
+                    if data is not None:
+                        return data
+                return None
+            return png_chunks.get(source_key)
 
         # Simple direct lookups
         simple_sources = {
-            "pil_info_key": lambda: context.get("pil_info", {}).get(source_key),
-            "png_chunk": lambda: context.get("png_chunks", {}).get(source_key),
+            "pil_info_key": get_from_pil_info,
+            "png_chunk": get_from_png_chunks,
             "software_tag": lambda: context.get("software_tag"),
             "exif_software_tag": lambda: context.get("software_tag"),
             "exif_user_comment": lambda: context.get("raw_user_comment_str"),
@@ -476,37 +571,60 @@ class DataSourceHandler:
             return None, False
 
     def _handle_a1111_parameter_string(self, context: ContextData) -> tuple[Any, bool]:
-        """Handle A1111 parameter string extraction."""
-        self.logger.info("=== A1111 PARAMETER STRING DEBUG ===")
-        self.logger.info(f"Context keys available: {list(context.keys())}")
+        """Handle A1111 parameter string extraction (cached to avoid redundant extractions)."""
+        # Check cache first - this prevents 9+ parsers from extracting the same data
+        if self._a1111_param_cache is not None:
+            self.logger.debug("=== A1111 PARAMETER STRING (CACHED) ===")
+            return self._a1111_param_cache
+
+        # FAST PATH: If ComfyUI workflow exists, skip A1111 extraction entirely
+        # (unless it's a hybrid A1111+ComfyUI image, which has both)
+        if context.get("comfyui_workflow_json"):
+            pil_info = context.get("pil_info", {})
+            # Only skip if there's NO "parameters" key (pure ComfyUI)
+            # If there IS a "parameters" key, it might be hybrid
+            if not (isinstance(pil_info, dict) and "parameters" in pil_info):
+                self.logger.debug("=== A1111 SKIP: ComfyUI workflow detected, no parameters key ===")
+                result = (None, False)
+                self._a1111_param_cache = result
+                return result
+
+        self.logger.debug("=== A1111 PARAMETER STRING DEBUG ===")
+        self.logger.debug("Context keys available: %s", list(context.keys()))
 
         # Check what's in pil_info
         pil_info = context.get("pil_info", {})
-        self.logger.info(f"pil_info keys: {list(pil_info.keys()) if isinstance(pil_info, dict) else 'NOT_DICT'}")
+        self.logger.debug("pil_info keys: %s", list(pil_info.keys()) if isinstance(pil_info, dict) else 'NOT_DICT')
 
         # Try parameters chunk first
         param_str = pil_info.get("parameters") if isinstance(pil_info, dict) else None
-        self.logger.info(f"param_str from pil_info['parameters']: {repr(param_str)[:100] if param_str else 'NONE'}")
+        self.logger.debug("param_str from pil_info['parameters']: %s", repr(param_str)[:100] if param_str else 'NONE')
 
         if param_str is None:
             param_str = context.get("raw_user_comment_str")
-            self.logger.info(f"param_str from raw_user_comment_str: {repr(param_str)[:100] if param_str else 'NONE'}")
+            self.logger.debug("param_str from raw_user_comment_str: %s", repr(param_str)[:100] if param_str else 'NONE')
 
         if param_str is None:
-            self.logger.info("=== FINAL RESULT: None, False ===")
-            return None, False
+            self.logger.debug("=== FINAL RESULT: None, False ===")
+            result = (None, False)
+            self._a1111_param_cache = result
+            return result
 
         # Check if it's wrapped in JSON
         try:
             wrapper = json.loads(param_str)
             if isinstance(wrapper, dict) and "parameters" in wrapper and isinstance(wrapper["parameters"], str):
                 self.logger.info("=== UNWRAPPED JSON PARAMETERS ===")
-                return wrapper["parameters"], True
+                result = (wrapper["parameters"], True)
+                self._a1111_param_cache = result
+                return result
         except json.JSONDecodeError:
             pass
 
         self.logger.info(f"=== FINAL RESULT: param_str (length: {len(param_str)}), True ===")
-        return param_str, True
+        result = (param_str, True)
+        self._a1111_param_cache = result
+        return result
 
     def _handle_pil_info_json_path(self, rule: RuleDict, context: ContextData) -> tuple[Any, bool]:
         """Handle PIL info JSON path extraction."""
@@ -683,19 +801,52 @@ class DataSourceHandler:
 
             elif json_query_type == "has_any_node_class_type":
                 class_types = rule.get("class_types_to_check", [])
+                self.logger.debug("[DETECTION] Checking for node types: %s", class_types)
                 if isinstance(json_obj, dict):
                     nodes_container = json_obj.get("nodes", json_obj)
+                    self.logger.debug("[DETECTION] nodes_container type: %s, is dict: %s, is list: %s",
+                                    type(nodes_container).__name__, isinstance(nodes_container, dict), isinstance(nodes_container, list))
                     if isinstance(nodes_container, dict):
                         result = any(
-                            isinstance(node_val, dict) and node_val.get("type") in class_types
+                            isinstance(node_val, dict) and (node_val.get("class_type") or node_val.get("type")) in class_types
                             for node_val in nodes_container.values()
                         )
+                        self.logger.debug("[DETECTION] Dict format check result: %s", result)
                         return result, True
                     if isinstance(nodes_container, list):
                         result = any(
-                            isinstance(node_item, dict) and node_item.get("type") in class_types
+                            isinstance(node_item, dict) and (node_item.get("class_type") or node_item.get("type")) in class_types
                             for node_item in nodes_container
                         )
+                        self.logger.debug("[DETECTION] List format check result: %s", result)
+                        return result, True
+
+            elif json_query_type == "has_all_node_class_types":
+                class_types = rule.get("class_types_to_check", [])
+                self.logger.debug("[DETECTION] Checking ALL node types present: %s", class_types)
+                if isinstance(json_obj, dict):
+                    nodes_container = json_obj.get("nodes", json_obj)
+                    if isinstance(nodes_container, dict):
+                        # Get all node types in the workflow
+                        found_types = {
+                            node_val.get("class_type") or node_val.get("type")
+                            for node_val in nodes_container.values()
+                            if isinstance(node_val, dict)
+                        }
+                        # Check if all required types are present
+                        result = all(class_type in found_types for class_type in class_types)
+                        self.logger.debug("[DETECTION] Dict format - found types: %s, all present: %s", found_types, result)
+                        return result, True
+                    if isinstance(nodes_container, list):
+                        # Get all node types in the workflow
+                        found_types = {
+                            node_item.get("class_type") or node_item.get("type")
+                            for node_item in nodes_container
+                            if isinstance(node_item, dict)
+                        }
+                        # Check if all required types are present
+                        result = all(class_type in found_types for class_type in class_types)
+                        self.logger.debug("[DETECTION] List format - found types: %s, all present: %s", found_types, result)
                         return result, True
 
         return json_obj, True
@@ -757,6 +908,10 @@ class RuleEngine:
         if config_path:
             self.load_rules(config_path)
 
+    def clear_file_cache(self):
+        """Clear cached data for processing a new file."""
+        self.data_source.clear_file_cache()
+
     def load_rules(self, config_path: Path) -> None:
         """Load rules from a TOML configuration file.
 
@@ -807,6 +962,11 @@ class RuleEngine:
             if "condition" in rule and "rules" in rule:
                 return self._evaluate_complex_rule(rule, context)
 
+            # Handle operator-based composite rules (AND/OR/NOT with rules array)
+            operator = rule.get("operator", "").upper()
+            if operator in ["AND", "OR", "NOT"] and "rules" in rule:
+                return self._evaluate_operator_composite_rule(rule, context)
+
             # Handle simple rules
             return self._evaluate_simple_rule(rule, context)
 
@@ -829,6 +989,43 @@ class RuleEngine:
         if condition == "AND":
             return all(self.evaluate_rule(sub_rule, context) for sub_rule in sub_rules)
         self.logger.warning(f"Unknown complex condition: '{condition}'")
+        return False
+
+    def _evaluate_operator_composite_rule(self, rule: RuleDict, context: ContextData) -> RuleResult:
+        """Evaluate operator-based composite rules (AND/OR/NOT with rules array)."""
+        operator = rule.get("operator", "").upper()
+        sub_rules = rule.get("rules", [])
+
+        if not sub_rules:
+            self.logger.warning("Operator composite rule has no sub-rules")
+            return False
+
+        # Inherit source_type and source_key from parent to child rules if not present
+        parent_source_type = rule.get("source_type")
+        parent_source_key = rule.get("source_key")
+
+        inherited_sub_rules = []
+        for sub_rule in sub_rules:
+            # Create a copy so we don't mutate the original
+            inherited_rule = dict(sub_rule)
+            if parent_source_type and "source_type" not in inherited_rule:
+                inherited_rule["source_type"] = parent_source_type
+            if parent_source_key and "source_key" not in inherited_rule:
+                inherited_rule["source_key"] = parent_source_key
+            inherited_sub_rules.append(inherited_rule)
+
+        if operator == "OR":
+            return any(self.evaluate_rule(sub_rule, context) for sub_rule in inherited_sub_rules)
+        if operator == "AND":
+            return all(self.evaluate_rule(sub_rule, context) for sub_rule in inherited_sub_rules)
+        if operator == "NOT":
+            # NOT should have exactly one sub-rule
+            if len(inherited_sub_rules) != 1:
+                self.logger.warning(f"NOT operator requires exactly one sub-rule, got {len(inherited_sub_rules)}")
+                return False
+            return not self.evaluate_rule(inherited_sub_rules[0], context)
+
+        self.logger.warning(f"Unknown operator for composite rule: '{operator}'")
         return False
 
     def _evaluate_simple_rule(self, rule: RuleDict, context: ContextData) -> RuleResult:

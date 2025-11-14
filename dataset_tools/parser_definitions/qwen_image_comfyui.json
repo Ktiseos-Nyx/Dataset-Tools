@@ -17,8 +17,7 @@
       "operator": "regex_match_any",
       "regex_patterns": [
         "qwen_image_fp8_e4m3fn.safetensors",
-        "qwen_2.5_vl_7b_fp8_scaled.safetensors",
-        "ModelSamplingAuraFlow"
+        "qwen_2.5_vl_7b_fp8_scaled.safetensors"
       ]
     }
   ],
@@ -35,13 +34,31 @@
     },
     "fields": [
       {
+        "comment": "Define sampler node types variable",
+        "target_key": "_sampler_node_types_var",
+        "method": "static_value",
+        "value": ["KSampler", "KSamplerAdvanced", "SamplerCustom", "SamplerCustomAdvanced", "ModelSamplingAuraFlow", "BasicGuider"]
+      },
+      {
         "comment": "BEST METHOD: Use the high-level dispatcher for prompts.",
         "target_key": "prompt",
-        "method": "comfyui_extract_prompt_from_workflow"
+        "method": "comfyui_extract_prompt_from_workflow",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "PCLazyTextEncode",
+          "T5TextEncode",
+          "PixArtT5TextEncode"
+        ]
       },
       {
         "target_key": "negative_prompt",
-        "method": "comfyui_extract_negative_prompt_from_workflow"
+        "method": "comfyui_extract_negative_prompt_from_workflow",
+        "text_encoder_node_types": [
+          "CLIPTextEncode",
+          "PCLazyTextEncode",
+          "T5TextEncode",
+          "PixArtT5TextEncode"
+        ]
       },
       {
         "target_key": "parameters.seed",

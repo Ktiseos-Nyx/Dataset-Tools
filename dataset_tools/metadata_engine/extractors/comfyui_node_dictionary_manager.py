@@ -293,7 +293,7 @@ class ComfyUINodeDictionaryManager:
             recommendations.append(f"Missing parameters: {', '.join(missing_params)}")
 
         if analysis["custom_nodes"]:
-            recommendations.append(f"Custom nodes detected: {', '.join(set(analysis['custom_nodes'])[:5])}")
+            recommendations.append(f"Custom nodes detected: {', '.join(list(analysis['custom_nodes'])[:5])}")
             recommendations.append("Consider updating node dictionary for custom nodes")
 
         if analysis["extraction_coverage"]["prompt"] and not analysis["extraction_coverage"]["negative_prompt"]:

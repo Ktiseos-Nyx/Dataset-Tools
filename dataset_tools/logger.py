@@ -5,8 +5,12 @@
 
 """Create console log for Dataset-Tools and provide utilities for configuring other loggers."""
 
+import atexit
 import logging as pylog
+import logging.handlers
+import queue
 import sys
+import threading
 from datetime import datetime
 from pathlib import Path
 
@@ -38,10 +42,20 @@ DATASET_TOOLS_RICH_THEME = Theme(
     },
 )
 
-_dataset_tools_main_rich_console = Console(stderr=True, theme=DATASET_TOOLS_RICH_THEME)
+_dataset_tools_main_rich_console = Console(
+    stderr=True,
+    theme=DATASET_TOOLS_RICH_THEME,
+    legacy_windows=False,  # Disable Windows legacy mode detection
+    force_terminal=True,   # Skip terminal detection
+    force_interactive=False,  # Don't probe for interactive features
+)
 
-# Create logs directory
-LOG_DIR = Path.cwd() / "logs"
+# Async logging queue and listener thread
+_log_queue = queue.Queue(-1)  # Unlimited queue size
+_queue_listener = None
+
+# Create logs directory in the app folder, not wherever command is run from
+LOG_DIR = Path(__file__).parent.parent / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 
 # Create timestamped log file
@@ -55,18 +69,31 @@ _current_log_level_str_for_dt = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper()
 _initial_log_level_enum_for_dt = getattr(pylog, _current_log_level_str_for_dt, pylog.INFO)
 logger.setLevel(_initial_log_level_enum_for_dt)
 
-if not logger.handlers:
-    # Rich console handler for pretty terminal output
-    _dt_rich_handler = RichHandler(
-        console=_dataset_tools_main_rich_console,
-        rich_tracebacks=True,
-        show_path=False,
-        markup=True,
-        level=_initial_log_level_enum_for_dt,
-    )
-    logger.addHandler(_dt_rich_handler)
+# Silence PIL's logger IMMEDIATELY (before it gets a chance to log plugin imports)
+pylog.getLogger("PIL").setLevel(pylog.INFO)
+pylog.getLogger("PIL.Image").setLevel(pylog.INFO)
+pylog.getLogger("PIL.PngImagePlugin").setLevel(pylog.INFO)
 
-    # File handler for user-sendable logs
+if not logger.handlers:
+    # Check if running in CLI quiet mode
+    import os
+    cli_quiet_mode = os.environ.get('DATASET_TOOLS_CLI_QUIET') == '1'
+
+    # Create handlers that will process logs in background thread
+    actual_handlers = []
+
+    if not cli_quiet_mode:
+        # Rich console handler for pretty terminal output
+        _dt_rich_handler = RichHandler(
+            console=_dataset_tools_main_rich_console,
+            rich_tracebacks=True,
+            show_path=False,
+            markup=True,
+            level=_initial_log_level_enum_for_dt,
+        )
+        actual_handlers.append(_dt_rich_handler)
+
+    # File handler for user-sendable logs (always enabled)
     _dt_file_handler = pylog.FileHandler(LOG_FILE, mode="w", encoding="utf-8")
     _dt_file_handler.setLevel(_initial_log_level_enum_for_dt)
 
@@ -76,14 +103,40 @@ if not logger.handlers:
         datefmt="%Y-%m-%d %H:%M:%S",
     )
     _dt_file_handler.setFormatter(file_formatter)
-    logger.addHandler(_dt_file_handler)
+    actual_handlers.append(_dt_file_handler)
+
+    # Set up async logging via QueueHandler + QueueListener
+    # Main logger gets QueueHandler (non-blocking)
+    queue_handler = logging.handlers.QueueHandler(_log_queue)
+    logger.addHandler(queue_handler)
+
+    # QueueListener processes logs in background thread (blocks there, not UI)
+    _queue_listener = logging.handlers.QueueListener(
+        _log_queue,
+        *actual_handlers,
+        respect_handler_level=True
+    )
+    _queue_listener.start()
+
+    # NOTE: Don't use atexit.register() here - it will be called twice
+    # (once by Qt's aboutToQuit and once by Python's atexit)
+    # Instead, we'll connect to Qt's aboutToQuit signal in main.py
 
     logger.propagate = False
 
-    # Log the session start and file location
-    logger.info("=== Dataset Tools Session Started ===")
-    logger.info("Log file: %s", LOG_FILE)
-    logger.info("Initial log level: %s", _current_log_level_str_for_dt)
+    # Silence noisy third-party library loggers (even at initial setup)
+    # Set to WARNING to suppress DEBUG/INFO spam from EXIF tag reading
+    pylog.getLogger("PIL").setLevel(pylog.WARNING)
+    pylog.getLogger("PIL.Image").setLevel(pylog.WARNING)
+    pylog.getLogger("PIL.TiffImagePlugin").setLevel(pylog.WARNING)
+    pylog.getLogger("PIL.PngImagePlugin").setLevel(pylog.WARNING)
+    pylog.getLogger("piexif").setLevel(pylog.WARNING)
+
+    # Log the session start and file location (only to file in quiet mode)
+    if not cli_quiet_mode:
+        logger.info("=== Dataset Tools Session Started ===")
+        logger.info("Log file: %s", LOG_FILE)
+        logger.info("Initial log level: %s", _current_log_level_str_for_dt)
 
 
 def reconfigure_all_loggers(new_log_level_name_str: str):
@@ -105,6 +158,15 @@ def reconfigure_all_loggers(new_log_level_name_str: str):
                 handler.setLevel(actual_level_enum)
         # Also set the root logger's level to ensure all child loggers inherit it
         pylog.root.setLevel(actual_level_enum)
+
+        # Silence noisy third-party library loggers
+        # Set to WARNING to suppress DEBUG/INFO spam from EXIF tag reading
+        pylog.getLogger("PIL").setLevel(pylog.WARNING)
+        pylog.getLogger("PIL.Image").setLevel(pylog.WARNING)
+        pylog.getLogger("PIL.TiffImagePlugin").setLevel(pylog.WARNING)
+        pylog.getLogger("PIL.PngImagePlugin").setLevel(pylog.WARNING)
+        pylog.getLogger("piexif").setLevel(pylog.WARNING)
+
         # Use the logger's own method for consistency after reconfiguration
         debug_message("Dataset-Tools Logger internal level object set to: %s", actual_level_enum)
         info_monitor(  # Use info_monitor which is now fixed
@@ -238,39 +300,129 @@ def debug_monitor(func):
 
 
 # --- CORRECTED WRAPPER FUNCTIONS ---
+
+
 def debug_message(msg: str, *args, **kwargs):
+
+
     """Logs a message with DEBUG level using the main app logger.
+
+
     'msg' is the primary message string, potentially with format specifiers.
+
+
     '*args' are the arguments for the format specifiers in 'msg'.
+
+
     '**kwargs' can include 'exc_info', 'stack_info', etc., for the underlying logger.
+
+
     """
+
+
     logger.debug(msg, *args, **kwargs)
 
 
+
+
+
 def info_monitor(msg: str, *args, **kwargs):  # Renamed from nfo for clarity
+
+
     """Logs a message with INFO level using the main app logger.
+
+
     'msg' is the primary message string, potentially with format specifiers.
+
+
     '*args' are the arguments for the format specifiers in 'msg'.
+
+
     '**kwargs' can include 'exc_info', 'stack_info', etc.
 
+
+
+
+
     If 'exc_info' is not explicitly passed in kwargs, it will be automatically
+
+
     set to True if an exception is active AND the initial log level was DEBUG/TRACE.
+
+
     """
+
+
     # Check if exc_info is explicitly passed by the caller
+
+
     if "exc_info" not in kwargs:
+
+
         # Default exc_info behavior: add it if an exception is active and log level is permissive
+
+
         should_add_exc_info_automatically = INITIAL_LOG_LEVEL_FROM_INIT.strip().upper() in [
+
+
             "DEBUG",
+
+
             "TRACE",
+
+
             "NOTSET",  # Usually means log everything
+
+
             "ALL",  # Custom "ALL" level if you define it
+
+
         ]
+
+
         # Check if there's an active exception
+
+
         current_exception = sys.exc_info()[0]
+
+
         if should_add_exc_info_automatically and current_exception is not None:
+
+
             kwargs["exc_info"] = True
 
+
+
+
+
     logger.info(msg, *args, **kwargs)
+
+
+
+
+
+def warning_message(msg: str, *args, **kwargs):
+
+
+    """Logs a message with WARNING level using the main app logger."""
+
+
+    logger.warning(msg, *args, **kwargs)
+
+
+
+
+
+def error_message(msg: str, *args, **kwargs):
+
+
+    """Logs a message with ERROR level using the main app logger."""
+
+
+    logger.error(msg, *args, **kwargs)
+
+
+
 
 
 # --- END OF CORRECTED WRAPPER FUNCTIONS ---
@@ -288,7 +440,23 @@ def get_log_file_path() -> Path:
     return LOG_FILE
 
 
+def stop_async_logging():
+    """Stop the async logging listener cleanly.
+
+    This should be called from Qt's aboutToQuit signal to ensure
+    the listener is stopped exactly once during application shutdown.
+    """
+    global _queue_listener
+    if _queue_listener and hasattr(_queue_listener, '_thread') and _queue_listener._thread is not None:
+        _queue_listener.stop()
+        _queue_listener = None  # Prevent double-stop
+
+
 def log_session_end():
-    """Log session end marker for debugging support."""
+    """Log session end marker for debugging support.
+
+    NOTE: This does NOT stop the listener - that's handled by stop_async_logging()
+    which should be connected to Qt's aboutToQuit signal.
+    """
     logger.info("=== Dataset Tools Session Ended ===")
     logger.info("Log file saved to: %s", LOG_FILE)

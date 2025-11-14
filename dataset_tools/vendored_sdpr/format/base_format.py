@@ -231,10 +231,7 @@ class BaseFormat:
     def _parameter_has_data(self) -> bool:
         if not self._parameter:
             return False
-        for value in self._parameter.values():
-            if value != self.DEFAULT_PARAMETER_PLACEHOLDER:
-                return True
-        return False
+        return any(value != self.DEFAULT_PARAMETER_PLACEHOLDER for value in self._parameter.values())
 
     def _populate_parameter(
         self,
@@ -262,7 +259,7 @@ class BaseFormat:
                 populated_any = True
             else:
                 self._logger.debug(
-                    "Target key '%s' for source '%s' not in self.PARAMETER_KEY. Value '%s' not assigned.",
+                    "Target key '%s' for source '%s' not in self.PARAMETER_KEY. Value '%s' not assigned. Tool: %s, Value: %s",
                     target_key,
                     source_key_for_debug,
                     self.tool,
@@ -324,7 +321,7 @@ class BaseFormat:
         self,
         size_str: str,
         source_key_for_debug: str,
-        data_dict_for_handled_keys: (dict[str, Any] | None) = None,  # Unused here, but for consistency
+        _data_dict_for_handled_keys: (dict[str, Any] | None) = None,  # Unused here, but for consistency
         handled_keys_set: set[str] | None = None,
     ):
         if handled_keys_set is None:
@@ -545,7 +542,7 @@ class BaseFormat:
         # Add parameters, excluding placeholders AND empty dicts/lists
         for key, value in self.parameter.items():
             if value != self.DEFAULT_PARAMETER_PLACEHOLDER:
-                if isinstance(value, (dict, list)) and not value:
+                if isinstance(value, dict | list) and not value:
                     continue  # Skip empty dict/list
                 properties[key] = value
 
@@ -574,7 +571,7 @@ class BaseFormat:
         final_props_to_serialize = {
             k: v
             for k, v in properties.items()
-            if v != self.DEFAULT_PARAMETER_PLACEHOLDER and not (isinstance(v, (dict, list)) and not v)
+            if v != self.DEFAULT_PARAMETER_PLACEHOLDER and not (isinstance(v, dict | list) and not v)
         }
         # Remove width/height if they are "0" after all processing
         if final_props_to_serialize.get("width") == "0":

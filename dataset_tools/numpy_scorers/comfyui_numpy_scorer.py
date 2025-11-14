@@ -1,4 +1,5 @@
-"""ComfyUI-Specific Numpy Scorer
+"""ComfyUI-Specific Numpy Scorer.
+
 =============================
 
 Specialized numpy scoring for ComfyUI workflows.
@@ -8,7 +9,7 @@ Handles workflow graph traversal, node analysis, and ComfyUI-specific scoring.
 import time
 from typing import Any
 
-from ..logger import get_logger
+from ..logger import get_logger  # noqa: TID252
 from .base_numpy_scorer import RUNTIME_ANALYTICS, WORKFLOW_CACHE, BaseNumpyScorer
 from .negative_indicators_loader import negative_indicators
 
@@ -17,8 +18,9 @@ logger = get_logger(__name__)
 # ComfyUI Node type scoring with domain knowledge
 NODE_TYPE_SCORES = {
     # Final resolved content display nodes (absolute highest priority)
-    "ShowText|pysssss": 5.0,  # ShowText nodes contain final resolved content - CRITICAL
+    "ShowText|pysssss": 2.0,  # ShowText nodes contain final resolved content - CRITICAL
     "Show Text": 5.0,  # Alternative ShowText format
+    "easy showAnything": 2.5,  # HiDream ComfyUI Easy Use display node - very high priority
 
     # Dynamic content generators (highest priority)
     "DPRandomGenerator": 3.0,  # Dynamic Prompts Random Generator - highest priority
@@ -34,14 +36,14 @@ NODE_TYPE_SCORES = {
 
     # Standard prompt nodes (medium priority)
     "ChatGptPrompt": 2.0,  # ChatGPT prompt integration - high priority
-    "Text Multiline": 2.2,  # Griptape Text Multiline - high priority for clean content
+    "Text Multiline": 6.0,  # Griptape Text Multiline - high priority for clean content
     "easy positive": 2.1,  # Easy positive nodes - high priority for clean content
     "Florence2Run": 2.8,  # AI vision model generated captions - very high priority
-    "ShowText|pysssss": 2.9,  # Display node often shows AI-generated content - highest priority
     "OllamaVision": 2.8,  # Ollama vision model generated prompts - high priority
     "Text to Conditioning": 2.3,  # Text to conditioning converter - high priority
     "Text Find and Replace": 1.8,  # Text processing node - medium-high priority
     "Text Concatenate": 2.0,  # Text concatenation - high priority for combined prompts
+    "TensorArt_PromptText": 2.5,  # TensorArt prompt text input - high priority
     "CLIPTextEncode": 1.0,
     "CLIPTextEncodeSDXL": 1.0,  # SDXL CLIP text encoding - same priority as standard
     "CLIPTextEncodeSDXLRefiner": 1.0,  # SDXL Refiner CLIP text encoding - same priority
@@ -67,6 +69,12 @@ NODE_TYPE_SCORES = {
     "T5v11Loader": 0.2,  # T5 v1.1 text encoder loader for PixArt workflows
     "PixArtCheckpointLoader": 0.2,  # PixArt model checkpoint loader
     "PixArtResolutionSelect": 0.1,  # PixArt resolution selector utility
+
+    # TensorArt utility nodes (very low priority - no prompt content)
+    "TensorArt_CheckpointLoader": 0.1,  # TensorArt checkpoint loader
+    "TensorArt_Seed": 0.1,  # TensorArt seed selector
+    "TensorArt_SelectBatchs": 0.1,  # TensorArt batch size selector
+    "TensorArt_SelectResolution": 0.1,  # TensorArt resolution selector
 }
 
 # Workflow classification system
@@ -86,7 +94,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
     def __init__(self):
         """Initialize the ComfyUI numpy analyzer."""
         super().__init__()
-        self.logger = get_logger(f"{__name__}.ComfyUINumpyScorer")
+        self.logger = get_logger("%s.ComfyUINumpyScorer" % __name__)
 
         # Performance optimization limits
         self.MAX_DEPTH = 5  # Maximum connection tracing depth
@@ -160,8 +168,50 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
         return "standard"
 
-    def _is_comfyui_template_text(self, text: str) -> bool:
-        """Check if text appears to be ComfyUI template content."""
+    def _is_comfyui_template_text(self, text: str, node_type: str = "") -> bool:
+        """Check if text appears to be ComfyUI template content.
+
+        Args:
+            text: The text to check
+            node_type: The source node type (e.g., 'CLIPTextEncode', 'PrimitiveNode')
+
+        Returns:
+
+            True if text appears to be template content
+        """
+        # CONTEXT-AWARE: If text is in actual text encoder nodes, it's a REAL PROMPT!
+        # Don't apply template rejection to prompts in CLIPTextEncode nodes
+        text_encoder_nodes = [
+            "CLIPTextEncode",
+            "CLIPTextEncodeSDXL",
+            "CLIPTextEncodeSDXLRefiner",
+            "BNK_CLIPTextEncodeAdvanced",
+            "Text Multiline",
+            "PCLazyTextEncode",
+            "TensorArt_PromptText",
+        ]
+
+        # Dynamic content generators - their wildcard syntax is REAL USER INPUT, not templates!
+        dynamic_generators = [
+            "DPRandomGenerator",
+            "WildcardProcessor",
+            "ImpactWildcardProcessor",
+            "RandomPrompt",
+        ]
+
+        if any(encoder in node_type for encoder in text_encoder_nodes):
+            # This is from an actual text encoder - only reject if it's the base template check
+            # (stuff like "example prompt here", "your prompt", etc.)
+            return self._is_template_text(text)  # Base template check only
+
+        if any(generator in node_type for generator in dynamic_generators):
+            # Dynamic generators use wildcard syntax that LOOKS like templates but is actual user input!
+            # Only reject if it's obviously a placeholder like "select wildcard" or "choose option"
+            placeholder_indicators = ["select wildcard", "choose wildcard", "populate", "add to the text"]
+            text_lower = text.lower()
+            return any(indicator in text_lower for indicator in placeholder_indicators)
+
+        # For other node types (PrimitiveNode, etc.), apply full template detection
         if self._is_template_text(text):  # Use base template detection
             return True
 
@@ -228,7 +278,8 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
         high_priority_types = [
             "DPRandomGenerator", "WildcardProcessor", "ImpactWildcardProcessor",
-            "RandomPrompt", "Wildcard", "WildCardProcessor", "ImpactWildcardEncode"
+            "RandomPrompt", "Wildcard", "WildCardProcessor", "ImpactWildcardEncode",
+            "easy showAnything", "ShowText|pysssss", "Show Text"
         ]
 
         medium_priority_types = [
@@ -237,26 +288,33 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline",
             "easy positive", "T5TextEncode", "Florence2Run", "Text to Conditioning",
             "Text Find and Replace", "OllamaVision", "Text Concatenate",
-            "CLIPTextEncodeFlux", "PixArtT5TextEncode", "ChatGptPrompt", "ShowText|pysssss"
+            "CLIPTextEncodeFlux", "PixArtT5TextEncode", "ChatGptPrompt", "ShowText|pysssss",
+            "JjkText", "CLIPTextEncodeLumina2"
         ]
 
         # Handle both list of nodes and TensorArt-style dict of nodes
-        print(f"[DEBUG] _find_conditioning_nodes called with nodes type: {type(nodes)}")
+        logger.debug("_find_conditioning_nodes called with nodes type: %s", type(nodes))
         if isinstance(nodes, dict):
             # TensorArt format: {"10035": {"class_type": "CLIPTextEncode", ...}}
             node_items = list(nodes.values())
-            print(f"[DEBUG] Using dict format - extracted {len(node_items)} node items")
+            logger.debug("Using dict format - extracted %s node items", len(node_items))
         elif isinstance(nodes, list):
             # Standard ComfyUI format: [{"class_type": "CLIPTextEncode", ...}]
             node_items = nodes
-            print(f"[DEBUG] Using list format - {len(node_items)} node items")
+            logger.debug("Using list format - %s node items", len(node_items))
         else:
-            print(f"[DEBUG] Nodes is neither dict nor list: {type(nodes)}")
+            logger.debug("Nodes is neither dict nor list: %s", type(nodes))
             return conditioning_nodes
 
         node_types_found = []
         for node in node_items:
             if not isinstance(node, dict):
+                continue
+
+            # SKIP BYPASSED NODES: mode: 4 means the node is disabled/bypassed in ComfyUI
+            node_mode = node.get("mode", 0)
+            if node_mode == 4:
+                logger.debug("Skipping bypassed node (mode: 4): %s", node.get("class_type") or node.get("type", ""))
                 continue
 
             # Handle both 'type' (standard ComfyUI) and 'class_type' (TensorArt/other formats)
@@ -265,33 +323,54 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
             # High priority nodes first
             if class_type in high_priority_types:
-                print(f"[DEBUG] Found high priority node: {class_type}")
+                logger.debug("Found high priority node: %s", class_type)
                 conditioning_nodes.append(node)
                 continue
 
             # Medium priority nodes
             if class_type in medium_priority_types:
-                print(f"[DEBUG] Found medium priority node: {class_type}")
+                logger.debug("Found medium priority node: %s", class_type)
                 conditioning_nodes.append(node)
                 continue
 
             # Any node with 'text' in inputs
             inputs = node.get("inputs", {})
             if isinstance(inputs, dict) and "text" in inputs:
-                print(f"[DEBUG] Found text input node: {class_type}")
+                logger.debug("Found text input node: %s", class_type)
                 conditioning_nodes.append(node)
 
-        print(f"[DEBUG] All node types found: {set(node_types_found)}")
-        print(f"[DEBUG] Total conditioning nodes found: {len(conditioning_nodes)}")
+        logger.debug("All node types found: %s", set(node_types_found))
+        logger.debug("Total conditioning nodes found: %s", len(conditioning_nodes))
 
         return conditioning_nodes
+
+    def _resolve_node_reference(self, source_info: dict[str, Any], node_id: str) -> str:
+        """Resolve a node reference to get the actual text content.
+
+        Args:
+            source_info: The workflow source info containing all nodes
+            node_id: The node ID to resolve (as string)
+
+        Returns:
+            The text content from the referenced node, or empty string if not found
+        """
+        workflow_data = source_info if isinstance(source_info, dict) else {}
+
+        # Find the referenced node
+        if node_id in workflow_data:
+            referenced_node = workflow_data[node_id]
+            # Recursively extract text from the referenced node
+            return self._extract_text_from_node(referenced_node, source_info)
+
+        logger.debug("Could not resolve node reference: %s", node_id)
+        return ""
 
     def _extract_text_from_node(self, node: dict[str, Any], source_info: dict[str, Any]) -> str:
         """Extract text content from a ComfyUI node."""
         class_type = node.get("class_type") or node.get("type", "")
         inputs = node.get("inputs", {})
 
-        print(f"[DEBUG] _extract_text_from_node: class_type={class_type}, inputs type={type(inputs)}")
+        logger.debug("_extract_text_from_node: class_type=%s, inputs type=%s", class_type, type(inputs))
 
         text = ""
 
@@ -299,7 +378,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         # This is the most common format, where values are stored directly in the node.
         if "widgets_values" in node and isinstance(node["widgets_values"], list):
             widgets_values = node["widgets_values"]
-            print(f"[DEBUG] Found widgets_values: {widgets_values}")
+            logger.debug("Found widgets_values: %s", widgets_values)
 
             if class_type in ["ImpactWildcardProcessor", "ImpactWildcardEncode"]:
                 if len(widgets_values) >= 2 and isinstance(widgets_values[1], str):
@@ -325,7 +404,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                         is_template = True
 
                 if is_template:
-                    print(f"[DEBUG] Detected template/mode text in {class_type}: '{text[:60]}...' - reducing priority")
+                    logger.debug("Detected template/mode text in %s: '%s...' - reducing priority", class_type, text[:60])
                     # Don't completely exclude, but mark as low priority template
                     text = f"[TEMPLATE]{text}"
             elif class_type in ["CLIPTextEncode", "CLIPTextEncodeSDXL", "CLIPTextEncodeSDXLRefiner", "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline", "easy positive", "T5TextEncode", "PixArtT5TextEncode"]:
@@ -370,6 +449,18 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                 # TIPO AI prompt generator - extract base input tags, not random output
                 if len(widgets_values) >= 1 and isinstance(widgets_values[0], str):
                     text = widgets_values[0]  # Usually the "tags" input
+            elif class_type == "CLIPTextEncodeLumina2":
+                if len(widgets_values) > 1 and isinstance(widgets_values[1], str):
+                    text = widgets_values[1]  # The prompt is the second element
+                elif len(widgets_values) > 0 and isinstance(widgets_values[0], str):
+                    text = widgets_values[0] # Fallback to the first
+            elif class_type == "easy showAnything":
+                # HiDream ComfyUI Easy Use display node - nested array format [[text]]
+                if len(widgets_values) >= 1:
+                    if isinstance(widgets_values[0], list) and len(widgets_values[0]) >= 1:
+                        text = str(widgets_values[0][0])  # Unwrap nested array
+                    elif isinstance(widgets_values[0], str):
+                        text = widgets_values[0]  # Fallback to direct string
             elif class_type == "ShowText|pysssss":
                 # ShowText display node - often shows AI-generated content
                 # widgets_values is usually a nested array like [["generated text here"]]
@@ -383,14 +474,20 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                 if len(widgets_values) >= 1 and isinstance(widgets_values[0], str):
                     text = widgets_values[0]
             elif len(widgets_values) >= 1 and isinstance(widgets_values[0], str):
-                 text = widgets_values[0]
+                text = widgets_values[0]
 
         # 2. If no text from widgets, check `inputs` dict.
         # This handles "flat" formats (like TensorArt) where input values are stored in the inputs dict.
         if not text and isinstance(inputs, dict):
-            print(f"[DEBUG] Checking inputs dict for text (flat/TensorArt format): {list(inputs.keys())}")
+            logger.debug("Checking inputs dict for text (flat/TensorArt format): %s", list(inputs.keys()))
             if class_type in ["CLIPTextEncode", "CLIPTextEncodeSDXL", "CLIPTextEncodeSDXLRefiner", "BNK_CLIPTextEncodeAdvanced", "String Literal", "Text Multiline", "easy positive"]:
                 text = inputs.get("text", "")
+                # Check if text is a node reference (e.g., ['12', 0])
+                if isinstance(text, list) and len(text) == 2:
+                    # This is a node connection reference - need to resolve it
+                    referenced_node_id = str(text[0])
+                    text = self._resolve_node_reference(source_info, referenced_node_id)
+                    logger.debug("Resolved node reference ['%s', %s] to text: '%s...'", referenced_node_id, text[1] if isinstance(text, list) else 0, str(text)[:60])
                 # For "easy positive" nodes, also check for "positive" field
                 if not text and class_type == "easy positive":
                     text = inputs.get("positive", "")
@@ -417,6 +514,9 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             elif class_type == "TIPO":
                 # TIPO AI prompt generator - check for tags input
                 text = inputs.get("tags", inputs.get("text", ""))
+            elif class_type == "TensorArt_PromptText":
+                # TensorArt uses capital T "Text" field
+                text = inputs.get("Text", inputs.get("text", ""))
             else:
                 text = inputs.get("text", inputs.get("prompt", inputs.get("input_text", "")))
 
@@ -429,13 +529,13 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             ]
 
             if any(pattern.lower() in text_str.lower() for pattern in empty_patterns) and len(text_str.strip()) < 50:
-                print(f"[DEBUG] Detected empty/placeholder text in {class_type}: '{text_str[:60]}...' - marking as template")
+                logger.debug("Detected empty/placeholder text in %s: '%s...' - marking as template", class_type, text_str[:60])
                 text_str = f"[TEMPLATE]{text_str}"
 
-            print(f"[DEBUG] Extracted text from {class_type}: '{text_str[:60] if text_str else 'EMPTY'}...'")
+            logger.debug("Extracted text from %s: '%s...'", class_type, text_str[:60] if text_str else "EMPTY")
             return text_str
 
-        print(f"[DEBUG] Extracted text from {class_type}: 'EMPTY...'")
+        logger.debug("Extracted text from %s: 'EMPTY...'", class_type)
         return ""
 
     def extract_text_candidates_from_workflow(self, workflow_data: dict[str, Any]) -> list[dict[str, Any]]:
@@ -445,12 +545,21 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
         try:
             # Get workflow hash for caching
+            from ..logger import info_monitor as nfo
             workflow_hash = self._get_workflow_hash(workflow_data)
-            if workflow_hash in WORKFLOW_CACHE:
-                RUNTIME_ANALYTICS["cache_hits"] += 1
-                return WORKFLOW_CACHE[workflow_hash]
 
+            # TEMP DEBUG: Disable cache to test AI generator detection
+            self.logger.debug("[CACHE] ⚠️ CACHE DISABLED FOR TESTING - will score fresh every time")
             RUNTIME_ANALYTICS["cache_misses"] += 1
+
+            # if workflow_hash in WORKFLOW_CACHE:
+            #     RUNTIME_ANALYTICS["cache_hits"] += 1
+            #     self.logger.debug("[CACHE] ⚠️ Returning CACHED workflow results (hash: %s...)", workflow_hash[:16])
+            #     self.logger.debug("[CACHE] Cached candidates will have OLD confidence scores!")
+            #     return WORKFLOW_CACHE[workflow_hash]
+            #
+            # RUNTIME_ANALYTICS["cache_misses"] += 1
+            # self.logger.debug("[CACHE] Cache miss - will score candidates fresh")
 
             # Classify workflow type
             workflow_type = self._classify_workflow_type(workflow_data)
@@ -482,14 +591,15 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                 return False
 
             # Extract candidates from conditioning nodes
-            print(f"[DEBUG] Processing {len(conditioning_nodes)} conditioning nodes")
+            logger.info("Processing %s conditioning nodes", len(conditioning_nodes))
             for i, node in enumerate(conditioning_nodes):
-                print(f"[DEBUG] Processing node {i}: type={type(node)}")
+                logger.debug("Processing node %s: type=%s", i, type(node))
                 if not isinstance(node, dict):
-                    print(f"[DEBUG] Skipping non-dict node: {node}")
+                    logger.debug("Skipping non-dict node: %s", node)
                     continue
 
-                text = self._extract_text_from_node(node, {})
+                # Pass workflow_data as source_info so node references can be resolved
+                text = self._extract_text_from_node(node, workflow_data)
                 if text and len(text.strip()) > 0:
                     node_id = node.get("id")
                     is_connected = False
@@ -510,8 +620,11 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                     }
 
                     # Score the candidate
+                    from ..logger import info_monitor as nfo
+                    self.logger.debug("[EXTRACT] About to score candidate: node_type='%s'", node.get("class_type") or node.get("type", ""))
                     scored_candidate = self.score_candidate(candidate, "comfyui")
-                    print(f"[DEBUG] Found candidate from {node.get('class_type') or node.get('type', '')}: confidence={scored_candidate.get('confidence', 0):.3f}, text_preview='{text[:60]}...'")
+                    self.logger.debug("[EXTRACT] After scoring: confidence=%.3f", scored_candidate.get("confidence", 0))
+                    logger.info("CANDIDATE: node_type='%s', confidence=%.3f, text='%s...'", node.get("class_type") or node.get("type", ""), scored_candidate.get("confidence", 0), text[:80])
                     candidates.append(scored_candidate)
 
             # Sort by confidence and limit results
@@ -519,7 +632,9 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             candidates = candidates[:self.MAX_CANDIDATES]
 
             # Cache results
-            WORKFLOW_CACHE[workflow_hash] = candidates
+            # TEMP DEBUG: Don't cache while testing
+            # WORKFLOW_CACHE[workflow_hash] = candidates
+            self.logger.debug("[CACHE] Skipping cache storage while testing")
 
             processing_time = time.time() - start_time
             self._track_analytics("extract_text_candidates_from_workflow", True, processing_time, workflow_type)
@@ -527,25 +642,31 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             return candidates
 
         except Exception as e:
-            self.logger.error(f"Error extracting ComfyUI workflow candidates: {e}")
+            self.logger.error("Error extracting ComfyUI workflow candidates: %s", e)
             processing_time = time.time() - start_time
             self._track_analytics("extract_text_candidates_from_workflow", False, processing_time, "error")
             return []
 
-    def score_candidate(self, candidate: dict[str, Any], format_type: str = "comfyui") -> dict[str, Any]:
+    def score_candidate(self, candidate: dict[str, Any], format_type: str = "comfyui", prompt_type: str = "positive") -> dict[str, Any]:
         """Score a ComfyUI text candidate with enhanced domain knowledge."""
+        from ..logger import info_monitor as nfo
+        node_type = candidate.get("source_node_type", "")
+        self.logger.debug("[SCORE_CANDIDATE] Scoring candidate: node_type='%s', text='%s...'",
+            node_type, candidate.get("text", "")[:40])
+
         # Start with base scoring
         scored_candidate = super().score_candidate(candidate, format_type)
 
         text = candidate.get("text", "")
         node_type = candidate.get("source_node_type", "")
         confidence = scored_candidate.get("confidence", 0.5)
+        self.logger.debug("[SCORE_CANDIDATE] After base scoring: confidence=%.3f", confidence)
 
         # Apply ComfyUI-specific scoring adjustments
 
         # Check for template content and heavily penalize
         if text.startswith("[TEMPLATE]"):
-            print("[DEBUG] Template content detected - applying heavy penalty")
+            logger.debug("Template content detected - applying heavy penalty")
             confidence *= 0.1  # Reduce confidence to 10% for template content
             text = text[10:]  # Remove [TEMPLATE] prefix for further processing
             candidate["text"] = text  # Update candidate text to remove prefix
@@ -568,8 +689,11 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             confidence *= 1.3  # Bonus for descriptive content
 
         # Connection-based scoring bonus (additive, not exclusive)
+        self.logger.debug("[SCORE_CANDIDATE] Calling _get_connection_bonus...")
         connection_bonus = self._get_connection_bonus(candidate)
+        self.logger.debug("[SCORE_CANDIDATE] Connection bonus: %.3f", connection_bonus)
         confidence += connection_bonus  # Add to existing confidence rather than multiply
+        self.logger.debug("[SCORE_CANDIDATE] After connection bonus: confidence=%.3f", confidence)
 
         # Additive bonus for explicit node titles
         node_title = candidate.get("node_title", "").lower()
@@ -579,22 +703,26 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         # TensorArt LoRA/Checkpoint naming penalty - CRITICAL for flat format
         if self._is_tensorart_technical_naming(text):
             confidence *= 0.01  # Heavy penalty for LoRA technical names
-            print(f"[DEBUG] TensorArt technical naming penalty applied: {text[:50]}...")
+            logger.debug("TensorArt technical naming penalty applied: %s...", text[:50])
 
         # Wildcard template pattern penalty - CRITICAL for complex workflows
         if self._is_wildcard_template_pattern(text):
             confidence *= 0.02  # Heavy penalty for unresolved wildcard templates
-            print(f"[DEBUG] Wildcard template pattern penalty applied: {text[:50]}...")
+            logger.debug("Wildcard template pattern penalty applied: %s...", text[:50])
 
         # ComfyUI template detection penalty - APPLY THIS LAST AND STRONGLY
-        if self._is_comfyui_template_text(text):
+        # CONTEXT-AWARE: Pass node_type to avoid rejecting real prompts in text encoder nodes
+        if self._is_comfyui_template_text(text, node_type=node_type):
             confidence *= 0.01  # Much heavier penalty for templates
+            logger.debug("Template text penalty applied to %s: %s...", node_type, text[:50])
 
         # Update the scored candidate (allow scores > 1.0 for high priority nodes)
         scored_candidate["confidence"] = max(0.0, confidence)
         scored_candidate["scoring_method"] = "comfyui_numpy"
         scored_candidate["node_type_score"] = node_score_multiplier
         scored_candidate["connection_bonus"] = connection_bonus
+
+        self.logger.debug("[SCORE_CANDIDATE] ✅ Final confidence: %.3f (node_type='%s')", scored_candidate["confidence"], node_type)
 
         return scored_candidate
 
@@ -606,9 +734,22 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         - Nodes in main execution path get high bonus
         - Utility/intermediate nodes get lower bonus
         - Disconnected nodes get no bonus
+        - ShowText connected to AI generators gets large bonus
         """
+        node_type = candidate.get("source_node_type", "")
+        text = candidate.get("text", "")
+
+        # Simple check: If Text Multiline has very short text, it's probably AI input
+        if node_type == "Text Multiline" and len(text) < 100:
+            return -5.0
+
+        # Boost ShowText nodes with longer, more detailed content (actual prompts vs filenames)
+        if node_type == "ShowText|pysssss" and len(text) > 200:
+            return 3.0  # Boost for detailed ShowText content
+
         # Enhanced graph-aware connection scoring
-        return self._calculate_graph_centrality(candidate)
+        centrality_bonus = self._calculate_graph_centrality(candidate)
+        return centrality_bonus
 
     def _calculate_graph_centrality(self, candidate: dict[str, Any]) -> float:
         """Calculate node importance using graph centrality analysis.
@@ -634,7 +775,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         # Convert to bonus (0.0 to 2.0 range)
         bonus = min(centrality_score * 0.5, 2.0)
 
-        print(f"[DEBUG] Graph centrality for node {node_id}: {centrality_score:.3f} -> bonus {bonus:.3f}")
+        logger.debug("Graph centrality for node %s: %.3f -> bonus %.3f", node_id, centrality_score, bonus)
 
         return bonus
 
@@ -712,7 +853,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         node_type_score = self._get_node_type_centrality(execution_graph, node_id)
         centrality_score += node_type_score * 1.5
 
-        print(f"[DEBUG] Node {node_id} centrality: sampler_dist={sampler_distance_score:.2f}, betweenness={betweenness_score:.2f}, type={node_type_score:.2f}")
+        logger.debug("Node %s centrality: sampler_dist=%.2f, betweenness=%.2f, type=%.2f", node_id, sampler_distance_score, betweenness_score, node_type_score)
 
         return centrality_score
 
@@ -725,7 +866,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
         min_distance = float("inf")
 
         # BFS to find shortest path to any sampler
-        from collections import deque
+        from collections import deque  # noqa: PLC0415
         queue = deque([(node_id, 0)])
         visited = {node_id}
 
@@ -799,7 +940,7 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
             return True, start_node == target_node
 
         # BFS to find if path exists
-        from collections import deque
+        from collections import deque  # noqa: PLC0415
         queue = deque([(start_node, [start_node])])
         visited = {start_node}
 
@@ -884,29 +1025,30 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
     def enhance_engine_result(self, engine_result: dict[str, Any], original_file_path: str | None = None) -> dict[str, Any]:
         """Enhance engine results with ComfyUI-specific numpy analysis."""
         try:
-            print("[DEBUG] ComfyUI scorer enhance_engine_result called")
+            from ..logger import info_monitor as nfo
+            self.logger.debug("[COMFYUI_SCORER] enhance_engine_result called")
             raw_metadata = engine_result.get("raw_metadata", {})
 
             # Check if this looks like ComfyUI data
             if not isinstance(raw_metadata, dict):
-                print(f"[DEBUG] raw_metadata is not a dict: {type(raw_metadata)}")
+                self.logger.debug("[COMFYUI_SCORER] raw_metadata is not a dict: %s", type(raw_metadata))
                 return engine_result
 
-            print(f"[DEBUG] raw_metadata keys: {list(raw_metadata.keys())}")
+            self.logger.debug("[COMFYUI_SCORER] raw_metadata is dict with keys: %s", list(raw_metadata.keys())[:10])
 
             # Handle different workflow data locations
             workflow_data = None
             if "workflow" in raw_metadata:
                 workflow_data = raw_metadata.get("workflow", {})
-                print("[DEBUG] Found workflow in raw_metadata['workflow']")
+                logger.debug("Found workflow in raw_metadata['workflow']")
             elif "nodes" in raw_metadata and isinstance(raw_metadata.get("nodes"), list):
                 # Standard ComfyUI case - raw_metadata contains the workflow with nodes array
                 workflow_data = raw_metadata
-                print("[DEBUG] Using raw_metadata as workflow (standard ComfyUI case)")
+                logger.debug("Using raw_metadata as workflow (standard ComfyUI case)")
             elif "nodes" in raw_metadata or "links" in raw_metadata:
                 # TensorArt case - raw_metadata is the workflow with flat nodes
                 workflow_data = raw_metadata
-                print("[DEBUG] Using raw_metadata as workflow (TensorArt flat case)")
+                logger.debug("Using raw_metadata as workflow (TensorArt flat case)")
             else:
                 # Check for flat format - numeric node IDs as keys with class_type
                 numeric_keys = []
@@ -917,29 +1059,42 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
 
                 if numeric_keys:
                     workflow_data = raw_metadata
-                    print(f"[DEBUG] Using raw_metadata as flat format workflow ({len(numeric_keys)} nodes)")
+                    logger.debug("Using raw_metadata as flat format workflow (%s nodes)", len(numeric_keys))
                 else:
-                    print("[DEBUG] No workflow structure detected in raw_metadata")
+                    logger.debug("No workflow structure detected in raw_metadata")
 
             if not isinstance(workflow_data, dict):
-                print(f"[DEBUG] workflow_data is not a dict: {type(workflow_data)}")
+                self.logger.debug("[COMFYUI_SCORER] workflow_data is not a dict: %s", type(workflow_data))
                 return engine_result
 
-            print(f"[DEBUG] workflow_data keys: {list(workflow_data.keys())}")
-            print("[DEBUG] About to call extract_text_candidates_from_workflow")
+            self.logger.debug("[COMFYUI_SCORER] workflow_data is dict with keys: %s", list(workflow_data.keys())[:10])
+            self.logger.debug("[COMFYUI_SCORER] About to call extract_text_candidates_from_workflow")
 
             # Extract and analyze workflow candidates
             candidates = self.extract_text_candidates_from_workflow(workflow_data)
-            print(f"[DEBUG] Candidates extracted: {len(candidates)}")
+            self.logger.debug("[COMFYUI_SCORER] Extracted %d candidates", len(candidates))
 
             if candidates:
+                from ..logger import info_monitor as nfo
+                self.logger.debug("[COMFYUI_SCORER] Analyzing %d candidates:", len(candidates))
+                for idx, candidate in enumerate(candidates):
+                    self.logger.debug("[COMFYUI_SCORER]   Candidate %d: node_type='%s', confidence=%.3f, text='%s...'",
+                        idx + 1,
+                        candidate.get("source_node_type", "UNKNOWN"),
+                        candidate.get("confidence", 0),
+                        candidate.get("text", "")[:60])
+
                 # Separate positive and negative candidates
                 positive_candidates = []
                 negative_candidates = []
 
+                self.logger.debug("[COMFYUI_SCORER] Classifying candidates as positive/negative:")
                 for candidate in candidates:
                     text = candidate.get("text", "").lower()
                     original_text = candidate.get("text", "")
+                    node_type = candidate.get("source_node_type", "UNKNOWN")
+
+                    self.logger.debug("[COMFYUI_SCORER]   Classifying: node_type='%s', text='%s...'", node_type, original_text[:60])
 
                     # First check ComfyUI node title for explicit negative/positive markers
                     node_title = candidate.get("node_title", "").lower() if "node_title" in candidate else ""
@@ -949,21 +1104,26 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                     # If node title explicitly indicates type, use that (high confidence)
                     if is_negative_by_title:
                         is_negative = True
-                        print(f"[DEBUG] Node title indicates negative: '{node_title}'")
+                        logger.debug("Node title indicates negative: '%s'", node_title)
                     elif is_positive_by_title:
                         is_negative = False
-                        print(f"[DEBUG] Node title indicates positive: '{node_title}'")
+                        logger.debug("Node title indicates positive: '%s'", node_title)
                     else:
                         # Fallback to JSON-based negative detection system
                         is_negative = negative_indicators.is_negative_text(original_text)
 
                     if is_negative:
-                        print(f"[DEBUG] JSON-based detection classified as negative: '{original_text[:40]}...'")
+                        logger.debug("JSON-based detection classified as negative: '%s...'", original_text[:40])
 
                     if is_negative:
-                        print(f"[DEBUG] Found negative prompt candidate: '{candidate.get('text', '')[:40]}...'")
+                        self.logger.debug("[COMFYUI_SCORER]     → NEGATIVE (node_type='%s', confidence=%.3f)",
+                            candidate.get("source_node_type", "UNKNOWN"),
+                            candidate.get("confidence", 0))
                         negative_candidates.append(candidate)
                     else:
+                        self.logger.debug("[COMFYUI_SCORER]     → POSITIVE (node_type='%s', confidence=%.3f)",
+                            candidate.get("source_node_type", "UNKNOWN"),
+                            candidate.get("confidence", 0))
                         positive_candidates.append(candidate)
 
                 enhanced_result = engine_result.copy()
@@ -971,20 +1131,37 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                 # Find best positive candidate
                 if positive_candidates:
                     best_positive = max(positive_candidates, key=lambda x: x.get("confidence", 0))
-                    print(f"[DEBUG] Best positive candidate: confidence={best_positive.get('confidence', 0):.3f}, text='{best_positive.get('text', '')[:60]}...'")
+                    self.logger.debug("[COMFYUI_SCORER] Best positive candidate: confidence=%.3f, node_type='%s', text='%s...'",
+                        best_positive.get("confidence", 0),
+                        best_positive.get("source_node_type", "UNKNOWN"),
+                        best_positive.get("text", "")[:80])
 
                     if best_positive.get("confidence", 0) > 0.5:
+                        self.logger.debug("[COMFYUI_SCORER] ✅ Setting prompt to best positive candidate")
                         enhanced_result["prompt"] = best_positive["text"]
+                    else:
+                        self.logger.debug("[COMFYUI_SCORER] ❌ Best positive confidence too low (%.3f < 0.5), keeping parser prompt", best_positive.get("confidence", 0))
+                else:
+                    self.logger.debug("[COMFYUI_SCORER] No positive candidates found")
 
                 # Find best negative candidate
                 if negative_candidates:
                     best_negative = max(negative_candidates, key=lambda x: x.get("confidence", 0))
-                    print(f"[DEBUG] Best negative candidate: confidence={best_negative.get('confidence', 0):.3f}, text='{best_negative.get('text', '')[:60]}...'")
-                    enhanced_result["negative_prompt"] = best_negative["text"]
+                    self.logger.debug("[COMFYUI_SCORER] Best negative candidate: confidence=%.3f, node_type='%s', text='%s...'",
+                        best_negative.get("confidence", 0),
+                        best_negative.get("source_node_type", "UNKNOWN"),
+                        best_negative.get("text", "")[:80])
+
+                    if best_negative.get("confidence", 0) > 0.5:
+                        self.logger.debug("[COMFYUI_SCORER] ✅ Setting negative_prompt to best negative candidate")
+                        enhanced_result["negative_prompt"] = best_negative["text"]
+                    else:
+                        self.logger.debug("[COMFYUI_SCORER] ❌ Best negative confidence too low (%.3f < 0.5), keeping parser negative", best_negative.get("confidence", 0))
                 else:
-                    # Clear any existing negative_prompt if we didn't find negative candidates
-                    print("[DEBUG] No negative candidates found, clearing negative_prompt")
-                    enhanced_result["negative_prompt"] = ""
+                    # Keep existing negative_prompt if parser already found one
+                    # Don't clear it - parser might have extracted embeddings/URNs that numpy doesn't recognize
+                    self.logger.debug("[COMFYUI_SCORER] No negative candidates found, keeping existing negative_prompt from parser")
+                    # No-op: keep enhanced_result["negative_prompt"] = engine_result.get("negative_prompt", "")
 
                 # Only enhance if we found good candidates
                 if positive_candidates or negative_candidates:
@@ -1001,24 +1178,24 @@ class ComfyUINumpyScorer(BaseNumpyScorer):
                     return enhanced_result
 
         except Exception as e:
-            self.logger.error(f"Error in ComfyUI numpy enhancement: {e}")
+            self.logger.error("Error in ComfyUI numpy enhancement: %s", e)
 
         return engine_result
 
 
 def should_use_comfyui_numpy_scoring(engine_result: dict[str, Any]) -> bool:
     """Determine if ComfyUI numpy scoring should be applied."""
-    from ..logger import get_logger
+    from ..logger import get_logger  # noqa: PLC0415, TID252
     logger = get_logger(__name__)
 
     raw_metadata = engine_result.get("raw_metadata", {})
     tool = engine_result.get("tool", "").lower()
     format_name = engine_result.get("format", "").lower()
 
-    print(f"[DEBUG] ComfyUI scoring check - tool: '{tool}', format: '{format_name}'")
-    print(f"[DEBUG] 'comfy' in tool: {'comfy' in tool}")
-    logger.info(f"ComfyUI scoring check - tool: {tool}, format: {format_name}")
-    logger.info(f"raw_metadata type: {type(raw_metadata)}, keys: {list(raw_metadata.keys()) if isinstance(raw_metadata, dict) else 'not dict'}")
+    logger.debug("ComfyUI scoring check - tool: '%s', format: '%s'", tool, format_name)
+    logger.debug("'comfy' in tool: %s", "comfy" in tool)
+    logger.info("ComfyUI scoring check - tool: %s, format: %s", tool, format_name)
+    logger.info("raw_metadata type: %s, keys: %s", type(raw_metadata), list(raw_metadata.keys()) if isinstance(raw_metadata, dict) else "not dict")
 
     # Check for ComfyUI workflow structure
     if isinstance(raw_metadata, dict) and "workflow" in raw_metadata:
@@ -1040,16 +1217,16 @@ def should_use_comfyui_numpy_scoring(engine_result: dict[str, Any]) -> bool:
             if isinstance(value, dict) and "class_type" in value:
                 node_like_keys.append(key)
         if node_like_keys:
-            logger.info(f"Found TensorArt-style workflow with {len(node_like_keys)} nodes")
+            logger.info("Found TensorArt-style workflow with %s nodes", len(node_like_keys))
             return True
 
     # Check for ComfyUI-specific indicators in the result
     if "comfy" in tool or "comfy" in format_name or "tensorart" in tool or "tensorart" in format_name:
-        logger.info(f"Found ComfyUI indicator in tool/format names - matched on tool={tool}, format={format_name}")
+        logger.info("Found ComfyUI indicator in tool/format names - matched on tool=%s, format=%s", tool, format_name)
         return True
 
     # NEW CHECK: If it's a Civitai A1111, check if its raw_metadata looks like a ComfyUI workflow
-    if tool == "civitai a1111" and isinstance(raw_metadata, dict):
+    if tool == "civitai a1111" and isinstance(raw_metadata, dict):  # noqa: SIM102
         # Check for typical ComfyUI workflow top-level keys
         if "nodes" in raw_metadata and "links" in raw_metadata and "version" in raw_metadata:
             logger.info("Found Civitai A1111 with ComfyUI-like workflow structure in raw_metadata, applying ComfyUI scoring")

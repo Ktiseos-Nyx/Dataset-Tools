@@ -49,20 +49,6 @@
       "class_types_to_check": [
         "KSamplerAdvanced"
       ]
-    },
-    {
-      "comment": "Rule 4: Must have multiple checkpoint loaders (base + refiner)",
-      "source_type": "pil_info_key",
-      "source_key_options": [
-        "workflow",
-        "prompt"
-      ],
-      "json_query_type": "count_nodes_of_type",
-      "operator": "greater_than",
-      "class_types_to_check": [
-        "CheckpointLoaderSimple"
-      ],
-      "threshold": 1
     }
   ],
   "parsing_instructions": {
@@ -173,6 +159,10 @@
         "input_field": "height",
         "data_type": "integer",
         "fallback": 1024
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
       }
     ],
     "output_template": {
@@ -193,6 +183,7 @@
         "width": "$parameters.width",
         "height": "$parameters.height"
       },
+      "raw_metadata": "$raw_metadata",
       "architecture_info": {
         "detected_as": "SDXL Base+Refiner",
         "sampling_method": "Two-Stage Advanced Sampling",

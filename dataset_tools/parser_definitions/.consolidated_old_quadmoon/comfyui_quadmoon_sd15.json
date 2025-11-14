@@ -1,0 +1,193 @@
+{
+  "parser_name": "ComfyUI QuadMoon SD 1.5",
+  "priority": 146,
+  "description": "ComfyUI workflows using QuadMoon's custom nodes for SD 1.5 (quadmoonKSampler, quadmoonSmartPrompt, quadmoonSmartNeg)",
+  "version": "1.0",
+  "maintainer": "Dataset-Tools",
+  "target_file_types": [
+    "PNG", "JPG", "JPEG"
+  ],
+  "detection_rules": [
+    {
+      "comment": "Rule 1: Must have ComfyUI JSON structure",
+      "condition": "OR",
+      "rules": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow",
+          "operator": "is_valid_json"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt",
+          "operator": "is_valid_json"
+        }
+      ]
+    },
+    {
+      "comment": "Rule 2: Must contain modern QuadMoon nodes",
+      "source_type": "pil_info_key",
+      "source_key_options": [
+        "workflow",
+        "prompt"
+      ],
+      "json_query_type": "has_any_node_class_type",
+      "operator": "is_true",
+      "class_types_to_check": [
+        "quadmoonKSampler",
+        "quadmoonSmartPrompt",
+        "quadmoonModelLoader"
+      ]
+    }
+  ],
+  "parsing_instructions": {
+    "input_data": {
+      "source_options": [
+        {
+          "source_type": "pil_info_key",
+          "source_key": "workflow"
+        },
+        {
+          "source_type": "pil_info_key",
+          "source_key": "prompt"
+        }
+      ],
+      "transformations": [
+        {
+          "type": "json_decode_string_itself"
+        }
+      ]
+    },
+    "fields": [
+      {
+        "target_key": "prompt",
+        "method": "quadmoons_extract_positive"
+      },
+      {
+        "target_key": "negative_prompt",
+        "method": "quadmoons_extract_negative"
+      },
+      {
+        "target_key": "parameters.seed",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "quadmoonKSampler"
+        ],
+        "input_key": "seed",
+        "value_type": "integer",
+        "fallback": -1
+      },
+      {
+        "target_key": "parameters.steps",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "quadmoonKSampler"
+        ],
+        "input_key": "steps",
+        "value_type": "integer",
+        "fallback": 30
+      },
+      {
+        "target_key": "parameters.cfg_scale",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "quadmoonKSampler"
+        ],
+        "input_key": "cfg",
+        "value_type": "float",
+        "fallback": 7.0
+      },
+      {
+        "target_key": "parameters.sampler_name",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "quadmoonKSampler"
+        ],
+        "input_key": "sampler_name",
+        "value_type": "string",
+        "fallback": "euler"
+      },
+      {
+        "target_key": "parameters.scheduler",
+        "method": "comfy_find_input_of_main_sampler",
+        "sampler_node_types": [
+          "quadmoonKSampler"
+        ],
+        "input_key": "scheduler",
+        "value_type": "string",
+        "fallback": "normal"
+      },
+      {
+        "target_key": "parameters.model",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "quadmoonModelLoader"
+        ],
+        "input_field": "ckpt_name",
+        "data_type": "string",
+        "fallback": "Unknown Model"
+      },
+      {
+        "target_key": "parameters.width",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage"
+        ],
+        "input_field": "width",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "parameters.height",
+        "method": "comfy_find_input_of_node_type",
+        "node_types": [
+          "EmptyLatentImage"
+        ],
+        "input_field": "height",
+        "data_type": "integer",
+        "fallback": 512
+      },
+      {
+        "target_key": "raw_metadata",
+        "method": "comfyui_extract_raw_workflow"
+      }
+    ],
+    "output_template": {
+      "parser_name_from_engine": "ComfyUI QuadMoon SD 1.5",
+      "tool": "ComfyUI (QuadMoon SD 1.5)",
+      "format": "QuadMoon SD 1.5 Workflow",
+      "prompt": "$prompt",
+      "negative_prompt": "$negative_prompt",
+      "parameters": {
+        "seed": "$parameters.seed",
+        "steps": "$parameters.steps",
+        "cfg_scale": "$parameters.cfg_scale",
+        "sampler_name": "$parameters.sampler_name",
+        "scheduler": "$parameters.scheduler",
+        "model": "$parameters.model",
+        "width": "$parameters.width",
+        "height": "$parameters.height"
+      },
+      "raw_metadata": "$raw_metadata",
+      "workflow_metadata": {
+        "source": "ComfyUI workflow",
+        "parser_priority": 146,
+        "confidence": "high",
+        "custom_nodes": ["QuadMoon"],
+        "workflow_type": "SD 1.5"
+      }
+    }
+  },
+  "error_handling": {
+    "on_parse_failure": "return_partial_data",
+    "log_errors": true,
+    "validation_level": "strict"
+  },
+  "notes": [
+    "Specifically targets modern QuadMoon workflows with SD 1.5",
+    "Looks for quadmoonKSampler, quadmoonSmartPrompt, quadmoonSmartNeg nodes",
+    "Priority 146 puts it above the legacy QuadMoon parser (145)",
+    "Extracts prompts from quadmoonSmartPrompt.prompt_text widget",
+    "Extracts negative from quadmoonSmartNeg.optional_text widget"
+  ]
+}

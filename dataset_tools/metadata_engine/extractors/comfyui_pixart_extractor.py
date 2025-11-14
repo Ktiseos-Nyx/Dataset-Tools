@@ -54,7 +54,7 @@ class ComfyUIPixArtExtractor:
 
         for node_id, node in self.nodes.items():
             if node.get("type") == target_node_type:
-                self.logger.debug(f"[PixArt] Found target node '{target_node_type}' with ID: {node_id}")
+                self.logger.debug("[PixArt] Found target node '%s' with ID: %s", target_node_type, node_id)
                 for field, input_name in mappings.items():
                     value = self._trace_input_value(node_id, input_name)
                     if value is not None:
@@ -74,12 +74,12 @@ class ComfyUIPixArtExtractor:
             if input_index != -1 and input_index < len(node["widgets_values"]):
                 widget_val = node["widgets_values"][input_index]
                 if widget_val is not None:
-                    self.logger.debug(f"[PixArt] Found widget value for '{input_name}' in node {node_id}: {widget_val}")
+                    self.logger.debug("[PixArt] Found widget value for '%s' in node %s: %s", input_name, node_id, widget_val)
                     return widget_val
 
         link_info = self.links.get((node_id, input_name))
         if not link_info:
-            self.logger.debug(f"[PixArt] No link found for input '{input_name}' on node {node_id}")
+            self.logger.debug("[PixArt] No link found for input '%s' on node %s", input_name, node_id)
             return None
 
         origin_id = link_info["origin_id"]
@@ -87,12 +87,12 @@ class ComfyUIPixArtExtractor:
         origin_node = self.nodes.get(origin_id)
 
         if not origin_node:
-            self.logger.warning(f"[PixArt] Origin node {origin_id} not found.")
+            self.logger.warning("[PixArt] Origin node %s not found.", origin_id)
             return None
 
         origin_node_type = origin_node.get("type")
         self.logger.debug(
-            f"[PixArt] Tracing back from '{input_name}' on node {node_id} to node {origin_id} (type: {origin_node_type})"
+            "[PixArt] Tracing back from '%s' on node %s to node %s (type: %s)", input_name, node_id, origin_id, origin_node_type
         )
 
         if "PixArtT5TextEncode" in origin_node_type:
@@ -107,7 +107,7 @@ class ComfyUIPixArtExtractor:
             output_name = origin_node["outputs"][origin_slot_idx]["name"]
         except (IndexError, KeyError):
             self.logger.error(
-                f"[PixArt] Could not determine output name for slot {origin_slot_idx} on node {origin_id}"
+                "[PixArt] Could not determine output name for slot %s on node %s", origin_slot_idx, origin_id
             )
             return None
 

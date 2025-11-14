@@ -297,7 +297,15 @@ class ComfyUISDXLExtractor:
 
     def _get_text_from_sdxl_node(self, node_data: dict, prompt_data: dict) -> str:
         """Extract text from SDXL text encode node."""
-        # First check widget values
+        # TEMPORARILY DISABLED - Testing if this breaks something
+        # # First check inputs for named 'text' field (for Refiner nodes)
+        # inputs = node_data.get("inputs", {})
+        # if isinstance(inputs, dict) and "text" in inputs:
+        #     text_value = inputs["text"]
+        #     if isinstance(text_value, str) and len(text_value.strip()) > 0:
+        #         return text_value.strip()
+
+        # Then check widget values (for base SDXL nodes)
         widgets = node_data.get("widgets_values", [])
         if widgets:
             for widget in widgets:
@@ -375,14 +383,14 @@ class ComfyUISDXLExtractor:
         return ""
 
     def _extract_standard_clip_prompt(self, prompt_data: dict, positive: bool = True) -> str:
-        """Extract from standard CLIPTextEncode nodes."""
+        """Extract from standard CLIPTextEncode nodes (includes variants like CLIPTextEncodeSDXL)."""
         for node_id, node_data in prompt_data.items():
             if not isinstance(node_data, dict):
                 continue
 
             class_type = node_data.get("class_type", "")
 
-            if class_type == "CLIPTextEncode":
+            if class_type.startswith("CLIPTextEncode"):
                 widgets = node_data.get("widgets_values", [])
                 if widgets and isinstance(widgets[0], str):
                     text = widgets[0].strip()

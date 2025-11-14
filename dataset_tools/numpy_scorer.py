@@ -6,6 +6,7 @@ based on metadata format. This replaces the old monolithic
 numpy_scorer.py with a modular approach.
 """
 
+import re
 from typing import Any
 
 from .logger import get_logger
@@ -19,17 +20,14 @@ from .numpy_scorers import (
     should_use_drawthings_numpy_scoring,
 )
 
-# Advanced ComfyUI scoring is now integrated into metadata_engine/extractors/
-# No separate advanced scorer needed since Griptape is handled by
-# ComfyUIGriptapeExtractor
-
 logger = get_logger(__name__)
+
+# 🔴 KILL SWITCH: Set to True to disable numpy scoring temporarily
+NUMPY_DISABLED = False
 
 # Global scorer instances (lazy-loaded)
 _comfyui_scorer = None
 _drawthings_scorer = None
-
-
 
 def _get_comfyui_scorer() -> ComfyUINumpyScorer:
     """Get or create the ComfyUI scorer instance."""
@@ -38,7 +36,6 @@ def _get_comfyui_scorer() -> ComfyUINumpyScorer:
         _comfyui_scorer = ComfyUINumpyScorer()
     return _comfyui_scorer
 
-
 def _get_drawthings_scorer() -> DrawThingsNumpyScorer:
     """Get or create the Draw Things scorer instance."""
     global _drawthings_scorer
@@ -46,61 +43,87 @@ def _get_drawthings_scorer() -> DrawThingsNumpyScorer:
         _drawthings_scorer = DrawThingsNumpyScorer()
     return _drawthings_scorer
 
-
-def should_use_numpy_scoring(_engine_result: dict[str, Any]) -> bool:
-    """Determine if ANY numpy scoring should be applied.
-
-    This replaces the conditional check - now we ALWAYS use numpy scoring
-    but select the appropriate scorer based on the format.
+def _slice_griptape_prompt(text: str) -> str:
     """
-    # Always return True to make numpy scoring mandatory for all parsers
-    return True
+    Slices the prompt from a Griptape agent's output.
+    It looks for common keywords like 'PROMPT:', 'Prompt:', etc.,
+    or JSON-like structures and extracts the text that follows.
+    """
+    if not isinstance(text, str):
+        return ""
+
+    # Pattern to find 'PROMPT:', 'Positive Prompt:', etc., and capture everything after it
+    # This is case-insensitive and handles optional surrounding quotes or newlines.
+    patterns = [
+        re.compile(r'(?:positive prompt|prompt)\s*:\s*"?\s*(.*)', re.IGNORECASE | re.DOTALL),
+        re.compile(r'```json\s*\n\s*{\s*"(?:positive_prompt|prompt)"\s*:\s*"(.*?)"', re.IGNORECASE | re.DOTALL),
+    ]
+
+    for pattern in patterns:
+        match = pattern.search(text)
+        if match:
+            # Extract the captured group, strip leading/trailing whitespace/quotes
+            prompt = match.group(1).strip().strip('"').strip()
+            # If the prompt ends with a code block or json closing, remove it
+            prompt = re.sub(r'"\s*}\s*```$', '', prompt, flags=re.DOTALL).strip()
+            logger.debug(f"[NUMPY-GRIPTAPE] Sliced prompt: '{prompt[:100]}...'")
+            return prompt
+
+    logger.debug("[NUMPY-GRIPTAPE] No slice pattern matched. Returning original text.")
+    return text.strip()
 
 
 def enhance_result(
     engine_result: dict[str, Any],
     original_file_path: str | None = None,
-    #    status_callback=None
 ) -> dict[str, Any]:
-    """Enhance engine results with the appropriate numpy scorer.
-
+    """
+    Enhance engine results with the appropriate numpy scorer.
     This is the main entry point that selects and applies the right scorer.
     """
-    try:
-        print(f"[DEBUG] numpy scorer called with engine_result keys: "
-              f"{list(engine_result.keys())}")
-        print(f"[DEBUG] Tool: {engine_result.get('tool', 'NONE')}, "
-              f"Format: {engine_result.get('format', 'NONE')}")
-        print(f"[DEBUG] Has raw_metadata: {'raw_metadata' in engine_result}")
-        logger.info(f"numpy scorer called with engine_result keys: "
-                    f"{list(engine_result.keys())}")
-        logger.info(f"Tool: {engine_result.get('tool', 'NONE')}, "
-                    f"Format: {engine_result.get('format', 'NONE')}")
-        logger.info(f"Has raw_metadata: {'raw_metadata' in engine_result}")
+    if NUMPY_DISABLED:
+        logger.info("[NUMPY] ⚠️ NUMPY SCORING DISABLED - returning parser result unchanged")
+        return engine_result
 
-        # Always apply numpy scoring, but choose the right scorer
-        # Advanced ComfyUI functionality (like Griptape) is now handled by
-        # metadata_engine/extractors
+    try:
+        logger.debug("[NUMPY] =" * 40)
+        logger.debug("[NUMPY] ENHANCE_RESULT: Tool: '%s'", engine_result.get("tool", "NONE"))
+
+        # ===================================================================
+        # NEW: Griptape Special Handling (The "SLICE" feature)
+        # Check if the result came from our Griptape parser before anything else.
+        # ===================================================================
+        if engine_result.get("parser_name_from_engine") == "ComfyUI Griptape":
+            logger.debug("[NUMPY] ✅ Detected Griptape result. Applying prompt slicing.")
+
+            if "prompt" in engine_result and engine_result["prompt"]:
+                engine_result["prompt"] = _slice_griptape_prompt(engine_result["prompt"])
+
+            # After slicing, we can still apply the standard ComfyUI scoring
+            logger.debug("[NUMPY] Proceeding with standard ComfyUI numpy scoring for Griptape result.")
+            scorer = _get_comfyui_scorer()
+            return scorer.enhance_engine_result(engine_result, original_file_path)
 
         # Try standard ComfyUI scoring
+        logger.debug("[NUMPY] Checking for standard ComfyUI workflow...")
         if should_use_comfyui_numpy_scoring(engine_result):
-            logger.info("Using standard ComfyUI numpy scoring")
+            logger.debug("[NUMPY] ✅ Using standard ComfyUI numpy scoring")
             scorer = _get_comfyui_scorer()
-            return scorer.enhance_engine_result(
-                engine_result, original_file_path)
+            return scorer.enhance_engine_result(engine_result, original_file_path)
 
         # Try Draw Things specific scoring
         if should_use_drawthings_numpy_scoring(engine_result):
-            logger.info("Using Draw Things numpy scoring")
+            logger.debug("[NUMPY] ✅ Using Draw Things numpy scoring")
             scorer = _get_drawthings_scorer()
-            return scorer.enhance_engine_result(
-                engine_result, original_file_path)
+            return scorer.enhance_engine_result(engine_result, original_file_path)
 
-    except Exception as e:
-        logger.error(f"Error in numpy scoring coordination: {e}")
-        # Return original result if scoring fails
+        logger.debug("[NUMPY] ❌ No specific scorer matched - returning original result")
         return engine_result
 
+    except Exception as e:
+        logger.error("[NUMPY] Error in numpy scoring coordination: %s", e, exc_info=True)
+        # Return original result if scoring fails
+        return engine_result
 
 # Re-export utility functions
 __all__ = [
@@ -108,5 +131,4 @@ __all__ = [
     "enhance_result",
     "get_cache_info",
     "get_runtime_analytics",
-    "should_use_numpy_scoring"
 ]
