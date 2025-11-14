@@ -48,6 +48,9 @@ Built with Python and PyQt6, it provides an intuitive interface for viewing embe
 
 ## Features
 
+<details>
+<summary>Click to expand Features. </summary>
+
 * **Lightweight & Fast:** Designed for quick loading and efficient metadata display with intelligent caching.
 * **Cross-Platform:** Built with Python and PyQt6 (compatible with Windows, macOS, Linux).
 * **Flexible View Modes:**
@@ -76,7 +79,12 @@ Built with Python and PyQt6, it provides an intuitive interface for viewing embe
   * **Model File Support:** Enhanced metadata viewing capabilities (Safetensors and GGUF support in progress!).
 * **Configurable Logging:** Control application log verbosity for debugging (see [Debug Mode](#debug-mode)).
 
+</details>
+
 ## Known Issues & Development Status
+
+<details>
+<summary>Click to expand Known Issues. </summary>
 
 ### UI Limitations (v0.x)
 *   **PyQt6 Layout Issues:** The current PyQt6 UI has known limitations with viewport resizing and button centering across different screen resolutions. While functional, some layout elements may appear inconsistent when resizing windows or using non-standard display configurations (4K, 5K Retina, etc.).
@@ -89,10 +97,8 @@ Built with Python and PyQt6, it provides an intuitive interface for viewing embe
 
 **Note:** This is active development software (v0.x). We're still ironing out bugs and refining functionality. Expect rough edges, but the core parsing is solid!
 
-**SPECIAL THANKS**
+</details>
 
-- Supervised by: traugdor
-- Special Thanks to contributors: Open Source Community, Whitevamp, Exdysa, and so many more.
 
 ## Supported Formats
 
@@ -261,18 +267,6 @@ pip install -e .  # Editable install for development
 </details>
 
 ---
-
-### 🆚 vs SD Prompt Reader
-
-Unlike SD Prompt Reader which focuses on basic prompt viewing, Dataset Tools provides:
-
-* Advanced ComfyUI workflow analysis
-* LoRA training metadata extraction
-* 25+ specialized AI format parsers
-* Model file support (SafeTensors, GGUF)
-* Comprehensive metadata engine
-
-**Both tools are great!** Use whichever fits your workflow better.
 
 ## Usage
 
@@ -459,6 +453,12 @@ Please see the LICENSE file in the repository root for the full license text.
 * Our peers and the wider AI and open-source communities for their continuous support and inspiration.
 * AI Language Models (like those from Google, OpenAI, Anthropic) for assistance with code generation, documentation, and problem-solving during development.
 * ...and many more!
+
+
+**SPECIAL THANKS**
+
+- Supervised by: traugdor
+- Special Thanks to contributors: Open Source Community, Whitevamp, Exdysa, and so many more.
 
 <hr>
 
