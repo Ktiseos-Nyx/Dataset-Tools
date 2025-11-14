@@ -29,6 +29,16 @@ Built with Python and PyQt6, it provides an intuitive interface for viewing embe
 
 </div>
 
+
+## Example Images
+ If you're interested in seeing the app in action, this table shows what's up!
+
+| Screenshot 1: Theme Browser | Screenshot 2: CivitaiAPI Key | Screenshot 3: FileTree View |
+| :-----------------------------: | :------------------------------: | :--------------------------: |
+| <img src="example_images/Screenshot 2025-11-14 at 16.27.01.jpg" alt="Theme Browser" width="250"> | <img src="example_images/Screenshot 2025-11-14 at 16.27.19.jpg" alt="CivitaiAPI Key" width="250"> | <img src="example_images/Screenshot 2025-10-31 at 18.07.50.jpg" alt="FileTree View" width="250"> |
+| Screenshot 4: Custom Themes & Thumbnail View | Screenshot 5: Appearance options | Screenshot 6: Edit Metadata |
+| <img src="example_images/Screenshot 2025-11-14 at 15.54.06.jpg" alt="Custom Themes & Thumbnail View" width="250"> | <img src="example_images/Screenshot 2025-11-14 at 16.28.12.jpg" alt="Appearance options" width="250"> |  <img src="example_images/Screenshot 2025-11-14 at 16.28.57.jpg" alt="Edit Metadata" width="250">|
+
 ---
 
 **Navigation:**
@@ -187,15 +197,6 @@ Dataset-Tools relies on several excellent open-source libraries:
 All dependencies are automatically installed via pip. See [Installation](#installation) for details.
 
 </details>
-
-## Example Images
- If you're interested in seeing the app in action, this table shows what's up!
-
-| Screenshot 1: Theme Browser | Screenshot 2: CivitaiAPI Key | Screenshot 3: FileTree View |
-| :-----------------------------: | :------------------------------: | :--------------------------: |
-| <img src="example_images/Screenshot 2025-11-14 at 16.27.01.jpg" alt="Theme Browser" width="250"> | <img src="example_images/Screenshot 2025-11-14 at 16.27.19.jpg" alt="CivitaiAPI Key" width="250"> | <img src="example_images/Screenshot 2025-10-31 at 18.07.50.jpg" alt="FileTree View" width="250"> |
-| Screenshot 4: Custom Themes & Thumbnail View | Screenshot 5: Appearance options | Screenshot 6: Edit Metadata |
-| <img src="example_images/Screenshot 2025-11-14 at 15.54.06.jpg" alt="Custom Themes & Thumbnail View" width="250"> | <img src="example_images/Screenshot 2025-11-14 at 16.28.12.jpg" alt="Appearance options" width="250"> |  <img src="example_images/Screenshot 2025-11-14 at 16.28.57.jpg" alt="Edit Metadata" width="250">|
 
 ## Installation
 
