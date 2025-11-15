@@ -10,7 +10,7 @@
 <hr>
 
 [English Readme](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/README.md) [Wiki](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki) [Discussions](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions) [Notices](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/NOTICE.md) [License](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/LICENSE)
-
+</div>
 <hr>
  Dataset Tools is a desktop application for browsing and managing AI image datasets with comprehensive metadata extraction. Whether you're organizing generations from A1111, ComfyUI, Civitai, or other tools - or just curious what parameters were used to create that cool image - Dataset Tools has you covered.
 
@@ -19,6 +19,8 @@ Built with Python and PyQt6, it provides an intuitive interface for viewing embe
 **Future Forward** We're looking into re-developing the front end with Electron, if you have concerns, suggestions or anything feel free to join our discord, pull an issue or use the github discussions. We'll always provide bug catching and error support for any PYQT6 branches. We validate that users don't always like stark changes, and we want to make the future transition as smooth as possible.
 
 **Community-Driven Development:** This project is inspired by [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) and thrives on community contributions. Found a bug? Have a workflow that won't parse? Want to add support for a new tool? **We welcome forks, fixes, and pull requests!** This is a community tool built by the community, for the community.
+
+<hr>
 
 ## Example Images
 
