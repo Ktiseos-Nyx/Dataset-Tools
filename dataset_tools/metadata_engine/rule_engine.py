@@ -614,14 +614,14 @@ class DataSourceHandler:
         try:
             wrapper = json.loads(param_str)
             if isinstance(wrapper, dict) and "parameters" in wrapper and isinstance(wrapper["parameters"], str):
-                self.logger.info("=== UNWRAPPED JSON PARAMETERS ===")
+                self.logger.debug("=== UNWRAPPED JSON PARAMETERS ===")
                 result = (wrapper["parameters"], True)
                 self._a1111_param_cache = result
                 return result
         except json.JSONDecodeError:
             pass
 
-        self.logger.info(f"=== FINAL RESULT: param_str (length: {len(param_str)}), True ===")
+        self.logger.debug(f"=== FINAL RESULT: param_str (length: {len(param_str)}), True ===")
         result = (param_str, True)
         self._a1111_param_cache = result
         return result
