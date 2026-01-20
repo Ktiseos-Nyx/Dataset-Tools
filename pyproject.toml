@@ -50,6 +50,7 @@ dependencies = [
     "defusedxml",
     "requests",
     "jsonpath-ng",  # Proper JSONPath implementation for parser detection rules (PyPI up-to-date: v1.7.0, Oct 2024)
+    "opencv-python-headless",
 ]
 
 [project.optional-dependencies]
