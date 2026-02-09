@@ -9,14 +9,4 @@ export interface ImageMetadata {
   ai: Record<string, unknown>
 }
 
-export interface FileItem {
-  id: string
-  name: string
-  size: number
-  type: string
-  lastModified: string
-  url: string
-  thumbnail: string
-}
-
 export type ViewMode = "thumbnail" | "list"

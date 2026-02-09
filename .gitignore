@@ -25,3 +25,21 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# test data & sample images
+Metadata Samples/
+Embed Outputs/
+IBS1pt5-TestV2LUNAXL/
+
+# legacy python scripts (reference only)
+*.py
+extract_comfyui_workflow.js
+comfyui_findings.txt
+
+# cloned repos (reference)
+Dataset-Tools/
+Dataset-Tools-main/
+
+# editor / AI tool configs
+.gemini/
+NUL

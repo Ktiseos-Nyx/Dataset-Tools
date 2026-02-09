@@ -1,29 +1,17 @@
 "use client"
 
 import type React from "react"
-
-import { Grid3x3, List, SidebarClose, SidebarOpen, FolderOpen, Upload } from "lucide-react"
+import { Grid3x3, List, SidebarClose, SidebarOpen, FolderOpen } from "lucide-react"
 import type { ViewMode } from "@/types/metadata"
-import { useRef } from "react"
 
 interface NavbarProps {
   viewMode: ViewMode
   onViewModeChange: (mode: ViewMode) => void
   showMetadata: boolean
   onToggleMetadata: () => void
-  onFilesAdded: (files: File[]) => void
 }
 
-export function Navbar({ viewMode, onViewModeChange, showMetadata, onToggleMetadata, onFilesAdded }: NavbarProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
-    if (files.length > 0) {
-      onFilesAdded(files.filter((f) => f.type.startsWith("image/")))
-    }
-  }
-
+export function Navbar({ viewMode, onViewModeChange, showMetadata, onToggleMetadata }: NavbarProps) {
   return (
     <nav className="h-14 border-b border-border bg-card flex items-center justify-between px-4 gap-4">
       {/* Left: App Title */}
@@ -60,15 +48,6 @@ export function Navbar({ viewMode, onViewModeChange, showMetadata, onToggleMetad
 
       {/* Right: Actions */}
       <div className="flex items-center gap-2">
-        <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleFileInput} className="hidden" />
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="flex items-center gap-2 px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
-        >
-          <Upload className="w-4 h-4" />
-          Add Files
-        </button>
-
         <div className="w-px h-6 bg-border" />
 
         <button

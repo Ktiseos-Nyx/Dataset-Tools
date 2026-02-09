@@ -1,0 +1,905 @@
+import { NextResponse } from 'next/server';
+import path from 'path';
+import fs from 'fs/promises';
+import mime from 'mime-types';
+import exifParser from 'exif-parser';
+
+// PNG chunk parser for AI generation parameters
+function parsePNGChunks(buffer: Buffer): Record<string, any> {
+  const chunks: Record<string, any> = {};
+
+  // Check PNG signature
+  if (buffer.length < 8 || buffer.toString('hex', 0, 8) !== '89504e470d0a1a0a') {
+    return chunks;
+  }
+
+  let offset = 8; // Skip PNG signature
+
+  while (offset < buffer.length) {
+    if (offset + 8 > buffer.length) break;
+
+    const length = buffer.readUInt32BE(offset);
+    const type = buffer.toString('ascii', offset + 4, offset + 8);
+
+    if (offset + 12 + length > buffer.length) break;
+
+    const data = buffer.slice(offset + 8, offset + 8 + length);
+
+    // Parse text chunks
+    if (type === 'tEXt') {
+      const nullIndex = data.indexOf(0);
+      if (nullIndex !== -1) {
+        const key = data.toString('latin1', 0, nullIndex);
+        const value = data.toString('utf8', nullIndex + 1);
+        chunks[key] = value;
+      }
+    } else if (type === 'iTXt') {
+      const nullIndex = data.indexOf(0);
+      if (nullIndex !== -1) {
+        const key = data.toString('latin1', 0, nullIndex);
+        // Skip compression flag, compression method, language tag, translated keyword
+        let textStart = nullIndex + 1;
+        const compressionFlag = data[textStart++];
+        const compressionMethod = data[textStart++];
+
+        // Skip language tag (null-terminated)
+        while (textStart < data.length && data[textStart] !== 0) textStart++;
+        textStart++; // Skip null
+
+        // Skip translated keyword (null-terminated)
+        while (textStart < data.length && data[textStart] !== 0) textStart++;
+        textStart++; // Skip null
+
+        const value = data.toString('utf8', textStart);
+        chunks[key] = value;
+      }
+    }
+
+    offset += 12 + length; // length + type + data + CRC
+  }
+
+  return chunks;
+}
+
+// ============================================================================
+// ComfyUI Workflow Extraction — Graph Trace Primary, Type Match Fallback
+// ============================================================================
+
+// Utility: is this value a node reference? (e.g. ["32", 0])
+function isNodeRef(value: any): value is [string, number] {
+  return Array.isArray(value) && value.length === 2 && typeof value[0] === 'string' && typeof value[1] === 'number';
+}
+
+// Utility: get a node from the workflow by ID
+function getNode(workflow: Record<string, any>, id: string): any | null {
+  const node = workflow[id];
+  return (node && typeof node === 'object' && node.inputs) ? node : null;
+}
+
+// Utility: follow a node ref to its source node, with cycle detection
+function followRef(workflow: Record<string, any>, ref: any, visited?: Set<string>): { nodeId: string; node: any } | null {
+  if (!isNodeRef(ref)) return null;
+  const seen = visited || new Set<string>();
+  if (seen.has(ref[0])) return null;
+  seen.add(ref[0]);
+  const node = getNode(workflow, ref[0]);
+  return node ? { nodeId: ref[0], node } : null;
+}
+
+// Walk backwards from a node input, collecting ancestor nodes up to maxDepth.
+// `hint` tells the tracer what kind of data we're looking for (e.g. "positive", "negative")
+// so combo nodes like Efficient Loader route us down the right input branch.
+function traceBack(
+  workflow: Record<string, any>,
+  startRef: any,
+  hint?: string,
+  maxDepth: number = 10,
+  visited?: Set<string>
+): Array<{ nodeId: string; node: any; depth: number }> {
+  const results: Array<{ nodeId: string; node: any; depth: number }> = [];
+  const seen = visited || new Set<string>();
+
+  function walk(ref: any, depth: number, currentHint?: string) {
+    if (depth > maxDepth) return;
+    const target = followRef(workflow, ref, new Set());
+    if (!target || seen.has(target.nodeId)) return;
+    seen.add(target.nodeId);
+    results.push({ ...target, depth });
+
+    const inputs = target.node.inputs || {};
+
+    // If we have a hint and this node has a matching input name, prefer that path.
+    // This handles combo nodes (e.g. Efficient Loader with both positive/negative inputs)
+    if (currentHint && isNodeRef(inputs[currentHint])) {
+      walk(inputs[currentHint], depth + 1, currentHint);
+      return; // Only follow the hinted path on combo nodes
+    }
+
+    // If the hint matches a direct string value on this node, we found what we need —
+    // no need to walk further from here
+    if (currentHint && typeof inputs[currentHint] === 'string') {
+      return;
+    }
+
+    // Otherwise walk all ref inputs
+    for (const [key, val] of Object.entries(inputs)) {
+      if (isNodeRef(val)) walk(val, depth + 1, currentHint);
+    }
+  }
+
+  walk(startRef, 0, hint);
+  return results;
+}
+
+// Find a text/prompt string in a node's inputs.
+// Strategy: try known keys first, then scan all string fields.
+// `hint` can be "positive" or "negative" to prefer matching fields.
+function findText(workflow: Record<string, any>, node: any, visited?: Set<string>, hint?: string): string | null {
+  const inputs = node.inputs || {};
+
+  // Priority 1: if hint is given, look for fields containing that hint
+  // (e.g. "POSITIVE_PROMPT", "negative_prompt", "positive", "negative")
+  if (hint) {
+    const hintUpper = hint.toUpperCase();
+    const hintLower = hint.toLowerCase();
+    for (const [key, val] of Object.entries(inputs)) {
+      const keyUpper = key.toUpperCase();
+      if ((keyUpper.includes(hintUpper) || keyUpper.includes(hintLower.toUpperCase())) &&
+          (keyUpper.includes('PROMPT') || keyUpper.includes('TEXT') || keyUpper.includes('STRING'))) {
+        if (typeof val === 'string' && val.trim()) return val;
+      }
+    }
+    // Also check just the hint name directly (e.g. inputs.positive, inputs.negative)
+    if (typeof inputs[hint] === 'string' && inputs[hint].trim()) return inputs[hint];
+  }
+
+  // Priority 2: known common text field names
+  const textKeys = ['text', 'string', 'text_a', 'text_b', 'value', 'user_prompt', 'prompt', 'text_g', 'text_l'];
+  for (const key of textKeys) {
+    if (typeof inputs[key] === 'string' && inputs[key].trim()) return inputs[key];
+    if (isNodeRef(inputs[key])) {
+      const upstream = followRef(workflow, inputs[key], visited);
+      if (upstream) {
+        const text = findText(workflow, upstream.node, visited, hint);
+        if (text) return text;
+      }
+    }
+  }
+
+  // Priority 3: scan all string inputs that look like prompts (longer than ~10 chars,
+  // not a filename or simple config value)
+  let bestText: string | null = null;
+  for (const [key, val] of Object.entries(inputs)) {
+    if (typeof val === 'string' && val.trim().length > 10) {
+      // Skip fields that are clearly not prompts
+      const keyLower = key.toLowerCase();
+      if (keyLower.includes('name') || keyLower.includes('file') || keyLower.includes('path') ||
+          keyLower.includes('method') || keyLower.includes('mode')) continue;
+      if (!bestText || val.length > bestText.length) bestText = val;
+    }
+  }
+  if (bestText) return bestText;
+
+  return null;
+}
+
+// ---- Field-based node identification (no type names needed) ----
+function hasFields(inputs: any, ...fields: string[]): boolean {
+  return fields.every(f => inputs[f] !== undefined);
+}
+
+function isSamplerByFields(inputs: any): boolean {
+  // A sampler has some combo of: steps, cfg, sampler_name, seed, positive, negative
+  const samplerFields = ['steps', 'cfg', 'sampler_name', 'seed', 'positive', 'negative'];
+  const matched = samplerFields.filter(f => inputs[f] !== undefined);
+  return matched.length >= 3; // at least 3 of these = almost certainly a sampler
+}
+
+function isCheckpointByFields(inputs: any): boolean {
+  return !!inputs.ckpt_name;
+}
+
+function isLatentByFields(inputs: any): boolean {
+  return hasFields(inputs, 'width', 'height', 'batch_size');
+}
+
+function extractComfyUIParams(workflow: Record<string, any>): Record<string, any> {
+  const extracted: Record<string, any> = {};
+
+  // Type-match fallback helper (for platforms that wrap standard nodes)
+  const typeMatches = (classType: string, ...patterns: string[]) =>
+    patterns.some(p => classType.includes(p));
+
+  // ========================================================================
+  // PHASE 1: Field-based scan (type-agnostic)
+  // Identify nodes by what data they carry, not what they're called
+  // ========================================================================
+  const samplerNodes: { id: string; node: any }[] = [];
+  const loraNodes: { id: string; node: any }[] = [];
+
+  for (const [nodeId, nodeData] of Object.entries(workflow)) {
+    const node = nodeData as any;
+    if (!node?.inputs) continue;
+    const inputs = node.inputs;
+    const classType = node.class_type || '';
+
+    // --- Sampler: identified by having steps + cfg + positive/negative ---
+    if (isSamplerByFields(inputs)) {
+      samplerNodes.push({ id: nodeId, node });
+    }
+
+    // --- Checkpoint: identified by having ckpt_name ---
+    if (isCheckpointByFields(inputs)) {
+      extracted.model = inputs.ckpt_name;
+    }
+
+    // --- UNET loader: identified by unet_name ---
+    if (inputs.unet_name && !extracted.model) {
+      extracted.model = inputs.unet_name;
+    }
+
+    // --- Latent image: identified by width + height + batch_size ---
+    // Also handles combo loaders with empty_latent_width/empty_latent_height
+    if (isLatentByFields(inputs)) {
+      const w = inputs.width, h = inputs.height;
+      if (typeof w === 'number' && typeof h === 'number') {
+        extracted.size = `${w}x${h}`;
+      }
+    }
+    if (!extracted.size && inputs.empty_latent_width && inputs.empty_latent_height) {
+      const w = inputs.empty_latent_width, h = inputs.empty_latent_height;
+      if (typeof w === 'number' && typeof h === 'number') {
+        extracted.size = `${w}x${h}`;
+      }
+    }
+
+    // --- VAE: identified by vae_name ---
+    if (inputs.vae_name && !extracted.vae) {
+      extracted.vae = inputs.vae_name;
+    }
+
+    // --- CLIP skip: identified by stop_at_clip_layer or clip_skip ---
+    if (inputs.stop_at_clip_layer) {
+      extracted.clip_skip = String(Math.abs(inputs.stop_at_clip_layer));
+    }
+    if (inputs.clip_skip && !extracted.clip_skip) {
+      extracted.clip_skip = String(Math.abs(inputs.clip_skip));
+    }
+
+    // --- LoRA: identified by lora_name, numbered lora_name_N, or <lora:...> tags ---
+    if (inputs.lora_name && inputs.lora_name !== 'None') {
+      loraNodes.push({ id: nodeId, node });
+    }
+    // LoRA Stacker nodes use numbered fields: lora_name_1, lora_name_2, etc.
+    for (const [key, val] of Object.entries(inputs)) {
+      if (/^lora_name_\d+$/.test(key) && typeof val === 'string' && val !== 'None') {
+        loraNodes.push({ id: nodeId, node });
+        break; // Only push once per node
+      }
+    }
+    if (typeof inputs.text === 'string' && inputs.text.includes('<lora:')) {
+      loraNodes.push({ id: nodeId, node });
+    }
+  }
+
+  // Extract LoRAs
+  const loraSet = new Set<string>();
+  for (const { node } of loraNodes) {
+    const inputs = node.inputs || {};
+    if (inputs.lora_name && inputs.lora_name !== 'None') {
+      loraSet.add(inputs.lora_name);
+    }
+    // Handle numbered LoRA stacker fields (lora_name_1, lora_wt_1, etc.)
+    for (const [key, val] of Object.entries(inputs)) {
+      const numMatch = key.match(/^lora_name_(\d+)$/);
+      if (numMatch && typeof val === 'string' && val !== 'None') {
+        // Try to find the matching weight
+        const weight = inputs[`lora_wt_${numMatch[1]}`];
+        if (typeof weight === 'number') {
+          loraSet.add(`${val} (${weight})`);
+        } else {
+          loraSet.add(val);
+        }
+      }
+    }
+    if (typeof inputs.text === 'string') {
+      const matches = inputs.text.matchAll(/<lora:([^:>]+):([^>]+)>/g);
+      for (const m of matches) loraSet.add(`${m[1]} (${m[2]})`);
+    }
+  }
+  if (loraSet.size > 0) extracted.loras = [...loraSet];
+
+  // ========================================================================
+  // PHASE 2: Graph trace from sampler nodes
+  // Follow positive/negative wires backwards to find prompt text
+  // ========================================================================
+  if (samplerNodes.length > 0) {
+    // Use the first sampler that has the most complete inputs (most likely the "main" one)
+    // Prefer samplers with denoise=1 or no denoise (full generation, not inpainting/refine)
+    const mainSampler = samplerNodes.find(s => {
+      const d = s.node.inputs.denoise;
+      return d === undefined || d === 1;
+    }) || samplerNodes[0];
+
+    const inputs = mainSampler.node.inputs;
+
+    // Extract sampler settings
+    if (inputs.steps) extracted.steps = String(inputs.steps);
+    if (inputs.cfg) extracted.cfg_scale = String(inputs.cfg);
+    if (inputs.sampler_name) extracted.sampler = inputs.sampler_name;
+    if (inputs.scheduler) extracted.scheduler = inputs.scheduler;
+    if (inputs.denoise !== undefined && inputs.denoise !== 1) {
+      extracted.denoise = String(inputs.denoise);
+    }
+
+    // Resolve seed (might be a ref to a seed generator node)
+    for (const seedKey of ['seed', 'noise_seed']) {
+      if (inputs[seedKey] !== undefined) {
+        if (typeof inputs[seedKey] === 'number') {
+          extracted.seed = String(inputs[seedKey]);
+          break;
+        }
+        // Follow ref for seed
+        const seedSource = followRef(workflow, inputs[seedKey]);
+        if (seedSource) {
+          for (const val of Object.values(seedSource.node.inputs || {})) {
+            if (typeof val === 'number' && val > 1000) { // seeds are large numbers
+              extracted.seed = String(val);
+              break;
+            }
+          }
+        }
+        if (extracted.seed) break;
+      }
+    }
+
+    // --- Trace positive conditioning wire ---
+    if (isNodeRef(inputs.positive)) {
+      const posChain = traceBack(workflow, inputs.positive, 'positive');
+      for (const { node } of posChain) {
+        const text = findText(workflow, node, undefined, 'positive');
+        if (text) {
+          if (!extracted.prompt || text.length > extracted.prompt.length) {
+            extracted.prompt = text;
+          }
+        }
+      }
+    }
+
+    // --- Trace negative conditioning wire ---
+    if (isNodeRef(inputs.negative)) {
+      const negChain = traceBack(workflow, inputs.negative, 'negative');
+      for (const { node } of negChain) {
+        const text = findText(workflow, node, undefined, 'negative');
+        if (text) {
+          if (!extracted.negative_prompt || text.length > extracted.negative_prompt.length) {
+            extracted.negative_prompt = text;
+          }
+        }
+      }
+    }
+  }
+
+  // ========================================================================
+  // PHASE 3: Type-match fallback
+  // If graph tracing didn't find prompts, fall back to type-name scanning
+  // ========================================================================
+  if (!extracted.prompt) {
+    const promptTexts: { text: string; nodeId: string }[] = [];
+
+    for (const [nodeId, nodeData] of Object.entries(workflow)) {
+      const node = nodeData as any;
+      const classType = node.class_type || '';
+      const inputs = node.inputs || {};
+
+      if (typeMatches(classType, 'CLIPTextEncode', 'T5TextEncode', 'FluxTextEncode')) {
+        const text = findText(workflow, node);
+        if (text) promptTexts.push({ text, nodeId });
+      }
+    }
+
+    if (promptTexts.length > 0) {
+      // Try to sort positive vs negative using sampler wiring
+      const negativeNodeIds = new Set<string>();
+      for (const s of samplerNodes) {
+        const neg = s.node.inputs?.negative;
+        if (isNodeRef(neg)) {
+          negativeNodeIds.add(neg[0]);
+          // Follow one more level
+          const condNode = getNode(workflow, neg[0]);
+          if (condNode) {
+            for (const val of Object.values(condNode.inputs || {})) {
+              if (isNodeRef(val)) negativeNodeIds.add(val[0]);
+            }
+          }
+        }
+      }
+
+      for (const pt of promptTexts) {
+        if (negativeNodeIds.has(pt.nodeId)) {
+          if (!extracted.negative_prompt) extracted.negative_prompt = pt.text;
+        } else if (!extracted.prompt || pt.text.length > extracted.prompt.length) {
+          extracted.prompt = pt.text;
+        }
+      }
+
+      // Last resort: longest = positive, next = negative
+      if (!extracted.prompt) {
+        promptTexts.sort((a, b) => b.text.length - a.text.length);
+        extracted.prompt = promptTexts[0].text;
+        if (promptTexts.length > 1) extracted.negative_prompt = promptTexts[1].text;
+      }
+    }
+  }
+
+  return extracted;
+}
+
+// Parse AI generation parameters from various formats
+function parseAIMetadata(chunks: Record<string, any>): Record<string, any> {
+  const aiData: Record<string, any> = {};
+
+  // A1111/Forge format - stored in "parameters" key
+  if (chunks.parameters) {
+    const params = chunks.parameters;
+
+    // Extract positive prompt (everything before "Negative prompt:")
+    const negativeMatch = params.match(/Negative prompt:\s*(.+?)(?:\n|$)/s);
+    const splitIndex = params.indexOf('\nNegative prompt:');
+
+    if (splitIndex !== -1) {
+      aiData.prompt = params.substring(0, splitIndex).trim();
+      if (negativeMatch) {
+        aiData.negative_prompt = negativeMatch[1].split('\n')[0].trim();
+      }
+    } else {
+      // No negative prompt found, everything is the positive prompt
+      const lines = params.split('\n');
+      aiData.prompt = lines[0].trim();
+    }
+
+    // Extract generation settings (last line typically)
+    const lines = params.split('\n');
+    const settingsLine = lines[lines.length - 1];
+
+    // Parse common parameters
+    const stepMatch = settingsLine.match(/Steps:\s*(\d+)/);
+    const samplerMatch = settingsLine.match(/Sampler:\s*([^,]+)/);
+    const cfgMatch = settingsLine.match(/CFG scale:\s*([\d.]+)/);
+    const seedMatch = settingsLine.match(/Seed:\s*(\d+)/);
+    const sizeMatch = settingsLine.match(/Size:\s*(\d+x\d+)/);
+    const modelMatch = settingsLine.match(/Model:\s*([^,]+)/);
+
+    if (stepMatch) aiData.steps = stepMatch[1];
+    if (samplerMatch) aiData.sampler = samplerMatch[1].trim();
+    if (cfgMatch) aiData.cfg_scale = cfgMatch[1];
+    if (seedMatch) aiData.seed = seedMatch[1];
+    if (sizeMatch) aiData.size = sizeMatch[1];
+    if (modelMatch) aiData.model = modelMatch[1].trim();
+  }
+
+  // ComfyUI format - stored in "prompt" key (JSON workflow)
+  if (chunks.prompt) {
+    try {
+      // Sanitize NaN/Infinity values that break JSON.parse
+      const sanitized = chunks.prompt
+        .replace(/:\s*NaN/g, ': null')
+        .replace(/:\s*Infinity/g, ': null')
+        .replace(/:\s*-Infinity/g, ': null');
+
+      const workflow = JSON.parse(sanitized);
+      aiData.comfyui_workflow = workflow;
+      aiData.workflow_type = 'ComfyUI';
+
+      // Extract useful parameters from workflow (one-level resolution)
+      const extracted = extractComfyUIParams(workflow);
+      Object.assign(aiData, extracted);
+    } catch (e) {
+      // Not valid JSON, store as-is
+      aiData.prompt = chunks.prompt;
+    }
+  }
+
+  // NovelAI format - stored in "Comment" or "Description" key as JSON
+  if (chunks.Comment || chunks.Description) {
+    const commentText = chunks.Comment || chunks.Description;
+    try {
+      const novelData = JSON.parse(commentText);
+      if (novelData.prompt) aiData.prompt = novelData.prompt;
+      if (novelData.uc) aiData.negative_prompt = novelData.uc;
+      if (novelData.steps) aiData.steps = novelData.steps;
+      if (novelData.scale) aiData.cfg_scale = novelData.scale;
+      if (novelData.seed) aiData.seed = novelData.seed;
+      if (novelData.sampler) aiData.sampler = novelData.sampler;
+    } catch (e) {
+      // Not JSON — check for Midjourney format
+      // MJ stores prompt + --params + "Job ID: uuid" in Description tEXt chunk
+      if (typeof commentText === 'string' && commentText.includes('Job ID:')) {
+        aiData.workflow_type = 'Midjourney';
+        const jobMatch = commentText.match(/Job ID:\s*([a-f0-9-]+)/i);
+        if (jobMatch) aiData.job_id = jobMatch[1];
+
+        // Extract prompt (everything before the first -- param)
+        const paramStart = commentText.indexOf(' --');
+        if (paramStart > 0) {
+          aiData.prompt = commentText.substring(0, paramStart).trim();
+
+          // Parse MJ parameters
+          const paramSection = commentText.substring(paramStart);
+          const arMatch = paramSection.match(/--ar\s+([\d:]+)/);
+          const vMatch = paramSection.match(/--v\s+([\d.]+)/);
+          const sMatch = paramSection.match(/--stylize\s+(\d+)|--s\s+(\d+)/);
+          const cMatch = paramSection.match(/--chaos\s+(\d+)|--c\s+(\d+)/);
+          const seedMatch = paramSection.match(/--seed\s+(\d+)/);
+          const noMatch = paramSection.match(/--no\s+([^-]+?)(?:\s+--|Job ID:|$)/);
+          const weirdMatch = paramSection.match(/--weird\s+(\d+)/);
+          const qualMatch = paramSection.match(/--quality\s+([\d.]+)|--q\s+([\d.]+)/);
+          const styleMatch = paramSection.match(/--style\s+(\S+)/);
+
+          if (arMatch) aiData.aspect_ratio = arMatch[1];
+          if (vMatch) aiData.version = `v${vMatch[1]}`;
+          if (sMatch) aiData.stylize = sMatch[1] || sMatch[2];
+          if (cMatch) aiData.chaos = cMatch[1] || cMatch[2];
+          if (seedMatch) aiData.seed = seedMatch[1];
+          if (noMatch) aiData.negative_prompt = noMatch[1].trim();
+          if (weirdMatch) aiData.weird = weirdMatch[1];
+          if (qualMatch) aiData.quality = qualMatch[1] || qualMatch[2];
+          if (styleMatch) aiData.style = styleMatch[1];
+        } else {
+          // No params, whole thing is the prompt (minus Job ID)
+          aiData.prompt = commentText.replace(/\s*Job ID:.*$/, '').trim();
+        }
+      }
+    }
+  }
+
+  // Also check "Author" PNG chunk (MJ stores the username there)
+  if (chunks.Author && aiData.workflow_type === 'Midjourney') {
+    aiData.author = chunks.Author;
+  }
+
+  return aiData;
+}
+
+// Extract AI metadata from JPEG EXIF UserComment field.
+// Different tools encode UserComment differently:
+//   - Civitai: "UNICODE\0\0" prefix + UTF-16-LE text
+//   - ComfyUI: "ASCII\0\0\0" prefix + UTF-8 JSON, or raw UTF-8 JSON
+//   - A1111: may use ASCII prefix or raw text
+function parseJPEGUserComment(buffer: Buffer): string | null {
+  try {
+    // Scan for APP1 (EXIF) markers - there can be multiple
+    let offset = 2; // Skip JPEG SOI marker
+
+    while (offset < buffer.length - 4) {
+      // Must be a marker
+      if (buffer[offset] !== 0xFF) { offset++; continue; }
+
+      const marker = buffer[offset + 1];
+
+      // End of markers
+      if (marker === 0xDA) break; // SOS - start of scan, no more metadata
+
+      // APP1 = 0xE1
+      if (marker === 0xE1) {
+        const segLength = (buffer[offset + 2] << 8) | buffer[offset + 3];
+        const segData = buffer.slice(offset + 4, offset + 2 + segLength);
+
+        // Try UNICODE prefix (Civitai style - UTF-16-LE)
+        const unicodeIndex = segData.indexOf('UNICODE');
+        if (unicodeIndex !== -1) {
+          const commentBytes = segData.slice(unicodeIndex + 8);
+          const stripped = Buffer.from(commentBytes.filter(b => b !== 0));
+          const comment = stripped.toString('utf8').trim();
+          if (comment.includes('Steps:') || comment.startsWith('{')) {
+            return comment;
+          }
+        }
+
+        // Try ASCII prefix (ComfyUI / A1111 style)
+        const asciiIndex = segData.indexOf('ASCII\0\0\0');
+        if (asciiIndex !== -1) {
+          const comment = segData.slice(asciiIndex + 8).toString('utf8').replace(/\0+$/, '').trim();
+          if (comment.includes('Steps:') || comment.startsWith('{')) {
+            return comment;
+          }
+        }
+
+        // Try raw - look for JSON or A1111 params without prefix
+        // UserComment tag ID is 0x9286 - scan for it
+        const userCommentTag = segData.indexOf(Buffer.from([0x92, 0x86]));
+        if (userCommentTag !== -1) {
+          // Try to find JSON or A1111 text after the tag
+          const searchArea = segData.slice(userCommentTag);
+          // Look for the start of JSON
+          const jsonStart = searchArea.indexOf('{'.charCodeAt(0));
+          if (jsonStart !== -1) {
+            const possibleJson = searchArea.slice(jsonStart).toString('utf8').replace(/\0+$/, '').trim();
+            if (possibleJson.startsWith('{')) {
+              try { JSON.parse(possibleJson); return possibleJson; } catch { /* not valid json */ }
+            }
+          }
+          // Look for A1111 "Steps:" pattern
+          const stepsIdx = searchArea.indexOf('Steps:');
+          if (stepsIdx !== -1) {
+            // Walk back to find the start of the text
+            let textStart = stepsIdx;
+            while (textStart > 0 && searchArea[textStart - 1] !== 0) textStart--;
+            const comment = searchArea.slice(textStart).toString('utf8').replace(/\0+$/, '').trim();
+            if (comment.length > 10) return comment;
+          }
+        }
+
+        // Move past this APP1 segment and check for more
+        offset += 2 + segLength;
+        continue;
+      }
+
+      // Skip other markers
+      if (marker >= 0xE0 && marker <= 0xEF || marker === 0xFE) {
+        const segLength = (buffer[offset + 2] << 8) | buffer[offset + 3];
+        offset += 2 + segLength;
+      } else {
+        offset++;
+      }
+    }
+  } catch (e) {
+    // Failed to parse
+  }
+
+  return null;
+}
+
+// ============================================================================
+// XMP Extraction — XML-based metadata (Midjourney, Draw Things, Mochi, cameras)
+// ============================================================================
+
+// Extract raw XMP XML string from a file buffer (works for PNG, JPEG, WebP, TIFF)
+function extractXMPString(buffer: Buffer): string | null {
+  // Method 1: Search for XMP packet markers directly in the buffer.
+  // This works across all formats since XMP is always valid XML text.
+  const startMarker = '<x:xmpmeta';
+  const endMarker = '</x:xmpmeta>';
+
+  const startIdx = buffer.indexOf(startMarker);
+  if (startIdx === -1) return null;
+
+  const endIdx = buffer.indexOf(endMarker, startIdx);
+  if (endIdx === -1) return null;
+
+  return buffer.slice(startIdx, endIdx + endMarker.length).toString('utf8');
+}
+
+// Parse XMP XML into a flat key-value object using regex.
+// No XML parser needed — XMP is structured enough for pattern matching.
+function parseXMP(xmpString: string): Record<string, any> {
+  const xmp: Record<string, any> = {};
+
+  // Extract all simple property values: <ns:Key>Value</ns:Key>
+  const simpleProps = xmpString.matchAll(/<([a-zA-Z_][\w]*):([a-zA-Z_][\w]*)(?:\s[^>]*)?>([^<]+)<\/\1:\2>/g);
+  for (const match of simpleProps) {
+    const ns = match[1];
+    const key = match[2];
+    const value = match[3].trim();
+    if (value) {
+      // Use namespace:key for clarity, but also store common ones with friendly names
+      xmp[`${ns}:${key}`] = value;
+    }
+  }
+
+  // Extract attribute-based values: ns:Key="value"
+  const attrProps = xmpString.matchAll(/\s([a-zA-Z_][\w]*):([a-zA-Z_][\w]*)="([^"]+)"/g);
+  for (const match of attrProps) {
+    const ns = match[1];
+    const key = match[2];
+    const value = match[3].trim();
+    if (value && ns !== 'xmlns' && ns !== 'x' && ns !== 'rdf') {
+      xmp[`${ns}:${key}`] = value;
+    }
+  }
+
+  // Extract rdf:li items (used for lists like dc:subject tags, dc:description, exif:UserComment)
+  // These can contain large text blobs, JSON, or multi-line content
+  const listBlocks = xmpString.matchAll(/<([a-zA-Z_][\w]*):([a-zA-Z_][\w]*)\s*>\s*<rdf:(?:Bag|Seq|Alt)\s*>([\s\S]*?)<\/rdf:(?:Bag|Seq|Alt)>/g);
+  for (const block of listBlocks) {
+    const ns = block[1];
+    const key = block[2];
+    const itemsRaw = block[3];
+    // Use [\s\S]*? to match ANY content inside rdf:li, including newlines, JSON, XML entities
+    const items = [...itemsRaw.matchAll(/<rdf:li[^>]*>([\s\S]*?)<\/rdf:li>/g)]
+      .map(m => m[1].trim().replace(/&#xA;/g, '\n').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"'))
+      .filter(Boolean);
+    if (items.length > 0) {
+      xmp[`${ns}:${key}`] = items.length === 1 ? items[0] : items;
+    }
+  }
+
+  return xmp;
+}
+
+// Extract AI-specific metadata from XMP data
+function extractAIFromXMP(xmp: Record<string, any>): Record<string, any> {
+  const ai: Record<string, any> = {};
+
+  // --- Midjourney ---
+  // MJ stores prompt in dc:description and sometimes in xmp:Description
+  // Job ID, version info may be in other fields
+  const description = xmp['dc:description'];
+  if (typeof description === 'string' && description.length > 20) {
+    // Midjourney descriptions often contain the full prompt with --parameters
+    const mjParamMatch = description.match(/^([\s\S]+?)\s+--/);
+    if (mjParamMatch) {
+      ai.prompt = mjParamMatch[1].trim();
+      ai.workflow_type = 'Midjourney';
+      // Extract MJ parameters
+      const arMatch = description.match(/--ar\s+([\d:]+)/);
+      const vMatch = description.match(/--v\s+([\d.]+)/);
+      const sMatch = description.match(/--s\s+(\d+)/);
+      const cMatch = description.match(/--c\s+(\d+)/);
+      const seedMatch = description.match(/--seed\s+(\d+)/);
+      const noMatch = description.match(/--no\s+([^-]+)/);
+      if (arMatch) ai.aspect_ratio = arMatch[1];
+      if (vMatch) ai.version = `v${vMatch[1]}`;
+      if (sMatch) ai.stylize = sMatch[1];
+      if (cMatch) ai.chaos = cMatch[1];
+      if (seedMatch) ai.seed = seedMatch[1];
+      if (noMatch) ai.negative_prompt = noMatch[1].trim();
+    } else if (!ai.prompt) {
+      ai.prompt = description;
+    }
+  }
+
+  // --- Draw Things ---
+  // Draw Things stores rich JSON in exif:UserComment AND A1111-style text in dc:description
+  const software = xmp['xmp:CreatorTool'] || xmp['tiff:Software'] || '';
+  const isDrawThings = typeof software === 'string' && software.toLowerCase().includes('draw things');
+
+  const userComment = xmp['exif:UserComment'] || xmp['tiff:ImageDescription'];
+  if (typeof userComment === 'string' && userComment.length > 10) {
+    try {
+      const parsed = JSON.parse(userComment);
+      // Draw Things JSON format
+      if (parsed.c || parsed.model || parsed.sampler) {
+        ai.workflow_type = 'Draw Things';
+        if (parsed.c) ai.prompt = parsed.c;
+        if (parsed.uc) ai.negative_prompt = parsed.uc;
+        if (parsed.model) ai.model = parsed.model;
+        if (parsed.sampler) ai.sampler = parsed.sampler;
+        if (parsed.steps) ai.steps = String(parsed.steps);
+        if (parsed.scale) ai.cfg_scale = String(parsed.scale);
+        if (parsed.seed) ai.seed = String(parsed.seed);
+        if (parsed.size) ai.size = parsed.size;
+        if (parsed.seed_mode) ai.seed_mode = parsed.seed_mode;
+        if (parsed.strength) ai.strength = String(parsed.strength);
+        // LoRAs
+        if (Array.isArray(parsed.lora) && parsed.lora.length > 0) {
+          ai.loras = parsed.lora.map((l: any) => `${l.model} (${l.weight})`);
+        }
+      } else if (parsed.prompt) {
+        Object.assign(ai, parsed);
+      }
+    } catch {
+      // Not JSON — try A1111-style text
+      if (userComment.includes('Steps:')) {
+        ai._drawthings_params = userComment;
+      }
+    }
+  }
+
+  // If dc:description has A1111-style params (Draw Things also puts them there)
+  if (isDrawThings && typeof description === 'string' && description.includes('Steps:') && !ai.prompt) {
+    ai._drawthings_params = description;
+  }
+
+  // --- Common AI XMP fields ---
+  const creator = xmp['dc:creator'];
+  if (creator) ai.creator_tool = typeof creator === 'string' ? creator : Array.isArray(creator) ? creator.join(', ') : undefined;
+
+  if (software && !ai.software) ai.software = software;
+
+  // Photoshop/Adobe fields that may indicate AI generation
+  const history = xmp['xmpMM:History'];
+  if (typeof history === 'string' && (history.includes('firefly') || history.includes('generative'))) {
+    ai.workflow_type = ai.workflow_type || 'Adobe Firefly';
+  }
+
+  return ai;
+}
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const filePath = searchParams.get('path');
+
+  if (!filePath) {
+    return NextResponse.json({ error: 'File path is required' }, { status: 400 });
+  }
+
+  // Basic security check to prevent directory traversal
+  const resolvedPath = path.resolve(filePath);
+   if (!resolvedPath.startsWith(path.resolve('.'))) {
+    return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+  }
+
+  try {
+    const file = await fs.readFile(resolvedPath);
+    const stats = await fs.stat(resolvedPath);
+    const mimeType = mime.lookup(resolvedPath) || 'application/octet-stream';
+
+    let exifData = {};
+    let iptcData = {};
+
+    // Try to parse EXIF data (only works for JPEG/TIFF)
+    try {
+      const parser = exifParser.create(file);
+      const result = parser.parse();
+      exifData = result.tags || {};
+      iptcData = result.iptc || {};
+    } catch (e) {
+      // EXIF parsing failed, that's ok for PNGs
+    }
+
+    // Parse PNG chunks for AI metadata
+    let aiData = {};
+    if (mimeType === 'image/png') {
+      const chunks = parsePNGChunks(file);
+      aiData = parseAIMetadata(chunks);
+    } else if (mimeType === 'image/jpeg') {
+      // Extract AI metadata from JPEG EXIF UserComment
+      const userComment = parseJPEGUserComment(file);
+      if (userComment) {
+        // If it looks like JSON (ComfyUI workflow), route it as "prompt" chunk
+        // If it looks like A1111 params, route it as "parameters" chunk
+        if (userComment.trim().startsWith('{')) {
+          aiData = parseAIMetadata({ prompt: userComment });
+        } else {
+          aiData = parseAIMetadata({ parameters: userComment });
+        }
+      }
+    }
+
+    // Extract XMP metadata (works for all image formats)
+    let xmpData: Record<string, any> = {};
+    const xmpString = extractXMPString(file);
+    if (xmpString) {
+      xmpData = parseXMP(xmpString);
+
+      // If we didn't get AI data from format-specific parsing, try XMP
+      const xmpAI = extractAIFromXMP(xmpData);
+      if (Object.keys(xmpAI).length > 0) {
+        // If XMP had Draw Things A1111-style params, parse them
+        if (xmpAI._drawthings_params) {
+          const dtParams = xmpAI._drawthings_params;
+          delete xmpAI._drawthings_params;
+          const dtParsed = parseAIMetadata({ parameters: dtParams });
+          Object.assign(aiData, dtParsed);
+        }
+        // Merge XMP AI data (don't overwrite existing ComfyUI/A1111 data)
+        for (const [key, value] of Object.entries(xmpAI)) {
+          if (!aiData[key]) aiData[key] = value;
+        }
+      }
+    }
+
+    const metadata = {
+      fileName: path.basename(resolvedPath),
+      fileSize: stats.size,
+      fileType: mimeType,
+      lastModified: stats.mtime.toISOString(),
+      exif: exifData,
+      iptc: iptcData,
+      xmp: xmpData,
+      ai: aiData,
+    };
+
+    return NextResponse.json(metadata);
+  } catch (error) {
+    console.error('Metadata extraction error:', error);
+    if (error instanceof Error) {
+      if ('code' in error && error.code === 'ENOENT') {
+        return NextResponse.json({ error: 'File not found' }, { status: 404 });
+      }
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
+  }
+}
