@@ -29,6 +29,12 @@
     "@hooks": "https://shadcn-hooks.vercel.app/r/{name}.json",
     "@einui": "https://ui.eindev.ir/r/{name}.json",
     "@abui": "https://abui.io/r/{name}.json",
-    "@smoothui": "https://smoothui.dev/r/{name}.json"
+    "@smoothui": "https://smoothui.dev/r/{name}.json",
+    "@hextaui": "https://hextaui.com/r/{name}.json",
+    "@optics": "https://optics.agusmayol.com.ar/r/{name}.json",
+    "@joyco": "https://registry.joyco.studio/r/{name}.json",
+    "@magicui": "https://magicui.design/r/{name}",
+    "@kokonutui": "https://kokonutui.com/r/{name}.json",
+    "@gooseui": "https://gooseui.pro/r/{name}.json"
   }
 }

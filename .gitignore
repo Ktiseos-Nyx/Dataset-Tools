@@ -40,6 +40,12 @@ comfyui_findings.txt
 Dataset-Tools/
 Dataset-Tools-main/
 
+# thumbnail cache
+.thumbcache/
+
+# server settings
+settings.json
+
 # editor / AI tool configs
 .gemini/
 NUL

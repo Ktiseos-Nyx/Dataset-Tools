@@ -1,6 +1,6 @@
 "use client"
 
-import { ZoomIn, ZoomOut, Maximize2, RotateCw } from "lucide-react"
+import { ZoomIn, ZoomOut, Maximize2, RotateCw, Minimize2 } from "lucide-react"
 import { useState } from "react"
 
 interface ImagePreviewProps {
@@ -9,8 +9,10 @@ interface ImagePreviewProps {
 }
 
 export function ImagePreview({ src, fileName }: ImagePreviewProps) {
-  const [zoom, setZoom] = useState(100)
+  const [zoom, setZoom] = useState(0) // 0 = fit-to-container
   const [rotation, setRotation] = useState(0)
+
+  const isFit = zoom === 0
 
   return (
     <div className="h-full flex flex-col">
@@ -22,28 +24,30 @@ export function ImagePreview({ src, fileName }: ImagePreviewProps) {
 
         <div className="flex items-center gap-1">
           <button
-            onClick={() => setZoom(Math.max(25, zoom - 25))}
+            onClick={() => setZoom(isFit ? 100 : Math.max(25, zoom - 25))}
             className="p-2 hover:bg-accent rounded-md transition-colors"
             aria-label="Zoom out"
-            disabled={zoom <= 25}
+            disabled={!isFit && zoom <= 25}
           >
             <ZoomOut className="w-4 h-4" />
           </button>
-          <span className="text-sm font-mono text-muted-foreground min-w-[4ch] text-center px-2">{zoom}%</span>
+          <span className="text-sm font-mono text-muted-foreground min-w-[4ch] text-center px-2">
+            {isFit ? "Fit" : `${zoom}%`}
+          </span>
           <button
-            onClick={() => setZoom(Math.min(400, zoom + 25))}
+            onClick={() => setZoom(isFit ? 150 : Math.min(400, zoom + 25))}
             className="p-2 hover:bg-accent rounded-md transition-colors"
             aria-label="Zoom in"
-            disabled={zoom >= 400}
+            disabled={!isFit && zoom >= 400}
           >
             <ZoomIn className="w-4 h-4" />
           </button>
           <button
-            onClick={() => setZoom(100)}
+            onClick={() => setZoom(isFit ? 100 : 0)}
             className="p-2 hover:bg-accent rounded-md transition-colors"
-            aria-label="Reset zoom"
+            aria-label={isFit ? "Actual size" : "Fit to view"}
           >
-            <Maximize2 className="w-4 h-4" />
+            {isFit ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
           </button>
           <div className="w-px h-4 bg-border mx-1" />
           <button
@@ -58,18 +62,27 @@ export function ImagePreview({ src, fileName }: ImagePreviewProps) {
 
       {/* Image Display */}
       <div className="flex-1 overflow-auto bg-muted/30 flex items-center justify-center p-4">
-        <div
-          className="transition-transform duration-200"
-          style={{
-            transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
-          }}
-        >
+        {isFit ? (
           <img
             src={src || "/placeholder.svg"}
             alt={fileName}
-            className="max-w-full h-auto rounded-lg shadow-2xl border border-border"
+            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl border border-border transition-transform duration-200"
+            style={{ transform: rotation ? `rotate(${rotation}deg)` : undefined }}
           />
-        </div>
+        ) : (
+          <div
+            className="transition-transform duration-200"
+            style={{
+              transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
+            }}
+          >
+            <img
+              src={src || "/placeholder.svg"}
+              alt={fileName}
+              className="max-w-none rounded-lg shadow-2xl border border-border"
+            />
+          </div>
+        )}
       </div>
     </div>
   )

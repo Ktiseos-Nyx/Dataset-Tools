@@ -2,6 +2,8 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { ThemeProvider } from "@/components/theme-provider"
+import { Navbar } from "@/components/navbar"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -36,9 +38,21 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased`}>
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="flex flex-col h-screen">
+            <Navbar />
+            <div className="flex-1 overflow-hidden">
+              {children}
+            </div>
+          </div>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

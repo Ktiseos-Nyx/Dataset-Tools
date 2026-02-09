@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import mime from 'mime-types';
 import exifParser from 'exif-parser';
+import iconv from 'iconv-lite';
 
 // PNG chunk parser for AI generation parameters
 function parsePNGChunks(buffer: Buffer): Record<string, any> {
@@ -561,82 +562,152 @@ function parseAIMetadata(chunks: Record<string, any>): Record<string, any> {
   return aiData;
 }
 
+// Decode a UserComment byte payload using iconv-lite.
+// The EXIF UserComment spec: first 8 bytes = encoding ID, rest = encoded text.
+// Known prefixes: "ASCII\0\0\0", "UNICODE\0" (UTF-16), "JIS\0\0\0\0\0" (Shift-JIS)
+// Some tools write raw bytes with no prefix at all.
+function decodeUserComment(raw: Buffer): string | null {
+  if (raw.length < 8) return null;
+
+  const prefix = raw.slice(0, 8);
+  const payload = raw.slice(8);
+
+  // UNICODE prefix → UTF-16 (Civitai, some A1111 forks)
+  if (prefix.indexOf('UNICODE') === 0) {
+    // Detect BOM: if first two bytes are FF FE → LE, FE FF → BE
+    if (payload.length >= 2 && payload[0] === 0xFF && payload[1] === 0xFE) {
+      return iconv.decode(payload.slice(2), 'utf-16le').replace(/\0+$/, '').trim();
+    }
+    if (payload.length >= 2 && payload[0] === 0xFE && payload[1] === 0xFF) {
+      return iconv.decode(payload.slice(2), 'utf-16be').replace(/\0+$/, '').trim();
+    }
+    // No BOM — detect byte order by checking null byte positions.
+    // In UTF-16-LE ASCII text: XX 00 XX 00 (every odd byte is 00)
+    // In UTF-16-BE ASCII text: 00 XX 00 XX (every even byte is 00)
+    const encoding = detectUTF16ByteOrder(payload);
+    const decoded = iconv.decode(payload, encoding).replace(/\0+$/, '').trim();
+    // If result still looks like mojibake (CJK where ASCII expected), try the other order
+    if (hasMojibake(decoded) || looksLikeByteSwappedASCII(decoded)) {
+      const altEncoding = encoding === 'utf-16le' ? 'utf-16be' : 'utf-16le';
+      const altDecoded = iconv.decode(payload, altEncoding).replace(/\0+$/, '').trim();
+      if (!hasMojibake(altDecoded) && !looksLikeByteSwappedASCII(altDecoded)) {
+        return altDecoded;
+      }
+    }
+    return decoded;
+  }
+
+  // ASCII prefix → UTF-8
+  if (prefix.indexOf('ASCII') === 0) {
+    return payload.toString('utf8').replace(/\0+$/, '').trim();
+  }
+
+  // JIS prefix → Shift-JIS (Japanese tools)
+  if (prefix.indexOf('JIS') === 0) {
+    return iconv.decode(payload, 'shiftjis').replace(/\0+$/, '').trim();
+  }
+
+  // No recognized prefix — try UTF-8 first, then common fallbacks
+  const utf8 = raw.toString('utf8').replace(/\0+$/, '').trim();
+  // Check for mojibake indicators (common in mis-encoded text)
+  if (!hasMojibake(utf8) && utf8.length > 0) return utf8;
+
+  // Try Shift-JIS
+  try {
+    const sjis = iconv.decode(raw, 'shiftjis').replace(/\0+$/, '').trim();
+    if (sjis.length > 0 && !hasMojibake(sjis)) return sjis;
+  } catch { /* skip */ }
+
+  // Try Windows-1252 (Latin)
+  try {
+    const latin = iconv.decode(raw, 'windows-1252').replace(/\0+$/, '').trim();
+    if (latin.length > 0) return latin;
+  } catch { /* skip */ }
+
+  // Give back the UTF-8 attempt as last resort
+  return utf8.length > 0 ? utf8 : null;
+}
+
+// Quick heuristic: does the string look like mojibake?
+// Looks for sequences of replacement chars or implausible byte patterns
+function hasMojibake(text: string): boolean {
+  // Unicode replacement characters
+  if (text.includes('\uFFFD')) return true;
+  // Runs of C2/C3 + high bytes (classic UTF-8-decoded-as-Latin mojibake)
+  if (/[\u00C2\u00C3][\u0080-\u00BF]{2,}/.test(text)) return true;
+  return false;
+}
+
+// Detect UTF-16 byte order by sampling null byte positions.
+// ASCII text in UTF-16-LE: byte pairs are [char, 0x00] — odd positions are 0x00
+// ASCII text in UTF-16-BE: byte pairs are [0x00, char] — even positions are 0x00
+function detectUTF16ByteOrder(data: Buffer): 'utf-16le' | 'utf-16be' {
+  let leScore = 0; // odd bytes are 0x00 → LE
+  let beScore = 0; // even bytes are 0x00 → BE
+  const sampleSize = Math.min(data.length, 64); // check first 32 code units
+  for (let i = 0; i < sampleSize - 1; i += 2) {
+    if (data[i] !== 0 && data[i + 1] === 0) leScore++;
+    if (data[i] === 0 && data[i + 1] !== 0) beScore++;
+  }
+  return beScore > leScore ? 'utf-16be' : 'utf-16le';
+}
+
+// Detect byte-swapped ASCII: CJK chars in the U+6000-U+7A00 range that map to
+// ASCII a-z/A-Z when byte-swapped (e.g. 瀀=U+7000 is really 'p'=U+0070 swapped)
+function looksLikeByteSwappedASCII(text: string): boolean {
+  if (text.length < 5) return false;
+  let suspiciousCount = 0;
+  const sampleLen = Math.min(text.length, 50);
+  for (let i = 0; i < sampleLen; i++) {
+    const code = text.charCodeAt(i);
+    // CJK Unified Ideographs range that maps to ASCII when byte-swapped
+    // ASCII 0x20-0x7E → swapped becomes 0x2000-0x7E00
+    if (code >= 0x2000 && code <= 0x7F00 && (code & 0xFF) === 0) {
+      suspiciousCount++;
+    }
+  }
+  // If more than 40% of sampled chars look byte-swapped, it's likely wrong endianness
+  return suspiciousCount / sampleLen > 0.4;
+}
+
 // Extract AI metadata from JPEG EXIF UserComment field.
 // Different tools encode UserComment differently:
-//   - Civitai: "UNICODE\0\0" prefix + UTF-16-LE text
+//   - Civitai: "UNICODE\0" prefix + UTF-16-LE text (A1111-style params)
 //   - ComfyUI: "ASCII\0\0\0" prefix + UTF-8 JSON, or raw UTF-8 JSON
 //   - A1111: may use ASCII prefix or raw text
+//   - Japanese tools: JIS prefix + Shift-JIS
+//
+// Proper approach: parse the TIFF IFD structure to find the UserComment tag,
+// read its offset and byte count, then decode only the exact data bytes.
 function parseJPEGUserComment(buffer: Buffer): string | null {
   try {
-    // Scan for APP1 (EXIF) markers - there can be multiple
-    let offset = 2; // Skip JPEG SOI marker
+    let offset = 2; // Skip JPEG SOI marker (FF D8)
 
     while (offset < buffer.length - 4) {
-      // Must be a marker
       if (buffer[offset] !== 0xFF) { offset++; continue; }
-
       const marker = buffer[offset + 1];
+      if (marker === 0xDA) break; // SOS — no more metadata after this
 
-      // End of markers
-      if (marker === 0xDA) break; // SOS - start of scan, no more metadata
-
-      // APP1 = 0xE1
+      // APP1 = 0xE1 (EXIF lives here)
       if (marker === 0xE1) {
         const segLength = (buffer[offset + 2] << 8) | buffer[offset + 3];
-        const segData = buffer.slice(offset + 4, offset + 2 + segLength);
+        const segEnd = offset + 2 + segLength;
+        const segData = buffer.slice(offset + 4, segEnd);
 
-        // Try UNICODE prefix (Civitai style - UTF-16-LE)
-        const unicodeIndex = segData.indexOf('UNICODE');
-        if (unicodeIndex !== -1) {
-          const commentBytes = segData.slice(unicodeIndex + 8);
-          const stripped = Buffer.from(commentBytes.filter(b => b !== 0));
-          const comment = stripped.toString('utf8').trim();
-          if (comment.includes('Steps:') || comment.startsWith('{')) {
-            return comment;
-          }
-        }
+        // Try proper TIFF-based extraction first
+        const fromTIFF = extractUserCommentFromTIFF(segData);
+        if (fromTIFF) return fromTIFF;
 
-        // Try ASCII prefix (ComfyUI / A1111 style)
-        const asciiIndex = segData.indexOf('ASCII\0\0\0');
-        if (asciiIndex !== -1) {
-          const comment = segData.slice(asciiIndex + 8).toString('utf8').replace(/\0+$/, '').trim();
-          if (comment.includes('Steps:') || comment.startsWith('{')) {
-            return comment;
-          }
-        }
+        // Fallback: scan entire segment for encoding prefixes
+        const fromScan = scanForUserComment(segData);
+        if (fromScan) return fromScan;
 
-        // Try raw - look for JSON or A1111 params without prefix
-        // UserComment tag ID is 0x9286 - scan for it
-        const userCommentTag = segData.indexOf(Buffer.from([0x92, 0x86]));
-        if (userCommentTag !== -1) {
-          // Try to find JSON or A1111 text after the tag
-          const searchArea = segData.slice(userCommentTag);
-          // Look for the start of JSON
-          const jsonStart = searchArea.indexOf('{'.charCodeAt(0));
-          if (jsonStart !== -1) {
-            const possibleJson = searchArea.slice(jsonStart).toString('utf8').replace(/\0+$/, '').trim();
-            if (possibleJson.startsWith('{')) {
-              try { JSON.parse(possibleJson); return possibleJson; } catch { /* not valid json */ }
-            }
-          }
-          // Look for A1111 "Steps:" pattern
-          const stepsIdx = searchArea.indexOf('Steps:');
-          if (stepsIdx !== -1) {
-            // Walk back to find the start of the text
-            let textStart = stepsIdx;
-            while (textStart > 0 && searchArea[textStart - 1] !== 0) textStart--;
-            const comment = searchArea.slice(textStart).toString('utf8').replace(/\0+$/, '').trim();
-            if (comment.length > 10) return comment;
-          }
-        }
-
-        // Move past this APP1 segment and check for more
-        offset += 2 + segLength;
+        offset = segEnd;
         continue;
       }
 
-      // Skip other markers
-      if (marker >= 0xE0 && marker <= 0xEF || marker === 0xFE) {
+      // Skip other marker segments
+      if ((marker >= 0xE0 && marker <= 0xEF) || marker === 0xFE) {
         const segLength = (buffer[offset + 2] << 8) | buffer[offset + 3];
         offset += 2 + segLength;
       } else {
@@ -644,7 +715,151 @@ function parseJPEGUserComment(buffer: Buffer): string | null {
       }
     }
   } catch (e) {
-    // Failed to parse
+    console.error('parseJPEGUserComment error:', e);
+  }
+  return null;
+}
+
+// Parse the TIFF structure inside an APP1 segment to find UserComment (tag 0x9286).
+// This correctly handles byte order (II = little-endian, MM = big-endian).
+function extractUserCommentFromTIFF(segData: Buffer): string | null {
+  // APP1 starts with "Exif\0\0" (6 bytes), then TIFF header
+  if (segData.length < 14) return null;
+  const exifHeader = segData.toString('ascii', 0, 4);
+  if (exifHeader !== 'Exif') return null;
+
+  const tiffStart = 6; // offset within segData where TIFF header begins
+  const tiffData = segData.slice(tiffStart);
+  const byteOrder = tiffData.toString('ascii', 0, 2);
+  const isLE = byteOrder === 'II';
+  const isBE = byteOrder === 'MM';
+  if (!isLE && !isBE) return null;
+
+  // All offsets in TIFF are relative to tiffStart (the TIFF header)
+  const read16 = (off: number) => {
+    if (off + 2 > tiffData.length) return 0;
+    return isLE ? tiffData.readUInt16LE(off) : tiffData.readUInt16BE(off);
+  };
+  const read32 = (off: number) => {
+    if (off + 4 > tiffData.length) return 0;
+    return isLE ? tiffData.readUInt32LE(off) : tiffData.readUInt32BE(off);
+  };
+
+  // Verify TIFF magic (42)
+  if (read16(2) !== 42) return null;
+
+  const ifd0Offset = read32(4);
+
+  // Read a 4-byte value from an IFD entry's value field (used for pointers like EXIF IFD offset)
+  function findIFDEntryValue(ifdOffset: number, targetTag: number): number | null {
+    if (ifdOffset + 2 > tiffData.length) return null;
+    const entryCount = read16(ifdOffset);
+    for (let i = 0; i < entryCount; i++) {
+      const entryOff = ifdOffset + 2 + i * 12;
+      if (entryOff + 12 > tiffData.length) break;
+      if (read16(entryOff) === targetTag) {
+        return read32(entryOff + 8); // value/offset field
+      }
+    }
+    return null;
+  }
+
+  // Find UserComment data (tag 0x9286) in an IFD — returns raw bytes
+  function findUserComment(ifdOffset: number): Buffer | null {
+    if (ifdOffset + 2 > tiffData.length) return null;
+    const entryCount = read16(ifdOffset);
+    for (let i = 0; i < entryCount; i++) {
+      const entryOff = ifdOffset + 2 + i * 12;
+      if (entryOff + 12 > tiffData.length) break;
+      if (read16(entryOff) !== 0x9286) continue;
+
+      // Type 7 = UNDEFINED, 1 byte per element
+      const byteCount = read32(entryOff + 4);
+      if (byteCount < 8) return null;
+
+      let dataStart: number;
+      if (byteCount <= 4) {
+        dataStart = entryOff + 8; // inline
+      } else {
+        dataStart = read32(entryOff + 8); // offset from TIFF header
+      }
+
+      if (dataStart + byteCount > tiffData.length) return null;
+      return tiffData.slice(dataStart, dataStart + byteCount);
+    }
+    return null;
+  }
+
+  // Find EXIF sub-IFD pointer (tag 0x8769) in IFD0
+  const exifIFDOffset = findIFDEntryValue(ifd0Offset, 0x8769);
+  if (exifIFDOffset === null) return null;
+
+  // Find UserComment in EXIF IFD
+  const ucRaw = findUserComment(exifIFDOffset);
+  if (!ucRaw) return null;
+
+  const decoded = decodeUserComment(ucRaw);
+  if (decoded && decoded.length > 5) return decoded;
+
+  return null;
+}
+
+// Fallback: scan segment bytes for encoding prefixes (handles non-standard EXIF)
+function scanForUserComment(segData: Buffer): string | null {
+  for (const prefix of ['UNICODE', 'ASCII\0\0\0', 'JIS\0\0\0\0\0']) {
+    const idx = segData.indexOf(prefix);
+    if (idx === -1) continue;
+
+    // Try to determine data length: scan for a run of null bytes after text
+    // or use a reasonable max length
+    let endIdx = idx + 8; // skip prefix
+    const maxEnd = Math.min(segData.length, idx + 65536);
+
+    if (prefix === 'UNICODE') {
+      // UTF-16-LE: scan for 4+ consecutive null bytes (end of text region)
+      endIdx = idx + 8;
+      while (endIdx + 3 < maxEnd) {
+        if (segData[endIdx] === 0 && segData[endIdx + 1] === 0 &&
+            segData[endIdx + 2] === 0 && segData[endIdx + 3] === 0) {
+          break;
+        }
+        endIdx += 2; // advance by UTF-16 code unit
+      }
+      endIdx = Math.min(endIdx + 2, maxEnd); // include last char
+    } else {
+      // ASCII/JIS: scan for null terminator
+      while (endIdx < maxEnd && segData[endIdx] !== 0) endIdx++;
+    }
+
+    const commentRaw = segData.slice(idx, endIdx);
+    const decoded = decodeUserComment(commentRaw);
+    if (decoded && decoded.length > 5 && (decoded.includes('Steps:') || decoded.startsWith('{') || decoded.length > 20)) {
+      return decoded;
+    }
+  }
+
+  // Also try finding raw JSON or A1111 params without prefix
+  const jsonStart = segData.indexOf('{'.charCodeAt(0));
+  if (jsonStart !== -1) {
+    // Try to find matching closing brace
+    let braceDepth = 0;
+    let jsonEnd = jsonStart;
+    for (let i = jsonStart; i < Math.min(segData.length, jsonStart + 65536); i++) {
+      if (segData[i] === 0x7B) braceDepth++;
+      else if (segData[i] === 0x7D) { braceDepth--; if (braceDepth === 0) { jsonEnd = i + 1; break; } }
+    }
+    if (jsonEnd > jsonStart) {
+      const possibleJson = segData.slice(jsonStart, jsonEnd).toString('utf8').trim();
+      try { JSON.parse(possibleJson); return possibleJson; } catch { /* not valid json */ }
+    }
+  }
+
+  const stepsIdx = segData.indexOf('Steps:');
+  if (stepsIdx !== -1) {
+    let textStart = stepsIdx;
+    while (textStart > 0 && segData[textStart - 1] !== 0) textStart--;
+    const comment = segData.slice(textStart, Math.min(segData.length, stepsIdx + 4096)).toString('utf8').replace(/\0+$/, '').trim();
+    if (comment.length > 10) return comment;
   }
 
   return null;
@@ -845,7 +1060,17 @@ export async function GET(request: Request) {
       aiData = parseAIMetadata(chunks);
     } else if (mimeType === 'image/jpeg') {
       // Extract AI metadata from JPEG EXIF UserComment
-      const userComment = parseJPEGUserComment(file);
+      let userComment = parseJPEGUserComment(file);
+
+      // Fallback: if our parser didn't find it but exif-parser did,
+      // the exif-parser string might be usable directly (ASCII/UTF-8 content)
+      if (!userComment && (exifData as any).UserComment) {
+        const epComment = String((exifData as any).UserComment).trim();
+        if (epComment.length > 10 && (epComment.includes('Steps:') || epComment.startsWith('{'))) {
+          userComment = epComment;
+        }
+      }
+
       if (userComment) {
         // If it looks like JSON (ComfyUI workflow), route it as "prompt" chunk
         // If it looks like A1111 params, route it as "parameters" chunk

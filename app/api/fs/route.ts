@@ -2,9 +2,20 @@ import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 
+const IMAGE_EXTENSIONS = new Set([
+  '.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tiff', '.tif',
+  '.svg', '.ico', '.avif', '.heic', '.heif', '.jxl',
+]);
+
+function isImageFile(name: string): boolean {
+  const ext = path.extname(name).toLowerCase();
+  return IMAGE_EXTENSIONS.has(ext);
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const dirPath = searchParams.get('path') || '.';
+  const showHidden = searchParams.get('showHidden') === 'true';
 
   // Basic security check to prevent directory traversal
   const resolvedPath = path.resolve(dirPath);
@@ -14,10 +25,19 @@ export async function GET(request: Request) {
 
   try {
     const files = await fs.readdir(resolvedPath, { withFileTypes: true });
-    const fileList = files.map(file => ({
+    let fileList = files.map(file => ({
       name: file.name,
       isDirectory: file.isDirectory(),
     }));
+
+    // Filter hidden files (dotfiles) unless showHidden is true
+    if (!showHidden) {
+      fileList = fileList.filter(file => !file.name.startsWith('.'));
+    }
+
+    // Only show directories and image files
+    fileList = fileList.filter(file => file.isDirectory || isImageFile(file.name));
+
     return NextResponse.json(fileList);
   } catch (error) {
     if (error instanceof Error) {
