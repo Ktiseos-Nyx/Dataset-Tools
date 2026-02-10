@@ -30,7 +30,7 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile }: Th
     const fetchImages = async () => {
       setIsLoading(true)
       try {
-        const response = await fetch(`/api/fs?path=${encodeURIComponent(currentDir)}&showHidden=${settings.showHiddenFiles}`)
+        const response = await fetch(`/api/fs?path=${encodeURIComponent(currentDir)}&showHidden=${settings.showHiddenFiles}&baseFolder=${encodeURIComponent(settings.currentFolder)}`)
         if (!response.ok) throw new Error('Failed to fetch')
         const data = await response.json()
         setImages(
@@ -48,7 +48,7 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile }: Th
       }
     }
     fetchImages()
-  }, [currentDir, settings.showHiddenFiles])
+  }, [currentDir, settings.showHiddenFiles, settings.currentFolder])
 
   const selectedRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
@@ -104,7 +104,7 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile }: Th
                       }`}
                       style={{ width: 96 }}
                     >
-                      <Thumb path={item.path} />
+                      <Thumb path={item.path} baseFolder={settings.currentFolder} />
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="text-[10px] truncate w-full text-center text-muted-foreground">
@@ -140,7 +140,7 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile }: Th
   )
 }
 
-function Thumb({ path: filePath }: { path: string }) {
+function Thumb({ path: filePath, baseFolder }: { path: string; baseFolder: string }) {
   const ref = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -167,7 +167,7 @@ function Thumb({ path: filePath }: { path: string }) {
     >
       {visible ? (
         <img
-          src={`/api/thumbnail?path=${encodeURIComponent(filePath)}&size=152`}
+          src={`/api/thumbnail?path=${encodeURIComponent(filePath)}&size=152&baseFolder=${encodeURIComponent(baseFolder)}`}
           alt=""
           className={`object-cover w-full h-full transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setLoaded(true)}

@@ -6,15 +6,22 @@ import mime from 'mime-types';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const filePath = searchParams.get('path');
+  const baseFolder = searchParams.get('baseFolder') || '.';
 
   if (!filePath) {
     return NextResponse.json({ error: 'File path is required' }, { status: 400 });
   }
 
-  // Basic security check to prevent directory traversal
-  const resolvedPath = path.resolve(filePath);
-  if (!resolvedPath.startsWith(path.resolve('.'))) {
-    return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+  // Resolve the base folder first
+  const resolvedBase = path.resolve(baseFolder);
+
+  // Build the full path
+  const fullPath = path.isAbsolute(filePath) ? filePath : path.join(resolvedBase, filePath);
+  const resolvedPath = path.resolve(fullPath);
+
+  // Security: prevent directory traversal outside the base folder
+  if (!resolvedPath.startsWith(resolvedBase)) {
+    return NextResponse.json({ error: 'Access denied - path outside base folder' }, { status: 403 });
   }
 
   try {

@@ -1,17 +1,20 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels"
 import { Grid3x3, List, SidebarClose, SidebarOpen, ImageIcon } from "lucide-react"
 import { FileTree } from "@/components/file-tree"
 import { ImagePreview } from "@/components/image-preview"
 import { MetadataPanel } from "@/components/metadata-panel"
 import { ThumbnailViewport } from "@/components/thumbnail-viewport"
+import { DropZone } from "@/components/drop-zone"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import { FsItem } from "@/types/fs"
 import type { ImageMetadata, ViewMode } from "@/types/metadata"
+import { useSettings } from "@/hooks/use-settings"
 
 export default function Home() {
+  const { settings, updateSettings } = useSettings()
   const [selectedFile, setSelectedFile] = useState<FsItem | null>(null)
   const [currentDir, setCurrentDir] = useState<string | null>(".")
   const [metadata, setMetadata] = useState<{ data: ImageMetadata | null; loading: boolean }>({ data: null, loading: false })
@@ -21,7 +24,7 @@ export default function Home() {
   const fetchMetadata = async (file: FsItem) => {
     setMetadata({ data: null, loading: true });
     try {
-      const response = await fetch(`/api/metadata?path=${encodeURIComponent(file.path)}`);
+      const response = await fetch(`/api/metadata?path=${encodeURIComponent(file.path)}&baseFolder=${encodeURIComponent(settings.currentFolder)}`);
       if (!response.ok) {
         throw new Error('Failed to fetch metadata');
       }
@@ -32,6 +35,11 @@ export default function Home() {
       setMetadata({ data: null, loading: false });
     }
   };
+
+  // Reset thumbnail viewport when folder changes
+  useEffect(() => {
+    setCurrentDir('.')
+  }, [settings.currentFolder])
 
   const handleFileSelect = (file: FsItem) => {
     if (file.isDirectory) {
@@ -52,8 +60,70 @@ export default function Home() {
     setCurrentDir(dirPath)
   }
 
+  const handleFileDrop = async (file: File, folderPath?: string) => {
+    // Show the image immediately
+    const objectUrl = URL.createObjectURL(file)
+    setSelectedFile({
+      name: file.name,
+      path: objectUrl,
+      isDirectory: false,
+    })
+
+    // If we got the folder path from the drop (Electron), switch to it
+    if (folderPath) {
+      updateSettings({ currentFolder: folderPath })
+    }
+
+    // Extract metadata (file is in memory, no disk I/O needed)
+    setMetadata({ data: null, loading: true })
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const response = await fetch('/api/metadata-from-file', {
+        method: 'POST',
+        body: formData,
+      })
+      if (response.ok) {
+        setMetadata({ data: await response.json(), loading: false })
+      } else {
+        setMetadata({ data: null, loading: false })
+      }
+    } catch {
+      setMetadata({ data: null, loading: false })
+    }
+
+    // If no folder path from browser, find it via server (quick bounded search)
+    if (!folderPath) {
+      try {
+        const controller = new AbortController()
+        const timeout = setTimeout(() => controller.abort(), 8000)
+
+        const res = await fetch('/api/find-file', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fileName: file.name,
+            fileSize: file.size,
+            lastFolder: settings.currentFolder !== '.' ? settings.currentFolder : undefined,
+          }),
+          signal: controller.signal,
+        })
+        clearTimeout(timeout)
+
+        if (res.ok) {
+          const { folder } = await res.json()
+          if (folder) updateSettings({ currentFolder: folder })
+        }
+      } catch {
+        // Timed out or failed - user can use folder picker
+      }
+    }
+  }
+
   return (
-    <div className="flex flex-col h-full">
+    <>
+      <DropZone onFileDrop={(file, folder) => handleFileDrop(file, folder)} />
+      <div className="flex flex-col h-full">
       {/* Page-specific toolbar */}
       <div className="h-10 border-b border-border bg-muted/20 flex items-center justify-between px-4">
         <div className="flex items-center gap-2 bg-muted rounded-lg p-0.5">
@@ -116,7 +186,7 @@ export default function Home() {
                   </Empty>
                 ) : (
                   <ImagePreview
-                    src={`/api/image?path=${encodeURIComponent(selectedFile.path)}`}
+                    src={selectedFile.path.startsWith('blob:') ? selectedFile.path : `/api/image?path=${encodeURIComponent(selectedFile.path)}&baseFolder=${encodeURIComponent(settings.currentFolder)}`}
                     fileName={selectedFile.name}
                   />
                 )}
@@ -147,5 +217,6 @@ export default function Home() {
         )}
       </PanelGroup>
     </div>
+    </>
   )
 }
