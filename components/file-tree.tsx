@@ -91,7 +91,7 @@ function Directory({
         {isExpanded ? (
           <FolderOpen className="w-4 h-4 text-primary" />
         ) : (
-          <Folder className="w-4 h-4 text-muted-foreground" />
+          <Folder className="w-4 h-4 text-accent-foreground" />
         )}
         <span className="font-medium">{item.name}</span>
       </button>
@@ -137,7 +137,7 @@ function Directory({
                       }`}
                       style={{ paddingLeft: `${(level + 1) * 1.5 + 0.5}rem` }}
                     >
-                      <FileImage className="w-4 h-4 text-muted-foreground" />
+                      <FileImage className="w-4 h-4 text-accent-foreground" />
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="truncate text-left flex-1">
@@ -352,7 +352,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
             <TooltipTrigger asChild>
               <button
                 onClick={handleFolderSelect}
-                className="p-1.5 hover:bg-accent rounded transition-colors"
+                className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded transition-colors"
                 title="Open Folder"
               >
                 <FolderInput className="w-4 h-4" />
@@ -363,7 +363,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className="p-1.5 hover:bg-accent rounded transition-colors"
+                className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded transition-colors"
                 title="Sort by"
               >
                 <ArrowUpDown className="w-4 h-4" />
@@ -385,7 +385,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
           <button
             onClick={fetchRoot}
             disabled={isLoading}
-            className="p-1.5 hover:bg-accent rounded transition-colors disabled:opacity-50"
+            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded transition-colors disabled:opacity-50"
             title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -444,7 +444,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
                             selectedFile?.path === item.path ? "bg-accent" : ""
                         }`}
                       >
-                        <FileImage className="w-4 h-4 text-muted-foreground" />
+                        <FileImage className="w-4 h-4 text-accent-foreground" />
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <span className="truncate text-left flex-1">

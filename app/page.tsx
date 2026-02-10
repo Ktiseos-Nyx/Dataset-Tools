@@ -130,7 +130,7 @@ export default function Home() {
           <button
             onClick={() => setViewMode("list")}
             className={`p-1.5 rounded transition-colors ${
-              viewMode === "list" ? "bg-background shadow-sm" : "hover:bg-background/50"
+              viewMode === "list" ? "bg-accent text-accent-foreground shadow-sm" : "text-muted-foreground hover:bg-background/50"
             }`}
             aria-label="List view"
           >
@@ -139,7 +139,7 @@ export default function Home() {
           <button
             onClick={() => setViewMode("thumbnail")}
             className={`p-1.5 rounded transition-colors ${
-              viewMode === "thumbnail" ? "bg-background shadow-sm" : "hover:bg-background/50"
+              viewMode === "thumbnail" ? "bg-accent text-accent-foreground shadow-sm" : "text-muted-foreground hover:bg-background/50"
             }`}
             aria-label="Thumbnail view"
           >
@@ -149,7 +149,7 @@ export default function Home() {
 
         <button
           onClick={() => setShowMetadata(!showMetadata)}
-          className="p-1.5 hover:bg-accent rounded-lg transition-colors"
+          className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded-lg transition-colors"
           aria-label={showMetadata ? "Hide metadata" : "Show metadata"}
         >
           {showMetadata ? <SidebarClose className="w-3.5 h-3.5" /> : <SidebarOpen className="w-3.5 h-3.5" />}
