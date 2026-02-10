@@ -23,7 +23,7 @@
 <hr>
 
 
-![Screenshot 2026-02-10 184845](https://github.com/user-attachments/assets/524f4535-473d-4884-aee5-ca3e1840cc8f)
+![Screenshot 2026-02-10 184845 (1)](https://github.com/user-attachments/assets/90f9e2bf-3c3c-4ae0-9131-33fa6b0b745d)
 
 
 </div>
