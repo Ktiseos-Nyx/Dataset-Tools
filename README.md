@@ -49,17 +49,16 @@ This project is inspired by [stable-diffusion-prompt-reader](https://github.com/
 ---
 
 ## Installation
-
+**Clone repo**
 ```bash
-# Clone repo
 git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
 cd Dataset-Tools
-
+```
 # Install dependencies (Node.js 18+ required)
-npm install
+```npm install```
 
 # Start dev server
-npm run dev
+```npm run dev
 ```
 
 For production:
