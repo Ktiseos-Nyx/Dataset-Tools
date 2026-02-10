@@ -1021,18 +1021,98 @@ function extractAIFromXMP(xmp: Record<string, any>): Record<string, any> {
   return ai;
 }
 
+// Shared extraction function used by both GET (path-based) and POST (file upload)
+export function extractMetadataFromBuffer(
+  buffer: Buffer,
+  mimeType: string,
+  fileName: string,
+  fileSize: number,
+  lastModified: string,
+): Record<string, any> {
+  let exifData = {};
+  let iptcData = {};
+
+  // Try to parse EXIF data (only works for JPEG/TIFF)
+  try {
+    const parser = exifParser.create(buffer);
+    const result = parser.parse();
+    exifData = result.tags || {};
+    iptcData = result.iptc || {};
+  } catch (e) {
+    // EXIF parsing failed, that's ok for PNGs
+  }
+
+  // Parse PNG chunks for AI metadata
+  let aiData: Record<string, any> = {};
+  if (mimeType === 'image/png') {
+    const chunks = parsePNGChunks(buffer);
+    aiData = parseAIMetadata(chunks);
+  } else if (mimeType === 'image/jpeg') {
+    let userComment = parseJPEGUserComment(buffer);
+
+    if (!userComment && (exifData as any).UserComment) {
+      const epComment = String((exifData as any).UserComment).trim();
+      if (epComment.length > 10 && (epComment.includes('Steps:') || epComment.startsWith('{'))) {
+        userComment = epComment;
+      }
+    }
+
+    if (userComment) {
+      if (userComment.trim().startsWith('{')) {
+        aiData = parseAIMetadata({ prompt: userComment });
+      } else {
+        aiData = parseAIMetadata({ parameters: userComment });
+      }
+    }
+  }
+
+  // Extract XMP metadata (works for all image formats)
+  let xmpData: Record<string, any> = {};
+  const xmpString = extractXMPString(buffer);
+  if (xmpString) {
+    xmpData = parseXMP(xmpString);
+
+    const xmpAI = extractAIFromXMP(xmpData);
+    if (Object.keys(xmpAI).length > 0) {
+      if (xmpAI._drawthings_params) {
+        const dtParams = xmpAI._drawthings_params;
+        delete xmpAI._drawthings_params;
+        const dtParsed = parseAIMetadata({ parameters: dtParams });
+        Object.assign(aiData, dtParsed);
+      }
+      for (const [key, value] of Object.entries(xmpAI)) {
+        if (!aiData[key]) aiData[key] = value;
+      }
+    }
+  }
+
+  return {
+    fileName,
+    fileSize,
+    fileType: mimeType,
+    lastModified,
+    exif: exifData,
+    iptc: iptcData,
+    xmp: xmpData,
+    ai: aiData,
+  };
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const filePath = searchParams.get('path');
+  const baseFolder = searchParams.get('baseFolder') || '.';
 
   if (!filePath) {
     return NextResponse.json({ error: 'File path is required' }, { status: 400 });
   }
 
-  // Basic security check to prevent directory traversal
-  const resolvedPath = path.resolve(filePath);
-   if (!resolvedPath.startsWith(path.resolve('.'))) {
-    return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+  const resolvedBase = path.resolve(baseFolder);
+  const fullPath = path.isAbsolute(filePath) ? filePath : path.join(resolvedBase, filePath);
+  const resolvedPath = path.resolve(fullPath);
+
+  if (!resolvedPath.startsWith(resolvedBase)) {
+    return NextResponse.json({ error: 'Access denied - path outside base folder' }, { status: 403 });
   }
 
   try {
@@ -1040,81 +1120,13 @@ export async function GET(request: Request) {
     const stats = await fs.stat(resolvedPath);
     const mimeType = mime.lookup(resolvedPath) || 'application/octet-stream';
 
-    let exifData = {};
-    let iptcData = {};
-
-    // Try to parse EXIF data (only works for JPEG/TIFF)
-    try {
-      const parser = exifParser.create(file);
-      const result = parser.parse();
-      exifData = result.tags || {};
-      iptcData = result.iptc || {};
-    } catch (e) {
-      // EXIF parsing failed, that's ok for PNGs
-    }
-
-    // Parse PNG chunks for AI metadata
-    let aiData = {};
-    if (mimeType === 'image/png') {
-      const chunks = parsePNGChunks(file);
-      aiData = parseAIMetadata(chunks);
-    } else if (mimeType === 'image/jpeg') {
-      // Extract AI metadata from JPEG EXIF UserComment
-      let userComment = parseJPEGUserComment(file);
-
-      // Fallback: if our parser didn't find it but exif-parser did,
-      // the exif-parser string might be usable directly (ASCII/UTF-8 content)
-      if (!userComment && (exifData as any).UserComment) {
-        const epComment = String((exifData as any).UserComment).trim();
-        if (epComment.length > 10 && (epComment.includes('Steps:') || epComment.startsWith('{'))) {
-          userComment = epComment;
-        }
-      }
-
-      if (userComment) {
-        // If it looks like JSON (ComfyUI workflow), route it as "prompt" chunk
-        // If it looks like A1111 params, route it as "parameters" chunk
-        if (userComment.trim().startsWith('{')) {
-          aiData = parseAIMetadata({ prompt: userComment });
-        } else {
-          aiData = parseAIMetadata({ parameters: userComment });
-        }
-      }
-    }
-
-    // Extract XMP metadata (works for all image formats)
-    let xmpData: Record<string, any> = {};
-    const xmpString = extractXMPString(file);
-    if (xmpString) {
-      xmpData = parseXMP(xmpString);
-
-      // If we didn't get AI data from format-specific parsing, try XMP
-      const xmpAI = extractAIFromXMP(xmpData);
-      if (Object.keys(xmpAI).length > 0) {
-        // If XMP had Draw Things A1111-style params, parse them
-        if (xmpAI._drawthings_params) {
-          const dtParams = xmpAI._drawthings_params;
-          delete xmpAI._drawthings_params;
-          const dtParsed = parseAIMetadata({ parameters: dtParams });
-          Object.assign(aiData, dtParsed);
-        }
-        // Merge XMP AI data (don't overwrite existing ComfyUI/A1111 data)
-        for (const [key, value] of Object.entries(xmpAI)) {
-          if (!aiData[key]) aiData[key] = value;
-        }
-      }
-    }
-
-    const metadata = {
-      fileName: path.basename(resolvedPath),
-      fileSize: stats.size,
-      fileType: mimeType,
-      lastModified: stats.mtime.toISOString(),
-      exif: exifData,
-      iptc: iptcData,
-      xmp: xmpData,
-      ai: aiData,
-    };
+    const metadata = extractMetadataFromBuffer(
+      file,
+      mimeType,
+      path.basename(resolvedPath),
+      stats.size,
+      stats.mtime.toISOString(),
+    );
 
     return NextResponse.json(metadata);
   } catch (error) {

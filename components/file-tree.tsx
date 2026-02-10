@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronRight, ChevronDown, Folder, FolderOpen, FileImage, Loader2, FolderSearch, Copy } from "lucide-react"
+import { ChevronRight, ChevronDown, Folder, FolderOpen, FileImage, Loader2, FolderSearch, Copy, RefreshCw, ArrowUpDown, FolderInput } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import type { FsItem } from "@/types/fs"
 import type { ViewMode } from "@/types/metadata"
@@ -10,6 +10,9 @@ import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/
 import {
   ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuSeparator,
 } from "@/components/ui/context-menu"
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu"
 
 interface FileTreeProps {
   onFileSelect: (file: FsItem) => void;
@@ -28,6 +31,8 @@ function Directory({
   viewMode,
   showFileExtensions,
   thumbnailSize,
+  sortBy,
+  baseFolder,
 }: {
   item: FsItem;
   onFileSelect: (file: FsItem) => void;
@@ -38,6 +43,8 @@ function Directory({
   viewMode: ViewMode;
   showFileExtensions: boolean;
   thumbnailSize: string;
+  sortBy: 'name' | 'date' | 'size';
+  baseFolder: string;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [children, setChildren] = useState<FsItem[]>([]);
@@ -47,15 +54,16 @@ function Directory({
     if (!isExpanded) {
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/fs?path=${encodeURIComponent(item.path)}&showHidden=${showHidden}`);
+        const response = await fetch(`/api/fs?path=${encodeURIComponent(item.path)}&showHidden=${showHidden}&baseFolder=${encodeURIComponent(baseFolder)}`);
         if (!response.ok) {
           throw new Error('Failed to fetch directory contents');
         }
         const data = await response.json();
-        setChildren(data.map((child: { name: string; isDirectory: boolean }) => ({
+        const items = data.map((child: FsItem) => ({
           ...child,
           path: `${item.path}/${child.name}`,
-        })));
+        }));
+        setChildren(sortItems(items, sortBy));
       } catch (error) {
         console.error(error);
       } finally {
@@ -83,7 +91,7 @@ function Directory({
         {isExpanded ? (
           <FolderOpen className="w-4 h-4 text-primary" />
         ) : (
-          <Folder className="w-4 h-4 text-muted-foreground" />
+          <Folder className="w-4 h-4 text-accent-foreground" />
         )}
         <span className="font-medium">{item.name}</span>
       </button>
@@ -99,6 +107,7 @@ function Directory({
               level={level + 1}
               showFileExtensions={showFileExtensions}
               thumbnailSize={thumbnailSize}
+              baseFolder={baseFolder}
             />
           )}
           <div className="space-y-0.5">
@@ -115,6 +124,8 @@ function Directory({
                   viewMode={viewMode}
                   showFileExtensions={showFileExtensions}
                   thumbnailSize={thumbnailSize}
+                  sortBy={sortBy}
+                  baseFolder={baseFolder}
                 />
               ) : viewMode === "list" ? (
                 <ContextMenu key={child.path}>
@@ -126,7 +137,7 @@ function Directory({
                       }`}
                       style={{ paddingLeft: `${(level + 1) * 1.5 + 0.5}rem` }}
                     >
-                      <FileImage className="w-4 h-4 text-muted-foreground" />
+                      <FileImage className="w-4 h-4 text-accent-foreground" />
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="truncate text-left flex-1">
@@ -172,6 +183,7 @@ function ThumbnailGrid({
   level,
   showFileExtensions,
   thumbnailSize,
+  baseFolder,
 }: {
   items: FsItem[];
   onFileSelect: (file: FsItem) => void;
@@ -179,6 +191,7 @@ function ThumbnailGrid({
   level: number;
   showFileExtensions: boolean;
   thumbnailSize: string;
+  baseFolder: string;
 }) {
   const size = THUMB_SIZES[thumbnailSize] || 120
 
@@ -196,7 +209,7 @@ function ThumbnailGrid({
           }`}
           style={{ width: size + 16 }}
         >
-          <LazyThumbnail path={item.path} size={size} />
+          <LazyThumbnail path={item.path} size={size} baseFolder={baseFolder} />
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="text-xs truncate w-full text-center">
@@ -211,7 +224,7 @@ function ThumbnailGrid({
   )
 }
 
-function LazyThumbnail({ path: filePath, size }: { path: string; size: number }) {
+function LazyThumbnail({ path: filePath, size, baseFolder }: { path: string; size: number; baseFolder: string }) {
   const ref = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -239,7 +252,7 @@ function LazyThumbnail({ path: filePath, size }: { path: string; size: number })
     >
       {isVisible ? (
         <img
-          src={`/api/thumbnail?path=${encodeURIComponent(filePath)}&size=${size * 2}`}
+          src={`/api/thumbnail?path=${encodeURIComponent(filePath)}&size=${size * 2}&baseFolder=${encodeURIComponent(baseFolder)}`}
           alt=""
           className={`object-cover w-full h-full transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setLoaded(true)}
@@ -255,37 +268,129 @@ function LazyThumbnail({ path: filePath, size }: { path: string; size: number })
   )
 }
 
+function sortItems(items: FsItem[], sortBy: 'name' | 'date' | 'size'): FsItem[] {
+  const sorted = [...items];
+
+  // Always keep directories first
+  const dirs = sorted.filter(i => i.isDirectory);
+  const files = sorted.filter(i => !i.isDirectory);
+
+  const sortFn = (a: FsItem, b: FsItem) => {
+    switch (sortBy) {
+      case 'date':
+        return (b.mtime || 0) - (a.mtime || 0); // Newest first
+      case 'size':
+        return (b.size || 0) - (a.size || 0); // Largest first
+      case 'name':
+      default:
+        return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
+    }
+  };
+
+  return [...dirs.sort(sortFn), ...files.sort(sortFn)];
+}
+
 export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "list" }: FileTreeProps) {
   const [rootItems, setRootItems] = useState<FsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { settings } = useSettings();
+  const { settings, updateSettings } = useSettings();
+
+  const fetchRoot = async () => {
+    setIsLoading(true);
+    setRootItems([]); // Clear stale items immediately
+    try {
+      const response = await fetch(`/api/fs?showHidden=${settings.showHiddenFiles}&baseFolder=${encodeURIComponent(settings.currentFolder)}`);
+      if (!response.ok) {
+          throw new Error('Failed to fetch root directory');
+      }
+      const data = await response.json();
+      const items = data.map((item: FsItem) => ({
+          ...item,
+          path: item.name,
+      }));
+      setRootItems(sortItems(items, settings.sortBy));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFolderSelect = async () => {
+    try {
+      // Use the File System Access API if available
+      if ('showDirectoryPicker' in window) {
+        const dirHandle = await (window as any).showDirectoryPicker();
+        // Get the path from the handle (this is tricky in browser)
+        // For now, we'll use a text input fallback
+        const folderPath = prompt('Enter folder path:', settings.currentFolder);
+        if (folderPath) {
+          updateSettings({ currentFolder: folderPath });
+        }
+      } else {
+        // Fallback: text input
+        const folderPath = prompt('Enter folder path:', settings.currentFolder);
+        if (folderPath) {
+          updateSettings({ currentFolder: folderPath });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to select folder:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchRoot = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(`/api/fs?showHidden=${settings.showHiddenFiles}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch root directory');
-        }
-        const data = await response.json();
-        setRootItems(data.map((item: { name: string; isDirectory: boolean }) => ({
-            ...item,
-            path: item.name,
-        })));
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchRoot();
-  }, [settings.showHiddenFiles]);
+  }, [settings.showHiddenFiles, settings.sortBy, settings.currentFolder]);
 
   return (
     <aside className="h-full bg-muted/20 flex flex-col">
-      <div className="h-10 border-b border-border px-3 flex items-center">
+      <div className="h-10 border-b border-border px-3 flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">File Browser</h2>
+        <div className="flex items-center gap-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleFolderSelect}
+                className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded transition-colors"
+                title="Open Folder"
+              >
+                <FolderInput className="w-4 h-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Open Folder</TooltipContent>
+          </Tooltip>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded transition-colors"
+                title="Sort by"
+              >
+                <ArrowUpDown className="w-4 h-4" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => updateSettings({ sortBy: 'name' })}>
+                Name {settings.sortBy === 'name' && '✓'}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => updateSettings({ sortBy: 'date' })}>
+                Date Modified {settings.sortBy === 'date' && '✓'}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => updateSettings({ sortBy: 'size' })}>
+                Size {settings.sortBy === 'size' && '✓'}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <button
+            onClick={fetchRoot}
+            disabled={isLoading}
+            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded transition-colors disabled:opacity-50"
+            title="Refresh"
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+          </button>
+        </div>
       </div>
       <div className="flex-1 overflow-y-auto p-2">
         {isLoading ? (
@@ -311,6 +416,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
                 level={0}
                 showFileExtensions={settings.showFileExtensions}
                 thumbnailSize={settings.thumbnailSize}
+                baseFolder={settings.currentFolder}
               />
             )}
             <div className="space-y-0.5">
@@ -326,6 +432,8 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
                     viewMode={viewMode}
                     showFileExtensions={settings.showFileExtensions}
                     thumbnailSize={settings.thumbnailSize}
+                    sortBy={settings.sortBy}
+                    baseFolder={settings.currentFolder}
                   />
                 ) : viewMode === "list" ? (
                   <ContextMenu key={item.path}>
@@ -336,7 +444,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
                             selectedFile?.path === item.path ? "bg-accent" : ""
                         }`}
                       >
-                        <FileImage className="w-4 h-4 text-muted-foreground" />
+                        <FileImage className="w-4 h-4 text-accent-foreground" />
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <span className="truncate text-left flex-1">

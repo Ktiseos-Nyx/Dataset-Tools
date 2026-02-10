@@ -39,6 +39,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          try {
+            var s = JSON.parse(localStorage.getItem('app-settings') || '{}');
+            if (s.accentColor && s.accentColor !== 'zinc') {
+              document.documentElement.setAttribute('data-accent', s.accentColor);
+            }
+          } catch(e) {}
+        `}} />
+      </head>
       <body className={`font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
