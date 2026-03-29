@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs/promises';
 import mime from 'mime-types';
+// @ts-expect-error — exif-parser has no type declarations
 import exifParser from 'exif-parser';
 import iconv from 'iconv-lite';
 
@@ -569,7 +570,7 @@ function parseAIMetadata(chunks: Record<string, any>): Record<string, any> {
     const params = chunks.parameters;
 
     // Extract positive prompt (everything before "Negative prompt:")
-    const negativeMatch = params.match(/Negative prompt:\s*(.+?)(?:\n|$)/s);
+    const negativeMatch = params.match(/Negative prompt:\s*([\s\S]+?)(?:\n|$)/);
     const splitIndex = params.indexOf('\nNegative prompt:');
 
     if (splitIndex !== -1) {

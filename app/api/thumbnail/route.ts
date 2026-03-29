@@ -86,7 +86,7 @@ export async function GET(request: Request) {
     // Write to cache (fire-and-forget)
     fs.writeFile(cachePath, buffer).catch(() => {})
 
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(buffer), {
       headers: {
         'Content-Type': 'image/webp',
         'Cache-Control': 'public, max-age=86400',
