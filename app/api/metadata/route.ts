@@ -95,7 +95,8 @@ function traceBack(
   startRef: any,
   hint?: string,
   maxDepth: number = 10,
-  visited?: Set<string>
+  visited?: Set<string>,
+  skipNodes?: Set<string>
 ): Array<{ nodeId: string; node: any; depth: number }> {
   const results: Array<{ nodeId: string; node: any; depth: number }> = [];
   const seen = visited || new Set<string>();
@@ -104,6 +105,7 @@ function traceBack(
     if (depth > maxDepth) return;
     const target = followRef(workflow, ref, new Set());
     if (!target || seen.has(target.nodeId)) return;
+    if (skipNodes?.has(target.nodeId)) return; // skip muted/bypassed nodes
     seen.add(target.nodeId);
     results.push({ ...target, depth });
 
@@ -212,6 +214,44 @@ function extractComfyUIParams(workflow: Record<string, any>): Record<string, any
     patterns.some(p => classType.includes(p));
 
   // ========================================================================
+  // PRE-PASS: Identify muted/bypassed nodes and AI prompt enhancers
+  // ComfyUI mode: 0 = normal, 2 = muted, 4 = bypassed
+  // ========================================================================
+  const mutedNodeIds = new Set<string>();
+  const aiPromptEnhancers: Array<{ nodeId: string; classType: string; reason: string }> = [];
+
+  const AI_ENHANCER_PATTERNS = [
+    'llm', 'gpt', 'claude', 'deepseek', 'ollama', 'llama', 'mistral',
+    'gemini', 'qwen', 'prompt enhance', 'prompt expand', 'prompt refine',
+    'prompt improve', 'prompt writer', 'prompt generator', 'ai prompt',
+  ];
+
+  for (const [nodeId, nodeData] of Object.entries(workflow)) {
+    const node = nodeData as any;
+    if (!node?.inputs) continue;
+
+    // Filter muted/bypassed nodes
+    if (node.mode === 2 || node.mode === 4) {
+      mutedNodeIds.add(nodeId);
+      continue;
+    }
+
+    // Detect AI prompt enhancement nodes
+    const ct = (node.class_type || '').toLowerCase();
+    for (const pattern of AI_ENHANCER_PATTERNS) {
+      if (ct.includes(pattern)) {
+        aiPromptEnhancers.push({ nodeId, classType: node.class_type, reason: `class_type contains '${pattern}'` });
+        break;
+      }
+    }
+  }
+
+  if (aiPromptEnhancers.length > 0) {
+    extracted.ai_prompt_enhancement = true;
+    extracted.ai_prompt_enhancers = aiPromptEnhancers.map(e => `${e.classType} (node ${e.nodeId})`);
+  }
+
+  // ========================================================================
   // PHASE 1: Field-based scan (type-agnostic)
   // Identify nodes by what data they carry, not what they're called
   // ========================================================================
@@ -220,7 +260,7 @@ function extractComfyUIParams(workflow: Record<string, any>): Record<string, any
 
   for (const [nodeId, nodeData] of Object.entries(workflow)) {
     const node = nodeData as any;
-    if (!node?.inputs) continue;
+    if (!node?.inputs || mutedNodeIds.has(nodeId)) continue;
     const inputs = node.inputs;
     const classType = node.class_type || '';
 
@@ -356,7 +396,7 @@ function extractComfyUIParams(workflow: Record<string, any>): Record<string, any
 
     // --- Trace positive conditioning wire ---
     if (isNodeRef(inputs.positive)) {
-      const posChain = traceBack(workflow, inputs.positive, 'positive');
+      const posChain = traceBack(workflow, inputs.positive, 'positive', 10, undefined, mutedNodeIds);
       for (const { node } of posChain) {
         const text = findText(workflow, node, undefined, 'positive');
         if (text) {
@@ -369,7 +409,7 @@ function extractComfyUIParams(workflow: Record<string, any>): Record<string, any
 
     // --- Trace negative conditioning wire ---
     if (isNodeRef(inputs.negative)) {
-      const negChain = traceBack(workflow, inputs.negative, 'negative');
+      const negChain = traceBack(workflow, inputs.negative, 'negative', 10, undefined, mutedNodeIds);
       for (const { node } of negChain) {
         const text = findText(workflow, node, undefined, 'negative');
         if (text) {
@@ -429,6 +469,90 @@ function extractComfyUIParams(workflow: Record<string, any>): Record<string, any
         promptTexts.sort((a, b) => b.text.length - a.text.length);
         extracted.prompt = promptTexts[0].text;
         if (promptTexts.length > 1) extracted.negative_prompt = promptTexts[1].text;
+      }
+    }
+  }
+
+  // ========================================================================
+  // PHASE 4: ControlNet detection
+  // ========================================================================
+  for (const [nodeId, nodeData] of Object.entries(workflow)) {
+    const node = nodeData as any;
+    if (mutedNodeIds.has(nodeId)) continue;
+    const ct = (node.class_type || '').toLowerCase();
+    if (ct.includes('controlnet') || ct.includes('control_net')) {
+      extracted.uses_controlnet = true;
+      break;
+    }
+  }
+
+  // ========================================================================
+  // PHASE 5: Forward conditioning trace (when backward trace was ambiguous)
+  // Walk from text-encoder nodes forward through the graph to see if they
+  // connect to a sampler's positive or negative input.
+  // ========================================================================
+  if (extracted.prompt && !extracted.negative_prompt && samplerNodes.length > 0) {
+    // Build a forward adjacency: for each node, track which nodes reference it
+    const forwardEdges: Record<string, Array<{ targetId: string; inputName: string }>> = {};
+    for (const [nodeId, nodeData] of Object.entries(workflow)) {
+      const node = nodeData as any;
+      if (!node?.inputs || mutedNodeIds.has(nodeId)) continue;
+      for (const [inputName, val] of Object.entries(node.inputs)) {
+        if (isNodeRef(val)) {
+          const sourceId = (val as [string, number])[0];
+          if (!forwardEdges[sourceId]) forwardEdges[sourceId] = [];
+          forwardEdges[sourceId].push({ targetId: nodeId, inputName });
+        }
+      }
+    }
+
+    // For each text-encoding node, trace forward to see if it eventually
+    // connects to a sampler's negative input
+    for (const [nodeId, nodeData] of Object.entries(workflow)) {
+      const node = nodeData as any;
+      if (mutedNodeIds.has(nodeId)) continue;
+      const ct = node.class_type || '';
+      if (!typeMatches(ct, 'CLIPTextEncode', 'T5TextEncode', 'FluxTextEncode')) continue;
+
+      const text = findText(workflow, node);
+      if (!text || text === extracted.prompt) continue;
+
+      // Walk forward up to 5 hops to see if we reach a sampler negative input
+      const visited = new Set<string>();
+      const queue: string[] = [nodeId];
+      let isNegative = false;
+
+      for (let depth = 0; depth < 5 && queue.length > 0 && !isNegative; depth++) {
+        const nextQueue: string[] = [];
+        for (const current of queue) {
+          if (visited.has(current)) continue;
+          visited.add(current);
+          for (const edge of (forwardEdges[current] || [])) {
+            const targetNode = workflow[edge.targetId] as any;
+            if (!targetNode?.inputs) continue;
+            // Check if target is a sampler and input is 'negative'
+            if (isSamplerByFields(targetNode.inputs) && edge.inputName === 'negative') {
+              isNegative = true;
+              break;
+            }
+            // Check for guider nodes connecting to negative
+            const targetCt = (targetNode.class_type || '').toLowerCase();
+            if ((targetCt.includes('guider') || targetCt.includes('guidance')) &&
+                edge.inputName.toLowerCase().includes('negative')) {
+              isNegative = true;
+              break;
+            }
+            nextQueue.push(edge.targetId);
+          }
+          if (isNegative) break;
+        }
+        queue.length = 0;
+        queue.push(...nextQueue);
+      }
+
+      if (isNegative && text) {
+        extracted.negative_prompt = text;
+        break; // Found it
       }
     }
   }
