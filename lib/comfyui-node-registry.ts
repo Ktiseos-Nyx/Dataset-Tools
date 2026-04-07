@@ -21,6 +21,8 @@ export type NodeClassification = 'builtin' | 'custom' | 'unknown';
 export interface NodeLookupResult {
   classification: NodeClassification;
   repo?: NodeRepoInfo;
+  /** How the repo info was resolved. Defaults to 'extension-map' when omitted. */
+  source?: 'extension-map' | 'github';
 }
 
 // ─── Built-in nodes ──────────────────────────────────────────────────────────
@@ -209,10 +211,26 @@ async function getNodeIndex(): Promise<CacheEntry> {
 
 // ─── Public API ──────────────────────────────────────────────────────────────
 
+export interface LookupOptions {
+  /**
+   * If true and a node is unknown, fall back to a GitHub code search
+   * (requires GITHUB_TOKEN env var). Results are tagged with source: 'github'.
+   */
+  useGitHubFallback?: boolean;
+  /**
+   * Maximum number of nodes to search via GitHub fallback (default: 5).
+   * Only applies when useGitHubFallback is true.
+   */
+  githubFallbackLimit?: number;
+}
+
 /**
  * Look up a single node class_type. Returns classification + repo info.
  */
-export async function lookupNode(classType: string): Promise<NodeLookupResult> {
+export async function lookupNode(
+  classType: string,
+  options: LookupOptions = {}
+): Promise<NodeLookupResult> {
   if (BUILTIN_NODES.has(classType)) {
     return { classification: 'builtin' };
   }
@@ -232,6 +250,15 @@ export async function lookupNode(classType: string): Promise<NodeLookupResult> {
     }
   }
 
+  // GitHub fallback (Phase 2)
+  if (options.useGitHubFallback) {
+    const { searchGitHubForNode } = await import('./comfyui-github-search');
+    const repo = await searchGitHubForNode(classType);
+    if (repo) {
+      return { classification: 'custom', repo, source: 'github' };
+    }
+  }
+
   return { classification: 'unknown' };
 }
 
@@ -240,10 +267,12 @@ export async function lookupNode(classType: string): Promise<NodeLookupResult> {
  * loop because it only fetches the index once.
  */
 export async function classifyNodes(
-  classTypes: string[]
+  classTypes: string[],
+  options: LookupOptions = {}
 ): Promise<Record<string, NodeLookupResult>> {
   const { nodeIndex, patterns } = await getNodeIndex();
   const results: Record<string, NodeLookupResult> = {};
+  const unresolved: string[] = [];
 
   for (const classType of classTypes) {
     if (BUILTIN_NODES.has(classType)) {
@@ -268,6 +297,21 @@ export async function classifyNodes(
 
     if (!matched) {
       results[classType] = { classification: 'unknown' };
+      unresolved.push(classType);
+    }
+  }
+
+  // GitHub fallback (Phase 2): query unresolved nodes sequentially. The search
+  // module throttles itself, so this naturally rate-limits.
+  if (options.useGitHubFallback && unresolved.length > 0) {
+    const { searchGitHubForNode } = await import('./comfyui-github-search');
+    const limit = options.githubFallbackLimit ?? 5;
+    const cappedCandidates = unresolved.slice(0, limit);
+    for (const classType of cappedCandidates) {
+      const repo = await searchGitHubForNode(classType);
+      if (repo) {
+        results[classType] = { classification: 'custom', repo, source: 'github' };
+      }
     }
   }
 

@@ -43,6 +43,9 @@ Dataset-Tools-main/
 # thumbnail cache
 .thumbcache/
 
+# github node search cache
+.cache/
+
 # server settings
 settings.json
 
