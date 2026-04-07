@@ -258,7 +258,7 @@ export default function SettingsPage() {
               </div>
               <button
                 onClick={handleSaveGithubToken}
-                disabled={!githubToken}
+                disabled={!githubToken && !hasGithubToken}
                 className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-1.5"
               >
                 {githubSaved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}

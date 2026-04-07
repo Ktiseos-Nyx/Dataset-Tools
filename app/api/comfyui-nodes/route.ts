@@ -17,7 +17,6 @@ import {
  * GET /api/comfyui-nodes?classTypes=KSampler,CLIPTextEncode,MyCustomNode
  * GET /api/comfyui-nodes?stats=true
  * GET /api/comfyui-nodes?refresh=true
- * GET /api/comfyui-nodes?clearGithubCache=true
  *
  * Add &github=true to any classType/classTypes lookup to enable the GitHub
  * code-search fallback for unknown nodes (requires GITHUB_TOKEN).
@@ -52,16 +51,6 @@ export async function GET(request: Request) {
     }
   }
 
-  // Clear GitHub fallback cache
-  if (searchParams.get('clearGithubCache') === 'true') {
-    try {
-      await clearGitHubSearchCache();
-      return NextResponse.json({ cleared: true });
-    } catch (err) {
-      return NextResponse.json({ error: 'Failed to clear github cache' }, { status: 500 });
-    }
-  }
-
   // Batch lookup
   const classTypesParam = searchParams.get('classTypes');
   if (classTypesParam) {
@@ -93,22 +82,36 @@ export async function GET(request: Request) {
 /**
  * POST /api/comfyui-nodes
  * Body: { workflow: { ... }, useGitHubFallback?: boolean }
+ * Body: { clearGithubCache: true }
  *
  * Accepts a full ComfyUI workflow (API format) and classifies every node in it.
  * Returns a per-node classification with repo info where available.
  *
  * Set useGitHubFallback: true to enable the GitHub code-search fallback for
  * unknown nodes (requires GITHUB_TOKEN env var, configurable from Settings).
+ *
+ * Alternatively, send { clearGithubCache: true } to clear the GitHub search cache.
  */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+
+    // Handle cache clearing
+    if (body?.clearGithubCache === true) {
+      try {
+        await clearGitHubSearchCache();
+        return NextResponse.json({ cleared: true });
+      } catch (err) {
+        return NextResponse.json({ error: 'Failed to clear github cache' }, { status: 500 });
+      }
+    }
+
     const workflow = body?.workflow;
     const useGitHubFallback = body?.useGitHubFallback === true;
 
     if (!workflow || typeof workflow !== 'object') {
       return NextResponse.json(
-        { error: 'Request body must include a "workflow" object' },
+        { error: 'Request body must include a "workflow" object or "clearGithubCache" flag' },
         { status: 400 }
       );
     }

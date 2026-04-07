@@ -82,8 +82,10 @@ export async function POST(request: Request) {
       if (secrets.githubToken !== undefined) {
         if (secrets.githubToken) {
           env.GITHUB_TOKEN = secrets.githubToken
+          process.env.GITHUB_TOKEN = secrets.githubToken
         } else {
           delete env.GITHUB_TOKEN
+          delete process.env.GITHUB_TOKEN
         }
       }
       await writeEnvLocal(env)

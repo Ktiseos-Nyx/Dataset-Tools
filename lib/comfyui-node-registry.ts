@@ -217,6 +217,11 @@ export interface LookupOptions {
    * (requires GITHUB_TOKEN env var). Results are tagged with source: 'github'.
    */
   useGitHubFallback?: boolean;
+  /**
+   * Maximum number of nodes to search via GitHub fallback (default: 5).
+   * Only applies when useGitHubFallback is true.
+   */
+  githubFallbackLimit?: number;
 }
 
 /**
@@ -300,7 +305,9 @@ export async function classifyNodes(
   // module throttles itself, so this naturally rate-limits.
   if (options.useGitHubFallback && unresolved.length > 0) {
     const { searchGitHubForNode } = await import('./comfyui-github-search');
-    for (const classType of unresolved) {
+    const limit = options.githubFallbackLimit ?? 5;
+    const cappedCandidates = unresolved.slice(0, limit);
+    for (const classType of cappedCandidates) {
       const repo = await searchGitHubForNode(classType);
       if (repo) {
         results[classType] = { classification: 'custom', repo, source: 'github' };
