@@ -40,11 +40,16 @@ export default function SettingsPage() {
 
   const handleSaveCivitaiKey = async () => {
     try {
-      await fetch("/api/settings", {
+      const response = await fetch("/api/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ secrets: { civitaiApiKey: civitaiKey } }),
       })
+      if (!response.ok) {
+        const errBody = await response.text().catch(() => "")
+        console.error(`Failed to save Civitai API key (${response.status}):`, errBody)
+        return
+      }
       setHasCivitaiKey(!!civitaiKey)
       setCivitaiKey("")
       setCivitaiSaved(true)
@@ -56,11 +61,16 @@ export default function SettingsPage() {
 
   const handleSaveGithubToken = async () => {
     try {
-      await fetch("/api/settings", {
+      const response = await fetch("/api/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ secrets: { githubToken: githubToken } }),
       })
+      if (!response.ok) {
+        const errBody = await response.text().catch(() => "")
+        console.error(`Failed to save GitHub token (${response.status}):`, errBody)
+        return
+      }
       setHasGithubToken(!!githubToken)
       setGithubToken("")
       setGithubSaved(true)
@@ -200,20 +210,30 @@ export default function SettingsPage() {
 
           {/* Civitai */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Civitai API Key</label>
+            <label htmlFor="civitai-api-key" className="text-sm font-medium">Civitai API Key</label>
             {hasCivitaiKey && (
               <p className="text-xs text-green-600 dark:text-green-400">Key is saved in .env.local</p>
             )}
-            <div className="flex gap-2">
+            <form
+              className="flex gap-2"
+              onSubmit={(e) => {
+                e.preventDefault()
+                handleSaveCivitaiKey()
+              }}
+            >
               <div className="relative flex-1">
                 <input
+                  id="civitai-api-key"
+                  name="civitai-api-key"
                   type={showCivitaiKey ? "text" : "password"}
+                  autoComplete="off"
                   value={civitaiKey}
                   onChange={(e) => setCivitaiKey(e.target.value)}
                   placeholder={hasCivitaiKey ? "Enter new key to replace" : "Enter Civitai API key"}
                   className="w-full p-2 pr-10 border border-border rounded-lg bg-background text-sm"
                 />
                 <button
+                  type="button"
                   onClick={() => setShowCivitaiKey(!showCivitaiKey)}
                   className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-accent rounded"
                 >
@@ -221,14 +241,14 @@ export default function SettingsPage() {
                 </button>
               </div>
               <button
-                onClick={handleSaveCivitaiKey}
-                disabled={!civitaiKey}
+                type="submit"
+                disabled={!civitaiKey && !hasCivitaiKey}
                 className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-1.5"
               >
                 {civitaiSaved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-                {civitaiSaved ? "Saved" : "Save"}
+                {civitaiSaved ? "Saved" : !civitaiKey && hasCivitaiKey ? "Clear" : "Save"}
               </button>
-            </div>
+            </form>
             <p className="text-xs text-muted-foreground">
               Stored server-side in .env.local. Never sent to the browser.
             </p>
@@ -236,20 +256,30 @@ export default function SettingsPage() {
 
           {/* GitHub */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">GitHub Personal Access Token</label>
+            <label htmlFor="github-token" className="text-sm font-medium">GitHub Personal Access Token</label>
             {hasGithubToken && (
               <p className="text-xs text-green-600 dark:text-green-400">Token is saved in .env.local</p>
             )}
-            <div className="flex gap-2">
+            <form
+              className="flex gap-2"
+              onSubmit={(e) => {
+                e.preventDefault()
+                handleSaveGithubToken()
+              }}
+            >
               <div className="relative flex-1">
                 <input
+                  id="github-token"
+                  name="github-token"
                   type={showGithubToken ? "text" : "password"}
+                  autoComplete="off"
                   value={githubToken}
                   onChange={(e) => setGithubToken(e.target.value)}
                   placeholder={hasGithubToken ? "Enter new token to replace" : "Enter GitHub token"}
                   className="w-full p-2 pr-10 border border-border rounded-lg bg-background text-sm"
                 />
                 <button
+                  type="button"
                   onClick={() => setShowGithubToken(!showGithubToken)}
                   className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-accent rounded"
                 >
@@ -257,14 +287,14 @@ export default function SettingsPage() {
                 </button>
               </div>
               <button
-                onClick={handleSaveGithubToken}
+                type="submit"
                 disabled={!githubToken && !hasGithubToken}
                 className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-1.5"
               >
                 {githubSaved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-                {githubSaved ? "Saved" : "Save"}
+                {githubSaved ? "Saved" : !githubToken && hasGithubToken ? "Clear" : "Save"}
               </button>
-            </div>
+            </form>
             <p className="text-xs text-muted-foreground">
               Used for searching ComfyUI custom nodes not in the public registry.
               Only needs <code className="text-[10px] bg-muted px-1 rounded">public_repo</code> scope.

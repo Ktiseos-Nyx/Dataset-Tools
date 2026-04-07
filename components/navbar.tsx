@@ -8,7 +8,7 @@ import { useTheme } from "next-themes"
 import { useSettings } from "@/hooks/use-settings"
 import type { AppSettings, AccentColor } from "@/types/settings"
 import {
-  Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle,
+  Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription,
 } from "@/components/ui/sheet"
 
 export function Navbar() {
@@ -55,6 +55,9 @@ export function Navbar() {
           <SheetContent className="overflow-y-auto w-[400px] sm:w-[450px]">
             <SheetHeader>
               <SheetTitle>Settings</SheetTitle>
+              <SheetDescription className="sr-only">
+                Configure appearance, file browser, and API keys.
+              </SheetDescription>
             </SheetHeader>
             <SettingsContent />
           </SheetContent>

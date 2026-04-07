@@ -75,13 +75,17 @@ export async function POST(request: Request) {
       if (secrets.civitaiApiKey !== undefined) {
         if (secrets.civitaiApiKey) {
           env.CIVITAI_API_KEY = secrets.civitaiApiKey
+          process.env.CIVITAI_API_KEY = secrets.civitaiApiKey
         } else {
           delete env.CIVITAI_API_KEY
+          delete process.env.CIVITAI_API_KEY
         }
       }
       if (secrets.githubToken !== undefined) {
         if (secrets.githubToken) {
           env.GITHUB_TOKEN = secrets.githubToken
+          // Update the running process so isGitHubSearchAvailable() and
+          // searchGitHubForNode() see the new token without a restart.
           process.env.GITHUB_TOKEN = secrets.githubToken
         } else {
           delete env.GITHUB_TOKEN

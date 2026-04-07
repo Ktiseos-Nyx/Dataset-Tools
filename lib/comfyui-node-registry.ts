@@ -218,11 +218,14 @@ export interface LookupOptions {
    */
   useGitHubFallback?: boolean;
   /**
-   * Maximum number of nodes to search via GitHub fallback (default: 5).
-   * Only applies when useGitHubFallback is true.
+   * Maximum number of unknown nodes to resolve via the GitHub fallback in a
+   * single classifyNodes call. Defaults to 5. Bounds worst-case latency on a
+   * cold cache (each search is throttled to ~2s).
    */
   githubFallbackLimit?: number;
 }
+
+const DEFAULT_GITHUB_FALLBACK_LIMIT = 5;
 
 /**
  * Look up a single node class_type. Returns classification + repo info.
@@ -302,15 +305,19 @@ export async function classifyNodes(
   }
 
   // GitHub fallback (Phase 2): query unresolved nodes sequentially. The search
-  // module throttles itself, so this naturally rate-limits.
+  // module throttles itself, but we also cap the candidate count here so a
+  // workflow with hundreds of unknown class_types can't drain the rate limit
+  // (or stall the request) on a cold cache.
   if (options.useGitHubFallback && unresolved.length > 0) {
-    const { searchGitHubForNode } = await import('./comfyui-github-search');
-    const limit = options.githubFallbackLimit ?? 5;
-    const cappedCandidates = unresolved.slice(0, limit);
-    for (const classType of cappedCandidates) {
-      const repo = await searchGitHubForNode(classType);
-      if (repo) {
-        results[classType] = { classification: 'custom', repo, source: 'github' };
+    const limit = options.githubFallbackLimit ?? DEFAULT_GITHUB_FALLBACK_LIMIT;
+    const cappedCandidates = unresolved.slice(0, Math.max(0, limit));
+    if (cappedCandidates.length > 0) {
+      const { searchGitHubForNode } = await import('./comfyui-github-search');
+      for (const classType of cappedCandidates) {
+        const repo = await searchGitHubForNode(classType);
+        if (repo) {
+          results[classType] = { classification: 'custom', repo, source: 'github' };
+        }
       }
     }
   }
