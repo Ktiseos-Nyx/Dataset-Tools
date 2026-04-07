@@ -5,6 +5,68 @@ import mime from 'mime-types';
 // @ts-expect-error — exif-parser has no type declarations
 import exifParser from 'exif-parser';
 import iconv from 'iconv-lite';
+import { classifyNodes, type NodeLookupResult } from '@/lib/comfyui-node-registry';
+
+// Cap how many unknown ComfyUI nodes we'll resolve via the GitHub fallback per
+// request. Each lookup is throttled to ~2s, so this bounds worst-case latency
+// on a cold cache. Subsequent loads hit the disk cache and are instant.
+const MAX_GITHUB_FALLBACK_PER_REQUEST = 5;
+
+/**
+ * Classify every class_type in a ComfyUI workflow against the extension-node-map
+ * registry, falling back to GitHub code search for nodes the main traversal
+ * couldn't identify. Returns null if no workflow is present.
+ */
+async function classifyComfyUIWorkflow(workflow: Record<string, any>): Promise<{
+  summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number };
+  classifications: Record<string, NodeLookupResult>;
+  unknownNodes: string[];
+} | null> {
+  const classTypes = new Set<string>();
+  for (const node of Object.values(workflow)) {
+    const ct = (node as any)?.class_type;
+    if (typeof ct === 'string' && ct) classTypes.add(ct);
+  }
+  if (classTypes.size === 0) return null;
+
+  // First pass: local registry only (fast — in-memory).
+  const local = await classifyNodes([...classTypes]);
+  const stillUnknown: string[] = [];
+  for (const [ct, result] of Object.entries(local)) {
+    if (result.classification === 'unknown') stillUnknown.push(ct);
+  }
+
+  // Second pass: GitHub fallback for unknowns, capped to bound latency.
+  // Skipped entirely when GITHUB_TOKEN is not configured.
+  if (stillUnknown.length > 0 && process.env.GITHUB_TOKEN) {
+    const target = stillUnknown.slice(0, MAX_GITHUB_FALLBACK_PER_REQUEST);
+    try {
+      const enriched = await classifyNodes(target, { useGitHubFallback: true });
+      Object.assign(local, enriched);
+    } catch (err) {
+      console.error('[metadata] GitHub fallback classification failed:', err);
+    }
+  }
+
+  let builtin = 0, custom = 0, unknown = 0, githubResolved = 0;
+  const unknownNodes: string[] = [];
+  for (const [ct, result] of Object.entries(local)) {
+    switch (result.classification) {
+      case 'builtin': builtin++; break;
+      case 'custom':
+        custom++;
+        if (result.source === 'github') githubResolved++;
+        break;
+      case 'unknown': unknown++; unknownNodes.push(ct); break;
+    }
+  }
+
+  return {
+    summary: { total: classTypes.size, builtin, custom, unknown, githubResolved },
+    classifications: local,
+    unknownNodes,
+  };
+}
 
 // PNG chunk parser for AI generation parameters
 function parsePNGChunks(buffer: Buffer): Record<string, any> {
@@ -1147,13 +1209,13 @@ function extractAIFromXMP(xmp: Record<string, any>): Record<string, any> {
 }
 
 // Shared extraction function used by both GET (path-based) and POST (file upload)
-export function extractMetadataFromBuffer(
+export async function extractMetadataFromBuffer(
   buffer: Buffer,
   mimeType: string,
   fileName: string,
   fileSize: number,
   lastModified: string,
-): Record<string, any> {
+): Promise<Record<string, any>> {
   let exifData = {};
   let iptcData = {};
 
@@ -1211,6 +1273,18 @@ export function extractMetadataFromBuffer(
     }
   }
 
+  // Classify ComfyUI workflow nodes (extension-map + GitHub fallback for unknowns)
+  if (aiData.comfyui_workflow && typeof aiData.comfyui_workflow === 'object') {
+    try {
+      const nodeInfo = await classifyComfyUIWorkflow(aiData.comfyui_workflow);
+      if (nodeInfo) {
+        aiData.comfyui_nodes = nodeInfo;
+      }
+    } catch (err) {
+      console.error('[metadata] ComfyUI node classification failed:', err);
+    }
+  }
+
   return {
     fileName,
     fileSize,
@@ -1245,7 +1319,7 @@ export async function GET(request: Request) {
     const stats = await fs.stat(resolvedPath);
     const mimeType = mime.lookup(resolvedPath) || 'application/octet-stream';
 
-    const metadata = extractMetadataFromBuffer(
+    const metadata = await extractMetadataFromBuffer(
       file,
       mimeType,
       path.basename(resolvedPath),

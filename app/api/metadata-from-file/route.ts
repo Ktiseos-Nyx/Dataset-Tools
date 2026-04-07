@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const metadata = extractMetadataFromBuffer(
+    const metadata = await extractMetadataFromBuffer(
       buffer,
       file.type,
       file.name,
