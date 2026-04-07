@@ -15,6 +15,7 @@ export interface AppSettings {
 // Keys stored server-side in .env.local, not in JSON config
 export interface ServerSecrets {
   civitaiApiKey?: string
+  githubToken?: string
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {

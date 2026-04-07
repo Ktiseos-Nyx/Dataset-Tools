@@ -55,6 +55,7 @@ export async function GET() {
     // Only expose whether keys exist, not the actual values
     secrets: {
       hasCivitaiApiKey: !!env.CIVITAI_API_KEY,
+      hasGithubToken: !!env.GITHUB_TOKEN,
     },
   })
 }
@@ -76,6 +77,13 @@ export async function POST(request: Request) {
           env.CIVITAI_API_KEY = secrets.civitaiApiKey
         } else {
           delete env.CIVITAI_API_KEY
+        }
+      }
+      if (secrets.githubToken !== undefined) {
+        if (secrets.githubToken) {
+          env.GITHUB_TOKEN = secrets.githubToken
+        } else {
+          delete env.GITHUB_TOKEN
         }
       }
       await writeEnvLocal(env)
