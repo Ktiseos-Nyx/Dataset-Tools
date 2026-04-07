@@ -8,7 +8,7 @@ import { useTheme } from "next-themes"
 import { useSettings } from "@/hooks/use-settings"
 import type { AppSettings, AccentColor } from "@/types/settings"
 import {
-  Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle,
+  Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription,
 } from "@/components/ui/sheet"
 
 export function Navbar() {
@@ -55,6 +55,9 @@ export function Navbar() {
           <SheetContent className="overflow-y-auto w-[400px] sm:w-[450px]">
             <SheetHeader>
               <SheetTitle>Settings</SheetTitle>
+              <SheetDescription className="sr-only">
+                Configure appearance, file browser, and API keys.
+              </SheetDescription>
             </SheetHeader>
             <SettingsContent />
           </SheetContent>
@@ -67,10 +70,16 @@ export function Navbar() {
 function SettingsContent() {
   const { settings, updateSettings } = useSettings()
   const { theme, setTheme } = useTheme()
+
   const [civitaiKey, setCivitaiKey] = useState("")
-  const [showKey, setShowKey] = useState(false)
+  const [showCivitaiKey, setShowCivitaiKey] = useState(false)
   const [hasCivitaiKey, setHasCivitaiKey] = useState(false)
-  const [keySaved, setKeySaved] = useState(false)
+  const [civitaiSaved, setCivitaiSaved] = useState(false)
+
+  const [githubToken, setGithubToken] = useState("")
+  const [showGithubToken, setShowGithubToken] = useState(false)
+  const [hasGithubToken, setHasGithubToken] = useState(false)
+  const [githubSaved, setGithubSaved] = useState(false)
 
   useEffect(() => {
     // Sync accent color to DOM on mount
@@ -86,6 +95,7 @@ function SettingsContent() {
       .then(res => res.json())
       .then(data => {
         setHasCivitaiKey(data.secrets?.hasCivitaiApiKey ?? false)
+        setHasGithubToken(data.secrets?.hasGithubToken ?? false)
       })
       .catch(() => {})
   }, [])
@@ -97,17 +107,43 @@ function SettingsContent() {
 
   const handleSaveCivitaiKey = async () => {
     try {
-      await fetch("/api/settings", {
+      const response = await fetch("/api/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ secrets: { civitaiApiKey: civitaiKey } }),
       })
+      if (!response.ok) {
+        const errBody = await response.text().catch(() => "")
+        console.error(`Failed to save Civitai API key (${response.status}):`, errBody)
+        return
+      }
       setHasCivitaiKey(!!civitaiKey)
       setCivitaiKey("")
-      setKeySaved(true)
-      setTimeout(() => setKeySaved(false), 2000)
+      setCivitaiSaved(true)
+      setTimeout(() => setCivitaiSaved(false), 2000)
     } catch (err) {
-      console.error("Failed to save API key:", err)
+      console.error("Failed to save Civitai API key:", err)
+    }
+  }
+
+  const handleSaveGithubToken = async () => {
+    try {
+      const response = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secrets: { githubToken: githubToken } }),
+      })
+      if (!response.ok) {
+        const errBody = await response.text().catch(() => "")
+        console.error(`Failed to save GitHub token (${response.status}):`, errBody)
+        return
+      }
+      setHasGithubToken(!!githubToken)
+      setGithubToken("")
+      setGithubSaved(true)
+      setTimeout(() => setGithubSaved(false), 2000)
+    } catch (err) {
+      console.error("Failed to save GitHub token:", err)
     }
   }
 
@@ -262,38 +298,106 @@ function SettingsContent() {
       <section className="space-y-4">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">API Keys</h2>
 
+        {/* Civitai */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Civitai API Key</label>
+          <label htmlFor="navbar-civitai-key" className="text-sm font-medium">Civitai API Key</label>
           {hasCivitaiKey && (
             <p className="text-xs text-green-600 dark:text-green-400">Key is saved in .env.local</p>
           )}
-          <div className="flex gap-2">
+          <form
+            className="flex gap-2"
+            onSubmit={(e) => {
+              e.preventDefault()
+              handleSaveCivitaiKey()
+            }}
+          >
             <div className="relative flex-1">
               <input
-                type={showKey ? "text" : "password"}
+                id="navbar-civitai-key"
+                name="navbar-civitai-key"
+                type={showCivitaiKey ? "text" : "password"}
+                autoComplete="off"
                 value={civitaiKey}
                 onChange={(e) => setCivitaiKey(e.target.value)}
                 placeholder={hasCivitaiKey ? "Enter new key to replace" : "Enter Civitai API key"}
                 className="w-full p-2 pr-10 border border-border rounded-lg bg-background text-sm"
               />
               <button
-                onClick={() => setShowKey(!showKey)}
+                type="button"
+                onClick={() => setShowCivitaiKey(!showCivitaiKey)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-accent rounded"
               >
-                {showKey ? <EyeOff className="w-3.5 h-3.5 text-muted-foreground" /> : <Eye className="w-3.5 h-3.5 text-muted-foreground" />}
+                {showCivitaiKey ? <EyeOff className="w-3.5 h-3.5 text-muted-foreground" /> : <Eye className="w-3.5 h-3.5 text-muted-foreground" />}
               </button>
             </div>
             <button
-              onClick={handleSaveCivitaiKey}
-              disabled={!civitaiKey}
+              type="submit"
+              disabled={!civitaiKey && !hasCivitaiKey}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-1.5"
             >
-              {keySaved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-              {keySaved ? "Saved" : "Save"}
+              {civitaiSaved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+              {civitaiSaved ? "Saved" : !civitaiKey && hasCivitaiKey ? "Clear" : "Save"}
             </button>
-          </div>
+          </form>
           <p className="text-xs text-muted-foreground">
             Stored server-side in .env.local. Never sent to the browser.
+          </p>
+        </div>
+
+        {/* GitHub */}
+        <div className="space-y-2">
+          <label htmlFor="navbar-github-token" className="text-sm font-medium">GitHub Personal Access Token</label>
+          {hasGithubToken && (
+            <p className="text-xs text-green-600 dark:text-green-400">Token is saved in .env.local</p>
+          )}
+          <form
+            className="flex gap-2"
+            onSubmit={(e) => {
+              e.preventDefault()
+              handleSaveGithubToken()
+            }}
+          >
+            <div className="relative flex-1">
+              <input
+                id="navbar-github-token"
+                name="navbar-github-token"
+                type={showGithubToken ? "text" : "password"}
+                autoComplete="off"
+                value={githubToken}
+                onChange={(e) => setGithubToken(e.target.value)}
+                placeholder={hasGithubToken ? "Enter new token to replace" : "Enter GitHub token"}
+                className="w-full p-2 pr-10 border border-border rounded-lg bg-background text-sm"
+              />
+              <button
+                type="button"
+                onClick={() => setShowGithubToken(!showGithubToken)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-accent rounded"
+              >
+                {showGithubToken ? <EyeOff className="w-3.5 h-3.5 text-muted-foreground" /> : <Eye className="w-3.5 h-3.5 text-muted-foreground" />}
+              </button>
+            </div>
+            <button
+              type="submit"
+              disabled={!githubToken && !hasGithubToken}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-1.5"
+            >
+              {githubSaved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+              {githubSaved ? "Saved" : !githubToken && hasGithubToken ? "Clear" : "Save"}
+            </button>
+          </form>
+          <p className="text-xs text-muted-foreground">
+            Used for searching ComfyUI custom nodes not in the public registry.
+            Only needs <code className="text-[10px] bg-muted px-1 rounded">public_repo</code> scope.
+            Create one at{" "}
+            <a
+              href="https://github.com/settings/tokens/new?scopes=public_repo&description=Dataset-Tools"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              github.com/settings/tokens
+            </a>
+            . Stored server-side, never sent to the browser.
           </p>
         </div>
       </section>

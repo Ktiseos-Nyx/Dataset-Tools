@@ -29,28 +29,22 @@ async function classifyComfyUIWorkflow(workflow: Record<string, any>): Promise<{
   }
   if (classTypes.size === 0) return null;
 
-  // First pass: local registry only (fast — in-memory).
-  const local = await classifyNodes([...classTypes]);
-  const stillUnknown: string[] = [];
-  for (const [ct, result] of Object.entries(local)) {
-    if (result.classification === 'unknown') stillUnknown.push(ct);
-  }
-
-  // Second pass: GitHub fallback for unknowns, capped to bound latency.
-  // Skipped entirely when GITHUB_TOKEN is not configured.
-  if (stillUnknown.length > 0 && process.env.GITHUB_TOKEN) {
-    const target = stillUnknown.slice(0, MAX_GITHUB_FALLBACK_PER_REQUEST);
-    try {
-      const enriched = await classifyNodes(target, { useGitHubFallback: true });
-      Object.assign(local, enriched);
-    } catch (err) {
-      console.error('[metadata] GitHub fallback classification failed:', err);
-    }
+  // Local registry first; GitHub fallback only when GITHUB_TOKEN is set.
+  // The registry caps the fallback at githubFallbackLimit unknown nodes.
+  let classifications: Record<string, NodeLookupResult>;
+  try {
+    classifications = await classifyNodes([...classTypes], {
+      useGitHubFallback: !!process.env.GITHUB_TOKEN,
+      githubFallbackLimit: MAX_GITHUB_FALLBACK_PER_REQUEST,
+    });
+  } catch (err) {
+    console.error('[metadata] ComfyUI node classification failed:', err);
+    classifications = {};
   }
 
   let builtin = 0, custom = 0, unknown = 0, githubResolved = 0;
   const unknownNodes: string[] = [];
-  for (const [ct, result] of Object.entries(local)) {
+  for (const [ct, result] of Object.entries(classifications)) {
     switch (result.classification) {
       case 'builtin': builtin++; break;
       case 'custom':
@@ -63,7 +57,7 @@ async function classifyComfyUIWorkflow(workflow: Record<string, any>): Promise<{
 
   return {
     summary: { total: classTypes.size, builtin, custom, unknown, githubResolved },
-    classifications: local,
+    classifications,
     unknownNodes,
   };
 }

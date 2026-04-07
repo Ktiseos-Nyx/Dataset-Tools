@@ -82,36 +82,22 @@ export async function GET(request: Request) {
 /**
  * POST /api/comfyui-nodes
  * Body: { workflow: { ... }, useGitHubFallback?: boolean }
- * Body: { clearGithubCache: true }
  *
  * Accepts a full ComfyUI workflow (API format) and classifies every node in it.
  * Returns a per-node classification with repo info where available.
  *
  * Set useGitHubFallback: true to enable the GitHub code-search fallback for
  * unknown nodes (requires GITHUB_TOKEN env var, configurable from Settings).
- *
- * Alternatively, send { clearGithubCache: true } to clear the GitHub search cache.
  */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-
-    // Handle cache clearing
-    if (body?.clearGithubCache === true) {
-      try {
-        await clearGitHubSearchCache();
-        return NextResponse.json({ cleared: true });
-      } catch (err) {
-        return NextResponse.json({ error: 'Failed to clear github cache' }, { status: 500 });
-      }
-    }
-
     const workflow = body?.workflow;
     const useGitHubFallback = body?.useGitHubFallback === true;
 
     if (!workflow || typeof workflow !== 'object') {
       return NextResponse.json(
-        { error: 'Request body must include a "workflow" object or "clearGithubCache" flag' },
+        { error: 'Request body must include a "workflow" object' },
         { status: 400 }
       );
     }
@@ -159,5 +145,30 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+}
+
+/**
+ * DELETE /api/comfyui-nodes?cache=github
+ *
+ * Clears the on-disk GitHub search cache. Mutating action — kept off GET so
+ * it can't be triggered by an idempotent crawl, prefetch, or accidental link.
+ */
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const target = searchParams.get('cache');
+
+  if (target !== 'github') {
+    return NextResponse.json(
+      { error: 'Provide ?cache=github to clear the GitHub fallback cache' },
+      { status: 400 }
+    );
+  }
+
+  try {
+    await clearGitHubSearchCache();
+    return NextResponse.json({ cleared: true });
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to clear github cache' }, { status: 500 });
   }
 }
