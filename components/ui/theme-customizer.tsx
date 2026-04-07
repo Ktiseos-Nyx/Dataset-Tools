@@ -6,7 +6,7 @@ import { useTheme } from "next-themes"
 import * as React from "react"
 import { BrushCleaning } from "@/components/animate-ui/icons/brush-cleaning"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
-import { useClickOutside } from "@/hooks/use-click-outside"
+import { useOutsideClick } from "@/hooks/use-outside-click"
 import { cn } from "@/lib/utils"
 
 const colors = [
@@ -50,7 +50,7 @@ export function ThemeCustomizerPill({
   const [showColors, setShowColors] = React.useState(false)
   const containerRef = React.useRef<HTMLDivElement>(null)
 
-  useClickOutside(containerRef, () => {
+  useOutsideClick(containerRef, () => {
     setShowColors(false)
   })
 
@@ -393,7 +393,7 @@ export function ThemeCustomizerToolbar({ className }: { className?: string }) {
   const [isOpen, setIsOpen] = React.useState(false)
   const containerRef = React.useRef<HTMLDivElement>(null)
 
-  useClickOutside(containerRef, () => {
+  useOutsideClick(containerRef, () => {
     setIsOpen(false)
   })
 
