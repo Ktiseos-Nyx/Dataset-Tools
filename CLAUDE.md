@@ -30,6 +30,7 @@ No test framework is configured.
 - `image/` — File serving with MIME detection
 - `rules/` — Conditional metadata rule evaluation
 - `civitai/` — Civitai API integration
+- `comfyui-nodes/` — ComfyUI node registry lookup (classifies nodes via extension-node-map.json)
 - `health/` — Health check
 
 **Key Components** (`components/`):
@@ -55,4 +56,21 @@ No test framework is configured.
 - Components: PascalCase. Files: kebab-case. Client components must have `"use client"` directive.
 - Types live in `types/` (metadata.ts, fs.ts, rules.ts). Hooks in `hooks/`.
 - TypeScript strict mode is on, but build ignores TS errors (`ignoreBuildErrors: true`).
-- Multiple UI component registries exist in `components/` (doras-ui, kibo-ui, systaliko-ui) — these are demo/experimental.
+- `doras-ui` clipboard component is used for prompt copy/paste in the metadata panel.
+
+## ComfyUI Node Registry
+
+`lib/comfyui-node-registry.ts` provides node class_type → repo lookup using ComfyUI-Manager's
+extension-node-map.json. The metadata extraction route (`app/api/metadata/route.ts`) uses muted
+node filtering, forward conditioning trace, AI prompt enhancer detection, and ControlNet detection.
+
+### Future phases (not yet implemented)
+- **Data-grid / Kibo UI**: A spreadsheet-style data grid was evaluated for tabular metadata viewing.
+  Removed in cleanup but could be reinstalled from [Kibo UI](https://kiboui.com) when a table/grid
+  view of metadata is needed.
+- **ComfyUI local scanner**: Port of `comfyui_scanner.py` + `static_node_analyzer.py` to catch
+  niche custom nodes not in the extension-node-map. Depends on settings UI for ComfyUI path config.
+- **GitHub token manager**: Port of `token_manager.py` for GitHub API-based node search fallback.
+  Would integrate into the settings section when ready.
+- **Node Finder origin**: The ComfyUI node lookup is a Node.js port of
+  [Ktiseos-Nyx/ComfyUI-Node-Finder](https://github.com/Ktiseos-Nyx/ComfyUI-Node-Finder) (Python).
