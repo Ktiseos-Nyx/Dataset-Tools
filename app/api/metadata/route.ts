@@ -269,12 +269,23 @@ function isLatentByFields(inputs: any): boolean {
   return hasFields(inputs, 'width', 'height', 'batch_size');
 }
 
-function extractComfyUIParams(workflow: Record<string, any>): Record<string, any> {
+function extractComfyUIParams(
+  workflow: Record<string, any>,
+  classifications: Record<string, NodeLookupResult> = {},
+): Record<string, any> {
   const extracted: Record<string, any> = {};
 
   // Type-match fallback helper (for platforms that wrap standard nodes)
   const typeMatches = (classType: string, ...patterns: string[]) =>
     patterns.some(p => classType.includes(p));
+
+  // Classification helper: is this class_type a recognised node?
+  // Anything in the registry (builtin OR custom-via-extension-map OR custom-via-github)
+  // is "known" — meaning we can apply field-based heuristics with more confidence.
+  const isKnownNode = (classType: string): boolean => {
+    const result = classifications[classType];
+    return result !== undefined && result.classification !== 'unknown';
+  };
 
   // ========================================================================
   // PRE-PASS: Identify muted/bypassed nodes and AI prompt enhancers
@@ -485,18 +496,46 @@ function extractComfyUIParams(workflow: Record<string, any>): Record<string, any
   }
 
   // ========================================================================
-  // PHASE 3: Type-match fallback
-  // If graph tracing didn't find prompts, fall back to type-name scanning
+  // PHASE 3: Type-match fallback (registry-aware)
+  // If graph tracing didn't find prompts, scan for text encoder candidates.
+  // We use the registry classification to expand the candidate set: any node
+  // that's known (builtin OR custom-via-registry) and carries a text-shaped
+  // input is a plausible text encoder, even if its class_type doesn't match
+  // the hardcoded CLIPTextEncode/T5/Flux patterns.
   // ========================================================================
   if (!extracted.prompt) {
     const promptTexts: { text: string; nodeId: string }[] = [];
+
+    // Field shapes that strongly suggest a text encoder node
+    const TEXT_ENCODER_FIELD_HINTS = ['text', 'text_g', 'text_l', 'prompt', 'string'];
+    const looksLikeTextEncoder = (inputs: Record<string, any>, classType: string): boolean => {
+      // Hardcoded patterns first (handles workflows with no registry classification)
+      if (typeMatches(classType, 'CLIPTextEncode', 'T5TextEncode', 'FluxTextEncode',
+                                  'TextEncode', 'PromptEncode')) {
+        return true;
+      }
+      // Class-name heuristics on lowercased name
+      const ctLower = classType.toLowerCase();
+      if (ctLower.includes('encode') && (ctLower.includes('text') || ctLower.includes('prompt') || ctLower.includes('clip'))) {
+        return true;
+      }
+      // Registry-aware: if this is a known custom node carrying a text-shaped input
+      if (isKnownNode(classType)) {
+        for (const field of TEXT_ENCODER_FIELD_HINTS) {
+          const v = inputs[field];
+          if (typeof v === 'string' && v.trim().length > 0) return true;
+        }
+      }
+      return false;
+    };
 
     for (const [nodeId, nodeData] of Object.entries(workflow)) {
       const node = nodeData as any;
       const classType = node.class_type || '';
       const inputs = node.inputs || {};
+      if (mutedNodeIds.has(nodeId)) continue;
 
-      if (typeMatches(classType, 'CLIPTextEncode', 'T5TextEncode', 'FluxTextEncode')) {
+      if (looksLikeTextEncoder(inputs, classType)) {
         const text = findText(workflow, node);
         if (text) promptTexts.push({ text, nodeId });
       }
@@ -624,7 +663,7 @@ function extractComfyUIParams(workflow: Record<string, any>): Record<string, any
 }
 
 // Parse AI generation parameters from various formats
-function parseAIMetadata(chunks: Record<string, any>): Record<string, any> {
+async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<string, any>> {
   const aiData: Record<string, any> = {};
 
   // A1111/Forge format - stored in "parameters" key
@@ -679,8 +718,18 @@ function parseAIMetadata(chunks: Record<string, any>): Record<string, any> {
       aiData.comfyui_workflow = workflow;
       aiData.workflow_type = 'ComfyUI';
 
-      // Extract useful parameters from workflow (one-level resolution)
-      const extracted = extractComfyUIParams(workflow);
+      // Classify all class_types FIRST (extension-map + GitHub fallback for
+      // unknowns) so the traversal in extractComfyUIParams can recognise
+      // custom nodes it has no hardcoded heuristics for.
+      const nodeInfo = await classifyComfyUIWorkflow(workflow);
+      if (nodeInfo) {
+        aiData.comfyui_nodes = nodeInfo;
+      }
+
+      // Extract useful parameters from workflow, feeding the classifications
+      // in so Phase 3 can treat known custom nodes with text-shaped inputs as
+      // candidate text encoders.
+      const extracted = extractComfyUIParams(workflow, nodeInfo?.classifications ?? {});
       Object.assign(aiData, extracted);
     } catch (e) {
       // Not valid JSON, store as-is
@@ -1233,7 +1282,7 @@ export async function extractMetadataFromBuffer(
   let aiData: Record<string, any> = {};
   if (mimeType === 'image/png') {
     const chunks = parsePNGChunks(buffer);
-    aiData = parseAIMetadata(chunks);
+    aiData = await parseAIMetadata(chunks);
   } else if (mimeType === 'image/jpeg') {
     let userComment = parseJPEGUserComment(buffer);
 
@@ -1246,9 +1295,9 @@ export async function extractMetadataFromBuffer(
 
     if (userComment) {
       if (userComment.trim().startsWith('{')) {
-        aiData = parseAIMetadata({ prompt: userComment });
+        aiData = await parseAIMetadata({ prompt: userComment });
       } else {
-        aiData = parseAIMetadata({ parameters: userComment });
+        aiData = await parseAIMetadata({ parameters: userComment });
       }
     }
   }
@@ -1264,24 +1313,12 @@ export async function extractMetadataFromBuffer(
       if (xmpAI._drawthings_params) {
         const dtParams = xmpAI._drawthings_params;
         delete xmpAI._drawthings_params;
-        const dtParsed = parseAIMetadata({ parameters: dtParams });
+        const dtParsed = await parseAIMetadata({ parameters: dtParams });
         Object.assign(aiData, dtParsed);
       }
       for (const [key, value] of Object.entries(xmpAI)) {
         if (!aiData[key]) aiData[key] = value;
       }
-    }
-  }
-
-  // Classify ComfyUI workflow nodes (extension-map + GitHub fallback for unknowns)
-  if (aiData.comfyui_workflow && typeof aiData.comfyui_workflow === 'object') {
-    try {
-      const nodeInfo = await classifyComfyUIWorkflow(aiData.comfyui_workflow);
-      if (nodeInfo) {
-        aiData.comfyui_nodes = nodeInfo;
-      }
-    } catch (err) {
-      console.error('[metadata] ComfyUI node classification failed:', err);
     }
   }
 
