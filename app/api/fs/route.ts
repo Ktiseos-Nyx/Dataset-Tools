@@ -7,9 +7,11 @@ const IMAGE_EXTENSIONS = new Set([
   '.svg', '.ico', '.avif', '.heic', '.heif', '.jxl',
 ]);
 
-function isImageFile(name: string): boolean {
+const MODEL_EXTENSIONS = new Set(['.safetensors']);
+
+function isViewableFile(name: string): boolean {
   const ext = path.extname(name).toLowerCase();
-  return IMAGE_EXTENSIONS.has(ext);
+  return IMAGE_EXTENSIONS.has(ext) || MODEL_EXTENSIONS.has(ext);
 }
 
 export async function GET(request: Request) {
@@ -62,8 +64,8 @@ export async function GET(request: Request) {
       fileList = fileList.filter(file => !file.name.startsWith('.'));
     }
 
-    // Only show directories and image files
-    fileList = fileList.filter(file => file.isDirectory || isImageFile(file.name));
+    // Only show directories, image files, and model files
+    fileList = fileList.filter(file => file.isDirectory || isViewableFile(file.name));
 
     return NextResponse.json(fileList);
   } catch (error) {

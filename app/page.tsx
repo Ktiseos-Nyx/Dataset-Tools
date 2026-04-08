@@ -1,17 +1,23 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useTransition, useRef } from "react"
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels"
-import { Grid3x3, List, SidebarClose, SidebarOpen, ImageIcon } from "lucide-react"
+import { Grid3x3, List, SidebarClose, SidebarOpen, ImageIcon, Brain } from "lucide-react"
 import { FileTree } from "@/components/file-tree"
 import { ImagePreview } from "@/components/image-preview"
 import { MetadataPanel } from "@/components/metadata-panel"
+import { SafetensorsPanel } from "@/components/safetensors-panel"
 import { ThumbnailViewport } from "@/components/thumbnail-viewport"
 import { DropZone } from "@/components/drop-zone"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import { FsItem } from "@/types/fs"
 import type { ImageMetadata, ViewMode } from "@/types/metadata"
+import type { SafetensorsMetadata } from "@/types/safetensors"
 import { useSettings } from "@/hooks/use-settings"
+
+function isSafetensorsFile(file: FsItem): boolean {
+  return file.name.toLowerCase().endsWith('.safetensors')
+}
 
 export default function Home() {
   const { settings, updateSettings } = useSettings()
@@ -20,17 +26,50 @@ export default function Home() {
   const [metadata, setMetadata] = useState<{ data: ImageMetadata | null; loading: boolean }>({ data: null, loading: false })
   const [viewMode, setViewMode] = useState<ViewMode>("list")
   const [showMetadata, setShowMetadata] = useState(true)
+  const [safetensors, setSafetensors] = useState<{ data: SafetensorsMetadata | null; loading: boolean }>({ data: null, loading: false })
+  const [, startTransition] = useTransition()
+  const fetchAbortRef = useRef<AbortController | null>(null)
+
+  const fetchSafetensors = async (file: FsItem) => {
+    fetchAbortRef.current?.abort()
+    const controller = new AbortController()
+    fetchAbortRef.current = controller
+
+    setSafetensors({ data: null, loading: true })
+    try {
+      const response = await fetch(
+        `/api/safetensors?path=${encodeURIComponent(file.path)}&baseFolder=${encodeURIComponent(settings.currentFolder)}`,
+        { signal: controller.signal }
+      )
+      if (!response.ok) throw new Error('Failed to fetch safetensors metadata')
+      const data = await response.json()
+      setSafetensors({ data, loading: false })
+    } catch (error) {
+      if ((error as Error).name === 'AbortError') return
+      console.error(error)
+      setSafetensors({ data: null, loading: false })
+    }
+  }
 
   const fetchMetadata = async (file: FsItem) => {
+    // Cancel any in-flight metadata request
+    fetchAbortRef.current?.abort()
+    const controller = new AbortController()
+    fetchAbortRef.current = controller
+
     setMetadata({ data: null, loading: true });
     try {
-      const response = await fetch(`/api/metadata?path=${encodeURIComponent(file.path)}&baseFolder=${encodeURIComponent(settings.currentFolder)}`);
+      const response = await fetch(
+        `/api/metadata?path=${encodeURIComponent(file.path)}&baseFolder=${encodeURIComponent(settings.currentFolder)}`,
+        { signal: controller.signal }
+      );
       if (!response.ok) {
         throw new Error('Failed to fetch metadata');
       }
       const data = await response.json();
       setMetadata({ data, loading: false });
     } catch (error) {
+      if ((error as Error).name === 'AbortError') return;
       console.error(error);
       setMetadata({ data: null, loading: false });
     }
@@ -45,15 +84,23 @@ export default function Home() {
     if (file.isDirectory) {
       setSelectedFile(null)
       setMetadata({ data: null, loading: false })
+      setSafetensors({ data: null, loading: false })
       return
     }
 
-    // Track which directory this file is in
     const dirPath = file.path.includes('/') ? file.path.slice(0, file.path.lastIndexOf('/')) : '.'
-    setCurrentDir(dirPath)
+    startTransition(() => {
+      setCurrentDir(dirPath)
+      setSelectedFile(file)
+    })
 
-    setSelectedFile(file)
-    fetchMetadata(file);
+    if (isSafetensorsFile(file)) {
+      setMetadata({ data: null, loading: false })
+      fetchSafetensors(file)
+    } else {
+      setSafetensors({ data: null, loading: false })
+      fetchMetadata(file)
+    }
   }
 
   const handleDirExpand = (dirPath: string) => {
@@ -184,6 +231,14 @@ export default function Home() {
                       <EmptyDescription>Browse the file tree and select an image to preview</EmptyDescription>
                     </EmptyHeader>
                   </Empty>
+                ) : isSafetensorsFile(selectedFile) ? (
+                  <Empty className="flex-1 border-0">
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon"><Brain /></EmptyMedia>
+                      <EmptyTitle>{selectedFile.name}</EmptyTitle>
+                      <EmptyDescription>Model file — see metadata panel</EmptyDescription>
+                    </EmptyHeader>
+                  </Empty>
                 ) : (
                   <ImagePreview
                     src={selectedFile.path.startsWith('blob:') ? selectedFile.path : `/api/image?path=${encodeURIComponent(selectedFile.path)}&baseFolder=${encodeURIComponent(settings.currentFolder)}`}
@@ -206,12 +261,16 @@ export default function Home() {
           </PanelGroup>
         </Panel>
 
-        {/* Metadata Panel */}
+        {/* Metadata / Safetensors Panel */}
         {showMetadata && (
           <>
             <PanelResizeHandle className="w-1 bg-border hover:bg-primary/50 transition-colors cursor-col-resize" />
             <Panel id="metadata" defaultSize={25} minSize={15} maxSize={50}>
-              <MetadataPanel metadata={metadata.data} isLoading={metadata.loading} />
+              {selectedFile && isSafetensorsFile(selectedFile) ? (
+                <SafetensorsPanel data={safetensors.data} isLoading={safetensors.loading} fileName={selectedFile.name} />
+              ) : (
+                <MetadataPanel metadata={metadata.data} isLoading={metadata.loading} />
+              )}
             </Panel>
           </>
         )}

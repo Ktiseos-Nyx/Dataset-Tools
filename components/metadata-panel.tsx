@@ -16,7 +16,7 @@ interface MetadataPanelProps {
 // Keys hidden from the generic parameter grid (shown in dedicated UI)
 const HIDDEN_KEYS = new Set([
   'prompt', 'negative_prompt', 'workflow_type', 'loras',
-  'comfyui_workflow', '_drawthings_params',
+  'comfyui_workflow', 'comfyui_nodes', '_drawthings_params',
 ])
 
 // Display order for the parameter grid
@@ -374,6 +374,84 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
   )
 }
 
+// --- ComfyUI Node Classification ---
+
+type ComfyNodeResult = { classification: 'builtin' | 'custom' | 'unknown'; repo?: string; source?: string }
+
+interface ComfyNodesData {
+  summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number }
+  classifications: Record<string, ComfyNodeResult>
+  unknownNodes: string[]
+}
+
+function ComfyUINodesSection({ nodes: initial, labelSize }: { nodes: ComfyNodesData; labelSize: string }) {
+  const [enriched, setEnriched] = useState<Record<string, ComfyNodeResult>>({})
+  const [enriching, setEnriching] = useState(false)
+  const unknownKey = initial.unknownNodes.join(',')
+
+  useEffect(() => {
+    if (initial.unknownNodes.length === 0) return
+    const controller = new AbortController()
+    setEnriching(true)
+    fetch(`/api/comfyui-nodes?classTypes=${encodeURIComponent(unknownKey)}&github=true`, {
+      signal: controller.signal,
+    })
+      .then(r => r.json())
+      .then((data: Record<string, ComfyNodeResult>) => setEnriched(data))
+      .catch(() => {})
+      .finally(() => setEnriching(false))
+    return () => controller.abort()
+  }, [unknownKey])
+
+  const merged = { ...initial.classifications, ...enriched }
+  const githubResolved = Object.values(enriched).filter(r => r.source === 'github' && r.classification === 'custom').length
+  const repos = [...new Set(
+    Object.values(merged).filter(r => r.classification === 'custom' && r.repo).map(r => r.repo!)
+  )]
+  const stillUnknown = Object.entries(merged).filter(([, r]) => r.classification === 'unknown').map(([ct]) => ct)
+  const customCount = Object.values(merged).filter(r => r.classification === 'custom').length
+
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center gap-2">
+        <p className={`font-medium text-muted-foreground uppercase tracking-wide ${labelSize}`}>Nodes</p>
+        {enriching && <Loader2 className="w-3 h-3 animate-spin text-muted-foreground" />}
+        {!enriching && githubResolved > 0 && (
+          <span className="text-[10px] text-muted-foreground">+{githubResolved} via GitHub</span>
+        )}
+      </div>
+      <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs">
+        <span className="text-muted-foreground">{initial.summary.total} total</span>
+        <span className="text-muted-foreground">·</span>
+        <span>{initial.summary.builtin} builtin</span>
+        {customCount > 0 && <><span className="text-muted-foreground">·</span><span className="text-primary">{customCount} custom</span></>}
+        {stillUnknown.length > 0 && <><span className="text-muted-foreground">·</span><span className="text-muted-foreground">{stillUnknown.length} unknown</span></>}
+      </div>
+      {repos.length > 0 && (
+        <div className="flex flex-wrap gap-1 pt-0.5">
+          {repos.map(repo => (
+            <a
+              key={repo}
+              href={`https://github.com/${repo}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-muted hover:bg-accent border border-border"
+              title={repo}
+            >
+              {repo.split('/')[1] || repo}
+            </a>
+          ))}
+        </div>
+      )}
+      {stillUnknown.length > 0 && !enriching && (
+        <p className="text-[10px] text-muted-foreground truncate">
+          Unknown: {stillUnknown.slice(0, 3).join(', ')}{stillUnknown.length > 3 ? ` +${stillUnknown.length - 3} more` : ''}
+        </p>
+      )}
+    </div>
+  )
+}
+
 // --- AI Tab ---
 
 interface AITabProps {
@@ -406,6 +484,7 @@ function AITab({ ai, metadata, copiedValue, onCopy, fontSize: fs, formatFileSize
   const loras = Array.isArray(ai.loras)
     ? (ai.loras as unknown[]).map(toDisplayString).filter(Boolean)
     : undefined
+  const comfyNodes = ai.comfyui_nodes as ComfyNodesData | undefined
 
   // Build ordered params from known keys first, then remaining
   const knownParams: [string, string][] = []
@@ -482,6 +561,15 @@ function AITab({ ai, metadata, copiedValue, onCopy, fontSize: fs, formatFileSize
             ))}
           </div>
         </div>
+      )}
+
+      {/* ComfyUI Node Classification */}
+      {comfyNodes && (
+        <ComfyUINodesSection
+          key={comfyNodes.unknownNodes.join(',')}
+          nodes={comfyNodes}
+          labelSize={fs.label}
+        />
       )}
 
       {/* Parameter Grid */}

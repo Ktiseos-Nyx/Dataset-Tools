@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { FileImage, Loader2, FolderOpen, ImageIcon, Copy, FileText } from "lucide-react"
+import { FileImage, Loader2, FolderOpen, ImageIcon, Copy, FileText, Brain } from "lucide-react"
 import type { FsItem } from "@/types/fs"
 import { useSettings } from "@/hooks/use-settings"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
@@ -140,10 +140,18 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile }: Th
   )
 }
 
+const MODEL_EXTENSIONS = new Set(['.safetensors'])
+
+function isModelFile(name: string): boolean {
+  return MODEL_EXTENSIONS.has(name.slice(name.lastIndexOf('.')).toLowerCase())
+}
+
 function Thumb({ path: filePath, baseFolder }: { path: string; baseFolder: string }) {
   const ref = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
   const [loaded, setLoaded] = useState(false)
+
+  const fileName = filePath.split('/').pop() ?? filePath
 
   useEffect(() => {
     if (!ref.current) return
@@ -159,6 +167,14 @@ function Thumb({ path: filePath, baseFolder }: { path: string; baseFolder: strin
     observer.observe(ref.current)
     return () => observer.disconnect()
   }, [])
+
+  if (isModelFile(fileName)) {
+    return (
+      <div className="w-[76px] h-[76px] rounded bg-primary/10 flex items-center justify-center">
+        <Brain className="w-7 h-7 text-primary/60" />
+      </div>
+    )
+  }
 
   return (
     <div

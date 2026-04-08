@@ -7,15 +7,11 @@ import exifParser from 'exif-parser';
 import iconv from 'iconv-lite';
 import { classifyNodes, type NodeLookupResult } from '@/lib/comfyui-node-registry';
 
-// Cap how many unknown ComfyUI nodes we'll resolve via the GitHub fallback per
-// request. Each lookup is throttled to ~2s, so this bounds worst-case latency
-// on a cold cache. Subsequent loads hit the disk cache and are instant.
-const MAX_GITHUB_FALLBACK_PER_REQUEST = 5;
-
 /**
  * Classify every class_type in a ComfyUI workflow against the extension-node-map
- * registry, falling back to GitHub code search for nodes the main traversal
- * couldn't identify. Returns null if no workflow is present.
+ * registry. GitHub fallback is intentionally disabled here — the panel triggers
+ * it as a separate async request after the metadata response arrives, so the
+ * initial load is never blocked by GitHub API latency.
  */
 async function classifyComfyUIWorkflow(workflow: Record<string, any>): Promise<{
   summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number };
@@ -29,14 +25,9 @@ async function classifyComfyUIWorkflow(workflow: Record<string, any>): Promise<{
   }
   if (classTypes.size === 0) return null;
 
-  // Local registry first; GitHub fallback only when GITHUB_TOKEN is set.
-  // The registry caps the fallback at githubFallbackLimit unknown nodes.
   let classifications: Record<string, NodeLookupResult>;
   try {
-    classifications = await classifyNodes([...classTypes], {
-      useGitHubFallback: !!process.env.GITHUB_TOKEN,
-      githubFallbackLimit: MAX_GITHUB_FALLBACK_PER_REQUEST,
-    });
+    classifications = await classifyNodes([...classTypes]);
   } catch (err) {
     console.error('[metadata] ComfyUI node classification failed:', err);
     classifications = {};
@@ -728,50 +719,140 @@ function coercePromptValue(val: unknown): string | undefined {
   return undefined;
 }
 
+// TensorArt-specific ComfyUI node class_types
+const TENSORART_NODE_TYPES = new Set([
+  'ECHOCheckpointLoaderSimple', 'TensorArt_CheckpointLoader',
+  'TensorArt_PromptText', 'KolorsCheckpointLoaderSimple', 'TensorArtLoadChatGLM3',
+]);
+
 // Parse AI generation parameters from various formats
 async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<string, any>> {
   const aiData: Record<string, any> = {};
 
-  // A1111/Forge format - stored in "parameters" key
-  if (chunks.parameters) {
-    const params = chunks.parameters;
-
-    // Extract positive prompt (everything before "Negative prompt:")
-    const negativeMatch = params.match(/Negative prompt:\s*([\s\S]+?)(?:\n|$)/);
-    const splitIndex = params.indexOf('\nNegative prompt:');
-
-    if (splitIndex !== -1) {
-      aiData.prompt = params.substring(0, splitIndex).trim();
-      if (negativeMatch) {
-        aiData.negative_prompt = negativeMatch[1].split('\n')[0].trim();
+  // --- InvokeAI: dedicated invokeai_metadata PNG chunk ---
+  if (chunks.invokeai_metadata) {
+    try {
+      const inv = JSON.parse(chunks.invokeai_metadata);
+      if (inv.positive_prompt !== undefined) {
+        aiData.workflow_type = 'InvokeAI';
+        if (inv.positive_prompt) aiData.prompt = String(inv.positive_prompt);
+        if (inv.negative_prompt) aiData.negative_prompt = String(inv.negative_prompt);
+        if (inv.seed !== undefined) aiData.seed = String(inv.seed);
+        if (inv.steps !== undefined) aiData.steps = String(inv.steps);
+        if (inv.cfg_scale !== undefined) aiData.cfg_scale = String(inv.cfg_scale);
+        if (inv.scheduler) aiData.scheduler = String(inv.scheduler);
+        if (inv.model?.name) aiData.model = String(inv.model.name);
+        if (inv.width && inv.height) aiData.size = `${inv.width}x${inv.height}`;
       }
-    } else {
-      // No negative prompt found, everything is the positive prompt
-      const lines = params.split('\n');
-      aiData.prompt = lines[0].trim();
-    }
-
-    // Extract generation settings (last line typically)
-    const lines = params.split('\n');
-    const settingsLine = lines[lines.length - 1];
-
-    // Parse common parameters
-    const stepMatch = settingsLine.match(/Steps:\s*(\d+)/);
-    const samplerMatch = settingsLine.match(/Sampler:\s*([^,]+)/);
-    const cfgMatch = settingsLine.match(/CFG scale:\s*([\d.]+)/);
-    const seedMatch = settingsLine.match(/Seed:\s*(\d+)/);
-    const sizeMatch = settingsLine.match(/Size:\s*(\d+x\d+)/);
-    const modelMatch = settingsLine.match(/Model:\s*([^,]+)/);
-
-    if (stepMatch) aiData.steps = stepMatch[1];
-    if (samplerMatch) aiData.sampler = samplerMatch[1].trim();
-    if (cfgMatch) aiData.cfg_scale = cfgMatch[1];
-    if (seedMatch) aiData.seed = seedMatch[1];
-    if (sizeMatch) aiData.size = sizeMatch[1];
-    if (modelMatch) aiData.model = modelMatch[1].trim();
+    } catch { /* not JSON */ }
   }
 
-  // ComfyUI format - stored in "prompt" key (JSON workflow)
+  // --- LibLibAI: AIGC PNG chunk containing the liblibai.com service string ---
+  if (!aiData.workflow_type && typeof chunks.AIGC === 'string' && chunks.AIGC.includes('liblibai.com')) {
+    aiData.workflow_type = 'LibLibAI';
+    const cidMatch = chunks.AIGC.match(/'ContentID':\s*(\d+)/);
+    if (cidMatch) aiData.content_id = cidMatch[1];
+  }
+
+  // --- A1111-family + JSON-format parameters (parameters PNG chunk / EXIF text) ---
+  if (!aiData.workflow_type && chunks.parameters) {
+    const params = String(chunks.parameters);
+
+    // JSON-format parameters: SwarmUI and EasyDiffusion embed JSON here
+    if (params.trim().startsWith('{')) {
+      try {
+        const jp = JSON.parse(params);
+        // SwarmUI: has comfyuisampler / autowebuisampler / cfgscale (not a raw ComfyUI node)
+        if ((jp.comfyuisampler !== undefined || jp.autowebuisampler !== undefined || jp.cfgscale !== undefined) && !jp.class_type) {
+          const sd = jp.sui_image_params ?? jp;
+          aiData.workflow_type = 'SwarmUI';
+          if (sd.prompt) aiData.prompt = String(sd.prompt);
+          if (sd.negativeprompt) aiData.negative_prompt = String(sd.negativeprompt);
+          if (sd.seed !== undefined) aiData.seed = String(sd.seed);
+          if (sd.steps !== undefined) aiData.steps = String(sd.steps);
+          if (sd.cfgscale !== undefined) aiData.cfg_scale = String(sd.cfgscale);
+          if (sd.width && sd.height) aiData.size = `${sd.width}x${sd.height}`;
+          if (sd.model) aiData.model = String(sd.model);
+          const swarmSampler = sd.comfyuisampler ?? sd.autowebuisampler;
+          if (swarmSampler) aiData.sampler = String(swarmSampler);
+        // EasyDiffusion: uses verbose field name num_inference_steps instead of steps
+        } else if (jp.num_inference_steps !== undefined) {
+          aiData.workflow_type = 'EasyDiffusion';
+          const edPrompt = jp.prompt ?? jp.Prompt;
+          if (edPrompt) aiData.prompt = String(edPrompt);
+          const edNeg = jp.negative_prompt ?? jp['Negative Prompt'] ?? jp.negative;
+          if (edNeg) aiData.negative_prompt = String(edNeg);
+          aiData.steps = String(jp.num_inference_steps);
+          if (jp.guidance_scale !== undefined) aiData.cfg_scale = String(jp.guidance_scale);
+          if (jp.seed !== undefined) aiData.seed = String(jp.seed);
+          const edSampler = jp.sampler_name ?? jp.sampler;
+          if (edSampler) aiData.sampler = String(edSampler);
+          if (jp.width && jp.height) aiData.size = `${jp.width}x${jp.height}`;
+          if (jp.use_stable_diffusion_model) {
+            const mp = String(jp.use_stable_diffusion_model);
+            aiData.model = mp.split(/[/\\]/).pop()?.replace(/\.(safetensors|ckpt|pt)$/i, '') ?? mp;
+          }
+        }
+      } catch { /* not JSON, fall through to A1111 text parsing */ }
+    }
+
+    // A1111-style text parameters (A1111, Forge, Yodayo, Civitai A1111)
+    if (!aiData.workflow_type) {
+      // Extract positive prompt (everything before "Negative prompt:")
+      const negativeMatch = params.match(/Negative prompt:\s*([\s\S]+?)(?:\n|$)/);
+      const splitIndex = params.indexOf('\nNegative prompt:');
+
+      if (splitIndex !== -1) {
+        aiData.prompt = params.substring(0, splitIndex).trim();
+        if (negativeMatch) {
+          aiData.negative_prompt = negativeMatch[1].split('\n')[0].trim();
+        }
+      } else {
+        aiData.prompt = params.split('\n')[0].trim();
+      }
+
+      // Extract generation settings (last line typically carries key=value pairs)
+      const lines = params.split('\n');
+      const settingsLine = lines[lines.length - 1];
+
+      const stepMatch = settingsLine.match(/Steps:\s*(\d+)/);
+      const samplerMatch = settingsLine.match(/Sampler:\s*([^,]+)/);
+      const cfgMatch = settingsLine.match(/CFG scale:\s*([\d.]+)/);
+      const seedMatch = settingsLine.match(/Seed:\s*(\d+)/);
+      const sizeMatch = settingsLine.match(/Size:\s*(\d+x\d+)/);
+      const modelMatch = settingsLine.match(/Model:\s*([^,]+)/);
+
+      if (stepMatch) aiData.steps = stepMatch[1];
+      if (samplerMatch) aiData.sampler = samplerMatch[1].trim();
+      if (cfgMatch) aiData.cfg_scale = cfgMatch[1];
+      if (seedMatch) aiData.seed = seedMatch[1];
+      if (sizeMatch) aiData.size = sizeMatch[1];
+      if (modelMatch) aiData.model = modelMatch[1].trim();
+
+      // Version field (search all lines, not just the last — extensions add extra lines)
+      const versionMatch = params.match(/Version:\s*([^,\n]+)/);
+      const versionStr = versionMatch ? versionMatch[1].trim() : '';
+      if (versionStr) aiData.version = versionStr;
+
+      // Platform detection — most-specific signal wins
+      if (params.includes('NGMS:')) {
+        // Yodayo/Moescape: NGMS is their unique content-filter strength field
+        aiData.workflow_type = 'Yodayo';
+        const ngmsMatch = params.match(/NGMS:\s*([\d.]+)/);
+        if (ngmsMatch) aiData.ngms = ngmsMatch[1];
+      } else if (/Civitai resources:|Civitai metadata:/.test(params)) {
+        // Civitai on-site generator embeds explicit resource metadata
+        aiData.workflow_type = 'Civitai';
+      } else if (/^f\d/i.test(versionStr)) {
+        // Forge: version string starts with 'f' (e.g. "f0.0.17-dirty-1254-gabcdef")
+        aiData.workflow_type = 'Forge';
+      } else {
+        aiData.workflow_type = 'AUTOMATIC1111';
+      }
+    }
+  }
+
+  // --- ComfyUI format: JSON workflow stored in "prompt" PNG chunk ---
   if (chunks.prompt) {
     try {
       // Sanitize NaN/Infinity values that break JSON.parse
@@ -782,7 +863,16 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
 
       const workflow = JSON.parse(sanitized);
       aiData.comfyui_workflow = workflow;
+      // Default to ComfyUI; override with TensorArt if their nodes are present
       aiData.workflow_type = 'ComfyUI';
+
+      for (const nodeData of Object.values(workflow)) {
+        const node = nodeData as any;
+        if (TENSORART_NODE_TYPES.has(node?.class_type)) { aiData.workflow_type = 'TensorArt'; break; }
+        // TensorArt model resources use EMS-<id> naming
+        const ckpt = node?.inputs?.ckpt_name;
+        if (typeof ckpt === 'string' && /EMS-\d+/i.test(ckpt)) { aiData.workflow_type = 'TensorArt'; break; }
+      }
 
       // Classify all class_types FIRST (extension-map + GitHub fallback for
       // unknowns) so the traversal in extractComfyUIParams can recognise
@@ -797,13 +887,21 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       // candidate text encoders.
       const extracted = extractComfyUIParams(workflow, nodeInfo?.classifications ?? {});
       Object.assign(aiData, extracted);
+      // Restore workflow_type — extractComfyUIParams doesn't set it but Object.assign
+      // could theoretically clobber it if the extracted object ever grows that key.
+      if (!aiData.workflow_type) aiData.workflow_type = 'ComfyUI';
     } catch (e) {
       // Not valid JSON, store as-is
       aiData.prompt = chunks.prompt;
     }
   }
 
-  // NovelAI format - stored in "Comment" or "Description" key as JSON
+  // --- NovelAI: Software chunk = "NovelAI" is the authoritative signal ---
+  if (chunks.Software === 'NovelAI' && !aiData.workflow_type) {
+    aiData.workflow_type = 'NovelAI';
+  }
+
+  // NovelAI / Midjourney: Comment or Description PNG chunk
   if (chunks.Comment || chunks.Description) {
     const commentText = chunks.Comment || chunks.Description;
     try {
@@ -818,6 +916,10 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       if (novelData.scale !== undefined) aiData.cfg_scale = String(novelData.scale);
       if (novelData.seed !== undefined) aiData.seed = String(novelData.seed);
       if (novelData.sampler !== undefined) aiData.sampler = coercePromptValue(novelData.sampler);
+      // NovelAI uses 'uc' for negative prompt; Draw Things uses 'c' for positive
+      if (novelData.uc !== undefined && !novelData.c) {
+        aiData.workflow_type = 'NovelAI';
+      }
     } catch (e) {
       // Not JSON — check for Midjourney format
       // MJ stores prompt + --params + "Job ID: uuid" in Description tEXt chunk
