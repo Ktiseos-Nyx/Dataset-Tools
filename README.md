@@ -30,10 +30,30 @@
 
 ---
 
-**Dataset Tools NextJS Edition** is a **local-first web application** for browsing AI image datasets with comprehensive metadata extraction. Built from the ground up in TypeScript — no Python dependencies, no OpenCV duct tape, no NumPy startup tax. Running on Next.js 16, React 19, and shadcn/ui components.
+**Dataset Tools NextJS Edition** is a **local-first web application** for browsing AI image datasets with comprehensive metadata extraction. Built from the ground up in TypeScript — no Python dependencies, no OpenCV duct tape, no NumPy startup tax. Running on Next.js 16, React 19, and shadcn/ui components. 
 
 ### Why this exists
 The Python edition worked at 65% success rate with heuristic spaghetti. This NextJS engine hits **90% success rate** on complex ComfyUI workflows using **deterministic graph traversal**. Metadata is parsed in pure JavaScript — no waiting for Python to boot, no OpenCV overhead.
+
+#### Development Stage
+
+While this is working 99% better than our original python app, please be aware that as we move this into "ALPHA TESTING" that there will be more bugs, we can't provide enough pre-catching for bugs as we tried for the original python. So we're hoping that the amount of work we've put into porting this into a much easier format you can help test. 
+
+Q: Are you working on putting this into an executable format? 
+
+A: Yes, eventually we'll port this to Electron or see what Tauri needs, we're likely for ease of use likely going to use Electron, as for this we're not sure how Tauri would effect the rendering of metadata or otherwise. 
+
+Q: Are you aware that NextJS/Node has more CVE's and is the Number ONE VIBE CODED language this side of the moon?
+
+A: Yes, but just like our python version and anything else we build, we're not like other "VIBE CODED TOOLS" we demand security, peace of mind and a way through the mess. Unlike the trainer which uses major ML stacks to survive, we can promise you A LOT more security with this. As long as you're not installing this on an OpenClaw instance you're fine.
+
+Q: But Chrome Sucks!
+
+A: Duskfallcrew personally reccomends the use of Vivaldi which is a CHROMIUM fork, Electron is only as "BLOATED" as the packages you port with it, along with web trackers and unmitigated cache, image sizes and lazy loading issues. When we port our executable mode, we'll make sure the thing runs on every flipping potato machine out there! 
+
+Q: Why is this not already 100% Done?
+
+A: Because I have 20 projects on the go? Plus i'm currently the solo dork with AI assistance, yes Joel does supervise and add things to the code, his ComfyUI lookup tool is what powers this - Exception: Claude translated it to node because Joel's actually a real life developer, he's not got time to do EVERYTHING. Plus when he's not at work or with his family: He's an A+ Smexy FFXIV player! He beats our Miqo'te's poor fashion choices just by existing! 
 
 > **Development Tool Warning**
 > * **Run locally:** `npm run dev`
@@ -65,7 +85,7 @@ cd Dataset-Tools
 npm install
 ```
 
-# Start dev server
+# Start dev server (For Local Testing)
 ```bash
 npm run dev
 ```
@@ -90,6 +110,7 @@ npm run build && npm start
 | **Accent Colors** | ✅ | 7 color themes (zinc, red, orange, green, blue, violet, pink) with dark mode support. |
 | **WebP Metadata** | ⚠️ | Viewing works. Metadata extraction in development. |
 | **ComfyUI Workflows** | ✅ | 3-phase extraction: field-based scan → graph trace → type-match fallback. Handles custom nodes, TensorArt wrappers, FLUX/SD3/SDXL. |
+| **Github Lookup** | ✅ | If a node isn't found the first time, search, search again. |
 
 ### Supported Formats
 - **A1111 / Forge** — PNG tEXt chunks, JPEG EXIF
@@ -153,6 +174,25 @@ Open an issue with the details above. Real-world edge cases are how we push past
 
 ## License
 GNU General Public License v3.0
+
+## Acknowledgements
+
+* Core Parsing Logic & Inspiration: This project incorporates and significantly adapts parsing functionalities from Stable Diffusion Prompt Reader by  **[receyuki](https://github.com/receyuki)** . Our sincere thanks for this foundational work.
+      Original Repository: [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
+      The original MIT license for this vendored code is included in the NOTICE.md file.
+* UI Theming: The beautiful PyQt themes are made possible by [qt-material](https://github.com/dunderlab/qt-material) by [DunderLab](https://github.com/dunderlab) as well as GTRONICK - [GTRONICKS](https://github.com/GTRONICK/QSS) and the UNREAL STYLE SHEET Creator [UNREAL STYLESHEET](https://github.com/leixingyu/unrealStylesheet)
+* Essential Libraries: This project relies on great open-source Python libraries including [Pillow,](https://github.com/python-pillow/Pillow), [PyQt6](https://www.riverbankcomputing.com/software/pyqt/), [piexif](https://github.com/hMatoba/Piexif), [pyexiv2](https://github.com/LeoHsiao1/pyexiv2), [toml](https://github.com/uiri/toml), [Pydantic](https://docs.pydantic.dev/latest/), and [Rich](https://github.com/Textualize/rich). Their respective licenses apply.
+* **[Anzhc](https://github.com/anzhc)** for continued support and motivation.
+* Our peers and the wider AI and open-source communities for their continuous support and inspiration.
+* AI Language Models (like those from Google, OpenAI, Anthropic) for assistance with code generation, documentation, and problem-solving during development.
+* ...and many more!
+
+
+**SPECIAL THANKS**
+
+- Supervised by: traugdor
+- Special Thanks to contributors: Open Source Community, Whitevamp, Exdysa, and so many more.
+- Special Thanks to Anthropic for the numerous amounts of insanely valuable free credits during marketing ploys. While we're only on the USD 20 a month plan, anything helps so throw more of these our way because development has become sort of a job for us! 
 
 ## Support Development
 [![Join us on Discord](https://img.shields.io/badge/Join%20us%20on-Discord-5865F2?style=for-the-badge&logo=discord)](https://discord.gg/HhBSvM9gBY)
