@@ -52,8 +52,8 @@ export function Navbar() {
               Settings
             </button>
           </SheetTrigger>
-          <SheetContent className="overflow-y-auto w-[400px] sm:w-[450px]">
-            <SheetHeader>
+          <SheetContent className="overflow-y-auto w-[400px] sm:w-[450px] sm:max-w-[450px]">
+            <SheetHeader className="px-6 pt-6 pb-2">
               <SheetTitle>Settings</SheetTitle>
               <SheetDescription className="sr-only">
                 Configure appearance, file browser, and API keys.
@@ -148,7 +148,7 @@ function SettingsContent() {
   }
 
   return (
-    <div className="space-y-6 py-4">
+    <div className="space-y-6 px-6 pb-6">
       {/* Appearance */}
       <section className="space-y-4">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Appearance</h2>

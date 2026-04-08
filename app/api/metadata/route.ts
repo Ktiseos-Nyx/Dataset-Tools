@@ -144,51 +144,23 @@ function followRef(workflow: Record<string, any>, ref: any, visited?: Set<string
   return node ? { nodeId: ref[0], node } : null;
 }
 
-// Walk backwards from a node input, collecting ancestor nodes up to maxDepth.
-// `hint` tells the tracer what kind of data we're looking for (e.g. "positive", "negative")
-// so combo nodes like Efficient Loader route us down the right input branch.
-function traceBack(
-  workflow: Record<string, any>,
-  startRef: any,
-  hint?: string,
-  maxDepth: number = 10,
-  visited?: Set<string>,
-  skipNodes?: Set<string>
-): Array<{ nodeId: string; node: any; depth: number }> {
-  const results: Array<{ nodeId: string; node: any; depth: number }> = [];
-  const seen = visited || new Set<string>();
+// Common text input field names found across vanilla + custom ComfyUI nodes.
+// Ordered roughly by frequency so the loop returns sooner on hot cases.
+const TEXT_INPUT_KEYS = [
+  'text', 'string', 'prompt', 'value',
+  'text_a', 'text_b', 'text_g', 'text_l', 'text_c',
+  'positive', 'negative',
+  'positive_prompt', 'negative_prompt',
+  'user_prompt', 'wildcard_text', 'final_text',
+  'populated_text', 'output_text',
+] as const;
 
-  function walk(ref: any, depth: number, currentHint?: string) {
-    if (depth > maxDepth) return;
-    const target = followRef(workflow, ref, new Set());
-    if (!target || seen.has(target.nodeId)) return;
-    if (skipNodes?.has(target.nodeId)) return; // skip muted/bypassed nodes
-    seen.add(target.nodeId);
-    results.push({ ...target, depth });
+// Field-name fragments that disqualify a value from being treated as prompt text.
+const NON_PROMPT_KEY_FRAGMENTS = ['name', 'file', 'path', 'method', 'mode', 'type', 'format'];
 
-    const inputs = target.node.inputs || {};
-
-    // If we have a hint and this node has a matching input name, prefer that path.
-    // This handles combo nodes (e.g. Efficient Loader with both positive/negative inputs)
-    if (currentHint && isNodeRef(inputs[currentHint])) {
-      walk(inputs[currentHint], depth + 1, currentHint);
-      return; // Only follow the hinted path on combo nodes
-    }
-
-    // If the hint matches a direct string value on this node, we found what we need —
-    // no need to walk further from here
-    if (currentHint && typeof inputs[currentHint] === 'string') {
-      return;
-    }
-
-    // Otherwise walk all ref inputs
-    for (const [key, val] of Object.entries(inputs)) {
-      if (isNodeRef(val)) walk(val, depth + 1, currentHint);
-    }
-  }
-
-  walk(startRef, 0, hint);
-  return results;
+function isPromptyKey(key: string): boolean {
+  const lower = key.toLowerCase();
+  return !NON_PROMPT_KEY_FRAGMENTS.some(f => lower.includes(f));
 }
 
 // Find a text/prompt string in a node's inputs.
@@ -201,21 +173,33 @@ function findText(workflow: Record<string, any>, node: any, visited?: Set<string
   // (e.g. "POSITIVE_PROMPT", "negative_prompt", "positive", "negative")
   if (hint) {
     const hintUpper = hint.toUpperCase();
-    const hintLower = hint.toLowerCase();
     for (const [key, val] of Object.entries(inputs)) {
       const keyUpper = key.toUpperCase();
-      if ((keyUpper.includes(hintUpper) || keyUpper.includes(hintLower.toUpperCase())) &&
+      if (keyUpper.includes(hintUpper) &&
           (keyUpper.includes('PROMPT') || keyUpper.includes('TEXT') || keyUpper.includes('STRING'))) {
         if (typeof val === 'string' && val.trim()) return val;
+        if (isNodeRef(val)) {
+          const upstream = followRef(workflow, val, visited);
+          if (upstream) {
+            const text = findText(workflow, upstream.node, visited, hint);
+            if (text) return text;
+          }
+        }
       }
     }
     // Also check just the hint name directly (e.g. inputs.positive, inputs.negative)
     if (typeof inputs[hint] === 'string' && inputs[hint].trim()) return inputs[hint];
+    if (isNodeRef(inputs[hint])) {
+      const upstream = followRef(workflow, inputs[hint], visited);
+      if (upstream) {
+        const text = findText(workflow, upstream.node, visited, hint);
+        if (text) return text;
+      }
+    }
   }
 
   // Priority 2: known common text field names
-  const textKeys = ['text', 'string', 'text_a', 'text_b', 'value', 'user_prompt', 'prompt', 'text_g', 'text_l'];
-  for (const key of textKeys) {
+  for (const key of TEXT_INPUT_KEYS) {
     if (typeof inputs[key] === 'string' && inputs[key].trim()) return inputs[key];
     if (isNodeRef(inputs[key])) {
       const upstream = followRef(workflow, inputs[key], visited);
@@ -226,21 +210,88 @@ function findText(workflow: Record<string, any>, node: any, visited?: Set<string
     }
   }
 
-  // Priority 3: scan all string inputs that look like prompts (longer than ~10 chars,
+  // Priority 3: any NodeRef input — follow it. This catches custom routers
+  // that store the prompt under a non-standard key (e.g. `wildcard`, `seed_text`).
+  for (const [key, val] of Object.entries(inputs)) {
+    if (!isPromptyKey(key)) continue;
+    if (isNodeRef(val)) {
+      const upstream = followRef(workflow, val, visited);
+      if (upstream) {
+        const text = findText(workflow, upstream.node, visited, hint);
+        if (text) return text;
+      }
+    }
+  }
+
+  // Priority 4: scan all string inputs that look like prompts (longer than ~10 chars,
   // not a filename or simple config value)
   let bestText: string | null = null;
   for (const [key, val] of Object.entries(inputs)) {
     if (typeof val === 'string' && val.trim().length > 10) {
-      // Skip fields that are clearly not prompts
-      const keyLower = key.toLowerCase();
-      if (keyLower.includes('name') || keyLower.includes('file') || keyLower.includes('path') ||
-          keyLower.includes('method') || keyLower.includes('mode')) continue;
+      if (!isPromptyKey(key)) continue;
       if (!bestText || val.length > bestText.length) bestText = val;
     }
   }
   if (bestText) return bestText;
 
   return null;
+}
+
+// Quadmoon-style recursive prompt extraction. Walks back through every
+// string-typed connection and joins the text contributions with " | ", which
+// preserves both branches of ConditioningCombine and similar combiner nodes.
+//
+// Returns null when nothing prompt-shaped is reachable. Otherwise returns the
+// combined text in upstream-first order so the most-specific source ends up
+// at the front (matches Python's collected_texts ordering).
+function extractPromptTextWithTrace(
+  workflow: Record<string, any>,
+  startNodeId: string,
+  hint?: string,
+  maxDepth: number = 10,
+  skipNodes?: Set<string>,
+): string | null {
+  const seen = new Set<string>();
+  const collected: string[] = [];
+
+  function visit(nodeId: string, depth: number) {
+    if (depth > maxDepth || seen.has(nodeId)) return;
+    if (skipNodes?.has(nodeId)) return;
+    seen.add(nodeId);
+
+    const node = getNode(workflow, nodeId);
+    if (!node) return;
+    const inputs = node.inputs || {};
+
+    // First recurse into upstream nodes via NodeRef inputs. We follow every
+    // ref (not just text-shaped ones) because conditioning combiners route
+    // through CONDITIONING-typed inputs that still feed text underneath.
+    for (const [key, val] of Object.entries(inputs)) {
+      if (!isNodeRef(val)) continue;
+      // Skip clearly non-text plumbing so we don't drag in seeds/clip/vae paths.
+      const lower = key.toLowerCase();
+      if (
+        lower === 'clip' || lower === 'vae' || lower === 'model' || lower === 'image' ||
+        lower === 'latent' || lower === 'mask' || lower === 'samples' || lower === 'sigmas' ||
+        lower === 'noise' || lower === 'guider' || lower === 'sampler' || lower === 'scheduler'
+      ) {
+        continue;
+      }
+      visit((val as [string, number])[0], depth + 1);
+    }
+
+    // Then collect any direct text on this node.
+    const direct = findText(workflow, node, undefined, hint);
+    if (direct && !collected.includes(direct)) {
+      collected.push(direct);
+    }
+  }
+
+  visit(startNodeId, 0);
+
+  if (collected.length === 0) return null;
+  // Upstream-first ordering reads more naturally for combiner chains.
+  return collected.length === 1 ? collected[0] : collected.reverse().join(' | ');
 }
 
 // ---- Field-based node identification (no type names needed) ----
@@ -463,29 +514,19 @@ function extractComfyUIParams(
     }
 
     // --- Trace positive conditioning wire ---
+    // Quadmoon's _extract_prompt_text_with_trace handles combiners (multiple
+    // CLIPTextEncodes via ConditioningCombine) by joining all contributions.
     if (isNodeRef(inputs.positive)) {
-      const posChain = traceBack(workflow, inputs.positive, 'positive', 10, undefined, mutedNodeIds);
-      for (const { node } of posChain) {
-        const text = findText(workflow, node, undefined, 'positive');
-        if (text) {
-          if (!extracted.prompt || text.length > extracted.prompt.length) {
-            extracted.prompt = text;
-          }
-        }
-      }
+      const startId = (inputs.positive as [string, number])[0];
+      const traced = extractPromptTextWithTrace(workflow, startId, 'positive', 10, mutedNodeIds);
+      if (traced) extracted.prompt = traced;
     }
 
     // --- Trace negative conditioning wire ---
     if (isNodeRef(inputs.negative)) {
-      const negChain = traceBack(workflow, inputs.negative, 'negative', 10, undefined, mutedNodeIds);
-      for (const { node } of negChain) {
-        const text = findText(workflow, node, undefined, 'negative');
-        if (text) {
-          if (!extracted.negative_prompt || text.length > extracted.negative_prompt.length) {
-            extracted.negative_prompt = text;
-          }
-        }
-      }
+      const startId = (inputs.negative as [string, number])[0];
+      const traced = extractPromptTextWithTrace(workflow, startId, 'negative', 10, mutedNodeIds);
+      if (traced) extracted.negative_prompt = traced;
     }
   }
 
@@ -656,6 +697,37 @@ function extractComfyUIParams(
   return extracted;
 }
 
+/**
+ * Coerce any JSON-derived value to a plain string suitable for rendering.
+ * Some metadata formats (e.g. NovelAI v3 reference images, Draw Things style
+ * objects) store fields like `prompt` as `{ content, image, ... }` objects
+ * instead of plain strings — passing these straight to React triggers error
+ * #31. We unwrap known shapes and stringify everything else.
+ */
+function coercePromptValue(val: unknown): string | undefined {
+  if (val === null || val === undefined) return undefined;
+  if (typeof val === 'string') return val;
+  if (typeof val === 'number' || typeof val === 'boolean' || typeof val === 'bigint') return String(val);
+  if (Array.isArray(val)) {
+    const parts = val.map(coercePromptValue).filter((s): s is string => !!s);
+    return parts.length > 0 ? parts.join(', ') : undefined;
+  }
+  if (typeof val === 'object') {
+    const obj = val as Record<string, unknown>;
+    // Common nested-text shapes seen in the wild
+    for (const key of ['content', 'text', 'prompt', 'caption', 'value', 'description']) {
+      if (typeof obj[key] === 'string') return obj[key] as string;
+    }
+    // Last resort: pretty JSON so the user at least sees something useful
+    try {
+      return JSON.stringify(val);
+    } catch {
+      return undefined;
+    }
+  }
+  return undefined;
+}
+
 // Parse AI generation parameters from various formats
 async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<string, any>> {
   const aiData: Record<string, any> = {};
@@ -736,12 +808,16 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
     const commentText = chunks.Comment || chunks.Description;
     try {
       const novelData = JSON.parse(commentText);
-      if (novelData.prompt) aiData.prompt = novelData.prompt;
-      if (novelData.uc) aiData.negative_prompt = novelData.uc;
-      if (novelData.steps) aiData.steps = novelData.steps;
-      if (novelData.scale) aiData.cfg_scale = novelData.scale;
-      if (novelData.seed) aiData.seed = novelData.seed;
-      if (novelData.sampler) aiData.sampler = novelData.sampler;
+      // NovelAI v3+ can wrap prompt fields in `{ content, image, ... }` objects.
+      // Coerce everything before assigning so React never sees a raw object.
+      const promptStr = coercePromptValue(novelData.prompt);
+      const ucStr = coercePromptValue(novelData.uc);
+      if (promptStr) aiData.prompt = promptStr;
+      if (ucStr) aiData.negative_prompt = ucStr;
+      if (novelData.steps !== undefined) aiData.steps = String(novelData.steps);
+      if (novelData.scale !== undefined) aiData.cfg_scale = String(novelData.scale);
+      if (novelData.seed !== undefined) aiData.seed = String(novelData.seed);
+      if (novelData.sampler !== undefined) aiData.sampler = coercePromptValue(novelData.sampler);
     } catch (e) {
       // Not JSON — check for Midjourney format
       // MJ stores prompt + --params + "Job ID: uuid" in Description tEXt chunk
@@ -1206,22 +1282,35 @@ function extractAIFromXMP(xmp: Record<string, any>): Record<string, any> {
       // Draw Things JSON format
       if (parsed.c || parsed.model || parsed.sampler) {
         ai.workflow_type = 'Draw Things';
-        if (parsed.c) ai.prompt = parsed.c;
-        if (parsed.uc) ai.negative_prompt = parsed.uc;
-        if (parsed.model) ai.model = parsed.model;
-        if (parsed.sampler) ai.sampler = parsed.sampler;
+        const promptStr = coercePromptValue(parsed.c);
+        const negStr = coercePromptValue(parsed.uc);
+        if (promptStr) ai.prompt = promptStr;
+        if (negStr) ai.negative_prompt = negStr;
+        if (parsed.model) ai.model = coercePromptValue(parsed.model);
+        if (parsed.sampler) ai.sampler = coercePromptValue(parsed.sampler);
         if (parsed.steps) ai.steps = String(parsed.steps);
         if (parsed.scale) ai.cfg_scale = String(parsed.scale);
         if (parsed.seed) ai.seed = String(parsed.seed);
-        if (parsed.size) ai.size = parsed.size;
-        if (parsed.seed_mode) ai.seed_mode = parsed.seed_mode;
+        if (parsed.size) ai.size = coercePromptValue(parsed.size);
+        if (parsed.seed_mode) ai.seed_mode = coercePromptValue(parsed.seed_mode);
         if (parsed.strength) ai.strength = String(parsed.strength);
         // LoRAs
         if (Array.isArray(parsed.lora) && parsed.lora.length > 0) {
           ai.loras = parsed.lora.map((l: any) => `${l.model} (${l.weight})`);
         }
       } else if (parsed.prompt) {
-        Object.assign(ai, parsed);
+        // Coerce per-field rather than spreading raw JSON, which can drop
+        // object-shaped fields straight into the AI tab as React children.
+        const promptStr = coercePromptValue(parsed.prompt);
+        if (promptStr) ai.prompt = promptStr;
+        const negStr = coercePromptValue(parsed.negative_prompt ?? parsed.uc);
+        if (negStr) ai.negative_prompt = negStr;
+        for (const [k, v] of Object.entries(parsed)) {
+          if (k === 'prompt' || k === 'negative_prompt' || k === 'uc') continue;
+          if (ai[k] !== undefined) continue;
+          const coerced = coercePromptValue(v);
+          if (coerced !== undefined) ai[k] = coerced;
+        }
       }
     } catch {
       // Not JSON — try A1111-style text

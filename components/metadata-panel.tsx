@@ -31,6 +31,27 @@ function formatLabel(key: string): string {
     .replace(/\b\w/g, c => c.toUpperCase())
 }
 
+// Defensive coercion for any value that the metadata API might hand us. The
+// server already normalises NovelAI/Draw Things JSON into strings, but new
+// formats can sneak object-shaped fields ({ content, image, ... }) into
+// `ai.prompt` and similar — and rendering one of those as a React child
+// triggers React error #31 and blanks the whole panel. This stringifies
+// anything non-string so the UI degrades gracefully instead of crashing.
+function toDisplayString(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  if (typeof value === 'string') return value
+  if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'bigint') return String(value)
+  if (Array.isArray(value)) return value.map(toDisplayString).filter(Boolean).join(', ')
+  if (typeof value === 'object') {
+    const obj = value as Record<string, unknown>
+    for (const k of ['content', 'text', 'prompt', 'caption', 'value']) {
+      if (typeof obj[k] === 'string') return obj[k] as string
+    }
+    try { return JSON.stringify(value) } catch { return '' }
+  }
+  return ''
+}
+
 const FONT_SIZE_MAP = {
   sm: { prompt: 'text-xs', param: 'text-xs', label: 'text-[10px]' },
   md: { prompt: 'text-sm', param: 'text-sm', label: 'text-xs' },
@@ -201,17 +222,21 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
                 ) : (
                   <>
                     <FileBasics metadata={metadata} formatFileSize={formatFileSize} fontSize={fs} />
-                    {Object.entries(metadata.exif || {}).map(([key, value]) => (
-                      <MetadataRow
-                        key={key}
-                        label={key}
-                        value={String(value)}
-                        onCopy={() => copyToClipboard(String(value), `exif-${key}`)}
-                        copied={copiedValue === `exif-${key}`}
-                        fontSize={fs.param}
-                        labelSize={fs.label}
-                      />
-                    ))}
+                    {Object.entries(metadata.exif || {}).map(([key, value]) => {
+                      const display = toDisplayString(value)
+                      if (!display) return null
+                      return (
+                        <MetadataRow
+                          key={key}
+                          label={key}
+                          value={display}
+                          onCopy={() => copyToClipboard(display, `exif-${key}`)}
+                          copied={copiedValue === `exif-${key}`}
+                          fontSize={fs.param}
+                          labelSize={fs.label}
+                        />
+                      )
+                    })}
                   </>
                 )}
               </>
@@ -228,17 +253,21 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
                     </EmptyHeader>
                   </Empty>
                 ) : (
-                  Object.entries(metadata.iptc || {}).map(([key, value]) => (
-                    <MetadataRow
-                      key={key}
-                      label={key}
-                      value={String(value)}
-                      onCopy={() => copyToClipboard(String(value), `iptc-${key}`)}
-                      copied={copiedValue === `iptc-${key}`}
-                      fontSize={fs.param}
-                      labelSize={fs.label}
-                    />
-                  ))
+                  Object.entries(metadata.iptc || {}).map(([key, value]) => {
+                    const display = toDisplayString(value)
+                    if (!display) return null
+                    return (
+                      <MetadataRow
+                        key={key}
+                        label={key}
+                        value={display}
+                        onCopy={() => copyToClipboard(display, `iptc-${key}`)}
+                        copied={copiedValue === `iptc-${key}`}
+                        fontSize={fs.param}
+                        labelSize={fs.label}
+                      />
+                    )
+                  })
                 )}
               </>
             )}
@@ -254,18 +283,22 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
                     </EmptyHeader>
                   </Empty>
                 ) : (
-                  Object.entries(metadata.xmp || {}).map(([key, value]) => (
-                    <MetadataRow
-                      key={key}
-                      label={key}
-                      value={String(value)}
-                      onCopy={() => copyToClipboard(String(value), `xmp-${key}`)}
-                      copied={copiedValue === `xmp-${key}`}
-                      mono
-                      fontSize={fs.param}
-                      labelSize={fs.label}
-                    />
-                  ))
+                  Object.entries(metadata.xmp || {}).map(([key, value]) => {
+                    const display = toDisplayString(value)
+                    if (!display) return null
+                    return (
+                      <MetadataRow
+                        key={key}
+                        label={key}
+                        value={display}
+                        onCopy={() => copyToClipboard(display, `xmp-${key}`)}
+                        copied={copiedValue === `xmp-${key}`}
+                        mono
+                        fontSize={fs.param}
+                        labelSize={fs.label}
+                      />
+                    )
+                  })
                 )}
               </>
             )}
@@ -367,17 +400,19 @@ function AITab({ ai, metadata, copiedValue, onCopy, fontSize: fs, formatFileSize
     )
   }
 
-  const workflowType = ai.workflow_type as string | undefined
-  const prompt = ai.prompt as string | undefined
-  const negativePrompt = ai.negative_prompt as string | undefined
-  const loras = ai.loras as string[] | undefined
+  const workflowType = toDisplayString(ai.workflow_type) || undefined
+  const prompt = toDisplayString(ai.prompt) || undefined
+  const negativePrompt = toDisplayString(ai.negative_prompt) || undefined
+  const loras = Array.isArray(ai.loras)
+    ? (ai.loras as unknown[]).map(toDisplayString).filter(Boolean)
+    : undefined
 
   // Build ordered params from known keys first, then remaining
   const knownParams: [string, string][] = []
   for (const key of PARAM_ORDER) {
     if (ai[key] !== undefined && !HIDDEN_KEYS.has(key)) {
-      const val = ai[key]
-      knownParams.push([key, typeof val === 'object' ? JSON.stringify(val) : String(val)])
+      const display = toDisplayString(ai[key])
+      if (display) knownParams.push([key, display])
     }
   }
   // Remaining keys not in known order or hidden
@@ -385,10 +420,8 @@ function AITab({ ai, metadata, copiedValue, onCopy, fontSize: fs, formatFileSize
   const extraParams: [string, string][] = []
   for (const [key, val] of Object.entries(ai)) {
     if (shownKeys.has(key)) continue
-    const display = typeof val === 'object' && val !== null
-      ? (Array.isArray(val) ? val.join(', ') : JSON.stringify(val, null, 2))
-      : String(val)
-    extraParams.push([key, display])
+    const display = toDisplayString(val)
+    if (display) extraParams.push([key, display])
   }
 
   return (
