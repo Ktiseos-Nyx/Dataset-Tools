@@ -105,20 +105,44 @@ interface GitHubCodeSearchResponse {
 }
 
 /**
- * Search GitHub code for a ComfyUI node class_type.
- *
- * The query targets `NODE_CLASS_MAPPINGS` references containing the class_type
- * inside Python files, which is how ComfyUI custom nodes register themselves.
+ * Sanitize a class_type for GitHub search by stripping characters that have
+ * special meaning in the search query language. Mirrors Quadmoon's
+ * `clean_name = class_name.replace('(', '')…` pre-processing.
  */
-async function queryGitHub(
-  classType: string,
+function cleanClassName(classType: string): string {
+  return classType.replace(/[()[\]"']/g, '').trim();
+}
+
+/**
+ * Decide whether a search hit looks like a real ComfyUI custom node and not
+ * a random Python file. We accept the hit if either the repository or the
+ * file path mentions "comfy" (case-insensitive). Mirrors Quadmoon's
+ * `_extract_repo_info` filter.
+ */
+function isPlausibleComfyHit(item: GitHubCodeSearchItem): boolean {
+  const repoName = item.repository.full_name.toLowerCase();
+  const description = (item.repository.description || '').toLowerCase();
+  const filePath = item.path.toLowerCase();
+  return (
+    repoName.includes('comfy') ||
+    description.includes('comfy') ||
+    filePath.includes('comfy')
+  );
+}
+
+/**
+ * Run a single GitHub code-search request and return the first plausible hit.
+ * Returns null on rate-limit or no usable matches.
+ */
+async function fetchGitHubSearch(
+  query: string,
   token: string
 ): Promise<GitHubCodeSearchItem | null> {
   await throttle();
 
-  // Quote the class type to force an exact substring match
-  const q = `"${classType}" NODE_CLASS_MAPPINGS language:python`;
-  const url = `https://api.github.com/search/code?q=${encodeURIComponent(q)}&per_page=10`;
+  // Mirror Quadmoon's per_page=5 — small page keeps us well under the 1000-result
+  // ceiling and gives the first-valid-match filter a tight working set.
+  const url = `https://api.github.com/search/code?q=${encodeURIComponent(query)}&per_page=5`;
 
   const res = await fetch(url, {
     headers: {
@@ -131,7 +155,6 @@ async function queryGitHub(
   });
 
   if (res.status === 401 || res.status === 403) {
-    // Bad token or rate-limited — bail without caching
     const reset = res.headers.get('x-ratelimit-reset');
     console.warn(
       `[comfyui-github-search] GitHub returned ${res.status}` +
@@ -141,32 +164,56 @@ async function queryGitHub(
   }
 
   if (!res.ok) {
-    console.warn(`[comfyui-github-search] GitHub returned ${res.status} for "${classType}"`);
+    console.warn(`[comfyui-github-search] GitHub returned ${res.status} for "${query}"`);
     return null;
   }
 
   const data: GitHubCodeSearchResponse = await res.json();
   if (!data.items || data.items.length === 0) return null;
 
-  // Pick the best result: prefer non-fork, non-archived, repos that look like
-  // ComfyUI custom node packs (name contains "comfy" or path looks right).
-  const ranked = [...data.items].sort((a, b) => {
-    const score = (item: GitHubCodeSearchItem) => {
-      let s = 0;
-      if (item.repository.fork) s -= 5;
-      if (item.repository.archived) s -= 3;
-      const name = item.repository.full_name.toLowerCase();
-      if (name.includes('comfy')) s += 3;
-      if (item.path.toLowerCase().includes('node')) s += 1;
-      // Prefer top-level files (likely the main nodes module)
-      const depth = item.path.split('/').length;
-      s -= depth * 0.1;
-      return s;
-    };
-    return score(b) - score(a);
-  });
+  // Quadmoon-style first-valid-match: walk results in API order, return the
+  // first one that looks like a ComfyUI custom node pack, demoting forks and
+  // archived repos rather than dropping them entirely.
+  const candidates = data.items
+    .filter(isPlausibleComfyHit)
+    .sort((a, b) => {
+      const score = (item: GitHubCodeSearchItem) => {
+        let s = 0;
+        if (item.repository.fork) s -= 5;
+        if (item.repository.archived) s -= 3;
+        return s;
+      };
+      return score(b) - score(a);
+    });
 
-  return ranked[0];
+  return candidates[0] || null;
+}
+
+/**
+ * Search GitHub code for a ComfyUI node class_type.
+ *
+ * Mirrors Quadmoon's two-stage GitHubNodeFinder:
+ *   1. Loose query: `${clean_name} comfyui` — broadest net, finds nodes
+ *      registered with any pattern (NODE_CLASS_MAPPINGS, decorators, etc.).
+ *   2. Fallback query: `"${clean_name}" language:python` — tighter substring
+ *      match against Python files when the loose query misses.
+ *
+ * Both queries are filtered through `isPlausibleComfyHit` so we never return
+ * an unrelated Python file just because it shares the class name.
+ */
+async function queryGitHub(
+  classType: string,
+  token: string
+): Promise<GitHubCodeSearchItem | null> {
+  const clean = cleanClassName(classType);
+  if (!clean) return null;
+
+  // Stage 1: loose query
+  const looseHit = await fetchGitHubSearch(`${clean} comfyui`, token);
+  if (looseHit) return looseHit;
+
+  // Stage 2: tighter Python-only fallback
+  return fetchGitHubSearch(`"${clean}" language:python`, token);
 }
 
 function itemToRepoInfo(item: GitHubCodeSearchItem): NodeRepoInfo {
