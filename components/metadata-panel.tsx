@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { Copy, Camera, FileText, Sparkles, Code, Check, Loader2, ListTree, Tag, ImageIcon } from "lucide-react"
 import type { ImageMetadata } from "@/types/metadata"
+import type { NodeRepoInfo } from "@/lib/comfyui-node-registry"
 import type { Rule, RuleEvaluationResult } from "@/types/rules"
 import { useSettings } from "@/hooks/use-settings"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
@@ -376,7 +377,7 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
 
 // --- ComfyUI Node Classification ---
 
-type ComfyNodeResult = { classification: 'builtin' | 'custom' | 'unknown'; repo?: string; source?: string }
+type ComfyNodeResult = { classification: 'builtin' | 'custom' | 'unknown'; repo?: NodeRepoInfo; source?: string }
 
 interface ComfyNodesData {
   summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number }
@@ -405,9 +406,11 @@ function ComfyUINodesSection({ nodes: initial, labelSize }: { nodes: ComfyNodesD
 
   const merged = { ...initial.classifications, ...enriched }
   const githubResolved = Object.values(enriched).filter(r => r.source === 'github' && r.classification === 'custom').length
-  const repos = [...new Set(
-    Object.values(merged).filter(r => r.classification === 'custom' && r.repo).map(r => r.repo!)
-  )]
+  const repoMap = new Map<string, NodeRepoInfo>()
+  Object.values(merged).filter(r => r.classification === 'custom' && r.repo).forEach(r => {
+    repoMap.set(r.repo!.repoUrl, r.repo!)
+  })
+  const repos = [...repoMap.values()]
   const stillUnknown = Object.entries(merged).filter(([, r]) => r.classification === 'unknown').map(([ct]) => ct)
   const customCount = Object.values(merged).filter(r => r.classification === 'custom').length
 
@@ -431,14 +434,14 @@ function ComfyUINodesSection({ nodes: initial, labelSize }: { nodes: ComfyNodesD
         <div className="flex flex-wrap gap-1 pt-0.5">
           {repos.map(repo => (
             <a
-              key={repo}
-              href={`https://github.com/${repo}`}
+              key={repo.repoUrl}
+              href={repo.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-muted hover:bg-accent border border-border"
-              title={repo}
+              title={repo.title || repo.repoName}
             >
-              {repo.split('/')[1] || repo}
+              {repo.repoName.split('/')[1] || repo.repoName}
             </a>
           ))}
         </div>
