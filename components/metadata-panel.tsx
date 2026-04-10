@@ -77,11 +77,14 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
 
     const hasAi = Object.keys(metadata.ai || {}).length > 0
     const hasExif = Object.keys(metadata.exif || {}).length > 0
+    const hasXmp = Object.keys(metadata.xmp || {}).length > 0
 
     if (hasAi) {
       setActiveTab("ai")
     } else if (hasExif) {
       setActiveTab("exif")
+    } else if (hasXmp) {
+      setActiveTab("xmp")
     } else {
       setActiveTab("basic")
     }
@@ -206,6 +209,9 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
                 />
                 <MetadataRow label="File Size" value={formatFileSize(metadata.fileSize)} fontSize={fs.param} labelSize={fs.label} />
                 <MetadataRow label="File Type" value={metadata.fileType} fontSize={fs.param} labelSize={fs.label} />
+                {metadata.width && metadata.height && (
+                  <MetadataRow label="Dimensions" value={`${metadata.width} × ${metadata.height}`} fontSize={fs.param} labelSize={fs.label} />
+                )}
                 <MetadataRow label="Last Modified" value={new Date(metadata.lastModified).toLocaleString()} fontSize={fs.param} labelSize={fs.label} />
               </>
             )}

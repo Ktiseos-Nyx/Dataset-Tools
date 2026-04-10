@@ -3,6 +3,8 @@ export interface ImageMetadata {
   fileSize: number
   fileType: string
   lastModified: string
+  width?: number
+  height?: number
   exif: Record<string, unknown>
   iptc: Record<string, unknown>
   xmp: Record<string, unknown>

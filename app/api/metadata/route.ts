@@ -13,7 +13,40 @@ import { classifyNodes, type NodeLookupResult } from '@/lib/comfyui-node-registr
  * it as a separate async request after the metadata response arrives, so the
  * initial load is never blocked by GitHub API latency.
  */
-async function classifyComfyUIWorkflow(workflow: Record<string, any>): Promise<{
+// Node provenance extracted from the Workflow PNG chunk (ComfyUI ≥1.26).
+// Keys are class_type strings; values are the cnr_id / aux_id from node.properties.
+type WorkflowProvenance = Record<string, { cnrId?: string; auxId?: string }>;
+
+/**
+ * Extract node provenance from the ComfyUI Workflow PNG chunk.
+ * ComfyUI ≥1.26 stores cnr_id and aux_id in each node's properties:
+ *   cnr_id: "comfy-core"        → built-in node
+ *   aux_id: "owner/repo"        → custom node, GitHub repo
+ * This is more authoritative than the extension-node-map registry and avoids
+ * GitHub code-search false positives entirely.
+ */
+function extractWorkflowProvenance(workflowJson: string): WorkflowProvenance {
+  const provenance: WorkflowProvenance = {};
+  try {
+    const wf = JSON.parse(workflowJson);
+    const nodes: any[] = Array.isArray(wf.nodes) ? wf.nodes : [];
+    for (const node of nodes) {
+      const type = node?.type;
+      const props = node?.properties ?? {};
+      if (typeof type === 'string' && type && (props.cnr_id || props.aux_id)) {
+        provenance[type] = { cnrId: props.cnr_id, auxId: props.aux_id };
+      }
+    }
+  } catch {
+    // Not valid JSON or unexpected shape — skip
+  }
+  return provenance;
+}
+
+async function classifyComfyUIWorkflow(
+  workflow: Record<string, any>,
+  provenance?: WorkflowProvenance,
+): Promise<{
   summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number };
   classifications: Record<string, NodeLookupResult>;
   unknownNodes: string[];
@@ -31,6 +64,28 @@ async function classifyComfyUIWorkflow(workflow: Record<string, any>): Promise<{
   } catch (err) {
     console.error('[metadata] ComfyUI node classification failed:', err);
     classifications = {};
+  }
+
+  // Overlay Workflow-chunk provenance — this is authoritative and avoids
+  // GitHub code-search false positives for nodes with known origins.
+  if (provenance) {
+    for (const ct of classTypes) {
+      const p = provenance[ct];
+      if (!p) continue;
+      if (p.cnrId === 'comfy-core') {
+        classifications[ct] = { classification: 'builtin' };
+      } else if (p.auxId) {
+        const repoTitle = p.auxId.split('/').pop() ?? p.auxId;
+        classifications[ct] = {
+          classification: 'custom',
+          repo: {
+            repoUrl: `https://github.com/${p.auxId}`,
+            repoName: p.auxId,
+            title: repoTitle,
+          },
+        };
+      }
+    }
   }
 
   let builtin = 0, custom = 0, unknown = 0, githubResolved = 0;
@@ -291,10 +346,13 @@ function hasFields(inputs: any, ...fields: string[]): boolean {
 }
 
 function isSamplerByFields(inputs: any): boolean {
-  // A sampler has some combo of: steps, cfg, sampler_name, seed, positive, negative
+  // Standard KSampler / FSamplerAdvanced: has steps/cfg/sampler_name/seed/positive/negative
   const samplerFields = ['steps', 'cfg', 'sampler_name', 'seed', 'positive', 'negative'];
   const matched = samplerFields.filter(f => inputs[f] !== undefined);
-  return matched.length >= 3; // at least 3 of these = almost certainly a sampler
+  if (matched.length >= 3) return true;
+  // SamplerCustomAdvanced (Flux composite sampler) — all connections are node refs.
+  // Identified by having guider + sigmas + noise all as node refs (its 3 defining wires).
+  return ['guider', 'sigmas', 'noise'].every(f => isNodeRef(inputs[f]));
 }
 
 function isCheckpointByFields(inputs: any): boolean {
@@ -477,7 +535,10 @@ function extractComfyUIParams(
     // Extract sampler settings
     if (inputs.steps) extracted.steps = String(inputs.steps);
     if (inputs.cfg) extracted.cfg_scale = String(inputs.cfg);
+    // sampler_name is the standard KSampler field; custom samplers (FSamplerAdvanced
+    // etc.) use 'sampler' instead. Fall back to 'sampler' when sampler_name is absent.
     if (inputs.sampler_name) extracted.sampler = inputs.sampler_name;
+    else if (typeof inputs.sampler === 'string') extracted.sampler = inputs.sampler;
     if (inputs.scheduler) extracted.scheduler = inputs.scheduler;
     if (inputs.denoise !== undefined && inputs.denoise !== 1) {
       extracted.denoise = String(inputs.denoise);
@@ -504,6 +565,35 @@ function extractComfyUIParams(
       }
     }
 
+    // --- SamplerCustomAdvanced: follow specialised input refs ---
+    // This Flux-era node delegates to BasicScheduler (steps/scheduler),
+    // KSamplerSelect (sampler_name), RandomNoise (noise_seed), and BasicGuider
+    // (positive conditioning). All connections are node refs, not direct values.
+    if (isNodeRef(inputs.sigmas)) {
+      const schedNode = followRef(workflow, inputs.sigmas);
+      if (schedNode?.node.inputs) {
+        const si = schedNode.node.inputs;
+        if (!extracted.steps && si.steps !== undefined) extracted.steps = String(si.steps);
+        if (!extracted.scheduler && si.scheduler) extracted.scheduler = si.scheduler;
+        if (!extracted.denoise && si.denoise !== undefined && si.denoise !== 1) {
+          extracted.denoise = String(si.denoise);
+        }
+      }
+    }
+    if (!extracted.sampler && isNodeRef(inputs.sampler)) {
+      const kselectNode = followRef(workflow, inputs.sampler);
+      if (kselectNode?.node.inputs?.sampler_name) {
+        extracted.sampler = kselectNode.node.inputs.sampler_name;
+      }
+    }
+    if (!extracted.seed && isNodeRef(inputs.noise)) {
+      const noiseNode = followRef(workflow, inputs.noise);
+      if (noiseNode?.node.inputs) {
+        const noiseSeed = noiseNode.node.inputs.noise_seed ?? noiseNode.node.inputs.seed;
+        if (typeof noiseSeed === 'number') extracted.seed = String(noiseSeed);
+      }
+    }
+
     // --- Trace positive conditioning wire ---
     // Quadmoon's _extract_prompt_text_with_trace handles combiners (multiple
     // CLIPTextEncodes via ConditioningCombine) by joining all contributions.
@@ -511,6 +601,15 @@ function extractComfyUIParams(
       const startId = (inputs.positive as [string, number])[0];
       const traced = extractPromptTextWithTrace(workflow, startId, 'positive', 10, mutedNodeIds);
       if (traced) extracted.prompt = traced;
+    }
+    // SamplerCustomAdvanced uses a guider node instead of direct positive/negative wires
+    if (!extracted.prompt && isNodeRef(inputs.guider)) {
+      const guiderNode = followRef(workflow, inputs.guider);
+      if (guiderNode && isNodeRef(guiderNode.node.inputs?.conditioning)) {
+        const condId = (guiderNode.node.inputs.conditioning as [string, number])[0];
+        const traced = extractPromptTextWithTrace(workflow, condId, 'positive', 10, mutedNodeIds);
+        if (traced) extracted.prompt = traced;
+      }
     }
 
     // --- Trace negative conditioning wire ---
@@ -755,8 +854,10 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
   }
 
   // --- A1111-family + JSON-format parameters (parameters PNG chunk / EXIF text) ---
-  if (!aiData.workflow_type && chunks.parameters) {
-    const params = String(chunks.parameters);
+  // Some tools (smZ CLIPTextEncode, etc.) write 'Parameters' with a capital P
+  const parametersChunk = chunks.parameters ?? chunks.Parameters;
+  if (!aiData.workflow_type && parametersChunk) {
+    const params = String(parametersChunk);
 
     // JSON-format parameters: SwarmUI and EasyDiffusion embed JSON here
     if (params.trim().startsWith('{')) {
@@ -846,6 +947,10 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       } else if (/^f\d/i.test(versionStr)) {
         // Forge: version string starts with 'f' (e.g. "f0.0.17-dirty-1254-gabcdef")
         aiData.workflow_type = 'Forge';
+      } else if (versionStr.toLowerCase() === 'comfyui') {
+        // smZ CLIPTextEncode and similar ComfyUI nodes that emit A1111-style params
+        // include "Version: ComfyUI" to signal they're ComfyUI-generated
+        aiData.workflow_type = 'ComfyUI';
       } else {
         aiData.workflow_type = 'AUTOMATIC1111';
       }
@@ -863,21 +968,63 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
 
       const workflow = JSON.parse(sanitized);
       aiData.comfyui_workflow = workflow;
-      // Default to ComfyUI; override with TensorArt if their nodes are present
+      // Default to ComfyUI; override with service-specific signals below
       aiData.workflow_type = 'ComfyUI';
+
+      // UUID pattern used by ArcEnCiel for lora names and SaveImage prefixes
+      const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
 
       for (const nodeData of Object.values(workflow)) {
         const node = nodeData as any;
+        const inputs = node?.inputs ?? {};
+
+        // TensorArt: proprietary node class_types or EMS-<id> model naming
         if (TENSORART_NODE_TYPES.has(node?.class_type)) { aiData.workflow_type = 'TensorArt'; break; }
-        // TensorArt model resources use EMS-<id> naming
-        const ckpt = node?.inputs?.ckpt_name;
+        const ckpt = inputs.ckpt_name;
         if (typeof ckpt === 'string' && /EMS-\d+/i.test(ckpt)) { aiData.workflow_type = 'TensorArt'; break; }
+
+        // ArcEnCiel: SaveImage prefix is "generator/{uuid}", and/or lora names
+        // are UUID-prefixed (e.g. "ab234327-..._LoraName.safetensors").
+        // ArcEnCiel runs standard ComfyUI nodes so there are no proprietary class_types.
+        // NOTE: no API integration yet — pending contact with the ArcEnCiel team.
+        if (node?.class_type === 'SaveImage') {
+          const prefix = inputs.filename_prefix;
+          if (typeof prefix === 'string' && /^generator\/[0-9a-f-]{36}$/i.test(prefix)) {
+            aiData.workflow_type = 'ArcEnCiel';
+          }
+        }
+        if (aiData.workflow_type !== 'ArcEnCiel' && typeof inputs.lora_name === 'string' && UUID_RE.test(inputs.lora_name)) {
+          aiData.workflow_type = 'ArcEnCiel';
+        }
       }
 
-      // Classify all class_types FIRST (extension-map + GitHub fallback for
-      // unknowns) so the traversal in extractComfyUIParams can recognise
-      // custom nodes it has no hardcoded heuristics for.
-      const nodeInfo = await classifyComfyUIWorkflow(workflow);
+      // If a Workflow chunk exists alongside the Prompt chunk, extract per-node
+      // provenance (cnr_id / aux_id). ComfyUI ≥1.26 embeds this automatically;
+      // it lets us resolve node origins without GitHub code search.
+      const provenance = chunks.Workflow ? extractWorkflowProvenance(chunks.Workflow) : undefined;
+
+      // Scan entire workflow JSON for Civitai URN:AIR resource identifiers.
+      // Format: urn:air:{baseModel}:{type}:civitai:{modelId}@{versionId}
+      // These appear in lora_name, model_name, and other input fields.
+      const URN_AIR_RE = /urn:air:([^:]+):([^:]+):civitai:(\d+)@(\d+)/g;
+      const workflowStr = JSON.stringify(workflow);
+      const seenUrns = new Set<string>();
+      const civitaiUrnResources: Array<{ urn: string; baseModel: string; type: string; modelId: string; versionId: string }> = [];
+      for (const m of workflowStr.matchAll(URN_AIR_RE)) {
+        if (!seenUrns.has(m[0])) {
+          seenUrns.add(m[0]);
+          civitaiUrnResources.push({ urn: m[0], baseModel: m[1], type: m[2], modelId: m[3], versionId: m[4] });
+        }
+      }
+      if (civitaiUrnResources.length > 0) {
+        aiData.civitai_urn_resources = civitaiUrnResources;
+        // URN:AIR presence is authoritative: this workflow was generated by Civitai
+        if (aiData.workflow_type === 'ComfyUI') aiData.workflow_type = 'Civitai';
+      }
+
+      // Classify all class_types FIRST (extension-map + Workflow provenance),
+      // so the traversal in extractComfyUIParams can recognise custom nodes.
+      const nodeInfo = await classifyComfyUIWorkflow(workflow, provenance);
       if (nodeInfo) {
         aiData.comfyui_nodes = nodeInfo;
       }
@@ -1442,6 +1589,63 @@ function extractAIFromXMP(xmp: Record<string, any>): Record<string, any> {
   return ai;
 }
 
+// Detect the actual image format from magic bytes, ignoring file extension.
+// CDNs (Civitai, etc.) sometimes serve PNG files with a .jpeg extension.
+// Returns null if the format is not recognised.
+// Extract image dimensions without relying on EXIF data.
+// PNG: read IHDR (always the first chunk, width/height at fixed offsets).
+// JPEG: scan for the first SOF marker.
+function extractImageDimensions(buffer: Buffer, mimeType: string): { width: number; height: number } | null {
+  if (mimeType === 'image/png' && buffer.length >= 24) {
+    // After the 8-byte PNG signature: 4-byte chunk length + 4-byte "IHDR" type,
+    // then the IHDR data: width (4 bytes BE) at offset 16, height at offset 20.
+    const width = buffer.readUInt32BE(16);
+    const height = buffer.readUInt32BE(20);
+    if (width > 0 && height > 0) return { width, height };
+  } else if (mimeType === 'image/jpeg') {
+    let offset = 2; // Skip SOI marker (FF D8)
+    while (offset + 3 < buffer.length) {
+      if (buffer[offset] !== 0xFF) break;
+      const marker = buffer[offset + 1];
+      const segLen = buffer.readUInt16BE(offset + 2);
+      // SOF0-SOF3, SOF5-SOF7, SOF9-SOF11, SOF13-SOF15 carry dimensions.
+      // Exclude 0xC4 (DHT), 0xC8 (reserved), 0xCC (DAC).
+      if (marker !== 0xC4 && marker !== 0xC8 && marker !== 0xCC &&
+          ((marker >= 0xC0 && marker <= 0xC3) || (marker >= 0xC5 && marker <= 0xC7) ||
+           (marker >= 0xC9 && marker <= 0xCB) || (marker >= 0xCD && marker <= 0xCF))) {
+        if (offset + 8 < buffer.length) {
+          const height = buffer.readUInt16BE(offset + 5);
+          const width = buffer.readUInt16BE(offset + 7);
+          if (width > 0 && height > 0) return { width, height };
+        }
+      }
+      offset += 2 + segLen;
+    }
+  }
+  return null;
+}
+
+function detectMimeFromMagic(buffer: Buffer): string | null {
+  if (buffer.length < 4) return null;
+  // PNG: 89 50 4E 47 0D 0A 1A 0A
+  if (buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E && buffer[3] === 0x47) {
+    return 'image/png';
+  }
+  // JPEG: FF D8 FF
+  if (buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF) {
+    return 'image/jpeg';
+  }
+  // WebP: RIFF????WEBP
+  if (
+    buffer.length >= 12 &&
+    buffer.toString('ascii', 0, 4) === 'RIFF' &&
+    buffer.toString('ascii', 8, 12) === 'WEBP'
+  ) {
+    return 'image/webp';
+  }
+  return null;
+}
+
 // Shared extraction function used by both GET (path-based) and POST (file upload)
 export async function extractMetadataFromBuffer(
   buffer: Buffer,
@@ -1450,6 +1654,9 @@ export async function extractMetadataFromBuffer(
   fileSize: number,
   lastModified: string,
 ): Promise<Record<string, any>> {
+  // Trust file content over extension — CDNs can mislabel format in the filename.
+  const effectiveMime = detectMimeFromMagic(buffer) ?? mimeType;
+
   let exifData = {};
   let iptcData = {};
 
@@ -1465,10 +1672,10 @@ export async function extractMetadataFromBuffer(
 
   // Parse PNG chunks for AI metadata
   let aiData: Record<string, any> = {};
-  if (mimeType === 'image/png') {
+  if (effectiveMime === 'image/png') {
     const chunks = parsePNGChunks(buffer);
     aiData = await parseAIMetadata(chunks);
-  } else if (mimeType === 'image/jpeg') {
+  } else if (effectiveMime === 'image/jpeg') {
     let userComment = parseJPEGUserComment(buffer);
 
     if (!userComment && (exifData as any).UserComment) {
@@ -1507,11 +1714,14 @@ export async function extractMetadataFromBuffer(
     }
   }
 
+  const dims = extractImageDimensions(buffer, effectiveMime);
+
   return {
     fileName,
     fileSize,
-    fileType: mimeType,
+    fileType: effectiveMime,
     lastModified,
+    ...(dims ?? {}),
     exif: exifData,
     iptc: iptcData,
     xmp: xmpData,
