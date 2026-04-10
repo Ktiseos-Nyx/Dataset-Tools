@@ -29,34 +29,6 @@
 
 **Dataset Tools NextJS Edition** is a **local-first web application** for browsing AI image datasets with comprehensive metadata extraction. Built from the ground up in TypeScript — no Python dependencies, no OpenCV duct tape, no NumPy startup tax. Running on Next.js 16, React 19, and shadcn/ui components. 
 
-### Why this exists
-The Python edition worked at 65% success rate with heuristic spaghetti. This NextJS engine hits **90% success rate** on complex ComfyUI workflows using **deterministic graph traversal**. Metadata is parsed in pure JavaScript — no waiting for Python to boot, no OpenCV overhead.
-
-#### Development Stage
-
-While this is working 99% better than our original python app, please be aware that as we move this into "ALPHA TESTING" that there will be more bugs, we can't provide enough pre-catching for bugs as we tried for the original python. So we're hoping that the amount of work we've put into porting this into a much easier format you can help test. 
-
-Q: Are you working on putting this into an executable format? 
-
-A: Yes, eventually we'll port this to Electron or see what Tauri needs, we're likely for ease of use likely going to use Electron, as for this we're not sure how Tauri would effect the rendering of metadata or otherwise. 
-
-Q: Are you aware that NextJS/Node has more CVE's and is the Number ONE VIBE CODED language this side of the moon?
-
-A: Yes, but just like our python version and anything else we build, we're not like other "VIBE CODED TOOLS" we demand security, peace of mind and a way through the mess. Unlike the trainer which uses major ML stacks to survive, we can promise you A LOT more security with this. As long as you're not installing this on an OpenClaw instance you're fine.
-
-Q: But Chrome Sucks!
-
-A: Duskfallcrew personally reccomends the use of Vivaldi which is a CHROMIUM fork, Electron is only as "BLOATED" as the packages you port with it, along with web trackers and unmitigated cache, image sizes and lazy loading issues. When we port our executable mode, we'll make sure the thing runs on every flipping potato machine out there! 
-
-Q: Why is this not already 100% Done?
-
-A: Because I have 20 projects on the go? Plus i'm currently the solo dork with AI assistance, yes Joel does supervise and add things to the code, his ComfyUI lookup tool is what powers this - Exception: Claude translated it to node because Joel's actually a real life developer, he's not got time to do EVERYTHING. Plus when he's not at work or with his family: He's an A+ Smexy FFXIV player! He beats our Miqo'te's poor fashion choices just by existing! 
-
-> **Development Tool Warning**
-> * **Run locally:** `npm run dev`
-> * **Requirements:** Node.js 18+ and npm
-> * **Status:** No public deployment. Local-only tool.
-
 ### Community-Driven Development
 This project is inspired by [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) and thrives on community contributions. Found a bug? Have a workflow that won't parse? Want to add support for a new tool? **We welcome forks, fixes, and pull requests!**
 
@@ -94,33 +66,6 @@ npm run build && npm start
 
 ---
 
-## Current Capabilities
-
-| Feature | Status | Details |
-| :--- | :---: | :--- |
-| **Metadata Parsing** | ✅ | **90% success rate.** Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
-| **Image Viewing** | ✅ | PNG, JPG, JPEG, WebP. Zoom (25-400%), rotation, fit-to-container. |
-| **File Browsing** | ✅ | Recursive lazy-loading file tree. Browse any folder on your system. |
-| **Drag & Drop** | ✅ | Drop an image to auto-detect its folder and extract metadata. |
-| **Thumbnails** | ✅ | Sharp-powered WebP thumbnails with disk cache (`.thumbcache/`). |
-| **Sorting** | ✅ | Sort by name, date modified, or file size. |
-| **Accent Colors** | ✅ | 7 color themes (zinc, red, orange, green, blue, violet, pink) with dark mode support. |
-| **WebP Metadata** | ⚠️ | Viewing works. Metadata extraction in development. |
-| **ComfyUI Workflows** | ✅ | 3-phase extraction: field-based scan → graph trace → type-match fallback. Handles custom nodes, TensorArt wrappers, FLUX/SD3/SDXL. |
-| **Github Lookup** | ✅ | If a node isn't found the first time, search, search again. |
-
-### Supported Formats
-- **A1111 / Forge** — PNG tEXt chunks, JPEG EXIF
-- **ComfyUI** — JSON workflow with node graph resolution
-- **NovelAI** — PNG metadata
-- **Civitai** — UTF-16-LE JPEG UserComment
-- **Standard EXIF/IPTC/XMP** — All image formats
-
-### Why 90% > 65% Matters
-The Python edition relied on fragile heuristics. This engine uses **deterministic graph traversal** with proper node relationship mapping. It follows wires backwards from sampler nodes to find prompts, identifies nodes by their data (not just class_type), and handles platform-wrapped node names via substring matching. When it fails, logs show exactly why.
-
----
-
 ## Usage
 
 1. **Start the app:** `npm run dev` → open `http://localhost:3000`
@@ -136,6 +81,60 @@ The Python edition relied on fragile heuristics. This engine uses **deterministi
    * Console error snippet
    * Workflow type + custom nodes used
    * Minimal repro image (if shareable)
+   * 
+---
+
+## Current Capabilities
+
+| Feature | Status | Details |
+| :--- | :---: | :--- |
+| **Metadata Parsing** | ✅ | **90% success rate.** Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
+| **Image Viewing** | ✅ | PNG, JPG, JPEG, WebP. Zoom (25-400%), rotation, fit-to-container. |
+| **File Browsing** | ✅ | Recursive lazy-loading file tree. Browse any folder on your system. |
+| **Drag & Drop** | ✅ | Drop an image to auto-detect its folder and extract metadata. |
+| **Thumbnails** | ✅ | Sharp-powered WebP thumbnails with disk cache (`.thumbcache/`). |
+| **Sorting** | ✅ | Sort by name, date modified, or file size. (Thumbnail Sorting Coming Soon) |
+| **Accent Colors** | ✅ | 7 color themes (zinc, red, orange, green, blue, violet, pink) with dark mode support. |
+| **WebP Metadata** | ⚠️ | Viewing works. Metadata extraction in development.(Not all webP will have metadata, but some animated ones will)|
+| **ComfyUI Workflows** | ✅ | 3-phase extraction: field-based scan → graph trace → type-match fallback. Handles custom nodes, service detection and more. |
+| **Github Lookup** | ✅ | If a node isn't found the first time, search, search again. |
+
+### Supported Formats
+- **A1111 / Forge** — PNG tEXt chunks, JPEG EXIF
+- **ComfyUI** — JSON workflow with node graph resolution
+- **NovelAI** — PNG metadata
+- **Civitai** — UTF-16-LE JPEG UserComment
+- **Standard EXIF/IPTC/XMP** — All image formats
+- **Png as Jpeg** - Magic Byte Detection.
+
+---
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router), React 19, TypeScript 5
+- **UI:** shadcn/ui + Radix UI, Lucide icons, Tailwind CSS v4 (OKLch color space)
+- **Thumbnails:** Sharp (libvips) with WebP disk caching
+- **Metadata:** Pure JS parsing — PNG chunks, JPEG EXIF (exif-parser), ComfyUI graph traversal
+
+---
+
+### Service Detection
+
+As we had in the python edition our journey is marked with making sure as many of the popular and niche sites with generation services are tagged for easy detection. If your workflow or website has a custom pattern for resource detection, our tool is likely to be able to find it. If it hasn't been hashed and dashed through to the tool yet, just flick an issue up and we'll hook it up ASAP. 
+
+Examples of this are Tensorart, Forge, ArcEncCiel, CivitAI and Yodayo. 
+
+Many tools desktop or remote based have patterns, so the key is either in the metadata handling, or the resource identification. 
+
+### Why 90% > 65% Matters
+The Python edition relied on fragile heuristics. This engine uses **deterministic graph traversal** with proper node relationship mapping. It follows wires backwards from sampler nodes to find prompts, identifies nodes by their data (not just class_type), and handles platform-wrapped node names via substring matching. When it fails, logs show exactly why.
+
+### Why this exists
+The Python edition worked at 65% success rate with heuristic spaghetti. This NextJS engine hits **90% success rate** on complex ComfyUI workflows using **deterministic graph traversal**. Metadata is parsed in pure JavaScript — no waiting for Python to boot, no OpenCV overhead.
+
+#### Development Stage
+
+While this is working 99% better than our original python app, please be aware that as we move this into "ALPHA TESTING" that there will be more bugs, we can't provide enough pre-catching for bugs as we tried for the original python. So we're hoping that the amount of work we've put into porting this into a much easier format you can help test. 
 
 ---
 
@@ -157,15 +156,25 @@ Open an issue with the details above. Real-world edge cases are how we push past
 - [ ] ComfyUI workflow visualization
 - [ ] Batch metadata export (CSV/JSON)
 - [ ] Parser debugger panel showing traversal steps
-
+- [ ] 
 ---
+### Q&A 
 
-## Tech Stack
+Q: Are you working on putting this into an executable format? 
 
-- **Framework:** Next.js 16 (App Router), React 19, TypeScript 5
-- **UI:** shadcn/ui + Radix UI, Lucide icons, Tailwind CSS v4 (OKLch color space)
-- **Thumbnails:** Sharp (libvips) with WebP disk caching
-- **Metadata:** Pure JS parsing — PNG chunks, JPEG EXIF (exif-parser), ComfyUI graph traversal
+A: Yes, eventually we'll port this to Electron or see what Tauri needs, we're likely for ease of use likely going to use Electron, as for this we're not sure how Tauri would effect the rendering of metadata or otherwise. 
+
+Q: Are you aware that NextJS/Node has more CVE's and is the Number ONE VIBE CODED language this side of the moon?
+
+A: Yes, but just like our python version and anything else we build, we're not like other "VIBE CODED TOOLS" we demand security, peace of mind and a way through the mess. Unlike the trainer which uses major ML stacks to survive, we can promise you A LOT more security with this. As long as you're not installing this on an OpenClaw instance you're fine.
+
+Q: But Chrome Sucks!
+
+A: Duskfallcrew personally reccomends the use of Vivaldi which is a CHROMIUM fork, Electron is only as "BLOATED" as the packages you port with it, along with web trackers and unmitigated cache, image sizes and lazy loading issues. When we port our executable mode, we'll make sure the thing runs on every flipping potato machine out there! 
+
+Q: Why is this not already 100% Done?
+
+A: Because I have 20 projects on the go? Plus i'm currently the solo dork with AI assistance, yes Joel does supervise and add things to the code, his ComfyUI lookup tool is what powers this - Exception: Claude translated it to node because Joel's actually a real life developer, he's not got time to do EVERYTHING. Plus when he's not at work or with his family: He's an A+ Smexy FFXIV player! He beats our Miqo'te's poor fashion choices just by existing! 
 
 ---
 
@@ -178,10 +187,11 @@ GNU General Public License v3.0
       Original Repository: [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
       The original MIT license for this vendored code is included in the NOTICE.md file.
 * **[Traugdor](https://github.com/traugdor)** For the supervision, the memes and this: [Python ComfyUI Node Finder](https://github.com/Ktiseos-Nyx/ComfyUI-Node-Finder) 
-* Everyone at Arc En Ciel for your continued driven support.
+* Everyone at [Arc En Ciel](arcenciel.io/) for your continued driven support.
 * Anthropic - Pls Keep Sending us Free Credits, we're broke!
 * **[Anzhc](https://github.com/anzhc)** for continued support and motivation.
 * Our peers and the wider AI and open-source communities for their continuous support and inspiration.
+* Mempalace for Neurodivergent Memory Support for Local Development [Mempalace @ Github](https://github.com/milla-jovovich/mempalace)
 * AI Language Models (like those from Google, OpenAI, Anthropic) for assistance with code generation, documentation, and problem-solving during development.
 * ...and many more!
 
