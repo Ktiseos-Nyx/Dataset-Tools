@@ -195,6 +195,8 @@ function followRef(workflow: Record<string, any>, ref: any, visited?: Set<string
 const TEXT_INPUT_KEYS = [
   'text', 'string', 'prompt', 'value',
   'text_a', 'text_b', 'text_g', 'text_l', 'text_c',
+  // CLIPTextEncodeFlux fields (Flux architecture)
+  'clip_l', 't5xxl',
   'positive', 'negative',
   'positive_prompt', 'negative_prompt',
   'user_prompt', 'wildcard_text', 'final_text',
@@ -486,6 +488,13 @@ function extractComfyUIParams(
         break; // Only push once per node
       }
     }
+    // Power Lora Loader (rgthree) uses lora_1, lora_2, ... object fields: {on, lora, strength}
+    for (const [key, val] of Object.entries(inputs)) {
+      if (/^lora_\d+$/.test(key) && val !== null && typeof val === 'object' && (val as any).lora) {
+        loraNodes.push({ id: nodeId, node });
+        break;
+      }
+    }
     if (typeof inputs.text === 'string' && inputs.text.includes('<lora:')) {
       loraNodes.push({ id: nodeId, node });
     }
@@ -498,16 +507,30 @@ function extractComfyUIParams(
     if (inputs.lora_name && inputs.lora_name !== 'None') {
       loraSet.add(inputs.lora_name);
     }
-    // Handle numbered LoRA stacker fields (lora_name_1, lora_wt_1, etc.)
+    // Handle numbered LoRA stacker fields (lora_name_1, lora_wt_1, model_weight_1 etc.)
     for (const [key, val] of Object.entries(inputs)) {
       const numMatch = key.match(/^lora_name_(\d+)$/);
       if (numMatch && typeof val === 'string' && val !== 'None') {
-        // Try to find the matching weight
-        const weight = inputs[`lora_wt_${numMatch[1]}`];
+        const n = numMatch[1];
+        // Skip disabled loras (CR LoRA Stack uses switch_N: "On"/"Off")
+        const switchVal = inputs[`switch_${n}`];
+        if (typeof switchVal === 'string' && switchVal.toLowerCase() === 'off') continue;
+        // Weight may be lora_wt_N (generic stacker) or model_weight_N (CR LoRA Stack)
+        const weight = inputs[`lora_wt_${n}`] ?? inputs[`model_weight_${n}`];
         if (typeof weight === 'number') {
           loraSet.add(`${val} (${weight})`);
         } else {
           loraSet.add(val);
+        }
+      }
+    }
+    // Power Lora Loader (rgthree) — lora_N object fields, only include enabled loras
+    for (const [key, val] of Object.entries(inputs)) {
+      if (/^lora_\d+$/.test(key) && val !== null && typeof val === 'object') {
+        const loraObj = val as any;
+        if (loraObj.on && typeof loraObj.lora === 'string' && loraObj.lora !== 'None') {
+          const strength = typeof loraObj.strength === 'number' ? ` (${loraObj.strength})` : '';
+          loraSet.add(`${loraObj.lora}${strength}`);
         }
       }
     }
@@ -1084,6 +1107,7 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
           const paramSection = commentText.substring(paramStart);
           const arMatch = paramSection.match(/--ar\s+([\d:]+)/);
           const vMatch = paramSection.match(/--v\s+([\d.]+)/);
+          const nijiMatch = paramSection.match(/--niji\s+(\d+)/);
           const sMatch = paramSection.match(/--stylize\s+(\d+)|--s\s+(\d+)/);
           const cMatch = paramSection.match(/--chaos\s+(\d+)|--c\s+(\d+)/);
           const seedMatch = paramSection.match(/--seed\s+(\d+)/);
@@ -1093,7 +1117,9 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
           const styleMatch = paramSection.match(/--style\s+(\S+)/);
 
           if (arMatch) aiData.aspect_ratio = arMatch[1];
+          // --niji overrides --v if both present (they're mutually exclusive MJ model families)
           if (vMatch) aiData.version = `v${vMatch[1]}`;
+          if (nijiMatch) aiData.version = `niji ${nijiMatch[1]}`;
           if (sMatch) aiData.stylize = sMatch[1] || sMatch[2];
           if (cMatch) aiData.chaos = cMatch[1] || cMatch[2];
           if (seedMatch) aiData.seed = seedMatch[1];

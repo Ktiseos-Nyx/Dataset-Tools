@@ -33,14 +33,21 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile }: Th
         const response = await fetch(`/api/fs?path=${encodeURIComponent(currentDir)}&showHidden=${settings.showHiddenFiles}&baseFolder=${encodeURIComponent(settings.currentFolder)}`)
         if (!response.ok) throw new Error('Failed to fetch')
         const data = await response.json()
-        setImages(
-          data
-            .filter((item: { name: string; isDirectory: boolean }) => !item.isDirectory)
-            .map((item: { name: string; isDirectory: boolean }) => ({
-              ...item,
-              path: currentDir === '.' ? item.name : `${currentDir}/${item.name}`,
-            }))
-        )
+        const files: FsItem[] = data
+          .filter((item: FsItem) => !item.isDirectory)
+          .map((item: FsItem) => ({
+            ...item,
+            path: currentDir === '.' ? item.name : `${currentDir}/${item.name}`,
+          }))
+        const sortBy = settings.sortBy
+        files.sort((a, b) => {
+          switch (sortBy) {
+            case 'date': return (b.mtime ?? 0) - (a.mtime ?? 0)
+            case 'size': return (b.size ?? 0) - (a.size ?? 0)
+            default: return a.name.localeCompare(b.name)
+          }
+        })
+        setImages(files)
       } catch {
         setImages([])
       } finally {
@@ -48,7 +55,7 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile }: Th
       }
     }
     fetchImages()
-  }, [currentDir, settings.showHiddenFiles, settings.currentFolder])
+  }, [currentDir, settings.showHiddenFiles, settings.currentFolder, settings.sortBy])
 
   const selectedRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
