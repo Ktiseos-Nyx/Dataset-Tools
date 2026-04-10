@@ -51,4 +51,5 @@ settings.json
 
 # editor / AI tool configs
 .gemini/
+.claude/
 NUL
