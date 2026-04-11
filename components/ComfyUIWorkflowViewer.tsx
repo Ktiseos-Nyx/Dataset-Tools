@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import LiteGraph from 'litegraph.js';
+// ComfyUIWorkflowViewer.tsx
+import { LGraph, LGraphCanvas, LGraphNode, LiteGraph } from 'litegraph.js';
 import 'litegraph.js/css/litegraph.css';
 import { AlertCircle } from 'lucide-react';
 
@@ -27,8 +28,11 @@ export function ComfyUIWorkflowViewer({
     }
 
     const canvas = canvasRef.current;
-    const graph = new LiteGraph.LGraph();
-    const graphCanvas = new LiteGraph.LGraphCanvas(canvas, graph, {
+	const rect = canvas.getBoundingClientRect();
+	canvas.width = rect.width || 800;
+    canvas.height = rect.height || 400;
+    const graph = new LGraph();
+    const graphCanvas = new LGraphCanvas(canvas, graph, {
       readOnly,
       skip_events: readOnly,
       skip_links: readOnly,
@@ -39,7 +43,7 @@ export function ComfyUIWorkflowViewer({
     function registerMinimalNode(type: string) {
       if (LiteGraph.registered_node_types[type]) return;
       
-      class MinimalNode extends LiteGraph.LGraphNode {
+      class MinimalNode extends LGraphNode {
         constructor() {
           super();
           this.title = type.split('/').pop() || type;
@@ -69,7 +73,9 @@ export function ComfyUIWorkflowViewer({
       graph.load(workflow);
       graph.start();
       graphCanvas.draw();
-      graphCanvas.fitView(); // Auto-zoom to show all nodes
+      graphCanvas.ds.offset = [0, 0];
+	  graphCanvas.ds.scale = 1;
+      graphCanvas.setDirty(true, true);
     } catch (e) {
       console.error('Workflow render error:', e);
       setError('Could not render workflow graph');
@@ -79,9 +85,8 @@ export function ComfyUIWorkflowViewer({
 
     // Cleanup
     return () => {
-      graph.stop();
-      graphCanvas.close();
-    };
+  graph.stop();
+};
   }, [workflow, readOnly]);
 
   if (isLoading) {

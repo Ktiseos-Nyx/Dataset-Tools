@@ -990,7 +990,7 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
         .replace(/:\s*-Infinity/g, ': null');
 
       const workflow = JSON.parse(sanitized);
-      aiData.comfy_workflow = chunks.workflow ? JSON.parse(chunks.workflow) : workflow;
+      aiData.comfyui_workflow = chunks.workflow ? JSON.parse(chunks.workflow) : workflow;
       // Default to ComfyUI; override with service-specific signals below
       aiData.workflow_type = 'ComfyUI';
 

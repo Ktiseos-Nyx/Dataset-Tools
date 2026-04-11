@@ -603,11 +603,7 @@ function AITab({ ai, metadata, copiedValue, onCopy, fontSize: fs, formatFileSize
           labelSize={fs.label}
         />
       )}
-	  {ai.comfyui_workflow && (
-  <div className="text-[10px] font-mono bg-black/60 text-lime-400 p-2 rounded max-h-24 overflow-auto">
-    typeof: {typeof ai.comfyui_workflow} | hasNodes: {!!(ai.comfyui_workflow as any)?.nodes} | keys: {Object.keys(ai.comfyui_workflow).slice(0,5).join(',')}
-  </div>
-)}
+	  
 	   {/* ComfyUI Workflow Graph Visualizer */}
 {ai.comfyui_workflow && typeof ai.comfyui_workflow === 'object' && (
   <div className="space-y-1.5">
