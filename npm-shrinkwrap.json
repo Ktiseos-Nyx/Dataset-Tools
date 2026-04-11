@@ -54,6 +54,7 @@
         "framer-motion": "^12.33.0",
         "iconv-lite": "^0.7.2",
         "input-otp": "1.4.1",
+        "litegraph.js": "^0.7.18",
         "lucide-react": "^0.454.0",
         "marked": "^17.0.1",
         "mime-types": "^3.0.2",
@@ -7347,6 +7348,12 @@
         "type": "opencollective",
         "url": "https://opencollective.com/parcel"
       }
+    },
+    "node_modules/litegraph.js": {
+      "version": "0.7.18",
+      "resolved": "https://registry.npmjs.org/litegraph.js/-/litegraph.js-0.7.18.tgz",
+      "integrity": "sha512-1WEwjOO58j4FcLX8DvsuMXM371MEq4Y+8pBr3q2pBhJ9nDkwBtBd9Gj6bxArBKhW6i42bSOyv9ybeuez6NAxoQ==",
+      "license": "MIT"
     },
     "node_modules/lodash": {
       "version": "4.18.1",

@@ -55,6 +55,7 @@
     "framer-motion": "^12.33.0",
     "iconv-lite": "^0.7.2",
     "input-otp": "1.4.1",
+    "litegraph.js": "^0.7.18",
     "lucide-react": "^0.454.0",
     "marked": "^17.0.1",
     "mime-types": "^3.0.2",

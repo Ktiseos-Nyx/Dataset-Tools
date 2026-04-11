@@ -9,6 +9,15 @@
 
 # production
 /build
+/logs
+
+# old python files
+dataset_tools
+kn_dataset_tools.egg-info
+
+# mempalace 
+mempalace.yaml
+entities.json
 
 # debug
 npm-debug.log*
