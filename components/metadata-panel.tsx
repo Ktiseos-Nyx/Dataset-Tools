@@ -454,7 +454,7 @@ function ComfyUINodesSection({ nodes: initial, labelSize }: { nodes: ComfyNodesD
       )}
       {stillUnknown.length > 0 && !enriching && (
         <p className="text-[10px] text-muted-foreground truncate">
-          Unknown: {stillUnknown.slice(0, 3).join(', ')}{stillUnknown.length > 3 ? ` +${stillUnknown.length - 3} more` : ''}
+          Unknown: {stillUnknown.slice(0, 3).map(ct => merged[ct]?.displayName ?? ct).join(', ')}{stillUnknown.length > 3 ? ` +${stillUnknown.length - 3} more` : ''}
         </p>
       )}
     </div>

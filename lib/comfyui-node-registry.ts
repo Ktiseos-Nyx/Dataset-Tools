@@ -23,6 +23,17 @@ export interface NodeLookupResult {
   repo?: NodeRepoInfo;
   /** How the repo info was resolved. Defaults to 'extension-map' when omitted. */
   source?: 'extension-map' | 'github';
+  displayName?: string;  // ← NEW: human-readable name when repo is unknown
+}
+
+function deriveDisplayName(classType: string): string {
+  // Strip common suffix words, split camelCase/underscores, take the first segment
+  // e.g. "TensorArtSampler" → "TensorArt", "TA_KSampler_Node" → "TA"
+  return classType
+    .replace(/[_\-]?(node|sampler|loader|encode|decode|apply|advanced|simple)$/i, '')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')  // camelCase → words
+    .split(/[_\- ]+/)[0]                   // take first segment
+    .trim();
 }
 
 // ─── Built-in nodes ──────────────────────────────────────────────────────────
@@ -262,7 +273,7 @@ export async function lookupNode(
     }
   }
 
-  return { classification: 'unknown' };
+  return { classification: 'unknown', displayName: deriveDisplayName(classtype) };
 }
 
 /**
