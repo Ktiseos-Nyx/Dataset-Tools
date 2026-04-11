@@ -6140,7 +6140,6 @@
       "resolved": "https://registry.npmjs.org/@types/react/-/react-19.2.8.tgz",
       "integrity": "sha512-3MbSL37jEchWZz2p2mjntRZtPt837ij10ApxKfgmXCTuHWagYg7iA5bqPw6C8BMPfwidlvfPI/fxOc42HLhcyg==",
       "license": "MIT",
-      "peer": true,
       "dependencies": {
         "csstype": "^3.2.2"
       }
@@ -6151,7 +6150,6 @@
       "integrity": "sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==",
       "devOptional": true,
       "license": "MIT",
-      "peer": true,
       "peerDependencies": {
         "@types/react": "^19.2.0"
       }
@@ -6348,7 +6346,6 @@
         }
       ],
       "license": "MIT",
-      "peer": true,
       "dependencies": {
         "baseline-browser-mapping": "^2.9.0",
         "caniuse-lite": "^1.0.30001759",
@@ -6722,8 +6719,7 @@
       "version": "8.5.1",
       "resolved": "https://registry.npmjs.org/embla-carousel/-/embla-carousel-8.5.1.tgz",
       "integrity": "sha512-JUb5+FOHobSiWQ2EJNaueCNT/cQU9L6XWBbWmorWPQT9bkbk+fhsuLr8wWrzXKagO3oWszBO7MSx+GfaRk4E6A==",
-      "license": "MIT",
-      "peer": true
+      "license": "MIT"
     },
     "node_modules/embla-carousel-react": {
       "version": "8.5.1",
@@ -7353,9 +7349,9 @@
       }
     },
     "node_modules/lodash": {
-      "version": "4.17.23",
-      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.23.tgz",
-      "integrity": "sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==",
+      "version": "4.18.1",
+      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.18.1.tgz",
+      "integrity": "sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==",
       "license": "MIT"
     },
     "node_modules/longest-streak": {
@@ -8369,7 +8365,6 @@
       "resolved": "https://registry.npmjs.org/next/-/next-16.2.3.tgz",
       "integrity": "sha512-9V3zV4oZFza3PVev5/poB9g0dEafVcgNyQ8eTRop8GvxZjV2G15FC5ARuG1eFD42QgeYkzJBJzHghNP8Ad9xtA==",
       "license": "MIT",
-      "peer": true,
       "dependencies": {
         "@next/env": "16.2.3",
         "@swc/helpers": "0.5.15",
@@ -8538,7 +8533,6 @@
         }
       ],
       "license": "MIT",
-      "peer": true,
       "dependencies": {
         "nanoid": "^3.3.11",
         "picocolors": "^1.1.1",
@@ -9691,7 +9685,6 @@
       "resolved": "https://registry.npmjs.org/react/-/react-19.2.3.tgz",
       "integrity": "sha512-Ku/hhYbVjOQnXDZFv2+RibmLFGwFdeeKHFcOTlrt7xplBnya5OGn/hIRDsqDiSUcfORsDC7MPxwork8jBwsIWA==",
       "license": "MIT",
-      "peer": true,
       "engines": {
         "node": ">=0.10.0"
       }
@@ -9722,7 +9715,6 @@
       "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-19.2.0.tgz",
       "integrity": "sha512-UlbRu4cAiGaIewkPyiRGJk0imDN2T3JjieT6spoL2UeSf5od4n5LB/mQ4ejmxhCFT1tYe8IvaFulzynWovsEFQ==",
       "license": "MIT",
-      "peer": true,
       "dependencies": {
         "scheduler": "^0.27.0"
       },
@@ -9735,7 +9727,6 @@
       "resolved": "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.71.0.tgz",
       "integrity": "sha512-oFDt/iIFMV9ZfV52waONXzg4xuSlbwKUPvXVH2jumL1me5qFhBMc4knZxuXiZ2+j6h546sYe3ZKJcg/900/iHw==",
       "license": "MIT",
-      "peer": true,
       "engines": {
         "node": ">=18.0.0"
       },
@@ -10242,8 +10233,7 @@
       "version": "4.1.18",
       "resolved": "https://registry.npmjs.org/tailwindcss/-/tailwindcss-4.1.18.tgz",
       "integrity": "sha512-4+Z+0yiYyEtUVCScyfHCxOYP06L5Ne+JiHhY2IjR2KWMIWhJOYZKLSGZaP5HkZ8+bY0cxfzwDE5uOmzFXyIwxw==",
-      "license": "MIT",
-      "peer": true
+      "license": "MIT"
     },
     "node_modules/tailwindcss-animate": {
       "version": "1.0.7",
@@ -10574,7 +10564,6 @@
       "resolved": "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz",
       "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==",
       "license": "MIT",
-      "peer": true,
       "funding": {
         "url": "https://github.com/sponsors/colinhacks"
       }
