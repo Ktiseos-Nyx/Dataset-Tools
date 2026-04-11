@@ -1,13 +1,14 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Copy, Camera, FileText, Sparkles, Code, Check, Loader2, ListTree, Tag, ImageIcon } from "lucide-react"
+import { Copy, Camera, FileText, Sparkles, Code, Check, Loader2, ListTree, Tag, ImageIcon, ChartArea } from "lucide-react"
 import type { ImageMetadata } from "@/types/metadata"
 import type { NodeRepoInfo } from "@/lib/comfyui-node-registry"
 import type { Rule, RuleEvaluationResult } from "@/types/rules"
 import { useSettings } from "@/hooks/use-settings"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
+import { ComfyUIWorkflowViewer } from '@/components/ComfyUIWorkflowViewer'
 
 interface MetadataPanelProps {
   metadata: ImageMetadata | null
@@ -60,7 +61,7 @@ const FONT_SIZE_MAP = {
 } as const
 
 export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
-  const [activeTab, setActiveTab] = useState<"basic" | "exif" | "iptc" | "xmp" | "ai" | "rules">("basic")
+  const [activeTab, setActiveTab] = useState<"basic" | "exif" | "iptc" | "xmp" | "ai" | "rules" | "workflow">("basic")
   const [copiedValue, setCopiedValue] = useState<string | null>(null)
   const [ruleCondition, setRuleCondition] = useState<string>("exif.Make === 'Canon'")
   const [ruleResults, setRuleResults] = useState<RuleEvaluationResult[] | null>(null)
@@ -160,7 +161,8 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
       { id: "iptc" as const, label: "IPTC", icon: FileText },
       { id: "xmp" as const, label: "XMP", icon: Code },
       { id: "ai" as const, label: "AI", icon: Sparkles },
-      { id: "rules" as const, label: "Rules", icon: ListTree },
+      // { id: "rules" as const, label: "Rules", icon: ListTree },
+	  { id: "workflow" as const, label: "Workflow", icon: ChartArea },
     ]
 
     const formatFileSize = (bytes: number) => {
@@ -320,51 +322,72 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
                 formatFileSize={formatFileSize}
               />
             )}
+			
+			{/* Workflow Tab */}
+{activeTab === "workflow" && (
+  <div className="space-y-3">
+    <FileBasics metadata={metadata} formatFileSize={formatFileSize} fontSize={fs} />
+    
+    {/* Workflow Graph Viewer - Full Height */}
+    <div className="min-h-[500px] bg-zinc-900 rounded-lg border border-zinc-700 overflow-hidden">
+      {metadata.ai?.comfyui_workflow ? (
+        <ComfyUIWorkflowViewer 
+          workflow={metadata.ai.comfyui_workflow} 
+          readOnly={true}
+        />
+      ) : (
+        <div className="h-full flex items-center justify-center text-sm text-muted-foreground">
+          No ComfyUI workflow data in this image
+        </div>
+      )}
+    </div>
+  </div>
+)}
 
-            {activeTab === "rules" && (
-              <div className="space-y-4">
+          {activeTab === "rules" && (
+             <div className="space-y-4">
                 <div>
-                  <label htmlFor="rule-condition" className="block text-sm font-medium text-muted-foreground mb-1">
-                    Rule Condition (e.g., exif.Make === &apos;Canon&apos;)
-                  </label>
-                  <input
-                    id="rule-condition"
-                    type="text"
-                    value={ruleCondition}
-                    onChange={(e) => setRuleCondition(e.target.value)}
+                 <label htmlFor="rule-condition" className="block text-sm font-medium text-muted-foreground mb-1">
+                   Rule Condition (e.g., exif.Make === &apos;Canon&apos;)
+                 </label>
+                 <input
+                   id="rule-condition"
+                   type="text"
+                  value={ruleCondition}
+                   onChange={(e) => setRuleCondition(e.target.value)}
                     className="w-full p-2 border border-border rounded-md bg-background text-foreground"
-                    placeholder="Enter rule condition"
+                     placeholder="Enter rule condition"
                   />
-                </div>
-                <button
-                  onClick={handleApplyRules}
-                  disabled={isApplyingRules}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
-                >
+                 </div>
+                 <button
+                   onClick={handleApplyRules}
+                   disabled={isApplyingRules}
+                   className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
+                 >
                   {isApplyingRules && <Loader2 className="w-4 h-4 animate-spin" />}
                   Apply Rules
-                </button>
-
-                {ruleResults && (
-                  <div className="mt-4 space-y-2">
+                 </button>
+			  
+                 {ruleResults && (
+                 <div className="mt-4 space-y-2">
                     <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                       Rule Evaluation Results
-                    </h3>
-                    {ruleResults.map((result) => (
-                      <div key={result.ruleId} className="p-3 border border-border rounded-md bg-muted/50">
+                     </h3>
+                     {ruleResults.map((result) => (
+                       <div key={result.ruleId} className="p-3 border border-border rounded-md bg-muted/50">
                         <p className="text-sm font-medium">{result.ruleName}</p>
-                        <p className={`text-xs ${result.passed ? "text-green-500" : "text-red-500"}`}>
-                          Status: {result.passed ? "PASSED" : "FAILED"}
-                        </p>
-                        {result.message && <p className="text-xs text-muted-foreground">{result.message}</p>}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+                         <p className={`text-xs ${result.passed ? "text-green-500" : "text-red-500"}`}>
+                           Status: {result.passed ? "PASSED" : "FAILED"}
+                         </p>
+                         {result.message && <p className="text-xs text-muted-foreground">{result.message}</p>}
+                       </div>
+                     ))}
+                   </div>
+                 )}
+               </div>
+             )}
+           </div>
+         </div>
       </>
     )
   }
@@ -580,7 +603,24 @@ function AITab({ ai, metadata, copiedValue, onCopy, fontSize: fs, formatFileSize
           labelSize={fs.label}
         />
       )}
-
+	  {ai.comfyui_workflow && (
+  <div className="text-[10px] font-mono bg-black/60 text-lime-400 p-2 rounded max-h-24 overflow-auto">
+    typeof: {typeof ai.comfyui_workflow} | hasNodes: {!!(ai.comfyui_workflow as any)?.nodes} | keys: {Object.keys(ai.comfyui_workflow).slice(0,5).join(',')}
+  </div>
+)}
+	   {/* ComfyUI Workflow Graph Visualizer */}
+{ai.comfyui_workflow && typeof ai.comfyui_workflow === 'object' && (
+  <div className="space-y-1.5">
+    <p className={`font-medium text-muted-foreground uppercase tracking-wide ${fs.label}`}>
+      Workflow Graph
+    </p>
+    <ComfyUIWorkflowViewer 
+      workflow={ai.comfyui_workflow as Record<string, any>} 
+      readOnly={true}
+      className="mt-1"
+    />
+  </div>
+)}
       {/* Parameter Grid */}
       {(knownParams.length > 0 || extraParams.length > 0) && (
         <div className="space-y-1">

@@ -990,7 +990,7 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
         .replace(/:\s*-Infinity/g, ': null');
 
       const workflow = JSON.parse(sanitized);
-      aiData.comfyui_workflow = workflow;
+      aiData.comfy_workflow = chunks.workflow ? JSON.parse(chunks.workflow) : workflow;
       // Default to ComfyUI; override with service-specific signals below
       aiData.workflow_type = 'ComfyUI';
 
@@ -1024,7 +1024,7 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       // If a Workflow chunk exists alongside the Prompt chunk, extract per-node
       // provenance (cnr_id / aux_id). ComfyUI ≥1.26 embeds this automatically;
       // it lets us resolve node origins without GitHub code search.
-      const provenance = chunks.Workflow ? extractWorkflowProvenance(chunks.Workflow) : undefined;
+      const provenance = chunks.workflow ? extractWorkflowProvenance(chunks.workflow) : undefined;
 
       // Scan entire workflow JSON for Civitai URN:AIR resource identifiers.
       // Format: urn:air:{baseModel}:{type}:civitai:{modelId}@{versionId}
