@@ -293,6 +293,9 @@ function sortItems(items: FsItem[], sortBy: 'name' | 'date' | 'size'): FsItem[] 
 export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "list" }: FileTreeProps) {
   const [rootItems, setRootItems] = useState<FsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isEditingPath, setIsEditingPath] = useState(false);
+  const [pathInput, setPathInput] = useState('');
+  const pathInputRef = useRef<HTMLInputElement>(null);
   const { settings, updateSettings } = useSettings();
 
   const fetchRoot = async () => {
@@ -316,27 +319,18 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
     }
   };
 
-  const handleFolderSelect = async () => {
-    try {
-      // Use the File System Access API if available
-      if ('showDirectoryPicker' in window) {
-        const dirHandle = await (window as any).showDirectoryPicker();
-        // Get the path from the handle (this is tricky in browser)
-        // For now, we'll use a text input fallback
-        const folderPath = prompt('Enter folder path:', settings.currentFolder);
-        if (folderPath) {
-          updateSettings({ currentFolder: folderPath });
-        }
-      } else {
-        // Fallback: text input
-        const folderPath = prompt('Enter folder path:', settings.currentFolder);
-        if (folderPath) {
-          updateSettings({ currentFolder: folderPath });
-        }
-      }
-    } catch (error) {
-      console.error('Failed to select folder:', error);
+  const openPathEditor = () => {
+    setPathInput(settings.currentFolder);
+    setIsEditingPath(true);
+    setTimeout(() => pathInputRef.current?.select(), 0);
+  };
+
+  const commitPath = () => {
+    const trimmed = pathInput.trim();
+    if (trimmed && trimmed !== settings.currentFolder) {
+      updateSettings({ currentFolder: trimmed });
     }
+    setIsEditingPath(false);
   };
 
   useEffect(() => {
@@ -346,12 +340,28 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   return (
     <aside className="h-full bg-muted/20 flex flex-col">
       <div className="h-10 border-b border-border px-3 flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">File Browser</h2>
-        <div className="flex items-center gap-1">
+        {isEditingPath ? (
+          <input
+            ref={pathInputRef}
+            value={pathInput}
+            onChange={e => setPathInput(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') commitPath();
+              if (e.key === 'Escape') setIsEditingPath(false);
+            }}
+            onBlur={commitPath}
+            className="flex-1 min-w-0 text-xs bg-background border border-border rounded px-2 py-1 outline-none focus:ring-1 focus:ring-primary font-mono"
+            placeholder="Paste or type folder path…"
+            spellCheck={false}
+          />
+        ) : (
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide truncate">File Browser</h2>
+        )}
+        <div className="flex items-center gap-1 flex-shrink-0">
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={handleFolderSelect}
+                onClick={openPathEditor}
                 className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded transition-colors"
                 title="Open Folder"
               >
