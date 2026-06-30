@@ -14,9 +14,11 @@ interface ThumbnailViewportProps {
   currentDir: string | null
   onFileSelect: (file: FsItem) => void
   selectedFile?: FsItem
+  /** Bumping this re-fetches the current folder (e.g. after editing adds a file). */
+  refreshKey?: number
 }
 
-export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile }: ThumbnailViewportProps) {
+export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refreshKey }: ThumbnailViewportProps) {
   const [images, setImages] = useState<FsItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const { settings } = useSettings()
@@ -55,7 +57,7 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile }: Th
       }
     }
     fetchImages()
-  }, [currentDir, settings.showHiddenFiles, settings.currentFolder, settings.sortBy])
+  }, [currentDir, settings.showHiddenFiles, settings.currentFolder, settings.sortBy, refreshKey])
 
   const selectedRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {

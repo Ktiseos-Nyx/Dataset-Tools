@@ -1,16 +1,17 @@
 "use client"
 
-import { ZoomIn, ZoomOut, Maximize2, RotateCw, Minimize2 } from "lucide-react"
+import { ZoomIn, ZoomOut, Maximize2, RefreshCw, Minimize2 } from "lucide-react"
 import { useState } from "react"
 
 interface ImagePreviewProps {
   src: string
   fileName: string
+  /** Reload the file list (e.g. after editing creates a new .edited.png). */
+  onRefresh?: () => void
 }
 
-export function ImagePreview({ src, fileName }: ImagePreviewProps) {
+export function ImagePreview({ src, fileName, onRefresh }: ImagePreviewProps) {
   const [zoom, setZoom] = useState(0) // 0 = fit-to-container
-  const [rotation, setRotation] = useState(0)
 
   const isFit = zoom === 0
 
@@ -49,14 +50,19 @@ export function ImagePreview({ src, fileName }: ImagePreviewProps) {
           >
             {isFit ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
           </button>
-          <div className="w-px h-4 bg-border mx-1" />
-          <button
-            onClick={() => setRotation((rotation + 90) % 360)}
-            className="p-2 hover:bg-accent rounded-md transition-colors"
-            aria-label="Rotate image"
-          >
-            <RotateCw className="w-4 h-4" />
-          </button>
+          {onRefresh && (
+            <>
+              <div className="w-px h-4 bg-border mx-1" />
+              <button
+                onClick={onRefresh}
+                className="p-2 hover:bg-accent rounded-md transition-colors"
+                aria-label="Refresh file list"
+                title="Refresh file list (pick up newly edited files)"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -67,14 +73,11 @@ export function ImagePreview({ src, fileName }: ImagePreviewProps) {
             src={src || "/placeholder.svg"}
             alt={fileName}
             className="max-w-full max-h-full object-contain rounded-lg shadow-2xl border border-border transition-transform duration-200"
-            style={{ transform: rotation ? `rotate(${rotation}deg)` : undefined }}
           />
         ) : (
           <div
             className="transition-transform duration-200"
-            style={{
-              transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
-            }}
+            style={{ transform: `scale(${zoom / 100})` }}
           >
             <img
               src={src || "/placeholder.svg"}

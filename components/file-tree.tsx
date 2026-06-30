@@ -19,6 +19,8 @@ interface FileTreeProps {
   onDirExpand?: (dirPath: string) => void;
   selectedFile?: FsItem;
   viewMode?: ViewMode;
+  /** Bumping this re-fetches the root listing (e.g. after editing adds a file). */
+  refreshKey?: number;
 }
 
 function Directory({
@@ -290,7 +292,7 @@ function sortItems(items: FsItem[], sortBy: 'name' | 'date' | 'size'): FsItem[] 
   return [...dirs.sort(sortFn), ...files.sort(sortFn)];
 }
 
-export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "list" }: FileTreeProps) {
+export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "list", refreshKey }: FileTreeProps) {
   const [rootItems, setRootItems] = useState<FsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditingPath, setIsEditingPath] = useState(false);
@@ -335,7 +337,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
 
   useEffect(() => {
     fetchRoot();
-  }, [settings.showHiddenFiles, settings.sortBy, settings.currentFolder]);
+  }, [settings.showHiddenFiles, settings.sortBy, settings.currentFolder, refreshKey]);
 
   return (
     <aside className="h-full bg-muted/20 flex flex-col">

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs/promises';
+import crypto from 'crypto';
 import mime from 'mime-types';
 // @ts-expect-error — exif-parser has no type declarations
 import exifParser from 'exif-parser';
@@ -967,6 +968,9 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       } else if (/Civitai resources:|Civitai metadata:/.test(params)) {
         // Civitai on-site generator embeds explicit resource metadata
         aiData.workflow_type = 'Civitai';
+      } else if (/^neo/i.test(versionStr)) {
+        // Forge Neo: version string is "NEO" or "neo-x.x"
+        aiData.workflow_type = 'Forge Neo';
       } else if (/^f\d/i.test(versionStr)) {
         // Forge: version string starts with 'f' (e.g. "f0.0.17-dirty-1254-gabcdef")
         aiData.workflow_type = 'Forge';
@@ -1063,6 +1067,32 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
     } catch (e) {
       // Not valid JSON, store as-is
       aiData.prompt = chunks.prompt;
+    }
+  }
+
+  // --- ComfyUI UI-graph chunk without an API `prompt` chunk ---
+  // Some ComfyUI save nodes (e.g. the A1111-compatible "Save Image" variants
+  // LoRA Manager uses) embed only the UI `workflow` graph plus an A1111-style
+  // `parameters` string, omitting the API `prompt` chunk. The block above only
+  // runs when `prompt` exists, so these images look like plain A1111 and their
+  // workflow graph stays invisible. Surface the graph and correct the type here.
+  // We keep the A1111-derived prompt/params: the UI-graph format isn't the API
+  // shape that extractComfyUIParams / classifyComfyUIWorkflow consume.
+  if (!aiData.comfyui_workflow && chunks.workflow) {
+    try {
+      const sanitized = String(chunks.workflow)
+        .replace(/:\s*NaN/g, ': null')
+        .replace(/:\s*Infinity/g, ': null')
+        .replace(/:\s*-Infinity/g, ': null');
+      const uiWorkflow = JSON.parse(sanitized);
+      // A genuine ComfyUI UI export has a `nodes` array — this also keeps us
+      // from misreading some unrelated tool's `workflow` text as a graph.
+      if (uiWorkflow && Array.isArray(uiWorkflow.nodes)) {
+        aiData.comfyui_workflow = uiWorkflow;
+        aiData.workflow_type = 'ComfyUI';
+      }
+    } catch {
+      // Not valid JSON — leave A1111 detection as-is.
     }
   }
 
@@ -1747,6 +1777,7 @@ export async function extractMetadataFromBuffer(
     fileSize,
     fileType: effectiveMime,
     lastModified,
+    sha256: crypto.createHash('sha256').update(buffer).digest('hex'),
     ...(dims ?? {}),
     exif: exifData,
     iptc: iptcData,

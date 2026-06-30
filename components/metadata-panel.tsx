@@ -18,8 +18,6 @@ interface MetadataPanelProps {
   filePath?: string
   /** Folder the path resolves against (settings.currentFolder). */
   baseFolder?: string
-  /** Re-fetch metadata after an in-place overwrite. */
-  onSaved?: () => void
 }
 
 // Keys hidden from the generic parameter grid (shown in dedicated UI)
@@ -67,7 +65,7 @@ const FONT_SIZE_MAP = {
   lg: { prompt: 'text-base', param: 'text-base', label: 'text-sm' },
 } as const
 
-export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onSaved }: MetadataPanelProps) {
+export function MetadataPanel({ metadata, isLoading, filePath, baseFolder }: MetadataPanelProps) {
   const [activeTab, setActiveTab] = useState<"basic" | "exif" | "iptc" | "xmp" | "ai" | "rules" | "workflow">("basic")
   const [copiedValue, setCopiedValue] = useState<string | null>(null)
   const [ruleCondition, setRuleCondition] = useState<string>("exif.Make === 'Canon'")
@@ -222,6 +220,17 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onSav
                   <MetadataRow label="Dimensions" value={`${metadata.width} × ${metadata.height}`} fontSize={fs.param} labelSize={fs.label} />
                 )}
                 <MetadataRow label="Last Modified" value={new Date(metadata.lastModified).toLocaleString()} fontSize={fs.param} labelSize={fs.label} />
+                {metadata.sha256 && (
+                  <MetadataRow
+                    label="SHA256"
+                    value={metadata.sha256}
+                    onCopy={() => copyToClipboard(metadata.sha256!, "sha256")}
+                    copied={copiedValue === "sha256"}
+                    mono
+                    fontSize={fs.param}
+                    labelSize={fs.label}
+                  />
+                )}
               </>
             )}
 
@@ -417,7 +426,6 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onSav
             filePath={filePath}
             baseFolder={baseFolder ?? "."}
             fileName={metadata.fileName}
-            onSaved={onSaved}
           />
         )}
       </div>

@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Pencil, Loader2, Save } from "lucide-react"
+import { Pencil, Loader2, Save, AlertTriangle } from "lucide-react"
 import { toast } from "sonner"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -15,16 +15,6 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog"
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog"
 
 interface MetadataEditDialogProps {
   /** Server path of the selected file (relative or absolute, as the fs tree provides it). */
@@ -32,8 +22,6 @@ interface MetadataEditDialogProps {
   /** The folder the path is resolved against — passed straight to the API. */
   baseFolder: string
   fileName: string
-  /** Called after a successful in-place overwrite so the panel can re-read the file. */
-  onSaved?: () => void
 }
 
 // name.png -> name.edited.png (for the "save as copy" hint and toast preview)
@@ -43,14 +31,17 @@ function copyName(fileName: string): string {
   return `${fileName.slice(0, dot)}.edited${fileName.slice(dot)}`
 }
 
-export function MetadataEditDialog({ filePath, baseFolder, fileName, onSaved }: MetadataEditDialogProps) {
+export function MetadataEditDialog({ filePath, baseFolder, fileName }: MetadataEditDialogProps) {
   const [open, setOpen] = useState(false)
   const [text, setText] = useState("")
   const [original, setOriginal] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saveAsCopy, setSaveAsCopy] = useState(true)
-  const [confirmOpen, setConfirmOpen] = useState(false)
+  // Inline overwrite confirmation — kept in this single Dialog rather than a
+  // nested AlertDialog, because stacking two Radix modals (and unmounting them
+  // together) leaves `pointer-events: none` stuck on <body> and freezes the UI.
+  const [confirmingOverwrite, setConfirmingOverwrite] = useState(false)
 
   const query = `path=${encodeURIComponent(filePath)}&baseFolder=${encodeURIComponent(baseFolder)}`
 
@@ -75,6 +66,7 @@ export function MetadataEditDialog({ filePath, baseFolder, fileName, onSaved }: 
     setOpen(next)
     if (next) {
       setSaveAsCopy(true)
+      setConfirmingOverwrite(false)
       void loadParameters()
     }
   }
@@ -90,113 +82,111 @@ export function MetadataEditDialog({ filePath, baseFolder, fileName, onSaved }: 
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Save failed")
       toast.success(saveAsCopy ? `Saved copy: ${data.path}` : `Saved ${data.path}`)
+      // Re-baseline so reopening reflects the saved state (and Save disables).
+      setOriginal(text)
+      setConfirmingOverwrite(false)
       setOpen(false)
-      if (!saveAsCopy) onSaved?.()
     } catch (e) {
       toast.error(`Save failed: ${(e as Error).message}`)
     } finally {
       setSaving(false)
-      setConfirmOpen(false)
     }
   }
 
   const handleSaveClick = () => {
     if (saveAsCopy) void doSave()
-    else setConfirmOpen(true)
+    else setConfirmingOverwrite(true)
   }
 
   // Nothing to save until the text actually differs from what's on disk.
   const dirty = original !== null ? text !== original : text.trim().length > 0
 
   return (
-    <>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <Button variant="outline" size="xs" onClick={() => handleOpenChange(true)} title="Edit raw metadata">
         <Pencil />
         Edit
       </Button>
 
-      <Dialog open={open} onOpenChange={handleOpenChange}>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Edit metadata</DialogTitle>
-            <DialogDescription>
-              Raw <code>parameters</code> text for{" "}
-              <span className="font-medium text-foreground">{fileName}</span>. Pixels are never
-              recompressed — only this block changes.
-            </DialogDescription>
-          </DialogHeader>
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Edit metadata</DialogTitle>
+          <DialogDescription>
+            Raw <code>parameters</code> text for{" "}
+            <span className="font-medium text-foreground">{fileName}</span>. Pixels are never
+            recompressed — only this block changes.
+          </DialogDescription>
+        </DialogHeader>
 
-          {loading ? (
-            <div className="flex items-center justify-center py-16 text-muted-foreground">
-              <Loader2 className="w-5 h-5 animate-spin mr-2" />
-              Reading…
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {original === null && (
-                <p className="text-xs text-amber-500">
-                  This PNG has no <code>parameters</code> block yet. Saving will create one.
-                </p>
-              )}
-              <Textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                spellCheck={false}
-                aria-label="Raw metadata"
-                className="font-mono text-xs min-h-[320px] max-h-[60vh] resize-y whitespace-pre overflow-auto"
-                placeholder={"masterpiece, best quality, … <lora:Name:1.0>\nNegative prompt: …\nSteps: 30, Sampler: …"}
+        {loading ? (
+          <div className="flex items-center justify-center py-16 text-muted-foreground">
+            <Loader2 className="w-5 h-5 animate-spin mr-2" />
+            Reading…
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {original === null && (
+              <p className="text-xs text-amber-500">
+                This PNG has no <code>parameters</code> block yet. Saving will create one.
+              </p>
+            )}
+            <Textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              spellCheck={false}
+              aria-label="Raw metadata"
+              className="font-mono text-xs min-h-[320px] max-h-[60vh] w-full min-w-0 resize-y [field-sizing:fixed] whitespace-pre-wrap break-words overflow-y-auto"
+              placeholder={"masterpiece, best quality, … <lora:Name:1.0>\nNegative prompt: …\nSteps: 30, Sampler: …"}
+            />
+            <label className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Checkbox
+                checked={saveAsCopy}
+                onCheckedChange={(v) => {
+                  setSaveAsCopy(v === true)
+                  setConfirmingOverwrite(false)
+                }}
               />
-              <label className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Checkbox
-                  checked={saveAsCopy}
-                  onCheckedChange={(v) => setSaveAsCopy(v === true)}
-                />
-                Save as a copy (<code className="text-foreground">{copyName(fileName)}</code>) — keeps the original untouched
-              </label>
-            </div>
-          )}
+              Save as a copy (<code className="text-foreground">{copyName(fileName)}</code>) — keeps the original untouched
+            </label>
+          </div>
+        )}
 
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" disabled={saving}>
-                Cancel
+        {confirmingOverwrite && (
+          <div className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm">
+            <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-destructive" />
+            <span>
+              Overwrite the original <span className="font-medium">{fileName}</span>? Pixels stay
+              intact, but the previous metadata can&apos;t be recovered.
+            </span>
+          </div>
+        )}
+
+        <DialogFooter>
+          {confirmingOverwrite ? (
+            <>
+              <Button variant="outline" onClick={() => setConfirmingOverwrite(false)} disabled={saving}>
+                Back
               </Button>
-            </DialogClose>
-            <Button onClick={handleSaveClick} disabled={loading || saving || !dirty}>
-              {saving ? <Loader2 className="animate-spin" /> : <Save />}
-              {saveAsCopy ? "Save copy" : "Overwrite original"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Overwrite the original?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This writes directly over{" "}
-              <span className="font-medium text-foreground">{fileName}</span>. The pixels stay
-              untouched, but the previous metadata can&apos;t be recovered. Prefer “Save as a copy”
-              if you&apos;re unsure.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={saving}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className={buttonVariants({ variant: "destructive" })}
-              onClick={(e) => {
-                e.preventDefault()
-                void doSave()
-              }}
-              disabled={saving}
-            >
-              {saving ? <Loader2 className="animate-spin" /> : null}
-              Overwrite
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+              <Button variant="destructive" onClick={() => void doSave()} disabled={saving}>
+                {saving ? <Loader2 className="animate-spin" /> : null}
+                Yes, overwrite
+              </Button>
+            </>
+          ) : (
+            <>
+              <DialogClose asChild>
+                <Button variant="outline" disabled={saving}>
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button onClick={handleSaveClick} disabled={loading || saving || !dirty}>
+                {saving ? <Loader2 className="animate-spin" /> : <Save />}
+                {saveAsCopy ? "Save copy" : "Overwrite original"}
+              </Button>
+            </>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
