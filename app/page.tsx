@@ -269,7 +269,13 @@ export default function Home() {
               {selectedFile && isSafetensorsFile(selectedFile) ? (
                 <SafetensorsPanel data={safetensors.data} isLoading={safetensors.loading} fileName={selectedFile.name} />
               ) : (
-                <MetadataPanel metadata={metadata.data} isLoading={metadata.loading} />
+                <MetadataPanel
+                  metadata={metadata.data}
+                  isLoading={metadata.loading}
+                  filePath={selectedFile?.path}
+                  baseFolder={settings.currentFolder}
+                  onSaved={() => { if (selectedFile) fetchMetadata(selectedFile) }}
+                />
               )}
             </Panel>
           </>

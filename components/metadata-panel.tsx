@@ -9,10 +9,17 @@ import { useSettings } from "@/hooks/use-settings"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import { ComfyUIWorkflowViewer } from '@/components/ComfyUIWorkflowViewer'
+import { MetadataEditDialog } from "@/components/metadata-edit-dialog"
 
 interface MetadataPanelProps {
   metadata: ImageMetadata | null
   isLoading: boolean
+  /** Server path of the selected file — enables the raw-metadata editor (PNG only). */
+  filePath?: string
+  /** Folder the path resolves against (settings.currentFolder). */
+  baseFolder?: string
+  /** Re-fetch metadata after an in-place overwrite. */
+  onSaved?: () => void
 }
 
 // Keys hidden from the generic parameter grid (shown in dedicated UI)
@@ -60,7 +67,7 @@ const FONT_SIZE_MAP = {
   lg: { prompt: 'text-base', param: 'text-base', label: 'text-sm' },
 } as const
 
-export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
+export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onSaved }: MetadataPanelProps) {
   const [activeTab, setActiveTab] = useState<"basic" | "exif" | "iptc" | "xmp" | "ai" | "rules" | "workflow">("basic")
   const [copiedValue, setCopiedValue] = useState<string | null>(null)
   const [ruleCondition, setRuleCondition] = useState<string>("exif.Make === 'Canon'")
@@ -392,11 +399,27 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
     )
   }
 
+  // The raw editor needs a real server path (drag-dropped blobs have none) and
+  // only handles PNG `parameters` chunks for now.
+  const canEdit =
+    !!metadata &&
+    !!filePath &&
+    !filePath.startsWith("blob:") &&
+    metadata.fileType === "image/png"
+
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="h-10 border-b border-border px-4 flex items-center bg-muted/20">
+      <div className="h-10 border-b border-border px-4 flex items-center justify-between bg-muted/20">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Metadata</h2>
+        {canEdit && metadata && filePath && (
+          <MetadataEditDialog
+            filePath={filePath}
+            baseFolder={baseFolder ?? "."}
+            fileName={metadata.fileName}
+            onSaved={onSaved}
+          />
+        )}
       </div>
 
       {renderContent()}
