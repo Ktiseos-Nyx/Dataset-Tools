@@ -96,7 +96,8 @@ overwrite is a **small write route**, not a browser download:
   how DT already loads. Skip unless asked.)*
 
 **Destructive-write guard (these images are precious):** confirm before overwrite,
-**or** offer a "save as copy" toggle (write `name.edited.png` alongside). Recommend
+**or** offer a "save as copy" toggle (write `name_edited.png` alongside — underscore,
+not a second dot, so dataset/training tools that pair by stem don't orphan the file). Recommend
 at least a confirm step.
 
 ## Wiring tasks (checklist)

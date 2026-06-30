@@ -25,7 +25,7 @@ type Resolved = { path: string } | { error: string; status: number };
 // fs.realpath on the concrete file so a symlink inside the base can't redirect
 // the write outside it. Combined with the PNG-validity requirement downstream,
 // the only writes this route can perform are "rewrite an existing PNG" or
-// "create <name>.edited.png beside one".
+// "create <name>_edited.png beside one".
 async function resolveTarget(filePath: string, baseFolder: string): Promise<Resolved> {
   const resolvedBase = path.resolve(baseFolder || '.');
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(resolvedBase, filePath);
@@ -87,7 +87,7 @@ export async function GET(request: Request) {
 }
 
 // POST /api/metadata-write  { path, baseFolder, text, saveAsCopy? }
-// Swaps the 'parameters' tEXt chunk in place (or writes name.edited.png) without
+// Swaps the 'parameters' tEXt chunk in place (or writes name_edited.png) without
 // recompressing pixels. Returns { ok: true, path: <basename written> }.
 export async function POST(request: Request) {
   let body: { path?: string; baseFolder?: string; text?: string; saveAsCopy?: boolean };
@@ -125,7 +125,10 @@ export async function POST(request: Request) {
     if (saveAsCopy) {
       const ext = path.extname(sourcePath);
       const stem = path.basename(sourcePath, ext);
-      targetPath = path.join(path.dirname(sourcePath), `${stem}.edited${ext}`);
+      // Underscore, not a second dot: `foo_edited.png` keeps a single-extension
+      // stem so dataset/training tools that pair by stem (foo.png ↔ foo.txt) or
+      // split on the first dot don't orphan the file.
+      targetPath = path.join(path.dirname(sourcePath), `${stem}_edited${ext}`);
     }
 
     await fs.writeFile(targetPath, out);

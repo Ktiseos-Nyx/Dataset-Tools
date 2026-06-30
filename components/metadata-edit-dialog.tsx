@@ -24,11 +24,12 @@ interface MetadataEditDialogProps {
   fileName: string
 }
 
-// name.png -> name.edited.png (for the "save as copy" hint and toast preview)
+// name.png -> name_edited.png (underscore keeps a single-extension stem so
+// dataset/training tools that pair by stem don't orphan the file).
 function copyName(fileName: string): string {
   const dot = fileName.lastIndexOf(".")
-  if (dot === -1) return `${fileName}.edited`
-  return `${fileName.slice(0, dot)}.edited${fileName.slice(dot)}`
+  if (dot === -1) return `${fileName}_edited`
+  return `${fileName.slice(0, dot)}_edited${fileName.slice(dot)}`
 }
 
 export function MetadataEditDialog({ filePath, baseFolder, fileName }: MetadataEditDialogProps) {

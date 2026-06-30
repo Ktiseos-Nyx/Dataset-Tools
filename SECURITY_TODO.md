@@ -20,7 +20,7 @@ hardened against path traversal:
 - containment via `path.relative` (no `startsWith` prefix-match bypass),
 - `fs.realpath` symlink re-check on both base and target,
 - PNG-only + "must be an existing file" gates, so its entire write capability is
-  limited to "rewrite an existing PNG" or "create `<name>.edited.png` beside one".
+  limited to "rewrite an existing PNG" or "create `<name>_edited.png` beside one".
 
 ## What's still open (and why it's deferred, not ignored)
 

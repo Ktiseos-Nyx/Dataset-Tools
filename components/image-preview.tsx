@@ -6,7 +6,7 @@ import { useState } from "react"
 interface ImagePreviewProps {
   src: string
   fileName: string
-  /** Reload the file list (e.g. after editing creates a new .edited.png). */
+  /** Reload the file list (e.g. after editing creates a new _edited.png). */
   onRefresh?: () => void
 }
 
