@@ -10,7 +10,7 @@ import { readPngParameters, writePngParameters } from '@/lib/png-metadata';
 function isInside(base: string, target: string): boolean {
   if (target === base) return true;
   const rel = path.relative(base, target);
-  return rel.length > 0 && !rel.startsWith('..') && !path.isAbsolute(rel);
+  return rel.length > 0 && rel !== '..' && !rel.startsWith(`..${path.sep}`) && !path.isAbsolute(rel);
 }
 
 const PROJECT_ROOT = path.resolve(process.cwd());
