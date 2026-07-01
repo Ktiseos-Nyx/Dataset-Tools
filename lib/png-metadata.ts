@@ -37,6 +37,19 @@ function crc32(buf: Buffer): number {
   return (crc ^ 0xffffffff) >>> 0;
 }
 
+// Compute CRC-32 over two buffers sequentially without concatenating them.
+// Avoids allocating an intermediate buffer (notably for large IDAT chunks).
+function crc32Two(a: Buffer, b: Buffer): number {
+  let crc = 0xffffffff;
+  for (let i = 0; i < a.length; i++) {
+    crc = CRC_TABLE[(crc ^ a[i]) & 0xff] ^ (crc >>> 8);
+  }
+  for (let i = 0; i < b.length; i++) {
+    crc = CRC_TABLE[(crc ^ b[i]) & 0xff] ^ (crc >>> 8);
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
 export function isPng(buf: Buffer): boolean {
   return buf.length >= 8 && buf.subarray(0, 8).equals(PNG_SIGNATURE);
 }
@@ -73,7 +86,7 @@ function assembleChunks(chunks: PngChunk[]): Buffer {
     length.writeUInt32BE(data.length, 0);
     const typeBuf = Buffer.from(type, 'ascii');
     const crcBuf = Buffer.alloc(4);
-    crcBuf.writeUInt32BE(crc32(Buffer.concat([typeBuf, data])), 0);
+    crcBuf.writeUInt32BE(crc32Two(typeBuf, data), 0);
     parts.push(length, typeBuf, data, crcBuf);
   }
   return Buffer.concat(parts);
