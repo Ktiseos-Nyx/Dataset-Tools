@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Navbar } from "@/components/navbar"
+import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -71,6 +72,7 @@ export default function RootLayout({
               {children}
             </div>
           </div>
+          <Toaster richColors closeButton position="bottom-right" />
         </ThemeProvider>
         <Analytics />
       </body>

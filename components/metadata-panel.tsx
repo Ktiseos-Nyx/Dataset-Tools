@@ -9,10 +9,17 @@ import { useSettings } from "@/hooks/use-settings"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import { ComfyUIWorkflowViewer } from '@/components/ComfyUIWorkflowViewer'
+import { MetadataEditDialog } from "@/components/metadata-edit-dialog"
 
 interface MetadataPanelProps {
   metadata: ImageMetadata | null
   isLoading: boolean
+  /** Server path of the selected file — enables the raw-metadata editor (PNG only). */
+  filePath?: string
+  /** Folder the path resolves against (settings.currentFolder). */
+  baseFolder?: string
+  /** Called after a successful edit save so thumbnails/tree/metadata reload. */
+  onRefresh?: () => void
 }
 
 // Keys hidden from the generic parameter grid (shown in dedicated UI)
@@ -60,7 +67,7 @@ const FONT_SIZE_MAP = {
   lg: { prompt: 'text-base', param: 'text-base', label: 'text-sm' },
 } as const
 
-export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
+export function MetadataPanel({ metadata, isLoading, filePath, baseFolder }: MetadataPanelProps) {
   const [activeTab, setActiveTab] = useState<"basic" | "exif" | "iptc" | "xmp" | "ai" | "rules" | "workflow">("basic")
   const [copiedValue, setCopiedValue] = useState<string | null>(null)
   const [ruleCondition, setRuleCondition] = useState<string>("exif.Make === 'Canon'")
@@ -215,6 +222,17 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
                   <MetadataRow label="Dimensions" value={`${metadata.width} × ${metadata.height}`} fontSize={fs.param} labelSize={fs.label} />
                 )}
                 <MetadataRow label="Last Modified" value={new Date(metadata.lastModified).toLocaleString()} fontSize={fs.param} labelSize={fs.label} />
+                {metadata.sha256 && (
+                  <MetadataRow
+                    label="SHA256"
+                    value={metadata.sha256}
+                    onCopy={() => copyToClipboard(metadata.sha256!, "sha256")}
+                    copied={copiedValue === "sha256"}
+                    mono
+                    fontSize={fs.param}
+                    labelSize={fs.label}
+                  />
+                )}
               </>
             )}
 
@@ -333,7 +351,7 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
       {metadata.ai?.comfyui_workflow ? (
         <ComfyUIWorkflowViewer 
           workflow={metadata.ai.comfyui_workflow} 
-          readOnly={true}
+          readOnly={false}
         />
       ) : (
         <div className="h-full flex items-center justify-center text-sm text-muted-foreground">
@@ -392,11 +410,27 @@ export function MetadataPanel({ metadata, isLoading }: MetadataPanelProps) {
     )
   }
 
+  // The raw editor needs a real server path (drag-dropped blobs have none) and
+  // only handles PNG `parameters` chunks for now.
+  const canEdit =
+    !!metadata &&
+    !!filePath &&
+    !filePath.startsWith("blob:") &&
+    metadata.fileType === "image/png"
+
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="h-10 border-b border-border px-4 flex items-center bg-muted/20">
+      <div className="h-10 border-b border-border px-4 flex items-center justify-between bg-muted/20">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Metadata</h2>
+        {canEdit && metadata && filePath && (
+          <MetadataEditDialog
+            filePath={filePath}
+            baseFolder={baseFolder ?? "."}
+            fileName={metadata.fileName}
+            onSaved={onRefresh}
+          />
+        )}
       </div>
 
       {renderContent()}
@@ -604,19 +638,6 @@ function AITab({ ai, metadata, copiedValue, onCopy, fontSize: fs, formatFileSize
         />
       )}
 	  
-	   {/* ComfyUI Workflow Graph Visualizer */}
-{ai.comfyui_workflow && typeof ai.comfyui_workflow === 'object' && (
-  <div className="space-y-1.5">
-    <p className={`font-medium text-muted-foreground uppercase tracking-wide ${fs.label}`}>
-      Workflow Graph
-    </p>
-    <ComfyUIWorkflowViewer 
-      workflow={ai.comfyui_workflow as Record<string, any>} 
-      readOnly={true}
-      className="mt-1"
-    />
-  </div>
-)}
       {/* Parameter Grid */}
       {(knownParams.length > 0 || extraParams.length > 0) && (
         <div className="space-y-1">

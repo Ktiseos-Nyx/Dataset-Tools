@@ -27,6 +27,7 @@ export default function Home() {
   const [viewMode, setViewMode] = useState<ViewMode>("list")
   const [showMetadata, setShowMetadata] = useState(true)
   const [safetensors, setSafetensors] = useState<{ data: SafetensorsMetadata | null; loading: boolean }>({ data: null, loading: false })
+  const [refreshKey, setRefreshKey] = useState(0)
   const [, startTransition] = useTransition()
   const fetchAbortRef = useRef<AbortController | null>(null)
 
@@ -105,6 +106,16 @@ export default function Home() {
 
   const handleDirExpand = (dirPath: string) => {
     setCurrentDir(dirPath)
+  }
+
+  // Reload the file list (thumbnails + tree root) and re-read the current file's
+  // metadata — used after editing creates/updates files on disk.
+  const handleRefresh = () => {
+    setRefreshKey((k) => k + 1)
+    if (selectedFile && !selectedFile.path.startsWith('blob:')) {
+      if (isSafetensorsFile(selectedFile)) fetchSafetensors(selectedFile)
+      else fetchMetadata(selectedFile)
+    }
   }
 
   const handleFileDrop = async (file: File, folderPath?: string) => {
@@ -212,6 +223,7 @@ export default function Home() {
             onDirExpand={handleDirExpand}
             selectedFile={selectedFile ?? undefined}
             viewMode={viewMode}
+            refreshKey={refreshKey}
           />
         </Panel>
 
@@ -243,6 +255,7 @@ export default function Home() {
                   <ImagePreview
                     src={selectedFile.path.startsWith('blob:') ? selectedFile.path : `/api/image?path=${encodeURIComponent(selectedFile.path)}&baseFolder=${encodeURIComponent(settings.currentFolder)}`}
                     fileName={selectedFile.name}
+                    onRefresh={handleRefresh}
                   />
                 )}
               </div>
@@ -256,6 +269,7 @@ export default function Home() {
                 currentDir={currentDir}
                 onFileSelect={handleFileSelect}
                 selectedFile={selectedFile ?? undefined}
+                refreshKey={refreshKey}
               />
             </Panel>
           </PanelGroup>
@@ -269,7 +283,13 @@ export default function Home() {
               {selectedFile && isSafetensorsFile(selectedFile) ? (
                 <SafetensorsPanel data={safetensors.data} isLoading={safetensors.loading} fileName={selectedFile.name} />
               ) : (
-                <MetadataPanel metadata={metadata.data} isLoading={metadata.loading} />
+                <MetadataPanel
+                  metadata={metadata.data}
+                  isLoading={metadata.loading}
+                  filePath={selectedFile?.path}
+                  baseFolder={settings.currentFolder}
+                  onRefresh={handleRefresh}
+                />
               )}
             </Panel>
           </>
