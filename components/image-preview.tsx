@@ -81,16 +81,24 @@ export function ImagePreview({ src, fileName, onRefresh }: ImagePreviewProps) {
       {/* Image Display */}
       <div className="flex-1 overflow-auto bg-muted/30 flex items-center justify-center p-4">
         {isFit ? (
-          <div
-            className="transition-transform duration-200"
-            style={{ transform: `rotate(${rotation}deg)` }}
-          >
+          rotation === 0 ? (
             <img
               src={src || "/placeholder.svg"}
               alt={fileName}
               className="max-w-full max-h-full object-contain rounded-lg shadow-2xl border border-border"
             />
-          </div>
+          ) : (
+            <div
+              className="max-w-full max-h-full transition-transform duration-200 flex items-center justify-center"
+              style={{ transform: `rotate(${rotation}deg)` }}
+            >
+              <img
+                src={src || "/placeholder.svg"}
+                alt={fileName}
+                className="max-w-full max-h-full object-contain rounded-lg shadow-2xl border border-border"
+              />
+            </div>
+          )
         ) : (
           <div
             className="transition-transform duration-200"
