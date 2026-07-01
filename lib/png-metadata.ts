@@ -29,14 +29,6 @@ const CRC_TABLE: Uint32Array = (() => {
   return table;
 })();
 
-function crc32(buf: Buffer): number {
-  let crc = 0xffffffff;
-  for (let i = 0; i < buf.length; i++) {
-    crc = CRC_TABLE[(crc ^ buf[i]) & 0xff] ^ (crc >>> 8);
-  }
-  return (crc ^ 0xffffffff) >>> 0;
-}
-
 // Compute CRC-32 over two buffers sequentially without concatenating them.
 // Avoids allocating an intermediate buffer (notably for large IDAT chunks).
 function crc32Two(a: Buffer, b: Buffer): number {
