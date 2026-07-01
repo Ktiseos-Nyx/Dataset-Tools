@@ -7,7 +7,9 @@
 // are finished images the user must not recompress.
 
 const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
-const PARAMETERS_KEYWORD = 'parameters';
+// The metadata route parses both spellings; the editor must handle both too so
+// existing capital-P chunks are replaced rather than duplicated.
+const PARAMETERS_KEYWORDS = new Set(['parameters', 'Parameters']);
 
 interface PngChunk {
   type: string; // 4-char chunk name, e.g. 'tEXt', 'IDAT', 'IEND'
@@ -44,17 +46,21 @@ function splitChunks(buf: Buffer): PngChunk[] | null {
   if (!isPng(buf)) return null;
   const chunks: PngChunk[] = [];
   let offset = 8; // skip signature
+  let sawIend = false;
   while (offset + 8 <= buf.length) {
     const length = buf.readUInt32BE(offset);
     const type = buf.toString('ascii', offset + 4, offset + 8);
     const dataStart = offset + 8;
     const dataEnd = dataStart + length;
-    if (dataEnd + 4 > buf.length) break; // truncated — stop cleanly
+    if (dataEnd + 4 > buf.length) return null; // truncated — fail fast
     chunks.push({ type, data: buf.subarray(dataStart, dataEnd) });
     offset = dataEnd + 4; // advance past the 4-byte CRC
-    if (type === 'IEND') break;
+    if (type === 'IEND') {
+      sawIend = true;
+      break;
+    }
   }
-  return chunks;
+  return sawIend ? chunks : null;
 }
 
 // Re-assemble chunks into a PNG buffer, recomputing each chunk's CRC. CRCs over
@@ -96,6 +102,10 @@ function encodeText(keyword: string, text: string): PngChunk {
   };
 }
 
+function isParametersKeyword(keyword: string | undefined | null): boolean {
+  return typeof keyword === 'string' && PARAMETERS_KEYWORDS.has(keyword);
+}
+
 /** Read the A1111-style 'parameters' tEXt string. null if absent or not a PNG. */
 export function readPngParameters(buf: Buffer): string | null {
   const chunks = splitChunks(buf);
@@ -103,7 +113,7 @@ export function readPngParameters(buf: Buffer): string | null {
   for (const c of chunks) {
     if (c.type !== 'tEXt') continue;
     const decoded = decodeText(c.data);
-    if (decoded?.keyword === PARAMETERS_KEYWORD) return decoded.text;
+    if (decoded && isParametersKeyword(decoded.keyword)) return decoded.text;
   }
   return null;
 }
@@ -119,12 +129,12 @@ export function writePngParameters(buf: Buffer, edited: string): Buffer {
 
   // Drop any existing 'parameters' tEXt chunk(s) before re-inserting.
   const kept = chunks.filter(
-    (c) => c.type !== 'tEXt' || decodeText(c.data)?.keyword !== PARAMETERS_KEYWORD,
+    (c) => c.type !== 'tEXt' || !isParametersKeyword(decodeText(c.data)?.keyword),
   );
 
   // tEXt must sit before IEND — insert right before it (append if IEND is absent).
   const iendIndex = kept.findIndex((c) => c.type === 'IEND');
-  const newChunk = encodeText(PARAMETERS_KEYWORD, edited);
+  const newChunk = encodeText('parameters', edited);
   if (iendIndex === -1) kept.push(newChunk);
   else kept.splice(iendIndex, 0, newChunk);
 

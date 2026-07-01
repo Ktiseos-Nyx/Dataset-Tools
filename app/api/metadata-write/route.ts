@@ -13,6 +13,8 @@ function isInside(base: string, target: string): boolean {
   return rel.length > 0 && !rel.startsWith('..') && !path.isAbsolute(rel);
 }
 
+const PROJECT_ROOT = path.resolve(process.cwd());
+
 type Resolved = { path: string } | { error: string; status: number };
 
 // Confine a client-supplied path to `baseFolder`.
@@ -21,26 +23,33 @@ type Resolved = { path: string } | { error: string; status: number };
 // filesystem browser whose entire purpose is to operate on the folder the user
 // selected, so there is no fixed server-side root to pin to. We still defend the
 // write path hard: (1) lexical containment with path.relative (no prefix-match
-// bypass), (2) PNG-extension gate, and (3) a symlink-aware re-check using
-// fs.realpath on the concrete file so a symlink inside the base can't redirect
-// the write outside it. Combined with the PNG-validity requirement downstream,
-// the only writes this route can perform are "rewrite an existing PNG" or
-// "create <name>_edited.png beside one".
+// bypass), (2) a project-root containment layer so arbitrary baseFolders can't
+// reach outside the repo, (3) PNG-extension gate, and (4) a symlink-aware
+// re-check using fs.realpath on the concrete file so a symlink inside the base
+// can't redirect the write outside it. Combined with the PNG-validity
+// requirement downstream, the only writes this route can perform are "rewrite an
+// existing PNG" or "create <name>_edited.png beside one".
 async function resolveTarget(filePath: string, baseFolder: string): Promise<Resolved> {
   const resolvedBase = path.resolve(baseFolder || '.');
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(resolvedBase, filePath);
   const resolvedPath = path.resolve(fullPath);
 
-  // (1) Lexical containment.
+  // (1) Project-root containment — defense in depth so a client-supplied
+  //     baseFolder can't reach outside the repo.
+  if (!isInside(PROJECT_ROOT, resolvedBase)) {
+    return { error: 'Access denied - base folder outside project root', status: 403 };
+  }
+
+  // (2) Lexical containment within baseFolder.
   if (!isInside(resolvedBase, resolvedPath)) {
     return { error: 'Access denied - path outside base folder', status: 403 };
   }
-  // (2) PNG only.
+  // (3) PNG only.
   if (!resolvedPath.toLowerCase().endsWith('.png')) {
     return { error: 'Only PNG files are supported', status: 415 };
   }
 
-  // (3) Symlink-aware containment. Both ends are canonicalised via realpath, so
+  // (4) Symlink-aware containment. Both ends are canonicalised via realpath, so
   // a base reached through a symlink/junction still works (its files canonicalise
   // consistently), while a file that escapes the base via a symlink is rejected.
   let realBase: string;
@@ -62,9 +71,38 @@ async function resolveTarget(filePath: string, baseFolder: string): Promise<Reso
   return { path: realPath };
 }
 
+function isLoopbackHost(host: string): boolean {
+  const hostname = host.split(':')[0].toLowerCase();
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+}
+
+function originGuard(request: Request): string | null {
+  const origin = request.headers.get('origin');
+  const host = request.headers.get('host');
+  if (host && !isLoopbackHost(host)) {
+    return 'Access denied - non-loopback host';
+  }
+  if (origin) {
+    try {
+      const originUrl = new URL(origin);
+      if (!isLoopbackHost(originUrl.hostname)) {
+        return 'Access denied - cross-origin request';
+      }
+    } catch {
+      return 'Access denied - invalid origin';
+    }
+  }
+  return null;
+}
+
 // GET /api/metadata-write?path=&baseFolder=
 // Returns the raw 'parameters' tEXt string to prefill the editor: { text: string | null }.
 export async function GET(request: Request) {
+  const guardError = originGuard(request);
+  if (guardError) {
+    return NextResponse.json({ error: guardError }, { status: 403 });
+  }
+
   const { searchParams } = new URL(request.url);
   const filePath = searchParams.get('path');
   const baseFolder = searchParams.get('baseFolder') || '.';
@@ -90,6 +128,11 @@ export async function GET(request: Request) {
 // Swaps the 'parameters' tEXt chunk in place (or writes name_edited.png) without
 // recompressing pixels. Returns { ok: true, path: <basename written> }.
 export async function POST(request: Request) {
+  const guardError = originGuard(request);
+  if (guardError) {
+    return NextResponse.json({ error: guardError }, { status: 403 });
+  }
+
   let body: { path?: string; baseFolder?: string; text?: string; saveAsCopy?: boolean };
   try {
     body = await request.json();
@@ -119,8 +162,8 @@ export async function POST(request: Request) {
     // PNG derived from an existing PNG at this location.
     const out = writePngParameters(buf, text);
 
-    // The copy lives in the same already-confined directory; its name is derived
-    // from the source basename, so no traversal is possible here.
+    // Build target path and re-validate it against the base to prevent a
+    // symlink redirect on the sibling name.
     let targetPath = sourcePath;
     if (saveAsCopy) {
       const ext = path.extname(sourcePath);
@@ -131,8 +174,19 @@ export async function POST(request: Request) {
       targetPath = path.join(path.dirname(sourcePath), `${stem}_edited${ext}`);
     }
 
-    await fs.writeFile(targetPath, out);
-    return NextResponse.json({ ok: true, path: path.basename(targetPath) });
+    // Re-validate the final write target against the base folder and project
+    // root, so a symlink on the sibling name can't redirect the write outside
+    // the confined tree.
+    const writeResolved = await resolveTarget(
+      path.relative(PROJECT_ROOT, targetPath),
+      PROJECT_ROOT,
+    );
+    if ('error' in writeResolved) {
+      return NextResponse.json({ error: writeResolved.error }, { status: writeResolved.status });
+    }
+
+    await fs.writeFile(writeResolved.path, out);
+    return NextResponse.json({ ok: true, path: path.basename(writeResolved.path) });
   } catch (error) {
     if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
       return NextResponse.json({ error: 'File not found' }, { status: 404 });

@@ -1089,7 +1089,9 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       // from misreading some unrelated tool's `workflow` text as a graph.
       if (uiWorkflow && Array.isArray(uiWorkflow.nodes)) {
         aiData.comfyui_workflow = uiWorkflow;
-        aiData.workflow_type = 'ComfyUI';
+        if (!aiData.workflow_type || aiData.workflow_type === 'AUTOMATIC1111') {
+          aiData.workflow_type = 'ComfyUI';
+        }
       }
     } catch {
       // Not valid JSON — leave A1111 detection as-is.

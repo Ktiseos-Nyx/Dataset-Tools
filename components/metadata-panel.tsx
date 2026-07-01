@@ -349,7 +349,7 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder }: Met
       {metadata.ai?.comfyui_workflow ? (
         <ComfyUIWorkflowViewer 
           workflow={metadata.ai.comfyui_workflow} 
-          readOnly={true}
+          readOnly={false}
         />
       ) : (
         <div className="h-full flex items-center justify-center text-sm text-muted-foreground">
@@ -635,19 +635,6 @@ function AITab({ ai, metadata, copiedValue, onCopy, fontSize: fs, formatFileSize
         />
       )}
 	  
-	   {/* ComfyUI Workflow Graph Visualizer */}
-{ai.comfyui_workflow && typeof ai.comfyui_workflow === 'object' && (
-  <div className="space-y-1.5">
-    <p className={`font-medium text-muted-foreground uppercase tracking-wide ${fs.label}`}>
-      Workflow Graph
-    </p>
-    <ComfyUIWorkflowViewer 
-      workflow={ai.comfyui_workflow as Record<string, any>} 
-      readOnly={true}
-      className="mt-1"
-    />
-  </div>
-)}
       {/* Parameter Grid */}
       {(knownParams.length > 0 || extraParams.length > 0) && (
         <div className="space-y-1">
