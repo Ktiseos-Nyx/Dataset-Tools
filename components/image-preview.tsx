@@ -1,6 +1,6 @@
 "use client"
 
-import { ZoomIn, ZoomOut, Maximize2, RefreshCw, Minimize2 } from "lucide-react"
+import { ZoomIn, ZoomOut, Maximize2, RefreshCw, Minimize2, RotateCw } from "lucide-react"
 import { useState } from "react"
 
 interface ImagePreviewProps {
@@ -12,8 +12,11 @@ interface ImagePreviewProps {
 
 export function ImagePreview({ src, fileName, onRefresh }: ImagePreviewProps) {
   const [zoom, setZoom] = useState(0) // 0 = fit-to-container
+  const [rotation, setRotation] = useState(0) // degrees: 0, 90, 180, 270
 
   const isFit = zoom === 0
+
+  const rotate = () => setRotation((r) => (r + 90) % 360)
 
   return (
     <div className="h-full flex flex-col">
@@ -50,6 +53,15 @@ export function ImagePreview({ src, fileName, onRefresh }: ImagePreviewProps) {
           >
             {isFit ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
           </button>
+          <div className="w-px h-4 bg-border mx-1" />
+          <button
+            onClick={rotate}
+            className="p-2 hover:bg-accent rounded-md transition-colors"
+            aria-label="Rotate 90° clockwise"
+            title={`Rotated ${rotation}°`}
+          >
+            <RotateCw className="w-4 h-4" />
+          </button>
           {onRefresh && (
             <>
               <div className="w-px h-4 bg-border mx-1" />
@@ -69,15 +81,20 @@ export function ImagePreview({ src, fileName, onRefresh }: ImagePreviewProps) {
       {/* Image Display */}
       <div className="flex-1 overflow-auto bg-muted/30 flex items-center justify-center p-4">
         {isFit ? (
-          <img
-            src={src || "/placeholder.svg"}
-            alt={fileName}
-            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl border border-border transition-transform duration-200"
-          />
+          <div
+            className="transition-transform duration-200"
+            style={{ transform: `rotate(${rotation}deg)` }}
+          >
+            <img
+              src={src || "/placeholder.svg"}
+              alt={fileName}
+              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl border border-border"
+            />
+          </div>
         ) : (
           <div
             className="transition-transform duration-200"
-            style={{ transform: `scale(${zoom / 100})` }}
+            style={{ transform: `scale(${zoom / 100}) rotate(${rotation}deg)` }}
           >
             <img
               src={src || "/placeholder.svg"}
