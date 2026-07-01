@@ -18,6 +18,8 @@ interface MetadataPanelProps {
   filePath?: string
   /** Folder the path resolves against (settings.currentFolder). */
   baseFolder?: string
+  /** Called after a successful edit save so thumbnails/tree/metadata reload. */
+  onRefresh?: () => void
 }
 
 // Keys hidden from the generic parameter grid (shown in dedicated UI)
@@ -426,6 +428,7 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder }: Met
             filePath={filePath}
             baseFolder={baseFolder ?? "."}
             fileName={metadata.fileName}
+            onSaved={onRefresh}
           />
         )}
       </div>

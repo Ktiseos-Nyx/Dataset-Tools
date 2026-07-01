@@ -22,6 +22,8 @@ interface MetadataEditDialogProps {
   /** The folder the path is resolved against — passed straight to the API. */
   baseFolder: string
   fileName: string
+  /** Called after a successful save so the parent can refresh metadata/thumbnails. */
+  onSaved?: () => void
 }
 
 // name.png -> name_edited.png (underscore keeps a single-extension stem so
@@ -32,7 +34,7 @@ function copyName(fileName: string): string {
   return `${fileName.slice(0, dot)}_edited${fileName.slice(dot)}`
 }
 
-export function MetadataEditDialog({ filePath, baseFolder, fileName }: MetadataEditDialogProps) {
+export function MetadataEditDialog({ filePath, baseFolder, fileName, onSaved }: MetadataEditDialogProps) {
   const [open, setOpen] = useState(false)
   const [text, setText] = useState("")
   const [original, setOriginal] = useState<string | null>(null)
@@ -87,6 +89,7 @@ export function MetadataEditDialog({ filePath, baseFolder, fileName }: MetadataE
       setOriginal(text)
       setConfirmingOverwrite(false)
       setOpen(false)
+      onSaved?.()
     } catch (e) {
       toast.error(`Save failed: ${(e as Error).message}`)
     } finally {

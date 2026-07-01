@@ -288,6 +288,7 @@ export default function Home() {
                   isLoading={metadata.loading}
                   filePath={selectedFile?.path}
                   baseFolder={settings.currentFolder}
+                  onRefresh={handleRefresh}
                 />
               )}
             </Panel>
