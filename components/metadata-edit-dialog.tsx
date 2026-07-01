@@ -134,6 +134,7 @@ export function MetadataEditDialog({ filePath, baseFolder, fileName }: MetadataE
             <Textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
+              disabled={saving}
               spellCheck={false}
               aria-label="Raw metadata"
               className="font-mono text-xs min-h-[320px] max-h-[60vh] w-full min-w-0 resize-y [field-sizing:fixed] whitespace-pre-wrap break-words overflow-y-auto"
@@ -142,6 +143,7 @@ export function MetadataEditDialog({ filePath, baseFolder, fileName }: MetadataE
             <label className="flex items-center gap-2 text-sm text-muted-foreground">
               <Checkbox
                 checked={saveAsCopy}
+                disabled={saving}
                 onCheckedChange={(v) => {
                   setSaveAsCopy(v === true)
                   setConfirmingOverwrite(false)
