@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
-import { readPngParameters, writePngParameters } from '@/lib/png-metadata';
+import { readPngParameters, writePngParameters, isPng } from '@/lib/png-metadata';
 
 // True only when `target` is `base` itself or a real descendant of it. Uses
 // path.relative instead of a raw string prefix so siblings like
@@ -117,6 +117,9 @@ export async function GET(request: Request) {
 
   try {
     const buf = await fs.readFile(resolved.path);
+    if (!isPng(buf)) {
+      return NextResponse.json({ error: 'Not a valid PNG file' }, { status: 415 });
+    }
     return NextResponse.json({ text: readPngParameters(buf) });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'An unknown error occurred';
