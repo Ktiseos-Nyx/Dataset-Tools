@@ -67,7 +67,7 @@ const FONT_SIZE_MAP = {
   lg: { prompt: 'text-base', param: 'text-base', label: 'text-sm' },
 } as const
 
-export function MetadataPanel({ metadata, isLoading, filePath, baseFolder }: MetadataPanelProps) {
+export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onRefresh }: MetadataPanelProps) {
   const [activeTab, setActiveTab] = useState<"basic" | "exif" | "iptc" | "xmp" | "ai" | "rules" | "workflow">("basic")
   const [copiedValue, setCopiedValue] = useState<string | null>(null)
   const [ruleCondition, setRuleCondition] = useState<string>("exif.Make === 'Canon'")
