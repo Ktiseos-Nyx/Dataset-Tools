@@ -34,8 +34,7 @@ This creates a private space for us to discuss and fix the issue.
 
 **Alternative Reporting Methods (if GitHub Advisories aren't possible):**
 
-* **Discord:** Send a direct message (DM) to a project maintainer (e.g., Ktiseos Nyx) on our official [Discord server](https://discord.gg/HhBSvM9gBY). *Please do not post vulnerability details in public channels.*
-* **Email:** (Optional: If you decide to include an email, list it here, e.g., `security@example.com`. Otherwise, you can state: "Email reporting is not preferred for security issues; please use GitHub Advisories or Discord DMs.")
+* Open a [GitHub Discussion](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions) to reach a maintainer for guidance on private disclosure.
 
 **What to Include in Your Report:**
 To help us understand and fix the issue quickly, please include:

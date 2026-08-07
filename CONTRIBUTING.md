@@ -20,13 +20,6 @@ Coordinate with us by:
 
 - Opening a topic in [discussions](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions/new/choose)
 - Opening an [issue](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues/new/choose)
-- Connect with us live on discord!
-
-<a href="https://discord.gg/HhBSvM9gBY" target="_blank">
-
-![A flat logo for Discord](https://img.shields.io/badge/%20Discord%20_%20_%20_%20_%20_%7C-_?style=flat-square&labelColor=rgb(65%2C69%2C191)&color=rgb(65%2C69%2C191))
-
-</a>
 
 ## Contributing Code
 
@@ -41,8 +34,7 @@ Coordinate with us by:
 
 ### Before Contributing
 1. Check existing [issues](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues) and [discussions](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions)
-2. For major changes, open a discussion first
-3. Join our [Discord](https://discord.gg/HhBSvM9gBY) for real-time coordination\n\n### Pull Request Workflow\n1. **Fork** the repository\n2. **Create** a new branch for your feature/fix: `git checkout -b feature/your-feature-name`\n3. **Make** your changes following the code quality guidelines\n4. **Test** your changes thoroughly\n5. **Run** linting and formatting: `ruff check --fix .` and `ruff format .`\n6. **Commit** with clear, descriptive messages\n7. **Push** to your fork: `git push origin feature/your-feature-name`\n8. **Open** a pull request with:\n   - Clear description of changes\n   - Link to related issues\n   - Screenshots for UI changes\n   - Test results if applicable
+2. For major changes, open a discussion first\n\n### Pull Request Workflow\n1. **Fork** the repository\n2. **Create** a new branch for your feature/fix: `git checkout -b feature/your-feature-name`\n3. **Make** your changes following the code quality guidelines\n4. **Test** your changes thoroughly\n5. **Run** linting and formatting: `ruff check --fix .` and `ruff format .`\n6. **Commit** with clear, descriptive messages\n7. **Push** to your fork: `git push origin feature/your-feature-name`\n8. **Open** a pull request with:\n   - Clear description of changes\n   - Link to related issues\n   - Screenshots for UI changes\n   - Test results if applicable
 
 ### Specifications
 
