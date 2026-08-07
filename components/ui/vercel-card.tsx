@@ -1,13 +1,16 @@
+"use client";
+
 import React from "react";
 import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-interface VercelCardProps extends Omit<HTMLMotionProps<"div">, "whileHover" | "transition"> {
+interface VercelCardProps extends Omit<HTMLMotionProps<"div">, "whileHover" | "transition" | "children"> {
   showIcons?: boolean;
   iconClassName?: string;
   animateOnHover?: boolean;
   glowEffect?: boolean;
   bordered?: boolean;
+  children?: React.ReactNode;
 }
 
 function VercelCard({

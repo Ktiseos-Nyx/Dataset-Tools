@@ -298,6 +298,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   const [isEditingPath, setIsEditingPath] = useState(false);
   const [pathInput, setPathInput] = useState('');
   const pathInputRef = useRef<HTMLInputElement>(null);
+  const folderPickerRef = useRef<HTMLInputElement>(null);
   const { settings, updateSettings } = useSettings();
 
   const fetchRoot = async () => {
@@ -322,9 +323,62 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   };
 
   const openPathEditor = () => {
-    setPathInput(settings.currentFolder);
+    setPathInput(settings.currentFolder === '.' ? '' : settings.currentFolder);
     setIsEditingPath(true);
     setTimeout(() => pathInputRef.current?.select(), 0);
+  };
+
+  const extractFolderFromFile = (file: File) => {
+    const filePath = (file as any).path as string | undefined;
+    if (filePath && (filePath.includes('\\') || filePath.includes('/'))) {
+      const sep = filePath.includes('\\') ? '\\' : '/';
+      return filePath.substring(0, filePath.lastIndexOf(sep));
+    }
+    return null;
+  };
+
+  const handleOpenFolder = async () => {
+    if ('showDirectoryPicker' in window) {
+      try {
+        const handle = await (window as any).showDirectoryPicker();
+        for await (const [, entry] of (handle as any).entries()) {
+          if (entry.kind === 'file') {
+            const file = await entry.getFile();
+            const folder = extractFolderFromFile(file);
+            if (folder) {
+              updateSettings({ currentFolder: folder });
+              return;
+            }
+            break;
+          }
+        }
+        // Could not extract path — open text editor with existing folder
+        openPathEditor();
+        return;
+      } catch {
+        openPathEditor();
+        return;
+      }
+    }
+
+    if (folderPickerRef.current) {
+      folderPickerRef.current.value = '';
+      folderPickerRef.current.click();
+      return;
+    }
+
+    openPathEditor();
+  };
+
+  const handleFolderPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    const folder = extractFolderFromFile(files[0]);
+    if (folder) {
+      updateSettings({ currentFolder: folder });
+    } else {
+      openPathEditor();
+    }
   };
 
   const commitPath = () => {
@@ -363,7 +417,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={openPathEditor}
+                onClick={handleOpenFolder}
                 className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded transition-colors"
                 title="Open Folder"
               >
@@ -484,6 +538,15 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
           </>
         )}
       </div>
+      <input
+        ref={folderPickerRef}
+        type="file"
+        // @ts-expect-error webkitdirectory is non-standard but widely supported
+        webkitdirectory=""
+        directory=""
+        className="hidden"
+        onChange={handleFolderPickerChange}
+      />
     </aside>
   )
 }

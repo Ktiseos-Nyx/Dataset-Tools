@@ -273,7 +273,7 @@ export async function lookupNode(
     }
   }
 
-  return { classification: 'unknown', displayName: deriveDisplayName(classtype) };
+  return { classification: 'unknown', displayName: deriveDisplayName(classType) };
 }
 
 /**

@@ -40,8 +40,6 @@ const Status = React.forwardRef<HTMLDivElement, StatusProps>(
         <Badge
           variant="outline"
           className={cn(statusVariants({ status }), className)}
-          shiny={shiny}
-          shinySpeed={shinySpeed}
           {...props}
         >
           <span className="inline-flex items-center gap-2">
