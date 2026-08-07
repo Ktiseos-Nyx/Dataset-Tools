@@ -35,7 +35,7 @@ function Section({
   )
 }
 
-function Row({ label, value }: { label: string; value: React.ReactNode }) {
+function Row({ label, value }: { label: string; value: unknown }) {
   if (value === undefined || value === null || value === "") return null
   return (
     <div className="flex gap-2 text-xs">
@@ -154,7 +154,7 @@ export function SafetensorsPanel({ data, isLoading, fileName }: SafetensorsPanel
           <p className="text-sm font-semibold truncate" title={displayName}>{displayName}</p>
           <p className="text-xs text-muted-foreground">
             {data.tensorCount.toLocaleString()} tensors
-            {data.baseModel?.version && ` · ${data.baseModel.version}`}
+            {data.baseModel?.version != null && ` · ${String(data.baseModel.version)}`}
             {data.lora && ` · LoRA`}
           </p>
         </div>
@@ -176,7 +176,7 @@ export function SafetensorsPanel({ data, isLoading, fileName }: SafetensorsPanel
           <Row label="Rank (dim)" value={data.lora!.dim} />
           <Row label="Alpha" value={data.lora!.alpha} />
           <Row label="Network" value={data.lora!.networkModule} />
-          {data.lora!.networkArgs && (
+          {data.lora!.networkArgs != null && (
             <Row label="Network Args" value={JSON.stringify(data.lora!.networkArgs)} />
           )}
         </Section>

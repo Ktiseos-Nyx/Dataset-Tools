@@ -8,11 +8,11 @@ function NavigationMenuRoot({ className, ...props }: NavigationMenu.Root.Props) 
 }
 
 function NavigationMenuList({ className, ...props }: NavigationMenu.List.Props) {
-  return <NavigationMenu.List className={cn(styles.list, className)} data-slot="navigationmenu-list" {...props} />;
+  return <NavigationMenu.List className={cn(styles.list, className)} data-slot="navigationmenu-list" {...(props as any)} />;
 }
 
 function NavigationMenuItem({ className, ...props }: NavigationMenu.Item.Props) {
-  return <NavigationMenu.Item className={cn(className)} {...props} />;
+  return <NavigationMenu.Item className={cn(className)} {...(props as any)} />;
 }
 
 function NavigationMenuTrigger({ className, ...props }: NavigationMenu.Trigger.Props) {
@@ -28,7 +28,7 @@ function NavigationMenuContent({ className, ...props }: NavigationMenu.Content.P
 }
 
 function NavigationMenuIcon({ className, ...props }: NavigationMenu.Icon.Props) {
-  return <NavigationMenu.Icon className={cn(styles.chevron, className)} data-slot="navigationmenu-icon" {...props} />;
+  return <NavigationMenu.Icon className={cn(styles.chevron, className)} data-slot="navigationmenu-icon" {...(props as any)} />;
 }
 
 function NavigationMenuLink({ className, ...props }: NavigationMenu.Link.Props) {

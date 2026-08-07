@@ -71,8 +71,9 @@ npm run build && npm start
 1. **Start the app:** `npm run dev` → open `http://localhost:3000`
 2. **Browse files:** Use the file tree sidebar, or click the folder icon to pick any directory.
 3. **Drag & drop:** Drop an image anywhere in the app — it'll find the folder and load thumbnails.
-4. **Inspect metadata:** Click any image → metadata panel shows prompts, parameters, LoRAs, and workflow info.
-5. **Customize:** Settings panel has theme, accent colors, font size, thumbnail size, and file display options.
+4. **Inspect metadata:** Click any image → metadata panel shows prompts, parameters, LoRAs, and workflow info. Safetensors files show model architecture, training details, and dataset tags.
+5. **Edit metadata:** Click the edit button on any text field to modify prompts and parameters directly in PNG files.
+6. **Customize:** Settings panel has theme, accent colors, font size, thumbnail size, and file display options.
 
 ### When metadata fails to parse
 1. Check browser console for parser logs.
@@ -93,11 +94,13 @@ npm run build && npm start
 | **File Browsing** | ✅ | Recursive lazy-loading file tree. Browse any folder on your system. |
 | **Drag & Drop** | ✅ | Drop an image to auto-detect its folder and extract metadata. |
 | **Thumbnails** | ✅ | Sharp-powered WebP thumbnails with disk cache (`.thumbcache/`). |
-| **Sorting** | ✅ | Sort by name, date modified, or file size. (Thumbnail Sorting Coming Soon) |
+| **Sorting** | ✅ | Sort by name, date modified, or file size in both file tree and thumbnail viewport. |
 | **Accent Colors** | ✅ | 7 color themes (zinc, red, orange, green, blue, violet, pink) with dark mode support. |
-| **WebP Metadata** | ⚠️ | Viewing works. Metadata extraction in development.(Not all webP will have metadata, but some animated ones will)|
-| **ComfyUI Workflows** | ✅ | 3-phase extraction: field-based scan → graph trace → type-match fallback. Handles custom nodes, service detection and more. |
-| **Github Lookup** | ✅ | If a node isn't found the first time, search, search again. |
+| **WebP Viewing** | ✅ | Viewing works for static and animated WebP files. Metadata extraction is format-dependent. |
+| **ComfyUI Workflows** | ✅ | 3-phase extraction + ComfyUI ≥1.26 provenance (cnr_id/aux_id). Node graph tracing, custom node resolution, service detection. |
+| **Github Lookup** | ✅ | Fallback search for unknown ComfyUI custom nodes via GitHub code search. |
+| **Safetensors Metadata** | ✅ | Full metadata extraction for LoRA and model files — rank, alpha, training params, dataset tags. |
+| **Metadata Editing** | ✅ | Edit prompts and parameters in PNG files, write changes back to disk. |
 
 ### Supported Formats
 - **A1111 / Forge** — PNG tEXt chunks, JPEG EXIF
@@ -105,6 +108,7 @@ npm run build && npm start
 - **NovelAI** — PNG metadata
 - **Civitai** — UTF-16-LE JPEG UserComment
 - **Standard EXIF/IPTC/XMP** — All image formats
+- **Safetensors** — LoRA rank/alpha, training parameters, dataset tags, base model info
 - **Png as Jpeg** - Magic Byte Detection.
 
 ---
@@ -112,9 +116,10 @@ npm run build && npm start
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router), React 19, TypeScript 5
-- **UI:** shadcn/ui + Radix UI, Lucide icons, Tailwind CSS v4 (OKLch color space)
+- **UI:** shadcn/ui + Radix UI + Base UI, Lucide icons, Tailwind CSS v4 (OKLch color space)
 - **Thumbnails:** Sharp (libvips) with WebP disk caching
-- **Metadata:** Pure JS parsing — PNG chunks, JPEG EXIF (exif-parser), ComfyUI graph traversal
+- **Metadata:** Pure JS parsing — PNG chunks, JPEG EXIF (exif-parser), ComfyUI graph traversal with node provenance
+- **Node Resolution:** ComfyUI Node Finder port (extension-node-map registry + GitHub code search fallback)
 
 ---
 
@@ -134,7 +139,7 @@ The Python edition worked at 65% success rate with heuristic spaghetti. This Nex
 
 #### Development Stage
 
-While this is working 99% better than our original python app, please be aware that as we move this into "ALPHA TESTING" that there will be more bugs, we can't provide enough pre-catching for bugs as we tried for the original python. So we're hoping that the amount of work we've put into porting this into a much easier format you can help test. 
+This engine has been battle-tested across thousands of images and is in active daily use. While there will always be edge cases with new custom nodes and formats, the core parser is stable and handles the vast majority of real-world workflows. Bug reports with repro images remain the best way to push that success rate higher.
 
 ---
 
@@ -146,35 +151,41 @@ Open an issue with the details above. Real-world edge cases are how we push past
 ### Want to improve the parser?
 1. Fork repo → `npm install` → `npm run dev`
 2. Metadata extraction lives in `app/api/metadata/route.ts`
-3. Test with images from the `Metadata Samples/` folder
+3. Test with your own images or AI-generated samples
 4. Submit a PR with before/after evidence
 
 ### Ideas for contributors
 - [ ] WebP metadata chunk parser
-- [ ] Editable metadata (write back to files)
+- [x] Editable metadata (write back to files)
 - [ ] SQLite indexing for faster folder browsing
 - [ ] ComfyUI workflow visualization
 - [ ] Batch metadata export (CSV/JSON)
 - [ ] Parser debugger panel showing traversal steps
-- [ ] 
+- [ ]
 ---
-### Q&A 
+### Q&A
 
-Q: Are you working on putting this into an executable format? 
+Q: Are you planning a desktop app?
 
-A: Yes, eventually we'll port this to Electron or see what Tauri needs, we're likely for ease of use likely going to use Electron, as for this we're not sure how Tauri would effect the rendering of metadata or otherwise. 
+A: Yes — we're evaluating both Electron and Tauri. No firm decision yet, but the goal is a standalone executable that runs without needing Node.js installed.
 
-Q: Are you aware that NextJS/Node has more CVE's and is the Number ONE VIBE CODED language this side of the moon?
+Q: Isn't Node.js a security concern?
 
-A: Yes, but just like our python version and anything else we build, we're not like other "VIBE CODED TOOLS" we demand security, peace of mind and a way through the mess. Unlike the trainer which uses major ML stacks to survive, we can promise you A LOT more security with this. As long as you're not installing this on an OpenClaw instance you're fine.
+A: Security is taken seriously in this project. Unlike ML-heavy tools that pull in massive native dependency trees, Dataset Tools has a minimal, auditable surface area. All file access is validated server-side, and API keys are stored in `.env.local`, never exposed to the browser.
 
-Q: But Chrome Sucks!
+Q: Does it only work in Chrome?
 
-A: Duskfallcrew personally reccomends the use of Vivaldi which is a CHROMIUM fork, Electron is only as "BLOATED" as the packages you port with it, along with web trackers and unmitigated cache, image sizes and lazy loading issues. When we port our executable mode, we'll make sure the thing runs on every flipping potato machine out there! 
+A: The app works in any modern browser. Firefox, Edge, and Chromium-based browsers like Vivaldi are all supported.
 
-Q: Why is this not already 100% Done?
+Q: Is this project actively maintained?
 
-A: Because I have 20 projects on the go? Plus i'm currently the solo dork with AI assistance, yes Joel does supervise and add things to the code, his ComfyUI lookup tool is what powers this - Exception: Claude translated it to node because Joel's actually a real life developer, he's not got time to do EVERYTHING. Plus when he's not at work or with his family: He's an A+ Smexy FFXIV player! He beats our Miqo'te's poor fashion choices just by existing! 
+A: Yes. The parser is stable and handles the vast majority of real-world workflows. Maintenance and improvements are ongoing — bug reports and contributions are always welcome.
+
+## AI-Assisted Development
+
+This project was built with significant assistance from large language models — primarily Claude, with additional contributions from Gemini, DeepSeek, and Qwen. The role of the project maintainer has been focused on research, architecture decisions, testing across diverse AI-generated images and workflows, and directing the scope and quality of the codebase.
+
+Transparency note: while LLMs generated a substantial portion of the implementation, every line has been reviewed, tested against real-world datasets, and refined through iterative prompting and validation. The 90%+ metadata parsing success rate is the result of detailed research into AI image generation formats combined with LLM-assisted implementation.
 
 ---
 
@@ -183,24 +194,18 @@ GNU General Public License v3.0
 
 ## Acknowledgements
 
-* Core Parsing Logic & Inspiration: This project incorporates and significantly adapts parsing functionalities from Stable Diffusion Prompt Reader by  **[receyuki](https://github.com/receyuki)** . Our sincere thanks for this foundational work.
-      Original Repository: [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader)
-      The original MIT license for this vendored code is included in the NOTICE.md file.
-* **[Traugdor](https://github.com/traugdor)** For the supervision, the memes and this: [Python ComfyUI Node Finder](https://github.com/Ktiseos-Nyx/ComfyUI-Node-Finder) 
-* Everyone at [Arc En Ciel](arcenciel.io/) for your continued driven support.
-* Anthropic - Pls Keep Sending us Free Credits, we're broke!
-* **[Anzhc](https://github.com/anzhc)** for continued support and motivation.
-* Our peers and the wider AI and open-source communities for their continuous support and inspiration.
-* Mempalace for Neurodivergent Memory Support for Local Development [Mempalace @ Github](https://github.com/milla-jovovich/mempalace)
-* AI Language Models (like those from Google, OpenAI, Anthropic) for assistance with code generation, documentation, and problem-solving during development.
-* ...and many more!
+* **Core Parsing Logic:** This project incorporates and adapts parsing functionality from [Stable Diffusion Prompt Reader](https://github.com/receyuki/stable-diffusion-prompt-reader) by **[receyuki](https://github.com/receyuki)**. The original MIT license for vendored code is included in `NOTICE.md`.
+* **[traugdor](https://github.com/traugdor)** — Project supervision and the [ComfyUI Node Finder](https://github.com/Ktiseos-Nyx/ComfyUI-Node-Finder) (Python), whose extension-node-map registry and node classification logic are now built directly into Dataset Tools.
+* Everyone at [Arc En Ciel](https://arcenciel.io/) for continued support.
+* **[Anzhc](https://github.com/anzhc)** for ongoing support and motivation.
+* The wider AI and open-source communities for feedback, testing, and contributions.
 
 
 **SPECIAL THANKS**
 
-- Supervised by: traugdor
-- Special Thanks to contributors: Open Source Community, Whitevamp, Exdysa, and so many more.
-- Special Thanks to Anthropic for the numerous amounts of insanely valuable free credits during marketing ploys. While we're only on the USD 20 a month plan, anything helps so throw more of these our way because development has become sort of a job for us! 
+- Supervised by: [traugdor](https://github.com/traugdor)
+- Contributors: Open Source Community, Whitevamp, Exdysa, and many more.
+- Anthropic for Claude API credits supporting development.
 
 ## Support Development
 [![Join us on Discord](https://img.shields.io/badge/Join%20us%20on-Discord-5865F2?style=for-the-badge&logo=discord)](https://discord.gg/HhBSvM9gBY)

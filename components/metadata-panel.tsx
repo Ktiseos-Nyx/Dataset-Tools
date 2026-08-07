@@ -440,7 +440,7 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onRef
 
 // --- ComfyUI Node Classification ---
 
-type ComfyNodeResult = { classification: 'builtin' | 'custom' | 'unknown'; repo?: NodeRepoInfo; source?: string }
+type ComfyNodeResult = { classification: 'builtin' | 'custom' | 'unknown'; repo?: NodeRepoInfo; source?: string; displayName?: string }
 
 interface ComfyNodesData {
   summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number }
