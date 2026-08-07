@@ -352,12 +352,11 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
             break;
           }
         }
-        // Could not extract path — open text editor with folder name hint
-        setPathInput(handle.name);
-        setIsEditingPath(true);
-        setTimeout(() => pathInputRef.current?.select(), 0);
+        // Could not extract path — open text editor with existing folder
+        openPathEditor();
         return;
       } catch {
+        openPathEditor();
         return;
       }
     }

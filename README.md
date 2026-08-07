@@ -98,7 +98,7 @@ npm run build && npm start
 | **Accent Colors** | ✅ | 7 color themes (zinc, red, orange, green, blue, violet, pink) with dark mode support. |
 | **WebP Viewing** | ✅ | Viewing works for static and animated WebP files. Metadata extraction is format-dependent. |
 | **ComfyUI Workflows** | ✅ | 3-phase extraction + ComfyUI ≥1.26 provenance (cnr_id/aux_id). Node graph tracing, custom node resolution, service detection. |
-| **Github Lookup** | ✅ | Fallback search for unknown ComfyUI custom nodes via GitHub code search. |
+| **GitHub Lookup** | ✅ | Fallback search for unknown ComfyUI custom nodes via GitHub code search. |
 | **Safetensors Metadata** | ✅ | Full metadata extraction for LoRA and model files — rank, alpha, training params, dataset tags. |
 | **Metadata Editing** | ✅ | Edit prompts and parameters in PNG files, write changes back to disk. |
 
@@ -109,7 +109,7 @@ npm run build && npm start
 - **Civitai** — UTF-16-LE JPEG UserComment
 - **Standard EXIF/IPTC/XMP** — All image formats
 - **Safetensors** — LoRA rank/alpha, training parameters, dataset tags, base model info
-- **Png as Jpeg** - Magic Byte Detection.
+- **PNG as JPEG** - Magic Byte Detection.
 
 ---
 
@@ -204,7 +204,7 @@ GNU General Public License v3.0
 **SPECIAL THANKS**
 
 - Supervised by: [traugdor](https://github.com/traugdor)
-- Contributors: Open Source Community, Whitevamp, Exdysa, and many more.
+- Contributors: open-source community, Whitevamp, Exdysa, and many more.
 - Anthropic for Claude API credits supporting development.
 
 ## Support Development
