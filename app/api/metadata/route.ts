@@ -131,7 +131,7 @@ function extractUserCommentFromRawTIFF(tiffData: Buffer): string | null {
 
   function findEntry(ifdOff: number, targetTag: number): number | null {
     if (ifdOff + 2 > tiffData.length) return null;
-    const count = read16(ifdOff);
+    const count = Math.min(read16(ifdOff), 4096);
     for (let i = 0; i < count; i++) {
       const eOff = ifdOff + 2 + i * 12;
       if (eOff + 12 > tiffData.length) break;
@@ -142,14 +142,14 @@ function extractUserCommentFromRawTIFF(tiffData: Buffer): string | null {
 
   function findUserComment(ifdOff: number): Buffer | null {
     if (ifdOff + 2 > tiffData.length) return null;
-    const count = read16(ifdOff);
+    const count = Math.min(read16(ifdOff), 4096);
     for (let i = 0; i < count; i++) {
       const eOff = ifdOff + 2 + i * 12;
       if (eOff + 12 > tiffData.length) break;
       if (read16(eOff) !== 0x9286) continue;
       const byteCount = read32(eOff + 4);
       if (byteCount < 8) return null;
-      const dataStart = byteCount <= 4 ? eOff + 8 : read32(eOff + 8);
+      const dataStart = read32(eOff + 8);
       if (dataStart + byteCount > tiffData.length) return null;
       return tiffData.slice(dataStart, dataStart + byteCount);
     }
@@ -219,7 +219,7 @@ function parsePNGChunks(buffer: Buffer): Record<string, any> {
       // PNG eXIf chunk carries raw TIFF/EXIF data (no "Exif\0\0" prefix).
       // Civitai stores A1111-style generation params in UserComment here.
       const uc = extractUserCommentFromRawTIFF(data);
-      if (uc) {
+      if (uc && !chunks.parameters && !chunks.Parameters) {
         chunks.parameters = uc;
       }
     }
@@ -1829,8 +1829,11 @@ export async function extractMetadataFromBuffer(
     // Fall back to the exif-parser-decoded UserComment when the TIFF-based
     // parser couldn't find anything. Exif-parser handles byte order, IFD
     // traversal, and offset calculations natively and is more battle-tested.
-    if (!userComment) {
-      userComment = userCommentFromEXIF;
+    if (!userComment && userCommentFromEXIF) {
+      const ucText = userCommentFromEXIF.trim();
+      if (ucText.startsWith('{') || /Steps:\s*\d+/i.test(ucText)) {
+        userComment = userCommentFromEXIF;
+      }
     }
 
     if (userComment) {
