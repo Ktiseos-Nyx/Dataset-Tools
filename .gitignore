@@ -42,6 +42,7 @@ IBS1pt5-TestV2LUNAXL/
 
 # legacy python scripts (reference only)
 *.py
+scripts/
 extract_comfyui_workflow.js
 comfyui_findings.txt
 
@@ -61,4 +62,5 @@ settings.json
 # editor / AI tool configs
 .gemini/
 .claude/
+.idea/
 NUL
