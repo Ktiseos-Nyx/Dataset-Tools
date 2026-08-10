@@ -5,7 +5,7 @@ const nextConfig = {
   reactStrictMode: true,
   compress: true,
   productionBrowserSourceMaps: false,
-  serverExternalPackages: ['sharp', 'onnxruntime-node'],
+  serverExternalPackages: ['sharp'],
 }
 
 export default nextConfig
