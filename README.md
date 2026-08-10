@@ -208,3 +208,4 @@ GNU General Public License v3.0
 
 ## Support Development
 [![Support us on Ko-fi](https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi)](https://ko-fi.com/duskfallcrew)
+[![Rent GPUs on Vast.ai](https://img.shields.io/badge/Rent%20GPUs%20on-Vast.ai-4B32C3?style=for-the-badge)](https://cloud.vast.ai/?ref_id=70354)
