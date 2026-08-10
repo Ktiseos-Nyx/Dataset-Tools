@@ -219,8 +219,11 @@ function parsePNGChunks(buffer: Buffer): Record<string, any> {
       // PNG eXIf chunk carries raw TIFF/EXIF data (no "Exif\0\0" prefix).
       // Civitai stores A1111-style generation params in UserComment here.
       const uc = extractUserCommentFromRawTIFF(data);
-      if (uc && !chunks.parameters && !chunks.Parameters) {
+      if (uc) {
         chunks.parameters = uc;
+        console.log('[parsePNGChunks] eXIf UserComment extracted, length:', uc.length)
+      } else {
+        console.log('[parsePNGChunks] eXIf chunk found but no UserComment extracted')
       }
     }
 
