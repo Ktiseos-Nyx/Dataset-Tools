@@ -112,11 +112,11 @@ async function classifyComfyUIWorkflow(
 // Extract UserComment from raw TIFF/EXIF bytes (no "Exif\0\0" prefix — used by
 // PNG eXIf chunks which store just the TIFF header directly).
 function extractUserCommentFromRawTIFF(tiffData: Buffer): string | null {
-  if (tiffData.length < 8) return null;
+  if (tiffData.length < 8) { console.log('[eXIf] tiffData too short:', tiffData.length); return null; }
   const byteOrder = tiffData.toString('ascii', 0, 2);
   const isLE = byteOrder === 'II';
   const isBE = byteOrder === 'MM';
-  if (!isLE && !isBE) return null;
+  if (!isLE && !isBE) { console.log('[eXIf] bad byteOrder:', byteOrder); return null; }
 
   const read16 = (off: number) => {
     if (off + 2 > tiffData.length) return 0;
@@ -127,15 +127,22 @@ function extractUserCommentFromRawTIFF(tiffData: Buffer): string | null {
     return isLE ? tiffData.readUInt32LE(off) : tiffData.readUInt32BE(off);
   };
 
-  if (read16(2) !== 42) return null;
+  const magic = read16(2);
+  if (magic !== 42) { console.log('[eXIf] bad TIFF magic:', magic); return null; }
 
   function findEntry(ifdOff: number, targetTag: number): number | null {
     if (ifdOff + 2 > tiffData.length) return null;
     const count = Math.min(read16(ifdOff), 4096);
+    console.log('[eXIf] findEntry: ifdOff=', ifdOff, 'count=', count, 'targetTag=0x' + targetTag.toString(16))
     for (let i = 0; i < count; i++) {
       const eOff = ifdOff + 2 + i * 12;
       if (eOff + 12 > tiffData.length) break;
-      if (read16(eOff) === targetTag) return read32(eOff + 8);
+      const tag = read16(eOff);
+      if (tag === targetTag) {
+        const val = read32(eOff + 8);
+        console.log('[eXIf] found tag 0x' + targetTag.toString(16), 'at entry', i, 'val=', val)
+        return val;
+      }
     }
     return null;
   }
@@ -157,13 +164,18 @@ function extractUserCommentFromRawTIFF(tiffData: Buffer): string | null {
   }
 
   const ifd0Off = read32(4);
+  console.log('[eXIf] ifd0Off:', ifd0Off, 'tiffData.length:', tiffData.length)
   const exifOff = findEntry(ifd0Off, 0x8769); // EXIF sub-IFD pointer from IFD0
-  if (exifOff === null) return null;
+  if (exifOff === null) { console.log('[eXIf] no EXIF sub-IFD (0x8769) found'); return null; }
+  console.log('[eXIf] exifOff:', exifOff)
 
   const ucRaw = findUserComment(exifOff);
-  if (!ucRaw) return null;
+  if (!ucRaw) { console.log('[eXIf] no UserComment found in EXIF sub-IFD'); return null; }
+  console.log('[eXIf] UserComment raw found, length:', ucRaw.length)
 
-  return decodeUserComment(ucRaw);
+  const decoded = decodeUserComment(ucRaw);
+  console.log('[eXIf] decoded UserComment, length:', decoded?.length)
+  return decoded;
 }
 
 // PNG chunk parser for AI generation parameters
