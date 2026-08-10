@@ -6,6 +6,8 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
+    console.log('[metadata-from-file] received file:', file?.name, file?.type, file?.size);
+
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }

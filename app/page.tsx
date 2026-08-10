@@ -30,7 +30,7 @@ export default function Home() {
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const [selectedFile, setSelectedFile] = useState<FsItem | null>(null)
   const [imageSrc, setImageSrc] = useState<string>("")
-  const [metadata, setMetadata] = useState<{ data: ImageMetadata | null; loading: boolean }>({ data: null, loading: false })
+  const [metadata, setMetadata] = useState<{ data: ImageMetadata | null; loading: boolean; error?: string }>({ data: null, loading: false })
   const [showMetadata, setShowMetadata] = useState(true)
   const metadataRef = useRef<ImageMetadata | null>(null)
 
@@ -46,17 +46,25 @@ export default function Home() {
     setMetadata({ data: null, loading: true })
     const formData = new FormData()
     formData.append("file", file)
+    console.log("[demo] uploading file:", file.name, file.type, file.size)
     fetch("/api/metadata-from-file", { method: "POST", body: formData })
       .then(async (res) => {
+        console.log("[demo] metadata response status:", res.status)
         if (res.ok) {
           const data = await res.json()
+          console.log("[demo] metadata parsed, keys:", Object.keys(data))
           metadataRef.current = data
           setMetadata({ data, loading: false })
         } else {
-          setMetadata({ data: null, loading: false })
+          const text = await res.text()
+          console.error("[demo] metadata error response:", res.status, text)
+          setMetadata({ data: null, loading: false, error: `Server error: ${res.status}` })
         }
       })
-      .catch(() => setMetadata({ data: null, loading: false }))
+      .catch((err) => {
+        console.error("[demo] metadata fetch failed:", err)
+        setMetadata({ data: null, loading: false, error: String(err) })
+      })
   }, [])
 
   const handleClear = useCallback(() => {
@@ -111,6 +119,11 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
+                {metadata.error && (
+                  <div className="px-3 py-1.5 bg-destructive/10 border-b border-destructive/20 text-xs text-destructive">
+                    Metadata failed: {metadata.error}
+                  </div>
+                )}
                 <ImagePreview
                   src={imageSrc}
                   fileName={selectedFile.name}
@@ -155,6 +168,11 @@ export default function Home() {
                 </button>
               </div>
             </div>
+            {metadata.error && (
+              <div className="px-3 py-1.5 bg-destructive/10 border-b border-destructive/20 text-xs text-destructive">
+                Metadata failed: {metadata.error}
+              </div>
+            )}
             <div className="flex-1 min-h-0">
               <ImagePreview
                 src={imageSrc}
