@@ -31,7 +31,6 @@ export default function Home() {
   const [selectedFile, setSelectedFile] = useState<FsItem | null>(null)
   const [imageSrc, setImageSrc] = useState<string>("")
   const [metadata, setMetadata] = useState<{ data: ImageMetadata | null; loading: boolean; error?: string }>({ data: null, loading: false })
-  const [diagnostic, setDiagnostic] = useState<string[]>([])
   const [showMetadata, setShowMetadata] = useState(true)
   const metadataRef = useRef<ImageMetadata | null>(null)
   const fileRef = useRef<File | null>(null)
@@ -67,11 +66,8 @@ export default function Home() {
         clearTimeout(timeout)
         if (res.ok) {
           const data = await res.json()
-          const diag = data._diagnostic as string[] | undefined
-          delete data._diagnostic
           metadataRef.current = data
           setMetadata({ data, loading: false })
-          if (diag) setDiagnostic(diag)
         } else {
           const text = await res.text()
           setMetadata({ data: null, loading: false, error: `Server error ${res.status}: ${text.slice(0, 200)}` })
@@ -90,7 +86,6 @@ export default function Home() {
     setSelectedFile(null)
     setImageSrc("")
     setMetadata({ data: null, loading: false })
-    setDiagnostic([])
     metadataRef.current = null
     fileRef.current = null
   }, [])
@@ -142,14 +137,7 @@ export default function Home() {
                 </div>
                 {metadata.error && (
                   <div className="px-3 py-1.5 bg-destructive/10 border-b border-destructive/20 text-xs text-destructive">
-                    Metadata failed: {metadata.error}
-                  </div>
-                )}
-                {diagnostic.length > 0 && (
-                  <div className="px-3 py-1.5 bg-yellow-50 dark:bg-yellow-950/30 border-b border-yellow-200 dark:border-yellow-900/50 text-xs font-mono leading-relaxed max-h-32 overflow-y-auto">
-                    {diagnostic.map((line, i) => (
-                      <div key={i}>{line}</div>
-                    ))}
+                    {metadata.error}
                   </div>
                 )}
                 <ImagePreview
@@ -198,14 +186,7 @@ export default function Home() {
             </div>
             {metadata.error && (
               <div className="px-3 py-1.5 bg-destructive/10 border-b border-destructive/20 text-xs text-destructive">
-                Metadata failed: {metadata.error}
-              </div>
-            )}
-            {diagnostic.length > 0 && (
-              <div className="px-3 py-1.5 bg-yellow-50 dark:bg-yellow-950/30 border-b border-yellow-200 dark:border-yellow-900/50 text-xs font-mono leading-relaxed max-h-32 overflow-y-auto">
-                {diagnostic.map((line, i) => (
-                  <div key={i}>{line}</div>
-                ))}
+                {metadata.error}
               </div>
             )}
             <div className="flex-1 min-h-0">
