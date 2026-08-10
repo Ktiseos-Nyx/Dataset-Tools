@@ -54,13 +54,19 @@ export default function Home() {
     setMetadata({ data: null, loading: true })
     const formData = new FormData()
     formData.append("file", file)
-    console.log("[demo] uploading file:", file.name, file.type, file.size)
-    fetch("/api/metadata-from-file", { method: "POST", body: formData })
+
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 30000)
+
+    fetch("/api/metadata-from-file", {
+      method: "POST",
+      body: formData,
+      signal: controller.signal,
+    })
       .then(async (res) => {
-        console.log("[demo] metadata response status:", res.status)
+        clearTimeout(timeout)
         if (res.ok) {
           const data = await res.json()
-          console.log("[demo] metadata parsed, keys:", Object.keys(data))
           const diag = data._diagnostic as string[] | undefined
           delete data._diagnostic
           metadataRef.current = data
@@ -68,13 +74,15 @@ export default function Home() {
           if (diag) setDiagnostic(diag)
         } else {
           const text = await res.text()
-          console.error("[demo] metadata error response:", res.status, text)
-          setMetadata({ data: null, loading: false, error: `Server error: ${res.status}` })
+          setMetadata({ data: null, loading: false, error: `Server error ${res.status}: ${text.slice(0, 200)}` })
         }
       })
-      .catch((err) => {
-        console.error("[demo] metadata fetch failed:", err)
-        setMetadata({ data: null, loading: false, error: String(err) })
+      .catch((err: Error) => {
+        clearTimeout(timeout)
+        const msg = err.name === 'AbortError'
+          ? `Upload timed out (file: ${(file.size / 1024 / 1024).toFixed(1)}MB)`
+          : `${err.name}: ${err.message} (file: ${(file.size / 1024 / 1024).toFixed(1)}MB)`
+        setMetadata({ data: null, loading: false, error: msg })
       })
   }, [])
 
@@ -82,6 +90,7 @@ export default function Home() {
     setSelectedFile(null)
     setImageSrc("")
     setMetadata({ data: null, loading: false })
+    setDiagnostic([])
     metadataRef.current = null
     fileRef.current = null
   }, [])
