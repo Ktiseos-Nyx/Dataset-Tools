@@ -11,42 +11,42 @@ export function DemoBanner() {
 
   return (
     <>
-      <div className="flex items-center justify-between gap-3 px-4 py-1.5 bg-primary/10 border-b border-primary/20 text-xs">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-1 px-3 sm:px-4 py-1.5 bg-primary/10 border-b border-primary/20 text-xs">
+        <div className="flex items-center gap-1 sm:gap-3">
           <span className="font-semibold text-primary">Demo</span>
-          <span className="text-muted-foreground hidden sm:inline">
-            Single-image metadata viewer
-          </span>
           <button
             onClick={() => setShowAbout(true)}
             className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
           >
-            <Info className="w-3 h-3" /> About
+            <Info className="w-3 h-3" /> <span className="hidden sm:inline">About</span>
           </button>
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-0.5 sm:gap-2">
             <a
               href="https://github.com/Ktiseos-Nyx/Dataset-Tools"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+              aria-label="GitHub"
             >
-              <Github className="w-3 h-3" /> GitHub
+              <Github className="w-3 h-3" /> <span className="hidden sm:inline">GitHub</span>
             </a>
             <a
               href="https://ko-fi.com/duskfallcrew"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+              aria-label="Support on Ko-fi"
             >
-              <Coffee className="w-3 h-3" /> Support
+              <Coffee className="w-3 h-3" /> <span className="hidden sm:inline">Support</span>
             </a>
             <a
               href="https://cloud.vast.ai/?ref_id=70354"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+              aria-label="Rent GPUs on Vast.ai"
             >
-              <Cloud className="w-3 h-3" /> GPU Rentals
+              <Cloud className="w-3 h-3" /> <span className="hidden sm:inline">GPU Rentals</span>
             </a>
           </span>
         </div>
