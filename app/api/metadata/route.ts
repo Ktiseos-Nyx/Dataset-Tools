@@ -109,6 +109,69 @@ async function classifyComfyUIWorkflow(
   };
 }
 
+// Extract UserComment from raw TIFF data (as found in PNG eXIf chunks).
+// Similar to extractUserCommentFromTIFF but without the JPEG "Exif\0\0" wrapper.
+function extractUserCommentFromRawTIFF(tiffData: Buffer): string | null {
+  if (tiffData.length < 8) return null;
+
+  const byteOrder = tiffData.toString('ascii', 0, 2);
+  const isLE = byteOrder === 'II';
+  const isBE = byteOrder === 'MM';
+  if (!isLE && !isBE) return null;
+
+  const read16 = (off: number) => {
+    if (off + 2 > tiffData.length) return 0;
+    return isLE ? tiffData.readUInt16LE(off) : tiffData.readUInt16BE(off);
+  };
+  const read32 = (off: number) => {
+    if (off + 4 > tiffData.length) return 0;
+    return isLE ? tiffData.readUInt32LE(off) : tiffData.readUInt32BE(off);
+  };
+
+  if (read16(2) !== 42) return null;
+  const ifd0Offset = read32(4);
+
+  function findIFDEntryValue(ifdOffset: number, targetTag: number): number | null {
+    if (ifdOffset + 2 > tiffData.length) return null;
+    const entryCount = read16(ifdOffset);
+    for (let i = 0; i < entryCount; i++) {
+      const entryOff = ifdOffset + 2 + i * 12;
+      if (entryOff + 12 > tiffData.length) break;
+      if (read16(entryOff) === targetTag) return read32(entryOff + 8);
+    }
+    return null;
+  }
+
+  function findUserComment(ifdOffset: number): Buffer | null {
+    if (ifdOffset + 2 > tiffData.length) return null;
+    const entryCount = read16(ifdOffset);
+    for (let i = 0; i < entryCount; i++) {
+      const entryOff = ifdOffset + 2 + i * 12;
+      if (entryOff + 12 > tiffData.length) break;
+      if (read16(entryOff) !== 0x9286) continue;
+      const byteCount = read32(entryOff + 4);
+      if (byteCount < 8) return null;
+      let dataStart: number;
+      if (byteCount <= 4) {
+        dataStart = entryOff + 8;
+      } else {
+        dataStart = read32(entryOff + 8);
+      }
+      if (dataStart + byteCount > tiffData.length) return null;
+      return tiffData.slice(dataStart, dataStart + byteCount);
+    }
+    return null;
+  }
+
+  const exifIFDOffset = findIFDEntryValue(ifd0Offset, 0x8769);
+  if (exifIFDOffset === null) return null;
+
+  const ucRaw = findUserComment(exifIFDOffset);
+  if (!ucRaw) return null;
+
+  return decodeUserComment(ucRaw);
+}
+
 // PNG chunk parser for AI generation parameters
 function parsePNGChunks(buffer: Buffer): Record<string, any> {
   const chunks: Record<string, any> = {};
@@ -157,6 +220,15 @@ function parsePNGChunks(buffer: Buffer): Record<string, any> {
 
         const value = data.toString('utf8', textStart);
         chunks[key] = value;
+      }
+    }
+
+    // Parse eXIf chunks (PNG EXIF) — some tools (Civitai, etc.) embed A1111-style
+    // parameters as EXIF UserComment inside an eXIf chunk instead of a tEXt chunk.
+    if (type === 'eXIf') {
+      const uc = extractUserCommentFromRawTIFF(data);
+      if (uc && !chunks.parameters && !chunks.Parameters) {
+        chunks.parameters = uc;
       }
     }
 
@@ -968,9 +1040,17 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       } else if (/Civitai resources:|Civitai metadata:/.test(params)) {
         // Civitai on-site generator embeds explicit resource metadata
         aiData.workflow_type = 'Civitai';
+      } else if (/EMS-\d+/i.test(params) && !/^(?:v\d|f\d|neo|comfyui)/i.test(versionStr)) {
+        // TensorArt model naming convention (e.g. "Model: EMS-12345") without a
+        // standard A1111/Forge version — older TensorArt images with plain A1111 params
+        aiData.workflow_type = 'TensorArt';
       } else if (/^neo/i.test(versionStr)) {
         // Forge Neo: version string is "NEO" or "neo-x.x"
         aiData.workflow_type = 'Forge Neo';
+      } else if (/^f\d+\.\d+\.\d+v/i.test(versionStr)) {
+        // ReForge: fX.Y.ZvBACKEND format (e.g. "f1.0.0v2-v1.10.1RC-latest-2518-g739b2e1d",
+        // "f2.0.1v1.10.1-previous-659-gc055f2d4") — the "v" after patch distinguishes from Classic
+        aiData.workflow_type = 'ReForge';
       } else if (/^f\d/i.test(versionStr)) {
         // Forge: version string starts with 'f' (e.g. "f0.0.17-dirty-1254-gabcdef")
         aiData.workflow_type = 'Forge';
@@ -994,7 +1074,8 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
         .replace(/:\s*-Infinity/g, ': null');
 
       const workflow = JSON.parse(sanitized);
-      aiData.comfyui_workflow = chunks.workflow ? JSON.parse(chunks.workflow) : workflow;
+      const uiWorkflowRaw = chunks.workflow ?? chunks.Workflow;
+      aiData.comfyui_workflow = uiWorkflowRaw ? JSON.parse(uiWorkflowRaw) : workflow;
       // Default to ComfyUI; override with service-specific signals below
       aiData.workflow_type = 'ComfyUI';
 
@@ -1028,7 +1109,7 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       // If a Workflow chunk exists alongside the Prompt chunk, extract per-node
       // provenance (cnr_id / aux_id). ComfyUI ≥1.26 embeds this automatically;
       // it lets us resolve node origins without GitHub code search.
-      const provenance = chunks.workflow ? extractWorkflowProvenance(chunks.workflow) : undefined;
+      const provenance = (chunks.workflow ?? chunks.Workflow) ? extractWorkflowProvenance(String(chunks.workflow ?? chunks.Workflow)) : undefined;
 
       // Scan entire workflow JSON for Civitai URN:AIR resource identifiers.
       // Format: urn:air:{baseModel}:{type}:civitai:{modelId}@{versionId}
@@ -1078,9 +1159,10 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
   // workflow graph stays invisible. Surface the graph and correct the type here.
   // We keep the A1111-derived prompt/params: the UI-graph format isn't the API
   // shape that extractComfyUIParams / classifyComfyUIWorkflow consume.
-  if (!aiData.comfyui_workflow && chunks.workflow) {
+  const uiWorkflowChunk = chunks.workflow ?? chunks.Workflow;
+  if (!aiData.comfyui_workflow && uiWorkflowChunk) {
     try {
-      const sanitized = String(chunks.workflow)
+      const sanitized = String(uiWorkflowChunk)
         .replace(/:\s*NaN/g, ': null')
         .replace(/:\s*Infinity/g, ': null')
         .replace(/:\s*-Infinity/g, ': null');
@@ -1773,6 +1855,17 @@ export async function extractMetadataFromBuffer(
   }
 
   const dims = extractImageDimensions(buffer, effectiveMime);
+
+  // Filename-based fallback: ComfyUI's default save prefix is "ComfyUI_".
+  // If all other classification failed and the filename matches, override.
+  if (aiData.workflow_type === 'AUTOMATIC1111' && fileName.startsWith('ComfyUI_')) {
+    aiData.workflow_type = 'ComfyUI';
+  }
+
+  // ArcEnCiel uses UUID-prefixed filenames (e.g. "86771998-...-upscaled_00001_.png")
+  if (aiData.workflow_type === 'ComfyUI' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(fileName)) {
+    aiData.workflow_type = 'ArcEnCiel';
+  }
 
   return {
     fileName,

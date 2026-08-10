@@ -146,6 +146,27 @@ const BUILTIN_NODES = new Set([
   'ToCPUDevice', 'ToGPUDevice',
 ]);
 
+// ─── Supplemental node patterns ─────────────────────────────────────────────────
+// Patterns for well-known custom nodes not yet in the upstream extension-node-map.
+// These supplement the remote map and are checked alongside it.
+
+interface SupplementalPattern {
+  regex: RegExp;
+  repo: NodeRepoInfo;
+}
+
+const SUPPLEMENTAL_PATTERNS: SupplementalPattern[] = [
+  // willmiao/ComfyUI-Lora-Manager — LoraManager save/load/checkpoint nodes
+  {
+    regex: / \(LoraManager\)$/,
+    repo: {
+      repoUrl: 'https://github.com/willmiao/ComfyUI-Lora-Manager',
+      repoName: 'willmiao/ComfyUI-Lora-Manager',
+      title: 'ComfyUI Lora Manager',
+    },
+  },
+];
+
 // ─── Extension node map cache ────────────────────────────────────────────────
 
 const EXTENSION_MAP_URL =
@@ -257,10 +278,17 @@ export async function lookupNode(
     return { classification: 'custom', repo: exact };
   }
 
-  // Pattern match fallback
+  // Pattern match fallback (extension-map)
   for (const { regex, repo } of patterns) {
     if (regex.test(classType)) {
       return { classification: 'custom', repo };
+    }
+  }
+
+  // Supplemental local patterns (repos not yet in upstream extension-map)
+  for (const { regex, repo } of SUPPLEMENTAL_PATTERNS) {
+    if (regex.test(classType)) {
+      return { classification: 'custom', repo, source: 'extension-map' };
     }
   }
 
@@ -306,6 +334,16 @@ export async function classifyNodes(
         results[classType] = { classification: 'custom', repo };
         matched = true;
         break;
+      }
+    }
+
+    if (!matched) {
+      for (const { regex, repo } of SUPPLEMENTAL_PATTERNS) {
+        if (regex.test(classType)) {
+          results[classType] = { classification: 'custom', repo, source: 'extension-map' };
+          matched = true;
+          break;
+        }
       }
     }
 
