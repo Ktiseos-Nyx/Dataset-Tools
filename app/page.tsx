@@ -33,15 +33,22 @@ export default function Home() {
   const [metadata, setMetadata] = useState<{ data: ImageMetadata | null; loading: boolean; error?: string }>({ data: null, loading: false })
   const [showMetadata, setShowMetadata] = useState(true)
   const metadataRef = useRef<ImageMetadata | null>(null)
+  const fileRef = useRef<File | null>(null)
 
   const handleFileDrop = useCallback((file: File) => {
-    const objectUrl = URL.createObjectURL(file)
-    setImageSrc(objectUrl)
-    setSelectedFile({
-      name: file.name,
-      path: objectUrl,
-      isDirectory: false,
-    })
+    fileRef.current = file
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      const dataUrl = reader.result as string
+      setImageSrc(dataUrl)
+      setSelectedFile({
+        name: file.name,
+        path: dataUrl,
+        isDirectory: false,
+      })
+    }
+    reader.readAsDataURL(file)
 
     setMetadata({ data: null, loading: true })
     const formData = new FormData()
@@ -72,6 +79,7 @@ export default function Home() {
     setImageSrc("")
     setMetadata({ data: null, loading: false })
     metadataRef.current = null
+    fileRef.current = null
   }, [])
 
   const handleRefresh = useCallback(() => {
