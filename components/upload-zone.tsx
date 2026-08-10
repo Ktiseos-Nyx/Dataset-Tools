@@ -12,8 +12,14 @@ export function UploadZone({ onFileDrop }: UploadZoneProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const dragCount = useRef(0)
 
+  const isValidImage = (file: File) => {
+    if (file.type.startsWith("image/")) return true
+    const ext = file.name.split(".").pop()?.toLowerCase()
+    return ext === "png" || ext === "jpg" || ext === "jpeg" || ext === "webp"
+  }
+
   const processFile = useCallback((file: File) => {
-    if (!file.type.startsWith("image/")) return
+    if (!isValidImage(file)) return
     onFileDrop(file)
   }, [onFileDrop])
 

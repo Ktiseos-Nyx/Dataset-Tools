@@ -70,9 +70,11 @@ export function DropZone({ onFileDrop }: DropZoneProps) {
 
     const file = files[0]
 
-    // Check if it's an image
-    if (!file.type.startsWith('image/')) {
-      console.warn('Not an image file:', file.type)
+    // Check if it's an image — fall back to extension for mobile browsers
+    // that don't set file.type (Safari, Android WebView, etc.)
+    const ext = file.name.split(".").pop()?.toLowerCase()
+    if (!file.type.startsWith("image/") && !["png", "jpg", "jpeg", "webp"].includes(ext ?? "")) {
+      console.warn("Not an image file:", file.type)
       return
     }
 
