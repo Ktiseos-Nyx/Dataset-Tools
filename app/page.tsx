@@ -31,6 +31,7 @@ export default function Home() {
   const [selectedFile, setSelectedFile] = useState<FsItem | null>(null)
   const [imageSrc, setImageSrc] = useState<string>("")
   const [metadata, setMetadata] = useState<{ data: ImageMetadata | null; loading: boolean; error?: string }>({ data: null, loading: false })
+  const [diagnostic, setDiagnostic] = useState<string[]>([])
   const [showMetadata, setShowMetadata] = useState(true)
   const metadataRef = useRef<ImageMetadata | null>(null)
   const fileRef = useRef<File | null>(null)
@@ -60,8 +61,11 @@ export default function Home() {
         if (res.ok) {
           const data = await res.json()
           console.log("[demo] metadata parsed, keys:", Object.keys(data))
+          const diag = data._diagnostic as string[] | undefined
+          delete data._diagnostic
           metadataRef.current = data
           setMetadata({ data, loading: false })
+          if (diag) setDiagnostic(diag)
         } else {
           const text = await res.text()
           console.error("[demo] metadata error response:", res.status, text)
@@ -132,6 +136,13 @@ export default function Home() {
                     Metadata failed: {metadata.error}
                   </div>
                 )}
+                {diagnostic.length > 0 && (
+                  <div className="px-3 py-1.5 bg-yellow-50 dark:bg-yellow-950/30 border-b border-yellow-200 dark:border-yellow-900/50 text-xs font-mono leading-relaxed max-h-32 overflow-y-auto">
+                    {diagnostic.map((line, i) => (
+                      <div key={i}>{line}</div>
+                    ))}
+                  </div>
+                )}
                 <ImagePreview
                   src={imageSrc}
                   fileName={selectedFile.name}
@@ -179,6 +190,13 @@ export default function Home() {
             {metadata.error && (
               <div className="px-3 py-1.5 bg-destructive/10 border-b border-destructive/20 text-xs text-destructive">
                 Metadata failed: {metadata.error}
+              </div>
+            )}
+            {diagnostic.length > 0 && (
+              <div className="px-3 py-1.5 bg-yellow-50 dark:bg-yellow-950/30 border-b border-yellow-200 dark:border-yellow-900/50 text-xs font-mono leading-relaxed max-h-32 overflow-y-auto">
+                {diagnostic.map((line, i) => (
+                  <div key={i}>{line}</div>
+                ))}
               </div>
             )}
             <div className="flex-1 min-h-0">
