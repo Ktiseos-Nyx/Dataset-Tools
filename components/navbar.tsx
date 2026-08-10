@@ -294,11 +294,10 @@ function SettingsContent() {
         </div>
       </section>
 
-      {/* API Keys */}
+      {/* API Keys — hidden on the demo site (no server-side .env.local access) */}
+      {false && (
       <section className="space-y-4">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">API Keys</h2>
-
-        {/* Civitai */}
         <div className="space-y-2">
           <label htmlFor="navbar-civitai-key" className="text-sm font-medium">Civitai API Key</label>
           {hasCivitaiKey && (
@@ -343,8 +342,6 @@ function SettingsContent() {
             Stored server-side in .env.local. Never sent to the browser.
           </p>
         </div>
-
-        {/* GitHub */}
         <div className="space-y-2">
           <label htmlFor="navbar-github-token" className="text-sm font-medium">GitHub Personal Access Token</label>
           {hasGithubToken && (
@@ -401,6 +398,7 @@ function SettingsContent() {
           </p>
         </div>
       </section>
+      )}
     </div>
   )
 }

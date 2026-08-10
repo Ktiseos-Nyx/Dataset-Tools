@@ -1,301 +1,117 @@
 "use client"
 
-import { useState, useEffect, useTransition, useRef } from "react"
+import { useState, useRef } from "react"
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels"
-import { Grid3x3, List, SidebarClose, SidebarOpen, ImageIcon, Brain } from "lucide-react"
-import { FileTree } from "@/components/file-tree"
+import { SidebarClose, SidebarOpen, X } from "lucide-react"
 import { ImagePreview } from "@/components/image-preview"
 import { MetadataPanel } from "@/components/metadata-panel"
-import { SafetensorsPanel } from "@/components/safetensors-panel"
-import { ThumbnailViewport } from "@/components/thumbnail-viewport"
 import { DropZone } from "@/components/drop-zone"
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
+import { UploadZone } from "@/components/upload-zone"
 import { FsItem } from "@/types/fs"
-import type { ImageMetadata, ViewMode } from "@/types/metadata"
-import type { SafetensorsMetadata } from "@/types/safetensors"
+import type { ImageMetadata } from "@/types/metadata"
 import { useSettings } from "@/hooks/use-settings"
 
-function isSafetensorsFile(file: FsItem): boolean {
-  return file.name.toLowerCase().endsWith('.safetensors')
-}
-
 export default function Home() {
-  const { settings, updateSettings } = useSettings()
+  const { settings } = useSettings()
   const [selectedFile, setSelectedFile] = useState<FsItem | null>(null)
-  const [currentDir, setCurrentDir] = useState<string | null>(".")
+  const [imageSrc, setImageSrc] = useState<string>("")
   const [metadata, setMetadata] = useState<{ data: ImageMetadata | null; loading: boolean }>({ data: null, loading: false })
-  const [viewMode, setViewMode] = useState<ViewMode>("list")
   const [showMetadata, setShowMetadata] = useState(true)
-  const [safetensors, setSafetensors] = useState<{ data: SafetensorsMetadata | null; loading: boolean }>({ data: null, loading: false })
-  const [refreshKey, setRefreshKey] = useState(0)
-  const [, startTransition] = useTransition()
-  const fetchAbortRef = useRef<AbortController | null>(null)
+  const metadataRef = useRef<ImageMetadata | null>(null)
 
-  const fetchSafetensors = async (file: FsItem) => {
-    fetchAbortRef.current?.abort()
-    const controller = new AbortController()
-    fetchAbortRef.current = controller
-
-    setSafetensors({ data: null, loading: true })
-    try {
-      const response = await fetch(
-        `/api/safetensors?path=${encodeURIComponent(file.path)}&baseFolder=${encodeURIComponent(settings.currentFolder)}`,
-        { signal: controller.signal }
-      )
-      if (!response.ok) throw new Error('Failed to fetch safetensors metadata')
-      const data = await response.json()
-      setSafetensors({ data, loading: false })
-    } catch (error) {
-      if ((error as Error).name === 'AbortError') return
-      console.error(error)
-      setSafetensors({ data: null, loading: false })
-    }
-  }
-
-  const fetchMetadata = async (file: FsItem) => {
-    // Cancel any in-flight metadata request
-    fetchAbortRef.current?.abort()
-    const controller = new AbortController()
-    fetchAbortRef.current = controller
-
-    setMetadata({ data: null, loading: true });
-    try {
-      const response = await fetch(
-        `/api/metadata?path=${encodeURIComponent(file.path)}&baseFolder=${encodeURIComponent(settings.currentFolder)}`,
-        { signal: controller.signal }
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch metadata');
-      }
-      const data = await response.json();
-      setMetadata({ data, loading: false });
-    } catch (error) {
-      if ((error as Error).name === 'AbortError') return;
-      console.error(error);
-      setMetadata({ data: null, loading: false });
-    }
-  };
-
-  // Reset thumbnail viewport when folder changes
-  useEffect(() => {
-    setCurrentDir('.')
-  }, [settings.currentFolder])
-
-  const handleFileSelect = (file: FsItem) => {
-    if (file.isDirectory) {
-      setSelectedFile(null)
-      setMetadata({ data: null, loading: false })
-      setSafetensors({ data: null, loading: false })
-      return
-    }
-
-    const dirPath = file.path.includes('/') ? file.path.slice(0, file.path.lastIndexOf('/')) : '.'
-    startTransition(() => {
-      setCurrentDir(dirPath)
-      setSelectedFile(file)
-    })
-
-    if (isSafetensorsFile(file)) {
-      setMetadata({ data: null, loading: false })
-      fetchSafetensors(file)
-    } else {
-      setSafetensors({ data: null, loading: false })
-      fetchMetadata(file)
-    }
-  }
-
-  const handleDirExpand = (dirPath: string) => {
-    setCurrentDir(dirPath)
-  }
-
-  // Reload the file list (thumbnails + tree root) and re-read the current file's
-  // metadata — used after editing creates/updates files on disk.
-  const handleRefresh = () => {
-    setRefreshKey((k) => k + 1)
-    if (selectedFile && !selectedFile.path.startsWith('blob:')) {
-      if (isSafetensorsFile(selectedFile)) fetchSafetensors(selectedFile)
-      else fetchMetadata(selectedFile)
-    }
-  }
-
-  const handleFileDrop = async (file: File, folderPath?: string) => {
-    // Show the image immediately
+  const handleFileDrop = (file: File) => {
     const objectUrl = URL.createObjectURL(file)
+    setImageSrc(objectUrl)
     setSelectedFile({
       name: file.name,
       path: objectUrl,
       isDirectory: false,
     })
 
-    // If we got the folder path from the drop (Electron), switch to it
-    if (folderPath) {
-      updateSettings({ currentFolder: folderPath })
-    }
-
-    // Extract metadata (file is in memory, no disk I/O needed)
     setMetadata({ data: null, loading: true })
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-      const response = await fetch('/api/metadata-from-file', {
-        method: 'POST',
-        body: formData,
-      })
-      if (response.ok) {
-        setMetadata({ data: await response.json(), loading: false })
-      } else {
-        setMetadata({ data: null, loading: false })
-      }
-    } catch {
-      setMetadata({ data: null, loading: false })
-    }
-
-    // If no folder path from browser, find it via server (quick bounded search)
-    if (!folderPath) {
-      try {
-        const controller = new AbortController()
-        const timeout = setTimeout(() => controller.abort(), 8000)
-
-        const res = await fetch('/api/find-file', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            fileName: file.name,
-            fileSize: file.size,
-            lastFolder: settings.currentFolder !== '.' ? settings.currentFolder : undefined,
-          }),
-          signal: controller.signal,
-        })
-        clearTimeout(timeout)
-
+    const formData = new FormData()
+    formData.append("file", file)
+    fetch("/api/metadata-from-file", { method: "POST", body: formData })
+      .then(async (res) => {
         if (res.ok) {
-          const { folder } = await res.json()
-          if (folder) updateSettings({ currentFolder: folder })
+          const data = await res.json()
+          metadataRef.current = data
+          setMetadata({ data, loading: false })
+        } else {
+          setMetadata({ data: null, loading: false })
         }
-      } catch {
-        // Timed out or failed - user can use folder picker
-      }
-    }
+      })
+      .catch(() => setMetadata({ data: null, loading: false }))
+  }
+
+  const handleClear = () => {
+    setSelectedFile(null)
+    setImageSrc("")
+    setMetadata({ data: null, loading: false })
+    metadataRef.current = null
+  }
+
+  const handleRefresh = () => {
+    if (!metadataRef.current || !selectedFile) return
+    setMetadata({ data: metadataRef.current, loading: false })
   }
 
   return (
     <>
-      <DropZone onFileDrop={(file, folder) => handleFileDrop(file, folder)} />
+      <DropZone onFileDrop={(file) => handleFileDrop(file)} />
       <div className="flex flex-col h-full">
-      {/* Page-specific toolbar */}
-      <div className="h-10 border-b border-border bg-muted/20 flex items-center justify-between px-4">
-        <div className="flex items-center gap-2 bg-muted rounded-lg p-0.5">
+        <div className="h-10 border-b border-border bg-muted/20 flex items-center justify-between px-4">
+          <div />
           <button
-            onClick={() => setViewMode("list")}
-            className={`p-1.5 rounded transition-colors ${
-              viewMode === "list" ? "bg-accent text-accent-foreground shadow-sm" : "text-muted-foreground hover:bg-background/50"
-            }`}
-            aria-label="List view"
+            onClick={() => setShowMetadata(!showMetadata)}
+            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded-lg transition-colors"
+            aria-label={showMetadata ? "Hide metadata" : "Show metadata"}
           >
-            <List className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={() => setViewMode("thumbnail")}
-            className={`p-1.5 rounded transition-colors ${
-              viewMode === "thumbnail" ? "bg-accent text-accent-foreground shadow-sm" : "text-muted-foreground hover:bg-background/50"
-            }`}
-            aria-label="Thumbnail view"
-          >
-            <Grid3x3 className="w-3.5 h-3.5" />
+            {showMetadata ? <SidebarClose className="w-3.5 h-3.5" /> : <SidebarOpen className="w-3.5 h-3.5" />}
           </button>
         </div>
 
-        <button
-          onClick={() => setShowMetadata(!showMetadata)}
-          className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded-lg transition-colors"
-          aria-label={showMetadata ? "Hide metadata" : "Show metadata"}
-        >
-          {showMetadata ? <SidebarClose className="w-3.5 h-3.5" /> : <SidebarOpen className="w-3.5 h-3.5" />}
-        </button>
-      </div>
-
-      {/* Resizable panel layout */}
-      <PanelGroup id="main-layout" direction="horizontal" className="flex-1">
-        {/* File Tree */}
-        <Panel id="file-tree" defaultSize={15} minSize={10} maxSize={30}>
-          <FileTree
-            onFileSelect={handleFileSelect}
-            onDirExpand={handleDirExpand}
-            selectedFile={selectedFile ?? undefined}
-            viewMode={viewMode}
-            refreshKey={refreshKey}
-          />
-        </Panel>
-
-        <PanelResizeHandle className="w-1 bg-border hover:bg-primary/50 transition-colors cursor-col-resize" />
-
-        {/* Center: Image Preview + Thumbnail Strip */}
-        <Panel id="center" defaultSize={showMetadata ? 60 : 85} minSize={30}>
-          <PanelGroup id="center-vertical" direction="vertical">
-            {/* Image Preview */}
-            <Panel id="image-preview" defaultSize={70} minSize={30}>
+        {!selectedFile ? (
+          <UploadZone onFileDrop={handleFileDrop} />
+        ) : (
+          <PanelGroup id="demo-layout" direction="horizontal" className="flex-1">
+            <Panel id="image-preview" defaultSize={showMetadata ? 60 : 100} minSize={30}>
               <div className="h-full flex flex-col">
-                {!selectedFile ? (
-                  <Empty className="flex-1 border-0">
-                    <EmptyHeader>
-                      <EmptyMedia variant="icon"><ImageIcon /></EmptyMedia>
-                      <EmptyTitle>No image selected</EmptyTitle>
-                      <EmptyDescription>Browse the file tree and select an image to preview</EmptyDescription>
-                    </EmptyHeader>
-                  </Empty>
-                ) : isSafetensorsFile(selectedFile) ? (
-                  <Empty className="flex-1 border-0">
-                    <EmptyHeader>
-                      <EmptyMedia variant="icon"><Brain /></EmptyMedia>
-                      <EmptyTitle>{selectedFile.name}</EmptyTitle>
-                      <EmptyDescription>Model file — see metadata panel</EmptyDescription>
-                    </EmptyHeader>
-                  </Empty>
-                ) : (
-                  <ImagePreview
-                    src={selectedFile.path.startsWith('blob:') ? selectedFile.path : `/api/image?path=${encodeURIComponent(selectedFile.path)}&baseFolder=${encodeURIComponent(settings.currentFolder)}`}
-                    fileName={selectedFile.name}
-                    onRefresh={handleRefresh}
-                  />
-                )}
+                <div className="h-8 border-b border-border bg-muted/20 flex items-center justify-between px-3">
+                  <span className="text-xs text-muted-foreground truncate max-w-[80%]">{selectedFile.name}</span>
+                  <button
+                    onClick={handleClear}
+                    className="p-1 hover:bg-accent rounded transition-colors"
+                    aria-label="Remove image"
+                  >
+                    <X className="w-3.5 h-3.5 text-muted-foreground" />
+                  </button>
+                </div>
+                <ImagePreview
+                  src={imageSrc}
+                  fileName={selectedFile.name}
+                  onRefresh={handleRefresh}
+                />
               </div>
             </Panel>
 
-            <PanelResizeHandle className="h-1 bg-border hover:bg-primary/50 transition-colors cursor-row-resize" />
-
-            {/* Thumbnail Viewport */}
-            <Panel id="thumbnails" defaultSize={30} minSize={10} maxSize={60}>
-              <ThumbnailViewport
-                currentDir={currentDir}
-                onFileSelect={handleFileSelect}
-                selectedFile={selectedFile ?? undefined}
-                refreshKey={refreshKey}
-              />
-            </Panel>
+            {showMetadata && (
+              <>
+                <PanelResizeHandle className="w-1 bg-border hover:bg-primary/50 transition-colors cursor-col-resize" />
+                <Panel id="metadata" defaultSize={40} minSize={20} maxSize={55}>
+                  <MetadataPanel
+                    metadata={metadata.data}
+                    isLoading={metadata.loading}
+                    filePath={selectedFile.path}
+                    baseFolder={settings.currentFolder}
+                    onRefresh={handleRefresh}
+                  />
+                </Panel>
+              </>
+            )}
           </PanelGroup>
-        </Panel>
-
-        {/* Metadata / Safetensors Panel */}
-        {showMetadata && (
-          <>
-            <PanelResizeHandle className="w-1 bg-border hover:bg-primary/50 transition-colors cursor-col-resize" />
-            <Panel id="metadata" defaultSize={25} minSize={15} maxSize={50}>
-              {selectedFile && isSafetensorsFile(selectedFile) ? (
-                <SafetensorsPanel data={safetensors.data} isLoading={safetensors.loading} fileName={selectedFile.name} />
-              ) : (
-                <MetadataPanel
-                  metadata={metadata.data}
-                  isLoading={metadata.loading}
-                  filePath={selectedFile?.path}
-                  baseFolder={settings.currentFolder}
-                  onRefresh={handleRefresh}
-                />
-              )}
-            </Panel>
-          </>
         )}
-      </PanelGroup>
-    </div>
+      </div>
     </>
   )
 }

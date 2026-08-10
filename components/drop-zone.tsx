@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Upload } from "lucide-react"
 
 interface DropZoneProps {
-  onFileDrop: (file: File, folderPath?: string) => void
+  onFileDrop: (file: File) => void
 }
 
 export function DropZone({ onFileDrop }: DropZoneProps) {
@@ -76,17 +76,7 @@ export function DropZone({ onFileDrop }: DropZoneProps) {
       return
     }
 
-    // Try to get the folder path directly from the file
-    // Works in Electron and some environments
-    const filePath = (file as any).path as string | undefined
-    let folderPath: string | undefined
-
-    if (filePath && (filePath.includes('\\') || filePath.includes('/'))) {
-      const sep = filePath.includes('\\') ? '\\' : '/'
-      folderPath = filePath.substring(0, filePath.lastIndexOf(sep))
-    }
-
-    onFileDrop(file, folderPath)
+    onFileDrop(file)
   }
 
   return (
@@ -101,8 +91,8 @@ export function DropZone({ onFileDrop }: DropZoneProps) {
         >
           <div className="flex flex-col items-center gap-4 text-muted-foreground pointer-events-none">
             <Upload className="w-16 h-16" />
-            <div className="text-xl font-semibold">Drop an image to browse its folder</div>
-            <div className="text-sm">The app will load all images from the same directory</div>
+            <div className="text-xl font-semibold">Drop an image to inspect its metadata</div>
+            <div className="text-sm">Supports PNG, JPEG, and WebP with AI generation metadata</div>
           </div>
         </div>
       )}

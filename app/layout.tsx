@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Navbar } from "@/components/navbar"
+import { DemoBanner } from "@/components/demo-banner"
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 
@@ -68,6 +69,7 @@ export default function RootLayout({
         >
           <div className="flex flex-col h-screen">
             <Navbar />
+            <DemoBanner />
             <div className="flex-1 overflow-hidden">
               {children}
             </div>
