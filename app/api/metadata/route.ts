@@ -109,10 +109,11 @@ async function classifyComfyUIWorkflow(
   };
 }
 
-// Extract UserComment from raw TIFF/EXIF bytes (no "Exif\0\0" prefix — used by
-// PNG eXIf chunks which store just the TIFF header directly).
+// Extract UserComment from raw TIFF data (as found in PNG eXIf chunks).
+// Similar to extractUserCommentFromTIFF but without the JPEG "Exif\0\0" wrapper.
 function extractUserCommentFromRawTIFF(tiffData: Buffer): string | null {
   if (tiffData.length < 8) return null;
+
   const byteOrder = tiffData.toString('ascii', 0, 2);
   const isLE = byteOrder === 'II';
   const isBE = byteOrder === 'MM';
@@ -128,39 +129,44 @@ function extractUserCommentFromRawTIFF(tiffData: Buffer): string | null {
   };
 
   if (read16(2) !== 42) return null;
+  const ifd0Offset = read32(4);
 
-  function findEntry(ifdOff: number, targetTag: number): number | null {
-    if (ifdOff + 2 > tiffData.length) return null;
-    const count = Math.min(read16(ifdOff), 4096);
-    for (let i = 0; i < count; i++) {
-      const eOff = ifdOff + 2 + i * 12;
-      if (eOff + 12 > tiffData.length) break;
-      if (read16(eOff) === targetTag) return read32(eOff + 8);
+  function findIFDEntryValue(ifdOffset: number, targetTag: number): number | null {
+    if (ifdOffset + 2 > tiffData.length) return null;
+    const entryCount = read16(ifdOffset);
+    for (let i = 0; i < entryCount; i++) {
+      const entryOff = ifdOffset + 2 + i * 12;
+      if (entryOff + 12 > tiffData.length) break;
+      if (read16(entryOff) === targetTag) return read32(entryOff + 8);
     }
     return null;
   }
 
-  function findUserComment(ifdOff: number): Buffer | null {
-    if (ifdOff + 2 > tiffData.length) return null;
-    const count = Math.min(read16(ifdOff), 4096);
-    for (let i = 0; i < count; i++) {
-      const eOff = ifdOff + 2 + i * 12;
-      if (eOff + 12 > tiffData.length) break;
-      if (read16(eOff) !== 0x9286) continue;
-      const byteCount = read32(eOff + 4);
+  function findUserComment(ifdOffset: number): Buffer | null {
+    if (ifdOffset + 2 > tiffData.length) return null;
+    const entryCount = read16(ifdOffset);
+    for (let i = 0; i < entryCount; i++) {
+      const entryOff = ifdOffset + 2 + i * 12;
+      if (entryOff + 12 > tiffData.length) break;
+      if (read16(entryOff) !== 0x9286) continue;
+      const byteCount = read32(entryOff + 4);
       if (byteCount < 8) return null;
-      const dataStart = read32(eOff + 8);
+      let dataStart: number;
+      if (byteCount <= 4) {
+        dataStart = entryOff + 8;
+      } else {
+        dataStart = read32(entryOff + 8);
+      }
       if (dataStart + byteCount > tiffData.length) return null;
       return tiffData.slice(dataStart, dataStart + byteCount);
     }
     return null;
   }
 
-  const ifd0Off = read32(4);
-  const exifOff = findEntry(ifd0Off, 0x8769);
-  if (exifOff === null) return null;
+  const exifIFDOffset = findIFDEntryValue(ifd0Offset, 0x8769);
+  if (exifIFDOffset === null) return null;
 
-  const ucRaw = findUserComment(exifOff);
+  const ucRaw = findUserComment(exifIFDOffset);
   if (!ucRaw) return null;
 
   return decodeUserComment(ucRaw);
@@ -215,9 +221,11 @@ function parsePNGChunks(buffer: Buffer): Record<string, any> {
         const value = data.toString('utf8', textStart);
         chunks[key] = value;
       }
-    } else if (type === 'eXIf') {
-      // PNG eXIf chunk carries raw TIFF/EXIF data (no "Exif\0\0" prefix).
-      // Civitai stores A1111-style generation params in UserComment here.
+    }
+
+    // Parse eXIf chunks (PNG EXIF) — some tools (Civitai, etc.) embed A1111-style
+    // parameters as EXIF UserComment inside an eXIf chunk instead of a tEXt chunk.
+    if (type === 'eXIf') {
       const uc = extractUserCommentFromRawTIFF(data);
       if (uc && !chunks.parameters && !chunks.Parameters) {
         chunks.parameters = uc;
@@ -1032,9 +1040,17 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       } else if (/Civitai resources:|Civitai metadata:/.test(params)) {
         // Civitai on-site generator embeds explicit resource metadata
         aiData.workflow_type = 'Civitai';
+      } else if (/EMS-\d+/i.test(params) && !/^(?:v\d|f\d|neo|comfyui)/i.test(versionStr)) {
+        // TensorArt model naming convention (e.g. "Model: EMS-12345") without a
+        // standard A1111/Forge version — older TensorArt images with plain A1111 params
+        aiData.workflow_type = 'TensorArt';
       } else if (/^neo/i.test(versionStr)) {
         // Forge Neo: version string is "NEO" or "neo-x.x"
         aiData.workflow_type = 'Forge Neo';
+      } else if (/^f\d+\.\d+\.\d+v/i.test(versionStr)) {
+        // ReForge: fX.Y.ZvBACKEND format (e.g. "f1.0.0v2-v1.10.1RC-latest-2518-g739b2e1d",
+        // "f2.0.1v1.10.1-previous-659-gc055f2d4") — the "v" after patch distinguishes from Classic
+        aiData.workflow_type = 'ReForge';
       } else if (/^f\d/i.test(versionStr)) {
         // Forge: version string starts with 'f' (e.g. "f0.0.17-dirty-1254-gabcdef")
         aiData.workflow_type = 'Forge';
@@ -1058,7 +1074,8 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
         .replace(/:\s*-Infinity/g, ': null');
 
       const workflow = JSON.parse(sanitized);
-      aiData.comfyui_workflow = chunks.workflow ? JSON.parse(chunks.workflow) : workflow;
+      const uiWorkflowRaw = chunks.workflow ?? chunks.Workflow;
+      aiData.comfyui_workflow = uiWorkflowRaw ? JSON.parse(uiWorkflowRaw) : workflow;
       // Default to ComfyUI; override with service-specific signals below
       aiData.workflow_type = 'ComfyUI';
 
@@ -1092,7 +1109,7 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       // If a Workflow chunk exists alongside the Prompt chunk, extract per-node
       // provenance (cnr_id / aux_id). ComfyUI ≥1.26 embeds this automatically;
       // it lets us resolve node origins without GitHub code search.
-      const provenance = chunks.workflow ? extractWorkflowProvenance(chunks.workflow) : undefined;
+      const provenance = (chunks.workflow ?? chunks.Workflow) ? extractWorkflowProvenance(String(chunks.workflow ?? chunks.Workflow)) : undefined;
 
       // Scan entire workflow JSON for Civitai URN:AIR resource identifiers.
       // Format: urn:air:{baseModel}:{type}:civitai:{modelId}@{versionId}
@@ -1142,9 +1159,10 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
   // workflow graph stays invisible. Surface the graph and correct the type here.
   // We keep the A1111-derived prompt/params: the UI-graph format isn't the API
   // shape that extractComfyUIParams / classifyComfyUIWorkflow consume.
-  if (!aiData.comfyui_workflow && chunks.workflow) {
+  const uiWorkflowChunk = chunks.workflow ?? chunks.Workflow;
+  if (!aiData.comfyui_workflow && uiWorkflowChunk) {
     try {
-      const sanitized = String(chunks.workflow)
+      const sanitized = String(uiWorkflowChunk)
         .replace(/:\s*NaN/g, ': null')
         .replace(/:\s*Infinity/g, ': null')
         .replace(/:\s*-Infinity/g, ': null');
@@ -1714,9 +1732,54 @@ function extractAIFromXMP(xmp: Record<string, any>): Record<string, any> {
 // Detect the actual image format from magic bytes, ignoring file extension.
 // CDNs (Civitai, etc.) sometimes serve PNG files with a .jpeg extension.
 // Returns null if the format is not recognised.
+// Extract dimensions from a WebP RIFF container via VP8X/VP8L/VP8  chunks.
+function extractWebPDimensions(buffer: Buffer): { width: number; height: number } | null {
+  let offset = 12; // Skip RIFF header
+  while (offset + 8 <= buffer.length) {
+    const chunkId = buffer.toString("ascii", offset, offset + 4);
+    const chunkSize = buffer.readUInt32LE(offset + 4);
+    if (offset + 8 + chunkSize > buffer.length) break;
+    const p = offset + 8; // payload start
+
+    if (chunkId === "VP8X" && chunkSize >= 10) {
+      const w = buffer.readUIntLE(p + 4, 3) + 1;
+      const h = buffer.readUIntLE(p + 7, 3) + 1;
+      if (w > 0 && h > 0) return { width: w, height: h };
+    } else if (chunkId === "VP8L" && chunkSize >= 5) {
+      const b1 = buffer[p + 1], b2 = buffer[p + 2], b3 = buffer[p + 3];
+      const w = ((b2 & 0x3f) << 8) | b1;
+      const h = ((b2 & 0xc0) >> 6) | (b3 << 2) | ((buffer[p + 4] & 0x0f) << 10);
+      if (w > 0 && h > 0) return { width: w + 1, height: h + 1 };
+    } else if (chunkId === "VP8 " && chunkSize >= 10) {
+      const w = buffer.readUInt16LE(p + 6) & 0x3fff;
+      const h = buffer.readUInt16LE(p + 8) & 0x3fff;
+      if (w > 0 && h > 0) return { width: w, height: h };
+    }
+
+    offset += 8 + chunkSize + (chunkSize & 1);
+  }
+  return null;
+}
+
+// Extract a named RIFF chunk payload from a WebP buffer (e.g. "EXIF", "XMP ").
+function extractWebPChunk(buffer: Buffer, target: string): Buffer | null {
+  let offset = 12;
+  while (offset + 8 <= buffer.length) {
+    const chunkId = buffer.toString("ascii", offset, offset + 4);
+    const chunkSize = buffer.readUInt32LE(offset + 4);
+    if (offset + 8 + chunkSize > buffer.length) break;
+    if (chunkId === target) {
+      return buffer.subarray(offset + 8, offset + 8 + chunkSize);
+    }
+    offset += 8 + chunkSize + (chunkSize & 1);
+  }
+  return null;
+}
+
 // Extract image dimensions without relying on EXIF data.
 // PNG: read IHDR (always the first chunk, width/height at fixed offsets).
 // JPEG: scan for the first SOF marker.
+// WebP: read VP8X/VP8L/VP8  chunk headers.
 function extractImageDimensions(buffer: Buffer, mimeType: string): { width: number; height: number } | null {
   if (mimeType === 'image/png' && buffer.length >= 24) {
     // After the 8-byte PNG signature: 4-byte chunk length + 4-byte "IHDR" type,
@@ -1743,6 +1806,9 @@ function extractImageDimensions(buffer: Buffer, mimeType: string): { width: numb
       }
       offset += 2 + segLen;
     }
+  } else if (mimeType === 'image/webp' && buffer.length >= 30) {
+    const dims = extractWebPDimensions(buffer);
+    if (dims) return dims;
   }
   return null;
 }
@@ -1782,38 +1848,12 @@ export async function extractMetadataFromBuffer(
   let exifData = {};
   let iptcData = {};
 
-  // Try to parse EXIF data (only works for JPEG/TIFF).
-  // enableBinaryFields(true) is required so format-7 (UNDEFINED) tags like
-  // UserComment (0x9286) are NOT skipped — without it AI metadata extraction
-  // from JPEGs has no fallback when the TIFF-based parser fails.
-  let userCommentFromEXIF: string | null = null;
+  // Try to parse EXIF data (only works for JPEG/TIFF)
   try {
     const parser = exifParser.create(buffer);
-    parser.enableBinaryFields(true);
     const result = parser.parse();
     exifData = result.tags || {};
     iptcData = result.iptc || {};
-
-    // Extract and decode UserComment from exif-parser's tags (format-7 data
-    // comes back as a raw Buffer, not a string). Decode it once here so the
-    // JPEG AI metadata path can use it as a fallback.
-    const rawUC = (exifData as any).UserComment;
-    if (Buffer.isBuffer(rawUC) && rawUC.length >= 8) {
-      userCommentFromEXIF = decodeUserComment(rawUC);
-    }
-
-    // Strip binary/format-7 tags from exifData so we don't send large opaque
-    // blobs (MakerNote etc.) to the client. UserComment is kept as a decoded
-    // string so EXIF tab shows it, but we move it to a friendlier key first.
-    for (const [key, value] of Object.entries(exifData as Record<string, any>)) {
-      if (Buffer.isBuffer(value)) {
-        delete (exifData as any)[key];
-      }
-    }
-    // Store the decoded UserComment under a readable key for the EXIF tab
-    if (userCommentFromEXIF) {
-      (exifData as any).UserCommentText = userCommentFromEXIF;
-    }
   } catch (e) {
     // EXIF parsing failed, that's ok for PNGs
   }
@@ -1824,15 +1864,12 @@ export async function extractMetadataFromBuffer(
     const chunks = parsePNGChunks(buffer);
     aiData = await parseAIMetadata(chunks);
   } else if (effectiveMime === 'image/jpeg') {
-    let userComment: string | null = parseJPEGUserComment(buffer);
+    let userComment = parseJPEGUserComment(buffer);
 
-    // Fall back to the exif-parser-decoded UserComment when the TIFF-based
-    // parser couldn't find anything. Exif-parser handles byte order, IFD
-    // traversal, and offset calculations natively and is more battle-tested.
-    if (!userComment && userCommentFromEXIF) {
-      const ucText = userCommentFromEXIF.trim();
-      if (ucText.startsWith('{') || /Steps:\s*\d+/i.test(ucText)) {
-        userComment = userCommentFromEXIF;
+    if (!userComment && (exifData as any).UserComment) {
+      const epComment = String((exifData as any).UserComment).trim();
+      if (epComment.length > 10 && (epComment.includes('Steps:') || epComment.startsWith('{'))) {
+        userComment = epComment;
       }
     }
 
@@ -1841,6 +1878,19 @@ export async function extractMetadataFromBuffer(
         aiData = await parseAIMetadata({ prompt: userComment });
       } else {
         aiData = await parseAIMetadata({ parameters: userComment });
+      }
+    }
+  } else if (effectiveMime === 'image/webp') {
+    // WebP may carry an EXIF chunk with AI metadata (e.g. CoreML/MPS tools on macOS).
+    const webpExif = extractWebPChunk(buffer, 'EXIF');
+    if (webpExif) {
+      const userComment = extractUserCommentFromTIFF(webpExif);
+      if (userComment) {
+        if (userComment.trim().startsWith('{')) {
+          aiData = await parseAIMetadata({ prompt: userComment });
+        } else {
+          aiData = await parseAIMetadata({ parameters: userComment });
+        }
       }
     }
   }
@@ -1860,12 +1910,40 @@ export async function extractMetadataFromBuffer(
         Object.assign(aiData, dtParsed);
       }
       for (const [key, value] of Object.entries(xmpAI)) {
-        if (!aiData[key]) aiData[key] = value;
+        if (!aiData[key]) {
+          aiData[key] = value;
+        } else if (key === 'workflow_type' && aiData[key] === 'AUTOMATIC1111') {
+          // XMP-derived workflow_type (e.g. Draw Things, Midjourney) is more
+          // specific than the generic A1111 classification from tEXt params.
+          aiData[key] = value;
+        }
       }
     }
   }
 
-  const dims = extractImageDimensions(buffer, effectiveMime);
+  let dims = extractImageDimensions(buffer, effectiveMime);
+
+  // XMP dimension fallback: formats like WebP may not have native dimension
+  // extraction, but XMP often carries exif:PixelXDimension / PixelYDimension.
+  if (!dims) {
+    const xmpW = Number(xmpData['exif:PixelXDimension'] || 0);
+    const xmpH = Number(xmpData['exif:PixelYDimension'] || 0);
+    if (xmpW > 0 && xmpH > 0) dims = { width: xmpW, height: xmpH };
+  }
+
+  // Filename-based fallback: ComfyUI's default save prefix is "ComfyUI_".
+  // If all other classification failed and the filename matches, override.
+  if (aiData.workflow_type === 'AUTOMATIC1111' && fileName.startsWith('ComfyUI_')) {
+    aiData.workflow_type = 'ComfyUI';
+  }
+
+  // ArcEnCiel uses UUID-prefixed filenames with a 5-digit batch counter suffix
+  // (e.g. "8ed5f254-3c23-4362-8425-5fd32f8beed5_00001_.png").
+  // Civitai now also renames downloads with UUIDs but without the counter suffix,
+  // so the pattern requires the trailing _NNNNN_ marker to avoid false positives.
+  if (aiData.workflow_type === 'ComfyUI' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}_\d{5}_\./i.test(fileName)) {
+    aiData.workflow_type = 'ArcEnCiel';
+  }
 
   return {
     fileName,

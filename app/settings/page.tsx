@@ -159,11 +159,11 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* File Browser */}
+        {/* File Browser — hidden on the demo site (no server-side filesystem) */}
+        {false && (
         <section className="space-y-4">
           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">File Browser</h2>
 
-          {/* Hidden Files */}
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium">Show Hidden Files</p>
@@ -183,7 +183,6 @@ export default function SettingsPage() {
             </button>
           </div>
 
-          {/* File Extensions */}
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium">Show File Extensions</p>
@@ -203,8 +202,10 @@ export default function SettingsPage() {
             </button>
           </div>
         </section>
+        )}
 
-        {/* API Keys */}
+        {/* API Keys — hidden on the demo site (no server-side .env.local access) */}
+        {false && (
         <section className="space-y-4">
           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">API Keys</h2>
 
@@ -311,6 +312,7 @@ export default function SettingsPage() {
             </p>
           </div>
         </section>
+        )}
       </div>
     </div>
   )

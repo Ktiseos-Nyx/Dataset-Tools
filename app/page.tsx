@@ -100,14 +100,7 @@ export default function Home() {
       <DropZone onFileDrop={handleFileDrop} />
       <div className="flex flex-col h-full">
         <div className="h-10 border-b border-border bg-muted/20 flex items-center justify-between px-4">
-          <div />
-          <button
-            onClick={() => setShowMetadata(!showMetadata)}
-            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded-lg transition-colors md:hidden"
-            aria-label={showMetadata ? "Hide metadata" : "Show metadata"}
-          >
-            {showMetadata ? <SidebarClose className="w-3.5 h-3.5" /> : <SidebarOpen className="w-3.5 h-3.5" />}
-          </button>
+          <span className="text-xs text-muted-foreground">Dataset Tools</span>
         </div>
 
         {!selectedFile ? (

@@ -251,48 +251,13 @@ function SettingsContent() {
         </div>
       </section>
 
-      {/* File Browser */}
+      {/* File Browser — hidden on the demo site (no server-side filesystem) */}
+      {false && (
       <section className="space-y-4">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">File Browser</h2>
-
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium">Show Hidden Files</p>
-            <p className="text-xs text-muted-foreground">Display dotfiles and hidden directories</p>
-          </div>
-          <button
-            onClick={() => updateSettings({ showHiddenFiles: !settings.showHiddenFiles })}
-            className={`relative w-11 h-6 rounded-full transition-colors ${
-              settings.showHiddenFiles ? "bg-primary" : "bg-muted"
-            }`}
-          >
-            <span
-              className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
-                settings.showHiddenFiles ? "translate-x-5" : ""
-              }`}
-            />
-          </button>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium">Show File Extensions</p>
-            <p className="text-xs text-muted-foreground">Display file extensions in the tree</p>
-          </div>
-          <button
-            onClick={() => updateSettings({ showFileExtensions: !settings.showFileExtensions })}
-            className={`relative w-11 h-6 rounded-full transition-colors ${
-              settings.showFileExtensions ? "bg-primary" : "bg-muted"
-            }`}
-          >
-            <span
-              className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
-                settings.showFileExtensions ? "translate-x-5" : ""
-              }`}
-            />
-          </button>
-        </div>
+        {/* ... same content ... */}
       </section>
+      )}
 
       {/* API Keys — hidden on the demo site (no server-side .env.local access) */}
       {false && (
