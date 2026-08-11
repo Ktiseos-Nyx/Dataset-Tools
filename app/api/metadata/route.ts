@@ -48,7 +48,7 @@ async function classifyComfyUIWorkflow(
   workflow: Record<string, any>,
   provenance?: WorkflowProvenance,
 ): Promise<{
-  summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number };
+  summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number; builtinProvenance: number };
   classifications: Record<string, NodeLookupResult>;
   unknownNodes: string[];
 } | null> {
@@ -74,7 +74,7 @@ async function classifyComfyUIWorkflow(
       const p = provenance[ct];
       if (!p) continue;
       if (p.cnrId === 'comfy-core') {
-        classifications[ct] = { classification: 'builtin' };
+        classifications[ct] = { classification: 'builtin', source: 'provenance' };
       } else if (p.auxId) {
         const repoTitle = p.auxId.split('/').pop() ?? p.auxId;
         classifications[ct] = {
@@ -89,11 +89,14 @@ async function classifyComfyUIWorkflow(
     }
   }
 
-  let builtin = 0, custom = 0, unknown = 0, githubResolved = 0;
+  let builtin = 0, custom = 0, unknown = 0, githubResolved = 0, builtinProvenance = 0;
   const unknownNodes: string[] = [];
   for (const [ct, result] of Object.entries(classifications)) {
     switch (result.classification) {
-      case 'builtin': builtin++; break;
+      case 'builtin':
+        builtin++;
+        if (result.source === 'provenance') builtinProvenance++;
+        break;
       case 'custom':
         custom++;
         if (result.source === 'github') githubResolved++;
@@ -103,7 +106,7 @@ async function classifyComfyUIWorkflow(
   }
 
   return {
-    summary: { total: classTypes.size, builtin, custom, unknown, githubResolved },
+    summary: { total: classTypes.size, builtin, custom, unknown, githubResolved, builtinProvenance },
     classifications,
     unknownNodes,
   };
@@ -1040,6 +1043,50 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       } else if (/Civitai resources:|Civitai metadata:/.test(params)) {
         // Civitai on-site generator embeds explicit resource metadata
         aiData.workflow_type = 'Civitai';
+
+        // Extract modelVersionId references from both Civitai metadata formats
+        const resources: Array<{ type: string; modelVersionId: number; modelName: string; url: string }> = [];
+
+        // Format 1: Civitai resources: [{"type":"checkpoint","modelVersionId":123,...}]
+        const resMatch = params.match(/Civitai resources:\s*(\[[\s\S]*?\](?=\s*,?\s*(?:Civitai metadata|Negative prompt|Steps:|$)))/i);
+        if (resMatch) {
+          try {
+            const arr = JSON.parse(resMatch[1]);
+            for (const item of arr) {
+              if (item.modelVersionId) {
+                resources.push({
+                  type: item.type || 'resource',
+                  modelVersionId: item.modelVersionId,
+                  modelName: item.modelName || item.modelVersionName || '',
+                  url: `https://civitai.com/models/${item.modelVersionId}`,
+                });
+              }
+            }
+          } catch { /* JSON parse failure — skip */ }
+        }
+
+        // Format 2: Civitai metadata: {"resources":[{"modelVersionId":...}]}
+        const metaMatch = params.match(/Civitai metadata:\s*(\{[\s\S]*?\})(?:\s*$)/i);
+        if (metaMatch) {
+          try {
+            const meta = JSON.parse(metaMatch[1]);
+            const metaResources = meta.resources ?? [];
+            for (const item of metaResources) {
+              if (item.modelVersionId && !resources.some(r => r.modelVersionId === item.modelVersionId)) {
+                resources.push({
+                  type: item.type || 'resource',
+                  modelVersionId: item.modelVersionId,
+                  modelName: '',
+                  url: `https://civitai.com/models/${item.modelVersionId}`,
+                });
+              }
+            }
+          } catch { /* JSON parse failure — skip */ }
+        }
+
+        if (resources.length > 0) {
+          aiData.civitai_resources = resources;
+        }
       } else if (/EMS-\d+/i.test(params) && !/^(?:v\d|f\d|neo|comfyui)/i.test(versionStr)) {
         // TensorArt model naming convention (e.g. "Model: EMS-12345") without a
         // standard A1111/Forge version — older TensorArt images with plain A1111 params
@@ -1062,6 +1109,12 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
         aiData.workflow_type = 'AUTOMATIC1111';
       }
     }
+  }
+
+  // Fooocus uses A1111-style parameters but writes a distinctive fooocus_scheme
+  // tEXt chunk. Override the generic AUTOMATIC1111 classification.
+  if (chunks.fooocus_scheme) {
+    aiData.workflow_type = 'Fooocus';
   }
 
   // --- ComfyUI format: JSON workflow stored in "prompt" PNG chunk ---

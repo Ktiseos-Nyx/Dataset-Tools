@@ -26,6 +26,7 @@ interface MetadataPanelProps {
 const HIDDEN_KEYS = new Set([
   'prompt', 'negative_prompt', 'workflow_type', 'loras',
   'comfyui_workflow', 'comfyui_nodes', '_drawthings_params',
+  'civitai_resources', 'civitai_urn_resources',
 ])
 
 // Display order for the parameter grid
@@ -444,7 +445,7 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onRef
 type ComfyNodeResult = { classification: 'builtin' | 'custom' | 'unknown'; repo?: NodeRepoInfo; source?: string }
 
 interface ComfyNodesData {
-  summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number }
+  summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number; builtinProvenance: number }
   classifications: Record<string, ComfyNodeResult>
   unknownNodes: string[]
 }
@@ -490,7 +491,7 @@ function ComfyUINodesSection({ nodes: initial, labelSize }: { nodes: ComfyNodesD
       <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs">
         <span className="text-muted-foreground">{initial.summary.total} total</span>
         <span className="text-muted-foreground">·</span>
-        <span>{initial.summary.builtin} builtin</span>
+        <span>{initial.summary.builtin} builtin{initial.summary.builtinProvenance > 0 ? <span className="text-emerald-400 ml-0.5" title={`${initial.summary.builtinProvenance} verified by workflow metadata (ComfyUI >= 1.26)`}>({initial.summary.builtinProvenance} verified)</span> : ''}</span>
         {customCount > 0 && <><span className="text-muted-foreground">·</span><span className="text-primary">{customCount} custom</span></>}
         {stillUnknown.length > 0 && <><span className="text-muted-foreground">·</span><span className="text-muted-foreground">{stillUnknown.length} unknown</span></>}
       </div>
@@ -629,6 +630,47 @@ function AITab({ ai, metadata, copiedValue, onCopy, fontSize: fs, formatFileSize
           </div>
         </div>
       )}
+
+      {/* ComfyUI Node Classification */}
+      {/* Civitai Resources */}
+      {(() => {
+        const civitaiRes = ai.civitai_resources as Array<{ type: string; modelVersionId: number; modelName: string; url: string }> | undefined;
+        const urnRes = ai.civitai_urn_resources as Array<{ type: string; modelId: string; versionId: string; baseModel: string }> | undefined;
+        if ((!civitaiRes || civitaiRes.length === 0) && (!urnRes || urnRes.length === 0)) return null;
+        return (
+          <div className="space-y-1.5">
+            <p className={`font-medium text-muted-foreground uppercase tracking-wide ${fs.label}`}>Civitai Resources</p>
+            <div className="flex flex-wrap gap-1.5">
+              {civitaiRes?.map((r, i) => (
+                <a
+                  key={`cr-${i}`}
+                  href={r.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-accent hover:bg-primary/20 text-accent-foreground border border-border transition-colors"
+                  title={r.modelName || `Model #${r.modelVersionId}`}
+                >
+                  <Tag className="w-3 h-3" />
+                  {r.type}: {r.modelName ? r.modelName.length > 30 ? r.modelName.slice(0, 30) + '...' : r.modelName : `#${r.modelVersionId}`}
+                </a>
+              ))}
+              {urnRes?.map((r, i) => (
+                <a
+                  key={`urn-${i}`}
+                  href={`https://civitai.com/models/${r.modelId}?modelVersionId=${r.versionId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-accent hover:bg-primary/20 text-accent-foreground border border-border transition-colors"
+                  title={`${r.type}: ${r.baseModel}`}
+                >
+                  <Tag className="w-3 h-3" />
+                  {r.type}: #{r.versionId}
+                </a>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* ComfyUI Node Classification */}
       {comfyNodes && (
