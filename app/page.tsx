@@ -76,9 +76,12 @@ export default function Home() {
     }
   };
 
-  // Reset thumbnail viewport when folder changes
+  // Reset thumbnail viewport and selection when folder changes
   useEffect(() => {
     setCurrentDir('.')
+    setSelectedFile(null)
+    setMetadata({ data: null, loading: false })
+    setSafetensors({ data: null, loading: false })
   }, [settings.currentFolder])
 
   const handleFileSelect = (file: FsItem) => {

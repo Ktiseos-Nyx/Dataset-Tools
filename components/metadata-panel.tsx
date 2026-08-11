@@ -352,6 +352,7 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onRef
         <ComfyUIWorkflowViewer 
           workflow={metadata.ai.comfyui_workflow} 
           readOnly={false}
+          fileName={metadata.fileName}
         />
       ) : (
         <div className="h-full flex items-center justify-center text-sm text-muted-foreground">

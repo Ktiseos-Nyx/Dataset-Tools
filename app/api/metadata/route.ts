@@ -1732,9 +1732,54 @@ function extractAIFromXMP(xmp: Record<string, any>): Record<string, any> {
 // Detect the actual image format from magic bytes, ignoring file extension.
 // CDNs (Civitai, etc.) sometimes serve PNG files with a .jpeg extension.
 // Returns null if the format is not recognised.
+// Extract dimensions from a WebP RIFF container via VP8X/VP8L/VP8  chunks.
+function extractWebPDimensions(buffer: Buffer): { width: number; height: number } | null {
+  let offset = 12; // Skip RIFF header
+  while (offset + 8 <= buffer.length) {
+    const chunkId = buffer.toString("ascii", offset, offset + 4);
+    const chunkSize = buffer.readUInt32LE(offset + 4);
+    if (offset + 8 + chunkSize > buffer.length) break;
+    const p = offset + 8; // payload start
+
+    if (chunkId === "VP8X" && chunkSize >= 10) {
+      const w = buffer.readUIntLE(p + 4, 3) + 1;
+      const h = buffer.readUIntLE(p + 7, 3) + 1;
+      if (w > 0 && h > 0) return { width: w, height: h };
+    } else if (chunkId === "VP8L" && chunkSize >= 5) {
+      const b1 = buffer[p + 1], b2 = buffer[p + 2], b3 = buffer[p + 3];
+      const w = ((b2 & 0x3f) << 8) | b1;
+      const h = ((b2 & 0xc0) >> 6) | (b3 << 2) | ((buffer[p + 4] & 0x0f) << 10);
+      if (w > 0 && h > 0) return { width: w + 1, height: h + 1 };
+    } else if (chunkId === "VP8 " && chunkSize >= 10) {
+      const w = buffer.readUInt16LE(p + 6) & 0x3fff;
+      const h = buffer.readUInt16LE(p + 8) & 0x3fff;
+      if (w > 0 && h > 0) return { width: w, height: h };
+    }
+
+    offset += 8 + chunkSize + (chunkSize & 1);
+  }
+  return null;
+}
+
+// Extract a named RIFF chunk payload from a WebP buffer (e.g. "EXIF", "XMP ").
+function extractWebPChunk(buffer: Buffer, target: string): Buffer | null {
+  let offset = 12;
+  while (offset + 8 <= buffer.length) {
+    const chunkId = buffer.toString("ascii", offset, offset + 4);
+    const chunkSize = buffer.readUInt32LE(offset + 4);
+    if (offset + 8 + chunkSize > buffer.length) break;
+    if (chunkId === target) {
+      return buffer.subarray(offset + 8, offset + 8 + chunkSize);
+    }
+    offset += 8 + chunkSize + (chunkSize & 1);
+  }
+  return null;
+}
+
 // Extract image dimensions without relying on EXIF data.
 // PNG: read IHDR (always the first chunk, width/height at fixed offsets).
 // JPEG: scan for the first SOF marker.
+// WebP: read VP8X/VP8L/VP8  chunk headers.
 function extractImageDimensions(buffer: Buffer, mimeType: string): { width: number; height: number } | null {
   if (mimeType === 'image/png' && buffer.length >= 24) {
     // After the 8-byte PNG signature: 4-byte chunk length + 4-byte "IHDR" type,
@@ -1761,6 +1806,9 @@ function extractImageDimensions(buffer: Buffer, mimeType: string): { width: numb
       }
       offset += 2 + segLen;
     }
+  } else if (mimeType === 'image/webp' && buffer.length >= 30) {
+    const dims = extractWebPDimensions(buffer);
+    if (dims) return dims;
   }
   return null;
 }
@@ -1832,6 +1880,19 @@ export async function extractMetadataFromBuffer(
         aiData = await parseAIMetadata({ parameters: userComment });
       }
     }
+  } else if (effectiveMime === 'image/webp') {
+    // WebP may carry an EXIF chunk with AI metadata (e.g. CoreML/MPS tools on macOS).
+    const webpExif = extractWebPChunk(buffer, 'EXIF');
+    if (webpExif) {
+      const userComment = extractUserCommentFromTIFF(webpExif);
+      if (userComment) {
+        if (userComment.trim().startsWith('{')) {
+          aiData = await parseAIMetadata({ prompt: userComment });
+        } else {
+          aiData = await parseAIMetadata({ parameters: userComment });
+        }
+      }
+    }
   }
 
   // Extract XMP metadata (works for all image formats)
@@ -1849,12 +1910,26 @@ export async function extractMetadataFromBuffer(
         Object.assign(aiData, dtParsed);
       }
       for (const [key, value] of Object.entries(xmpAI)) {
-        if (!aiData[key]) aiData[key] = value;
+        if (!aiData[key]) {
+          aiData[key] = value;
+        } else if (key === 'workflow_type' && aiData[key] === 'AUTOMATIC1111') {
+          // XMP-derived workflow_type (e.g. Draw Things, Midjourney) is more
+          // specific than the generic A1111 classification from tEXt params.
+          aiData[key] = value;
+        }
       }
     }
   }
 
-  const dims = extractImageDimensions(buffer, effectiveMime);
+  let dims = extractImageDimensions(buffer, effectiveMime);
+
+  // XMP dimension fallback: formats like WebP may not have native dimension
+  // extraction, but XMP often carries exif:PixelXDimension / PixelYDimension.
+  if (!dims) {
+    const xmpW = Number(xmpData['exif:PixelXDimension'] || 0);
+    const xmpH = Number(xmpData['exif:PixelYDimension'] || 0);
+    if (xmpW > 0 && xmpH > 0) dims = { width: xmpW, height: xmpH };
+  }
 
   // Filename-based fallback: ComfyUI's default save prefix is "ComfyUI_".
   // If all other classification failed and the filename matches, override.
@@ -1862,8 +1937,11 @@ export async function extractMetadataFromBuffer(
     aiData.workflow_type = 'ComfyUI';
   }
 
-  // ArcEnCiel uses UUID-prefixed filenames (e.g. "86771998-...-upscaled_00001_.png")
-  if (aiData.workflow_type === 'ComfyUI' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(fileName)) {
+  // ArcEnCiel uses UUID-prefixed filenames with a 5-digit batch counter suffix
+  // (e.g. "8ed5f254-3c23-4362-8425-5fd32f8beed5_00001_.png").
+  // Civitai now also renames downloads with UUIDs but without the counter suffix,
+  // so the pattern requires the trailing _NNNNN_ marker to avoid false positives.
+  if (aiData.workflow_type === 'ComfyUI' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}_\d{5}_\./i.test(fileName)) {
     aiData.workflow_type = 'ArcEnCiel';
   }
 
