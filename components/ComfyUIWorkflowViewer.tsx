@@ -61,10 +61,11 @@ function convertPromptApiToLiteGraph(apiData: Record<string, any>): Record<strin
       if (
         Array.isArray(value) &&
         value.length === 2 &&
-        typeof value[0] === 'number' &&
+        (typeof value[0] === 'number' || (typeof value[0] === 'string' && /^\d+$/.test(value[0]))) &&
         typeof value[1] === 'number'
       ) {
-        const [fromNodeId, fromSlot] = value as [number, number];
+        const fromNodeId = Number(value[0]);
+        const fromSlot = value[1];
         const lid = nextLinkId++;
         links.push([lid, fromNodeId, fromSlot, toNodeId, inputSlot, '*']);
         node.inputs.push({ name, type: '*', link: lid });

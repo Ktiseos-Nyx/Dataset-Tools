@@ -6,6 +6,7 @@ import mime from 'mime-types';
 // @ts-expect-error — exif-parser has no type declarations
 import exifParser from 'exif-parser';
 import iconv from 'iconv-lite';
+import zlib from 'zlib';
 import { classifyNodes, type NodeLookupResult } from '@/lib/comfyui-node-registry';
 
 /**
@@ -34,8 +35,11 @@ function extractWorkflowProvenance(workflowJson: string): WorkflowProvenance {
     for (const node of nodes) {
       const type = node?.type;
       const props = node?.properties ?? {};
-      if (typeof type === 'string' && type && (props.cnr_id || props.aux_id)) {
-        provenance[type] = { cnrId: props.cnr_id, auxId: props.aux_id };
+      if (typeof type !== 'string' || !type) continue;
+      const cnrId = typeof props.cnr_id === 'string' ? props.cnr_id : undefined;
+      const auxId = typeof props.aux_id === 'string' ? props.aux_id : undefined;
+      if (cnrId || auxId) {
+        provenance[type] = { cnrId, auxId };
       }
     }
   } catch {
@@ -129,44 +133,39 @@ function extractUserCommentFromRawTIFF(tiffData: Buffer): string | null {
   };
 
   if (read16(2) !== 42) return null;
-  const ifd0Offset = read32(4);
 
-  function findIFDEntryValue(ifdOffset: number, targetTag: number): number | null {
-    if (ifdOffset + 2 > tiffData.length) return null;
-    const entryCount = read16(ifdOffset);
-    for (let i = 0; i < entryCount; i++) {
-      const entryOff = ifdOffset + 2 + i * 12;
-      if (entryOff + 12 > tiffData.length) break;
-      if (read16(entryOff) === targetTag) return read32(entryOff + 8);
+  function findEntry(ifdOff: number, targetTag: number): number | null {
+    if (ifdOff + 2 > tiffData.length) return null;
+    const count = Math.min(read16(ifdOff), 4096);
+    for (let i = 0; i < count; i++) {
+      const eOff = ifdOff + 2 + i * 12;
+      if (eOff + 12 > tiffData.length) break;
+      if (read16(eOff) === targetTag) return read32(eOff + 8);
     }
     return null;
   }
 
-  function findUserComment(ifdOffset: number): Buffer | null {
-    if (ifdOffset + 2 > tiffData.length) return null;
-    const entryCount = read16(ifdOffset);
-    for (let i = 0; i < entryCount; i++) {
-      const entryOff = ifdOffset + 2 + i * 12;
-      if (entryOff + 12 > tiffData.length) break;
-      if (read16(entryOff) !== 0x9286) continue;
-      const byteCount = read32(entryOff + 4);
+  function findUserComment(ifdOff: number): Buffer | null {
+    if (ifdOff + 2 > tiffData.length) return null;
+    const count = Math.min(read16(ifdOff), 4096);
+    for (let i = 0; i < count; i++) {
+      const eOff = ifdOff + 2 + i * 12;
+      if (eOff + 12 > tiffData.length) break;
+      if (read16(eOff) !== 0x9286) continue;
+      const byteCount = read32(eOff + 4);
       if (byteCount < 8) return null;
-      let dataStart: number;
-      if (byteCount <= 4) {
-        dataStart = entryOff + 8;
-      } else {
-        dataStart = read32(entryOff + 8);
-      }
+      const dataStart = read32(eOff + 8);
       if (dataStart + byteCount > tiffData.length) return null;
       return tiffData.slice(dataStart, dataStart + byteCount);
     }
     return null;
   }
 
-  const exifIFDOffset = findIFDEntryValue(ifd0Offset, 0x8769);
-  if (exifIFDOffset === null) return null;
+  const ifd0Off = read32(4);
+  const exifOff = findEntry(ifd0Off, 0x8769); // EXIF sub-IFD pointer from IFD0
+  if (exifOff === null) return null;
 
-  const ucRaw = findUserComment(exifIFDOffset);
+  const ucRaw = findUserComment(exifOff);
   if (!ucRaw) return null;
 
   return decodeUserComment(ucRaw);
@@ -205,10 +204,10 @@ function parsePNGChunks(buffer: Buffer): Record<string, any> {
       const nullIndex = data.indexOf(0);
       if (nullIndex !== -1) {
         const key = data.toString('latin1', 0, nullIndex);
-        // Skip compression flag, compression method, language tag, translated keyword
-        let textStart = nullIndex + 1;
-        const compressionFlag = data[textStart++];
-        const compressionMethod = data[textStart++];
+        // iTXt: keyword\0, compression flag, compression method, language tag\0, translated keyword\0, text
+        const compressionFlag = data[nullIndex + 1];
+        const compressionMethod = data[nullIndex + 2];
+        let textStart = nullIndex + 3;
 
         // Skip language tag (null-terminated)
         while (textStart < data.length && data[textStart] !== 0) textStart++;
@@ -218,7 +217,16 @@ function parsePNGChunks(buffer: Buffer): Record<string, any> {
         while (textStart < data.length && data[textStart] !== 0) textStart++;
         textStart++; // Skip null
 
-        const value = data.toString('utf8', textStart);
+        let value: string;
+        if (compressionFlag === 1 && compressionMethod === 0) {
+          try {
+            value = zlib.inflateSync(data.subarray(textStart)).toString('utf8');
+          } catch {
+            value = data.toString('utf8', textStart);
+          }
+        } else {
+          value = data.toString('utf8', textStart);
+        }
         chunks[key] = value;
       }
     }
@@ -1064,6 +1072,12 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
     }
   }
 
+  // Fooocus uses A1111-style parameters but writes a distinctive fooocus_scheme
+  // tEXt chunk. Override the generic AUTOMATIC1111 classification.
+  if (chunks.fooocus_scheme && aiData.workflow_type === 'AUTOMATIC1111') {
+    aiData.workflow_type = 'Fooocus';
+  }
+
   // --- ComfyUI format: JSON workflow stored in "prompt" PNG chunk ---
   if (chunks.prompt) {
     try {
@@ -1472,12 +1486,7 @@ function extractUserCommentFromTIFF(segData: Buffer): string | null {
       const byteCount = read32(entryOff + 4);
       if (byteCount < 8) return null;
 
-      let dataStart: number;
-      if (byteCount <= 4) {
-        dataStart = entryOff + 8; // inline
-      } else {
-        dataStart = read32(entryOff + 8); // offset from TIFF header
-      }
+      const dataStart = read32(entryOff + 8); // offset from TIFF header
 
       if (dataStart + byteCount > tiffData.length) return null;
       return tiffData.slice(dataStart, dataStart + byteCount);
@@ -1845,15 +1854,41 @@ export async function extractMetadataFromBuffer(
   // Trust file content over extension — CDNs can mislabel format in the filename.
   const effectiveMime = detectMimeFromMagic(buffer) ?? mimeType;
 
-  let exifData = {};
-  let iptcData = {};
+  let exifData: Record<string, any> = {};
+  let iptcData: Record<string, any> = {};
+  let userCommentFromEXIF: string | null = null;
 
-  // Try to parse EXIF data (only works for JPEG/TIFF)
+  // Try to parse EXIF data (only works for JPEG/TIFF).
+  // enableBinaryFields(true) is required so format-7 (UNDEFINED) tags like
+  // UserComment (0x9286) are NOT skipped — without it AI metadata extraction
+  // from JPEGs has no fallback when the TIFF-based parser fails.
   try {
     const parser = exifParser.create(buffer);
+    parser.enableBinaryFields(true);
     const result = parser.parse();
     exifData = result.tags || {};
     iptcData = result.iptc || {};
+
+    // Extract and decode UserComment from exif-parser's tags (format-7 data
+    // comes back as a raw Buffer, not a string). Decode it once here so the
+    // JPEG AI metadata path can use it as a fallback.
+    const rawUC = (exifData as any).UserComment;
+    if (Buffer.isBuffer(rawUC) && rawUC.length >= 8) {
+      userCommentFromEXIF = decodeUserComment(rawUC);
+    }
+
+    // Strip binary/format-7 tags from exifData so we don't send large opaque
+    // blobs (MakerNote etc.) to the client. UserComment is kept as a decoded
+    // string so EXIF tab shows it, but we move it to a friendlier key first.
+    for (const [key, value] of Object.entries(exifData as Record<string, any>)) {
+      if (Buffer.isBuffer(value)) {
+        delete (exifData as any)[key];
+      }
+    }
+    // Store the decoded UserComment under a readable key for the EXIF tab
+    if (userCommentFromEXIF) {
+      (exifData as any).UserCommentText = userCommentFromEXIF;
+    }
   } catch (e) {
     // EXIF parsing failed, that's ok for PNGs
   }
@@ -1866,10 +1901,13 @@ export async function extractMetadataFromBuffer(
   } else if (effectiveMime === 'image/jpeg') {
     let userComment = parseJPEGUserComment(buffer);
 
-    if (!userComment && (exifData as any).UserComment) {
-      const epComment = String((exifData as any).UserComment).trim();
-      if (epComment.length > 10 && (epComment.includes('Steps:') || epComment.startsWith('{'))) {
-        userComment = epComment;
+    // Fall back to the exif-parser-decoded UserComment when the TIFF-based
+    // parser couldn't find anything. Exif-parser handles byte order, IFD
+    // traversal, and offset calculations natively and is more battle-tested.
+    if (!userComment && userCommentFromEXIF) {
+      const ucText = userCommentFromEXIF.trim();
+      if (ucText.startsWith('{') || /Steps:\s*\d+/i.test(ucText)) {
+        userComment = userCommentFromEXIF;
       }
     }
 
