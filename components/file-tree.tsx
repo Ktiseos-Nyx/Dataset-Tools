@@ -300,7 +300,10 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   const pathInputRef = useRef<HTMLInputElement>(null);
   const { settings, updateSettings } = useSettings();
 
+  const requestIdRef = useRef(0);
+
   const fetchRoot = useCallback(async () => {
+    const requestId = ++requestIdRef.current;
     setIsLoading(true);
     setRootItems([]); // Clear stale items immediately
     try {
@@ -309,15 +312,19 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
           throw new Error('Failed to fetch root directory');
       }
       const data = await response.json();
+      if (requestId !== requestIdRef.current) return;
       const items = data.map((item: FsItem) => ({
           ...item,
           path: item.name,
       }));
       setRootItems(sortItems(items, settings.sortBy));
     } catch (error) {
+      if (requestId !== requestIdRef.current) return;
       console.error(error);
     } finally {
-      setIsLoading(false);
+      if (requestId === requestIdRef.current) {
+        setIsLoading(false);
+      }
     }
   }, [settings.showHiddenFiles, settings.currentFolder, settings.sortBy]);
 

@@ -53,6 +53,7 @@ export default function Home() {
       setSafetensors({ data, loading: false })
     } catch (error) {
       if ((error as Error).name === 'AbortError') return
+      if (controller.signal.aborted || fetchAbortRef.current !== controller) return
       console.error(error)
       setSafetensors({ data: null, loading: false })
     }
@@ -78,6 +79,7 @@ export default function Home() {
       setMetadata({ data, loading: false });
     } catch (error) {
       if ((error as Error).name === 'AbortError') return;
+      if (controller.signal.aborted || fetchAbortRef.current !== controller) return;
       console.error(error);
       setMetadata({ data: null, loading: false });
     }

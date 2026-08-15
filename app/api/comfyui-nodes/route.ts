@@ -104,8 +104,8 @@ export async function POST(request: Request) {
     // Extract unique class_types from the workflow
     const classTypes = new Set<string>();
     for (const nodeData of Object.values(workflow)) {
-      const node = nodeData as { class_type?: string };
-      if (node?.class_type) {
+      const node = nodeData as { class_type?: unknown } | null;
+      if (node && typeof node.class_type === 'string' && node.class_type) {
         classTypes.add(node.class_type);
       }
     }

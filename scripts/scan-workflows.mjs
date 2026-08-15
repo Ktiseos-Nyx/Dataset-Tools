@@ -6,8 +6,8 @@
  * Usage: node scripts/scan-workflows.mjs "C:\path\to\workflows"
  */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'fs';
-import { join, extname } from 'path';
+import { readFileSync, writeFileSync, existsSync, readdirSync, statSync, mkdirSync } from 'fs';
+import { join, extname, dirname } from 'path';
 
 const CACHE_PATH = new URL('../.cache/extension-node-map.json', import.meta.url).pathname.replace(/^\/([A-Z]:)/, '$1');
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
@@ -56,6 +56,7 @@ async function getExtensionMap() {
   const res = await fetch(EXTENSION_MAP_URL);
   if (!res.ok) throw new Error(`Failed to fetch extension map: ${res.status}`);
   const data = await res.json();
+  mkdirSync(dirname(CACHE_PATH), { recursive: true });
   writeFileSync(CACHE_PATH, JSON.stringify({ fetchedAt: Date.now(), data }, null, 2));
   console.log('Cached extension map.\n');
   return data;

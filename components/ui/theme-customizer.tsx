@@ -29,6 +29,11 @@ function useThemeColor() {
     () => false,
   );
 
+  React.useEffect(() => {
+    // Apply any saved color to the DOM so the CSS var reflects it on load.
+    document.documentElement.setAttribute("data-theme-color", activeColor)
+  }, [activeColor])
+
   const setColor = (colorName: string) => {
     setActiveColor(colorName)
     localStorage.setItem("theme-color", colorName)

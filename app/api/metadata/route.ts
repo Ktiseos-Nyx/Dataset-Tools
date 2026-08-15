@@ -6,6 +6,7 @@ import mime from 'mime-types';
 // @ts-expect-error — exif-parser has no type declarations
 import exifParser from 'exif-parser';
 import iconv from 'iconv-lite';
+import zlib from 'zlib';
 import { classifyNodes, type NodeLookupResult } from '@/lib/comfyui-node-registry';
 
 // A ComfyUI API-format workflow is a map of node id → node object. Inputs are
@@ -46,11 +47,11 @@ function extractWorkflowProvenance(workflowJson: string): WorkflowProvenance {
     for (const node of nodes) {
       const type = node.type;
       const props = node.properties ?? {};
-      if (typeof type === 'string' && type && (props.cnr_id || props.aux_id)) {
-        provenance[type] = {
-          cnrId: props.cnr_id as string | undefined,
-          auxId: props.aux_id as string | undefined,
-        };
+      if (typeof type !== 'string' || !type) continue;
+      const cnrId = typeof props.cnr_id === 'string' ? props.cnr_id : undefined;
+      const auxId = typeof props.aux_id === 'string' ? props.aux_id : undefined;
+      if (cnrId || auxId) {
+        provenance[type] = { cnrId, auxId };
       }
     }
   } catch {
@@ -219,8 +220,9 @@ function parsePNGChunks(buffer: Buffer): Record<string, string> {
       if (nullIndex !== -1) {
         const key = data.toString('latin1', 0, nullIndex);
         // Skip compression flag, compression method, language tag, translated keyword
-        let textStart = nullIndex + 1;
-        textStart += 2;
+        const compressionFlag = data[nullIndex + 1];
+        const compressionMethod = data[nullIndex + 2];
+        let textStart = nullIndex + 3;
 
         // Skip language tag (null-terminated)
         while (textStart < data.length && data[textStart] !== 0) textStart++;
@@ -230,7 +232,16 @@ function parsePNGChunks(buffer: Buffer): Record<string, string> {
         while (textStart < data.length && data[textStart] !== 0) textStart++;
         textStart++; // Skip null
 
-        const value = data.toString('utf8', textStart);
+        let value: string;
+        if (compressionFlag === 1 && compressionMethod === 0) {
+          try {
+            value = zlib.inflateSync(data.subarray(textStart)).toString('utf8');
+          } catch {
+            value = data.toString('utf8', textStart);
+          }
+        } else {
+          value = data.toString('utf8', textStart);
+        }
         chunks[key] = value;
       }
     }
