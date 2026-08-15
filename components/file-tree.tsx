@@ -1,14 +1,14 @@
 "use client"
 
 import { ChevronRight, ChevronDown, Folder, FolderOpen, FileImage, Loader2, FolderSearch, Copy, RefreshCw, ArrowUpDown, FolderInput } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import type { FsItem } from "@/types/fs"
 import type { ViewMode } from "@/types/metadata"
 import { useSettings } from "@/hooks/use-settings"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import {
-  ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuSeparator,
+  ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem,
 } from "@/components/ui/context-menu"
 import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
@@ -300,7 +300,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   const pathInputRef = useRef<HTMLInputElement>(null);
   const { settings, updateSettings } = useSettings();
 
-  const fetchRoot = async () => {
+  const fetchRoot = useCallback(async () => {
     setIsLoading(true);
     setRootItems([]); // Clear stale items immediately
     try {
@@ -319,7 +319,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [settings.showHiddenFiles, settings.currentFolder, settings.sortBy]);
 
   const openPathEditor = () => {
     setPathInput(settings.currentFolder);
@@ -336,8 +336,9 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- resets list + shows loading before fetching the new folder
     fetchRoot();
-  }, [settings.showHiddenFiles, settings.sortBy, settings.currentFolder, refreshKey]);
+  }, [fetchRoot, refreshKey]);
 
   return (
     <aside className="h-full bg-muted/20 flex flex-col">

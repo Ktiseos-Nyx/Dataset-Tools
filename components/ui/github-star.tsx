@@ -72,13 +72,18 @@ function formatNumber(num: number): string {
 function useGitHubStars(owner: string, repo: string, manualStars?: number) {
   const [stars, setStars] = React.useState<number>(manualStars ?? 0);
   const [loading, setLoading] = React.useState(!manualStars);
+  const [prevManual, setPrevManual] = React.useState(manualStars);
 
-  React.useEffect(() => {
+  if (manualStars !== prevManual) {
+    setPrevManual(manualStars);
     if (manualStars !== undefined) {
       setStars(manualStars);
       setLoading(false);
-      return;
     }
+  }
+
+  React.useEffect(() => {
+    if (manualStars !== undefined) return;
 
     fetch(`https://api.github.com/repos/${owner}/${repo}`)
       .then((response) => response.json())
@@ -183,16 +188,18 @@ export function GitHubStarButton({
 }: GitHubStarButtonProps) {
   const { stars, loading } = useGitHubStars(owner, repo, manualStars);
   const [localStars, setLocalStars] = React.useState(0);
+  const [prevStars, setPrevStars] = React.useState(stars);
   const [isHovered, setIsHovered] = React.useState(false);
   const [isStarred, setIsStarred] = React.useState(false);
   const [particles, setParticles] = React.useState<Particle[]>([]);
   const buttonRef = React.useRef<HTMLAnchorElement>(null);
 
-  React.useEffect(() => {
+  if (stars !== prevStars) {
+    setPrevStars(stars);
     if (stars > 0) {
       setLocalStars(stars);
     }
-  }, [stars]);
+  }
 
   const handleClick = (e: React.MouseEvent) => {
     if (!isStarred) {

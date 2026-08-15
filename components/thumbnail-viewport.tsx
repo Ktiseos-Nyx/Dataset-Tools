@@ -25,7 +25,9 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refr
 
   useEffect(() => {
     if (!currentDir) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- clears list state when the folder becomes null
       setImages([])
+      setIsLoading(false)
       return
     }
 
@@ -57,7 +59,7 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refr
           }
         })
         setImages(files)
-      } catch (e) {
+      } catch {
         if (!aborted) setImages([])
       } finally {
         if (!aborted) setIsLoading(false)

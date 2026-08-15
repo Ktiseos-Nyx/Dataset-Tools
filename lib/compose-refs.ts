@@ -55,7 +55,7 @@ function composeRefs<T>(...refs: PossibleRef<T>[]): React.RefCallback<T> {
  * Accepts callback refs and RefObject(s)
  */
 function useComposedRefs<T>(...refs: PossibleRef<T>[]): React.RefCallback<T> {
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want to re-run this callback when the refs change
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo -- refs is a rest array; we want the latest refs each render
   return React.useCallback(composeRefs(...refs), refs);
 }
 

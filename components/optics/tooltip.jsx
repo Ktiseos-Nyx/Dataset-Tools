@@ -175,7 +175,7 @@ function TooltipTrigger({
 			event.stopPropagation();
 			onPointerDown?.(event);
 		},
-		[onPointerDown, setShouldKeepOpen],
+		[onPointerDown, setShouldKeepOpen, isPointerOverTriggerRef],
 	);
 
 	const handlePointerEnter = React.useCallback(
@@ -184,7 +184,7 @@ function TooltipTrigger({
 			isPointerOverTriggerRef.current = true;
 			onPointerEnter?.(event);
 		},
-		[onPointerEnter, setShouldKeepOpen],
+		[onPointerEnter, setShouldKeepOpen, isPointerOverTriggerRef],
 	);
 
 	const handlePointerLeave = React.useCallback(
@@ -195,7 +195,7 @@ function TooltipTrigger({
 			}
 			onPointerLeave?.(event);
 		},
-		[onPointerLeave, setShouldKeepOpen, isPointerOverContentRef],
+		[onPointerLeave, setShouldKeepOpen, isPointerOverContentRef, isPointerOverTriggerRef],
 	);
 
 	const handleTouchStart = React.useCallback(
@@ -217,7 +217,7 @@ function TooltipTrigger({
 
 			onTouchStart?.(event);
 		},
-		[onTouchStart, setShouldKeepOpen, openTooltip, delay],
+		[onTouchStart, setShouldKeepOpen, openTooltip, delay, isPointerOverTriggerRef],
 	);
 
 	const handleTouchEnd = React.useCallback(
@@ -283,7 +283,7 @@ function TooltipContent({
 			isPointerOverContentRef.current = true;
 			onPointerEnter?.(event);
 		},
-		[onPointerEnter, setShouldKeepOpen],
+		[onPointerEnter, setShouldKeepOpen, isPointerOverContentRef],
 	);
 
 	const handlePointerLeave = React.useCallback(
@@ -294,7 +294,7 @@ function TooltipContent({
 			}
 			onPointerLeave?.(event);
 		},
-		[onPointerLeave, setShouldKeepOpen, isPointerOverTriggerRef],
+		[onPointerLeave, setShouldKeepOpen, isPointerOverTriggerRef, isPointerOverContentRef],
 	);
 
 	return (

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useSyncExternalStore } from "react"
 import { useTheme } from "next-themes"
 import { Save, Eye, EyeOff, Check } from "lucide-react"
 import { useSettings } from "@/hooks/use-settings"
@@ -19,10 +19,13 @@ export default function SettingsPage() {
   const [hasGithubToken, setHasGithubToken] = useState(false)
   const [githubSaved, setGithubSaved] = useState(false)
 
-  const [mounted, setMounted] = useState(false)
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  )
 
   useEffect(() => {
-    setMounted(true)
     // Check if server has saved keys
     fetch("/api/settings")
       .then(res => res.json())

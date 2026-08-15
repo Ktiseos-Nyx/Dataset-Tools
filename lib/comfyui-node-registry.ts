@@ -22,7 +22,7 @@ export interface NodeLookupResult {
   classification: NodeClassification;
   repo?: NodeRepoInfo;
   /** How the repo info was resolved. Defaults to 'extension-map' when omitted. */
-  source?: 'extension-map' | 'github';
+  source?: 'extension-map' | 'github' | 'provenance' | 'supplemental';
   displayName?: string;  // ← NEW: human-readable name when repo is unknown
 }
 
@@ -205,7 +205,7 @@ async function getNodeIndex(): Promise<CacheEntry> {
       throw new Error(`Failed to fetch extension map: ${res.status}`);
     }
 
-    const map: Record<string, [string[], Record<string, any>]> = await res.json();
+    const map: Record<string, [string[], { title_aux?: string; title?: string; nodename_pattern?: string }]> = await res.json();
 
     for (const [repoUrl, [nodeNames, meta]] of Object.entries(map)) {
       // Extract a clean repo name from the URL
@@ -288,7 +288,7 @@ export async function lookupNode(
   // Supplemental local patterns (repos not yet in upstream extension-map)
   for (const { regex, repo } of SUPPLEMENTAL_PATTERNS) {
     if (regex.test(classType)) {
-      return { classification: 'custom', repo, source: 'extension-map' };
+      return { classification: 'custom', repo, source: 'supplemental' };
     }
   }
 
@@ -301,7 +301,7 @@ export async function lookupNode(
     }
   }
 
-  return { classification: 'unknown', displayName: deriveDisplayName(classtype) };
+  return { classification: 'unknown', displayName: deriveDisplayName(classType) };
 }
 
 /**
@@ -340,7 +340,7 @@ export async function classifyNodes(
     if (!matched) {
       for (const { regex, repo } of SUPPLEMENTAL_PATTERNS) {
         if (regex.test(classType)) {
-          results[classType] = { classification: 'custom', repo, source: 'extension-map' };
+          results[classType] = { classification: 'custom', repo, source: 'supplemental' };
           matched = true;
           break;
         }

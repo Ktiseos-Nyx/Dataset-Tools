@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { Copy, Camera, FileText, Sparkles, Code, Check, Loader2, ListTree, Tag, ImageIcon, ChartArea } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Copy, Camera, FileText, Sparkles, Code, Check, Loader2, Tag, ImageIcon, ChartArea } from "lucide-react"
 import type { ImageMetadata } from "@/types/metadata"
 import type { NodeRepoInfo } from "@/lib/comfyui-node-registry"
 import type { Rule, RuleEvaluationResult } from "@/types/rules"
@@ -75,14 +75,15 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onRef
   const [ruleResults, setRuleResults] = useState<RuleEvaluationResult[] | null>(null)
   const [isApplyingRules, setIsApplyingRules] = useState(false)
   const { settings } = useSettings()
-  const prevFileRef = useRef<string | null>(null)
+  const [prevFileName, setPrevFileName] = useState<string | null>(null)
 
   const fs = FONT_SIZE_MAP[settings.fontSize] || FONT_SIZE_MAP.md
 
-  // Auto-switch to the best tab when a new file's metadata loads
-  useEffect(() => {
-    if (!metadata || metadata.fileName === prevFileRef.current) return
-    prevFileRef.current = metadata.fileName
+  // Auto-switch to the best tab when a new file's metadata loads. Adjusted
+  // during render (rather than in an effect) so a new file doesn't cause a
+  // cascading render before the tab is corrected.
+  if (metadata && metadata.fileName !== prevFileName) {
+    setPrevFileName(metadata.fileName)
 
     const hasAi = Object.keys(metadata.ai || {}).length > 0
     const hasExif = Object.keys(metadata.exif || {}).length > 0
@@ -97,7 +98,7 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onRef
     } else {
       setActiveTab("basic")
     }
-  }, [metadata])
+  }
 
   const handleApplyRules = async () => {
     if (!metadata) return
@@ -352,7 +353,6 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onRef
       {metadata.ai?.comfyui_workflow ? (
         <ComfyUIWorkflowViewer 
           workflow={metadata.ai.comfyui_workflow} 
-          readOnly={false}
           fileName={metadata.fileName}
         />
       ) : (
@@ -445,7 +445,7 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onRef
 type ComfyNodeResult = { classification: 'builtin' | 'custom' | 'unknown'; repo?: NodeRepoInfo; source?: string }
 
 interface ComfyNodesData {
-  summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number; builtinProvenance: number }
+  summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number; builtinProvenance?: number }
   classifications: Record<string, ComfyNodeResult>
   unknownNodes: string[]
 }
@@ -456,8 +456,9 @@ function ComfyUINodesSection({ nodes: initial, labelSize }: { nodes: ComfyNodesD
   const unknownKey = initial.unknownNodes.join(',')
 
   useEffect(() => {
-    if (initial.unknownNodes.length === 0) return
+    if (!unknownKey) return
     const controller = new AbortController()
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- show loading state before the async enrichment fetch
     setEnriching(true)
     fetch(`/api/comfyui-nodes?classTypes=${encodeURIComponent(unknownKey)}&github=true`, {
       signal: controller.signal,
@@ -478,6 +479,12 @@ function ComfyUINodesSection({ nodes: initial, labelSize }: { nodes: ComfyNodesD
   const repos = [...repoMap.values()]
   const stillUnknown = Object.entries(merged).filter(([, r]) => r.classification === 'unknown').map(([ct]) => ct)
   const customCount = Object.values(merged).filter(r => r.classification === 'custom').length
+  const verifiedCount = initial.summary.builtinProvenance ?? 0
+  const verifiedBadge = verifiedCount > 0 ? (
+    <span className="text-primary ml-0.5" title={`${verifiedCount} verified by workflow metadata (ComfyUI >= 1.26)`}>
+      ({verifiedCount} verified)
+    </span>
+  ) : null
 
   return (
     <div className="space-y-1.5">
@@ -491,7 +498,7 @@ function ComfyUINodesSection({ nodes: initial, labelSize }: { nodes: ComfyNodesD
       <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs">
         <span className="text-muted-foreground">{initial.summary.total} total</span>
         <span className="text-muted-foreground">·</span>
-        <span>{initial.summary.builtin} builtin{initial.summary.builtinProvenance > 0 ? <span className="text-emerald-400 ml-0.5" title={`${initial.summary.builtinProvenance} verified by workflow metadata (ComfyUI >= 1.26)`}>({initial.summary.builtinProvenance} verified)</span> : ''}</span>
+        <span>{initial.summary.builtin} builtin{verifiedBadge}</span>
         {customCount > 0 && <><span className="text-muted-foreground">·</span><span className="text-primary">{customCount} custom</span></>}
         {stillUnknown.length > 0 && <><span className="text-muted-foreground">·</span><span className="text-muted-foreground">{stillUnknown.length} unknown</span></>}
       </div>
@@ -631,7 +638,6 @@ function AITab({ ai, metadata, copiedValue, onCopy, fontSize: fs, formatFileSize
         </div>
       )}
 
-      {/* ComfyUI Node Classification */}
       {/* Civitai Resources */}
       {(() => {
         const civitaiRes = ai.civitai_resources as Array<{ type: string; modelVersionId: number; modelName: string; url: string }> | undefined;

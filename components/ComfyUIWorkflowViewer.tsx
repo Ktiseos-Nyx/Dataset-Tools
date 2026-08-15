@@ -1,12 +1,28 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { LGraph, LGraphCanvas, LGraphNode, LiteGraph } from 'litegraph.js';
+import { LGraph, LGraphCanvas, LGraphNode, LiteGraph, type IWidget } from 'litegraph.js';
 import 'litegraph.js/css/litegraph.css';
 import { AlertCircle, Download, X, Circle } from 'lucide-react';
 
+interface ApiNode {
+  class_type?: string;
+  inputs?: Record<string, unknown>;
+}
+
+interface SerializedLiteNode {
+  id: number;
+  type: string;
+  pos: number[];
+  size: number[];
+  inputs: Array<{ name: string; type: string; link: number }>;
+  outputs: Array<{ name: string; type: string; links: number[] }>;
+  properties: Record<string, unknown>;
+  widgets_values: unknown[];
+}
+
 interface ComfyUIWorkflowViewerProps {
-  workflow: Record<string, any>;
+  workflow: Record<string, unknown>;
   readOnly?: boolean;
   className?: string;
   fileName?: string;
@@ -18,51 +34,53 @@ interface SelectedNodeInfo {
   title: string;
   inputs: Array<{ name: string; type: string; link: number | null }>;
   outputs: Array<{ name: string; type: string; links: number[] }>;
-  widgets: Array<{ name: string; value: any }>;
-  properties: Record<string, any>;
-  raw: Record<string, any> | null;
+  widgets: Array<{ name: string; value: unknown }>;
+  properties: Record<string, unknown>;
+  raw: Record<string, unknown> | null;
 }
 
-function isPromptApiFormat(data: Record<string, any>): boolean {
+function isPromptApiFormat(data: Record<string, unknown>): boolean {
   if (Array.isArray(data.nodes)) return false;
   const keys = Object.keys(data);
   if (keys.length === 0) return false;
   return (
     keys.every(k => /^\d+$/.test(k)) &&
     Object.values(data).every(
-      (v: any) => v && typeof v === 'object' && 'class_type' in v
+      (v) => typeof v === 'object' && v !== null && 'class_type' in v
     )
   );
 }
 
-function convertPromptApiToLiteGraph(apiData: Record<string, any>): Record<string, any> {
+function convertPromptApiToLiteGraph(apiData: Record<string, unknown>): Record<string, unknown> {
   const entries = Object.entries(apiData);
-  const nodesById: Record<number, any> = {};
+  const nodesById: Record<number, SerializedLiteNode> = {};
   const links: [number, number, number, number, number, string][] = [];
   let nextLinkId = 1;
 
   const cols = Math.max(1, Math.ceil(Math.sqrt(entries.length)));
 
   entries.forEach(([key, nodeData], index) => {
+    const node = nodeData as ApiNode;
     const id = parseInt(key, 10);
     nodesById[id] = {
       id,
-      type: nodeData.class_type || 'Unknown',
+      type: node.class_type || 'Unknown',
       pos: [(index % cols) * 280, Math.floor(index / cols) * 200],
       size: [220, 80],
       inputs: [],
       outputs: [{ name: 'out', type: '*', links: [] }],
-      properties: { 'Node name for S&R': nodeData.class_type || '' },
+      properties: { 'Node name for S&R': node.class_type || '' },
       widgets_values: [],
     };
   });
 
   entries.forEach(([key, nodeData]) => {
+    const node = nodeData as ApiNode;
     const toNodeId = parseInt(key, 10);
-    const node = nodesById[toNodeId];
+    const target = nodesById[toNodeId];
     let inputSlot = 0;
 
-    for (const [name, value] of Object.entries(nodeData.inputs ?? {})) {
+    for (const [name, value] of Object.entries(node.inputs ?? {})) {
       if (
         Array.isArray(value) &&
         value.length === 2 &&
@@ -72,7 +90,7 @@ function convertPromptApiToLiteGraph(apiData: Record<string, any>): Record<strin
         const [fromNodeId, fromSlot] = value as [number, number];
         const lid = nextLinkId++;
         links.push([lid, fromNodeId, fromSlot, toNodeId, inputSlot, '*']);
-        node.inputs.push({ name, type: '*', link: lid });
+        target.inputs.push({ name, type: '*', link: lid });
 
         const srcNode = nodesById[fromNodeId];
         if (srcNode) {
@@ -83,7 +101,7 @@ function convertPromptApiToLiteGraph(apiData: Record<string, any>): Record<strin
         }
         inputSlot++;
       } else {
-        node.widgets_values.push(value);
+        target.widgets_values.push(value);
       }
     }
   });
@@ -121,38 +139,41 @@ export function ComfyUIWorkflowViewer({
 }: ComfyUIWorkflowViewerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const graphCanvasRef = useRef<LGraphCanvas | null>(null);
-  const workflowRef = useRef(workflow);
-  const graphDataRef = useRef<Record<string, any> | null>(null);
+  const graphDataRef = useRef<Record<string, unknown> | null>(null);
   const [status, setStatus] = useState<Status>('loading');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<SelectedNodeInfo | null>(null);
 
-  workflowRef.current = workflow;
-
   const extractNodeInfo = useCallback((liteNode: LGraphNode): SelectedNodeInfo | null => {
     try {
       const rawId = liteNode.id;
-      const raw = graphDataRef.current?.nodes?.find((n: any) => n.id === rawId) ?? null;
+      const graphData = graphDataRef.current;
+      const raw: Record<string, unknown> | null =
+        graphData && Array.isArray(graphData.nodes)
+          ? ((graphData.nodes as Record<string, unknown>[]).find((n) => n.id === rawId) ?? null)
+          : ((graphData?.[String(rawId)] as Record<string, unknown>) ?? null);
+
+      const widgets = (liteNode as LGraphNode & { widgets?: IWidget[] }).widgets ?? [];
 
       return {
         id: rawId,
-        type: (liteNode as any).type || raw?.type || 'Unknown',
-        title: (liteNode as any).title || String(rawId),
-        inputs: ((liteNode.inputs ?? []) as any[]).map((inp: any, i: number) => ({
-          name: inp?.name || `input_${i}`,
-          type: inp?.type || '*',
-          link: inp?.link ?? null,
+        type: liteNode.type || (typeof raw?.type === 'string' ? raw.type : 'Unknown'),
+        title: liteNode.title || String(rawId),
+        inputs: (liteNode.inputs ?? []).map((inp, i) => ({
+          name: inp.name || `input_${i}`,
+          type: typeof inp.type === 'string' ? inp.type : '*',
+          link: inp.link ?? null,
         })),
-        outputs: ((liteNode.outputs ?? []) as any[]).map((out: any, i: number) => ({
-          name: out?.name || `output_${i}`,
-          type: out?.type || '*',
-          links: out?.links ?? [],
+        outputs: (liteNode.outputs ?? []).map((out, i) => ({
+          name: out.name || `output_${i}`,
+          type: typeof out.type === 'string' ? out.type : '*',
+          links: out.links ?? [],
         })),
-        widgets: ((liteNode.widgets ?? []) as any[]).map((w: any, i: number) => ({
-          name: w?.name || `param_${i}`,
-          value: w?.value ?? w,
+        widgets: widgets.map((w, i) => ({
+          name: w.name || `param_${i}`,
+          value: w.value ?? null,
         })),
-        properties: (liteNode.properties ?? {}) as Record<string, any>,
+        properties: liteNode.properties ?? {},
         raw,
       };
     } catch {
@@ -162,7 +183,7 @@ export function ComfyUIWorkflowViewer({
 
   const handleDownload = useCallback(() => {
     try {
-      const json = JSON.stringify(workflowRef.current, null, 2);
+      const json = JSON.stringify(workflow, null, 2);
       const blob = new Blob([json], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -175,7 +196,7 @@ export function ComfyUIWorkflowViewer({
     } catch {
       // ignore
     }
-  }, [fileName]);
+  }, [workflow, fileName]);
 
   useEffect(() => {
     if (!canvasRef.current || !workflow) {
@@ -187,7 +208,8 @@ export function ComfyUIWorkflowViewer({
     const graphData = isApi ? convertPromptApiToLiteGraph(workflow) : workflow;
     graphDataRef.current = isApi ? workflow : graphData;
 
-    if (!Array.isArray(graphData.nodes) || graphData.nodes.length === 0) {
+    const nodes = graphData.nodes;
+    if (!Array.isArray(nodes) || nodes.length === 0) {
       setStatus('empty');
       return;
     }
@@ -198,10 +220,10 @@ export function ComfyUIWorkflowViewer({
     canvas.height = rect.height || 400;
 
     const graph = new LGraph();
-    const graphCanvas = new LGraphCanvas(canvas, graph, { autoresize: true } as any);
+    const graphCanvas = new LGraphCanvas(canvas, graph, { autoresize: true });
     graphCanvasRef.current = graphCanvas;
     if (readOnly) {
-      (graphCanvas as any).read_only = true;
+      (graphCanvas as LGraphCanvas & { read_only: boolean }).read_only = true;
     }
 
     function registerMinimalNode(type: string) {
@@ -223,7 +245,7 @@ export function ComfyUIWorkflowViewer({
       LiteGraph.registerNodeType(type, MinimalNode);
     }
 
-    for (const node of graphData.nodes) {
+    for (const node of nodes) {
       if (node.type) registerMinimalNode(node.type);
     }
 
@@ -237,7 +259,7 @@ export function ComfyUIWorkflowViewer({
     };
 
     try {
-      graph.configure(graphData as any);
+      graph.configure(graphData);
       graph.start();
       graphCanvas.draw();
       graphCanvas.ds.offset = [0, 0];
@@ -252,6 +274,10 @@ export function ComfyUIWorkflowViewer({
 
     return () => {
       graph.stop();
+      graphCanvas.setGraph(null as unknown as LGraph);
+      graphCanvasRef.current = null;
+      graphDataRef.current = null;
+      setSelectedNode(null);
     };
   }, [workflow, readOnly, extractNodeInfo]);
 
@@ -314,6 +340,7 @@ export function ComfyUIWorkflowViewer({
               <button
                 type="button"
                 onClick={() => setSelectedNode(null)}
+                aria-label="Close node details"
                 className="p-0.5 rounded hover:bg-zinc-700 text-zinc-500 hover:text-zinc-300 transition-colors"
               >
                 <X className="w-3.5 h-3.5" />
