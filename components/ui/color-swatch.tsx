@@ -103,7 +103,6 @@ function ColorSwatch({
     <Primitive
       role="img"
       aria-label={ariaLabel}
-      aria-disabled={disabled || undefined}
       data-disabled={disabled ? "" : undefined}
       data-slot="color-swatch"
       {...props}

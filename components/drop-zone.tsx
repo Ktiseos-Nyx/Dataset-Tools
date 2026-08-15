@@ -78,7 +78,7 @@ export function DropZone({ onFileDrop }: DropZoneProps) {
 
     // Try to get the folder path directly from the file
     // Works in Electron and some environments
-    const filePath = (file as any).path as string | undefined
+    const filePath = (file as File & { path?: string }).path
     let folderPath: string | undefined
 
     if (filePath && (filePath.includes('\\') || filePath.includes('/'))) {

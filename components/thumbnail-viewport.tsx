@@ -25,16 +25,25 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refr
 
   useEffect(() => {
     if (!currentDir) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- clears list state when the folder becomes null
       setImages([])
+      setIsLoading(false)
       return
     }
 
+    let aborted = false
+    const controller = new AbortController()
+
     const fetchImages = async () => {
+      setImages([])
       setIsLoading(true)
       try {
-        const response = await fetch(`/api/fs?path=${encodeURIComponent(currentDir)}&showHidden=${settings.showHiddenFiles}&baseFolder=${encodeURIComponent(settings.currentFolder)}`)
+        const response = await fetch(`/api/fs?path=${encodeURIComponent(currentDir)}&showHidden=${settings.showHiddenFiles}&baseFolder=${encodeURIComponent(settings.currentFolder)}`, {
+          signal: controller.signal,
+        })
         if (!response.ok) throw new Error('Failed to fetch')
         const data = await response.json()
+        if (aborted) return
         const files: FsItem[] = data
           .filter((item: FsItem) => !item.isDirectory)
           .map((item: FsItem) => ({
@@ -51,12 +60,16 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refr
         })
         setImages(files)
       } catch {
-        setImages([])
+        if (!aborted) setImages([])
       } finally {
-        setIsLoading(false)
+        if (!aborted) setIsLoading(false)
       }
     }
     fetchImages()
+    return () => {
+      aborted = true
+      controller.abort()
+    }
   }, [currentDir, settings.showHiddenFiles, settings.currentFolder, settings.sortBy, refreshKey])
 
   const selectedRef = useRef<HTMLButtonElement>(null)

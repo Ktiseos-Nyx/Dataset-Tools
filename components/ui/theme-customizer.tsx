@@ -20,14 +20,19 @@ const colors = [
 ]
 
 function useThemeColor() {
-  const [activeColor, setActiveColor] = React.useState("green")
-  const [mounted, setMounted] = React.useState(false)
+  const [activeColor, setActiveColor] = React.useState<string>(
+    () => (typeof window !== "undefined" ? localStorage.getItem("theme-color") || "green" : "green"),
+  );
+  const mounted = React.useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   React.useEffect(() => {
-    setMounted(true)
-    const saved = localStorage.getItem("theme-color")
-    if (saved) setActiveColor(saved)
-  }, [])
+    // Apply any saved color to the DOM so the CSS var reflects it on load.
+    document.documentElement.setAttribute("data-theme-color", activeColor)
+  }, [activeColor])
 
   const setColor = (colorName: string) => {
     setActiveColor(colorName)
@@ -388,7 +393,6 @@ function ToolbarButton({
 }
 
 export function ThemeCustomizerToolbar({ className }: { className?: string }) {
-  const { setTheme, resolvedTheme } = useTheme()
   const { activeColor, setColor, mounted } = useThemeColor()
   const [isOpen, setIsOpen] = React.useState(false)
   const containerRef = React.useRef<HTMLDivElement>(null)

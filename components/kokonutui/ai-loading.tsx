@@ -175,6 +175,7 @@ export default function AILoadingState() {
                 number: i + 1,
             });
         }
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- reset the animation state when the sequence changes
         setVisibleLines(initialLines);
         setScrollPosition(0);
     }, [sequenceIndex, currentSequence.lines, totalLines]);
@@ -248,7 +249,7 @@ export default function AILoadingState() {
                         style={{ scrollBehavior: "smooth" }}
                     >
                         <div>
-                            {visibleLines.map((line, index) => (
+                            {visibleLines.map((line) => (
                                 <div
                                     key={`${line.number}-${line.text}`}
                                     className="flex h-[28px] items-center px-2"

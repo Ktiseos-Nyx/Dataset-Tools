@@ -20,11 +20,11 @@ export function ThemeToggle({
   ...props
 }: ThemeToggleProps) {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = React.useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   // Render a placeholder until mounted to avoid hydration mismatch
   if (!mounted) {

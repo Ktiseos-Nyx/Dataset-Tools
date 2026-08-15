@@ -1,14 +1,14 @@
 "use client"
 
 import { ChevronRight, ChevronDown, Folder, FolderOpen, FileImage, Loader2, FolderSearch, Copy, RefreshCw, ArrowUpDown, FolderInput } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import type { FsItem } from "@/types/fs"
 import type { ViewMode } from "@/types/metadata"
 import { useSettings } from "@/hooks/use-settings"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import {
-  ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuSeparator,
+  ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem,
 } from "@/components/ui/context-menu"
 import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
@@ -301,7 +301,10 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   const folderPickerRef = useRef<HTMLInputElement>(null);
   const { settings, updateSettings } = useSettings();
 
-  const fetchRoot = async () => {
+  const requestIdRef = useRef(0);
+
+  const fetchRoot = useCallback(async () => {
+    const requestId = ++requestIdRef.current;
     setIsLoading(true);
     setRootItems([]); // Clear stale items immediately
     try {
@@ -310,17 +313,21 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
           throw new Error('Failed to fetch root directory');
       }
       const data = await response.json();
+      if (requestId !== requestIdRef.current) return;
       const items = data.map((item: FsItem) => ({
           ...item,
           path: item.name,
       }));
       setRootItems(sortItems(items, settings.sortBy));
     } catch (error) {
+      if (requestId !== requestIdRef.current) return;
       console.error(error);
     } finally {
-      setIsLoading(false);
+      if (requestId === requestIdRef.current) {
+        setIsLoading(false);
+      }
     }
-  };
+  }, [settings.showHiddenFiles, settings.currentFolder, settings.sortBy]);
 
   const openPathEditor = () => {
     setPathInput(settings.currentFolder === '.' ? '' : settings.currentFolder);
@@ -329,7 +336,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   };
 
   const extractFolderFromFile = (file: File) => {
-    const filePath = (file as any).path as string | undefined;
+    const filePath = (file as File & { path?: string }).path;
     if (filePath && (filePath.includes('\\') || filePath.includes('/'))) {
       const sep = filePath.includes('\\') ? '\\' : '/';
       return filePath.substring(0, filePath.lastIndexOf(sep));
@@ -340,9 +347,14 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   const handleOpenFolder = async () => {
     if ('showDirectoryPicker' in window) {
       try {
-        const handle = await (window as any).showDirectoryPicker();
-        for await (const [, entry] of (handle as any).entries()) {
-          if (entry.kind === 'file') {
+        const picker = window as Window & {
+          showDirectoryPicker?: () => Promise<{
+            entries: () => AsyncIterable<[string, { kind: string; getFile?: () => Promise<File> }]>;
+          }>;
+        };
+        const handle = await picker.showDirectoryPicker!();
+        for await (const [, entry] of handle.entries()) {
+          if (entry.kind === 'file' && entry.getFile) {
             const file = await entry.getFile();
             const folder = extractFolderFromFile(file);
             if (folder) {
@@ -390,8 +402,9 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- resets list + shows loading before fetching the new folder
     fetchRoot();
-  }, [settings.showHiddenFiles, settings.sortBy, settings.currentFolder, refreshKey]);
+  }, [fetchRoot, refreshKey]);
 
   return (
     <aside className="h-full bg-muted/20 flex flex-col">

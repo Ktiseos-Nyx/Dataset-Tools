@@ -30,6 +30,11 @@ export default function Home() {
   const [refreshKey, setRefreshKey] = useState(0)
   const [, startTransition] = useTransition()
   const fetchAbortRef = useRef<AbortController | null>(null)
+  const selectedFileRef = useRef<FsItem | null>(null)
+
+  useEffect(() => {
+    selectedFileRef.current = selectedFile
+  }, [selectedFile])
 
   const fetchSafetensors = async (file: FsItem) => {
     fetchAbortRef.current?.abort()
@@ -44,9 +49,11 @@ export default function Home() {
       )
       if (!response.ok) throw new Error('Failed to fetch safetensors metadata')
       const data = await response.json()
+      if (controller.signal.aborted || fetchAbortRef.current !== controller) return
       setSafetensors({ data, loading: false })
     } catch (error) {
       if ((error as Error).name === 'AbortError') return
+      if (controller.signal.aborted || fetchAbortRef.current !== controller) return
       console.error(error)
       setSafetensors({ data: null, loading: false })
     }
@@ -68,17 +75,26 @@ export default function Home() {
         throw new Error('Failed to fetch metadata');
       }
       const data = await response.json();
+      if (controller.signal.aborted || fetchAbortRef.current !== controller) return;
       setMetadata({ data, loading: false });
     } catch (error) {
       if ((error as Error).name === 'AbortError') return;
+      if (controller.signal.aborted || fetchAbortRef.current !== controller) return;
       console.error(error);
       setMetadata({ data: null, loading: false });
     }
   };
 
-  // Reset thumbnail viewport when folder changes
+  // Reset thumbnail viewport and selection when folder changes
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- resets view state in response to the folder setting change */
+    fetchAbortRef.current?.abort()
     setCurrentDir('.')
+    if (selectedFileRef.current?.path.startsWith('blob:')) return
+    setSelectedFile(null)
+    setMetadata({ data: null, loading: false })
+    setSafetensors({ data: null, loading: false })
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [settings.currentFolder])
 
   const handleFileSelect = (file: FsItem) => {
