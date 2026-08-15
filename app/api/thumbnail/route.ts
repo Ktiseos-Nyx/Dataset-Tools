@@ -3,7 +3,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import sharp from 'sharp'
 
-const CACHE_DIR = path.resolve('.thumbcache')
+const CACHE_DIR = path.resolve(/* turbopackIgnore: true */ '.thumbcache')
 
 // Extensions sharp can reliably handle
 const SHARP_SUPPORTED = new Set([

@@ -28,20 +28,16 @@ export interface StatusProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   status?: "online" | "offline" | "away" | "busy" | "idle" | "pending" | "success" | "error" | "warning" | "info";
   statusindicator?: boolean;
   indicatorClassName?: string;
-  shiny?: boolean;
-  shinySpeed?: number;
   children?: React.ReactNode;
 }
 
 const Status = React.forwardRef<HTMLDivElement, StatusProps>(
-  ({ className, status = "offline", statusindicator = false, indicatorClassName, shiny = false, shinySpeed, children, ...props }, ref) => {
+  ({ className, status = "offline", statusindicator = false, indicatorClassName, children, ...props }, ref) => {
     return (
       <div ref={ref}>
         <Badge
           variant="outline"
           className={cn(statusVariants({ status }), className)}
-          shiny={shiny}
-          shinySpeed={shinySpeed}
           {...props}
         >
           <span className="inline-flex items-center gap-2">
