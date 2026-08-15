@@ -84,7 +84,7 @@ function convertPromptApiToLiteGraph(apiData: Record<string, unknown>): Record<s
       if (
         Array.isArray(value) &&
         value.length === 2 &&
-        (typeof value[0] === 'string' || typeof value[0] === 'number') &&
+        (typeof value[0] === 'number' || (typeof value[0] === 'string' && /^\d+$/.test(value[0]))) &&
         typeof value[1] === 'number'
       ) {
         const fromNodeId = Number(value[0]);

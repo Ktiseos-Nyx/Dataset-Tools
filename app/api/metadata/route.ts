@@ -218,7 +218,7 @@ function parsePNGChunks(buffer: Buffer): Record<string, string> {
       const nullIndex = data.indexOf(0);
       if (nullIndex !== -1) {
         const key = data.toString('latin1', 0, nullIndex);
-        // Skip compression flag, compression method, language tag, translated keyword
+        // iTXt: keyword\0, compression flag, compression method, language tag\0, translated keyword\0, text
         const compressionFlag = data[nullIndex + 1];
         const compressionMethod = data[nullIndex + 2];
         let textStart = nullIndex + 3;
