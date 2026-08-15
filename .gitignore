@@ -63,4 +63,5 @@ settings.json
 .gemini/
 .claude/
 .idea/
+.cortexkit/
 NUL
