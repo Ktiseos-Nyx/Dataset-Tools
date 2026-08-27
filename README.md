@@ -8,7 +8,6 @@
 [![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew)
 [![Support us on Ko-fi](https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi)](https://ko-fi.com/duskfallcrew) 
 [![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/itQySJ65urb)
-[![Support us on Ko-fi](https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi)](https://ko-fi.com/duskfallcrew)
 [![Rent GPUs on Vast.ai](https://img.shields.io/badge/Rent%20GPUs%20on-Vast.ai-4B32C3?style=for-the-badge)](https://cloud.vast.ai/?ref_id=671131)
 
 <hr>
@@ -29,7 +28,7 @@
 
 ---
 
-**Dataset Tools NextJS Edition** is a **local-first web application** for viewing EXIF metadata. You can view EXIF data from AI images and parse what software was used to make it, or you can parse your EXIF data from which camera you made it from and otherwise. 
+**Dataset Tools NextJS Edition** is a **local-first web application** for viewing EXIF metadata from AI-generated images and camera photos, including the software used to create AI images and the camera details embedded in photos.
 
 <hr>
 
