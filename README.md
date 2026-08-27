@@ -5,9 +5,10 @@
 <!-- Social & Support Badges -->
 [![Built with NextJS](https://img.shields.io/badge/Built%20with-NextJS-black?style=for-the-badge&logo=next.js)](https://nextjs.org/) [![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx/Dataset-Tools)
 [![Demo](https://img.shields.io/badge/Live-Demo-000000?style=for-the-badge&logo=vercel)](https://dataset-tools-three.vercel.app)
-[![Twitch](https://img.shields.io/badge/Twitch-Follow%20on%20Twitch-9146FF?logo=twitch&style=for-the-badge)](https://twitch.tv/duskfallcrew)
+
+<hr>
+
 [![Support us on Ko-fi](https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi)](https://ko-fi.com/duskfallcrew) 
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/itQySJ65urb)
 [![Rent GPUs on Vast.ai](https://img.shields.io/badge/Rent%20GPUs%20on-Vast.ai-4B32C3?style=for-the-badge)](https://cloud.vast.ai/?ref_id=671131)
 
 <hr>
@@ -209,7 +210,3 @@ GNU General Public License v3.0
 - Supervised by: [traugdor](https://github.com/traugdor)
 - Contributors: open-source community, Whitevamp, Exdysa, and many more.
 - Anthropic for Claude API credits supporting development.
-
-## Support Development
-[![Support us on Ko-fi](https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi)](https://ko-fi.com/duskfallcrew)
-[![Rent GPUs on Vast.ai](https://img.shields.io/badge/Rent%20GPUs%20on-Vast.ai-4B32C3?style=for-the-badge)](https://cloud.vast.ai/?ref_id=671131)
