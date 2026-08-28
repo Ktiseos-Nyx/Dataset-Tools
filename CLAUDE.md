@@ -56,7 +56,7 @@ No test framework is configured.
 - Components: PascalCase. Files: kebab-case. Client components must have `"use client"` directive.
 - Types live in `types/` (metadata.ts, fs.ts, rules.ts). Hooks in `hooks/`.
 - TypeScript strict mode is on, but build ignores TS errors (`ignoreBuildErrors: true`).
-- `doras-ui` clipboard component is used for prompt copy/paste in the metadata panel.
+- Prompt copy/paste in the metadata panel uses `navigator.clipboard.writeText` directly (no external clipboard component).
 
 ## ComfyUI Node Registry
 

@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import type { FsItem } from "@/types/fs"
 import type { ViewMode } from "@/types/metadata"
 import { useSettings } from "@/hooks/use-settings"
+import { isElectron, pickFolder } from "@/lib/electron-bridge"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import {
@@ -345,6 +346,13 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   };
 
   const handleOpenFolder = async () => {
+    // Electron: native dialog returns a real absolute path (fixes #211).
+    if (isElectron()) {
+      const folder = await pickFolder();
+      if (folder) updateSettings({ currentFolder: folder });
+      return;
+    }
+
     if ('showDirectoryPicker' in window) {
       try {
         const picker = window as Window & {
@@ -482,6 +490,13 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
               <EmptyMedia variant="icon"><FolderSearch /></EmptyMedia>
               <EmptyTitle>No images found</EmptyTitle>
               <EmptyDescription>This directory has no image files</EmptyDescription>
+              <button
+                onClick={handleOpenFolder}
+                className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+              >
+                <FolderInput className="w-4 h-4" />
+                Open a folder
+              </button>
             </EmptyHeader>
           </Empty>
         ) : (

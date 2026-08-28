@@ -11,6 +11,10 @@
 /build
 /logs
 
+# electron
+/.electron/
+/dist/
+
 # old python files
 dataset_tools
 kn_dataset_tools.egg-info

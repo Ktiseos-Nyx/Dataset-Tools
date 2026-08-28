@@ -31,7 +31,11 @@ interface CachedMiss {
 
 type CacheRecord = CachedHit | CachedMiss;
 
-const CACHE_DIR = path.resolve('.cache');
+// Under Electron, cache lives in the per-user app-data dir (ELECTRON_USER_DATA)
+// so a packaged app's read-only install dir isn't written to.
+const CACHE_DIR = process.env.ELECTRON_USER_DATA
+  ? path.join(process.env.ELECTRON_USER_DATA, '.cache')
+  : path.resolve('.cache')
 const CACHE_FILE = path.join(CACHE_DIR, 'comfyui-github-search.json');
 
 // Hits live for 7 days, misses for 1 day (in case the node is published later)

@@ -1,0 +1,46 @@
+appId: com.ktiseos-nyx.dataset-tools
+productName: Dataset Tools
+copyright: "Copyright © 2026 The Duskfall Portal Crew"
+
+# asar: false keeps node_modules (incl. sharp's native binary) and .next as real
+# files on disk so `next start` and native modules work without asar-unpack fiddling.
+asar: false
+
+files:
+  - .next/**/*
+  - public/**/*
+  - .electron/**/*
+  - node_modules/**/*
+  - package.json
+  - next.config.mjs
+
+directories:
+  output: dist
+  buildResources: build
+
+main: .electron/main.js
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: build/icon.ico
+
+mac:
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+  icon: build/icon.icns
+  category: public.app-category.productivity
+
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+  icon: build/icon.png
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true

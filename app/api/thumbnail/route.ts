@@ -3,7 +3,11 @@ import fs from 'fs/promises'
 import path from 'path'
 import sharp from 'sharp'
 
-const CACHE_DIR = path.resolve(/* turbopackIgnore: true */ '.thumbcache')
+// Under Electron, the thumbnail cache lives in the per-user app-data dir so a
+// packaged app's read-only install dir isn't written to.
+const CACHE_DIR = process.env.ELECTRON_USER_DATA
+  ? path.join(process.env.ELECTRON_USER_DATA, '.thumbcache')
+  : path.resolve(/* turbopackIgnore: true */ '.thumbcache')
 
 // Extensions sharp can reliably handle
 const SHARP_SUPPORTED = new Set([

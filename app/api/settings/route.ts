@@ -2,8 +2,15 @@ import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
 
-const CONFIG_PATH = path.resolve('settings.json')
-const ENV_PATH = path.resolve('.env.local')
+// Under Electron the main process sets ELECTRON_USER_DATA to the per-user
+// app-data dir (install dir is read-only in a packaged app). Fall back to the
+// project root for dev/Vercel so existing behavior is unchanged.
+const DATA_DIR = process.env.ELECTRON_USER_DATA
+  ? path.resolve(process.env.ELECTRON_USER_DATA)
+  : path.resolve('.')
+
+const CONFIG_PATH = path.join(DATA_DIR, 'settings.json')
+const ENV_PATH = path.join(DATA_DIR, '.env.local')
 
 async function readConfig(): Promise<Record<string, unknown>> {
   try {
