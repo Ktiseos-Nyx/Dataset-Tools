@@ -10,6 +10,8 @@
 export interface ElectronAPI {
   /** Opens a native directory picker and resolves the absolute path, or null if cancelled. */
   pickFolder: () => Promise<string | null>
+  /** Reports the app's resolved theme so the native window background can match. */
+  setTheme: (theme: 'dark' | 'light') => void
 }
 
 export function getElectronAPI(): ElectronAPI | undefined {
@@ -32,5 +34,18 @@ export async function pickFolder(): Promise<string | null> {
     return await api.pickFolder()
   } catch {
     return null
+  }
+}
+
+/**
+ * Sync the native window's background color with the app theme. No-ops in the
+ * browser (no native window to update).
+ */
+export function syncElectronTheme(theme: 'dark' | 'light') {
+  const api = getElectronAPI()
+  try {
+    api?.setTheme?.(theme)
+  } catch {
+    // ignore — web/Vercel has no native window to sync
   }
 }

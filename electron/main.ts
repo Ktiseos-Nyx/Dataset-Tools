@@ -1,10 +1,15 @@
-import { app, BrowserWindow, dialog, ipcMain, shell, type OpenDialogOptions } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, nativeTheme, shell, type OpenDialogOptions } from 'electron';
 import { spawn, type ChildProcess } from 'child_process';
 import * as path from 'path';
 import * as http from 'http';
 import * as net from 'net';
 
 const DEV_URL = 'http://localhost:3000';
+
+// Native window background must be a hex value (not an OKLCH CSS function).
+// These match the app theme in globals.css: oklch(0.145 0 0) / oklch(1 0 0).
+const DARK_BG = '#0a0a0a';
+const LIGHT_BG = '#ffffff';
 
 let nextProcess: ChildProcess | null = null;
 let mainWindow: BrowserWindow | null = null;
@@ -103,7 +108,8 @@ async function createWindow(): Promise<void> {
     minWidth: 900,
     minHeight: 600,
     title: 'Dataset Tools',
-    backgroundColor: '#000000',
+    autoHideMenuBar: true,
+    backgroundColor: nativeTheme.shouldUseDarkColors ? DARK_BG : LIGHT_BG,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -131,6 +137,17 @@ app.whenReady().then(async () => {
       : await dialog.showOpenDialog(options);
     if (result.canceled || result.filePaths.length === 0) return null;
     return result.filePaths[0];
+  });
+
+  // Keep the native window background in sync with the OS theme. The renderer
+  // also reports its resolved theme via `theme:set` (handles in-app toggles
+  // that differ from the OS setting).
+  nativeTheme.on('updated', () => {
+    mainWindow?.setBackgroundColor(nativeTheme.shouldUseDarkColors ? DARK_BG : LIGHT_BG);
+  });
+
+  ipcMain.on('theme:set', (_event, theme: 'dark' | 'light') => {
+    mainWindow?.setBackgroundColor(theme === 'light' ? LIGHT_BG : DARK_BG);
   });
 
   try {
