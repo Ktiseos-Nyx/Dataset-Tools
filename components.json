@@ -35,6 +35,11 @@
     "@joyco": "https://registry.joyco.studio/r/{name}.json",
     "@magicui": "https://magicui.design/r/{name}",
     "@kokonutui": "https://kokonutui.com/r/{name}.json",
-    "@gooseui": "https://gooseui.pro/r/{name}.json"
+    "@gooseui": "https://gooseui.pro/r/{name}.json",
+    "@beui": "https://beui.dev/r/{name}.json",
+    "@ericts": "https://ui.ericts.com/r/{name}.json",
+    "@jalco": "https://ui.justinlevine.me/r/{name}.json",
+    "@ncdai": "https://chanhdai.com/r/{name}.json",
+    "@shadcnhooks": "https://shadcn-hooks.com/r/{name}.json"
   }
 }

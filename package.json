@@ -55,6 +55,7 @@
     "cmdk": "^1.0.4",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "8.5.1",
+    "es-toolkit": "^1.52.0",
     "exif-parser": "^0.1.12",
     "framer-motion": "^12.33.0",
     "iconv-lite": "^0.7.2",
@@ -105,6 +106,8 @@
     "wait-on": "^9.1.0"
   },
   "overrides": {
-    "nanoid": "3.3.18"
+    "nanoid": "3.3.18",
+    "browserslist": "4.28.8",
+    "fflate": "0.8.3"
   }
 }
