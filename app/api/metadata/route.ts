@@ -9,6 +9,16 @@ import iconv from 'iconv-lite';
 import zlib from 'zlib';
 import { classifyNodes, type NodeLookupResult } from '@/lib/comfyui-node-registry';
 
+// A ComfyUI API-format workflow is a map of node id → node object. Inputs are
+// dynamic JSON, so values are `unknown` and narrowed at the point of use.
+interface ComfyNode {
+  class_type?: string;
+  inputs?: Record<string, unknown>;
+  mode?: number;
+  [key: string]: unknown;
+}
+type ComfyWorkflow = Record<string, ComfyNode>;
+
 /**
  * Classify every class_type in a ComfyUI workflow against the extension-node-map
  * registry. GitHub fallback is intentionally disabled here — the panel triggers
@@ -30,11 +40,13 @@ type WorkflowProvenance = Record<string, { cnrId?: string; auxId?: string }>;
 function extractWorkflowProvenance(workflowJson: string): WorkflowProvenance {
   const provenance: WorkflowProvenance = {};
   try {
-    const wf = JSON.parse(workflowJson);
-    const nodes: any[] = Array.isArray(wf.nodes) ? wf.nodes : [];
+    const wf = JSON.parse(workflowJson) as {
+      nodes?: Array<{ type?: unknown; properties?: Record<string, unknown> }>;
+    };
+    const nodes = Array.isArray(wf.nodes) ? wf.nodes : [];
     for (const node of nodes) {
-      const type = node?.type;
-      const props = node?.properties ?? {};
+      const type = node.type;
+      const props = node.properties ?? {};
       if (typeof type !== 'string' || !type) continue;
       const cnrId = typeof props.cnr_id === 'string' ? props.cnr_id : undefined;
       const auxId = typeof props.aux_id === 'string' ? props.aux_id : undefined;
@@ -49,16 +61,16 @@ function extractWorkflowProvenance(workflowJson: string): WorkflowProvenance {
 }
 
 async function classifyComfyUIWorkflow(
-  workflow: Record<string, any>,
+  workflow: ComfyWorkflow,
   provenance?: WorkflowProvenance,
 ): Promise<{
-  summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number };
+  summary: { total: number; builtin: number; custom: number; unknown: number; githubResolved: number; builtinProvenance: number };
   classifications: Record<string, NodeLookupResult>;
   unknownNodes: string[];
 } | null> {
   const classTypes = new Set<string>();
   for (const node of Object.values(workflow)) {
-    const ct = (node as any)?.class_type;
+    const ct = node?.class_type;
     if (typeof ct === 'string' && ct) classTypes.add(ct);
   }
   if (classTypes.size === 0) return null;
@@ -78,7 +90,7 @@ async function classifyComfyUIWorkflow(
       const p = provenance[ct];
       if (!p) continue;
       if (p.cnrId === 'comfy-core') {
-        classifications[ct] = { classification: 'builtin' };
+        classifications[ct] = { classification: 'builtin', source: 'provenance' };
       } else if (p.auxId) {
         const repoTitle = p.auxId.split('/').pop() ?? p.auxId;
         classifications[ct] = {
@@ -93,11 +105,14 @@ async function classifyComfyUIWorkflow(
     }
   }
 
-  let builtin = 0, custom = 0, unknown = 0, githubResolved = 0;
+  let builtin = 0, custom = 0, unknown = 0, githubResolved = 0, builtinProvenance = 0;
   const unknownNodes: string[] = [];
   for (const [ct, result] of Object.entries(classifications)) {
     switch (result.classification) {
-      case 'builtin': builtin++; break;
+      case 'builtin':
+        builtin++;
+        if (result.source === 'provenance') builtinProvenance++;
+        break;
       case 'custom':
         custom++;
         if (result.source === 'github') githubResolved++;
@@ -107,17 +122,16 @@ async function classifyComfyUIWorkflow(
   }
 
   return {
-    summary: { total: classTypes.size, builtin, custom, unknown, githubResolved },
+    summary: { total: classTypes.size, builtin, custom, unknown, githubResolved, builtinProvenance },
     classifications,
     unknownNodes,
   };
 }
 
-// Extract UserComment from raw TIFF data (as found in PNG eXIf chunks).
-// Similar to extractUserCommentFromTIFF but without the JPEG "Exif\0\0" wrapper.
+// Extract UserComment from raw TIFF/EXIF bytes (no "Exif\0\0" prefix — used by
+// PNG eXIf chunks which store just the TIFF header directly).
 function extractUserCommentFromRawTIFF(tiffData: Buffer): string | null {
   if (tiffData.length < 8) return null;
-
   const byteOrder = tiffData.toString('ascii', 0, 2);
   const isLE = byteOrder === 'II';
   const isBE = byteOrder === 'MM';
@@ -172,8 +186,8 @@ function extractUserCommentFromRawTIFF(tiffData: Buffer): string | null {
 }
 
 // PNG chunk parser for AI generation parameters
-function parsePNGChunks(buffer: Buffer): Record<string, any> {
-  const chunks: Record<string, any> = {};
+function parsePNGChunks(buffer: Buffer): Record<string, string> {
+  const chunks: Record<string, string> = {};
 
   // Check PNG signature
   if (buffer.length < 8 || buffer.toString('hex', 0, 8) !== '89504e470d0a1a0a') {
@@ -229,6 +243,13 @@ function parsePNGChunks(buffer: Buffer): Record<string, any> {
         }
         chunks[key] = value;
       }
+    } else if (type === 'eXIf') {
+      // PNG eXIf chunk carries raw TIFF/EXIF data (no "Exif\0\0" prefix).
+      // Civitai stores A1111-style generation params in UserComment here.
+      const uc = extractUserCommentFromRawTIFF(data);
+      if (uc && !chunks.parameters && !chunks.Parameters) {
+        chunks.parameters = uc;
+      }
     }
 
     // Parse eXIf chunks (PNG EXIF) — some tools (Civitai, etc.) embed A1111-style
@@ -251,18 +272,18 @@ function parsePNGChunks(buffer: Buffer): Record<string, any> {
 // ============================================================================
 
 // Utility: is this value a node reference? (e.g. ["32", 0])
-function isNodeRef(value: any): value is [string, number] {
+function isNodeRef(value: unknown): value is [string, number] {
   return Array.isArray(value) && value.length === 2 && typeof value[0] === 'string' && typeof value[1] === 'number';
 }
 
 // Utility: get a node from the workflow by ID
-function getNode(workflow: Record<string, any>, id: string): any | null {
+function getNode(workflow: ComfyWorkflow, id: string): ComfyNode | null {
   const node = workflow[id];
   return (node && typeof node === 'object' && node.inputs) ? node : null;
 }
 
 // Utility: follow a node ref to its source node, with cycle detection
-function followRef(workflow: Record<string, any>, ref: any, visited?: Set<string>): { nodeId: string; node: any } | null {
+function followRef(workflow: ComfyWorkflow, ref: unknown, visited?: Set<string>): { nodeId: string; node: ComfyNode } | null {
   if (!isNodeRef(ref)) return null;
   const seen = visited || new Set<string>();
   if (seen.has(ref[0])) return null;
@@ -295,7 +316,7 @@ function isPromptyKey(key: string): boolean {
 // Find a text/prompt string in a node's inputs.
 // Strategy: try known keys first, then scan all string fields.
 // `hint` can be "positive" or "negative" to prefer matching fields.
-function findText(workflow: Record<string, any>, node: any, visited?: Set<string>, hint?: string): string | null {
+function findText(workflow: ComfyWorkflow, node: ComfyNode, visited?: Set<string>, hint?: string): string | null {
   const inputs = node.inputs || {};
 
   // Priority 1: if hint is given, look for fields containing that hint
@@ -317,9 +338,10 @@ function findText(workflow: Record<string, any>, node: any, visited?: Set<string
       }
     }
     // Also check just the hint name directly (e.g. inputs.positive, inputs.negative)
-    if (typeof inputs[hint] === 'string' && inputs[hint].trim()) return inputs[hint];
-    if (isNodeRef(inputs[hint])) {
-      const upstream = followRef(workflow, inputs[hint], visited);
+    const hintVal = inputs[hint];
+    if (typeof hintVal === 'string' && hintVal.trim()) return hintVal;
+    if (isNodeRef(hintVal)) {
+      const upstream = followRef(workflow, hintVal, visited);
       if (upstream) {
         const text = findText(workflow, upstream.node, visited, hint);
         if (text) return text;
@@ -329,9 +351,10 @@ function findText(workflow: Record<string, any>, node: any, visited?: Set<string
 
   // Priority 2: known common text field names
   for (const key of TEXT_INPUT_KEYS) {
-    if (typeof inputs[key] === 'string' && inputs[key].trim()) return inputs[key];
-    if (isNodeRef(inputs[key])) {
-      const upstream = followRef(workflow, inputs[key], visited);
+    const keyVal = inputs[key];
+    if (typeof keyVal === 'string' && keyVal.trim()) return keyVal;
+    if (isNodeRef(keyVal)) {
+      const upstream = followRef(workflow, keyVal, visited);
       if (upstream) {
         const text = findText(workflow, upstream.node, visited, hint);
         if (text) return text;
@@ -374,7 +397,7 @@ function findText(workflow: Record<string, any>, node: any, visited?: Set<string
 // combined text in upstream-first order so the most-specific source ends up
 // at the front (matches Python's collected_texts ordering).
 function extractPromptTextWithTrace(
-  workflow: Record<string, any>,
+  workflow: ComfyWorkflow,
   startNodeId: string,
   hint?: string,
   maxDepth: number = 10,
@@ -424,11 +447,11 @@ function extractPromptTextWithTrace(
 }
 
 // ---- Field-based node identification (no type names needed) ----
-function hasFields(inputs: any, ...fields: string[]): boolean {
+function hasFields(inputs: Record<string, unknown>, ...fields: string[]): boolean {
   return fields.every(f => inputs[f] !== undefined);
 }
 
-function isSamplerByFields(inputs: any): boolean {
+function isSamplerByFields(inputs: Record<string, unknown>): boolean {
   // Standard KSampler / FSamplerAdvanced: has steps/cfg/sampler_name/seed/positive/negative
   const samplerFields = ['steps', 'cfg', 'sampler_name', 'seed', 'positive', 'negative'];
   const matched = samplerFields.filter(f => inputs[f] !== undefined);
@@ -438,19 +461,19 @@ function isSamplerByFields(inputs: any): boolean {
   return ['guider', 'sigmas', 'noise'].every(f => isNodeRef(inputs[f]));
 }
 
-function isCheckpointByFields(inputs: any): boolean {
+function isCheckpointByFields(inputs: Record<string, unknown>): boolean {
   return !!inputs.ckpt_name;
 }
 
-function isLatentByFields(inputs: any): boolean {
+function isLatentByFields(inputs: Record<string, unknown>): boolean {
   return hasFields(inputs, 'width', 'height', 'batch_size');
 }
 
 function extractComfyUIParams(
-  workflow: Record<string, any>,
+  workflow: ComfyWorkflow,
   classifications: Record<string, NodeLookupResult> = {},
-): Record<string, any> {
-  const extracted: Record<string, any> = {};
+): Record<string, unknown> {
+  const extracted: Record<string, unknown> = {};
 
   // Type-match fallback helper (for platforms that wrap standard nodes)
   const typeMatches = (classType: string, ...patterns: string[]) =>
@@ -478,7 +501,7 @@ function extractComfyUIParams(
   ];
 
   for (const [nodeId, nodeData] of Object.entries(workflow)) {
-    const node = nodeData as any;
+    const node = nodeData as ComfyNode;
     if (!node?.inputs) continue;
 
     // Filter muted/bypassed nodes
@@ -506,14 +529,13 @@ function extractComfyUIParams(
   // PHASE 1: Field-based scan (type-agnostic)
   // Identify nodes by what data they carry, not what they're called
   // ========================================================================
-  const samplerNodes: { id: string; node: any }[] = [];
-  const loraNodes: { id: string; node: any }[] = [];
+  const samplerNodes: { id: string; node: ComfyNode }[] = [];
+  const loraNodes: { id: string; node: ComfyNode }[] = [];
 
   for (const [nodeId, nodeData] of Object.entries(workflow)) {
-    const node = nodeData as any;
+    const node = nodeData as ComfyNode;
     if (!node?.inputs || mutedNodeIds.has(nodeId)) continue;
     const inputs = node.inputs;
-    const classType = node.class_type || '';
 
     // --- Sampler: identified by having steps + cfg + positive/negative ---
     if (isSamplerByFields(inputs)) {
@@ -552,10 +574,10 @@ function extractComfyUIParams(
 
     // --- CLIP skip: identified by stop_at_clip_layer or clip_skip ---
     if (inputs.stop_at_clip_layer) {
-      extracted.clip_skip = String(Math.abs(inputs.stop_at_clip_layer));
+      extracted.clip_skip = String(Math.abs(inputs.stop_at_clip_layer as number));
     }
     if (inputs.clip_skip && !extracted.clip_skip) {
-      extracted.clip_skip = String(Math.abs(inputs.clip_skip));
+      extracted.clip_skip = String(Math.abs(inputs.clip_skip as number));
     }
 
     // --- LoRA: identified by lora_name, numbered lora_name_N, or <lora:...> tags ---
@@ -571,7 +593,7 @@ function extractComfyUIParams(
     }
     // Power Lora Loader (rgthree) uses lora_1, lora_2, ... object fields: {on, lora, strength}
     for (const [key, val] of Object.entries(inputs)) {
-      if (/^lora_\d+$/.test(key) && val !== null && typeof val === 'object' && (val as any).lora) {
+      if (/^lora_\d+$/.test(key) && val !== null && typeof val === 'object' && (val as { lora?: unknown }).lora) {
         loraNodes.push({ id: nodeId, node });
         break;
       }
@@ -586,7 +608,7 @@ function extractComfyUIParams(
   for (const { node } of loraNodes) {
     const inputs = node.inputs || {};
     if (inputs.lora_name && inputs.lora_name !== 'None') {
-      loraSet.add(inputs.lora_name);
+      loraSet.add(inputs.lora_name as string);
     }
     // Handle numbered LoRA stacker fields (lora_name_1, lora_wt_1, model_weight_1 etc.)
     for (const [key, val] of Object.entries(inputs)) {
@@ -608,7 +630,7 @@ function extractComfyUIParams(
     // Power Lora Loader (rgthree) — lora_N object fields, only include enabled loras
     for (const [key, val] of Object.entries(inputs)) {
       if (/^lora_\d+$/.test(key) && val !== null && typeof val === 'object') {
-        const loraObj = val as any;
+        const loraObj = val as { on?: unknown; lora?: unknown; strength?: unknown };
         if (loraObj.on && typeof loraObj.lora === 'string' && loraObj.lora !== 'None') {
           const strength = typeof loraObj.strength === 'number' ? ` (${loraObj.strength})` : '';
           loraSet.add(`${loraObj.lora}${strength}`);
@@ -737,7 +759,7 @@ function extractComfyUIParams(
 
     // Field shapes that strongly suggest a text encoder node
     const TEXT_ENCODER_FIELD_HINTS = ['text', 'text_g', 'text_l', 'prompt', 'string'];
-    const looksLikeTextEncoder = (inputs: Record<string, any>, classType: string): boolean => {
+    const looksLikeTextEncoder = (inputs: Record<string, unknown>, classType: string): boolean => {
       // Hardcoded patterns first (handles workflows with no registry classification)
       if (typeMatches(classType, 'CLIPTextEncode', 'T5TextEncode', 'FluxTextEncode',
                                   'TextEncode', 'PromptEncode')) {
@@ -759,7 +781,7 @@ function extractComfyUIParams(
     };
 
     for (const [nodeId, nodeData] of Object.entries(workflow)) {
-      const node = nodeData as any;
+      const node = nodeData as ComfyNode;
       const classType = node.class_type || '';
       const inputs = node.inputs || {};
       if (mutedNodeIds.has(nodeId)) continue;
@@ -808,7 +830,7 @@ function extractComfyUIParams(
   // PHASE 4: ControlNet detection
   // ========================================================================
   for (const [nodeId, nodeData] of Object.entries(workflow)) {
-    const node = nodeData as any;
+    const node = nodeData as ComfyNode;
     if (mutedNodeIds.has(nodeId)) continue;
     const ct = (node.class_type || '').toLowerCase();
     if (ct.includes('controlnet') || ct.includes('control_net')) {
@@ -826,7 +848,7 @@ function extractComfyUIParams(
     // Build a forward adjacency: for each node, track which nodes reference it
     const forwardEdges: Record<string, Array<{ targetId: string; inputName: string }>> = {};
     for (const [nodeId, nodeData] of Object.entries(workflow)) {
-      const node = nodeData as any;
+      const node = nodeData as ComfyNode;
       if (!node?.inputs || mutedNodeIds.has(nodeId)) continue;
       for (const [inputName, val] of Object.entries(node.inputs)) {
         if (isNodeRef(val)) {
@@ -840,7 +862,7 @@ function extractComfyUIParams(
     // For each text-encoding node, trace forward to see if it eventually
     // connects to a sampler's negative input
     for (const [nodeId, nodeData] of Object.entries(workflow)) {
-      const node = nodeData as any;
+      const node = nodeData as ComfyNode;
       if (mutedNodeIds.has(nodeId)) continue;
       const ct = node.class_type || '';
       if (!typeMatches(ct, 'CLIPTextEncode', 'T5TextEncode', 'FluxTextEncode')) continue;
@@ -859,7 +881,7 @@ function extractComfyUIParams(
           if (visited.has(current)) continue;
           visited.add(current);
           for (const edge of (forwardEdges[current] || [])) {
-            const targetNode = workflow[edge.targetId] as any;
+            const targetNode = workflow[edge.targetId] as ComfyNode;
             if (!targetNode?.inputs) continue;
             // Check if target is a sampler and input is 'negative'
             if (isSamplerByFields(targetNode.inputs) && edge.inputName === 'negative') {
@@ -929,8 +951,8 @@ const TENSORART_NODE_TYPES = new Set([
 ]);
 
 // Parse AI generation parameters from various formats
-async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<string, any>> {
-  const aiData: Record<string, any> = {};
+async function parseAIMetadata(chunks: Record<string, string>): Promise<Record<string, unknown>> {
+  const aiData: Record<string, unknown> = {};
 
   // --- InvokeAI: dedicated invokeai_metadata PNG chunk ---
   if (chunks.invokeai_metadata) {
@@ -1048,6 +1070,56 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       } else if (/Civitai resources:|Civitai metadata:/.test(params)) {
         // Civitai on-site generator embeds explicit resource metadata
         aiData.workflow_type = 'Civitai';
+
+        // Extract modelVersionId references from both Civitai metadata formats
+        const resources: Array<{ type: string; modelVersionId: number; modelName: string; url: string }> = [];
+
+        // Format 1: Civitai resources: [{"type":"checkpoint","modelVersionId":123,...}]
+        const resMatch = params.match(/Civitai resources:\s*(\[[\s\S]*?\](?=\s*,?\s*(?:Civitai metadata|Negative prompt|Steps:|$)))/i);
+        if (resMatch) {
+          try {
+            const arr = JSON.parse(resMatch[1]);
+            for (const item of arr) {
+              if (item.modelVersionId) {
+                const url = item.modelId
+                  ? `https://civitai.com/models/${item.modelId}?modelVersionId=${item.modelVersionId}`
+                  : `https://civitai.com/model-versions/${item.modelVersionId}`;
+                resources.push({
+                  type: item.type || 'resource',
+                  modelVersionId: item.modelVersionId,
+                  modelName: item.modelName || item.modelVersionName || '',
+                  url,
+                });
+              }
+            }
+          } catch { /* JSON parse failure — skip */ }
+        }
+
+        // Format 2: Civitai metadata: {"resources":[{"modelVersionId":...}]}
+        const metaMatch = params.match(/Civitai metadata:\s*(\{[\s\S]*?\})(?:\s*$)/i);
+        if (metaMatch) {
+          try {
+            const meta = JSON.parse(metaMatch[1]);
+            const metaResources = meta.resources ?? [];
+            for (const item of metaResources) {
+              if (item.modelVersionId && !resources.some(r => r.modelVersionId === item.modelVersionId)) {
+                const url = item.modelId
+                  ? `https://civitai.com/models/${item.modelId}?modelVersionId=${item.modelVersionId}`
+                  : `https://civitai.com/model-versions/${item.modelVersionId}`;
+                resources.push({
+                  type: item.type || 'resource',
+                  modelVersionId: item.modelVersionId,
+                  modelName: '',
+                  url,
+                });
+              }
+            }
+          } catch { /* JSON parse failure — skip */ }
+        }
+
+        if (resources.length > 0) {
+          aiData.civitai_resources = resources;
+        }
       } else if (/EMS-\d+/i.test(params) && !/^(?:v\d|f\d|neo|comfyui)/i.test(versionStr)) {
         // TensorArt model naming convention (e.g. "Model: EMS-12345") without a
         // standard A1111/Forge version — older TensorArt images with plain A1111 params
@@ -1097,7 +1169,7 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
 
       for (const nodeData of Object.values(workflow)) {
-        const node = nodeData as any;
+        const node = nodeData as ComfyNode;
         const inputs = node?.inputs ?? {};
 
         // TensorArt: proprietary node class_types or EMS-<id> model naming
@@ -1159,7 +1231,7 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       // Restore workflow_type — extractComfyUIParams doesn't set it but Object.assign
       // could theoretically clobber it if the extracted object ever grows that key.
       if (!aiData.workflow_type) aiData.workflow_type = 'ComfyUI';
-    } catch (e) {
+    } catch {
       // Not valid JSON, store as-is
       aiData.prompt = chunks.prompt;
     }
@@ -1218,7 +1290,7 @@ async function parseAIMetadata(chunks: Record<string, any>): Promise<Record<stri
       if (novelData.uc !== undefined && !novelData.c) {
         aiData.workflow_type = 'NovelAI';
       }
-    } catch (e) {
+    } catch {
       // Not JSON — check for Midjourney format
       // MJ stores prompt + --params + "Job ID: uuid" in Description tEXt chunk
       if (typeof commentText === 'string' && commentText.includes('Job ID:')) {
@@ -1591,8 +1663,8 @@ function extractXMPString(buffer: Buffer): string | null {
 
 // Parse XMP XML into a flat key-value object using regex.
 // No XML parser needed — XMP is structured enough for pattern matching.
-function parseXMP(xmpString: string): Record<string, any> {
-  const xmp: Record<string, any> = {};
+function parseXMP(xmpString: string): Record<string, unknown> {
+  const xmp: Record<string, unknown> = {};
 
   // Extract all simple property values: <ns:Key>Value</ns:Key>
   const simpleProps = xmpString.matchAll(/<([a-zA-Z_][\w]*):([a-zA-Z_][\w]*)(?:\s[^>]*)?>([^<]+)<\/\1:\2>/g);
@@ -1637,8 +1709,8 @@ function parseXMP(xmpString: string): Record<string, any> {
 }
 
 // Extract AI-specific metadata from XMP data
-function extractAIFromXMP(xmp: Record<string, any>): Record<string, any> {
-  const ai: Record<string, any> = {};
+function extractAIFromXMP(xmp: Record<string, unknown>): Record<string, unknown> {
+  const ai: Record<string, unknown> = {};
 
   // --- Midjourney ---
   // MJ stores prompt in dc:description and sometimes in xmp:Description
@@ -1694,7 +1766,7 @@ function extractAIFromXMP(xmp: Record<string, any>): Record<string, any> {
         if (parsed.strength) ai.strength = String(parsed.strength);
         // LoRAs
         if (Array.isArray(parsed.lora) && parsed.lora.length > 0) {
-          ai.loras = parsed.lora.map((l: any) => `${l.model} (${l.weight})`);
+          ai.loras = parsed.lora.map((l: { model?: unknown; weight?: unknown }) => `${l.model} (${l.weight})`);
         }
       } else if (parsed.prompt) {
         // Coerce per-field rather than spreading raw JSON, which can drop
@@ -1756,9 +1828,9 @@ function extractWebPDimensions(buffer: Buffer): { width: number; height: number 
       if (w > 0 && h > 0) return { width: w, height: h };
     } else if (chunkId === "VP8L" && chunkSize >= 5) {
       const b1 = buffer[p + 1], b2 = buffer[p + 2], b3 = buffer[p + 3];
-      const w = ((b2 & 0x3f) << 8) | b1;
-      const h = ((b2 & 0xc0) >> 6) | (b3 << 2) | ((buffer[p + 4] & 0x0f) << 10);
-      if (w > 0 && h > 0) return { width: w + 1, height: h + 1 };
+      const width = (((b2 & 0x3f) << 8) | b1) + 1;
+      const height = (((b2 & 0xc0) >> 6) | (b3 << 2) | ((buffer[p + 4] & 0x0f) << 10)) + 1;
+      if (width > 0 && height > 0) return { width, height };
     } else if (chunkId === "VP8 " && chunkSize >= 10) {
       const w = buffer.readUInt16LE(p + 6) & 0x3fff;
       const h = buffer.readUInt16LE(p + 8) & 0x3fff;
@@ -1850,18 +1922,18 @@ export async function extractMetadataFromBuffer(
   fileName: string,
   fileSize: number,
   lastModified: string,
-): Promise<Record<string, any>> {
+): Promise<Record<string, unknown>> {
   // Trust file content over extension — CDNs can mislabel format in the filename.
   const effectiveMime = detectMimeFromMagic(buffer) ?? mimeType;
 
-  let exifData: Record<string, any> = {};
-  let iptcData: Record<string, any> = {};
-  let userCommentFromEXIF: string | null = null;
+  let exifData: Record<string, unknown> = {};
+  let iptcData: Record<string, unknown> = {};
 
   // Try to parse EXIF data (only works for JPEG/TIFF).
   // enableBinaryFields(true) is required so format-7 (UNDEFINED) tags like
   // UserComment (0x9286) are NOT skipped — without it AI metadata extraction
   // from JPEGs has no fallback when the TIFF-based parser fails.
+  let userCommentFromEXIF: string | null = null;
   try {
     const parser = exifParser.create(buffer);
     parser.enableBinaryFields(true);
@@ -1872,7 +1944,7 @@ export async function extractMetadataFromBuffer(
     // Extract and decode UserComment from exif-parser's tags (format-7 data
     // comes back as a raw Buffer, not a string). Decode it once here so the
     // JPEG AI metadata path can use it as a fallback.
-    const rawUC = (exifData as any).UserComment;
+    const rawUC = exifData.UserComment;
     if (Buffer.isBuffer(rawUC) && rawUC.length >= 8) {
       userCommentFromEXIF = decodeUserComment(rawUC);
     }
@@ -1880,26 +1952,26 @@ export async function extractMetadataFromBuffer(
     // Strip binary/format-7 tags from exifData so we don't send large opaque
     // blobs (MakerNote etc.) to the client. UserComment is kept as a decoded
     // string so EXIF tab shows it, but we move it to a friendlier key first.
-    for (const [key, value] of Object.entries(exifData as Record<string, any>)) {
-      if (Buffer.isBuffer(value)) {
-        delete (exifData as any)[key];
+    for (const key of Object.keys(exifData)) {
+      if (Buffer.isBuffer(exifData[key])) {
+        delete exifData[key];
       }
     }
     // Store the decoded UserComment under a readable key for the EXIF tab
     if (userCommentFromEXIF) {
-      (exifData as any).UserCommentText = userCommentFromEXIF;
+      exifData.UserCommentText = userCommentFromEXIF;
     }
-  } catch (e) {
+  } catch {
     // EXIF parsing failed, that's ok for PNGs
   }
 
   // Parse PNG chunks for AI metadata
-  let aiData: Record<string, any> = {};
+  let aiData: Record<string, unknown> = {};
   if (effectiveMime === 'image/png') {
     const chunks = parsePNGChunks(buffer);
     aiData = await parseAIMetadata(chunks);
   } else if (effectiveMime === 'image/jpeg') {
-    let userComment = parseJPEGUserComment(buffer);
+    let userComment: string | null = parseJPEGUserComment(buffer);
 
     // Fall back to the exif-parser-decoded UserComment when the TIFF-based
     // parser couldn't find anything. Exif-parser handles byte order, IFD
@@ -1922,7 +1994,7 @@ export async function extractMetadataFromBuffer(
     // WebP may carry an EXIF chunk with AI metadata (e.g. CoreML/MPS tools on macOS).
     const webpExif = extractWebPChunk(buffer, 'EXIF');
     if (webpExif) {
-      const userComment = extractUserCommentFromTIFF(webpExif);
+      const userComment = extractUserCommentFromTIFF(webpExif) ?? extractUserCommentFromRawTIFF(webpExif);
       if (userComment) {
         if (userComment.trim().startsWith('{')) {
           aiData = await parseAIMetadata({ prompt: userComment });
@@ -1934,7 +2006,7 @@ export async function extractMetadataFromBuffer(
   }
 
   // Extract XMP metadata (works for all image formats)
-  let xmpData: Record<string, any> = {};
+  let xmpData: Record<string, unknown> = {};
   const xmpString = extractXMPString(buffer);
   if (xmpString) {
     xmpData = parseXMP(xmpString);

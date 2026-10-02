@@ -60,22 +60,21 @@ function parseComfyUIMetadata(jsonText: string): Record<string, string> {
   const params: Record<string, string> = {};
 
   try {
-    const data = JSON.parse(jsonText);
+    const data = JSON.parse(jsonText) as Record<string, { class_type?: string; inputs?: Record<string, unknown> }>;
 
     // Extract key information from nodes
-    for (const [nodeId, nodeData] of Object.entries(data)) {
-      const node = nodeData as any;
-      const inputs = node.inputs || {};
-      const classType = node.class_type || '';
+    for (const [nodeId, node] of Object.entries(data)) {
+      const inputs = node.inputs ?? {};
+      const classType = node.class_type ?? '';
 
       // Extract text prompts
-      if (inputs.text && typeof inputs.text === 'string') {
+      if (typeof inputs.text === 'string' && inputs.text) {
         params[`${classType} (${nodeId})`] = inputs.text;
       }
 
       // Extract checkpoint/model
       if (inputs.ckpt_name) {
-        params[`Checkpoint (${nodeId})`] = inputs.ckpt_name;
+        params[`Checkpoint (${nodeId})`] = String(inputs.ckpt_name);
       }
 
       // Extract common parameters
@@ -232,7 +231,7 @@ async function readJPEGMetadata(arrayBuffer: ArrayBuffer): Promise<ParsedMetadat
         if (unicodeIndex !== -1) {
           // Extract bytes after UNICODE\x00\x00
           const commentStart = offset + 4 + unicodeIndex + 8;
-          let commentBytes = bytes.slice(commentStart, offset + 2 + length);
+          const commentBytes = bytes.slice(commentStart, offset + 2 + length);
 
           // Strip null bytes (Civitai stores as UTF-16-LE with nulls)
           const strippedBytes = commentBytes.filter(b => b !== 0);
