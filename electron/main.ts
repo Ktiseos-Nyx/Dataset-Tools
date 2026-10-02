@@ -3,6 +3,7 @@ import { spawn, type ChildProcess } from 'child_process';
 import * as path from 'path';
 import * as http from 'http';
 import * as net from 'net';
+import * as fs from 'fs';
 
 const DEV_URL = 'http://localhost:3000';
 
@@ -13,6 +14,15 @@ const LIGHT_BG = '#ffffff';
 
 let nextProcess: ChildProcess | null = null;
 let mainWindow: BrowserWindow | null = null;
+let fsWatcher: fs.FSWatcher | null = null;
+
+function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: number): (...args: Parameters<T>) => void {
+  let timer: NodeJS.Timeout | null = null;
+  return (...args: Parameters<T>) => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), ms);
+  };
+}
 
 function getFreePort(): Promise<number> {
   return new Promise((resolve, reject) => {
@@ -63,23 +73,28 @@ const SELF_SERVE = process.argv.includes('--self-serve');
  * install dir. In dev, the server is already running under `next dev`.
  */
 async function startNextServer(port: number): Promise<void> {
-  const projectRoot = app.isPackaged
-    ? path.join(process.resourcesPath, 'app')
-    : path.join(__dirname, '..');
+  // The self-contained server lives in `.next/standalone` in dev, and is copied
+  // to `resources/standalone` (electron-builder extraResources) when packaged.
+  const standaloneDir = app.isPackaged
+    ? path.join(process.resourcesPath, 'standalone')
+    : path.join(__dirname, '..', '.next', 'standalone');
 
-  // Run the bundled `next` CLI through Electron's own Node runtime
-  // (ELECTRON_RUN_AS_NODE) so the packaged app doesn't depend on a system
-  // Node/npx installation.
+  // Run the standalone build's self-contained server through Electron's own
+  // Node runtime (ELECTRON_RUN_AS_NODE) so the packaged app doesn't depend on
+  // a system Node/npx installation. The standalone server reads PORT + HOSTNAME
+  // from the environment (defaults to 0.0.0.0, so HOSTNAME is pinned explicitly
+  // to keep the server off the network).
   nextProcess = spawn(
     process.execPath,
-    ['node_modules/next/dist/bin/next', 'start', '--port', String(port), '--hostname', '127.0.0.1'],
+    [path.join(standaloneDir, 'server.js')],
     {
-      cwd: projectRoot,
+      cwd: standaloneDir,
       env: {
         ...process.env,
         ELECTRON_RUN_AS_NODE: '1',
         NODE_ENV: 'production',
         PORT: String(port),
+        HOSTNAME: '127.0.0.1',
         ELECTRON_USER_DATA: app.getPath('userData'),
       },
       stdio: 'inherit',
@@ -150,6 +165,29 @@ app.whenReady().then(async () => {
     mainWindow?.setBackgroundColor(theme === 'light' ? LIGHT_BG : DARK_BG);
   });
 
+  // Watch a folder for changes and notify the renderer so the file tree can
+  // auto-refresh (B5). Uses Node's built-in fs.watch — zero dependencies, and
+  // recursive watching works on Windows under Electron's Node 22.
+  ipcMain.handle('fs:watch', async (_event, dir: unknown) => {
+    if (fsWatcher) {
+      fsWatcher.close();
+      fsWatcher = null;
+    }
+    if (typeof dir !== 'string' || dir.length === 0) return;
+    try {
+      const notify = debounce(() => {
+        mainWindow?.webContents.send('fs:change');
+      }, 300);
+      fsWatcher = fs.watch(dir, { recursive: true }, notify);
+      fsWatcher.on('error', () => {
+        fsWatcher?.close();
+        fsWatcher = null;
+      });
+    } catch (err) {
+      console.error('[electron] fs.watch failed:', err);
+    }
+  });
+
   try {
     await createWindow();
   } catch (err) {
@@ -168,5 +206,7 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
+  fsWatcher?.close();
+  fsWatcher = null;
   nextProcess?.kill();
 });

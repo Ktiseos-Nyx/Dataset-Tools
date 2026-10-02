@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import type { FsItem } from "@/types/fs"
 import type { ViewMode } from "@/types/metadata"
 import { useSettings } from "@/hooks/use-settings"
-import { isElectron, pickFolder } from "@/lib/electron-bridge"
+import { isElectron, pickFolder, watchFolder, onFsChange } from "@/lib/electron-bridge"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import {
@@ -413,6 +413,14 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
     // eslint-disable-next-line react-hooks/set-state-in-effect -- resets list + shows loading before fetching the new folder
     fetchRoot();
   }, [fetchRoot, refreshKey]);
+
+  // Auto-refresh the tree when files change on disk (Electron only). Skip the
+  // default `.` root to avoid watching the whole project dir in dev.
+  useEffect(() => {
+    if (!isElectron() || settings.currentFolder === '.') return;
+    watchFolder(settings.currentFolder);
+    return onFsChange(() => fetchRoot());
+  }, [settings.currentFolder, fetchRoot]);
 
   return (
     <aside className="h-full bg-muted/20 flex flex-col">

@@ -66,6 +66,30 @@ npm run build && npm start
 
 ---
 
+## Desktop App (Windows)
+
+A standalone `.exe` lives on the [Releases](https://github.com/Ktiseos-Nyx/Dataset-Tools/releases) page — no Node.js, no browser, no npm. It bundles Next.js and runs the same metadata engine as the web build, but against any folder on your machine.
+
+> **A note on versioning:** the installer still stamps `0.8.0` even though the codebase is well past that (the tags are at `0.91`+) — the package number drifted out of sync during the Electron port and we're squaring it up on the next release. The number in the filename is behind reality, not a feature level.
+
+### "Windows protected your PC"?
+
+On first launch Windows will probably throw up a SmartScreen warning. That's not malware — it's because the exe isn't signed with a commercial code-signing certificate, which costs a few hundred dollars a year. Same thing every unsigned open-source desktop app deals with.
+
+To run it:
+
+1. Click **More info**
+2. Click **Run anyway**
+
+Two ways to check it yourself before running:
+
+- Every release ships a **VirusTotal scan** link so you can see the file checked against 70+ antivirus engines. You'll occasionally see 1–2 "generic heuristic" flags on a fresh Electron build — that's normal for unsigned apps, not a real detection.
+- The whole app is open source and the build is run from this repo, so nothing goes into the exe that isn't here.
+
+The warning also fades over time as more people download the app (SmartScreen builds a reputation for the file).
+
+---
+
 ## Usage
 
 1. **Start the app:** `npm run dev` → open `http://localhost:3000`
@@ -195,6 +219,7 @@ GNU General Public License v3.0
 ## Acknowledgements
 
 * **Core Parsing Logic:** This project incorporates and adapts parsing functionality from [Stable Diffusion Prompt Reader](https://github.com/receyuki/stable-diffusion-prompt-reader) by **[receyuki](https://github.com/receyuki)**. The original MIT license for vendored code is included in `NOTICE.md`.
+* **App icon:** [Web development icons created by Chanut-is-Industries - Flaticon](https://www.flaticon.com/free-icons/web-development)
 * **[traugdor](https://github.com/traugdor)** — Project supervision and the [ComfyUI Node Finder](https://github.com/Ktiseos-Nyx/ComfyUI-Node-Finder) (Python), whose extension-node-map registry and node classification logic are now built directly into Dataset Tools.
 * Everyone at [Arc En Ciel](https://arcenciel.io/) for continued support.
 * **[Anzhc](https://github.com/anzhc)** for ongoing support and motivation.

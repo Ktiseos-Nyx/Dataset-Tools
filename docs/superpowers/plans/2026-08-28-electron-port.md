@@ -1,6 +1,6 @@
 # Electron Port + Pre-Port UI Plan
 
-> **Status:** IN PROGRESS — A1/A3/A6 + B1 scaffold done; packaged build + B2/B3/B4/B5 pending.
+> **Status:** DONE — A1/A3/A6 + B1–B5 complete; Windows installer builds and runs (2026-10-02). Remaining: icon finalization, code-signing posture, B5 visual pass.
 
 ## Implementation status (2026-08-28)
 
@@ -11,8 +11,11 @@
 - 📌 **A4** — already satisfied: `currentFolder` is in `AppSettings` and persisted to `localStorage`, so the folder is remembered across launches. Remaining option is a *recent-folders* list (visual-pass enhancement).
 - 📌 **A5/A7** — enhancements, not fixes: A5 is already native titlebar (recommended default); A7 breadcrumbs are an optional upgrade over the text path input. Both are Dusk's visual-pass call.
 - ✅ **B1 (scaffold)** — `electron/{main,preload,tsconfig}`, `electron-builder.yml`, `package.json` scripts (`electron:compile/dev/start/build`, `main` field). Compiles + lints clean.
-- ⏳ **B1 (packaged verify)** — needs a real `next build` + electron-builder run + icons; sharp native module to confirm under `asar:false`.
-- ⏳ **B2/B3/B4/B5** — pending.
+- ✅ **B1 (packaged verify)** — real `next build` + electron-builder run produces `dist/Dataset Tools Setup 0.8.0.exe` (~116 MB); sharp native binary confirmed under `asar:false` + `extraResources`.
+- ✅ **B2 (userData)** — `ELECTRON_USER_DATA` routed through settings + cache (done under A3).
+- ✅ **B3 (standalone)** — `output: 'standalone'` + `outputFileTracingIncludes` (sharp/@img) + `outputFileTracingExcludes` (kills the "whole project traced" leak of `.env.local`/`.git`/source) + `scripts/copy-standalone-assets.mjs` (postbuild). Packaged server spawns `resources/standalone/server.js` with `HOSTNAME=127.0.0.1`.
+- ✅ **B4 (packaging + icons)** — `electron-builder.yml` (NSIS/AppImage targets, `asar:false`, `npmRebuild:false`), `build/icon.ico` + `build/icon.png` generated via `scripts/generate-icons.mjs`.
+- ✅ **B5 (file watching)** — zero-dep `fs.watch` (recursive) in `electron/main.ts` → `preload.ts` → `electron-bridge.ts` → `file-tree.tsx`; debounced, gated to skip the `.` root. Needs a visual pass in the running app.
 
 ### Key decisions made
 - **`asar: false`** in `electron-builder.yml` — keeps `node_modules` (sharp native binary) + `.next` as real files so `next start` works without asar-unpack fiddling.

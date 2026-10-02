@@ -518,5 +518,5 @@ Dataset Tools automatically creates detailed log files in a `logs/` directory:
 
 ---
 
-*Last Updated: October 2025*
+*Last Updated: October 2026*
 *For the most current information, always check the [GitHub repository](https://github.com/Ktiseos-Nyx/Dataset-Tools)*

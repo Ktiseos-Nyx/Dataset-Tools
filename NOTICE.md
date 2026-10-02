@@ -245,4 +245,22 @@ When creating custom themes:
 
 ---
 
-*This notice last updated: October 2025*
+## 4. Asset Attribution
+
+### Application Icon
+
+The Dataset Tools application icon is a "web development" icon from Flaticon, used under Flaticon's free license (attribution required).
+
+- **Icon:** Web development icon
+- **Created by:** [Chanut-is-Industries](https://www.flaticon.com/free-icons/web-development)
+- **Source:** [Flaticon — web development icons](https://www.flaticon.com/free-icons/web-development)
+
+Attribution as required by Flaticon:
+
+```
+<a href="https://www.flaticon.com/free-icons/web-development" title="web development icons">Web development icons created by Chanut-is-Industries - Flaticon</a>
+```
+
+---
+
+*This notice last updated: October 2026*

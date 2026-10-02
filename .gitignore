@@ -8,7 +8,10 @@
 /out/
 
 # production
-/build
+/build/*
+!/build/icon.ico
+!/build/icon.png
+!/build/icon-source.png
 /logs
 
 # electron
