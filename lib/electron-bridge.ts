@@ -56,10 +56,10 @@ export function syncElectronTheme(theme: 'dark' | 'light') {
 
 /**
  * Tell the native side to watch a folder for changes (no-op outside Electron).
- * Replaces any previous watcher so there's only ever one active watch.
+ * Replaces any previous watcher so there's only ever one active watch. Passing
+ * an empty string stops watching entirely (the main process closes the watcher).
  */
 export function watchFolder(dir: string) {
-  if (!dir) return
   const api = getElectronAPI()
   try {
     api?.watchFolder?.(dir)

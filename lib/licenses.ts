@@ -207,7 +207,7 @@ export async function fetchGitHubLicense(
 ): Promise<GitHubLicenseData | null> {
   try {
     const response = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}`,
+      `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`,
       {
         headers: {
           Accept: "application/vnd.github.v3+json",
@@ -229,7 +229,7 @@ export async function fetchGitHubLicense(
     return {
       spdxId: license.spdx_id,
       name: license.name ?? license.spdx_id,
-      url: `https://github.com/${owner}/${repo}/blob/${data.default_branch ?? "main"}/LICENSE`,
+      url: data.html_url ?? `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`,
       repoFullName: data.full_name ?? `${owner}/${repo}`,
     }
   } catch {

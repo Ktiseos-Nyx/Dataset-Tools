@@ -419,7 +419,11 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   useEffect(() => {
     if (!isElectron() || settings.currentFolder === '.') return;
     watchFolder(settings.currentFolder);
-    return onFsChange(() => fetchRoot());
+    const unsubscribe = onFsChange(() => fetchRoot());
+    return () => {
+      unsubscribe();
+      watchFolder('');
+    };
   }, [settings.currentFolder, fetchRoot]);
 
   return (

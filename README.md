@@ -84,7 +84,7 @@ To run it:
 Two ways to check it yourself before running:
 
 - Every release ships a **VirusTotal scan** link so you can see the file checked against 70+ antivirus engines. You'll occasionally see 1–2 "generic heuristic" flags on a fresh Electron build — that's normal for unsigned apps, not a real detection.
-- The whole app is open source and the build is run from this repo, so nothing goes into the exe that isn't here.
+- The whole app is open source — the source and the build configuration are all here, so you can inspect exactly how the exe is produced.
 
 The warning also fades over time as more people download the app (SmartScreen builds a reputation for the file).
 

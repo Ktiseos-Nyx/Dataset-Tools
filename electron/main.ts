@@ -15,6 +15,7 @@ const LIGHT_BG = '#ffffff';
 let nextProcess: ChildProcess | null = null;
 let mainWindow: BrowserWindow | null = null;
 let fsWatcher: fs.FSWatcher | null = null;
+let serverPort: number | null = null;
 
 function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: number): (...args: Parameters<T>) => void {
   let timer: NodeJS.Timeout | null = null;
@@ -112,9 +113,11 @@ async function createWindow(): Promise<void> {
   let url = DEV_URL;
 
   if (app.isPackaged || SELF_SERVE) {
-    const port = await getFreePort();
-    await startNextServer(port);
-    url = `http://127.0.0.1:${port}`;
+    if (serverPort === null) {
+      serverPort = await getFreePort();
+      await startNextServer(serverPort);
+    }
+    url = `http://127.0.0.1:${serverPort}`;
   }
 
   mainWindow = new BrowserWindow({
@@ -135,7 +138,14 @@ async function createWindow(): Promise<void> {
   mainWindow.loadURL(url);
 
   mainWindow.webContents.setWindowOpenHandler(({ url: target }) => {
-    shell.openExternal(target);
+    try {
+      const parsed = new URL(target);
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        shell.openExternal(target);
+      }
+    } catch {
+      // ignore malformed or disallowed URLs — only http/https are opened
+    }
     return { action: 'deny' };
   });
 
@@ -197,8 +207,13 @@ app.whenReady().then(async () => {
 });
 
 app.on('window-all-closed', () => {
-  nextProcess?.kill();
-  if (process.platform !== 'darwin') app.quit();
+  if (process.platform !== 'darwin') {
+    nextProcess?.kill();
+    app.quit();
+  }
+  // On macOS the app stays in the dock — keep the Next server running so
+  // re-activating reuses it (createWindow reuses serverPort) instead of
+  // spawning a fresh server per activation.
 });
 
 app.on('activate', () => {

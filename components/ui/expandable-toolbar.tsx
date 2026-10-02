@@ -304,7 +304,7 @@ export function ExpandableToolbar({
           open: isOpen,
           disabled,
           label: currentLabel,
-          controlsId: panelId,
+          controlsId: triggerProps["aria-controls"],
           triggerProps,
         })
       ) : (
