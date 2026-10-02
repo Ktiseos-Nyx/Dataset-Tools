@@ -4,7 +4,6 @@ import {
   classifyNodes,
   getRegistryStats,
   refreshRegistry,
-  type NodeLookupResult,
 } from '@/lib/comfyui-node-registry';
 import {
   getGitHubSearchStats,
@@ -35,7 +34,7 @@ export async function GET(request: Request) {
         getGitHubSearchStats(),
       ]);
       return NextResponse.json({ ...registry, github });
-    } catch (err) {
+    } catch {
       return NextResponse.json({ error: 'Failed to get registry stats' }, { status: 500 });
     }
   }
@@ -46,7 +45,7 @@ export async function GET(request: Request) {
       await refreshRegistry();
       const stats = await getRegistryStats();
       return NextResponse.json({ refreshed: true, ...stats });
-    } catch (err) {
+    } catch {
       return NextResponse.json({ error: 'Failed to refresh registry' }, { status: 500 });
     }
   }
@@ -143,7 +142,7 @@ export async function POST(request: Request) {
       unknownNodes,
       classifications,
     });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
 }
@@ -168,7 +167,7 @@ export async function DELETE(request: Request) {
   try {
     await clearGitHubSearchCache();
     return NextResponse.json({ cleared: true });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Failed to clear github cache' }, { status: 500 });
   }
 }
