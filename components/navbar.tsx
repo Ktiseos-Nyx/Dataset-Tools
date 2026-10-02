@@ -401,6 +401,22 @@ function SettingsContent() {
           </p>
         </div>
       </section>
+
+      {/* About */}
+      <section className="space-y-2 border-t border-border pt-4">
+        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">About</h2>
+        <p className="text-xs text-muted-foreground">
+          App icon:{" "}
+          <a
+            href="https://www.flaticon.com/free-icons/web-development"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline"
+          >
+            Web development icons by Chanut-is-Industries — Flaticon
+          </a>
+        </p>
+      </section>
     </div>
   )
 }

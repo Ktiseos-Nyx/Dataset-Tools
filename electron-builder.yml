@@ -1,0 +1,63 @@
+appId: com.ktiseos-nyx.dataset-tools
+productName: Dataset Tools
+copyright: "Copyright © 2026 The Duskfall Portal Crew"
+
+# asar: false keeps the standalone server + sharp's native binary as real files
+# on disk so the spawned server can read them directly without asar-unpack fiddling.
+asar: false
+
+# sharp ships prebuilt N-API binaries (@img/sharp-*) that work in Electron as-is;
+# no rebuild needed. Skipping @electron/rebuild also avoids symlink creation,
+# which fails on Windows without Developer Mode.
+npmRebuild: false
+
+# The standalone build (`.next/standalone`) already traces in every runtime
+# dependency (incl. sharp + its @img native binaries). Ship it via extraResources
+# (a raw copy electron-builder never scans for node_modules) so the collector
+# doesn't see `sharp` twice and try to symlink-dedupe it — that symlink is what
+# needs admin/Developer Mode on Windows. Only the main process + metadata live
+# in the app bundle; node_modules is excluded so nothing redundant gets copied.
+files:
+  - .electron/**/*
+  - package.json
+  - "!node_modules/**/*"
+
+# Copy from `.next` (not `.next/standalone`) so the standalone's node_modules
+# is *nested* (`standalone/node_modules`) rather than at the copy root —
+# electron-builder hard-excludes a node_modules that sits at the root of an
+# extraResources source (see app-builder-lib/util/filter.js), which would drop
+# sharp's native binary.
+extraResources:
+  - from: .next
+    to: .
+    filter:
+      - "standalone/**/*"
+
+directories:
+  output: dist
+  buildResources: build
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: build/icon.ico
+
+mac:
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+  icon: build/icon.icns
+  category: public.app-category.productivity
+
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+  icon: build/icon.png
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true

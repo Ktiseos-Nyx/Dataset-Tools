@@ -2,14 +2,20 @@
   "name": "knx-dataset-tools",
   "version": "0.8.0",
   "private": true,
+  "main": ".electron/main.js",
   "scripts": {
     "build": "next build",
+    "postbuild": "node scripts/copy-standalone-assets.mjs",
     "dev": "next dev",
     "lint": "eslint .",
-    "start": "next start"
+    "start": "node .next/standalone/server.js",
+    "electron:compile": "tsc -p electron/tsconfig.json",
+    "electron:dev": "npm run electron:compile && concurrently -k \"next dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron:start": "npm run electron:compile && electron . --self-serve",
+    "electron:build": "npm run build && npm run electron:compile && electron-builder",
+    "icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
-    "@base-ui/react": "^1.1.0",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.4",
@@ -51,6 +57,7 @@
     "cmdk": "^1.0.4",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "8.5.1",
+    "es-toolkit": "^1.52.0",
     "exif-parser": "^0.1.12",
     "framer-motion": "^12.33.0",
     "iconv-lite": "^0.7.2",
@@ -60,7 +67,7 @@
     "marked": "^17.0.1",
     "mime-types": "^3.0.2",
     "motion": "^12.33.0",
-    "next": "^16.2.3",
+    "next": "^16.3.8",
     "next-themes": "^0.4.6",
     "radix-ui": "^1.4.3",
     "react": "^19.2.3",
@@ -73,7 +80,7 @@
     "recharts": "2.15.4",
     "remark-breaks": "^4.0.0",
     "remark-gfm": "^4.0.1",
-    "sharp": "^0.35.3",
+    "sharp": "^0.35.5",
     "shiki": "^3.21.0",
     "sonner": "^1.7.4",
     "tailwind-merge": "^3.4.0",
@@ -89,11 +96,21 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/sharp": "^0.31.1",
+    "concurrently": "^10.0.5",
+    "electron": "^44.0.0",
+    "electron-builder": "^26.15.3",
     "eslint": "^9",
     "eslint-config-next": "^16.2.3",
+    "png-to-ico": "^3.0.2",
     "postcss": "^8.5",
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "1.3.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wait-on": "^9.1.0"
+  },
+  "overrides": {
+    "nanoid": "3.3.18",
+    "browserslist": "4.28.8",
+    "fflate": "0.8.3"
   }
 }

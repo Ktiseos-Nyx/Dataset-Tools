@@ -13,6 +13,8 @@ const eslintConfig = [
       "node_modules/**",
       ".cache/**",
       ".remember/**",
+      ".electron/**",
+      "dist/**",
       "public/**",
     ],
   },
