@@ -34,13 +34,13 @@ inside the integrity-protected `app.asar`, so the check is trustworthy).
 ## 4. Design
 
 1. **Build time** (electron-builder `afterPack` hook, or extend the existing `scripts/copy-standalone-assets.mjs`): compute a hash of the `standalone/` tree and write the expected hash **into `app.asar`** (a small `standalone.sha256` file, or embed as a constant in compiled `main.js`). Because `app.asar` is integrity-validated, the stored hash can't be tampered with.
-2. **Runtime** (`main.ts`, immediately before `startNextServer` spawns): re-hash the on-disk `resources/standalone/` tree and compare against the expected hash. Mismatch → refuse to spawn and quit (tamper detected).
+2. **Runtime** (`main.ts`, immediately before `startNextServer` spawns): verify the standalone tree. A naive "hash then spawn" has a **TOCTOU gap** — an attacker can modify files between the hash and the exec. So the bytes you verify must be the bytes you run: copy the `standalone/` tree to a private, write-protected snapshot, verify *that* snapshot, then spawn from it — or use an OS-enforced mechanism that authenticates files on read. Hashing the writable tree in place and then spawning it is not sufficient.
 
 ## 5. Open questions (decide before building)
 
 1. **Hash scope** — whole-tree digest vs a manifest of per-file hashes. A manifest pinpoints *which* file changed and makes exclusions explicit.
 2. **Exclusions** — is there any runtime-mutable state inside the standalone tree? Expected: no — `.thumbcache`/`.cache`/settings route to `userData` via `ELECTRON_USER_DATA`, so the packaged tree should be read-only and static. Confirm before relying on it.
-3. **Cost** — SHA-256 over ~100–150 MB adds cold-start latency. Acceptable, or use BLAKE3 (far faster) / hash a strategic subset (server.js + `.next` + a node_modules manifest, skipping the large sharp binary)? Note sharp is itself a supply-chain target, so skipping it weakens coverage.
+3. **Cost** — SHA-256 over ~100–150 MB adds cold-start latency, and the TOCTOU-safe snapshot *also* means copying that tree to a private location every launch (doubling the I/O). Acceptable, or use BLAKE3 (far faster) / hash a strategic subset (server.js + `.next` + a node_modules manifest, skipping the large sharp binary)? Note sharp is itself a supply-chain target, so skipping it weakens coverage.
 4. **Failure mode** — hard-fail (refuse to launch) vs warn-and-continue. Hard-fail is the point of integrity; on a read-only install dir, false positives should be near-zero.
 5. **Where the hash lives** — a file read out of `app.asar` (simplest) vs embedded in `main.js`.
 
@@ -62,5 +62,5 @@ inside the integrity-protected `app.asar`, so the check is trustworthy).
 |---|---|
 | 0 | Answer the open questions (hash scope, cost, failure mode) |
 | 1 | Build-time hash → embed in `app.asar` |
-| 2 | Runtime verify-before-spawn in `main.ts` |
+| 2 | Runtime verify-and-spawn in `main.ts` (TOCTOU-safe snapshot, or OS-enforced read-time auth) |
 | 3 | Test: clean install, tampered `server.js`, tampered sharp binary, legitimate reinstall/update |

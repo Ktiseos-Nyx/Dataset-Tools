@@ -37,10 +37,19 @@ for (const [src, dest] of copies) {
 // default for every other launch mode.
 const serverPath = join(standalone, 'server.js')
 const serverSrc = readFileSync(serverPath, 'utf8')
-const pinned = serverSrc.replace("process.env.HOSTNAME || '0.0.0.0'", "process.env.HOSTNAME || '127.0.0.1'")
-if (pinned !== serverSrc) {
-  writeFileSync(serverPath, pinned)
+const HOSTNAME_ANY = "process.env.HOSTNAME || '0.0.0.0'"
+const HOSTNAME_LOOPBACK = "process.env.HOSTNAME || '127.0.0.1'"
+
+if (serverSrc.includes(HOSTNAME_LOOPBACK)) {
+  // Already pinned from a prior build — accept as-is.
+  console.log('[postbuild] standalone server already pinned to 127.0.0.1')
+} else if (serverSrc.includes(HOSTNAME_ANY)) {
+  writeFileSync(serverPath, serverSrc.replace(HOSTNAME_ANY, HOSTNAME_LOOPBACK))
   console.log('[postbuild] pinned standalone server to 127.0.0.1')
 } else {
-  console.log('[postbuild] warn: HOSTNAME default not found, server may bind to 0.0.0.0')
+  // Next changed the generated server's HOSTNAME default and we can't find the
+  // expected pattern — fail the build rather than silently ship a server that
+  // might bind to all interfaces.
+  console.error('[postbuild] ERROR: unrecognized HOSTNAME default in server.js; aborting')
+  process.exit(1)
 }
