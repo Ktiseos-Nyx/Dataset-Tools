@@ -2,7 +2,7 @@
 
 **Status:** Design draft — for handoff to ArcEnCiel (FallenIncursio)
 **Date:** 2026-10-04
-**Related:** `docs/2026-07-03-additive-download-system.md` (ArcEnCiel public API contract, §4.2)
+**Note:** the ArcEnCiel public API contract is inlined in §8 (originally sourced from a now-retired KNX trainer design doc, which is not part of this repo).
 
 ---
 
