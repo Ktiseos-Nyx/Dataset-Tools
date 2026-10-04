@@ -1,3 +1,5 @@
+import { safeFetch } from './safe-fetch'
+
 export interface LicenseInfo {
   /** SPDX identifier (e.g. "MIT", "Apache-2.0"). */
   spdxId: string
@@ -206,7 +208,7 @@ export async function fetchGitHubLicense(
   repo: string
 ): Promise<GitHubLicenseData | null> {
   try {
-    const response = await fetch(
+    const response = await safeFetch(
       `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`,
       {
         headers: {
