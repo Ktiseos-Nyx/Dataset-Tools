@@ -18,6 +18,17 @@ function isLoopbackHost(host: string): boolean {
   return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
 }
 
+// Defense in depth for a local-only endpoint:
+// 1. PRIMARY boundary — the server is loopback-bound. The postbuild script pins
+//    the standalone server to 127.0.0.1, and Electron spawns it with
+//    HOSTNAME=127.0.0.1, so remote hosts can't connect in the first place.
+// 2. Origin check — a cross-origin fetch from a page on the local machine (e.g.
+//    evil.com driving your browser at http://127.0.0.1:3000) carries an Origin
+//    we reject.
+// 3. Host check — rejects a non-loopback Host. This is a spoofable header and
+//    therefore NOT a boundary by itself; it's only a secondary signal.
+// We cannot require an Origin header: our own same-origin EventSource client
+// sends none, so "loopback Host + no Origin" must remain accepted.
 function originGuard(request: Request): string | null {
   const origin = request.headers.get('origin');
   const host = request.headers.get('host');
