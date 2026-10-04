@@ -55,25 +55,20 @@ const nextConfig = {
       './LICENSE',
     ],
   },
-  // Content-Security-Policy applied to every response. The shipped app (Electron
-  // standalone + Vercel) gets the strict policy; `next dev` only relaxes
-  // script-src to admit Turbopack's hot-reload `eval`, not because the app is in
-  // development but because the dev server physically injects inline/eval scripts.
+  // Content-Security-Policy applied to every response. `default-src 'self'`
+  // blocks all external subresources (scripts, images, frames, fonts, media)
+  // unless explicitly allowlisted below — the goal is locking down *external*
+  // content.
   //
-  // `default-src 'self'` blocks all external subresources (scripts, images,
-  // frames, fonts, media) unless explicitly allowlisted below. The two external
-  // origins we DO touch are the GitHub star-badge fetch and Vercel analytics.
+  // script-src carries `'unsafe-inline'` (Next.js inlines the RSC payload as
+  // inline scripts) and `'unsafe-eval'` (Turbopack's module runtime uses
+  // `new Function` in both dev AND production — Next 16 bundles with Turbopack
+  // by default, so this is required for the app to boot at all). External
+  // scripts are still locked to same-origin via `'self'`.
   async headers() {
-    const isProd = process.env.NODE_ENV === 'production'
-    // Next.js inlines the RSC payload (`self.__next_f.push(...)`) as an inline
-    // script, so `'unsafe-inline'` is required for hydration; external scripts
-    // are still locked to same-origin via `'self'`.
-    const scriptSrc = isProd
-      ? "'self' 'unsafe-inline'"
-      : "'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com"
     const csp = [
       "default-src 'self'",
-      `script-src ${scriptSrc}`,
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
       // framer-motion + Radix set inline style attributes (transforms, positions)
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' blob: data:",
