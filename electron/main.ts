@@ -3,7 +3,6 @@ import { spawn, type ChildProcess } from 'child_process';
 import * as path from 'path';
 import * as http from 'http';
 import * as net from 'net';
-import * as fs from 'fs';
 
 const DEV_URL = 'http://localhost:3000';
 
@@ -14,16 +13,7 @@ const LIGHT_BG = '#ffffff';
 
 let nextProcess: ChildProcess | null = null;
 let mainWindow: BrowserWindow | null = null;
-let fsWatcher: fs.FSWatcher | null = null;
 let serverPort: number | null = null;
-
-function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: number): (...args: Parameters<T>) => void {
-  let timer: NodeJS.Timeout | null = null;
-  return (...args: Parameters<T>) => {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), ms);
-  };
-}
 
 function getFreePort(): Promise<number> {
   return new Promise((resolve, reject) => {
@@ -175,29 +165,6 @@ app.whenReady().then(async () => {
     mainWindow?.setBackgroundColor(theme === 'light' ? LIGHT_BG : DARK_BG);
   });
 
-  // Watch a folder for changes and notify the renderer so the file tree can
-  // auto-refresh (B5). Uses Node's built-in fs.watch — zero dependencies, and
-  // recursive watching works on Windows under Electron's Node 22.
-  ipcMain.handle('fs:watch', async (_event, dir: unknown) => {
-    if (fsWatcher) {
-      fsWatcher.close();
-      fsWatcher = null;
-    }
-    if (typeof dir !== 'string' || dir.length === 0) return;
-    try {
-      const notify = debounce(() => {
-        mainWindow?.webContents.send('fs:change');
-      }, 300);
-      fsWatcher = fs.watch(dir, { recursive: true }, notify);
-      fsWatcher.on('error', () => {
-        fsWatcher?.close();
-        fsWatcher = null;
-      });
-    } catch (err) {
-      console.error('[electron] fs.watch failed:', err);
-    }
-  });
-
   try {
     await createWindow();
   } catch (err) {
@@ -221,7 +188,5 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
-  fsWatcher?.close();
-  fsWatcher = null;
   nextProcess?.kill();
 });

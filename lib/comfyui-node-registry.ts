@@ -10,6 +10,8 @@
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
+import { safeFetch } from './safe-fetch';
+
 export interface NodeRepoInfo {
   repoUrl: string;
   repoName: string;
@@ -195,7 +197,7 @@ async function getNodeIndex(): Promise<CacheEntry> {
   const patterns: Array<{ regex: RegExp; repo: NodeRepoInfo }> = [];
 
   try {
-    const res = await fetch(EXTENSION_MAP_URL, {
+    const res = await safeFetch(EXTENSION_MAP_URL, {
       signal: AbortSignal.timeout(15_000),
     });
 

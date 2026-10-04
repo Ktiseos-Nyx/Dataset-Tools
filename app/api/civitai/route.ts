@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { safeFetch } from '@/lib/safe-fetch';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -8,9 +9,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Model ID is required' }, { status: 400 });
   }
 
+  // Civitai model IDs are positive integers. Reject anything else so a crafted
+  // workflow can't steer this proxy to an arbitrary Civitai path.
+  if (!/^\d+$/.test(modelId)) {
+    return NextResponse.json({ error: 'Invalid model ID' }, { status: 400 });
+  }
+
   try {
     const civitaiApiUrl = `https://civitai.com/api/v1/models/${modelId}`;
-    const response = await fetch(civitaiApiUrl);
+    const response = await safeFetch(civitaiApiUrl);
 
     if (!response.ok) {
       const errorData = await response.json();

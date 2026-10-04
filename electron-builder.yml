@@ -2,9 +2,20 @@ appId: com.ktiseos-nyx.dataset-tools
 productName: Dataset Tools
 copyright: "Copyright © 2026 The Duskfall Portal Crew"
 
-# asar: false keeps the standalone server + sharp's native binary as real files
-# on disk so the spawned server can read them directly without asar-unpack fiddling.
-asar: false
+# The app bundle now contains only pure-JS files (.electron/main.js + preload.js
+# + package.json) — sharp's native binary and the standalone server ship via
+# extraResources, outside the asar. So we can keep asar ON (default) for tamper
+# detection: electron-builder embeds a SHA-256 header hash, and the flipped fuse
+# below makes Electron verify it at startup (Windows >= Electron 30).
+asar: true
+
+# ASAR integrity + refuse to load app code from anywhere but the packed archive.
+# (electron-builder maps these boolean flags to the underlying @electron/fuses
+# `FuseV1Options` values. `runAsNode` is left at its default so the packaged app
+# can still spawn the standalone server via ELECTRON_RUN_AS_NODE.)
+electronFuses:
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true
 
 # sharp ships prebuilt N-API binaries (@img/sharp-*) that work in Electron as-is;
 # no rebuild needed. Skipping @electron/rebuild also avoids symlink creation,

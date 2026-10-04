@@ -1,0 +1,171 @@
+import { NextResponse } from 'next/server';
+import { stat } from 'fs/promises';
+import path from 'path';
+import { watch, type FSWatcher } from 'chokidar';
+
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+function isLoopbackHost(host: string): boolean {
+  let hostname: string;
+  try {
+    // Parse via URL so IPv6 literals like `[::1]:3000` resolve to `[::1]`
+    // instead of being truncated by a naive `split(':')`.
+    hostname = new URL(`http://${host}`).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+}
+
+// Defense in depth for a local-only endpoint:
+// 1. PRIMARY boundary — the server is loopback-bound. The postbuild script pins
+//    the standalone server to 127.0.0.1, and Electron spawns it with
+//    HOSTNAME=127.0.0.1, so remote hosts can't connect in the first place.
+// 2. Origin check — a cross-origin fetch from a page on the local machine (e.g.
+//    evil.com driving your browser at http://127.0.0.1:3000) carries an Origin
+//    we reject.
+// 3. Host check — rejects a non-loopback Host. This is a spoofable header and
+//    therefore NOT a boundary by itself; it's only a secondary signal.
+// We cannot require an Origin header: our own same-origin EventSource client
+// sends none, so "loopback Host + no Origin" must remain accepted.
+function originGuard(request: Request): string | null {
+  const origin = request.headers.get('origin');
+  const host = request.headers.get('host');
+  if (host && !isLoopbackHost(host)) {
+    return 'Access denied - non-loopback host';
+  }
+  if (origin) {
+    try {
+      const originUrl = new URL(origin);
+      if (!isLoopbackHost(originUrl.hostname)) {
+        return 'Access denied - cross-origin request';
+      }
+    } catch {
+      return 'Access denied - invalid origin';
+    }
+  }
+  return null;
+}
+
+// GET /api/watch?dir=<absolute path>
+// Server-sent events: pushes `{ type: 'change' }` whenever anything inside `dir`
+// changes, plus an initial `{ type: 'ready' }`. Watching lives here (in the
+// Next.js server) rather than in the Electron main process so it's reusable by
+// the desktop shell, a future CLI, and the web demo — and so Chokidar runs
+// against the server's own node_modules instead of a dep-free main bundle.
+// Only absolute, existing directories on the loopback are accepted.
+export async function GET(request: Request) {
+  const guardError = originGuard(request);
+  if (guardError) {
+    return NextResponse.json({ error: guardError }, { status: 403 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const dir = searchParams.get('dir');
+
+  if (!dir) {
+    return NextResponse.json({ error: 'Directory path is required' }, { status: 400 });
+  }
+  if (!path.isAbsolute(dir)) {
+    return NextResponse.json({ error: 'Directory path must be absolute' }, { status: 400 });
+  }
+
+  try {
+    const dirStat = await stat(dir);
+    if (!dirStat.isDirectory()) {
+      return NextResponse.json({ error: 'Path is not a directory' }, { status: 400 });
+    }
+  } catch {
+    return NextResponse.json({ error: 'Directory not found' }, { status: 404 });
+  }
+
+  const encoder = new TextEncoder();
+  let watcher: FSWatcher | null = null;
+  let heartbeat: ReturnType<typeof setInterval> | null = null;
+  let cleanedUp = false;
+
+  const cleanup = () => {
+    if (cleanedUp) return;
+    cleanedUp = true;
+    if (heartbeat) {
+      clearInterval(heartbeat);
+      heartbeat = null;
+    }
+    if (watcher) {
+      void watcher.close().catch(() => {});
+      watcher = null;
+    }
+  };
+
+  const stream = new ReadableStream({
+    start(controller) {
+      const send = (payload: unknown) => {
+        try {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
+        } catch {
+          // stream already closed — drop the event
+        }
+      };
+
+      watcher = watch(dir, { ignoreInitial: true });
+      const refresh = () => send({ type: 'change' });
+      watcher.on('add', refresh);
+      watcher.on('change', refresh);
+      watcher.on('unlink', refresh);
+      watcher.on('addDir', refresh);
+      watcher.on('unlinkDir', refresh);
+      // A watcher error (e.g. the watched dir was deleted) must not throw an
+      // unhandled 'error' event — close the stream and clean up instead.
+      watcher.on('error', () => {
+        cleanup();
+        try {
+          controller.close();
+        } catch {
+          // ignore
+        }
+      });
+      // Signal readiness only after chokidar's initial scan completes.
+      watcher.on('ready', () => send({ type: 'ready' }));
+
+      // Keep the connection alive and detect dead clients (Next's abort signal
+      // is reliable in standalone but can lag in dev).
+      heartbeat = setInterval(() => {
+        if (request.signal.aborted) {
+          cleanup();
+          try {
+            controller.close();
+          } catch {
+            // ignore
+          }
+          return;
+        }
+        try {
+          controller.enqueue(encoder.encode(': ping\n\n'));
+        } catch {
+          // ignore
+        }
+      }, 20_000);
+
+      request.signal.addEventListener('abort', () => {
+        cleanup();
+        try {
+          controller.close();
+        } catch {
+          // ignore
+        }
+      });
+    },
+    cancel() {
+      cleanup();
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache, no-transform',
+      Connection: 'keep-alive',
+    },
+  });
+}

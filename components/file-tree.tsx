@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import type { FsItem } from "@/types/fs"
 import type { ViewMode } from "@/types/metadata"
 import { useSettings } from "@/hooks/use-settings"
-import { isElectron, pickFolder, watchFolder, onFsChange } from "@/lib/electron-bridge"
+import { isElectron, pickFolder } from "@/lib/electron-bridge"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import {
@@ -414,15 +414,35 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
     fetchRoot();
   }, [fetchRoot, refreshKey]);
 
-  // Auto-refresh the tree when files change on disk (Electron only). Skip the
-  // default `.` root to avoid watching the whole project dir in dev.
+  // Auto-refresh the tree when files change on disk. Watching lives in the
+  // Next.js server (/api/watch) via Chokidar, so it works in Electron and any
+  // local Node context. Skip the default `.` root to avoid watching the whole
+  // project dir in dev.
   useEffect(() => {
-    if (!isElectron() || settings.currentFolder === '.') return;
-    watchFolder(settings.currentFolder);
-    const unsubscribe = onFsChange(() => fetchRoot());
+    if (settings.currentFolder === '.') return;
+    const url = `/api/watch?dir=${encodeURIComponent(settings.currentFolder)}`;
+    let source: EventSource | null = null;
+    let debounce: ReturnType<typeof setTimeout> | null = null;
+    try {
+      source = new EventSource(url);
+      source.onmessage = (event) => {
+        // Only real changes trigger a reload — ignore the initial `ready`
+        // ping so subscribing doesn't cause a redundant tree fetch (the
+        // folder-change already reloads via the fetchRoot effect).
+        try {
+          if (JSON.parse(event.data).type !== 'change') return;
+        } catch {
+          return;
+        }
+        if (debounce) clearTimeout(debounce);
+        debounce = setTimeout(() => fetchRoot(), 300);
+      };
+    } catch {
+      // EventSource unavailable — no auto-refresh, but browsing still works
+    }
     return () => {
-      unsubscribe();
-      watchFolder('');
+      if (debounce) clearTimeout(debounce);
+      source?.close();
     };
   }, [settings.currentFolder, fetchRoot]);
 

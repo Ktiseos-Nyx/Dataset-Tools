@@ -15,6 +15,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import type { NodeRepoInfo } from './comfyui-node-registry';
+import { safeFetch } from './safe-fetch';
 
 // ─── Cache (disk + memory) ───────────────────────────────────────────────────
 
@@ -148,7 +149,7 @@ async function fetchGitHubSearch(
   // ceiling and gives the first-valid-match filter a tight working set.
   const url = `https://api.github.com/search/code?q=${encodeURIComponent(query)}&per_page=5`;
 
-  const res = await fetch(url, {
+  const res = await safeFetch(url, {
     headers: {
       Accept: 'application/vnd.github+json',
       Authorization: `Bearer ${token}`,
