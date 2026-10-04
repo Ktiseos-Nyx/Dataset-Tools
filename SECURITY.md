@@ -54,6 +54,10 @@ We'll do our best to acknowledge your report within 48-72 hours. As an independe
 * **Dependency Management:** We aim to keep our third-party libraries up-to-date. We use tools like:
   * **`pip-audit`** (or **`Safety CLI`**) to check our dependencies against known vulnerability databases.
   * **GitHub's Dependabot alerts** (if enabled) to notify us of vulnerable dependencies.
+  * **`npm audit`** for the Node.js/Next.js + Electron toolchain. Transitive dependencies are pinned via `overrides` in `package.json`, and production dependencies (`npm audit --omit=dev`) are kept at **0 known vulnerabilities**.
+
+> **Known accepted advisory:** `braces` (CVE-2026-93687) currently flags as high severity through the dev-only ESLint toolchain (`eslint-config-next` → `fast-glob` → `micromatch` → `braces`). There is no patched release yet (affects all versions up to and including 3.0.3), and it never ships in the installer — it's a build-time linter dependency only. We'll drop the pin/override once upstream publishes a fix.
+
 * **Static Analysis:** We use linters and static analysis tools to identify potential issues in our own codebase:
   * **`Ruff`** for general linting, style enforcement, and identifying many common code issues.
   * **`Pylint`** for comprehensive static code analysis and identifying coding standard violations.
