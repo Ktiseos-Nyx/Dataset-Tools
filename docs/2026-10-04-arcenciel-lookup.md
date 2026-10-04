@@ -111,8 +111,9 @@ Prioritized — 1-3 are the ones that decide between 5.1 and 5.2.
    third-party metadata viewer?
 4. **Would ArcEnCiel consider adopting the `urn:air` resource identifier** (or
    documenting an existing one) so external tools can resolve models authoritatively?
-5. **Lookup-only expectations:** attribution/User-Agent requirements, and whether the
-   1200 req/min public limit applies to read-only metadata use.
+5. **Lookup-only expectations:** attribution/User-Agent requirements, and the exact
+   rate-limit scope (search advertises 300 requests/60s per user/key/IP; confirm
+   detail + version endpoints against the OpenAPI).
 
 ---
 
@@ -159,7 +160,7 @@ lookup-relevant subset only):
 | Gallery | `GET /models/{id}/gallery` |
 | Assets | resolve image paths against `https://arcenciel.io/uploads/{path}` |
 | Auth | none required for public published content |
-| Rate limit | 1200 req/min (plenty for lookup) |
+| Rate limit | search: 300 requests/60s (scope: per user / trusted API key / client IP — confirm against the applicable OpenAPI); confirm detail + version limits separately |
 | Egress allowlist | add `arcenciel.io` (API + uploads share the host) |
 
 The download-only fields (`filePath`, `externalDownloadUrl`, `sha256webui`) and the

@@ -25,7 +25,8 @@ Two concrete symptoms surfaced this:
 2. **Drag-drop auto-detect is slow/flaky.** `/api/find-file` scans every drive two
    levels deep (~10.7s worst case), while the client aborts at 8s
    (`app/page.tsx`). Files in `Pictures`/`Desktop`/`Downloads`/`Documents` resolve
-   instantly; anything else aborts and the folder never loads.
+   instantly; elsewhere the scan *may* complete in time or time out, so the folder
+   loads inconsistently.
 
 Neither is a security regression — they predate the recent CSP / egress-allowlist
 work — but they are the reason folder browsing feels broken in a browser.

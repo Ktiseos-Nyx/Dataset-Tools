@@ -7,7 +7,14 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 function isLoopbackHost(host: string): boolean {
-  const hostname = host.split(':')[0].toLowerCase();
+  let hostname: string;
+  try {
+    // Parse via URL so IPv6 literals like `[::1]:3000` resolve to `[::1]`
+    // instead of being truncated by a naive `split(':')`.
+    hostname = new URL(`http://${host}`).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
   return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
 }
 
@@ -97,8 +104,18 @@ export async function GET(request: Request) {
       watcher.on('unlink', refresh);
       watcher.on('addDir', refresh);
       watcher.on('unlinkDir', refresh);
-
-      send({ type: 'ready' });
+      // A watcher error (e.g. the watched dir was deleted) must not throw an
+      // unhandled 'error' event — close the stream and clean up instead.
+      watcher.on('error', () => {
+        cleanup();
+        try {
+          controller.close();
+        } catch {
+          // ignore
+        }
+      });
+      // Signal readiness only after chokidar's initial scan completes.
+      watcher.on('ready', () => send({ type: 'ready' }));
 
       // Keep the connection alive and detect dead clients (Next's abort signal
       // is reliable in standalone but can lag in dev).
