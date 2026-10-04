@@ -12,10 +12,6 @@ export interface ElectronAPI {
   pickFolder: () => Promise<string | null>
   /** Reports the app's resolved theme so the native window background can match. */
   setTheme: (theme: 'dark' | 'light') => void
-  /** Starts watching a folder for changes (native side handles debouncing). */
-  watchFolder: (dir: string) => Promise<void>
-  /** Subscribes to file-system change events. Returns an unsubscribe function. */
-  onFsChange: (callback: () => void) => () => void
 }
 
 export function getElectronAPI(): ElectronAPI | undefined {
@@ -51,33 +47,5 @@ export function syncElectronTheme(theme: 'dark' | 'light') {
     api?.setTheme?.(theme)
   } catch {
     // ignore — web/Vercel has no native window to sync
-  }
-}
-
-/**
- * Tell the native side to watch a folder for changes (no-op outside Electron).
- * Replaces any previous watcher so there's only ever one active watch. Passing
- * an empty string stops watching entirely (the main process closes the watcher).
- */
-export function watchFolder(dir: string) {
-  const api = getElectronAPI()
-  try {
-    api?.watchFolder?.(dir)
-  } catch {
-    // ignore — browser has no filesystem watcher
-  }
-}
-
-/**
- * Subscribe to file-system change events. Returns an unsubscribe function
- * (a no-op outside Electron). Callers should re-subscribe whenever the watched
- * folder changes.
- */
-export function onFsChange(callback: () => void): () => void {
-  const api = getElectronAPI()
-  try {
-    return api?.onFsChange?.(callback) ?? (() => {})
-  } catch {
-    return () => {}
   }
 }

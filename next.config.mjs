@@ -6,6 +6,9 @@ const nextConfig = {
   compress: true,
   productionBrowserSourceMaps: false,
   output: 'standalone',
+  // sharp is external because its native binaries (@img/sharp-*) can't be
+  // bundled. chokidar stays bundled — it's pure JS, and bundling it avoids a
+  // partial nft trace of its ESM/CJS dual entry points in the standalone output.
   serverExternalPackages: ['sharp'],
   // Standalone tracing can miss sharp's platform-specific native binaries
   // (@img/sharp-*), which would break thumbnails in the packaged Electron app.
