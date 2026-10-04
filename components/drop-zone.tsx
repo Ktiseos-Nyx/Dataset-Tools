@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Upload } from "lucide-react"
+import { getPathForFile } from "@/lib/electron-bridge"
 
 interface DropZoneProps {
   onFileDrop: (file: File, folderPath?: string) => void
@@ -76,9 +77,10 @@ export function DropZone({ onFileDrop }: DropZoneProps) {
       return
     }
 
-    // Try to get the folder path directly from the file
-    // Works in Electron and some environments
-    const filePath = (file as File & { path?: string }).path
+    // Get the folder path from the dropped file. `File.path` was removed from
+    // Electron 32+, so go through the bridge's `webUtils.getPathForFile` first,
+    // then fall back to the legacy property (harmless no-op in browsers).
+    const filePath = getPathForFile(file) || (file as File & { path?: string }).path
     let folderPath: string | undefined
 
     if (filePath && (filePath.includes('\\') || filePath.includes('/'))) {

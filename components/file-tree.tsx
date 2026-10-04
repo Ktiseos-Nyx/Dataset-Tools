@@ -425,7 +425,15 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
     let debounce: ReturnType<typeof setTimeout> | null = null;
     try {
       source = new EventSource(url);
-      source.onmessage = () => {
+      source.onmessage = (event) => {
+        // Only real changes trigger a reload — ignore the initial `ready`
+        // ping so subscribing doesn't cause a redundant tree fetch (the
+        // folder-change already reloads via the fetchRoot effect).
+        try {
+          if (JSON.parse(event.data).type !== 'change') return;
+        } catch {
+          return;
+        }
         if (debounce) clearTimeout(debounce);
         debounce = setTimeout(() => fetchRoot(), 300);
       };

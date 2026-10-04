@@ -12,6 +12,8 @@ export interface ElectronAPI {
   pickFolder: () => Promise<string | null>
   /** Reports the app's resolved theme so the native window background can match. */
   setTheme: (theme: 'dark' | 'light') => void
+  /** Resolves a dropped File to its absolute path (webUtils.getPathForFile). */
+  getPathForFile: (file: File) => string
 }
 
 export function getElectronAPI(): ElectronAPI | undefined {
@@ -47,5 +49,19 @@ export function syncElectronTheme(theme: 'dark' | 'light') {
     api?.setTheme?.(theme)
   } catch {
     // ignore — web/Vercel has no native window to sync
+  }
+}
+
+/**
+ * Resolve a dropped File to its absolute filesystem path. Returns '' when
+ * running outside Electron (browsers never expose the path), so callers can
+ * fall back to the path-less flow.
+ */
+export function getPathForFile(file: File): string {
+  const api = getElectronAPI()
+  try {
+    return api?.getPathForFile?.(file) ?? ''
+  } catch {
+    return ''
   }
 }
