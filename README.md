@@ -100,6 +100,8 @@ The warning also fades over time as more people download the app (SmartScreen bu
 5. **Edit metadata:** Click the edit button on any text field to modify prompts and parameters directly in PNG files.
 6. **Customize:** Settings panel has theme, accent colors, font size, thumbnail size, and file display options.
 
+> **Note on folder browsing in the browser:** the "Open folder" button and drop-to-detect-folder are **desktop-app (Electron) features** — they need a real filesystem path, which browsers don't expose to web pages. The web build is single-file drag-and-drop for now. Browser-native folder browsing (via the File System Access API) is in progress — track it in **[issue #220](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues/220)**.
+
 ### When metadata fails to parse
 1. Check browser console for parser logs.
 2. Note the workflow structure (ComfyUI? A1111? Custom nodes?).
