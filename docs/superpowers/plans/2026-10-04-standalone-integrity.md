@@ -16,6 +16,8 @@ The packaged app is split in two, and only half of it is tamper-checked:
 
 The fuses validate **`app.asar` only**. The standalone tree — which contains the *entire* actual application (metadata parser, every API route, sharp) — ships as a loose folder via `extraResources`, outside asar, with no integrity check. An attacker with write access to the install dir can swap `server.js`, a sharp binary, or any `.next` chunk and nothing detects it.
 
+This is **CWE-353 — Missing Support for Integrity Check**: the packaged app executes the standalone server through `ELECTRON_RUN_AS_NODE` without verifying its contents first, and neither `enableEmbeddedAsarIntegrityValidation` nor `onlyLoadAppFromAsar` covers a server copied through `extraResources`.
+
 ## 2. Why the standalone can't live inside asar
 
 1. **It's a separate process.** Spawned via `ELECTRON_RUN_AS_NODE=1 process.execPath server.js`; `child_process.spawn` needs a real on-disk path, not one inside a virtual asar filesystem.
