@@ -176,9 +176,11 @@ user picks the browse root. This is by design (`SECURITY_TODO.md` "Context").
   containment + `fs.realpath` symlink re-check + project-root containment (`baseFolder`
   inside `process.cwd()`).
 
-`SECURITY_TODO.md:50-54` flags the read routes should eventually fold onto the hardened
-helper. Not urgent (local, single-user, non-auth) — but relevant if a tag store ever
-needs to validate paths.
+`SECURITY_TODO.md:50-54` flags that the read routes should eventually fold onto the
+hardened helper. This remains deferred only while the server is loopback-only and
+serves a trusted local user. If the server binds to a non-loopback interface or serves
+untrusted clients, enforce boundary-aware containment together with server-side
+allowed-root and authentication controls.
 
 ### 8.3 Where app-level state already lives (the precedent for a tag store)
 
