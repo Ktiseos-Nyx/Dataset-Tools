@@ -108,6 +108,10 @@
     "typescript": "^5",
     "wait-on": "^9.1.0"
   },
+  "allowScripts": {
+    "electron-winstaller@5.4.0": true,
+    "unrs-resolver@1.12.2": true
+  },
   "overrides": {
     "nanoid": "3.3.18",
     "browserslist": "4.28.8",
@@ -119,6 +123,8 @@
     "brace-expansion@^1.0.0": "1.1.21",
     "brace-expansion@^2.0.0": "2.1.7",
     "brace-expansion@^5.0.0": "5.0.12",
+	"eslint-config-next": "^16.3.8",
+	"braces": "^3.0.3",
     "undici@^6.0.0": "6.28.1",
     "undici@^7.0.0": "7.29.1"
   }
