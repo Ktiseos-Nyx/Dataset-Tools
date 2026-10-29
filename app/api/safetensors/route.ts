@@ -20,7 +20,49 @@ async function computeAutoV2Hash(filePath: string): Promise<string> {
   })
 }
 
+// Confine a client-supplied path to baseFolder using path.relative. A raw
+// string prefix check would let sibling folders like `/base-evil` pass a
+// `/base` check — the same containment the main branch's metadata-write uses.
+function isInside(base: string, target: string): boolean {
+  if (target === base) return true
+  const rel = path.relative(base, target)
+  return rel.length > 0 && rel !== '..' && !rel.startsWith(`..${path.sep}`) && !path.isAbsolute(rel)
+}
+
+function isLoopbackHost(host: string): boolean {
+  const hostname = host.split(':')[0].toLowerCase()
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]'
+}
+
+// This route reads files from disk — a desktop-only capability. It is safe
+// on the local app (loopback host/origin) and inert on any public deployment
+// (the Vercel demo), where every request is refused with 403. Mirrors
+// metadata-write's originGuard.
+function originGuard(request: Request): string | null {
+  const origin = request.headers.get('origin')
+  const host = request.headers.get('host')
+  if (host && !isLoopbackHost(host)) {
+    return 'Access denied - non-loopback host'
+  }
+  if (origin) {
+    try {
+      const originUrl = new URL(origin)
+      if (!isLoopbackHost(originUrl.hostname)) {
+        return 'Access denied - cross-origin request'
+      }
+    } catch {
+      return 'Access denied - invalid origin'
+    }
+  }
+  return null
+}
+
 export async function GET(request: Request) {
+  const guardError = originGuard(request)
+  if (guardError) {
+    return NextResponse.json({ error: guardError }, { status: 403 })
+  }
+
   const { searchParams } = new URL(request.url)
   const filePath = searchParams.get('path')
   const baseFolder = searchParams.get('baseFolder') || '.'
@@ -34,7 +76,7 @@ export async function GET(request: Request) {
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(resolvedBase, filePath)
   const resolvedPath = path.resolve(fullPath)
 
-  if (!resolvedPath.startsWith(resolvedBase)) {
+  if (!isInside(resolvedBase, resolvedPath)) {
     return NextResponse.json({ error: 'Access denied' }, { status: 403 })
   }
 
@@ -42,7 +84,25 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Not a safetensors file' }, { status: 400 })
   }
 
-  const fh = await fs.open(resolvedPath, 'r').catch(() => null)
+  // Symlink-aware re-check: a symlink/junction inside the base folder must not
+  // redirect the read outside it.
+  let realBase: string
+  try {
+    realBase = await fs.realpath(resolvedBase)
+  } catch {
+    return NextResponse.json({ error: 'Base folder not found' }, { status: 404 })
+  }
+  let realPath: string
+  try {
+    realPath = await fs.realpath(resolvedPath)
+  } catch {
+    return NextResponse.json({ error: 'File not found' }, { status: 404 })
+  }
+  if (!isInside(realBase, realPath)) {
+    return NextResponse.json({ error: 'Access denied - path escapes base folder' }, { status: 403 })
+  }
+
+  const fh = await fs.open(realPath, 'r').catch(() => null)
   if (!fh) {
     return NextResponse.json({ error: 'File not found' }, { status: 404 })
   }
@@ -138,7 +198,7 @@ export async function GET(request: Request) {
       dataset,
       modelSpec,
       outputName: meta['ss_output_name'],
-      autoV2Hash: computeHash ? await computeAutoV2Hash(resolvedPath) : undefined,
+      autoV2Hash: computeHash ? await computeAutoV2Hash(realPath) : undefined,
     }
 
     return NextResponse.json(result)
