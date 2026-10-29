@@ -1,6 +1,6 @@
 {
   "name": "knx-dataset-tools",
-  "version": "0.8.0",
+  "version": "0.95",
   "private": true,
   "main": ".electron/main.js",
   "scripts": {
@@ -16,7 +16,6 @@
     "icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.4",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
@@ -73,7 +72,6 @@
     "react": "^19.2.3",
     "react-day-picker": "^9.13.1",
     "react-dom": "19.2.0",
-    "react-hook-form": "^7.60.0",
     "react-markdown": "^10.1.0",
     "react-resizable-panels": "^2.1.7",
     "react-use-measure": "^2.1.7",
@@ -86,8 +84,7 @@
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.182.0",
-    "vaul": "^1.1.2",
-    "zod": "3.25.76"
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
@@ -116,16 +113,14 @@
     "nanoid": "3.3.18",
     "browserslist": "4.28.8",
     "fflate": "0.8.3",
-    "fast-uri": "3.1.8",
+    "fast-uri": "3.1.9",
     "joi": "18.2.9",
     "js-yaml": "4.3.2",
     "http-cache-semantics": "4.3.0",
     "brace-expansion@^1.0.0": "1.1.21",
     "brace-expansion@^2.0.0": "2.1.7",
     "brace-expansion@^5.0.0": "5.0.12",
-	"eslint-config-next": "^16.3.8",
 	"braces": "^3.0.3",
-    "undici@^6.0.0": "6.28.1",
-    "undici@^7.0.0": "7.29.1"
+    "undici": "^7.30.1"
   }
 }
