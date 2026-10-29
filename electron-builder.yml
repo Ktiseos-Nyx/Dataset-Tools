@@ -43,6 +43,12 @@ extraResources:
     to: .
     filter:
       - "standalone/**/*"
+  # A real node.exe (v25) runs the standalone server. Electron's embedded
+  # Node (v24) mishandles the packaged Turbopack server (500 on every API
+  # route). The plain Node binary ships outside the asar, next to the
+  # standalone server.
+  - from: build/node-node
+    to: node-node
 
 directories:
   output: dist
@@ -51,6 +57,8 @@ directories:
 win:
   target:
     - target: nsis
+      arch: [x64]
+    - target: portable
       arch: [x64]
   icon: build/icon.ico
 

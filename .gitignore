@@ -71,3 +71,5 @@ settings.json
 .idea/
 .cortexkit/
 NUL
+# Bundled Node runtime for the packaged server (binary, not source)
+build/node-node/

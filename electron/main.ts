@@ -3,6 +3,7 @@ import { spawn, type ChildProcess } from 'child_process';
 import * as path from 'path';
 import * as http from 'http';
 import * as net from 'net';
+import * as fs from 'fs';
 
 const DEV_URL = 'http://localhost:3000';
 
@@ -70,19 +71,26 @@ async function startNextServer(port: number): Promise<void> {
     ? path.join(process.resourcesPath, 'standalone')
     : path.join(__dirname, '..', '.next', 'standalone');
 
-  // Run the standalone build's self-contained server through Electron's own
-  // Node runtime (ELECTRON_RUN_AS_NODE) so the packaged app doesn't depend on
-  // a system Node/npx installation. The standalone server reads PORT + HOSTNAME
-  // from the environment (defaults to 0.0.0.0, so HOSTNAME is pinned explicitly
-  // to keep the server off the network).
+  // Run the standalone build's self-contained server. Prefer the bundled
+  // node.exe (shipped via extraResources node-node/) over Electron's
+  // embedded Node: the server was traced against the full Node runtime,
+  // and Electron's embedded copy (v24) makes every API route 500 in the
+  // packaged build (Oct 2026 packaging saga). Falls back to
+  // Electron-as-Node if the bundled binary is missing.
+  const bundledNode = path.join(process.resourcesPath, 'node-node', 'node.exe');
+  const useBundledNode = app.isPackaged && fs.existsSync(bundledNode);
+  const nodeBin = useBundledNode ? bundledNode : process.execPath;
+
   nextProcess = spawn(
-    process.execPath,
+    nodeBin,
     [path.join(standaloneDir, 'server.js')],
     {
       cwd: standaloneDir,
       env: {
         ...process.env,
-        ELECTRON_RUN_AS_NODE: '1',
+        // Only meaningful when spawning the Electron binary itself; the
+        // bundled node.exe ignores it, so it's kept out for clarity.
+        ...(useBundledNode ? {} : { ELECTRON_RUN_AS_NODE: '1' }),
         NODE_ENV: 'production',
         PORT: String(port),
         HOSTNAME: '127.0.0.1',

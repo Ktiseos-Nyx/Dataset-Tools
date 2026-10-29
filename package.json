@@ -1,6 +1,8 @@
 {
   "name": "knx-dataset-tools",
-  "version": "0.95",
+  "version": "0.95.0",
+  "description": "Image & dataset metadata toolkit — EXIF/ComfyUI/Civitai/NovelAI parsing, built on Next.js with an Electron shell",
+  "author": "The Duskfall Portal Crew",
   "private": true,
   "main": ".electron/main.js",
   "scripts": {
