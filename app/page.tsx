@@ -14,6 +14,7 @@ import { FsItem } from "@/types/fs"
 import type { ImageMetadata, ViewMode } from "@/types/metadata"
 import type { SafetensorsMetadata } from "@/types/safetensors"
 import { useSettings } from "@/hooks/use-settings"
+import { readLocalSafetensors } from "@/lib/safetensors-parse"
 
 function isSafetensorsFile(file: FsItem): boolean {
   return file.name.toLowerCase().endsWith('.safetensors')
@@ -28,6 +29,7 @@ export default function Home() {
   const [showMetadata, setShowMetadata] = useState(true)
   const [safetensors, setSafetensors] = useState<{ data: SafetensorsMetadata | null; loading: boolean }>({ data: null, loading: false })
   const [refreshKey, setRefreshKey] = useState(0)
+  const [localItems, setLocalItems] = useState<FsItem[] | null>(null)
   const [, startTransition] = useTransition()
   const fetchAbortRef = useRef<AbortController | null>(null)
   const selectedFileRef = useRef<FsItem | null>(null)
@@ -97,11 +99,51 @@ export default function Home() {
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [settings.currentFolder])
 
-  const handleFileSelect = (file: FsItem) => {
+  const handleFileSelect = async (file: FsItem) => {
     if (file.isDirectory) {
       setSelectedFile(null)
       setMetadata({ data: null, loading: false })
       setSafetensors({ data: null, loading: false })
+      return
+    }
+
+    // Browser-picked local file: parse bytes in memory — no server-side path
+    // exists for these. Preview uses an object URL (ImagePreview handles
+    // blob: paths already).
+    if (file.localFile) {
+      const objectUrl = URL.createObjectURL(file.localFile)
+      startTransition(() => {
+        setCurrentDir('.')
+        setSelectedFile({ ...file, path: objectUrl })
+      })
+
+      if (isSafetensorsFile(file)) {
+        setMetadata({ data: null, loading: false })
+        setSafetensors({ data: null, loading: true })
+        try {
+          const data = await readLocalSafetensors(file.localFile)
+          setSafetensors({ data, loading: false })
+        } catch (error) {
+          console.error(error)
+          setSafetensors({ data: null, loading: false })
+        }
+      } else {
+        setSafetensors({ data: null, loading: false })
+        setMetadata({ data: null, loading: true })
+        try {
+          const formData = new FormData()
+          formData.append('file', file.localFile)
+          const response = await fetch('/api/metadata-from-file', {
+            method: 'POST',
+            body: formData,
+          })
+          if (!response.ok) throw new Error('Failed to parse local file')
+          setMetadata({ data: await response.json(), loading: false })
+        } catch (error) {
+          console.error(error)
+          setMetadata({ data: null, loading: false })
+        }
+      }
       return
     }
 
@@ -240,6 +282,8 @@ export default function Home() {
             selectedFile={selectedFile ?? undefined}
             viewMode={viewMode}
             refreshKey={refreshKey}
+            localItems={localItems ?? undefined}
+            onLocalItems={setLocalItems}
           />
         </Panel>
 
@@ -286,6 +330,7 @@ export default function Home() {
                 onFileSelect={handleFileSelect}
                 selectedFile={selectedFile ?? undefined}
                 refreshKey={refreshKey}
+                localItems={localItems ?? undefined}
               />
             </Panel>
           </PanelGroup>

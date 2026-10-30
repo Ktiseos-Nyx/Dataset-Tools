@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import { FileImage, Loader2, FolderOpen, ImageIcon, Copy, FileText, Brain } from "lucide-react"
 import type { FsItem } from "@/types/fs"
 import { useSettings } from "@/hooks/use-settings"
@@ -16,17 +16,22 @@ interface ThumbnailViewportProps {
   selectedFile?: FsItem
   /** Bumping this re-fetches the current folder (e.g. after editing adds a file). */
   refreshKey?: number
+  /**
+   * Non-null = browser-picked "local mode": thumbnails render from File
+   * objects instead of the server listing.
+   */
+  localItems?: FsItem[]
 }
 
-export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refreshKey }: ThumbnailViewportProps) {
-  const [images, setImages] = useState<FsItem[]>([])
+export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refreshKey, localItems }: ThumbnailViewportProps) {
+  const [serverImages, setServerImages] = useState<FsItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const { settings } = useSettings()
 
   useEffect(() => {
     if (!currentDir) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- clears list state when the folder becomes null
-      setImages([])
+      setServerImages([])
       setIsLoading(false)
       return
     }
@@ -35,7 +40,7 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refr
     const controller = new AbortController()
 
     const fetchImages = async () => {
-      setImages([])
+      setServerImages([])
       setIsLoading(true)
       try {
         const response = await fetch(`/api/fs?path=${encodeURIComponent(currentDir)}&showHidden=${settings.showHiddenFiles}&baseFolder=${encodeURIComponent(settings.currentFolder)}`, {
@@ -58,9 +63,9 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refr
             default: return a.name.localeCompare(b.name)
           }
         })
-        setImages(files)
+        setServerImages(files)
       } catch {
-        if (!aborted) setImages([])
+        if (!aborted) setServerImages([])
       } finally {
         if (!aborted) setIsLoading(false)
       }
@@ -71,6 +76,23 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refr
       controller.abort()
     }
   }, [currentDir, settings.showHiddenFiles, settings.currentFolder, settings.sortBy, refreshKey])
+
+  // Local mode derives the strip straight from the picked items during render
+  // (no effect, no extra state) — server mode keeps its own fetch effect.
+  const images = localItems
+    ? localItems
+        .filter(item =>
+          !item.isDirectory &&
+          (!currentDir || currentDir === '.' || item.path.startsWith(currentDir + '/'))
+        )
+        .sort((a, b) => {
+          switch (settings.sortBy) {
+            case 'date': return (b.mtime ?? 0) - (a.mtime ?? 0)
+            case 'size': return (b.size ?? 0) - (a.size ?? 0)
+            default: return a.name.localeCompare(b.name)
+          }
+        })
+    : serverImages
 
   const selectedRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
@@ -93,7 +115,7 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refr
       </div>
 
       <div className="flex-1 overflow-y-auto p-2">
-        {isLoading ? (
+        {(isLoading && !localItems) ? (
           <div className="flex items-center justify-center h-full">
             <Loader2 className="w-5 h-5 text-muted-foreground animate-spin" />
           </div>
@@ -126,7 +148,7 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refr
                       }`}
                       style={{ width: 96 }}
                     >
-                      <Thumb path={item.path} baseFolder={settings.currentFolder} />
+                      <Thumb path={item.path} baseFolder={settings.currentFolder} file={item.localFile} />
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="text-[10px] truncate w-full text-center text-muted-foreground">
@@ -168,12 +190,19 @@ function isModelFile(name: string): boolean {
   return MODEL_EXTENSIONS.has(name.slice(name.lastIndexOf('.')).toLowerCase())
 }
 
-function Thumb({ path: filePath, baseFolder }: { path: string; baseFolder: string }) {
+function Thumb({ path: filePath, baseFolder, file }: { path: string; baseFolder: string; file?: File }) {
   const ref = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
   const fileName = filePath.split('/').pop() ?? filePath
+
+  // Local (browser-picked) thumbnails come straight from the File object —
+  // no server round-trip.
+  const objectUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file])
+  useEffect(() => () => {
+    if (objectUrl) URL.revokeObjectURL(objectUrl)
+  }, [objectUrl])
 
   useEffect(() => {
     if (!ref.current) return
@@ -203,9 +232,9 @@ function Thumb({ path: filePath, baseFolder }: { path: string; baseFolder: strin
       ref={ref}
       className="w-[76px] h-[76px] rounded bg-muted/50 flex items-center justify-center overflow-hidden"
     >
-      {visible ? (
+      {visible || objectUrl ? (
         <img
-          src={`/api/thumbnail?path=${encodeURIComponent(filePath)}&size=152&baseFolder=${encodeURIComponent(baseFolder)}`}
+          src={objectUrl ?? `/api/thumbnail?path=${encodeURIComponent(filePath)}&size=152&baseFolder=${encodeURIComponent(baseFolder)}`}
           alt=""
           className={`object-cover w-full h-full transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setLoaded(true)}

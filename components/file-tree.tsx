@@ -1,7 +1,7 @@
 "use client"
 
 import { ChevronRight, ChevronDown, Folder, FolderOpen, FileImage, Loader2, FolderSearch, Copy, RefreshCw, ArrowUpDown, FolderInput } from "lucide-react"
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import type { FsItem } from "@/types/fs"
 import type { ViewMode } from "@/types/metadata"
 import { useSettings } from "@/hooks/use-settings"
@@ -22,6 +22,13 @@ interface FileTreeProps {
   viewMode?: ViewMode;
   /** Bumping this re-fetches the root listing (e.g. after editing adds a file). */
   refreshKey?: number;
+  /**
+   * Non-null = browser-picked "local mode": these items render instead of any
+   * server listing, and nothing touches disk paths.
+   */
+  localItems?: FsItem[];
+  /** Local picker results are reported upward (null returns to server mode). */
+  onLocalItems?: (items: FsItem[] | null) => void;
 }
 
 function Directory({
@@ -212,7 +219,7 @@ function ThumbnailGrid({
           }`}
           style={{ width: size + 16 }}
         >
-          <LazyThumbnail path={item.path} size={size} baseFolder={baseFolder} />
+          <LazyThumbnail path={item.path} size={size} baseFolder={baseFolder} file={item.localFile} />
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="text-xs truncate w-full text-center">
@@ -227,10 +234,20 @@ function ThumbnailGrid({
   )
 }
 
-function LazyThumbnail({ path: filePath, size, baseFolder }: { path: string; size: number; baseFolder: string }) {
+function LazyThumbnail({ path: filePath, size, baseFolder, file }: { path: string; size: number; baseFolder: string; file?: File }) {
   const ref = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [loaded, setLoaded] = useState(false)
+
+  // Local (browser-picked) thumbnails come straight from the File object via
+  // an object URL — no server round-trip, no absolute path needed.
+  const objectUrl = useMemo(
+    () => (file ? URL.createObjectURL(file) : null),
+    [file]
+  )
+  useEffect(() => () => {
+    if (objectUrl) URL.revokeObjectURL(objectUrl)
+  }, [objectUrl])
 
   useEffect(() => {
     if (!ref.current) return
@@ -253,9 +270,9 @@ function LazyThumbnail({ path: filePath, size, baseFolder }: { path: string; siz
       className="rounded bg-muted/50 flex items-center justify-center overflow-hidden"
       style={{ width: size, height: size }}
     >
-      {isVisible ? (
+      {isVisible || objectUrl ? (
         <img
-          src={`/api/thumbnail?path=${encodeURIComponent(filePath)}&size=${size * 2}&baseFolder=${encodeURIComponent(baseFolder)}`}
+          src={objectUrl ?? `/api/thumbnail?path=${encodeURIComponent(filePath)}&size=${size * 2}&baseFolder=${encodeURIComponent(baseFolder)}`}
           alt=""
           className={`object-cover w-full h-full transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setLoaded(true)}
@@ -293,18 +310,24 @@ function sortItems(items: FsItem[], sortBy: 'name' | 'date' | 'size'): FsItem[] 
   return [...dirs.sort(sortFn), ...files.sort(sortFn)];
 }
 
-export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "list", refreshKey }: FileTreeProps) {
+export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "list", refreshKey, localItems, onLocalItems }: FileTreeProps) {
   const [rootItems, setRootItems] = useState<FsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditingPath, setIsEditingPath] = useState(false);
   const [pathInput, setPathInput] = useState('');
+  const [localFolderName, setLocalFolderName] = useState<string | null>(null);
   const pathInputRef = useRef<HTMLInputElement>(null);
   const folderPickerRef = useRef<HTMLInputElement>(null);
   const { settings, updateSettings } = useSettings();
 
   const requestIdRef = useRef(0);
 
+  // Image/model extensions we list in local (browser-picked) mode.
+  const IMAGE_EXTENSIONS = /\.(png|jpe?g|webp|gif|bmp|avif|safetensors)$/i;
+
   const fetchRoot = useCallback(async () => {
+    // Local (browser-picked) mode has no server-side folder to fetch.
+    if (localItems) return;
     const requestId = ++requestIdRef.current;
     setIsLoading(true);
     setRootItems([]); // Clear stale items immediately
@@ -328,21 +351,16 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
         setIsLoading(false);
       }
     }
-  }, [settings.showHiddenFiles, settings.currentFolder, settings.sortBy]);
+  }, [settings.showHiddenFiles, settings.currentFolder, settings.sortBy, localItems]);
+
+  // In local mode the listing comes from the browser picker — sort it with the
+  // same rules as the server listing so both modes behave identically.
+  const items = localItems ? sortItems(localItems, settings.sortBy) : rootItems;
 
   const openPathEditor = () => {
     setPathInput(settings.currentFolder === '.' ? '' : settings.currentFolder);
     setIsEditingPath(true);
     setTimeout(() => pathInputRef.current?.select(), 0);
-  };
-
-  const extractFolderFromFile = (file: File) => {
-    const filePath = (file as File & { path?: string }).path;
-    if (filePath && (filePath.includes('\\') || filePath.includes('/'))) {
-      const sep = filePath.includes('\\') ? '\\' : '/';
-      return filePath.substring(0, filePath.lastIndexOf(sep));
-    }
-    return null;
   };
 
   const handleOpenFolder = async () => {
@@ -355,28 +373,37 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
 
     if ('showDirectoryPicker' in window) {
       try {
+        // File System Access API (primary web picker). No absolute path exists
+        // here, and local mode doesn't need one — handle + File bytes only.
         const picker = window as Window & {
           showDirectoryPicker?: () => Promise<{
+            name: string;
             entries: () => AsyncIterable<[string, { kind: string; getFile?: () => Promise<File> }]>;
           }>;
         };
         const handle = await picker.showDirectoryPicker!();
-        for await (const [, entry] of handle.entries()) {
+        const picked: FsItem[] = [];
+        for await (const [name, entry] of handle.entries()) {
           if (entry.kind === 'file' && entry.getFile) {
             const file = await entry.getFile();
-            const folder = extractFolderFromFile(file);
-            if (folder) {
-              updateSettings({ currentFolder: folder });
-              return;
-            }
-            break;
+            if (!IMAGE_EXTENSIONS.test(name)) continue;
+            picked.push({
+              name,
+              path: name,
+              isDirectory: false,
+              size: file.size,
+              mtime: file.lastModified,
+              localFile: file,
+            });
+          } else if (entry.kind === 'directory') {
+            picked.push({ name, path: name, isDirectory: true });
           }
         }
-        // Could not extract path — open text editor with existing folder
-        openPathEditor();
+        setLocalFolderName(handle.name);
+        onLocalItems?.(picked);
         return;
       } catch {
-        openPathEditor();
+        // Cancelled or unsupported — stay in the current mode.
         return;
       }
     }
@@ -393,16 +420,38 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   const handleFolderPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-    const folder = extractFolderFromFile(files[0]);
-    if (folder) {
-      updateSettings({ currentFolder: folder });
-    } else {
-      openPathEditor();
+    // webkitdirectory fallback (Firefox/Safari): build the same item shape
+    // from the File list, keyed by relative path. No absolute path exists in
+    // browsers — local mode never needs one.
+    const picked: FsItem[] = [];
+    let folderName = '';
+    for (const file of Array.from(files)) {
+      const rel = (file as File & { webkitRelativePath?: string }).webkitRelativePath || file.name;
+      if (!folderName) {
+        const seg = rel.indexOf('/');
+        folderName = seg === -1 ? file.name : rel.slice(0, seg);
+      }
+      if (!IMAGE_EXTENSIONS.test(rel)) continue;
+      picked.push({
+        name: file.name,
+        path: rel,
+        isDirectory: false,
+        size: file.size,
+        mtime: file.lastModified,
+        localFile: file,
+      });
     }
+    setLocalFolderName(folderName);
+    onLocalItems?.(picked);
   };
 
   const commitPath = () => {
     const trimmed = pathInput.trim();
+    // A typed path is a server-mode path — leave local mode.
+    if (localItems) {
+      setLocalFolderName(null);
+      onLocalItems?.(null);
+    }
     if (trimmed && trimmed !== settings.currentFolder) {
       updateSettings({ currentFolder: trimmed });
     }
@@ -419,7 +468,8 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
   // local Node context. Skip the default `.` root to avoid watching the whole
   // project dir in dev.
   useEffect(() => {
-    if (settings.currentFolder === '.') return;
+    // Local mode has no server-side folder to watch.
+    if (localItems || settings.currentFolder === '.') return;
     const url = `/api/watch?dir=${encodeURIComponent(settings.currentFolder)}`;
     let source: EventSource | null = null;
     let debounce: ReturnType<typeof setTimeout> | null = null;
@@ -444,7 +494,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
       if (debounce) clearTimeout(debounce);
       source?.close();
     };
-  }, [settings.currentFolder, fetchRoot]);
+  }, [settings.currentFolder, fetchRoot, localItems]);
 
   return (
     <aside className="h-full bg-muted/20 flex flex-col">
@@ -464,7 +514,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
             spellCheck={false}
           />
         ) : (
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide truncate">File Browser</h2>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide truncate">{localFolderName ?? 'File Browser'}</h2>
         )}
         <div className="flex items-center gap-1 flex-shrink-0">
           <Tooltip>
@@ -503,9 +553,9 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
           </DropdownMenu>
           <button
             onClick={fetchRoot}
-            disabled={isLoading}
-            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded transition-colors disabled:opacity-50"
-            title="Refresh"
+            disabled={isLoading || !!localItems}
+            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-accent-foreground rounded transition-colors disabled:opacity-50 disabled:hover:bg-transparent"
+            title={localItems ? 'Local folder — no server watch' : 'Refresh'}
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
@@ -516,7 +566,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
           <div className="flex justify-center items-center h-full">
             <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
           </div>
-        ) : rootItems.length === 0 ? (
+        ) : items.length === 0 ? (
           <Empty className="border-0 py-8">
             <EmptyHeader>
               <EmptyMedia variant="icon"><FolderSearch /></EmptyMedia>
@@ -534,9 +584,9 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
         ) : (
           <>
             {/* Root-level thumbnail grid */}
-            {viewMode === "thumbnail" && rootItems.some(i => !i.isDirectory) && (
+            {viewMode === "thumbnail" && items.some(i => !i.isDirectory) && (
               <ThumbnailGrid
-                items={rootItems.filter(i => !i.isDirectory)}
+                items={items.filter(i => !i.isDirectory)}
                 onFileSelect={onFileSelect}
                 selectedFile={selectedFile}
                 level={0}
@@ -546,8 +596,19 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
               />
             )}
             <div className="space-y-0.5">
-              {rootItems.map((item) => (
+              {items.map((item) => (
                 item.isDirectory ? (
+                  localItems ? (
+                    // Local mode: no handle navigation yet (planned) — show a
+                    // plain non-expandable folder row.
+                    <div
+                      key={item.path}
+                      className="w-full flex items-center gap-1.5 px-2 py-1.5 rounded text-sm text-muted-foreground/70"
+                    >
+                      <Folder className="w-4 h-4" />
+                      <span className="truncate">{item.name}</span>
+                    </div>
+                  ) : (
                   <Directory
                     key={item.path}
                     item={item}
@@ -561,6 +622,7 @@ export function FileTree({ onFileSelect, onDirExpand, selectedFile, viewMode = "
                     sortBy={settings.sortBy}
                     baseFolder={settings.currentFolder}
                   />
+                  )
                 ) : viewMode === "list" ? (
                   <ContextMenu key={item.path}>
                     <ContextMenuTrigger asChild>
