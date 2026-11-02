@@ -4,12 +4,7 @@
 
 <!-- Social & Support Badges -->
 [![Built with NextJS](https://img.shields.io/badge/Built%20with-NextJS-black?style=for-the-badge&logo=next.js)](https://nextjs.org/) [![GitHub](https://img.shields.io/badge/GitHub-View%20on%20GitHub-181717?logo=github&style=for-the-badge)](https://github.com/Ktiseos-Nyx/Dataset-Tools)
-[![Demo](https://img.shields.io/badge/Live-Demo-000000?style=for-the-badge&logo=vercel)](https://dataset-tools-three.vercel.app)
-
-<hr>
-
-[![Support us on Ko-fi](https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi)](https://ko-fi.com/duskfallcrew) 
-[![Rent GPUs on Vast.ai](https://img.shields.io/badge/Rent%20GPUs%20on-Vast.ai-4B32C3?style=for-the-badge)](https://cloud.vast.ai/?ref_id=671131)
+[![Demo](https://img.shields.io/badge/Live-Demo-000000?style=for-the-badge&logo=vercel)](https://dataset-tools-three.vercel.app) [![Support us on Ko-fi](https://img.shields.io/badge/Support%20us%20on-Ko--Fi-FF5E5B?style=for-the-badge&logo=kofi)](https://ko-fi.com/duskfallcrew) 
 
 <hr>
 
@@ -55,14 +50,11 @@ Requires [Node.js](https://nodejs.org) 18+.
 git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
 cd Dataset-Tools
 npm install
-npm run dev
-```
 
+npm run build 
+npm start
 Open http://localhost:3000.
 
-Production build:
-```bash
-npm run build && npm start
 ```
 
 ---
@@ -71,7 +63,6 @@ npm run build && npm start
 
 A standalone `.exe` lives on the [Releases](https://github.com/Ktiseos-Nyx/Dataset-Tools/releases) page — no Node.js, no browser, no npm. It bundles Next.js and runs the same metadata engine as the web build, but against any folder on your machine.
 
-> **A note on versioning:** the installer still stamps `0.8.0` even though the codebase is well past that (the tags are at `0.91`+) — the package number drifted out of sync during the Electron port and we're squaring it up on the next release. The number in the filename is behind reality, not a feature level.
 
 ### "Windows protected your PC"?
 
@@ -87,7 +78,10 @@ Two ways to check it yourself before running:
 - Every release ships a **VirusTotal scan** link so you can see the file checked against 70+ antivirus engines. You'll occasionally see 1–2 "generic heuristic" flags on a fresh Electron build — that's normal for unsigned apps, not a real detection.
 - The whole app is open source — the source and the build configuration are all here, so you can inspect exactly how the exe is produced.
 
-The warning also fades over time as more people download the app (SmartScreen builds a reputation for the file).
+### But I hate SmartScreen!
+
+- A portable windows exe with no requirements to install is now available on every release.
+- Future versions for Linux are coming, but not MacOS.
 
 ---
 
@@ -100,7 +94,7 @@ The warning also fades over time as more people download the app (SmartScreen bu
 5. **Edit metadata:** Click the edit button on any text field to modify prompts and parameters directly in PNG files.
 6. **Customize:** Settings panel has theme, accent colors, font size, thumbnail size, and file display options.
 
-> **Note on folder browsing:** "Open folder" (native directory picking) is a **desktop-app (Electron)** feature — browsers don't expose absolute filesystem paths to web pages. Drop-to-detect-folder is a **best-effort server-side search** (`/api/find-file`) that scans the server's filesystem and may find files beyond the common folders or exceed its timeout. The web build is otherwise single-file drag-and-drop. Browser-native folder browsing (via the File System Access API) is in progress — track it in **[issue #220](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues/220)**.
+> **Note on folder browsing:** "Open folder" (native directory picking) is a **desktop-app (Electron)** feature — browsers don't expose absolute filesystem paths to web pages. Drop-to-detect-folder is a **best-effort server-side search** (`/api/find-file`) that scans the server's filesystem and may find files beyond the common folders or exceed its timeout. The web build is otherwise single-file drag-and-drop. Browser-native folder browsing (via the File System Access API) is in progress — track it in **[issue #220](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues/220)**. This is being actively worked on and has some progress as of the recent updates.
 
 ### When metadata fails to parse
 1. Check browser console for parser logs.
@@ -109,14 +103,17 @@ The warning also fades over time as more people download the app (SmartScreen bu
    * Console error snippet
    * Workflow type + custom nodes used
    * Minimal repro image (if shareable)
-   * 
+   * Your OS if possible.
+   * Version of the application.
+  
+4. If the version is "PYTHON" we don't have any way of supporting that anymore.
 ---
 
 ## Current Capabilities
 
 | Feature | Status | Details |
 | :--- | :---: | :--- |
-| **Metadata Parsing** | ✅ | **90% success rate.** Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
+| **Metadata Parsing** | ✅ | **95% success rate.** Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
 | **Image Viewing** | ✅ | PNG, JPG, JPEG, WebP. Zoom (25-400%), rotation, fit-to-container. |
 | **File Browsing** | ✅ | Recursive lazy-loading file tree. Browse any folder on your system. |
 | **Drag & Drop** | ✅ | Drop an image to auto-detect its folder and extract metadata. |
@@ -150,23 +147,9 @@ The warning also fades over time as more people download the app (SmartScreen bu
 
 ---
 
-### Service Detection
-
-As we had in the python edition our journey is marked with making sure as many of the popular and niche sites with generation services are tagged for easy detection. If your workflow or website has a custom pattern for resource detection, our tool is likely to be able to find it. If it hasn't been hashed and dashed through to the tool yet, just flick an issue up and we'll hook it up ASAP. 
-
-Examples of this are Tensorart, Forge, ArcEncCiel, CivitAI and Yodayo. 
-
-Many tools desktop or remote based have patterns, so the key is either in the metadata handling, or the resource identification. 
-
-### Why 90% > 65% Matters
-The Python edition relied on fragile heuristics. This engine uses **deterministic graph traversal** with proper node relationship mapping. It follows wires backwards from sampler nodes to find prompts, identifies nodes by their data (not just class_type), and handles platform-wrapped node names via substring matching. When it fails, logs show exactly why.
-
-### Why this exists
-The Python edition worked at 65% success rate with heuristic spaghetti. This NextJS engine hits **90% success rate** on complex ComfyUI workflows using **deterministic graph traversal**. Metadata is parsed in pure JavaScript — no waiting for Python to boot, no OpenCV overhead.
-
 #### Development Stage
 
-This engine has been battle-tested across thousands of images and is in active daily use. While there will always be edge cases with new custom nodes and formats, the core parser is stable and handles the vast majority of real-world workflows. Bug reports with repro images remain the best way to push that success rate higher.
+This engine has been tested across thousands of images and is in active daily use. While there will always be edge cases with new custom nodes and formats, the core parser is stable and handles the vast majority of real-world workflows. Bug reports with repro images remain the best way to push that success rate higher. While we are largely no longer in generative AI circles, this application is developed for both sides of the coin. 
 
 ---
 
@@ -181,32 +164,7 @@ Open an issue with the details above. Real-world edge cases are how we push past
 3. Test with your own images or AI-generated samples
 4. Submit a PR with before/after evidence
 
-### Ideas for contributors
-- [ ] WebP metadata chunk parser
-- [x] Editable metadata (write back to files)
-- [ ] SQLite indexing for faster folder browsing
-- [ ] ComfyUI workflow visualization
-- [ ] Batch metadata export (CSV/JSON)
-- [ ] Parser debugger panel showing traversal steps
-- [ ]
 ---
-### Q&A
-
-Q: Are you planning a desktop app?
-
-A: Yes — we're evaluating both Electron and Tauri. No firm decision yet, but the goal is a standalone executable that runs without needing Node.js installed.
-
-Q: Isn't Node.js a security concern?
-
-A: Security is taken seriously in this project. Unlike ML-heavy tools that pull in massive native dependency trees, Dataset Tools has a minimal, auditable surface area. All file access is validated server-side, and API keys are stored in `.env.local`, never exposed to the browser.
-
-Q: Does it only work in Chrome?
-
-A: The app works in any modern browser. Firefox, Edge, and Chromium-based browsers like Vivaldi are all supported.
-
-Q: Is this project actively maintained?
-
-A: Yes. The parser is stable and handles the vast majority of real-world workflows. Maintenance and improvements are ongoing — bug reports and contributions are always welcome.
 
 ## AI-Assisted Development
 
