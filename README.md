@@ -42,12 +42,14 @@
 
 ### Current Capabilities
 
+Current Capabilities for CLI, Destkop Executable and Portable:
+
 | Feature | Status | Details |
 | :--- | :---: | :--- |
-| **Metadata Parsing** | ✅ | **95% success rate.** Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
+| **Metadata Parsing** | ✅ | Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
 | **Image Viewing** | ✅ | PNG, JPG, JPEG, WebP. Zoom (25-400%), rotation, fit-to-container. |
-| **File Browsing** | ✅ | Recursive lazy-loading file tree. Browse any folder on your system. |
-| **Drag & Drop** | ✅ | Drop an image to auto-detect its folder and extract metadata. |
+| **File Browsing** | ✅ | Currently Windows Executable Only: Recursive lazy-loading file tree. Browse any folder on your system. |
+| **Drag & Drop** | ✅ | Drop an image to extract metadata. |
 | **Thumbnails** | ✅ | Sharp-powered WebP thumbnails with disk cache (`.thumbcache/`). |
 | **Sorting** | ✅ | Sort by name, date modified, or file size in both file tree and thumbnail viewport. |
 | **Accent Colors** | ✅ | 7 color themes (zinc, red, orange, green, blue, violet, pink) with dark mode support. |
@@ -56,6 +58,22 @@
 | **GitHub Lookup** | ✅ | Fallback search for unknown ComfyUI custom nodes via GitHub code search. |
 | **Safetensors Metadata** | ✅ | Full metadata extraction for LoRA and model files — rank, alpha, training params, dataset tags. |
 | **Metadata Editing** | ✅ | Edit prompts and parameters in PNG files, write changes back to disk. |
+
+
+
+Current Capabilities for Vercel Demo:
+
+[![Demo](https://img.shields.io/badge/Live-Demo-000000?style=for-the-badge&logo=vercel)](https://dataset-tools-three.vercel.app)
+
+| Feature | Status | Details |
+| :--- | :---: | :--- |
+| **Metadata Parsing** | ✅ | Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
+| **Image Viewing** | ✅ | PNG, JPG, JPEG, WebP. Zoom (25-400%), rotation, fit-to-container. |
+| **Drag & Drop** | ✅ | Drop an image to extract metadata. |
+| **Accent Colors** | ✅ | 7 color themes (zinc, red, orange, green, blue, violet, pink) with dark mode support. |
+| **WebP Viewing** | ✅ | Viewing works for static and animated WebP files. Metadata extraction is format-dependent. |
+| **ComfyUI Workflows** | ✅ | 3-phase extraction + ComfyUI ≥1.26 provenance (cnr_id/aux_id). Node graph tracing, custom node resolution, service detection. |
+
 
 ### Supported Formats
 - **A1111 / Forge** — PNG tEXt chunks, JPEG EXIF
@@ -122,7 +140,7 @@ But I hate SmartScreen!
 
 ---
 
-## Usage (Production Mode)
+## Usage
 
 1. **Start the app:** `npm start` → open `http://localhost:3000`
 2. **Browse files:** Use the file tree sidebar, or click the folder icon to pick any directory.
@@ -164,51 +182,6 @@ Open http://localhost:3000.
 
 ```
 
-
----
-
-## Current Capabilities
-
-| Feature | Status | Details |
-| :--- | :---: | :--- |
-| **Metadata Parsing** | ✅ | **95% success rate.** Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
-| **Image Viewing** | ✅ | PNG, JPG, JPEG, WebP. Zoom (25-400%), rotation, fit-to-container. |
-| **File Browsing** | ✅ | Recursive lazy-loading file tree. Browse any folder on your system. |
-| **Drag & Drop** | ✅ | Drop an image to auto-detect its folder and extract metadata. |
-| **Thumbnails** | ✅ | Sharp-powered WebP thumbnails with disk cache (`.thumbcache/`). |
-| **Sorting** | ✅ | Sort by name, date modified, or file size in both file tree and thumbnail viewport. |
-| **Accent Colors** | ✅ | 7 color themes (zinc, red, orange, green, blue, violet, pink) with dark mode support. |
-| **WebP Viewing** | ✅ | Viewing works for static and animated WebP files. Metadata extraction is format-dependent. |
-| **ComfyUI Workflows** | ✅ | 3-phase extraction + ComfyUI ≥1.26 provenance (cnr_id/aux_id). Node graph tracing, custom node resolution, service detection. |
-| **GitHub Lookup** | ✅ | Fallback search for unknown ComfyUI custom nodes via GitHub code search. |
-| **Safetensors Metadata** | ✅ | Full metadata extraction for LoRA and model files — rank, alpha, training params, dataset tags. |
-| **Metadata Editing** | ✅ | Edit prompts and parameters in PNG files, write changes back to disk. |
-
-### Supported Formats
-- **A1111 / Forge** — PNG tEXt chunks, JPEG EXIF
-- **ComfyUI** — JSON workflow with node graph resolution
-- **NovelAI** — PNG metadata
-- **Civitai** — UTF-16-LE JPEG UserComment
-- **Standard EXIF/IPTC/XMP** — All image formats
-- **Safetensors** — LoRA rank/alpha, training parameters, dataset tags, base model info
-- **PNG as JPEG** - Magic Byte Detection.
-
----
-
-## Tech Stack
-
-- **Framework:** Next.js 16 (App Router), React 19, TypeScript 5
-- **UI:** shadcn/ui + Radix UI + Base UI, Lucide icons, Tailwind CSS v4 (OKLch color space)
-- **Thumbnails:** Sharp (libvips) with WebP disk caching
-- **Metadata:** Pure JS parsing — PNG chunks, JPEG EXIF (exif-parser), ComfyUI graph traversal with node provenance
-- **Node Resolution:** ComfyUI Node Finder port (extension-node-map registry + GitHub code search fallback)
-
----
-
-#### Development Stage
-
-This engine has been tested across thousands of images and is in active daily use. While there will always be edge cases with new custom nodes and formats, the core parser is stable and handles the vast majority of real-world workflows. Bug reports with repro images remain the best way to push that success rate higher. While we are largely no longer in generative AI circles, this application is developed for both sides of the coin. 
-
 ---
 
 ## Contributing
@@ -217,13 +190,18 @@ This engine has been tested across thousands of images and is in active daily us
 This project is inspired by [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) and thrives on community contributions. Found a bug? Have a workflow that won't parse? Want to add support for a new tool? **We welcome forks, fixes, and pull requests!**
 
 ### Found a parsing failure?
-Open an issue with the details above. Real-world edge cases are how we push past 90%.
+Open an issue with the details above. ComfyUI always has edge cases, and while we intend to catch almost everything we can with the lookup on desktop and CLI, there are always new software tags and nodes.
 
 ### Want to improve the parser?
 1. Fork repo → `npm install` → `npm run dev`
 2. Metadata extraction lives in `app/api/metadata/route.ts`
 3. Test with your own images or AI-generated samples
 4. Submit a PR with before/after evidence
+
+
+#### Development Stage
+
+This engine has been tested across thousands of images and is in active daily use. While there will always be edge cases with new custom nodes and formats, the core parser is stable and handles the vast majority of real-world workflows. While we are largely no longer in generative AI circles, this application is developed for both sides of the coin. If you run into any issues feel free to use the information on how t
 
 ---
 
@@ -242,7 +220,7 @@ GNU General Public License v3.0
 
 * **Core Parsing Logic:** This project incorporates and adapts parsing functionality from [Stable Diffusion Prompt Reader](https://github.com/receyuki/stable-diffusion-prompt-reader) by **[receyuki](https://github.com/receyuki)**. The original MIT license for vendored code is included in `NOTICE.md`.
 * **App icon:** [Web development icons created by Chanut-is-Industries - Flaticon](https://www.flaticon.com/free-icons/web-development)
-* **[traugdor](https://github.com/traugdor)** — Project supervision and the [ComfyUI Node Finder](https://github.com/Ktiseos-Nyx/ComfyUI-Node-Finder) (Python), whose extension-node-map registry and node classification logic are now built directly into Dataset Tools.
+* **[Quadmoon](https://github.com/traugdor)** — Project supervision and the [ComfyUI Node Finder](https://github.com/Ktiseos-Nyx/ComfyUI-Node-Finder) (Python), whose extension-node-map registry and node classification logic are now built directly into Dataset Tools.
 * Everyone at [Arc En Ciel](https://arcenciel.io/) for continued support.
 * **[Anzhc](https://github.com/anzhc)** for ongoing support and motivation.
 * The wider AI and open-source communities for feedback, testing, and contributions.
@@ -250,6 +228,6 @@ GNU General Public License v3.0
 
 **SPECIAL THANKS**
 
-- Supervised by: [traugdor](https://github.com/traugdor)
+- Supervised by: [Quadmoon](https://github.com/traugdor)
 - Contributors: open-source community, Whitevamp, Exdysa, and many more.
 - Anthropic for Claude API credits supporting development.
