@@ -29,7 +29,7 @@
 <div align="center">
 
 **Navigation**
-[Features](#current-capabilities) • [Supported Formats](#supported-formats) • [Installation](#installation) • [Usage](#usage) • [Contributing](#contributing)
+[Features](#current-capabilities) • [Supported Formats](#supported-formats) • [Installation](#installation) • [Usage](#usage) • [Contributing](#contributing) • [Development Mode](#development-mode)
 
 </div>
 
@@ -39,6 +39,7 @@
 
 **Dataset Tools NextJS Edition** is a **local-first web application** for viewing EXIF metadata from AI-generated images and camera photos, including the software used to create AI images and the camera details embedded in photos.
 
+---
 
 ### Current Capabilities
 
@@ -59,7 +60,7 @@ Current Capabilities for CLI, Destkop Executable and Portable:
 | **Safetensors Metadata** | ✅ | Full metadata extraction for LoRA and model files — rank, alpha, training params, dataset tags. |
 | **Metadata Editing** | ✅ | Edit prompts and parameters in PNG files, write changes back to disk. |
 
-
+---
 
 Current Capabilities for Vercel Demo:
 
@@ -74,6 +75,7 @@ Current Capabilities for Vercel Demo:
 | **WebP Viewing** | ✅ | Viewing works for static and animated WebP files. Metadata extraction is format-dependent. |
 | **ComfyUI Workflows** | ✅ | 3-phase extraction + ComfyUI ≥1.26 provenance (cnr_id/aux_id). Node graph tracing, custom node resolution, service detection. |
 
+---
 
 ### Supported Formats
 - **A1111 / Forge** — PNG tEXt chunks, JPEG EXIF
@@ -98,7 +100,7 @@ Current Capabilities for Vercel Demo:
 
 ## Installation 
 
-These instructions are based on PRODUCTION mode and are similar to DEV mode, please see the DEVELOPMENT instructions for more information on how that rolls.
+These instructions are based on PRODUCTION mode and are similar to DEV mode, please see the [Development Mode](#development-mode) instructions for more information on how that rolls.
 
 Requires [Node.js](https://nodejs.org) 18+.
 
@@ -113,10 +115,18 @@ Open http://localhost:3000.
 
 ```
 
+---
+
 ### Desktop App (Windows)
 
-A standalone `.exe` lives on the [Releases](https://github.com/Ktiseos-Nyx/Dataset-Tools/releases) page — no Node.js, no browser, no npm. It bundles Next.js and runs the same metadata engine as the web build, but against any folder on your machine. This comes in TWO flavors: Portable and NSIS based installer.
+A standalone `.exe` lives on the [Releases](https://github.com/Ktiseos-Nyx/Dataset-Tools/releases) page — no Node.js, no browser, no npm. It bundles Next.js and runs the same metadata engine as the web build, but against any folder on your machine. This comes in TWO flavors: Portable and NSIS based installer. 
 
+Portable works great for travel, or lower end machines that don't want to fuss with the full installation.
+
+
+---
+
+#### Smart Screen Issues
 
 "Windows protected your PC"?
 
@@ -182,6 +192,8 @@ Open http://localhost:3000.
 
 ```
 
+More information in depth will come over time in our [Wiki](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki).
+
 ---
 
 ## Contributing
@@ -198,23 +210,22 @@ Open an issue with the details above. ComfyUI always has edge cases, and while w
 3. Test with your own images or AI-generated samples
 4. Submit a PR with before/after evidence
 
-
-#### Development Stage
-
-This engine has been tested across thousands of images and is in active daily use. While there will always be edge cases with new custom nodes and formats, the core parser is stable and handles the vast majority of real-world workflows. While we are largely no longer in generative AI circles, this application is developed for both sides of the coin. If you run into any issues feel free to use the information on how t
-
 ---
 
-## AI-Assisted Development
+#### Development Info
 
-This project was built with significant assistance from large language models — primarily Claude, with additional contributions from Gemini, DeepSeek, and Qwen. The role of the project maintainer has been focused on research, architecture decisions, testing across diverse AI-generated images and workflows, and directing the scope and quality of the codebase.
+This engine has been tested across thousands of images and is in active daily use. While there will always be edge cases with new custom nodes and formats, the core parser is stable and handles the vast majority of real-world workflows. While we are largely no longer in generative AI circles, this application is developed for both sides of the coin. 
 
-Transparency note: while LLMs generated a substantial portion of the implementation, every line has been reviewed, tested against real-world datasets, and refined through iterative prompting and validation. The  metadata parsing success rate is the result of detailed research into AI image generation formats combined with LLM-assisted implementation.
+We don't want to lie about how the code was created, nor directed. Unlike future projects of ours that are intending to be far more human lead, this took far more human direction than human based coding. Due to the nature of the original being in python and being a total load of spaghetti code, there was no way we were going to do it again by hand. SD-Prompt Reader was easy to understand, but the edge case detection of most metadata readers falls at simplistic graph traversal. Through absolute insane amounts of research, bashing our heads into walls and throwing ourselves at lawnmowers (Aesthetically not literally) we caught a lot more than the original inspiration as well as our original version. 
+
+We take pride in security, so we do our best to audit with multiple tools, and we're aware of AI-based issues with security, and do our best to monitor dependency issues as well as hallucinatory issues inside the codebase. One singular reason alone Ktiseos Nyx moved to using Next/Node was the idea that it was closer to web development and the nature of typescript was a lot smoother for us to conceptualize than python. This only really covers Duskfallcrew (aka ashbluepollution-95), as they have a graphic design degree not a computer science degree. You try developing a python app when all you understand is how to center a DIV on a web page at 3am. If you run into any issues feel free to use the information on how to contribute, that way we can build better sources together. 
 
 ---
 
 ## License
-GNU General Public License v3.0
+[License](https://github.com/Ktiseos-Nyx/Dataset-Tools/blob/main/LICENSE) GNU General Public License v3.0
+
+---
 
 ## Acknowledgements
 
@@ -230,4 +241,4 @@ GNU General Public License v3.0
 
 - Supervised by: [Quadmoon](https://github.com/traugdor)
 - Contributors: open-source community, Whitevamp, Exdysa, and many more.
-- Anthropic for Claude API credits supporting development.
+- ComfyUI for consistent changes in how workflows work, both for AI and for non AI workflows.
