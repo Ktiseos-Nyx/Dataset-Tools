@@ -115,7 +115,7 @@
     "browserslist": "4.28.8",
     "fflate": "0.8.3",
     "fast-uri": "3.1.9",
-    "joi": "18.2.9",
+    "joi": "18.3.1",
     "js-yaml": "4.3.2",
     "http-cache-semantics": "4.3.0",
     "brace-expansion@^1.0.0": "1.1.21",
