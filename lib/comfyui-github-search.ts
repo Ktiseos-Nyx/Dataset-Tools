@@ -101,6 +101,9 @@ interface GitHubCodeSearchItem {
     description: string | null;
     fork: boolean;
     archived: boolean;
+    // Present on code-search responses. Used to keep the operator's token from
+    // ever surfacing private repository metadata (#237).
+    private: boolean;
   };
 }
 
@@ -179,7 +182,13 @@ async function fetchGitHubSearch(
   // Quadmoon-style first-valid-match: walk results in API order, return the
   // first one that looks like a ComfyUI custom node pack, demoting forks and
   // archived repos rather than dropping them entirely.
+  // Public-only gate (#237): the search runs with the operator's own token,
+  // which GitHub may honor for private repositories the token can see. Node
+  // lookup is public discovery, so private hits are dropped here — before
+  // caching or mapping into any HTTP response — rather than trusted and
+  // filtered later.
   const candidates = data.items
+    .filter((item) => !item.repository.private)
     .filter(isPlausibleComfyHit)
     .sort((a, b) => {
       const score = (item: GitHubCodeSearchItem) => {
