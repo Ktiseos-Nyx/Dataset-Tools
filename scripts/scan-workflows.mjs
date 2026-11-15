@@ -137,6 +137,12 @@ const jsonFiles = findJsonFiles(targetDir);
 console.log(`Found ${jsonFiles.length} workflow JSON(s) in ${targetDir}\n`);
 console.log('='.repeat(70));
 
+// Output helper for untrusted workflow data (#236): JSON.stringify quotes the
+// value and escapes line breaks, control characters, and ANSI escapes, so a
+// scanned file's node types / package titles / repo labels can't impersonate
+// report structure or issue terminal controls.
+const safe = (value) => JSON.stringify(String(value));
+
 for (const file of jsonFiles.sort()) {
   const result = classifyWorkflow(file, nodeIndex);
   if (!result) continue;
@@ -150,9 +156,9 @@ for (const file of jsonFiles.sort()) {
   if (customPackages.size > 0) {
     console.log('  Packages:');
     for (const [repo, info] of [...customPackages.entries()].sort()) {
-      console.log(`    - ${info.title} (${repo})`);
+      console.log(`    - ${safe(info.title)} (${safe(repo)})`);
       for (const n of [...info.nodes].sort()) {
-        console.log(`        ${n}`);
+        console.log(`        ${safe(n)}`);
       }
     }
   }
@@ -160,7 +166,7 @@ for (const file of jsonFiles.sort()) {
   if (unknownNodes.size > 0) {
     console.log(`  Unknown (not in registry):`);
     for (const n of [...unknownNodes].sort()) {
-      console.log(`    ? ${n}`);
+      console.log(`    ? ${safe(n)}`);
     }
   }
 }
