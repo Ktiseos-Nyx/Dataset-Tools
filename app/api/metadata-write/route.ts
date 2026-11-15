@@ -181,10 +181,11 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ error: 'Access denied - invalid origin' }, { status: 403 });
   }
-  // The server is loopback-only and has no TLS termination, so the trusted
-  // scheme is http unless a (future) proxy says otherwise via x-forwarded-proto.
-  const proto = (request.headers.get('x-forwarded-proto') || 'http').toLowerCase();
-  const trustedOrigin = `${proto}://${host.toLowerCase()}`;
+  // The server is loopback-only with no TLS termination, so the trusted
+  // scheme is fixed: http. Never derive the trusted origin from a
+  // client-supplied header — nothing the request carries may influence
+  // what the request is validated against.
+  const trustedOrigin = `http://${host.toLowerCase()}`;
   if (originUrl.origin.toLowerCase() !== trustedOrigin) {
     return NextResponse.json({ error: 'Access denied - cross-origin write' }, { status: 403 });
   }
