@@ -28,7 +28,10 @@ type Resolved = { path: string } | { error: string; status: number };
 // re-check using fs.realpath on the concrete file so a symlink inside the base
 // can't redirect the write outside it. Combined with the PNG-validity
 // requirement downstream, the only writes this route can perform are "rewrite an
-// existing PNG" or "create <name>_edited.png beside one".
+// existing PNG" or "create <name>_edited.png beside one" — the copy is strict
+// exclusive-create ('wx'): an existing sibling, file or symlink, is refused
+// rather than followed (owner decision on #235, Nov 2026). Writes require the
+// app's exact origin + an application/json content type (POST only).
 async function resolveTarget(filePath: string, baseFolder: string): Promise<Resolved> {
   const resolvedBase = path.resolve(baseFolder || '.');
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(resolvedBase, filePath);
@@ -66,6 +69,29 @@ async function resolveTarget(filePath: string, baseFolder: string): Promise<Reso
   }
   if (!isInside(realBase, realPath)) {
     return { error: 'Access denied - path escapes base folder', status: 403 };
+  }
+
+  // (5) Canonical project-root containment. Layer (1) is lexical only, so a
+  // base reached through an in-project folder symlink pointing outside the
+  // repo passes (1) while its canonical files live outside PROJECT_ROOT.
+  // Since every write decision downstream uses the canonical path returned
+  // here, containment must hold for the canonical path too.
+  let realRoot: string;
+  try {
+    realRoot = await fs.realpath(PROJECT_ROOT);
+  } catch {
+    realRoot = PROJECT_ROOT;
+  }
+  if (!isInside(realRoot, realPath)) {
+    return { error: 'Access denied - path outside project root', status: 403 };
+  }
+
+  // (6) Canonical PNG check. Layer (3) checks the lexical name only; a
+  // `foo.png` symlink pointing at PNG bytes stored as `foo.txt` would
+  // canonicalise to a .txt and let the copy flow derive a `_edited.txt`
+  // sibling the file browser then hides. Check the canonical name.
+  if (!realPath.toLowerCase().endsWith('.png')) {
+    return { error: 'Only PNG files are supported', status: 415 };
   }
 
   return { path: realPath };
@@ -136,6 +162,42 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: guardError }, { status: 403 });
   }
 
+  // CSRF hardening (#234): the guard above only requires *a* loopback origin,
+  // but every local port qualifies. A page on another loopback port could
+  // otherwise forge a browser-simple write (text/plain body — request.json()
+  // parses it regardless of content type). For writes we require an Origin
+  // header whose full origin (scheme + host + port) equals our own trusted
+  // origin, plus an application/json content type. The app's renderer always
+  // sends all of these; non-browser writers must now mimic them, which is
+  // fine — the threat this blocks is other *browser pages* on the same machine.
+  const origin = request.headers.get('origin');
+  const host = request.headers.get('host');
+  if (!host || !origin) {
+    return NextResponse.json({ error: 'Access denied - browser origin required for writes' }, { status: 403 });
+  }
+  let originUrl: URL;
+  try {
+    originUrl = new URL(origin);
+  } catch {
+    return NextResponse.json({ error: 'Access denied - invalid origin' }, { status: 403 });
+  }
+  // The server is loopback-only with no TLS termination, so the trusted
+  // scheme is fixed: http. Never derive the trusted origin from a
+  // client-supplied header — nothing the request carries may influence
+  // what the request is validated against.
+  const trustedOrigin = `http://${host.toLowerCase()}`;
+  if (originUrl.origin.toLowerCase() !== trustedOrigin) {
+    return NextResponse.json({ error: 'Access denied - cross-origin write' }, { status: 403 });
+  }
+  // Compare the media type proper (the part before any parameters), not a
+  // substring: `application/json` with a charset param passes, but impostor
+  // types like `application/json-patch+json` do not.
+  const contentType = (request.headers.get('content-type') || '').toLowerCase();
+  const mediaType = contentType.split(';')[0].trim();
+  if (mediaType !== 'application/json') {
+    return NextResponse.json({ error: 'Content-Type must be application/json' }, { status: 415 });
+  }
+
   let body: { path?: string; baseFolder?: string; text?: string; saveAsCopy?: boolean };
   try {
     body = await request.json();
@@ -165,8 +227,9 @@ export async function POST(request: Request) {
     // PNG derived from an existing PNG at this location.
     const out = writePngParameters(buf, text);
 
-    // Build target path and re-validate it against the base to prevent a
-    // symlink redirect on the sibling name.
+    // Build the target path from the canonical source: same directory, same
+    // canonical .png extension, so the sibling can neither escape the
+    // canonical base nor carry a non-PNG name.
     let targetPath = sourcePath;
     if (saveAsCopy) {
       const ext = path.extname(sourcePath);
@@ -177,19 +240,35 @@ export async function POST(request: Request) {
       targetPath = path.join(path.dirname(sourcePath), `${stem}_edited${ext}`);
     }
 
-    // Re-validate the final write target against the base folder and project
-    // root, so a symlink on the sibling name can't redirect the write outside
-    // the confined tree.
-    const writeResolved = await resolveTarget(
-      path.relative(PROJECT_ROOT, targetPath),
-      PROJECT_ROOT,
-    );
-    if ('error' in writeResolved) {
-      return NextResponse.json({ error: writeResolved.error }, { status: writeResolved.status });
+    // Save-as-copy is strict exclusive-create (#235, owner decision Nov 2026):
+    // the 'wx' flag fails with EEXIST if the sibling already exists — as a
+    // regular file OR a symlink — and O_EXCL creation does not follow a
+    // symlink planted at the path between check and write, because the
+    // creation IS the check: no lstat-then-write race window exists. Repeat
+    // copy-saves require deleting the old copy first (by design).
+    if (saveAsCopy) {
+      try {
+        await fs.writeFile(targetPath, out, { flag: 'wx' });
+      } catch (writeError) {
+        if (
+          writeError instanceof Error &&
+          'code' in writeError &&
+          writeError.code === 'EEXIST'
+        ) {
+          return NextResponse.json(
+            { error: 'Copy already exists - delete the old _edited copy first' },
+            { status: 409 },
+          );
+        }
+        throw writeError;
+      }
+      return NextResponse.json({ ok: true, path: path.basename(targetPath) });
     }
 
-    await fs.writeFile(writeResolved.path, out);
-    return NextResponse.json({ ok: true, path: path.basename(writeResolved.path) });
+    // In-place save overwrites the canonical source itself, which resolveTarget
+    // already validated as a real file inside the canonical tree.
+    await fs.writeFile(targetPath, out);
+    return NextResponse.json({ ok: true, path: path.basename(targetPath) });
   } catch (error) {
     if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
       return NextResponse.json({ error: 'File not found' }, { status: 404 });
