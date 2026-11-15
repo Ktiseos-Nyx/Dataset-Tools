@@ -9,6 +9,17 @@ duplicate or contradict the global file here.
 Image/dataset metadata tooling: a Next.js app (web) with an Electron shell that packages it as a
 desktop app. Status and planning docs live in `BETA_PLANNING.md` and `README.md`.
 
+## Teaching mode — OFF for this project
+
+Dataset-Tools is NOT the teaching repository. It is deep in development; walkthroughs,
+comprehension checks ("explain it back"), and manual steps for Dusk slow things down here and are
+not the default. Default to execution mode: do the work directly, keep explanations short and only
+where a decision genuinely needs Dusk's input. Switch to Teaching Mode on the spot if Dusk asks how
+something works — but don't force it otherwise.
+
+The designated teaching repository is the Tales of Osea website repo — the global Teaching Mode
+rules apply THERE, not here.
+
 ## Running
 
 - Default dev flow: `npm run dev` (or `npm run electron:dev` with the shell). Don't run

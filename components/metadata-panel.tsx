@@ -1,14 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Copy, Camera, FileText, Sparkles, Code, Check, Loader2, Tag, ImageIcon, ChartArea } from "lucide-react"
+import { Copy, Camera, FileText, Sparkles, Code, Check, Loader2, Tag, ImageIcon } from "lucide-react"
 import type { ImageMetadata } from "@/types/metadata"
 import type { NodeRepoInfo } from "@/lib/comfyui-node-registry"
 import type { Rule, RuleEvaluationResult } from "@/types/rules"
 import { useSettings } from "@/hooks/use-settings"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
-import { ComfyUIWorkflowViewer } from '@/components/ComfyUIWorkflowViewer'
 import { MetadataEditDialog } from "@/components/metadata-edit-dialog"
 
 interface MetadataPanelProps {
@@ -69,7 +68,7 @@ const FONT_SIZE_MAP = {
 } as const
 
 export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onRefresh }: MetadataPanelProps) {
-  const [activeTab, setActiveTab] = useState<"basic" | "exif" | "iptc" | "xmp" | "ai" | "rules" | "workflow">("basic")
+  const [activeTab, setActiveTab] = useState<"basic" | "exif" | "iptc" | "xmp" | "ai" | "rules">("basic")
   const [copiedValue, setCopiedValue] = useState<string | null>(null)
   const [ruleCondition, setRuleCondition] = useState<string>("exif.Make === 'Canon'")
   const [ruleResults, setRuleResults] = useState<RuleEvaluationResult[] | null>(null)
@@ -171,7 +170,6 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onRef
       { id: "xmp" as const, label: "XMP", icon: Code },
       { id: "ai" as const, label: "AI", icon: Sparkles },
       // { id: "rules" as const, label: "Rules", icon: ListTree },
-	  { id: "workflow" as const, label: "Workflow", icon: ChartArea },
     ]
 
     const formatFileSize = (bytes: number) => {
@@ -342,28 +340,6 @@ export function MetadataPanel({ metadata, isLoading, filePath, baseFolder, onRef
                 formatFileSize={formatFileSize}
               />
             )}
-			
-			{/* Workflow Tab */}
-{activeTab === "workflow" && (
-  <div className="space-y-3">
-    <FileBasics metadata={metadata} formatFileSize={formatFileSize} fontSize={fs} />
-    
-    {/* Workflow Graph Viewer - Full Height */}
-    <div className="min-h-[500px] bg-zinc-900 rounded-lg border border-zinc-700 overflow-hidden">
-      {metadata.ai?.comfyui_workflow ? (
-        <ComfyUIWorkflowViewer 
-          workflow={metadata.ai.comfyui_workflow} 
-          fileName={metadata.fileName}
-        />
-      ) : (
-        <div className="h-full flex items-center justify-center text-sm text-muted-foreground">
-          No ComfyUI workflow data in this image
-        </div>
-      )}
-    </div>
-  </div>
-)}
-
           {activeTab === "rules" && (
              <div className="space-y-4">
                 <div>

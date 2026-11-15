@@ -63,7 +63,6 @@
     "framer-motion": "^12.33.0",
     "iconv-lite": "^0.7.2",
     "input-otp": "1.4.1",
-    "litegraph.js": "^0.7.18",
     "lucide-react": "^0.454.0",
     "marked": "^17.0.1",
     "mime-types": "^3.0.2",
@@ -122,7 +121,7 @@
     "brace-expansion@^1.0.0": "1.1.21",
     "brace-expansion@^2.0.0": "2.1.7",
     "brace-expansion@^5.0.0": "5.0.12",
-	"braces": "^3.0.3",
+    "braces": "^3.0.3",
     "undici": "^7.30.1"
   }
 }
