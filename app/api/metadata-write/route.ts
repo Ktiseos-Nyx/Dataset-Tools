@@ -28,9 +28,10 @@ type Resolved = { path: string } | { error: string; status: number };
 // re-check using fs.realpath on the concrete file so a symlink inside the base
 // can't redirect the write outside it. Combined with the PNG-validity
 // requirement downstream, the only writes this route can perform are "rewrite an
-// existing PNG" or "create <name>_edited.png beside one". The copy target is
-// additionally lstat-gated (never followed through a symlink), and writes
-// require the app's exact origin + a JSON content type (POST only).
+// existing PNG" or "create <name>_edited.png beside one" — the copy is strict
+// exclusive-create ('wx'): an existing sibling, file or symlink, is refused
+// rather than followed (owner decision on #235, Nov 2026). Writes require the
+// app's exact origin + an application/json content type (POST only).
 async function resolveTarget(filePath: string, baseFolder: string): Promise<Resolved> {
   const resolvedBase = path.resolve(baseFolder || '.');
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(resolvedBase, filePath);
@@ -68,6 +69,29 @@ async function resolveTarget(filePath: string, baseFolder: string): Promise<Reso
   }
   if (!isInside(realBase, realPath)) {
     return { error: 'Access denied - path escapes base folder', status: 403 };
+  }
+
+  // (5) Canonical project-root containment. Layer (1) is lexical only, so a
+  // base reached through an in-project folder symlink pointing outside the
+  // repo passes (1) while its canonical files live outside PROJECT_ROOT.
+  // Since every write decision downstream uses the canonical path returned
+  // here, containment must hold for the canonical path too.
+  let realRoot: string;
+  try {
+    realRoot = await fs.realpath(PROJECT_ROOT);
+  } catch {
+    realRoot = PROJECT_ROOT;
+  }
+  if (!isInside(realRoot, realPath)) {
+    return { error: 'Access denied - path outside project root', status: 403 };
+  }
+
+  // (6) Canonical PNG check. Layer (3) checks the lexical name only; a
+  // `foo.png` symlink pointing at PNG bytes stored as `foo.txt` would
+  // canonicalise to a .txt and let the copy flow derive a `_edited.txt`
+  // sibling the file browser then hides. Check the canonical name.
+  if (!realPath.toLowerCase().endsWith('.png')) {
+    return { error: 'Only PNG files are supported', status: 415 };
   }
 
   return { path: realPath };
@@ -142,10 +166,10 @@ export async function POST(request: Request) {
   // but every local port qualifies. A page on another loopback port could
   // otherwise forge a browser-simple write (text/plain body — request.json()
   // parses it regardless of content type). For writes we require an Origin
-  // header present and exactly matching our own host (host + port compare),
-  // plus an application/json content type. The app's renderer always sends
-  // all three; non-browser writers must now mimic them, which is fine — the
-  // threat this blocks is other *browser pages* on the same machine.
+  // header whose full origin (scheme + host + port) equals our own trusted
+  // origin, plus an application/json content type. The app's renderer always
+  // sends all of these; non-browser writers must now mimic them, which is
+  // fine — the threat this blocks is other *browser pages* on the same machine.
   const origin = request.headers.get('origin');
   const host = request.headers.get('host');
   if (!host || !origin) {
@@ -157,11 +181,19 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ error: 'Access denied - invalid origin' }, { status: 403 });
   }
-  if (originUrl.host.toLowerCase() !== host.toLowerCase()) {
+  // The server is loopback-only and has no TLS termination, so the trusted
+  // scheme is http unless a (future) proxy says otherwise via x-forwarded-proto.
+  const proto = (request.headers.get('x-forwarded-proto') || 'http').toLowerCase();
+  const trustedOrigin = `${proto}://${host.toLowerCase()}`;
+  if (originUrl.origin.toLowerCase() !== trustedOrigin) {
     return NextResponse.json({ error: 'Access denied - cross-origin write' }, { status: 403 });
   }
+  // Compare the media type proper (the part before any parameters), not a
+  // substring: `application/json` with a charset param passes, but impostor
+  // types like `application/json-patch+json` do not.
   const contentType = (request.headers.get('content-type') || '').toLowerCase();
-  if (!contentType.includes('application/json')) {
+  const mediaType = contentType.split(';')[0].trim();
+  if (mediaType !== 'application/json') {
     return NextResponse.json({ error: 'Content-Type must be application/json' }, { status: 415 });
   }
 
@@ -194,8 +226,9 @@ export async function POST(request: Request) {
     // PNG derived from an existing PNG at this location.
     const out = writePngParameters(buf, text);
 
-    // Build target path and re-validate it against the base to prevent a
-    // symlink redirect on the sibling name.
+    // Build the target path from the canonical source: same directory, same
+    // canonical .png extension, so the sibling can neither escape the
+    // canonical base nor carry a non-PNG name.
     let targetPath = sourcePath;
     if (saveAsCopy) {
       const ext = path.extname(sourcePath);
@@ -206,31 +239,33 @@ export async function POST(request: Request) {
       targetPath = path.join(path.dirname(sourcePath), `${stem}_edited${ext}`);
     }
 
-    // For save-as-copy, the sibling `_edited.png` must never be followed
-    // through a symlink (#235): the previous re-validation here called
-    // fs.realpath on the target, which *resolves* a planted symlink and
-    // redirected the write to an innocent project file. lstat does not
-    // resolve links, so an existing sibling that is really a symlink is
-    // rejected outright; a plain existing file is still overwritten so
-    // repeat copy-saves keep working. The lexical targetPath is a sibling
-    // of the canonical source path, so it cannot escape the confined
-    // folder without being a symlink.
+    // Save-as-copy is strict exclusive-create (#235, owner decision Nov 2026):
+    // the 'wx' flag fails with EEXIST if the sibling already exists — as a
+    // regular file OR a symlink — and O_EXCL creation does not follow a
+    // symlink planted at the path between check and write, because the
+    // creation IS the check: no lstat-then-write race window exists. Repeat
+    // copy-saves require deleting the old copy first (by design).
     if (saveAsCopy) {
       try {
-        const existing = await fs.lstat(targetPath);
-        if (existing.isSymbolicLink()) {
+        await fs.writeFile(targetPath, out, { flag: 'wx' });
+      } catch (writeError) {
+        if (
+          writeError instanceof Error &&
+          'code' in writeError &&
+          writeError.code === 'EEXIST'
+        ) {
           return NextResponse.json(
-            { error: 'Refusing to overwrite a symlink' },
+            { error: 'Copy already exists - delete the old _edited copy first' },
             { status: 409 },
           );
         }
-      } catch (lstatError) {
-        if (!(lstatError instanceof Error && 'code' in lstatError && lstatError.code === 'ENOENT')) {
-          throw lstatError;
-        }
+        throw writeError;
       }
+      return NextResponse.json({ ok: true, path: path.basename(targetPath) });
     }
 
+    // In-place save overwrites the canonical source itself, which resolveTarget
+    // already validated as a real file inside the canonical tree.
     await fs.writeFile(targetPath, out);
     return NextResponse.json({ ok: true, path: path.basename(targetPath) });
   } catch (error) {
