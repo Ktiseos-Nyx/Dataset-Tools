@@ -28,7 +28,9 @@ type Resolved = { path: string } | { error: string; status: number };
 // re-check using fs.realpath on the concrete file so a symlink inside the base
 // can't redirect the write outside it. Combined with the PNG-validity
 // requirement downstream, the only writes this route can perform are "rewrite an
-// existing PNG" or "create <name>_edited.png beside one".
+// existing PNG" or "create <name>_edited.png beside one". The copy target is
+// additionally lstat-gated (never followed through a symlink), and writes
+// require the app's exact origin + a JSON content type (POST only).
 async function resolveTarget(filePath: string, baseFolder: string): Promise<Resolved> {
   const resolvedBase = path.resolve(baseFolder || '.');
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(resolvedBase, filePath);
@@ -136,6 +138,33 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: guardError }, { status: 403 });
   }
 
+  // CSRF hardening (#234): the guard above only requires *a* loopback origin,
+  // but every local port qualifies. A page on another loopback port could
+  // otherwise forge a browser-simple write (text/plain body — request.json()
+  // parses it regardless of content type). For writes we require an Origin
+  // header present and exactly matching our own host (host + port compare),
+  // plus an application/json content type. The app's renderer always sends
+  // all three; non-browser writers must now mimic them, which is fine — the
+  // threat this blocks is other *browser pages* on the same machine.
+  const origin = request.headers.get('origin');
+  const host = request.headers.get('host');
+  if (!host || !origin) {
+    return NextResponse.json({ error: 'Access denied - browser origin required for writes' }, { status: 403 });
+  }
+  let originUrl: URL;
+  try {
+    originUrl = new URL(origin);
+  } catch {
+    return NextResponse.json({ error: 'Access denied - invalid origin' }, { status: 403 });
+  }
+  if (originUrl.host.toLowerCase() !== host.toLowerCase()) {
+    return NextResponse.json({ error: 'Access denied - cross-origin write' }, { status: 403 });
+  }
+  const contentType = (request.headers.get('content-type') || '').toLowerCase();
+  if (!contentType.includes('application/json')) {
+    return NextResponse.json({ error: 'Content-Type must be application/json' }, { status: 415 });
+  }
+
   let body: { path?: string; baseFolder?: string; text?: string; saveAsCopy?: boolean };
   try {
     body = await request.json();
@@ -177,19 +206,33 @@ export async function POST(request: Request) {
       targetPath = path.join(path.dirname(sourcePath), `${stem}_edited${ext}`);
     }
 
-    // Re-validate the final write target against the base folder and project
-    // root, so a symlink on the sibling name can't redirect the write outside
-    // the confined tree.
-    const writeResolved = await resolveTarget(
-      path.relative(PROJECT_ROOT, targetPath),
-      PROJECT_ROOT,
-    );
-    if ('error' in writeResolved) {
-      return NextResponse.json({ error: writeResolved.error }, { status: writeResolved.status });
+    // For save-as-copy, the sibling `_edited.png` must never be followed
+    // through a symlink (#235): the previous re-validation here called
+    // fs.realpath on the target, which *resolves* a planted symlink and
+    // redirected the write to an innocent project file. lstat does not
+    // resolve links, so an existing sibling that is really a symlink is
+    // rejected outright; a plain existing file is still overwritten so
+    // repeat copy-saves keep working. The lexical targetPath is a sibling
+    // of the canonical source path, so it cannot escape the confined
+    // folder without being a symlink.
+    if (saveAsCopy) {
+      try {
+        const existing = await fs.lstat(targetPath);
+        if (existing.isSymbolicLink()) {
+          return NextResponse.json(
+            { error: 'Refusing to overwrite a symlink' },
+            { status: 409 },
+          );
+        }
+      } catch (lstatError) {
+        if (!(lstatError instanceof Error && 'code' in lstatError && lstatError.code === 'ENOENT')) {
+          throw lstatError;
+        }
+      }
     }
 
-    await fs.writeFile(writeResolved.path, out);
-    return NextResponse.json({ ok: true, path: path.basename(writeResolved.path) });
+    await fs.writeFile(targetPath, out);
+    return NextResponse.json({ ok: true, path: path.basename(targetPath) });
   } catch (error) {
     if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
       return NextResponse.json({ error: 'File not found' }, { status: 404 });
