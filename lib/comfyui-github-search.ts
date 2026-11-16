@@ -32,6 +32,12 @@ interface CachedMiss {
 
 type CacheRecord = CachedHit | CachedMiss;
 
+// Format version. v2 began when the public-only gate (#237) landed: v1
+// entries carried no privacy field and could hold private-repo metadata
+// cached before the gate existed, so a v1 file is discarded wholesale on
+// load rather than trusted for its remaining TTL.
+const CACHE_VERSION = 2;
+
 // Under Electron, cache lives in the per-user app-data dir (ELECTRON_USER_DATA)
 // so a packaged app's read-only install dir isn't written to.
 const CACHE_DIR = process.env.ELECTRON_USER_DATA
@@ -50,8 +56,11 @@ async function loadCache(): Promise<Map<string, CacheRecord>> {
   if (memoryCache) return memoryCache;
   try {
     const data = await fs.readFile(CACHE_FILE, 'utf-8');
-    const obj = JSON.parse(data) as Record<string, CacheRecord>;
-    memoryCache = new Map(Object.entries(obj));
+    const obj = JSON.parse(data) as { version?: number; entries?: Record<string, CacheRecord> };
+    // A wrong or missing version means the file predates the current
+    // format — start from an empty cache instead of honoring old entries.
+    memoryCache =
+      obj.version === CACHE_VERSION && obj.entries ? new Map(Object.entries(obj.entries)) : new Map();
   } catch {
     memoryCache = new Map();
   }
@@ -62,7 +71,7 @@ async function persistCache(): Promise<void> {
   if (!memoryCache || !cacheDirty) return;
   try {
     await fs.mkdir(CACHE_DIR, { recursive: true });
-    const obj = Object.fromEntries(memoryCache);
+    const obj = { version: CACHE_VERSION, entries: Object.fromEntries(memoryCache) };
     await fs.writeFile(CACHE_FILE, JSON.stringify(obj, null, 2), 'utf-8');
     cacheDirty = false;
   } catch (err) {
@@ -184,11 +193,13 @@ async function fetchGitHubSearch(
   // archived repos rather than dropping them entirely.
   // Public-only gate (#237): the search runs with the operator's own token,
   // which GitHub may honor for private repositories the token can see. Node
-  // lookup is public discovery, so private hits are dropped here — before
-  // caching or mapping into any HTTP response — rather than trusted and
-  // filtered later.
+  // lookup is public discovery, so only items whose privacy field is
+  // *explicitly* false are accepted — a missing or null field fails the
+  // gate (the response is typed but not runtime-validated), and private
+  // hits are dropped here — before caching or mapping into any HTTP
+  // response — rather than trusted and filtered later.
   const candidates = data.items
-    .filter((item) => !item.repository.private)
+    .filter((item) => item.repository.private === false)
     .filter(isPlausibleComfyHit)
     .sort((a, b) => {
       const score = (item: GitHubCodeSearchItem) => {
