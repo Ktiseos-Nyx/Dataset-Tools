@@ -133,8 +133,26 @@ if (!targetDir) {
 const extensionMap = await getExtensionMap();
 const nodeIndex = buildNodeIndex(extensionMap);
 
+// Output helper for untrusted workflow data (#236): JSON.stringify quotes the
+// value and escapes line breaks, control characters, and ANSI escapes — but
+// leaves U+007F (DEL), the C1 control range U+0080–U+009F, and the Unicode
+// invisible/bidirectional characters raw, so those are escaped here as well.
+// The extra ranges are the standard invisible-spoofing block list: bidi
+// controls and separators (U+061C, U+200E–U+202E, U+2066–U+2069), zero-width
+// space/joiners (U+200B–U+200D), soft hyphen (U+00AD), Mongolian vowel
+// separator (U+180E), word joiners (U+2060–U+2064), and BOM (U+FEFF). All of
+// them are invisible and can spoof, hide, or reorder displayed text in a
+// report that quotes untrusted fields. Declared before its first use — a
+// `const` called above its own declaration is a runtime ReferenceError, not
+// a syntax error.
+const safe = (value) =>
+  JSON.stringify(String(value)).replace(
+    /[\u007f-\u009f\u00ad\u061c\u180e\u200b-\u200f\u2028-\u202e\u2060-\u2069\ufeff]/g,
+    (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`,
+  );
+
 const jsonFiles = findJsonFiles(targetDir);
-console.log(`Found ${jsonFiles.length} workflow JSON(s) in ${targetDir}\n`);
+console.log(`Found ${jsonFiles.length} workflow JSON(s) in ${safe(targetDir)}\n`);
 console.log('='.repeat(70));
 
 for (const file of jsonFiles.sort()) {
@@ -144,15 +162,15 @@ for (const file of jsonFiles.sort()) {
   const relPath = file.replace(targetDir, '').replace(/^[\\/]/, '');
   const { nodeCount, customPackages, unknownNodes } = result;
 
-  console.log(`\n${relPath}`);
+  console.log(`\n${safe(relPath)}`);
   console.log(`  Nodes: ${nodeCount} | Custom packages: ${customPackages.size} | Unknown nodes: ${unknownNodes.size}`);
 
   if (customPackages.size > 0) {
     console.log('  Packages:');
     for (const [repo, info] of [...customPackages.entries()].sort()) {
-      console.log(`    - ${info.title} (${repo})`);
+      console.log(`    - ${safe(info.title)} (${safe(repo)})`);
       for (const n of [...info.nodes].sort()) {
-        console.log(`        ${n}`);
+        console.log(`        ${safe(n)}`);
       }
     }
   }
@@ -160,7 +178,7 @@ for (const file of jsonFiles.sort()) {
   if (unknownNodes.size > 0) {
     console.log(`  Unknown (not in registry):`);
     for (const n of [...unknownNodes].sort()) {
-      console.log(`    ? ${n}`);
+      console.log(`    ? ${safe(n)}`);
     }
   }
 }
