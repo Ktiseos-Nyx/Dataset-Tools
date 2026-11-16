@@ -133,21 +133,23 @@ if (!targetDir) {
 const extensionMap = await getExtensionMap();
 const nodeIndex = buildNodeIndex(extensionMap);
 
-const jsonFiles = findJsonFiles(targetDir);
-console.log(`Found ${jsonFiles.length} workflow JSON(s) in ${safe(targetDir)}\n`);
-console.log('='.repeat(70));
-
 // Output helper for untrusted workflow data (#236): JSON.stringify quotes the
 // value and escapes line breaks, control characters, and ANSI escapes — but
 // leaves U+007F (DEL) and the C1 control range U+0080–U+009F raw, so those are
 // escaped here as well. Result: a scanned file's filenames, node types,
 // package titles, and repo labels can't impersonate report structure or
 // issue terminal controls.
+// Declared before its first use — a `const` called above its own declaration
+// is a runtime ReferenceError, not a syntax error.
 const safe = (value) =>
   JSON.stringify(String(value)).replace(
     /[\u007f-\u009f]/g,
     (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`,
   );
+
+const jsonFiles = findJsonFiles(targetDir);
+console.log(`Found ${jsonFiles.length} workflow JSON(s) in ${safe(targetDir)}\n`);
+console.log('='.repeat(70));
 
 for (const file of jsonFiles.sort()) {
   const result = classifyWorkflow(file, nodeIndex);
