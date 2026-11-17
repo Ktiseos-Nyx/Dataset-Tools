@@ -97,6 +97,10 @@ async function startNextServer(port: number): Promise<void> {
         ELECTRON_USER_DATA: app.getPath('userData'),
       },
       stdio: 'inherit',
+      // node.exe is a console-subsystem binary: spawned from the GUI Electron
+      // process without this flag, Windows allocates a visible console window
+      // for it every launch (Nov 18 2026). Hide it — the server still runs.
+      windowsHide: true,
     }
   );
 
