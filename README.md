@@ -43,13 +43,16 @@
 
 ### Current Capabilities
 
-Current Capabilities for CLI, Destkop Executable and Portable:
+<details>
+<summary>Click to expand — feature tables</summary>
+
+Current Capabilities for Web Interface, Desktop Executable and Portable:
 
 | Feature | Status | Details |
 | :--- | :---: | :--- |
 | **Metadata Parsing** | ✅ | Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
 | **Image Viewing** | ✅ | PNG, JPG, JPEG, WebP. Zoom (25-400%), rotation, fit-to-container. |
-| **File Browsing** | ✅ | Currently Windows Executable Only: Recursive lazy-loading file tree. Browse any folder on your system. |
+| **File Browsing** | ✅ | Desktop: recursive tree of any folder. Web build: browser-local folder access (File System Access API) for images + safetensors. Subfolder navigation & handle persistence in progress — [#220](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues/220). |
 | **Drag & Drop** | ✅ | Drop an image to extract metadata. |
 | **Thumbnails** | ✅ | Sharp-powered WebP thumbnails with disk cache (`.thumbcache/`). |
 | **Sorting** | ✅ | Sort by name, date modified, or file size in both file tree and thumbnail viewport. |
@@ -64,8 +67,6 @@ Current Capabilities for CLI, Destkop Executable and Portable:
 
 Current Capabilities for Vercel Demo:
 
-[![Demo](https://img.shields.io/badge/Live-Demo-000000?style=for-the-badge&logo=vercel)](https://dataset-tools-three.vercel.app)
-
 | Feature | Status | Details |
 | :--- | :---: | :--- |
 | **Metadata Parsing** | ✅ | Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
@@ -75,18 +76,29 @@ Current Capabilities for Vercel Demo:
 | **WebP Viewing** | ✅ | Viewing works for static and animated WebP files. Metadata extraction is format-dependent. |
 | **ComfyUI Workflows** | ✅ | 3-phase extraction + ComfyUI ≥1.26 provenance (cnr_id/aux_id). Node graph tracing, custom node resolution, service detection. |
 
+</details>
+
 ---
 
 ### Supported Formats
+
+<details>
+<summary>Click to expand — supported formats</summary>
+
 - **A1111 / Forge** — PNG tEXt chunks, JPEG EXIF
 - **ComfyUI** — JSON workflow with node graph resolution
 - **NovelAI** — PNG metadata
 - **Civitai** — UTF-16-LE JPEG UserComment
 - **Standard EXIF/IPTC/XMP** — All image formats
 - **Safetensors** — LoRA rank/alpha, training parameters, dataset tags, base model info
-- **PNG as JPEG** - Magic Byte Detection.
+- **PNG as JPEG** - Magic Byte Detection: files with a .png extension that are actually JPEG-encoded are detected by magic bytes and parsed anyway.
+
+</details>
 
 ### Tech Stack
+
+<details>
+<summary>Click to expand — tech stack</summary>
 
 - **Framework:** Next.js 16 (App Router), React 19, TypeScript 5
 - **UI:** shadcn/ui + Radix UI + Base UI, Lucide icons, Tailwind CSS v4 (OKLch color space)
@@ -94,15 +106,15 @@ Current Capabilities for Vercel Demo:
 - **Metadata:** Pure JS parsing — PNG chunks, JPEG EXIF (exif-parser), ComfyUI graph traversal with node provenance
 - **Node Resolution:** ComfyUI Node Finder port (extension-node-map registry + GitHub code search fallback)
 
-
+</details>
 
 ---
 
 ## Installation 
 
-These instructions are based on PRODUCTION mode and are similar to DEV mode, please see the [Development Mode](#development-mode) instructions for more information on how that rolls.
+Production mode; dev mode differs — see [Development Mode](#development-mode).
 
-Requires [Node.js](https://nodejs.org) 18+.
+Requires [Node.js](https://nodejs.org) 20.9+.
 
 ```bash
 git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
@@ -111,9 +123,11 @@ npm install
 
 npm run build 
 npm start
+```
+
 Open http://localhost:3000.
 
-```
+
 
 ---
 
@@ -145,12 +159,14 @@ Two ways to check it yourself before running:
 But I hate SmartScreen!
 
 - A portable windows exe with no requirements to install is now available on the most recent releases.
-- Future versions for Linux are coming, but not MacOS.
+- Future versions for Linux are coming
 - This portable edition provides no requirements (as far as we're aware) and can be more useful than installing, but be aware it may not cache your settings.
 
 ---
 
 ## Usage
+<details>
+<summary>Click to expand — Usage info</summary>
 
 1. **Start the app:** `npm start` → open `http://localhost:3000`
 2. **Browse files:** Use the file tree sidebar, or click the folder icon to pick any directory.
@@ -159,7 +175,7 @@ But I hate SmartScreen!
 5. **Edit metadata:** Click the edit button on any text field to modify prompts and parameters directly in PNG files.
 6. **Customize:** Settings panel has theme, accent colors, font size, thumbnail size, and file display options.
 
-> **Note on folder browsing:** "Open folder" (native directory picking) is a **desktop-app (Electron)** feature — browsers don't expose absolute filesystem paths to web pages. Drop-to-detect-folder is a **best-effort server-side search** (`/api/find-file`) that scans the server's filesystem and may find files beyond the common folders or exceed its timeout. The web build is otherwise single-file drag-and-drop. Browser-native folder browsing (via the File System Access API) is in progress — track it in **[issue #220](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues/220)**. This is being actively worked on and has some progress as of the recent updates.
+> **Note on folder browsing:** The desktop app uses a native folder picker; the web build uses browser-local folder access (File System Access API). Subfolder navigation and remembering the folder between visits are still in progress — track **[issue #220](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues/220)**.
 
 ### When metadata fails to parse
 1. Check browser console for parser logs.
@@ -171,28 +187,46 @@ But I hate SmartScreen!
    * Your OS if possible.
    * Version of the application.
   
-4. If the version is "PYTHON" we don't have any way of supporting that anymore.
+4. If you're running the legacy Python edition, it is no longer supported — file issues against the Next.js edition only.
+
+</details>
+
 ---
 
 ## Development Mode
 
-Dev mode is highly volatile on some systems, and may cause some unintended effects, if you're interested in doing this we suggest using not only WSL2 for windows users but a DOCKER CONTAINER. 
-It's not that it's insecure it's more so that things run differently than production mode, and if anything may have unintended effects on your OS. 
+<details>
+<summary>Click to expand — Development info</summary>
 
-This runs via the turbopack dev mode, and may be slower and considerably janky on lower end systems.
+Dev mode is slow and RAM-hungry, if you're interested in doing this we suggest using not only WSL2 for windows users but a DOCKER CONTAINER. 
+
 
 ```bash
 git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
 cd Dataset-Tools
 npm install
 
-npm run build 
-npm run dev
-Open http://localhost:3000.
 
+npm run dev
 ```
 
+Open http://localhost:3000.
+
+### Electron Dev
+
+The Electron shell wraps the web app in a desktop window. `electron:dev` runs the Next dev server and launches the Electron shell against it once `localhost:3000` is up. `electron:build` is the release pipeline — production build, Electron compile, then the Windows installer + portable EXE via electron-builder.
+
+```bash
+npm run electron:dev    # next dev + Electron window at localhost:3000
+npm run electron:build  # production build → installer + portable EXE
+```
+
+Don't use `electron:build` output for day-to-day testing — it's for cutting releases.
+
+
 More information in depth will come over time in our [Wiki](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki).
+
+</details>
 
 ---
 
@@ -202,7 +236,7 @@ More information in depth will come over time in our [Wiki](https://github.com/K
 This project is inspired by [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) and thrives on community contributions. Found a bug? Have a workflow that won't parse? Want to add support for a new tool? **We welcome forks, fixes, and pull requests!**
 
 ### Found a parsing failure?
-Open an issue with the details above. ComfyUI always has edge cases, and while we intend to catch almost everything we can with the lookup on desktop and CLI, there are always new software tags and nodes.
+Open an issue with the details above. ComfyUI always has edge cases, and while we intend to catch almost everything we can with the lookup on desktop and web, there are always new software tags and nodes.
 
 ### Want to improve the parser?
 1. Fork repo → `npm install` → `npm run dev`
@@ -212,13 +246,18 @@ Open an issue with the details above. ComfyUI always has edge cases, and while w
 
 ---
 
-#### Development Info
+#### Development Disclaimers
+
+<details>
+<summary>Click to expand — Development Disclaimers</summary>
 
 This engine has been tested across thousands of images and is in active daily use. While there will always be edge cases with new custom nodes and formats, the core parser is stable and handles the vast majority of real-world workflows. While we are largely no longer in generative AI circles, this application is developed for both sides of the coin. 
 
 We don't want to lie about how the code was created, nor directed. Unlike future projects of ours that are intending to be far more human lead, this took far more human direction than human based coding. Due to the nature of the original being in python and being a total load of spaghetti code, there was no way we were going to do it again by hand. SD-Prompt Reader was easy to understand, but the edge case detection of most metadata readers falls at simplistic graph traversal. Through absolute insane amounts of research, bashing our heads into walls and throwing ourselves at lawnmowers (Aesthetically not literally) we caught a lot more than the original inspiration as well as our original version. 
 
 We take pride in security, so we do our best to audit with multiple tools, and we're aware of AI-based issues with security, and do our best to monitor dependency issues as well as hallucinatory issues inside the codebase. One singular reason alone Ktiseos Nyx moved to using Next/Node was the idea that it was closer to web development and the nature of typescript was a lot smoother for us to conceptualize than python. This only really covers Duskfallcrew (aka ashbluepollution-95), as they have a graphic design degree not a computer science degree. You try developing a python app when all you understand is how to center a DIV on a web page at 3am. If you run into any issues feel free to use the information on how to contribute, that way we can build better sources together. 
+
+</details>
 
 ---
 
