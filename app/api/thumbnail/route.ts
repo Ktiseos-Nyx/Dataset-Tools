@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
 import sharp from 'sharp'
-import { originGuard, resolveContained } from '@/lib/fs-guard'
+import { FS_READ_DEADLINE_MS, originGuard, resolveContained } from '@/lib/fs-guard'
 
 // Under Electron, the thumbnail cache lives in the per-user app-data dir so a
 // packaged app's read-only install dir isn't written to.
@@ -16,22 +16,46 @@ const CACHE_DIR = process.env.ELECTRON_USER_DATA
 // with in-flight pixel buffers, and starves every other route (Nov 18 2026).
 // Queued requests hold no resources — only active generations do.
 const MAX_CONCURRENT_THUMBS = 3
+const THUMB_QUEUE_WAIT_MS = 90_000
 let activeThumbs = 0
-const thumbQueue: Array<() => void> = []
+const thumbQueue: Array<{ done: boolean; wake?: () => void }> = []
 
+// Slot-transfer accounting: release() hands the slot to a waiter WITHOUT
+// decrementing, so the waiter must not increment either — otherwise the count
+// drifts above the cap and the pool dies permanently (caught by CodeRabbit,
+// confirmed live: thumbnails stopped loading in every folder after a few
+// navigations on a slow drive).
 async function acquireThumbSlot(): Promise<void> {
   if (activeThumbs < MAX_CONCURRENT_THUMBS) {
     activeThumbs++
     return
   }
-  await new Promise<void>(resolve => thumbQueue.push(resolve))
-  activeThumbs++
+  const me: { done: boolean; wake?: () => void } = { done: false }
+  thumbQueue.push(me)
+  await new Promise<void>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      me.done = true // release() skips us; no slot is ever transferred
+      reject(Object.assign(new Error('Timed out waiting for a thumbnail slot'), { name: 'TimeoutError' }))
+    }, THUMB_QUEUE_WAIT_MS)
+    me.wake = () => {
+      clearTimeout(timer)
+      resolve()
+    }
+  })
+  // Slot was transferred by release(); the count already reflects it.
 }
 
 function releaseThumbSlot(): void {
-  const next = thumbQueue.shift()
-  if (next) next() // wakes an acquire, which does the increment
-  else activeThumbs--
+  while (true) {
+    const next = thumbQueue.shift()
+    if (!next) {
+      activeThumbs--
+      return
+    }
+    if (next.done) continue // timed-out waiter — skip, keep looking
+    next.wake?.()
+    return
+  }
 }
 
 // Extensions sharp can reliably handle
@@ -105,16 +129,37 @@ export async function GET(request: Request) {
       // Cache miss or source doesn't exist yet, generate below
     }
 
-    // Generate thumbnail — one of at most MAX_CONCURRENT_THUMBS at a time,
-    // with a generous deadline so a drive that never answers can't hold a
-    // slot forever (sharp reads the file itself, so its own timeout applies).
+    // Generate thumbnail — one of at most MAX_CONCURRENT_THUMBS at a time.
+    // Three protections stack here:
+    //  - request.signal.aborted: the browser aborts on navigation; a queued
+    //    request that was abandoned must not run sharp at all (503, slot
+    //    released immediately).
+    //  - sharp .timeout(60s): bounds the generation itself.
+    //  - slot-hold race below: sharp's timer only starts after the input
+    //    opens, so a stalled open could otherwise hold a slot indefinitely.
+    //    On expiry the slot is released for others while the native work
+    //    continues in the background (its result is discarded; it ends at the
+    //    sharp timeout or when the drive finally answers).
     await acquireThumbSlot()
     try {
-      const buffer = await sharp(resolvedPath)
+      if (request.signal.aborted) {
+        return new NextResponse(null, { status: 503 })
+      }
+      let holdTimer: NodeJS.Timeout | undefined
+      const slotDeadline = new Promise<Buffer>((_, reject) => {
+        holdTimer = setTimeout(() => {
+          reject(Object.assign(new Error('Timed out generating thumbnail'), { name: 'TimeoutError' }))
+        }, FS_READ_DEADLINE_MS)
+      })
+      const generation = sharp(resolvedPath)
         .timeout({ seconds: 60 })
         .resize(size, size, { fit: 'cover', position: 'centre' })
         .webp({ quality: 80 })
         .toBuffer()
+      generation.catch(() => {}) // background failure after a deadline loss is non-fatal
+      const buffer = await Promise.race([generation, slotDeadline]).finally(() => {
+        clearTimeout(holdTimer)
+      })
 
       // Write to cache (fire-and-forget)
       fs.writeFile(cachePath, buffer).catch(() => {})
@@ -131,6 +176,9 @@ export async function GET(request: Request) {
   } catch (error) {
     if (error instanceof Error && 'code' in error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
       return NextResponse.json({ error: 'File not found' }, { status: 404 })
+    }
+    if (error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')) {
+      return NextResponse.json({ error: 'Drive not responding (timed out)' }, { status: 504 })
     }
     // For any sharp processing error, fall back to full image
     return NextResponse.redirect(new URL(`/api/image?path=${encodeURIComponent(filePath)}&baseFolder=${encodeURIComponent(baseFolder)}`, request.url))

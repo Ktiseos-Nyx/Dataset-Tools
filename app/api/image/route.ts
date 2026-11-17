@@ -58,7 +58,7 @@ export async function GET(request: Request) {
       if ('code' in error && error.code === 'ENOENT') {
         return NextResponse.json({ error: 'File not found' }, { status: 404 });
       }
-      if (error.name === 'TimeoutError') {
+      if (error.name === 'TimeoutError' || error.name === 'AbortError') {
         return NextResponse.json({ error: 'Drive not responding (timed out reading file)' }, { status: 504 });
       }
       return NextResponse.json({ error: error.message }, { status: 500 });

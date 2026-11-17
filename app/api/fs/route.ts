@@ -33,12 +33,20 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Node ≥20.12 supports a `signal` on readdir at runtime; @types/node@22
-    // doesn't declare it — cast so the deadline applies without a types bump.
-    const files = await fs.readdir(resolvedPath, {
-      withFileTypes: true,
-      signal: AbortSignal.timeout(FS_READ_DEADLINE_MS),
-    } as unknown as { withFileTypes: true });
+    // readdir does not consume options.signal (verified against Node 22 source —
+    // the binding call threads only encoding/withFileTypes), so the deadline is
+    // enforced on the RESPONSE: if the listing hasn't arrived in time we answer
+    // 504; a stalled native read may continue in the background holding one
+    // threadpool slot (bounded impact with UV_THREADPOOL_SIZE raised).
+    let readdirTimer: NodeJS.Timeout | undefined
+    const files = await Promise.race([
+      fs.readdir(resolvedPath, { withFileTypes: true }),
+      new Promise<never>((_, reject) => {
+        readdirTimer = setTimeout(() => {
+          reject(Object.assign(new Error('Drive not responding (timed out reading directory)'), { name: 'TimeoutError' }))
+        }, FS_READ_DEADLINE_MS)
+      }),
+    ]).finally(() => clearTimeout(readdirTimer));
 
     // Get file stats for sorting
     const fileListPromises = files.map(async (file) => {

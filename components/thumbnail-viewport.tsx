@@ -202,12 +202,12 @@ async function acquireBrowserThumbSlot(): Promise<void> {
     return
   }
   await new Promise<void>(resolve => browserThumbQueue.push(resolve))
-  activeBrowserThumbs++
+  // Slot was transferred by release; the count already reflects it.
 }
 
 function releaseBrowserThumbSlot(): void {
   const next = browserThumbQueue.shift()
-  if (next) next() // wakes an acquire, which does the increment
+  if (next) next() // slot transferred — count unchanged
   else activeBrowserThumbs--
 }
 
