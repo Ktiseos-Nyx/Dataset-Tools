@@ -69,6 +69,10 @@ paths now bind loopback: `next dev -H 127.0.0.1` (both the `dev` script and
 3. Residual accepted risk: another **local** process (same user account) can
    still reach these loopback endpoints, as it could reach any local app.
    Closing that fully would mean per-instance capabilities in Electron IPC.
+4. **Credential-store exclusion** (Windows Credential Manager / DPAPI
+   locations, etc.) on the read routes. The app's purpose is reading whatever
+   folder the user picks, so an ambient exclusion list is a policy decision —
+   tracked under the full scope of #233 alongside the allowed-roots allowlist.
 
 ## Pointers
 - Shared guard helpers: `lib/fs-guard.ts` (`originGuard` / `resolveContained` /
