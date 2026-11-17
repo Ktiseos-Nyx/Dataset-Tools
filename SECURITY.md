@@ -69,7 +69,12 @@ own machine. The relevant layers:
 * **Outbound HTTP is allowlisted.** All server-side requests funnel through
   `lib/safe-fetch.ts` (civitai.com, api.github.com, raw.githubusercontent.com
   only), with a matching renderer CSP in `next.config.mjs` — a hostile image's
-  embedded metadata can't steer the app to arbitrary domains.
+  embedded metadata can't steer the app to arbitrary domains. Known limitation:
+  the allowlist validates the initially requested URL only; HTTP redirects are
+  followed by the runtime and are not re-validated against the allowlist.
+  Per-hop redirect validation (follow redirects manually, re-check each hop)
+  is a planned follow-up hardening — it needs care so Civitai/GitHub flows
+  that legitimately redirect aren't broken.
 * **The write surface is tiny.** The only write route is `/api/metadata-write`:
   PNG-only, must target an existing file, containment + symlink re-checks, and
   its CSRF gate requires an exact loopback Origin match.
