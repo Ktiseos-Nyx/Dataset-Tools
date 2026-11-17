@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
-import { originGuard, resolveContained } from '@/lib/fs-guard';
+import { FS_READ_DEADLINE_MS, originGuard, resolveContained } from '@/lib/fs-guard';
 
 const IMAGE_EXTENSIONS = new Set([
   '.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tiff', '.tif',
@@ -33,7 +33,12 @@ export async function GET(request: Request) {
   }
 
   try {
-    const files = await fs.readdir(resolvedPath, { withFileTypes: true });
+    // Node ≥20.12 supports a `signal` on readdir at runtime; @types/node@22
+    // doesn't declare it — cast so the deadline applies without a types bump.
+    const files = await fs.readdir(resolvedPath, {
+      withFileTypes: true,
+      signal: AbortSignal.timeout(FS_READ_DEADLINE_MS),
+    } as unknown as { withFileTypes: true });
 
     // Get file stats for sorting
     const fileListPromises = files.map(async (file) => {
@@ -71,6 +76,9 @@ export async function GET(request: Request) {
         // More specific error handling
         if ('code' in error && error.code === 'ENOENT') {
             return NextResponse.json({ error: 'Directory not found' }, { status: 404 });
+        }
+        if (error.name === 'TimeoutError') {
+            return NextResponse.json({ error: 'Drive not responding (timed out reading directory)' }, { status: 504 });
         }
         return NextResponse.json({ error: error.message }, { status: 500 });
     }

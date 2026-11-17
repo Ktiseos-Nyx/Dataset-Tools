@@ -10,6 +10,30 @@ const CACHE_DIR = process.env.ELECTRON_USER_DATA
   ? path.join(process.env.ELECTRON_USER_DATA, '.thumbcache')
   : path.resolve(/* turbopackIgnore: true */ '.thumbcache')
 
+// Generate at most a few thumbnails at a time. The viewport fires every image
+// in a folder at once; on a slow external drive (USB-hub'd 2.5" portables are
+// the worst case) that flood saturates Node's 4-thread libuv pool, spikes RAM
+// with in-flight pixel buffers, and starves every other route (Nov 18 2026).
+// Queued requests hold no resources — only active generations do.
+const MAX_CONCURRENT_THUMBS = 3
+let activeThumbs = 0
+const thumbQueue: Array<() => void> = []
+
+async function acquireThumbSlot(): Promise<void> {
+  if (activeThumbs < MAX_CONCURRENT_THUMBS) {
+    activeThumbs++
+    return
+  }
+  await new Promise<void>(resolve => thumbQueue.push(resolve))
+  activeThumbs++
+}
+
+function releaseThumbSlot(): void {
+  const next = thumbQueue.shift()
+  if (next) next() // wakes an acquire, which does the increment
+  else activeThumbs--
+}
+
 // Extensions sharp can reliably handle
 const SHARP_SUPPORTED = new Set([
   '.png', '.jpg', '.jpeg', '.webp', '.gif', '.tiff', '.tif', '.avif',
@@ -81,21 +105,29 @@ export async function GET(request: Request) {
       // Cache miss or source doesn't exist yet, generate below
     }
 
-    // Generate thumbnail
-    const buffer = await sharp(resolvedPath)
-      .resize(size, size, { fit: 'cover', position: 'centre' })
-      .webp({ quality: 80 })
-      .toBuffer()
+    // Generate thumbnail — one of at most MAX_CONCURRENT_THUMBS at a time,
+    // with a generous deadline so a drive that never answers can't hold a
+    // slot forever (sharp reads the file itself, so its own timeout applies).
+    await acquireThumbSlot()
+    try {
+      const buffer = await sharp(resolvedPath)
+        .timeout({ seconds: 60 })
+        .resize(size, size, { fit: 'cover', position: 'centre' })
+        .webp({ quality: 80 })
+        .toBuffer()
 
-    // Write to cache (fire-and-forget)
-    fs.writeFile(cachePath, buffer).catch(() => {})
+      // Write to cache (fire-and-forget)
+      fs.writeFile(cachePath, buffer).catch(() => {})
 
-    return new NextResponse(new Uint8Array(buffer), {
-      headers: {
-        'Content-Type': 'image/webp',
-        'Cache-Control': 'public, max-age=86400',
-      },
-    })
+      return new NextResponse(new Uint8Array(buffer), {
+        headers: {
+          'Content-Type': 'image/webp',
+          'Cache-Control': 'public, max-age=86400',
+        },
+      })
+    } finally {
+      releaseThumbSlot()
+    }
   } catch (error) {
     if (error instanceof Error && 'code' in error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
       return NextResponse.json({ error: 'File not found' }, { status: 404 })
