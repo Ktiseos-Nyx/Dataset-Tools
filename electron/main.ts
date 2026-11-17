@@ -7,6 +7,17 @@ import * as fs from 'fs';
 
 const DEV_URL = 'http://localhost:3000';
 
+// electron-builder's portable target runs from a FRESH temp dir every launch,
+// which would wipe settings.json and the thumbnail cache each session. When
+// running as a portable, point userData at a persistent 'data' folder next to
+// the EXE instead. Must run before anything calls app.getPath('userData').
+const portableDir = process.env.PORTABLE_EXECUTABLE_DIR;
+if (portableDir) {
+  const persistentUserData = path.join(portableDir, 'data');
+  app.setPath('userData', persistentUserData);
+  fs.mkdirSync(persistentUserData, { recursive: true });
+}
+
 // Native window background must be a hex value (not an OKLCH CSS function).
 // These match the app theme in globals.css: oklch(0.145 0 0) / oklch(1 0 0).
 const DARK_BG = '#0a0a0a';
