@@ -53,3 +53,28 @@ if (serverSrc.includes(HOSTNAME_LOOPBACK)) {
   console.error('[postbuild] ERROR: unrecognized HOSTNAME default in server.js; aborting')
   process.exit(1)
 }
+
+// Guard against the standalone trace missing Next's compiled Turbopack runtime.
+// The runtime is loaded via a dynamic external require the tracer can't see
+// (see next.config.mjs outputFileTracingIncludes). When it's absent, dev and
+// `npm start` still work — require walk-up finds the file in the repo's
+// node_modules — but the packaged Electron app (no parent node_modules) 500s on
+// every API route. Fail loudly here instead of shipping that.
+const runtimeProbe = join(
+  standalone,
+  'node_modules',
+  'next',
+  'dist',
+  'compiled',
+  'next-server',
+  'app-route-turbo.runtime.prod.js'
+)
+
+if (!existsSync(runtimeProbe)) {
+  console.error(
+    '[postbuild] ERROR: standalone is missing next/dist/compiled/next-server/app-route-turbo.runtime.prod.js — ' +
+      'the packaged app would 500 on every API route. Check outputFileTracingIncludes in next.config.mjs; aborting.'
+  )
+  process.exit(1)
+}
+console.log('[postbuild] compiled next-server runtime present in standalone')

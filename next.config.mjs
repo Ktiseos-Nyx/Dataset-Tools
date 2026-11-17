@@ -13,8 +13,17 @@ const nextConfig = {
   // Standalone tracing can miss sharp's platform-specific native binaries
   // (@img/sharp-*), which would break thumbnails in the packaged Electron app.
   // Force them into the trace for every API route.
+  //
+  // Next 16.4.6's compiled Turbopack runtime is loaded via a *dynamic* external
+  // require from the standalone server chunks — the tracer can't see it, so it
+  // ships only 3 of the 74 files in next/dist/compiled/next-server/. From the
+  // project dir a missing module is silently rescued by require walk-up into
+  // the repo's node_modules, but the packaged Electron app has no parent
+  // node_modules — every API route 500s (Nov 18 2026 debugging session).
+  // Force the whole compiled runtime into the trace for all routes.
   outputFileTracingIncludes: {
     '/api/**/*': ['./node_modules/sharp/**/*', './node_modules/@img/**/*'],
+    '/**/*': ['./node_modules/next/dist/compiled/next-server/**/*'],
   },
   // The API routes read user-supplied paths at runtime (`path.resolve(baseFolder)`),
   // which makes Next's tracer fall back to tracing the *entire project* into the
