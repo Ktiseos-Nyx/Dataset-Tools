@@ -8,11 +8,11 @@
   "scripts": {
     "build": "next build",
     "postbuild": "node scripts/copy-standalone-assets.mjs",
-    "dev": "next dev",
+    "dev": "next dev -H 127.0.0.1",
     "lint": "eslint .",
     "start": "node .next/standalone/server.js",
     "electron:compile": "tsc -p electron/tsconfig.json",
-    "electron:dev": "npm run electron:compile && concurrently -k \"next dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron:dev": "npm run electron:compile && concurrently -k \"next dev -H 127.0.0.1\" \"wait-on http://localhost:3000 && electron .\"",
     "electron:start": "npm run electron:compile && electron . --self-serve",
     "electron:build": "npm run build && npm run electron:compile && electron-builder",
     "icons": "node scripts/generate-icons.mjs"

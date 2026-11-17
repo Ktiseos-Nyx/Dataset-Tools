@@ -45,13 +45,26 @@ On any public deployment (Vercel demo) these routes refuse every request with
 `scripts/generate-civitai-fixtures.mjs` → `fixtures/` (Civitai on-site params +
 ComfyUI URN:AIR paths).
 
+### 4. Loopback binding enforced in every launch path ✅
+A `Host` header is client-controlled, so the `originGuard` host check is
+defense-in-depth only — the binding is the real control. All three launch
+paths now bind loopback: `next dev -H 127.0.0.1` (both the `dev` script and
+`electron:dev`'s concurrently call), Electron's packaged-server spawn
+(`HOSTNAME: '127.0.0.1'`, electron/main.ts), and the standalone pin
+(`scripts/copy-standalone-assets.mjs` rewrites the server.js default from
+`0.0.0.0` to `127.0.0.1` on every build).
+
 ## Still deferred
 
-1. **(Trainer-UI / ecosystem phase only)** If the embedded copy ever serves over
+1. **`HOSTNAME` env override on the standalone server.** A caller can still set
+   `HOSTNAME=0.0.0.0` for `npm start`; that's a deliberate operator action, not
+   a default. If belt-and-braces is ever wanted, the postbuild script could
+   refuse a non-loopback `HOSTNAME` explicitly.
+2. **(Trainer-UI / ecosystem phase only)** If the embedded copy ever serves over
    a real interface or behind auth: add a per-session allowed-roots allowlist
    enforced server-side instead of trusting client `baseFolder`, plus standard
    CSRF tokens. That's the point where the "enterprise" treatment is warranted.
-2. Residual accepted risk: another **local** process (same user account) can
+3. Residual accepted risk: another **local** process (same user account) can
    still reach these loopback endpoints, as it could reach any local app.
    Closing that fully would mean per-instance capabilities in Electron IPC.
 

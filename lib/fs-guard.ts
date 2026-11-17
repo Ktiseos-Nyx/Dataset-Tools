@@ -21,8 +21,18 @@ export function isInside(base: string, target: string): boolean {
 }
 
 export function isLoopbackHost(host: string): boolean {
-  const hostname = host.split(':')[0].toLowerCase();
-  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+  let hostname = host.toLowerCase();
+  if (hostname.startsWith('[')) {
+    // Bracketed IPv6 literal, with or without a port: "[::1]:3000" -> "::1"
+    const end = hostname.indexOf(']');
+    hostname = end === -1 ? hostname.slice(1) : hostname.slice(1, end);
+  } else {
+    // IPv4/hostname, port stripped: "localhost:3000" -> "localhost".
+    // Note a Host header is client-controlled; the loopback *binding* in the
+    // dev scripts / standalone pin is the primary control, this is defense-in-depth.
+    hostname = hostname.split(':')[0];
+  }
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
 }
 
 export function originGuard(request: Request): string | null {
