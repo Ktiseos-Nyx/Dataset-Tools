@@ -114,7 +114,7 @@ Current Capabilities for Vercel Demo:
 
 Production mode; dev mode differs — see [Development Mode](#development-mode).
 
-Requires [Node.js](https://nodejs.org) 20.9+.
+Requires [Node.js](https://nodejs.org) 20.9+ to run the application. Development installs want Node.js 22+ — a dev-only dependency (`concurrently`) requires it, and npm only warns (not fails) on older versions.
 
 ```bash
 git clone https://github.com/Ktiseos-Nyx/Dataset-Tools.git
@@ -198,7 +198,7 @@ But I hate SmartScreen!
 <details>
 <summary>Click to expand — Development info</summary>
 
-Dev mode is slow and RAM-hungry, if you're interested in doing this we suggest using not only WSL2 for windows users but a DOCKER CONTAINER. 
+Dev mode is slow and RAM-hungry, if you're interested in doing this we suggest using not only WSL2 for Windows users but a DOCKER CONTAINER. 
 
 
 ```bash
@@ -214,11 +214,13 @@ Open http://localhost:3000.
 
 ### Electron Dev
 
-The Electron shell wraps the web app in a desktop window. `electron:dev` runs the Next dev server and launches the Electron shell against it once `localhost:3000` is up. `electron:build` is the release pipeline — production build, Electron compile, then the Windows installer + portable EXE via electron-builder.
+The Electron shell wraps the web app in a desktop window. `electron:dev` runs the Next dev server and launches the Electron shell against it once `localhost:3000` is up. `electron:build` is the release pipeline — production build, Electron compile, then the platform targets via electron-builder (Windows: installer + portable EXE; it builds for the host OS, so the Windows artifacts only come out of a Windows host).
+
+**Release prerequisite:** `electron:build` expects a Windows Node.js binary at `build/node-node/node.exe` (Node v25). That directory is git-ignored and no script creates it — without it the packaged app silently falls back to Electron's embedded Node, and every API route returns 500.
 
 ```bash
 npm run electron:dev    # next dev + Electron window at localhost:3000
-npm run electron:build  # production build → installer + portable EXE
+npm run electron:build  # production build → host-OS targets (Windows EXE on Windows)
 ```
 
 Don't use `electron:build` output for day-to-day testing — it's for cutting releases.
@@ -253,7 +255,7 @@ Open an issue with the details above. ComfyUI always has edge cases, and while w
 
 This engine has been tested across thousands of images and is in active daily use. While there will always be edge cases with new custom nodes and formats, the core parser is stable and handles the vast majority of real-world workflows. While we are largely no longer in generative AI circles, this application is developed for both sides of the coin. 
 
-We don't want to lie about how the code was created, nor directed. Unlike future projects of ours that are intending to be far more human lead, this took far more human direction than human based coding. Due to the nature of the original being in python and being a total load of spaghetti code, there was no way we were going to do it again by hand. SD-Prompt Reader was easy to understand, but the edge case detection of most metadata readers falls at simplistic graph traversal. Through absolute insane amounts of research, bashing our heads into walls and throwing ourselves at lawnmowers (Aesthetically not literally) we caught a lot more than the original inspiration as well as our original version. 
+We don't want to lie about how the code was created, nor directed. Unlike future projects of ours that are intending to be far more human lead, this took far more human direction than human-based coding. Due to the nature of the original being in python and being a total load of spaghetti code, there was no way we were going to do it again by hand. SD-Prompt Reader was easy to understand, but the edge case detection of most metadata readers falls at simplistic graph traversal. Through absolute insane amounts of research, bashing our heads into walls and throwing ourselves at lawnmowers (Aesthetically not literally) we caught a lot more than the original inspiration as well as our original version. 
 
 We take pride in security, so we do our best to audit with multiple tools, and we're aware of AI-based issues with security, and do our best to monitor dependency issues as well as hallucinatory issues inside the codebase. One singular reason alone Ktiseos Nyx moved to using Next/Node was the idea that it was closer to web development and the nature of typescript was a lot smoother for us to conceptualize than python. This only really covers Duskfallcrew (aka ashbluepollution-95), as they have a graphic design degree not a computer science degree. You try developing a python app when all you understand is how to center a DIV on a web page at 3am. If you run into any issues feel free to use the information on how to contribute, that way we can build better sources together. 
 
