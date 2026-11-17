@@ -35,20 +35,50 @@ allowing any path resolution, so a client-supplied baseFolder can't reach outsid
 the repo. The final write target (including `saveAsCopy` sibling names) is also
 re-validated through the same containment pipeline.
 
+### 3. Read routes folded onto the hardened helper ✅
+`/api/fs`, `/api/image`, `/api/metadata` (GET) and `/api/thumbnail` all use the
+shared `originGuard` + `resolveContained` helpers from `lib/fs-guard.ts`:
+loopback-only host/origin gate plus `path.relative` containment (the old
+`startsWith` prefix checks — vulnerable to sibling-folder tricks — are gone).
+On any public deployment (Vercel demo) these routes refuse every request with
+403 by design; the demo parses in-browser. Regression fixtures:
+`scripts/generate-civitai-fixtures.mjs` → `fixtures/` (Civitai on-site params +
+ComfyUI URN:AIR paths).
+
+### 4. Loopback binding enforced in every launch path ✅
+A `Host` header is client-controlled, so the `originGuard` host check is
+defense-in-depth only — the binding is the real control. All three launch
+paths now bind loopback: `next dev -H 127.0.0.1` (both the `dev` script and
+`electron:dev`'s concurrently call), Electron's packaged-server spawn
+(`HOSTNAME: '127.0.0.1'`, electron/main.ts), and the standalone pin
+(`scripts/copy-standalone-assets.mjs` rewrites the server.js default from
+`0.0.0.0` to `127.0.0.1` on every build).
+
 ## Still deferred
 
-1. **Bind to `127.0.0.1` only — never `0.0.0.0`.** Single most important control
-   for the packaged executable; keeps the server off the network entirely.
-   (`next start -H 127.0.0.1`, or the equivalent in the Electron/embedded host.)
-   Not yet done because `next dev` doesn't support `-H` the same way and the
-   app is currently used only via `npm run dev`.
+1. **Standalone binding overrides.** Ambient `HOSTNAME` inheritance is
+   neutralized by `scripts/start-standalone.mjs` (loopback unless the operator
+   explicitly sets `DT_HOSTNAME`). Deliberate non-loopback deployments remain
+   possible but now require a purpose-named variable — if belt-and-braces is
+   ever wanted, the postbuild script could also refuse a non-loopback
+   `DT_HOSTNAME` for release artifacts.
 2. **(Trainer-UI / ecosystem phase only)** If the embedded copy ever serves over
    a real interface or behind auth: add a per-session allowed-roots allowlist
    enforced server-side instead of trusting client `baseFolder`, plus standard
    CSRF tokens. That's the point where the "enterprise" treatment is warranted.
+3. Residual accepted risk: another **local** process (same user account) can
+   still reach these loopback endpoints, as it could reach any local app.
+   Closing that fully would mean per-instance capabilities in Electron IPC.
+4. **Credential-store exclusion** (Windows Credential Manager / DPAPI
+   locations, etc.) on the read routes. The app's purpose is reading whatever
+   folder the user picks, so an ambient exclusion list is a policy decision —
+   tracked under the full scope of #233 alongside the allowed-roots allowlist.
 
 ## Pointers
-- Write route: `app/api/metadata-write/route.ts` (`resolveTarget` / `isInside`)
-- Shared-but-weaker read-route validation: `app/api/fs/route.ts`,
-  `app/api/image/route.ts`, `app/api/metadata/route.ts` (still use the
-  `startsWith` prefix check — fold them onto the hardened helper when convenient).
+- Shared guard helpers: `lib/fs-guard.ts` (`originGuard` / `resolveContained` /
+  `isInside`) — mirrors the in-route copies that remain in
+  `app/api/metadata-write/route.ts`, `app/api/safetensors/route.ts`, and
+  `app/api/watch/route.ts` (hardened identically; consolidation into the shared
+  helper is optional cleanup).
+- Write route specifics: `app/api/metadata-write/route.ts`
+  (`resolveTarget` / `isInside`).

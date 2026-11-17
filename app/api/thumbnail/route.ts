@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
 import sharp from 'sharp'
+import { originGuard, resolveContained } from '@/lib/fs-guard'
 
 // Under Electron, the thumbnail cache lives in the per-user app-data dir so a
 // packaged app's read-only install dir isn't written to.
@@ -38,15 +39,14 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'path is required' }, { status: 400 })
   }
 
-  // Resolve the base folder first
-  const resolvedBase = path.resolve(baseFolder)
-
-  // Build the full path
-  const fullPath = path.isAbsolute(filePath) ? filePath : path.join(resolvedBase, filePath)
-  const resolvedPath = path.resolve(fullPath)
-
-  // Security: prevent directory traversal outside the base folder
-  if (!resolvedPath.startsWith(resolvedBase)) {
+  // Desktop-only filesystem read: loopback host/origin gate + containment via
+  // path.relative (shared helper, mirrors metadata-write/safetensors).
+  const guardError = originGuard(request)
+  if (guardError) {
+    return NextResponse.json({ error: guardError }, { status: 403 })
+  }
+  const resolvedPath = resolveContained(baseFolder, filePath)
+  if (!resolvedPath) {
     return NextResponse.json({ error: 'Access denied - path outside base folder' }, { status: 403 })
   }
 
