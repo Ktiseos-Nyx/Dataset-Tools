@@ -43,27 +43,74 @@ To help us understand and fix the issue quickly, please include:
 * Steps to reproduce it (be as detailed as possible).
 * Which version/branch of Dataset-Tools is affected.
 * The potential impact if the vulnerability is exploited.
-* Any proof-of-concept code (if you have it and it's safe to share).
-* Your environment details (OS, Python version) if relevant.
+* Any proof-of-of-concept code (if you have it and it's safe to share).
+* Your environment details (OS, Node.js/Electron version, app version) if relevant.
 
 We'll do our best to acknowledge your report within 48-72 hours. As an independent project, timelines for fixes will vary based on complexity and severity, but we are committed to addressing confirmed vulnerabilities.
 
+## How the Local App Is Hardened
+
+Dataset-Tools is a **local-first** application: the server binds to loopback
+(127.0.0.1) and the filesystem routes are designed for a single user on their
+own machine. The relevant layers:
+
+* **Loopback binding, enforced in every launch path.** `next dev` runs with
+  `-H 127.0.0.1` (dev + Electron dev), the packaged Electron app spawns its
+  server with `HOSTNAME: '127.0.0.1'`, and the standalone build is pinned to
+  loopback by a postbuild rewrite plus a start wrapper that neutralizes ambient
+  `HOSTNAME` inheritance. Deliberate non-loopback deployments require an
+  explicitly-named override (`DT_HOSTNAME`).
+* **Filesystem routes are desktop-only.** `/api/fs`, `/api/image`, `/api/metadata`,
+  `/api/thumbnail`, `/api/metadata-write` and `/api/safetensors` all validate a
+  loopback-only Host/Origin (defense-in-depth — a Host header is
+  client-controlled) and confine paths with `path.relative` containment
+  (shared helper: `lib/fs-guard.ts`). On any public web deployment these routes
+  refuse every request with 403 by design; the Vercel demo parses in-browser.
+* **Outbound HTTP is allowlisted.** All server-side requests funnel through
+  `lib/safe-fetch.ts` (civitai.com, api.github.com, raw.githubusercontent.com
+  only), with a matching renderer CSP in `next.config.mjs` — a hostile image's
+  embedded metadata can't steer the app to arbitrary domains.
+* **The write surface is tiny.** The only write route is `/api/metadata-write`:
+  PNG-only, must target an existing file, containment + symlink re-checks, and
+  its CSRF gate requires an exact loopback Origin match.
+* **Packaging integrity.** The Electron app ships as a fused ASAR with
+  embedded ASAR integrity validation; only the app bundle is tamper-checked,
+  and native dependencies ship outside it via `extraResources`.
+
+Residual risks we accept and track are listed in
+[SECURITY_TODO.md](SECURITY_TODO.md) — notably that another local process
+under the same user account can reach the loopback endpoints, same as it could
+reach any local app.
+
+### About browser extensions
+
+A browser extension with content-script permissions can inject into any page
+the user opens — including a page served from localhost. No web application
+can prevent that; it is inherent to how extension permissions work, and it is
+true of every local web app (dev servers, routers, etc.), not just this one.
+The practical exposure is limited to what the page itself shows, and the app
+never serves secrets on those pages.
+
+### About code signing
+
+The Windows EXE is currently **unsigned**. Code signing attests to who built
+a binary — it does not make the code more secure — and signing services gate on
+download-reputation, which a young open-source project hasn't accumulated yet.
+The README documents what the SmartScreen warning means and how to verify a
+release (VirusTotal link, open-source build). Signing is a 1.0 milestone
+decision, not a magic security fix.
+
 ## Our Security Practices
 
-* **Code Review:** We review code changes for potential security issues.
-* **Dependency Management:** We aim to keep our third-party libraries up-to-date. We use tools like:
-  * **`pip-audit`** (or **`Safety CLI`**) to check our dependencies against known vulnerability databases.
-  * **GitHub's Dependabot alerts** (if enabled) to notify us of vulnerable dependencies.
+* **Code Review:** Every change lands via pull request and is reviewed — including by AI reviewers (CodeRabbit, DeepScan, SafeDep dependency scanning, Aikido SAST on dedicated branches) as well as humans.
+* **Dependency Management:** We keep third-party libraries up to date using:
   * **`npm audit`** for the Node.js/Next.js + Electron toolchain. Transitive dependencies are pinned via `overrides` in `package.json`, and production dependencies (`npm audit --omit=dev`) are kept at **0 known vulnerabilities**.
+  * **GitHub's Dependabot alerts** to notify us of vulnerable dependencies.
+* **Static Analysis:** **TypeScript** (`tsc --noEmit`) type-checks the codebase, and ESLint enforces code quality across the Next.js/Electron source.
+* **Dev-chain advisories.** Findings that exist only in build/lint tooling (never in the shipped app bundle) are assessed as audit noise, accepted, and monitored until upstream ships an in-range fix.
 
 > **Known accepted advisory:** `braces` (CVE-2026-93687) currently flags as high severity through the dev-only ESLint toolchain (`eslint-config-next` → `fast-glob` → `micromatch` → `braces`). There is no patched release yet (affects all versions up to and including 3.0.3), and it never ships in the installer — it's a build-time linter dependency only. We'll drop the pin/override once upstream publishes a fix.
 
-* **Static Analysis:** We use linters and static analysis tools to identify potential issues in our own codebase:
-  * **`Ruff`** for general linting, style enforcement, and identifying many common code issues.
-  * **`Pylint`** for comprehensive static code analysis and identifying coding standard violations.
-  * **`Prospector`** to run and aggregate results from multiple static analysis tools.
-  * **`Bandit`** for finding common security pitfalls in Python code.
-  * We are also exploring the use of **`Mypy`** for static type checking to improve code robustness.
 * **Vendored Code:** Code vendored from other projects (like components from `sd-prompt-reader`) is included with clear attribution and its original license. We take on the responsibility of maintaining or updating these components as needed within our project. See our `NOTICE.md` file for details.
 
 We are always looking to improve our security posture and appreciate community feedback on our practices.
