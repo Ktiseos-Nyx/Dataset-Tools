@@ -160,7 +160,7 @@ But I hate SmartScreen!
 
 - A portable windows exe with no requirements to install is now available on the most recent releases.
 - Future versions for Linux are coming
-- This portable edition provides no requirements (as far as we're aware) and can be more useful than installing, but be aware it may not cache your settings.
+- This portable edition provides no requirements (as far as we're aware) and can be more useful than installing. It keeps its settings and thumbnail cache in a `data` folder created next to the EXE. API keys in that folder are stored scrambled — unreadable at a glance, but not encrypted — so if you run the EXE from a folder other accounts on the machine can access, assume those users can read them.
 
 ---
 
