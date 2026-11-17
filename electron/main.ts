@@ -14,8 +14,14 @@ const DEV_URL = 'http://localhost:3000';
 const portableDir = process.env.PORTABLE_EXECUTABLE_DIR;
 if (portableDir) {
   const persistentUserData = path.join(portableDir, 'data');
-  app.setPath('userData', persistentUserData);
-  fs.mkdirSync(persistentUserData, { recursive: true });
+  try {
+    fs.mkdirSync(persistentUserData, { recursive: true });
+    app.setPath('userData', persistentUserData);
+  } catch (err) {
+    // Read-only EXE location: fall back to the per-user default location
+    // rather than failing to open the app at all.
+    console.error('[electron] portable data folder unavailable, using default userData:', err);
+  }
 }
 
 // Native window background must be a hex value (not an OKLCH CSS function).
@@ -105,6 +111,10 @@ async function startNextServer(port: number): Promise<void> {
         NODE_ENV: 'production',
         PORT: String(port),
         HOSTNAME: '127.0.0.1',
+        // Default libuv threadpool is 4; slow/hung drive reads (which cannot be
+        // cancelled mid-syscall) can starve it and wedge every fs route. More
+        // threads = a wedged session degrades instead of dying (Nov 18 2026).
+        UV_THREADPOOL_SIZE: '16',
         ELECTRON_USER_DATA: app.getPath('userData'),
       },
       stdio: 'inherit',
