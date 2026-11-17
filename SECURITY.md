@@ -88,8 +88,13 @@ A browser extension with content-script permissions can inject into any page
 the user opens — including a page served from localhost. No web application
 can prevent that; it is inherent to how extension permissions work, and it is
 true of every local web app (dev servers, routers, etc.), not just this one.
-The practical exposure is limited to what the page itself shows, and the app
-never serves secrets on those pages.
+What injected code gets is also **not** limited to what the page displays:
+it runs same-origin and can call the app's own API routes — filesystem
+listings, image reads, metadata parsing — exactly as the page's own
+JavaScript can. In practice: an extension can do whatever the app's UI can
+do against the local filesystem surface. The loopback binding is what keeps
+that surface local; it does not (and cannot) discriminate between the
+page's JavaScript and an extension's.
 
 ### About code signing
 
