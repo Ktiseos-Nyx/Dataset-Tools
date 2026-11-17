@@ -43,7 +43,7 @@ To help us understand and fix the issue quickly, please include:
 * Steps to reproduce it (be as detailed as possible).
 * Which version/branch of Dataset-Tools is affected.
 * The potential impact if the vulnerability is exploited.
-* Any proof-of-of-concept code (if you have it and it's safe to share).
+* Any proof-of-concept code (if you have it and it's safe to share).
 * Your environment details (OS, Node.js/Electron version, app version) if relevant.
 
 We'll do our best to acknowledge your report within 48-72 hours. As an independent project, timelines for fixes will vary based on complexity and severity, but we are committed to addressing confirmed vulnerabilities.
