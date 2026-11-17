@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
-import path from 'path';
 import mime from 'mime-types';
 import { originGuard, resolveContained } from '@/lib/fs-guard';
 
