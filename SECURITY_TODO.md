@@ -56,10 +56,12 @@ paths now bind loopback: `next dev -H 127.0.0.1` (both the `dev` script and
 
 ## Still deferred
 
-1. **`HOSTNAME` env override on the standalone server.** A caller can still set
-   `HOSTNAME=0.0.0.0` for `npm start`; that's a deliberate operator action, not
-   a default. If belt-and-braces is ever wanted, the postbuild script could
-   refuse a non-loopback `HOSTNAME` explicitly.
+1. **Standalone binding overrides.** Ambient `HOSTNAME` inheritance is
+   neutralized by `scripts/start-standalone.mjs` (loopback unless the operator
+   explicitly sets `DT_HOSTNAME`). Deliberate non-loopback deployments remain
+   possible but now require a purpose-named variable — if belt-and-braces is
+   ever wanted, the postbuild script could also refuse a non-loopback
+   `DT_HOSTNAME` for release artifacts.
 2. **(Trainer-UI / ecosystem phase only)** If the embedded copy ever serves over
    a real interface or behind auth: add a per-session allowed-roots allowlist
    enforced server-side instead of trusting client `baseFolder`, plus standard
