@@ -35,20 +35,31 @@ allowing any path resolution, so a client-supplied baseFolder can't reach outsid
 the repo. The final write target (including `saveAsCopy` sibling names) is also
 re-validated through the same containment pipeline.
 
+### 3. Read routes folded onto the hardened helper ✅
+`/api/fs`, `/api/image`, `/api/metadata` (GET) and `/api/thumbnail` all use the
+shared `originGuard` + `resolveContained` helpers from `lib/fs-guard.ts`:
+loopback-only host/origin gate plus `path.relative` containment (the old
+`startsWith` prefix checks — vulnerable to sibling-folder tricks — are gone).
+On any public deployment (Vercel demo) these routes refuse every request with
+403 by design; the demo parses in-browser. Regression fixtures:
+`scripts/generate-civitai-fixtures.mjs` → `fixtures/` (Civitai on-site params +
+ComfyUI URN:AIR paths).
+
 ## Still deferred
 
-1. **Bind to `127.0.0.1` only — never `0.0.0.0`.** Single most important control
-   for the packaged executable; keeps the server off the network entirely.
-   (`next start -H 127.0.0.1`, or the equivalent in the Electron/embedded host.)
-   Not yet done because `next dev` doesn't support `-H` the same way and the
-   app is currently used only via `npm run dev`.
-2. **(Trainer-UI / ecosystem phase only)** If the embedded copy ever serves over
+1. **(Trainer-UI / ecosystem phase only)** If the embedded copy ever serves over
    a real interface or behind auth: add a per-session allowed-roots allowlist
    enforced server-side instead of trusting client `baseFolder`, plus standard
    CSRF tokens. That's the point where the "enterprise" treatment is warranted.
+2. Residual accepted risk: another **local** process (same user account) can
+   still reach these loopback endpoints, as it could reach any local app.
+   Closing that fully would mean per-instance capabilities in Electron IPC.
 
 ## Pointers
-- Write route: `app/api/metadata-write/route.ts` (`resolveTarget` / `isInside`)
-- Shared-but-weaker read-route validation: `app/api/fs/route.ts`,
-  `app/api/image/route.ts`, `app/api/metadata/route.ts` (still use the
-  `startsWith` prefix check — fold them onto the hardened helper when convenient).
+- Shared guard helpers: `lib/fs-guard.ts` (`originGuard` / `resolveContained` /
+  `isInside`) — mirrors the in-route copies that remain in
+  `app/api/metadata-write/route.ts`, `app/api/safetensors/route.ts`, and
+  `app/api/watch/route.ts` (hardened identically; consolidation into the shared
+  helper is optional cleanup).
+- Write route specifics: `app/api/metadata-write/route.ts`
+  (`resolveTarget` / `isInside`).

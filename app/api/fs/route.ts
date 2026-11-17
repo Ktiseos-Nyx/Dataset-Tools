@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { originGuard, resolveContained } from '@/lib/fs-guard';
 
 const IMAGE_EXTENSIONS = new Set([
   '.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tiff', '.tif',
@@ -20,18 +21,15 @@ export async function GET(request: Request) {
   const showHidden = searchParams.get('showHidden') === 'true';
   const baseFolder = searchParams.get('baseFolder') || '.';
 
-  // Resolve the base folder first
-  const resolvedBase = path.resolve(baseFolder);
-
-  // Build the full path: if dirPath is relative, it's relative to baseFolder
-  // If dirPath is absolute, use it directly
-  const fullPath = path.isAbsolute(dirPath) ? dirPath : path.join(resolvedBase, dirPath);
-  const resolvedPath = path.resolve(fullPath);
-
-  // Security: prevent directory traversal outside the base folder
-  // But allow browsing any folder if it's within the selected base
-  if (!resolvedPath.startsWith(resolvedBase)) {
-      return NextResponse.json({ error: 'Access denied - path outside base folder' }, { status: 403 });
+  // Desktop-only filesystem read: loopback host/origin gate + containment via
+  // path.relative (shared helper, mirrors metadata-write/safetensors).
+  const guardError = originGuard(request);
+  if (guardError) {
+    return NextResponse.json({ error: guardError }, { status: 403 });
+  }
+  const resolvedPath = resolveContained(baseFolder, dirPath);
+  if (!resolvedPath) {
+    return NextResponse.json({ error: 'Access denied - path outside base folder' }, { status: 403 });
   }
 
   try {

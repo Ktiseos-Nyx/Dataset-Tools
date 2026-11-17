@@ -8,6 +8,7 @@ import exifParser from 'exif-parser';
 import iconv from 'iconv-lite';
 import zlib from 'zlib';
 import { classifyNodes, type NodeLookupResult } from '@/lib/comfyui-node-registry';
+import { originGuard, resolveContained } from '@/lib/fs-guard';
 
 // A ComfyUI API-format workflow is a map of node id → node object. Inputs are
 // dynamic JSON, so values are `unknown` and narrowed at the point of use.
@@ -2078,11 +2079,14 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'File path is required' }, { status: 400 });
   }
 
-  const resolvedBase = path.resolve(baseFolder);
-  const fullPath = path.isAbsolute(filePath) ? filePath : path.join(resolvedBase, filePath);
-  const resolvedPath = path.resolve(fullPath);
-
-  if (!resolvedPath.startsWith(resolvedBase)) {
+  // Desktop-only filesystem read: loopback host/origin gate + containment via
+  // path.relative (shared helper, mirrors metadata-write/safetensors).
+  const guardError = originGuard(request);
+  if (guardError) {
+    return NextResponse.json({ error: guardError }, { status: 403 });
+  }
+  const resolvedPath = resolveContained(baseFolder, filePath);
+  if (!resolvedPath) {
     return NextResponse.json({ error: 'Access denied - path outside base folder' }, { status: 403 });
   }
 
