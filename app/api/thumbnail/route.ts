@@ -80,7 +80,10 @@ function getCachePath(filePath: string, size: number): string {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const filePath = searchParams.get('path')
-  const size = Math.min(Math.max(parseInt(searchParams.get('size') || '200', 10), 32), 800)
+  // parseInt of garbage is NaN; Math.max/min keep NaN, and sharp.resize(NaN)
+  // throws synchronously — guard at the source so the class dies entirely.
+  const parsedSize = parseInt(searchParams.get('size') || '200', 10)
+  const size = Number.isFinite(parsedSize) ? Math.min(Math.max(parsedSize, 32), 800) : 200
   const baseFolder = searchParams.get('baseFolder') || '.'
 
   if (!filePath) {
@@ -146,17 +149,21 @@ export async function GET(request: Request) {
         return new NextResponse(null, { status: 503 })
       }
       let holdTimer: NodeJS.Timeout | undefined
-      const slotDeadline = new Promise<Buffer>((_, reject) => {
-        holdTimer = setTimeout(() => {
-          reject(Object.assign(new Error('Timed out generating thumbnail'), { name: 'TimeoutError' }))
-        }, FS_READ_DEADLINE_MS)
-      })
+      // Build the sharp pipeline BEFORE the deadline timer: a synchronous
+      // throw (e.g. from resize) must happen while no timer is scheduled —
+      // otherwise the timer's later rejection has no handler and becomes an
+      // unhandled rejection that can kill the server (caught by CodeRabbit).
       const generation = sharp(resolvedPath)
         .timeout({ seconds: 60 })
         .resize(size, size, { fit: 'cover', position: 'centre' })
         .webp({ quality: 80 })
         .toBuffer()
       generation.catch(() => {}) // background failure after a deadline loss is non-fatal
+      const slotDeadline = new Promise<Buffer>((_, reject) => {
+        holdTimer = setTimeout(() => {
+          reject(Object.assign(new Error('Timed out generating thumbnail'), { name: 'TimeoutError' }))
+        }, FS_READ_DEADLINE_MS)
+      })
       const buffer = await Promise.race([generation, slotDeadline]).finally(() => {
         clearTimeout(holdTimer)
       })
