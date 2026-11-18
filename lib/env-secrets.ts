@@ -3,9 +3,12 @@ import path from 'path'
 
 // Shared location of the app's persisted settings. Under Electron the main
 // process sets ELECTRON_USER_DATA; dev/Vercel fall back to the project root.
+// turbopackIgnore on the fallback resolve: without it, the instrumentation
+// bundle's tracer treats the dynamic path as whole-project tracing and sweeps
+// dist/ (user data, old installers — 1GB+) into the standalone (Nov 18 2026).
 export const DATA_DIR = process.env.ELECTRON_USER_DATA
   ? path.resolve(process.env.ELECTRON_USER_DATA)
-  : path.resolve('.')
+  : path.resolve(/* turbopackIgnore: true */ '.')
 export const ENV_PATH = path.join(DATA_DIR, '.env.local')
 
 // Only these keys get obfuscation at rest. Every other value in .env.local is
