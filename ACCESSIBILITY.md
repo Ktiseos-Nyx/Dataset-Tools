@@ -25,8 +25,10 @@ Dataset Tools is a local-first desktop/web application for viewing and editing i
 
 ## Known limitations
 
-* The interface is heavily pointer-driven (file tree, drag-and-drop, click-to-inspect). Keyboard-only use is possible in the web UI but has not been audited; expect gaps.
+* The interface is heavily pointer-driven (file tree, drag-and-drop, click-to-inspect). Keyboard use works through the basics — every file row and thumbnail tile is a real focusable button, and menus/dialogs use Radix primitives with built-in arrow-key and Escape support — but there is no arrow-key navigation *within* the file grid: keyboard users tab through files one button at a time.
+* File selection is conveyed visually only (a background-color change) — screen readers are not currently told which file is selected (`aria-selected`/`aria-pressed` not set on file items).
 * The metadata panels are dense, visually-layered tables — we have not yet verified how screen readers announce them.
+* Some icon-only toolbar buttons rely on `title` attributes rather than `aria-label`.
 * Drag-and-drop is the primary import gesture in some flows; equivalents exist (folder picker, file picker) but aren't documented as accessibility alternatives yet.
 * No formal WCAG audit has been performed. We name WCAG as a direction, not a claim.
 
