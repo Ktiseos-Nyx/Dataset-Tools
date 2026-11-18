@@ -77,12 +77,16 @@ export async function readEnvFile(): Promise<Record<string, string>> {
 // CodeRabbit). Called from instrumentation.ts before any request is served:
 // decode the at-rest secrets and restore the real values into process.env.
 // Legacy plaintext needs no restore — Next already loaded it correctly.
+// Precedence (CodeRabbit, Nov 18 2026): a value the environment already
+// supplies WINS — the at-rest copy only fills a gap, it never overrides an
+// operator-provided one (12-factor convention; matters on deployments where
+// GITHUB_TOKEN comes from the environment rather than the settings UI).
 export async function restoreEnvSecrets(): Promise<void> {
   try {
     const env = await readEnvFile()
     for (const key of SECRET_KEYS) {
       const value = env[key]
-      if (value) process.env[key] = value
+      if (value && !process.env[key]) process.env[key] = value
     }
   } catch {
     // Missing or unreadable .env.local — nothing to restore.
