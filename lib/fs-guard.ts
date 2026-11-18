@@ -65,3 +65,12 @@ export function resolveContained(baseFolder: string, target: string): string | n
   const resolvedPath = path.resolve(fullPath);
   return isInside(resolvedBase, resolvedPath) ? resolvedPath : null;
 }
+
+/**
+ * Generous deadline for filesystem reads. Slow-but-alive drives (2.5" portables
+ * behind USB hubs, ~35 MB/s) legitimately take seconds and must pass; a drive
+ * that never answers would otherwise hold a libuv threadpool slot AND its
+ * multi-MB buffer forever, wedging the whole server — Nov 18 2026: one slow
+ * portable-HDD folder poisoned healthy C: folders for the rest of the session.
+ */
+export const FS_READ_DEADLINE_MS = 60_000;

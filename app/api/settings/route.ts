@@ -1,16 +1,9 @@
 import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
-
-// Under Electron the main process sets ELECTRON_USER_DATA to the per-user
-// app-data dir (install dir is read-only in a packaged app). Fall back to the
-// project root for dev/Vercel so existing behavior is unchanged.
-const DATA_DIR = process.env.ELECTRON_USER_DATA
-  ? path.resolve(process.env.ELECTRON_USER_DATA)
-  : path.resolve('.')
+import { DATA_DIR, ENV_PATH, SECRET_KEYS, scrambleSecret, readEnvFile } from '@/lib/env-secrets'
 
 const CONFIG_PATH = path.join(DATA_DIR, 'settings.json')
-const ENV_PATH = path.join(DATA_DIR, '.env.local')
 
 async function readConfig(): Promise<Record<string, unknown>> {
   try {
@@ -26,30 +19,13 @@ async function writeConfig(config: Record<string, unknown>): Promise<void> {
 }
 
 async function readEnvLocal(): Promise<Record<string, string>> {
-  try {
-    const data = await fs.readFile(ENV_PATH, 'utf-8')
-    const env: Record<string, string> = {}
-    for (const line of data.split('\n')) {
-      const trimmed = line.trim()
-      if (!trimmed || trimmed.startsWith('#')) continue
-      const eqIdx = trimmed.indexOf('=')
-      if (eqIdx === -1) continue
-      const key = trimmed.slice(0, eqIdx).trim()
-      let value = trimmed.slice(eqIdx + 1).trim()
-      // Strip surrounding quotes
-      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-        value = value.slice(1, -1)
-      }
-      env[key] = value
-    }
-    return env
-  } catch {
-    return {}
-  }
+  return readEnvFile()
 }
 
 async function writeEnvLocal(env: Record<string, string>): Promise<void> {
-  const lines = Object.entries(env).map(([key, value]) => `${key}=${value}`)
+  const lines = Object.entries(env).map(
+    ([key, value]) => `${key}=${SECRET_KEYS.has(key) ? scrambleSecret(value) : value}`
+  )
   await fs.writeFile(ENV_PATH, lines.join('\n') + '\n', 'utf-8')
 }
 

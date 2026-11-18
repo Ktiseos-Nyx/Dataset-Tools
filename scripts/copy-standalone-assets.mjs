@@ -4,7 +4,7 @@
 // must be moved manually or the packaged Electron app serves a blank page.
 //
 // Runs automatically as the `postbuild` npm script.
-import { cpSync, existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const root = process.cwd()
@@ -52,4 +52,57 @@ if (serverSrc.includes(HOSTNAME_LOOPBACK)) {
   // might bind to all interfaces.
   console.error('[postbuild] ERROR: unrecognized HOSTNAME default in server.js; aborting')
   process.exit(1)
+}
+
+// Guard against the standalone trace missing Next's compiled Turbopack runtime.
+// The runtime is loaded via a dynamic external require the tracer can't see
+// (see next.config.mjs outputFileTracingIncludes). When it's absent, dev and
+// `npm start` still work — require walk-up finds the file in the repo's
+// node_modules — but the packaged Electron app (no parent node_modules) 500s on
+// every API route. Fail loudly here instead of shipping that.
+const runtimeProbe = join(
+  standalone,
+  'node_modules',
+  'next',
+  'dist',
+  'compiled',
+  'next-server',
+  'app-route-turbo.runtime.prod.js'
+)
+
+if (!existsSync(runtimeProbe)) {
+  console.error(
+    '[postbuild] ERROR: standalone is missing next/dist/compiled/next-server/app-route-turbo.runtime.prod.js — ' +
+      'the packaged app would 500 on every API route. Check outputFileTracingIncludes in next.config.mjs; aborting.'
+  )
+  process.exit(1)
+}
+console.log('[postbuild] compiled next-server runtime present in standalone')
+
+// Scrub any user data the tracer may have swept into the standalone. Nov 18
+// 2026: the trace copied the developer's live portable data folder
+// (dist/data/.env.local — scrambled-but-decodable API keys) into the packaged
+// EXE. Whatever tracer quirk causes the sweep, the artifact must never
+// contain credential-bearing files — delete them and say so.
+function scrubSecretFiles(dir) {
+  let removed = 0
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name)
+    if (entry.isDirectory()) removed += scrubSecretFiles(full)
+    else if (entry.name === '.env.local') {
+      rmSync(full)
+      removed++
+    }
+  }
+  return removed
+}
+
+const scrubbed = scrubSecretFiles(standalone)
+if (scrubbed > 0) {
+  console.warn(
+    `[postbuild] WARNING: removed ${scrubbed} .env.local file(s) that the tracer swept into the standalone. ` +
+      'The packaged artifact must never contain credential files — if this recurs, run the portable EXE from outside the repo.'
+  )
+} else {
+  console.log('[postbuild] no swept credential files in standalone')
 }

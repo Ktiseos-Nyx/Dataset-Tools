@@ -8,7 +8,7 @@ import exifParser from 'exif-parser';
 import iconv from 'iconv-lite';
 import zlib from 'zlib';
 import { classifyNodes, type NodeLookupResult } from '@/lib/comfyui-node-registry';
-import { originGuard, resolveContained } from '@/lib/fs-guard';
+import { FS_READ_DEADLINE_MS, originGuard, resolveContained } from '@/lib/fs-guard';
 
 // A ComfyUI API-format workflow is a map of node id → node object. Inputs are
 // dynamic JSON, so values are `unknown` and narrowed at the point of use.
@@ -2091,7 +2091,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const file = await fs.readFile(resolvedPath);
+    const file = await fs.readFile(resolvedPath, { signal: AbortSignal.timeout(FS_READ_DEADLINE_MS) });
     const stats = await fs.stat(resolvedPath);
     const mimeType = mime.lookup(resolvedPath) || 'application/octet-stream';
 
@@ -2109,6 +2109,9 @@ export async function GET(request: Request) {
     if (error instanceof Error) {
       if ('code' in error && error.code === 'ENOENT') {
         return NextResponse.json({ error: 'File not found' }, { status: 404 });
+      }
+      if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+        return NextResponse.json({ error: 'Drive not responding (timed out reading file)' }, { status: 504 });
       }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }

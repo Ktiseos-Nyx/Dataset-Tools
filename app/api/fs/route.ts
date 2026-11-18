@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
-import { originGuard, resolveContained } from '@/lib/fs-guard';
+import { FS_READ_DEADLINE_MS, originGuard, resolveContained } from '@/lib/fs-guard';
 
 const IMAGE_EXTENSIONS = new Set([
   '.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tiff', '.tif',
@@ -33,7 +33,20 @@ export async function GET(request: Request) {
   }
 
   try {
-    const files = await fs.readdir(resolvedPath, { withFileTypes: true });
+    // readdir does not consume options.signal (verified against Node 22 source —
+    // the binding call threads only encoding/withFileTypes), so the deadline is
+    // enforced on the RESPONSE: if the listing hasn't arrived in time we answer
+    // 504; a stalled native read may continue in the background holding one
+    // threadpool slot (bounded impact with UV_THREADPOOL_SIZE raised).
+    let readdirTimer: NodeJS.Timeout | undefined
+    const files = await Promise.race([
+      fs.readdir(resolvedPath, { withFileTypes: true }),
+      new Promise<never>((_, reject) => {
+        readdirTimer = setTimeout(() => {
+          reject(Object.assign(new Error('Drive not responding (timed out reading directory)'), { name: 'TimeoutError' }))
+        }, FS_READ_DEADLINE_MS)
+      }),
+    ]).finally(() => clearTimeout(readdirTimer));
 
     // Get file stats for sorting
     const fileListPromises = files.map(async (file) => {
@@ -71,6 +84,9 @@ export async function GET(request: Request) {
         // More specific error handling
         if ('code' in error && error.code === 'ENOENT') {
             return NextResponse.json({ error: 'Directory not found' }, { status: 404 });
+        }
+        if (error.name === 'TimeoutError') {
+            return NextResponse.json({ error: 'Drive not responding (timed out reading directory)' }, { status: 504 });
         }
         return NextResponse.json({ error: error.message }, { status: 500 });
     }

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import mime from 'mime-types';
-import { originGuard, resolveContained } from '@/lib/fs-guard';
+import { FS_READ_DEADLINE_MS, originGuard, resolveContained } from '@/lib/fs-guard';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -41,7 +41,7 @@ export async function GET(request: Request) {
       });
     }
 
-    const file = await fs.readFile(resolvedPath);
+    const file = await fs.readFile(resolvedPath, { signal: AbortSignal.timeout(FS_READ_DEADLINE_MS) });
     const contentType = mime.lookup(resolvedPath) || 'application/octet-stream';
 
     return new NextResponse(file, {
@@ -57,6 +57,9 @@ export async function GET(request: Request) {
     if (error instanceof Error) {
       if ('code' in error && error.code === 'ENOENT') {
         return NextResponse.json({ error: 'File not found' }, { status: 404 });
+      }
+      if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+        return NextResponse.json({ error: 'Drive not responding (timed out reading file)' }, { status: 504 });
       }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }

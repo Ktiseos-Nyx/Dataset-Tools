@@ -7,6 +7,23 @@ import * as fs from 'fs';
 
 const DEV_URL = 'http://localhost:3000';
 
+// electron-builder's portable target runs from a FRESH temp dir every launch,
+// which would wipe settings.json and the thumbnail cache each session. When
+// running as a portable, point userData at a persistent 'data' folder next to
+// the EXE instead. Must run before anything calls app.getPath('userData').
+const portableDir = process.env.PORTABLE_EXECUTABLE_DIR;
+if (portableDir) {
+  const persistentUserData = path.join(portableDir, 'data');
+  try {
+    fs.mkdirSync(persistentUserData, { recursive: true });
+    app.setPath('userData', persistentUserData);
+  } catch (err) {
+    // Read-only EXE location: fall back to the per-user default location
+    // rather than failing to open the app at all.
+    console.error('[electron] portable data folder unavailable, using default userData:', err);
+  }
+}
+
 // Native window background must be a hex value (not an OKLCH CSS function).
 // These match the app theme in globals.css: oklch(0.145 0 0) / oklch(1 0 0).
 const DARK_BG = '#0a0a0a';
@@ -94,9 +111,17 @@ async function startNextServer(port: number): Promise<void> {
         NODE_ENV: 'production',
         PORT: String(port),
         HOSTNAME: '127.0.0.1',
+        // Default libuv threadpool is 4; slow/hung drive reads (which cannot be
+        // cancelled mid-syscall) can starve it and wedge every fs route. More
+        // threads = a wedged session degrades instead of dying (Nov 18 2026).
+        UV_THREADPOOL_SIZE: '16',
         ELECTRON_USER_DATA: app.getPath('userData'),
       },
       stdio: 'inherit',
+      // node.exe is a console-subsystem binary: spawned from the GUI Electron
+      // process without this flag, Windows allocates a visible console window
+      // for it every launch (Nov 18 2026). Hide it — the server still runs.
+      windowsHide: true,
     }
   );
 

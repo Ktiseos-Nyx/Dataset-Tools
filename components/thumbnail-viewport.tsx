@@ -186,6 +186,31 @@ export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refr
 
 const MODEL_EXTENSIONS = new Set(['.safetensors'])
 
+// Small client-side concurrency cap for thumbnail fetches. Without it, a slow
+// folder's pending <img> requests hold the browser's ~6-connections-per-origin
+// budget until the server answers (queued thumbs = up to a minute each), which
+// starves navigation itself — Nov 18 2026: C: folders became unreachable while
+// an external drive's thumbnails were pending. Fetch-based thumbs through this
+// pool can also be aborted on unmount, freeing slots instantly on navigation.
+const MAX_BROWSER_THUMBS = 4
+let activeBrowserThumbs = 0
+const browserThumbQueue: Array<() => void> = []
+
+async function acquireBrowserThumbSlot(): Promise<void> {
+  if (activeBrowserThumbs < MAX_BROWSER_THUMBS) {
+    activeBrowserThumbs++
+    return
+  }
+  await new Promise<void>(resolve => browserThumbQueue.push(resolve))
+  // Slot was transferred by release; the count already reflects it.
+}
+
+function releaseBrowserThumbSlot(): void {
+  const next = browserThumbQueue.shift()
+  if (next) next() // slot transferred — count unchanged
+  else activeBrowserThumbs--
+}
+
 function isModelFile(name: string): boolean {
   return MODEL_EXTENSIONS.has(name.slice(name.lastIndexOf('.')).toLowerCase())
 }
@@ -194,6 +219,8 @@ function Thumb({ path: filePath, baseFolder, file }: { path: string; baseFolder:
   const ref = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [thumbUrl, setThumbUrl] = useState<string | null>(null)
+  const [failed, setFailed] = useState(false)
 
   const fileName = filePath.split('/').pop() ?? filePath
 
@@ -219,6 +246,42 @@ function Thumb({ path: filePath, baseFolder, file }: { path: string; baseFolder:
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    if (!visible || objectUrl) return
+    const controller = new AbortController()
+    let slotHeld = false
+    let fetchedUrl: string | null = null
+
+    void (async () => {
+      try {
+        await acquireBrowserThumbSlot()
+        slotHeld = true
+        if (controller.signal.aborted) return
+        const res = await fetch(
+          `/api/thumbnail?path=${encodeURIComponent(filePath)}&size=152&baseFolder=${encodeURIComponent(baseFolder)}`,
+          { signal: controller.signal }
+        )
+        if (!res.ok) throw new Error(`thumbnail ${res.status}`)
+        if (controller.signal.aborted) return
+        const blob = await res.blob()
+        if (controller.signal.aborted) return
+        fetchedUrl = URL.createObjectURL(blob)
+        setThumbUrl(fetchedUrl)
+      } catch {
+        if (!controller.signal.aborted) setFailed(true)
+      } finally {
+        if (slotHeld) releaseBrowserThumbSlot()
+      }
+    })()
+
+    return () => {
+      // Navigating away aborts in-flight/pending fetches immediately, freeing
+      // the browser's connection slots for the next folder.
+      controller.abort()
+      if (fetchedUrl) URL.revokeObjectURL(fetchedUrl)
+    }
+  }, [visible, objectUrl, filePath, baseFolder])
+
   if (isModelFile(fileName)) {
     return (
       <div className="w-[76px] h-[76px] rounded bg-primary/10 flex items-center justify-center">
@@ -227,18 +290,20 @@ function Thumb({ path: filePath, baseFolder, file }: { path: string; baseFolder:
     )
   }
 
+  const displayUrl = objectUrl ?? thumbUrl
   return (
     <div
       ref={ref}
       className="w-[76px] h-[76px] rounded bg-muted/50 flex items-center justify-center overflow-hidden"
     >
-      {visible || objectUrl ? (
+      {failed ? (
+        <FileImage className="w-5 h-5 text-muted-foreground/40" />
+      ) : displayUrl ? (
         <img
-          src={objectUrl ?? `/api/thumbnail?path=${encodeURIComponent(filePath)}&size=152&baseFolder=${encodeURIComponent(baseFolder)}`}
+          src={displayUrl}
           alt=""
           className={`object-cover w-full h-full transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setLoaded(true)}
-          loading="lazy"
         />
       ) : (
         <FileImage className="w-5 h-5 text-muted-foreground/20" />
