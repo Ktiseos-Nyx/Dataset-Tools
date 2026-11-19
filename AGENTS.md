@@ -44,7 +44,10 @@ rules apply THERE, not here.
   `filter: ["standalone/**/*"]` — copying `from: .next/standalone` directly silently drops the
   standalone's own `node_modules` (sharp's native binary vanishes).
 - `next.config.mjs` → `outputFileTracingExcludes` keeps secrets (`.env*`, `.git`, etc.) out of the
-  standalone bundle. Don't loosen it.
+  standalone bundle. Don't loosen it. NOTE: excludes do NOT stop Next's own unconditional
+  `.env`/`.env.production` copy into standalone (build/index.js `writeStandaloneDirectory`) — the
+  postbuild scrub in `scripts/copy-standalone-assets.mjs` is the gate for env files; both layers
+  must stay.
 
 ## Package.json
 
@@ -55,3 +58,13 @@ rules apply THERE, not here.
   advisory. Don't re-add them unless deliberately adopting them in code.
 - `eslint` stays on v9 — v10 exists but `eslint-config-next`'s plugin chain does not support it yet;
   the "deprecated" npm warning is cosmetic.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
