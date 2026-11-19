@@ -25,8 +25,13 @@ interface ThumbnailViewportProps {
 
 // A hung thumbnail request must not hold a browser connection slot forever:
 // the deadline covers BOTH the response wait and the blob read (CR PR #250).
-// 150s = the server's worst bounded path (90s queue wait + 60s read deadline).
-const THUMB_FETCH_DEADLINE_MS = 150_000
+// The number is an end-to-end budget matching the server's worst sequential
+// path to a response: cache-validation deadline (60s) + thumbnail-queue wait
+// (90s) + generation hold deadline (60s) = 210s, + 30s transfer slack for
+// the blob read. Below 210s the client would abort requests the server was
+// still legitimately working on (CR PR #250 round 4). Only pathological
+// waits hit this; healthy tiles load in milliseconds.
+const THUMB_FETCH_DEADLINE_MS = 240_000
 
 export function ThumbnailViewport({ currentDir, onFileSelect, selectedFile, refreshKey, localItems }: ThumbnailViewportProps) {
   const [serverImages, setServerImages] = useState<FsItem[]>([])

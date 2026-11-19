@@ -104,37 +104,39 @@ export function expandEnvReferences(
   )
 }
 
-// Startup restore. Next.js loads .env.local into process.env verbatim, so
-// obfuscated secret values would reach consumers (GitHub search, license
-// lookup) as the encoded "enc:v1:..." string after every restart (caught by
-// CodeRabbit). Called from instrumentation.ts before any request is served.
-// The at-rest file is read VERBATIM (encoded-value convention), so three
-// cases per secret key:
-//  1. Stored value carries the marker → decode and restore the real value,
-//     but only when the environment doesn't already supply a real plaintext
-//     value (env-supplied plaintext WINS — CodeRabbit Nov 18) or still holds
-//     the encoded form (e.g. an operator exported the raw file contents).
-//  2. Stored value is legacy plaintext → Next already loaded it (and expanded
-//     any ${VAR} reference) when it can see the file; restore it into
-//     process.env only if absent, expanded the same way — the packaged app's
-//     user-data .env.local is NOT auto-loaded by Next, so this case matters
-//     there.
-//  3. Nothing stored → nothing to restore.
+// Startup restore + runtime configuration load. Next.js loads .env.local into
+// process.env in dev and `next start`, but the standalone server does NOT load
+// env files itself — and the packaged artifact deliberately contains none
+// (postbuild scrub, CodeRabbit PR #250 round 4). instrumentation.ts calls this
+// before any request is served, so this is the established configuration-
+// loading mechanism for the packaged/standalone launch path. Two cases per
+// key, letting the real environment always win:
+//
+//  1. Secret keys (at-rest `enc:v1:...`): decode and restore the real value
+//     only when the environment doesn't already supply a real plaintext value
+//     (env-supplied plaintext WINS — CodeRabbit Nov 18) or still holds the
+//     encoded form (e.g. an operator exported the raw file contents).
+//  2. Legacy plaintext secret, absent from the environment: expand ${VAR}
+//     references (Next-compatible) before exposing it — the packaged app's
+//     user-data .env.local is not auto-loaded by Next.
+//  3. Non-secret keys: restore into the environment when absent (the standalone
+//     server has no other loader), expanded the same way.
 export async function restoreEnvSecrets(): Promise<void> {
   try {
     const env = await readEnvFile()
-    for (const key of SECRET_KEYS) {
-      const stored = env[key]
-      const current = process.env[key]
+    for (const [key, stored] of Object.entries(env)) {
       if (!stored) continue
-      if (stored.startsWith(SECRET_MARKER)) {
-        const decoded = unscrambleSecret(stored)
-        if (decoded && (!current || current.startsWith(SECRET_MARKER))) {
-          process.env[key] = decoded
+      if (SECRET_KEYS.has(key)) {
+        const current = process.env[key]
+        if (stored.startsWith(SECRET_MARKER)) {
+          const decoded = unscrambleSecret(stored)
+          if (decoded && (!current || current.startsWith(SECRET_MARKER))) {
+            process.env[key] = decoded
+          }
+        } else if (!current) {
+          process.env[key] = expandEnvReferences(stored)
         }
-      } else if (!current) {
-        // Legacy plaintext, absent from the environment: expand references
-        // (Next-compatible) before exposing it as the value.
+      } else if (process.env[key] === undefined) {
         process.env[key] = expandEnvReferences(stored)
       }
     }
