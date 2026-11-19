@@ -70,7 +70,7 @@ Standalone builds live on the [Releases](https://github.com/Ktiseos-Nyx/Dataset-
 
 | Platform | Artifact | Status & notes |
 | :--- | :--- | :--- |
-| Windows | NSIS installer + portable EXE | ✅ Supported. Portable keeps its settings and thumbnail cache in a `data` folder next to the EXE (falls back to the default user-data folder if that can't be created); API keys stored there are scrambled, not encrypted — keep it out of shared folders. |
+| Windows | NSIS installer + portable EXE | ✅ Supported. Portable keeps its settings and thumbnail cache in a `data` folder next to the EXE; if that folder can't be created it falls back to the OS user-data folder (`%APPDATA%\Dataset Tools` on Windows) — copy that too if you're moving a portable install between machines. API keys stored there are scrambled, not encrypted — keep them out of shared folders. |
 | Linux | AppImage (x64) | ⚠️ **Experimental — not yet verified on a desktop Linux install** (built + smoke-tested only). Portable, no install step: download, `chmod +x`, run. Modern distros may need `libfuse2` (or use `--appimage-extract`). Report what works/breaks in [Discussions](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions). |
 | macOS | — | Not planned as an Electron build; use the CLI/web install above. |
 

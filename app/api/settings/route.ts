@@ -23,6 +23,9 @@ async function readEnvLocal(): Promise<Record<string, string>> {
 }
 
 async function writeEnvLocal(env: Record<string, string>): Promise<void> {
+  // Reference expansion sees the file's own values too (a legacy line may
+  // reference a sibling line in the same file — @next/env chained semantics).
+  const source: Record<string, string | undefined> = { ...process.env, ...env }
   const lines = Object.entries(env).map(([key, value]) => {
     if (!SECRET_KEYS.has(key)) return `${key}=${value}`
     // Encoded-value convention: a value already carrying the at-rest marker
@@ -33,7 +36,7 @@ async function writeEnvLocal(env: Record<string, string>): Promise<void> {
     // this, saving one secret re-encoded a literal "${GH_TOKEN}" reference
     // as the token itself, and every consumer saw garbage after restart
     // (CodeRabbit PR #250).
-    return `${key}=${scrambleSecret(expandEnvReferences(value))}`
+    return `${key}=${scrambleSecret(expandEnvReferences(value, source))}`
   })
   await fs.writeFile(ENV_PATH, lines.join('\n') + '\n', 'utf-8')
 }
