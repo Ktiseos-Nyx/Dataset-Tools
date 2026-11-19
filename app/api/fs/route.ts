@@ -33,20 +33,23 @@ export async function GET(request: Request) {
   }
 
   try {
-    // readdir does not consume options.signal (verified against Node 22 source —
-    // the binding call threads only encoding/withFileTypes), so the deadline is
-    // enforced on the RESPONSE: if the listing hasn't arrived in time we answer
-    // 504; a stalled native read may continue in the background holding one
-    // threadpool slot (bounded impact with UV_THREADPOOL_SIZE raised).
-    let readdirTimer: NodeJS.Timeout | undefined
-    const files = await Promise.race([
-      fs.readdir(resolvedPath, { withFileTypes: true }),
-      new Promise<never>((_, reject) => {
-        readdirTimer = setTimeout(() => {
-          reject(Object.assign(new Error('Drive not responding (timed out reading directory)'), { name: 'TimeoutError' }))
-        }, FS_READ_DEADLINE_MS)
-      }),
-    ]).finally(() => clearTimeout(readdirTimer));
+    // Neither readdir nor fs.promises.stat consumes options.signal (verified
+    // against Node 22 source — the bindings thread only encoding/withFileTypes),
+    // so the deadline is enforced on the RESPONSE — and it must cover the WHOLE
+    // listing phase: the readdir AND the per-file stat fan-out below it.
+    // Clearing the timer after readdir alone (the previous shape) let a pending
+    // stat hang the request forever with no 504 — hit live Nov 19 2026 on a
+    // cold-cache portable run against a slow drive. A stalled native read may
+    // continue in the background holding one threadpool slot (bounded impact
+    // with UV_THREADPOOL_SIZE raised).
+    let deadlineTimer: NodeJS.Timeout | undefined
+    const deadline = new Promise<never>((_, reject) => {
+      deadlineTimer = setTimeout(() => {
+        reject(Object.assign(new Error('Drive not responding (timed out reading directory)'), { name: 'TimeoutError' }))
+      }, FS_READ_DEADLINE_MS)
+    })
+    const listAll = (async () => {
+      const files = await fs.readdir(resolvedPath, { withFileTypes: true });
 
       // Get file stats for sorting
       const fileListPromises = files.map(async (file) => {

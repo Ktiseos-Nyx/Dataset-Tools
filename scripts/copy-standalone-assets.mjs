@@ -89,7 +89,10 @@ function scrubSecretFiles(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const full = join(dir, entry.name)
     if (entry.isDirectory()) removed += scrubSecretFiles(full)
-    else if (entry.name === '.env.local') {
+    else if (/^\.env(\..+)?$/.test(entry.name)) {
+      // .env, .env.local, .env.production, .env.development — every Next env
+      // file flavor can carry credentials; runtime config must come from
+      // environment variables instead (CodeRabbit PR #250).
       rmSync(full)
       removed++
     }
@@ -100,7 +103,7 @@ function scrubSecretFiles(dir) {
 const scrubbed = scrubSecretFiles(standalone)
 if (scrubbed > 0) {
   console.warn(
-    `[postbuild] WARNING: removed ${scrubbed} .env.local file(s) that the tracer swept into the standalone. ` +
+    `[postbuild] WARNING: removed ${scrubbed} .env* file(s) that the tracer swept into the standalone. ` +
       'The packaged artifact must never contain credential files — if this recurs, run the portable EXE from outside the repo.'
   )
 } else {

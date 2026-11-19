@@ -261,24 +261,38 @@ function Thumb({ path: filePath, baseFolder, file }: { path: string; baseFolder:
     const controller = new AbortController()
     let slotHeld = false
     let fetchedUrl: string | null = null
+    let deadlineFired = false
 
     void (async () => {
       try {
         await acquireBrowserThumbSlot()
         slotHeld = true
         if (controller.signal.aborted) return
-        const res = await fetch(
-          `/api/thumbnail?path=${encodeURIComponent(filePath)}&size=152&baseFolder=${encodeURIComponent(baseFolder)}`,
-          { signal: controller.signal }
-        )
-        if (!res.ok) throw new Error(`thumbnail ${res.status}`)
-        if (controller.signal.aborted) return
-        const blob = await res.blob()
-        if (controller.signal.aborted) return
-        fetchedUrl = URL.createObjectURL(blob)
-        setThumbUrl(fetchedUrl)
+        // Deadline covers BOTH the response wait and res.blob(): a hung
+        // connection otherwise holds the browser slot indefinitely (CR PR
+        // #250). Aborting frees the slot via the finally below.
+        const deadline = setTimeout(() => {
+          deadlineFired = true
+          controller.abort()
+        }, THUMB_FETCH_DEADLINE_MS)
+        try {
+          const res = await fetch(
+            `/api/thumbnail?path=${encodeURIComponent(filePath)}&size=152&baseFolder=${encodeURIComponent(baseFolder)}`,
+            { signal: controller.signal }
+          )
+          if (!res.ok) throw new Error(`thumbnail ${res.status}`)
+          if (controller.signal.aborted) return
+          const blob = await res.blob()
+          if (controller.signal.aborted) return
+          fetchedUrl = URL.createObjectURL(blob)
+          setThumbUrl(fetchedUrl)
+        } finally {
+          clearTimeout(deadline)
+        }
       } catch {
-        if (!controller.signal.aborted) setFailed(true)
+        // Deadline abort = the tile genuinely failed; navigation aborts
+        // (component cleanup) just cancel quietly.
+        if (deadlineFired || !controller.signal.aborted) setFailed(true)
       } finally {
         if (slotHeld) releaseBrowserThumbSlot()
       }
