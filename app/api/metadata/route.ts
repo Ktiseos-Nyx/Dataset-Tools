@@ -2091,8 +2091,22 @@ export async function GET(request: Request) {
   }
 
   try {
-    const file = await fs.readFile(resolvedPath, { signal: AbortSignal.timeout(FS_READ_DEADLINE_MS) });
-    const stats = await fs.stat(resolvedPath);
+    // Response deadline covers BOTH fs calls: the AbortSignal cannot stop
+    // native I/O, and a stalled fs.stat would hang with no signal at all —
+    // the timer is what guarantees the 504 lands. Clearing it does not cancel
+    // in-flight native I/O (bounded background impact with UV_THREADPOOL_SIZE).
+    let deadlineTimer: NodeJS.Timeout | undefined
+    const deadline = new Promise<never>((_, reject) => {
+      deadlineTimer = setTimeout(() => {
+        reject(Object.assign(new Error('Drive not responding (timed out reading file)'), { name: 'TimeoutError' }))
+      }, FS_READ_DEADLINE_MS)
+    })
+    const io = (async () => {
+      const file = await fs.readFile(resolvedPath, { signal: AbortSignal.timeout(FS_READ_DEADLINE_MS) });
+      const stats = await fs.stat(resolvedPath);
+      return { file, stats };
+    })();
+    const { file, stats } = await Promise.race([io, deadline]).finally(() => clearTimeout(deadlineTimer));
     const mimeType = mime.lookup(resolvedPath) || 'application/octet-stream';
 
     const metadata = await extractMetadataFromBuffer(

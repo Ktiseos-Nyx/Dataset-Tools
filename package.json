@@ -14,7 +14,7 @@
     "electron:compile": "tsc -p electron/tsconfig.json",
     "electron:dev": "npm run electron:compile && concurrently -k \"next dev -H 127.0.0.1\" \"wait-on http://localhost:3000 && electron .\"",
     "electron:start": "npm run electron:compile && electron . --self-serve",
-    "electron:build": "npm run build && npm run electron:compile && electron-builder",
+    "electron:build": "npm run build && node scripts/assert-electron-runtime.mjs && npm run electron:compile && electron-builder",
     "icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {

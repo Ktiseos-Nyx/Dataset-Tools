@@ -29,7 +29,7 @@
 <div align="center">
 
 **Navigation**
-[Features](#current-capabilities) • [Supported Formats](#supported-formats) • [Installation](#installation) • [Usage](#usage) • [Contributing](#contributing) • [Development Mode](#development-mode)
+[About](#about) • [Installation](#installation) • [Usage](#usage) • [Contributing](#contributing) • [Development Mode](#development-mode)
 
 </div>
 
@@ -39,74 +39,9 @@
 
 **Dataset Tools NextJS Edition** is a **local-first web application** for viewing EXIF metadata from AI-generated images and camera photos, including the software used to create AI images and the camera details embedded in photos.
 
----
-
-### Current Capabilities
-
-<details>
-<summary>Click to expand — feature tables</summary>
-
-Current Capabilities for Web Interface, Desktop Executable and Portable:
-
-| Feature | Status | Details |
-| :--- | :---: | :--- |
-| **Metadata Parsing** | ✅ | Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
-| **Image Viewing** | ✅ | PNG, JPG, JPEG, WebP. Zoom (25-400%), rotation, fit-to-container. |
-| **File Browsing** | ✅ | Desktop: recursive tree of any folder. Web build: browser-local folder access (File System Access API) for images + safetensors. Subfolder navigation & handle persistence in progress — [#220](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues/220). |
-| **Drag & Drop** | ✅ | Drop an image to extract metadata. |
-| **Thumbnails** | ✅ | Sharp-powered WebP thumbnails with disk cache (`.thumbcache/`). |
-| **Sorting** | ✅ | Sort by name, date modified, or file size in both file tree and thumbnail viewport. |
-| **Accent Colors** | ✅ | 7 color themes (zinc, red, orange, green, blue, violet, pink) with dark mode support. |
-| **WebP Viewing** | ✅ | Viewing works for static and animated WebP files. Metadata extraction is format-dependent. |
-| **ComfyUI Workflows** | ✅ | 3-phase extraction + ComfyUI ≥1.26 provenance (cnr_id/aux_id). Node graph tracing, custom node resolution, service detection. |
-| **GitHub Lookup** | ✅ | Fallback search for unknown ComfyUI custom nodes via GitHub code search. |
-| **Safetensors Metadata** | ✅ | Full metadata extraction for LoRA and model files — rank, alpha, training params, dataset tags. |
-| **Metadata Editing** | ✅ | Edit prompts and parameters in PNG files, write changes back to disk. |
-
----
-
-Current Capabilities for Vercel Demo:
-
-| Feature | Status | Details |
-| :--- | :---: | :--- |
-| **Metadata Parsing** | ✅ | Graph-tracing engine for ComfyUI, field-based detection for A1111/Forge/NovelAI. |
-| **Image Viewing** | ✅ | PNG, JPG, JPEG, WebP. Zoom (25-400%), rotation, fit-to-container. |
-| **Drag & Drop** | ✅ | Drop an image to extract metadata. |
-| **Accent Colors** | ✅ | 7 color themes (zinc, red, orange, green, blue, violet, pink) with dark mode support. |
-| **WebP Viewing** | ✅ | Viewing works for static and animated WebP files. Metadata extraction is format-dependent. |
-| **ComfyUI Workflows** | ✅ | 3-phase extraction + ComfyUI ≥1.26 provenance (cnr_id/aux_id). Node graph tracing, custom node resolution, service detection. |
-
-</details>
-
----
-
-### Supported Formats
-
-<details>
-<summary>Click to expand — supported formats</summary>
-
-- **A1111 / Forge** — PNG tEXt chunks, JPEG EXIF
-- **ComfyUI** — JSON workflow with node graph resolution
-- **NovelAI** — PNG metadata
-- **Civitai** — UTF-16-LE JPEG UserComment
-- **Standard EXIF/IPTC/XMP** — All image formats
-- **Safetensors** — LoRA rank/alpha, training parameters, dataset tags, base model info
-- **PNG as JPEG** - Magic Byte Detection: files with a .png extension that are actually JPEG-encoded are detected by magic bytes and parsed anyway.
-
-</details>
-
-### Tech Stack
-
-<details>
-<summary>Click to expand — tech stack</summary>
-
-- **Framework:** Next.js 16 (App Router), React 19, TypeScript 5
-- **UI:** shadcn/ui + Radix UI + Base UI, Lucide icons, Tailwind CSS v4 (OKLch color space)
-- **Thumbnails:** Sharp (libvips) with WebP disk caching
-- **Metadata:** Pure JS parsing — PNG chunks, JPEG EXIF (exif-parser), ComfyUI graph traversal with node provenance
-- **Node Resolution:** ComfyUI Node Finder port (extension-node-map registry + GitHub code search fallback)
-
-</details>
+- **Cross-platform:** the CLI/web install runs anywhere Node.js runs — Windows, macOS, and Linux, including headless boxes and cloud containers. Desktop binaries ship for Windows (installer + portable) and Linux (AppImage).
+- **Community-driven:** inspired by [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) — we welcome forks, fixes, and pull requests.
+- **Feature details, supported formats, and tech stack:** maintained in the [Wiki](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki) — see [Key Features](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki/Key-Features), [Supported File Formats & Metadata Details](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki/Supported-File-Formats-&-Metadata-Details), and [Troubleshooting & FAQ](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki/Troubleshooting-&-FAQ).
 
 ---
 
@@ -127,69 +62,39 @@ npm start
 
 Open http://localhost:3000.
 
+Works the same on Windows, macOS, and Linux. **Running on a headless box or cloud container (vast.ai, colab, a server)?** This is your build — skip the desktop binaries and use the web UI. Note the server binds to `127.0.0.1` only: it is *not* reachable from another machine just by opening a container port. For remote access, tunnel to the host's local listener (e.g. `ssh -L 3000:localhost:3000 user@host`) rather than exposing the server publicly.
 
+### Desktop Binaries
 
----
+Standalone builds live on the [Releases](https://github.com/Ktiseos-Nyx/Dataset-Tools/releases) page — no Node.js, no browser, no npm. They bundle Next.js and run the same metadata engine as the web build, but against any folder on your machine.
 
-### Desktop App (Windows)
+| Platform | Artifact | Status & notes |
+| :--- | :--- | :--- |
+| Windows | NSIS installer + portable EXE | ✅ Supported. Portable keeps its settings and thumbnail cache in a `data` folder next to the EXE; if that folder can't be created it falls back to the OS user-data folder (`%APPDATA%\Dataset Tools` on Windows) — copy that too if you're moving a portable install between machines. API keys stored there are scrambled, not encrypted — keep them out of shared folders. |
+| Linux | AppImage (x64) | ⚠️ **Experimental — not yet verified on a desktop Linux install** (built + smoke-tested only). Portable, no install step: download, `chmod +x`, run. Modern distros may need `libfuse2` (or use `--appimage-extract`). Report what works/breaks in [Discussions](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions). |
+| macOS | — | Not planned as an Electron build; use the CLI/web install above. |
 
-A standalone `.exe` lives on the [Releases](https://github.com/Ktiseos-Nyx/Dataset-Tools/releases) page — no Node.js, no browser, no npm. It bundles Next.js and runs the same metadata engine as the web build, but against any folder on your machine. This comes in TWO flavors: Portable and NSIS based installer. 
-
-Portable works great for travel, or lower end machines that don't want to fuss with the full installation.
-
-
----
-
-#### Smart Screen Issues
-
-"Windows protected your PC"?
-
-On first launch Windows will probably throw up a SmartScreen warning. That's not malware — it's because the exe isn't signed with a commercial code-signing certificate, which costs a few hundred dollars a year. Same thing every unsigned open-source desktop app deals with.
-
-To run it:
-
-1. Click **More info**
-2. Click **Run anyway**
-
-Two ways to check it yourself before running:
-
-- Every release ships a **VirusTotal scan** link so you can see the file checked against 70+ antivirus engines. You'll occasionally see 1–2 "generic heuristic" flags on a fresh Electron build — that's normal for unsigned apps, not a real detection.
-- The whole app is open source — the source and the build configuration are all here, so you can inspect exactly how the exe is produced.
-
-But I hate SmartScreen!
-
-- A portable windows exe with no requirements to install is now available on the most recent releases.
-- Future versions for Linux are coming
-- This portable edition provides no requirements (as far as we're aware) and can be more useful than installing. It keeps its settings and thumbnail cache in a `data` folder created next to the EXE. API keys in that folder are stored scrambled — unreadable at a glance, but not encrypted — so if you run the EXE from a folder other accounts on the machine can access, assume those users can read them.
+**Windows SmartScreen warning?** Expected for unsigned builds — the [Wiki's Installation page](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki/Installation) covers "More info → Run anyway" and how to verify releases via the VirusTotal scan links we ship.
 
 ---
 
 ## Usage
-<details>
-<summary>Click to expand — Usage info</summary>
 
-1. **Start the app:** `npm start` → open `http://localhost:3000`
-2. **Browse files:** Use the file tree sidebar, or click the folder icon to pick any directory.
-3. **Drag & drop:** Drop an image anywhere in the app — it'll find the folder and load thumbnails.
-4. **Inspect metadata:** Click any image → metadata panel shows prompts, parameters, LoRAs, and workflow info. Safetensors files show model architecture, training details, and dataset tags.
-5. **Edit metadata:** Click the edit button on any text field to modify prompts and parameters directly in PNG files.
-6. **Customize:** Settings panel has theme, accent colors, font size, thumbnail size, and file display options.
+1. **Start the app:** `npm start` → open `http://localhost:3000` (or launch the desktop binary)
+2. **Browse files:** file tree sidebar, or the folder icon to pick any directory
+3. **Drag & drop:** drop an image anywhere — the app finds the folder and loads thumbnails
+4. **Inspect metadata:** click any image — prompts, parameters, LoRAs, workflow info; safetensors show architecture, training details, and dataset tags
+5. **Edit metadata:** click the edit button on any text field to modify prompts/parameters in PNG files
+6. **Customize:** settings panel has theme, accent colors, font size, thumbnail size, and file display options
 
-> **Note on folder browsing:** The desktop app uses a native folder picker; the web build uses browser-local folder access (File System Access API). Subfolder navigation and remembering the folder between visits are still in progress — track **[issue #220](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues/220)**.
+> **Note on folder browsing:** the desktop app uses a native folder picker; the web build uses browser-local folder access (File System Access API). Subfolder navigation and remembering the folder between visits are still in progress — track **[issue #220](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues/220)**.
 
 ### When metadata fails to parse
-1. Check browser console for parser logs.
+1. Check the browser console for parser logs.
 2. Note the workflow structure (ComfyUI? A1111? Custom nodes?).
-3. **File an issue with:**
-   * Console error snippet
-   * Workflow type + custom nodes used
-   * Minimal repro image (if shareable)
-   * Your OS if possible.
-   * Version of the application.
-  
-4. If you're running the legacy Python edition, it is no longer supported — file issues against the Next.js edition only.
+3. **[File an issue](https://github.com/Ktiseos-Nyx/Dataset-Tools/issues/new)** with the console error, workflow type + custom nodes used, and a minimal repro image if shareable.
 
-</details>
+More detail in the [Troubleshooting & FAQ](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki/Troubleshooting-&-FAQ).
 
 ---
 
@@ -214,9 +119,14 @@ Open http://localhost:3000.
 
 ### Electron Dev
 
-The Electron shell wraps the web app in a desktop window. `electron:dev` runs the Next dev server and launches the Electron shell against it once `localhost:3000` is up. `electron:build` is the release pipeline — production build, Electron compile, then the platform targets via electron-builder (Windows: installer + portable EXE; it builds for the host OS, so the Windows artifacts only come out of a Windows host).
+The Electron shell wraps the web app in a desktop window. `electron:dev` runs the Next dev server and launches the Electron shell against it once `localhost:3000` is up. `electron:build` is the release pipeline — production build, Electron compile, then the platform targets via electron-builder (Windows: installer + portable EXE; Linux: AppImage). It builds for the host OS, so Windows artifacts only come out of a Windows host and Linux artifacts out of a Linux host.
 
-**Release prerequisite:** `electron:build` expects a Windows Node.js binary at `build/node-node/node.exe` (Node v25). That directory is git-ignored and no script creates it — without it the packaged app silently falls back to Electron's embedded Node, and every API route returns 500.
+**Release prerequisite:** `electron:build` expects a bundled Node runtime in the git-ignored `build/node-node/` directory (no script creates it — place the binary there yourself, matching the build host's OS):
+
+- **Windows builds:** `build/node-node/node.exe` (Node v25)
+- **Linux builds (AppImage):** `build/node-node/node-linux` — the plain `node` binary from the official Linux x64 tarball (v25), exec bit intact
+
+Without the matching binary the packaged app silently falls back to Electron's embedded Node, and every API route returns 500. The Linux postbuild check hard-fails an AppImage build that is missing its runtime rather than packaging a broken artifact.
 
 ```bash
 npm run electron:dev    # next dev + Electron window at localhost:3000
