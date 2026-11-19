@@ -24,7 +24,7 @@ export const SECRET_KEYS = new Set(['CIVITAI_API_KEY', 'GITHUB_TOKEN'])
 // .env.local in Notepad sees gibberish instead of "CIVITAI_API_KEY=sk-...".
 // Legacy plaintext values are read transparently and re-scrambled on the
 // next save, so no migration step is needed.
-const SECRET_MARKER = 'enc:v1:'
+export const SECRET_MARKER = 'enc:v1:'
 const SECRET_OBFUSCATION_CONSTANT = 'knx-dataset-tools-v1-secret-scramble'
 
 export function scrambleSecret(plain: string): string {
@@ -46,8 +46,12 @@ export function unscrambleSecret(stored: string): string {
   }
 }
 
-// Parse .env.local. Secret keys are decoded; all other values pass through
-// untouched. Does NOT touch process.env (that's restoreEnvSecrets' job).
+// Parse .env.local verbatim: values come back exactly as stored at rest —
+// secret keys keep their `enc:v1:...` marker (the encoded-value convention:
+// anything with the marker is written back untouched, anything without is
+// plaintext that still needs encoding). Callers that need the real secret
+// decode explicitly (restoreEnvSecrets). Does NOT touch process.env (that's
+// restoreEnvSecrets' job).
 export async function readEnvFile(): Promise<Record<string, string>> {
   try {
     const data = await fs.readFile(ENV_PATH, 'utf-8')
@@ -63,7 +67,7 @@ export async function readEnvFile(): Promise<Record<string, string>> {
       if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
         value = value.slice(1, -1)
       }
-      env[key] = SECRET_KEYS.has(key) ? unscrambleSecret(value) : value
+      env[key] = value
     }
     return env
   } catch {
@@ -71,24 +75,68 @@ export async function readEnvFile(): Promise<Record<string, string>> {
   }
 }
 
+// Next-compatible expansion of legacy plaintext environment references —
+// the same semantics @next/env applies when it loads .env files (CodeRabbit
+// PR #250: without this, saving any secret encoded a literal "${GH_TOKEN}"
+// reference as the token itself, and restoreEnvSecrets would restore the
+// literal string as the credential). Supported: ${VAR}, ${VAR:-fallback}
+// (unset or empty), ${VAR-fallback} (unset only), bare $VAR, and escaped \$.
+export function expandEnvReferences(
+  value: string,
+  source: Record<string, string | undefined> = process.env,
+): string {
+  return value.replace(
+    /\\\$|\$\{([A-Za-z_][A-Za-z0-9_]*)(:?-([^}]*))?\}|\$([A-Za-z_][A-Za-z0-9_]*)/g,
+    (match, braced, opWithFallback, fallback, bare) => {
+      if (match === '\\$') return '$' // escaped — literal dollar
+      const name = braced ?? bare
+      if (braced !== undefined) {
+        const colonForm = opWithFallback?.startsWith(':-') ?? false
+        const resolved = source[name]
+        const unset = resolved === undefined || (colonForm && resolved === '')
+        if (unset && opWithFallback !== undefined) return fallback ?? ''
+        if (unset) return ''
+        return resolved as string
+      }
+      const resolved = source[name]
+      return resolved === undefined ? '' : resolved
+    },
+  )
+}
+
 // Startup restore. Next.js loads .env.local into process.env verbatim, so
 // obfuscated secret values would reach consumers (GitHub search, license
 // lookup) as the encoded "enc:v1:..." string after every restart (caught by
-// CodeRabbit). Called from instrumentation.ts before any request is served:
-// decode the at-rest secrets and restore the real values into process.env.
-// Legacy plaintext needs no restore — Next already loaded it correctly.
-// Precedence (CodeRabbit, Nov 18 2026): a real plaintext value the environment
-// already supplies WINS — the at-rest copy only fills a gap. Two restore cases
-// remain: the variable is absent, or it still holds the encoded at-rest form
-// (e.g. an operator exported the raw file contents). Then restore the decoded
-// value; never overwrite an existing plaintext value.
+// CodeRabbit). Called from instrumentation.ts before any request is served.
+// The at-rest file is read VERBATIM (encoded-value convention), so three
+// cases per secret key:
+//  1. Stored value carries the marker → decode and restore the real value,
+//     but only when the environment doesn't already supply a real plaintext
+//     value (env-supplied plaintext WINS — CodeRabbit Nov 18) or still holds
+//     the encoded form (e.g. an operator exported the raw file contents).
+//  2. Stored value is legacy plaintext → Next already loaded it (and expanded
+//     any ${VAR} reference) when it can see the file; restore it into
+//     process.env only if absent, expanded the same way — the packaged app's
+//     user-data .env.local is NOT auto-loaded by Next, so this case matters
+//     there.
+//  3. Nothing stored → nothing to restore.
 export async function restoreEnvSecrets(): Promise<void> {
   try {
     const env = await readEnvFile()
     for (const key of SECRET_KEYS) {
-      const value = env[key]
+      const stored = env[key]
       const current = process.env[key]
-      if (value && (!current || current.startsWith(SECRET_MARKER))) process.env[key] = value
+      if (!stored) continue
+      if (stored.startsWith(SECRET_MARKER)) {
+        const decoded = unscrambleSecret(stored)
+        if (decoded && (!current || current.startsWith(SECRET_MARKER))) {
+          process.env[key] = decoded
+        }
+      } else if (!current) {
+        // Legacy plaintext, absent from the environment: expand references
+        // (Next-compatible) before exposing it as the value.
+        process.env[key] = expandEnvReferences(stored)
+      }
     }
   } catch {
     // Missing or unreadable .env.local — nothing to restore.

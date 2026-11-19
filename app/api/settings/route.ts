@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
-import { DATA_DIR, ENV_PATH, SECRET_KEYS, scrambleSecret, readEnvFile } from '@/lib/env-secrets'
+import { DATA_DIR, ENV_PATH, SECRET_KEYS, SECRET_MARKER, scrambleSecret, expandEnvReferences, readEnvFile } from '@/lib/env-secrets'
 
 const CONFIG_PATH = path.join(DATA_DIR, 'settings.json')
 
@@ -23,9 +23,18 @@ async function readEnvLocal(): Promise<Record<string, string>> {
 }
 
 async function writeEnvLocal(env: Record<string, string>): Promise<void> {
-  const lines = Object.entries(env).map(
-    ([key, value]) => `${key}=${SECRET_KEYS.has(key) ? scrambleSecret(value) : value}`
-  )
+  const lines = Object.entries(env).map(([key, value]) => {
+    if (!SECRET_KEYS.has(key)) return `${key}=${value}`
+    // Encoded-value convention: a value already carrying the at-rest marker
+    // is written back verbatim — re-encoding it would corrupt it.
+    if (value.startsWith(SECRET_MARKER)) return `${key}=${value}`
+    // Plaintext (UI-supplied or legacy): resolve ${VAR} references the same
+    // way @next/env expands them when loading the file, THEN encode. Without
+    // this, saving one secret re-encoded a literal "${GH_TOKEN}" reference
+    // as the token itself, and every consumer saw garbage after restart
+    // (CodeRabbit PR #250).
+    return `${key}=${scrambleSecret(expandEnvReferences(value))}`
+  })
   await fs.writeFile(ENV_PATH, lines.join('\n') + '\n', 'utf-8')
 }
 
