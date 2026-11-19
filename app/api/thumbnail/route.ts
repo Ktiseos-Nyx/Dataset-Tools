@@ -112,24 +112,45 @@ export async function GET(request: Request) {
     await ensureCacheDir()
     const cachePath = getCachePath(filePath, size)
 
+    // ---- Response deadline, started BEFORE the cache check. Previously the
+    // cache-check phase (two stats + a cache read) had no deadline at all —
+    // on a stalled drive requests hung there with no 504 (Nov 19 2026
+    // fresh-portable recurrence: cold thumbcache + slow drive). The timer is
+    // cleared as soon as the cache phase settles, so it can never fire later
+    // as an unhandled rejection.
+    let responseTimer: NodeJS.Timeout | undefined
+    const responseDeadline = new Promise<never>((_, reject) => {
+      responseTimer = setTimeout(() => {
+        reject(Object.assign(new Error('Drive not responding (timed out)'), { name: 'TimeoutError' }))
+      }, FS_READ_DEADLINE_MS)
+    })
+
     // Check cache validity: does cached thumb exist and is it newer than source?
-    try {
-      const [srcStat, thumbStat] = await Promise.all([
-        fs.stat(resolvedPath),
-        fs.stat(cachePath),
-      ])
-      if (thumbStat.mtimeMs >= srcStat.mtimeMs) {
-        // Serve cached thumbnail
-        const data = await fs.readFile(cachePath)
-        return new NextResponse(data, {
-          headers: {
-            'Content-Type': 'image/webp',
-            'Cache-Control': 'public, max-age=86400',
-          },
-        })
+    const cacheCheck = (async (): Promise<Buffer | null> => {
+      try {
+        const [srcStat, thumbStat] = await Promise.all([
+          fs.stat(resolvedPath),
+          fs.stat(cachePath),
+        ])
+        if (thumbStat.mtimeMs >= srcStat.mtimeMs) {
+          // Serve cached thumbnail
+          return await fs.readFile(cachePath)
+        }
+      } catch {
+        // Cache miss or source doesn't exist yet, generate below
       }
-    } catch {
-      // Cache miss or source doesn't exist yet, generate below
+      return null
+    })()
+    const cached = await Promise.race([cacheCheck, responseDeadline]).finally(() => {
+      clearTimeout(responseTimer)
+    })
+    if (cached) {
+      return new NextResponse(new Uint8Array(cached), {
+        headers: {
+          'Content-Type': 'image/webp',
+          'Cache-Control': 'public, max-age=86400',
+        },
+      })
     }
 
     // Generate thumbnail — one of at most MAX_CONCURRENT_THUMBS at a time.
@@ -144,6 +165,17 @@ export async function GET(request: Request) {
     //    continues in the background (its result is discarded; it ends at the
     //    sharp timeout or when the drive finally answers).
     await acquireThumbSlot()
+    let transferred = false // slot ownership moved to a background sharp job
+    let released = false
+    const freeSlot = (): void => {
+      if (!released) {
+        released = true
+        releaseThumbSlot()
+      }
+    }
+    // Declared outside the inner try so the catch can transfer its slot
+    // ownership when the hold deadline expires mid-generation.
+    let generation: Promise<Buffer> | undefined
     try {
       if (request.signal.aborted) {
         return new NextResponse(null, { status: 503 })
@@ -153,7 +185,7 @@ export async function GET(request: Request) {
       // throw (e.g. from resize) must happen while no timer is scheduled —
       // otherwise the timer's later rejection has no handler and becomes an
       // unhandled rejection that can kill the server (caught by CodeRabbit).
-      const generation = sharp(resolvedPath)
+      generation = sharp(resolvedPath)
         .timeout({ seconds: 60 })
         .resize(size, size, { fit: 'cover', position: 'centre' })
         .webp({ quality: 80 })
@@ -177,8 +209,26 @@ export async function GET(request: Request) {
           'Cache-Control': 'public, max-age=86400',
         },
       })
+    } catch (error) {
+      if (error instanceof Error && error.name === 'TimeoutError' && generation) {
+        // Hold-deadline expired: the response 504s via the outer catch, but the
+        // underlying sharp job may still be running — its own timer only starts
+        // once the input opens, so a stalled open can outlive anything we
+        // await. Transfer slot ownership to that background job so TOTAL sharp
+        // concurrency stays within the cap, and release exactly once when it
+        // settles. Backstop = hold deadline + sharp's own 60s timeout + slack,
+        // for the case where the input never opens and sharp never settles
+        // (otherwise the slot would be held forever — the original wedge).
+        transferred = true // suppress the finally-release below
+        const backstop = setTimeout(freeSlot, FS_READ_DEADLINE_MS + 65_000)
+        void generation.finally(() => {
+          clearTimeout(backstop)
+          freeSlot()
+        }).catch(() => {})
+      }
+      throw error
     } finally {
-      releaseThumbSlot()
+      if (!transferred) freeSlot()
     }
   } catch (error) {
     if (error instanceof Error && 'code' in error && (error as NodeJS.ErrnoException).code === 'ENOENT') {

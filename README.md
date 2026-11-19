@@ -62,16 +62,16 @@ npm start
 
 Open http://localhost:3000.
 
-Works the same on Windows, macOS, and Linux. **Running on a headless box or cloud container (vast.ai, colab, a server)?** This is your build — skip the desktop binaries and use the web UI.
+Works the same on Windows, macOS, and Linux. **Running on a headless box or cloud container (vast.ai, colab, a server)?** This is your build — skip the desktop binaries and use the web UI. Note the server binds to `127.0.0.1` only: it is *not* reachable from another machine just by opening a container port. For remote access, tunnel to the host's local listener (e.g. `ssh -L 3000:localhost:3000 user@host`) rather than exposing the server publicly.
 
 ### Desktop Binaries
 
 Standalone builds live on the [Releases](https://github.com/Ktiseos-Nyx/Dataset-Tools/releases) page — no Node.js, no browser, no npm. They bundle Next.js and run the same metadata engine as the web build, but against any folder on your machine.
 
-| Platform | Artifact | Notes |
+| Platform | Artifact | Status & notes |
 | :--- | :--- | :--- |
-| Windows | NSIS installer + portable EXE | Portable keeps its settings and thumbnail cache in a `data` folder next to the EXE; API keys stored there are scrambled, not encrypted — keep it out of shared folders. |
-| Linux | AppImage (x64) | Portable, no install step: download, `chmod +x`, run. Modern distros may need `libfuse2` (or use `--appimage-extract`). |
+| Windows | NSIS installer + portable EXE | ✅ Supported. Portable keeps its settings and thumbnail cache in a `data` folder next to the EXE (falls back to the default user-data folder if that can't be created); API keys stored there are scrambled, not encrypted — keep it out of shared folders. |
+| Linux | AppImage (x64) | ⚠️ **Experimental — not yet verified on a desktop Linux install** (built + smoke-tested only). Portable, no install step: download, `chmod +x`, run. Modern distros may need `libfuse2` (or use `--appimage-extract`). Report what works/breaks in [Discussions](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions). |
 | macOS | — | Not planned as an Electron build; use the CLI/web install above. |
 
 **Windows SmartScreen warning?** Expected for unsigned builds — the [Wiki's Installation page](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki/Installation) covers "More info → Run anyway" and how to verify releases via the VirusTotal scan links we ship.
