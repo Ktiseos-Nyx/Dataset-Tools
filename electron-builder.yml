@@ -43,12 +43,19 @@ extraResources:
     to: .
     filter:
       - "standalone/**/*"
-  # A real node.exe (v25) runs the standalone server. Electron's embedded
-  # Node (v24) mishandles the packaged Turbopack server (500 on every API
-  # route). The plain Node binary ships outside the asar, next to the
-  # standalone server.
-  - from: build/node-node
-    to: node-node
+  # NOTE: the Node runtime is now copied per-platform (win.extraResources /
+  # linux.extraResources below) so the Windows build doesn't carry the ~100MB
+  # Linux binary and vice versa. Both platforms still ship it outside the asar
+  # (rule: the runtime entry must never disappear — without it the packaged
+  # app falls back to Electron's embedded Node and every API route 500s).
+
+# A real Node binary runs the standalone server. Electron's embedded Node
+# (v24) mishandles the packaged Turbopack server (500 on every API route).
+# Windows ships node.exe (v25); Linux ships the plain `node` Linux binary
+# (v25) — selected by platform in electron/main.ts. Both live gitignored in
+# build/node-node/ (no script creates them; see README release prerequisite).
+# The Linux binary must keep its exec bit when placed there (tar extraction
+# preserves it).
 
 directories:
   output: dist
@@ -61,6 +68,9 @@ win:
     - target: portable
       arch: [x64]
   icon: build/icon.ico
+  extraResources:
+    - from: build/node-node/node.exe
+      to: node-node/node.exe
 
 mac:
   target:
@@ -74,6 +84,9 @@ linux:
     - target: AppImage
       arch: [x64]
   icon: build/icon.png
+  extraResources:
+    - from: build/node-node/node-linux
+      to: node-node/node
 
 nsis:
   oneClick: false

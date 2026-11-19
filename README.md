@@ -121,7 +121,12 @@ Open http://localhost:3000.
 
 The Electron shell wraps the web app in a desktop window. `electron:dev` runs the Next dev server and launches the Electron shell against it once `localhost:3000` is up. `electron:build` is the release pipeline — production build, Electron compile, then the platform targets via electron-builder (Windows: installer + portable EXE; Linux: AppImage). It builds for the host OS, so Windows artifacts only come out of a Windows host and Linux artifacts out of a Linux host.
 
-**Release prerequisite:** `electron:build` expects a Windows Node.js binary at `build/node-node/node.exe` (Node v25). That directory is git-ignored and no script creates it — without it the packaged app silently falls back to Electron's embedded Node, and every API route returns 500.
+**Release prerequisite:** `electron:build` expects a bundled Node runtime in the git-ignored `build/node-node/` directory (no script creates it — place the binary there yourself, matching the build host's OS):
+
+- **Windows builds:** `build/node-node/node.exe` (Node v25)
+- **Linux builds (AppImage):** `build/node-node/node-linux` — the plain `node` binary from the official Linux x64 tarball (v25), exec bit intact
+
+Without the matching binary the packaged app silently falls back to Electron's embedded Node, and every API route returns 500. The Linux postbuild check hard-fails an AppImage build that is missing its runtime rather than packaging a broken artifact.
 
 ```bash
 npm run electron:dev    # next dev + Electron window at localhost:3000

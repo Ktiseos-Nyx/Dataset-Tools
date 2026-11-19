@@ -88,14 +88,23 @@ async function startNextServer(port: number): Promise<void> {
     ? path.join(process.resourcesPath, 'standalone')
     : path.join(__dirname, '..', '.next', 'standalone');
 
-  // Run the standalone build's self-contained server. Prefer the bundled
-  // node.exe (shipped via extraResources node-node/) over Electron's
-  // embedded Node: the server was traced against the full Node runtime,
-  // and Electron's embedded copy (v24) makes every API route 500 in the
-  // packaged build (Oct 2026 packaging saga). Falls back to
-  // Electron-as-Node if the bundled binary is missing.
-  const bundledNode = path.join(process.resourcesPath, 'node-node', 'node.exe');
-  const useBundledNode = app.isPackaged && fs.existsSync(bundledNode);
+  // Run the standalone build's self-contained server. Prefer the bundled Node
+  // runtime (shipped via extraResources node-node/) over Electron's embedded
+  // Node: the server was traced against the full Node runtime, and Electron's
+  // embedded copy (v24) makes every API route 500 in the packaged build (Oct
+  // 2026 packaging saga). Falls back to Electron-as-Node if the bundled
+  // binary is missing. Platform-aware: node.exe on Windows, the plain `node`
+  // Linux binary on Linux (CodeRabbit PR #250 — the AppImage previously had
+  // no bundled runtime at all and silently used the embedded Node). macOS
+  // ships no bundled runtime (no Electron build planned there anyway).
+  const bundledNodeName =
+    process.platform === 'win32' ? 'node.exe'
+    : process.platform === 'linux' ? 'node'
+    : null;
+  const bundledNode = bundledNodeName
+    ? path.join(process.resourcesPath, 'node-node', bundledNodeName)
+    : null;
+  const useBundledNode = app.isPackaged && bundledNode !== null && fs.existsSync(bundledNode);
   const nodeBin = useBundledNode ? bundledNode : process.execPath;
 
   nextProcess = spawn(

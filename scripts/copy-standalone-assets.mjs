@@ -79,6 +79,23 @@ if (!existsSync(runtimeProbe)) {
 }
 console.log('[postbuild] compiled next-server runtime present in standalone')
 
+// The packaged app must ship a real Node runtime for the host OS — Electron's
+// embedded Node makes every API route 500 (Oct 2026 packaging saga), and a
+// Linux AppImage without its runtime would do the same (CodeRabbit PR #250).
+// Refuse to package a broken artifact instead of silently degrading.
+if (process.platform === 'linux') {
+  const linuxRuntime = join(root, 'build', 'node-node', 'node-linux')
+  if (!existsSync(linuxRuntime)) {
+    console.error(
+      '[postbuild] ERROR: Linux build is missing build/node-node/node-linux (the bundled Node v25 binary) — ' +
+        'the AppImage would silently fall back to Electron\u2019s embedded Node and 500 on every API route. ' +
+        'Download node-v<ver>-linux-x64.tar.xz from nodejs.org and extract bin/node to build/node-node/node-linux; aborting.'
+    )
+    process.exit(1)
+  }
+  console.log('[postbuild] bundled Linux node runtime present')
+}
+
 // Scrub any user data the tracer may have swept into the standalone. Nov 18
 // 2026: the trace copied the developer's live portable data folder
 // (dist/data/.env.local — scrambled-but-decodable API keys) into the packaged
