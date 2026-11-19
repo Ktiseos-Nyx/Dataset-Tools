@@ -165,17 +165,6 @@ export async function GET(request: Request) {
     //    continues in the background (its result is discarded; it ends at the
     //    sharp timeout or when the drive finally answers).
     await acquireThumbSlot()
-    let transferred = false // slot ownership moved to a background sharp job
-    let released = false
-    const freeSlot = (): void => {
-      if (!released) {
-        released = true
-        releaseThumbSlot()
-      }
-    }
-    // Declared outside the inner try so the catch can transfer its slot
-    // ownership when the hold deadline expires mid-generation.
-    let generation: Promise<Buffer> | undefined
     try {
       if (request.signal.aborted) {
         return new NextResponse(null, { status: 503 })
@@ -185,7 +174,7 @@ export async function GET(request: Request) {
       // throw (e.g. from resize) must happen while no timer is scheduled —
       // otherwise the timer's later rejection has no handler and becomes an
       // unhandled rejection that can kill the server (caught by CodeRabbit).
-      generation = sharp(resolvedPath)
+      const generation = sharp(resolvedPath)
         .timeout({ seconds: 60 })
         .resize(size, size, { fit: 'cover', position: 'centre' })
         .webp({ quality: 80 })
@@ -209,26 +198,8 @@ export async function GET(request: Request) {
           'Cache-Control': 'public, max-age=86400',
         },
       })
-    } catch (error) {
-      if (error instanceof Error && error.name === 'TimeoutError' && generation) {
-        // Hold-deadline expired: the response 504s via the outer catch, but the
-        // underlying sharp job may still be running — its own timer only starts
-        // once the input opens, so a stalled open can outlive anything we
-        // await. Transfer slot ownership to that background job so TOTAL sharp
-        // concurrency stays within the cap, and release exactly once when it
-        // settles. Backstop = hold deadline + sharp's own 60s timeout + slack,
-        // for the case where the input never opens and sharp never settles
-        // (otherwise the slot would be held forever — the original wedge).
-        transferred = true // suppress the finally-release below
-        const backstop = setTimeout(freeSlot, FS_READ_DEADLINE_MS + 65_000)
-        void generation.finally(() => {
-          clearTimeout(backstop)
-          freeSlot()
-        }).catch(() => {})
-      }
-      throw error
     } finally {
-      if (!transferred) freeSlot()
+      releaseThumbSlot()
     }
   } catch (error) {
     if (error instanceof Error && 'code' in error && (error as NodeJS.ErrnoException).code === 'ENOENT') {

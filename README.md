@@ -74,7 +74,30 @@ Standalone builds live on the [Releases](https://github.com/Ktiseos-Nyx/Dataset-
 | Linux | AppImage (x64) | ⚠️ **Experimental — not yet verified on a desktop Linux install** (built + smoke-tested only). Portable, no install step: download, `chmod +x`, run. Modern distros may need `libfuse2` (or use `--appimage-extract`). Report what works/breaks in [Discussions](https://github.com/Ktiseos-Nyx/Dataset-Tools/discussions). |
 | macOS | — | Not planned as an Electron build; use the CLI/web install above. |
 
-**Windows SmartScreen warning?** Expected for unsigned builds — the [Wiki's Installation page](https://github.com/Ktiseos-Nyx/Dataset-Tools/wiki/Installation) covers "More info → Run anyway" and how to verify releases via the VirusTotal scan links we ship.
+
+---
+
+#### Smart Screen Issues
+
+"Windows protected your PC"?
+
+On first launch Windows will probably throw up a SmartScreen warning. That's not malware — it's because the exe isn't signed with a commercial code-signing certificate, which costs a few hundred dollars a year. Same thing every unsigned open-source desktop app deals with.
+
+To run it:
+
+1. Click **More info**
+2. Click **Run anyway**
+
+Two ways to check it yourself before running:
+
+- Every release ships a **VirusTotal scan** link so you can see the file checked against 70+ antivirus engines. You'll occasionally see 1–2 "generic heuristic" flags on a fresh Electron build — that's normal for unsigned apps, not a real detection.
+- The whole app is open source — the source and the build configuration are all here, so you can inspect exactly how the exe is produced.
+
+But I hate SmartScreen!
+
+- A portable windows exe with no requirements to install is now available on the most recent releases.
+- Future versions for Linux are coming
+- This portable edition provides no requirements (as far as we're aware) and can be more useful than installing. It keeps its settings and thumbnail cache in a `data` folder created next to the EXE. API keys in that folder are stored scrambled — unreadable at a glance, but not encrypted — so if you run the EXE from a folder other accounts on the machine can access, assume those users can read them.
 
 ---
 

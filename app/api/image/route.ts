@@ -63,6 +63,7 @@ export async function GET(request: Request) {
       });
     }
 
+    const file = await fs.readFile(resolvedPath, { signal: AbortSignal.timeout(FS_READ_DEADLINE_MS) });
     const contentType = mime.lookup(resolvedPath) || 'application/octet-stream';
 
     return new NextResponse(result.file, {
