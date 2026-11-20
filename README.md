@@ -1,5 +1,7 @@
 # Dataset Tools: An AI Metadata Viewer
 
+**TEMPORAILY ARCHIVING UNTIL A NEW MAINTAINER CAN BE FOUND**
+
 <div align="center">
 
 <!-- Social & Support Badges -->
